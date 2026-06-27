@@ -1,0 +1,123 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+
+class TrainerJoinCard extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const TrainerJoinCard({super.key, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        splashColor: AppColors.accent.withOpacity(0.15),
+        highlightColor: AppColors.accent.withOpacity(0.08),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.accent.withOpacity(0.18),
+                AppColors.background,
+              ],
+            ),
+            border: Border.all(
+              color: AppColors.accent.withOpacity(0.5),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accent.withOpacity(0.18),
+                blurRadius: 5,
+                offset: const Offset(0, 0),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              /// LEFT ICON
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.accent.withOpacity(0.2),
+                ),
+                child: const Icon(
+                  Icons.verified_user_rounded,
+                  color: AppColors.accent,
+                  size: 22,
+                ),
+              ),
+
+              const SizedBox(width: 14),
+
+              /// TEXT CONTENT
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Are you a Trainer?',
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Join us to manage sessions, earnings, and your player roster — all in one dashboard.',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        color: AppColors.muted,
+                        fontSize: 12.5,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 12),
+
+              /// CTA BUTTON
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(color: AppColors.accent, width: 1),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      'Register',
+                      style: GoogleFonts.inter(
+                        color: AppColors.background,
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

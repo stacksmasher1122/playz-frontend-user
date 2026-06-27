@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
+
+/* ============================================================
+   SHIMMER PLACEHOLDER (REUSABLE)
+   ============================================================ */
+class HomeShimmer extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final double borderRadius;
+  final Widget? child;
+
+  const HomeShimmer({this.width, this.height, this.borderRadius = 0, this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade900.withOpacity(0.5),
+      highlightColor: Colors.grey.shade800.withOpacity(0.4),
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: child,
+      ),
+    );
+  }
+}

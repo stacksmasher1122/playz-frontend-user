@@ -1,0 +1,73 @@
+name: redesign
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  cached_network_image: ^3.4.1
+  carousel_slider: ^5.1.1
+  cloud_firestore: ^6.1.3
+  firebase_auth: ^6.2.0
+  firebase_core: ^4.5.0
+  firebase_storage: ^13.1.0
+  flutter:
+    sdk: flutter
+  flutter_rating_bar: ^4.0.1
+  google_fonts: ^6.3.2
+  google_sign_in: ^7.2.0
+  image_picker: ^1.2.1
+  intl: ^0.20.2
+  material_symbols_icons: ^4.2906.0
+  path: ^1.9.1
+  qr_flutter: ^4.1.0
+  get: ^4.7.3
+  shared_preferences: ^2.5.3
+  shimmer: ^3.0.0
+  sms_autofill: ^2.4.1
+  sqflite: ^2.4.2
+  google_maps_flutter: ^2.14.2
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+  flutter_dotenv: ^6.0.0
+  http: ^1.6.0
+  dotlottie_flutter: ^0.0.2
+  flutter_cache_manager: ^3.4.1
+  lottie: ^3.3.2
+  record: ^6.0.0
+  path_provider: ^2.1.5
+  uuid: ^4.5.1
+  video_player: ^2.9.3
+  chewie: ^1.13.0
+  dio: ^5.9.2
+  gallery_saver_plus: ^3.2.9
+  permission_handler: ^12.0.1
+  just_audio: ^0.10.5
+  flutter_audio_waveforms: ^1.2.1+8
+  audio_waveforms: ^2.0.2
+  camera: ^0.12.0+1
+  url_launcher: ^6.3.0
+  flutter_svg: ^2.2.4
+  audioplayers: ^6.6.0
+  vibration: ^3.1.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - .env
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  image_path: "assets/logo2.png"
+  adaptive_icon_background: "assets/logo2.png"
+  adaptive_icon_foreground: "assets/transparent.png"
+  ios: false
