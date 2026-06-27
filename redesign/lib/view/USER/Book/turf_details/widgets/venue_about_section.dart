@@ -1,0 +1,74 @@
+import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+
+class VenueAboutSection extends StatelessWidget {
+  final bool isExpanded;
+  final VoidCallback onToggleExpand;
+
+  const VenueAboutSection({
+    super.key,
+    required this.isExpanded,
+    required this.onToggleExpand,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'About Venue',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Experience premium CrossFit training with state-of-the-art equipment, cardio zones, and expert trainers. Perfect for strength and endurance.',
+            maxLines: isExpanded ? null : 3,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Color(0xFFA7A7A7)),
+          ),
+          GestureDetector(
+            onTap: onToggleExpand,
+            child: Text(
+              isExpanded ? 'Read more' : 'Read less',
+              style: const TextStyle(color: AppColors.accent),
+            ),
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Stack(
+              children: [
+                Image.network(
+                  'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWFwc3xlbnwwfHwwfHx8MA%3D%3D',
+                  height: 150,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.black.withOpacity(0.7),
+                    ),
+                    icon: const Icon(Icons.directions, size: 16),
+                    label: const Text('Get Directions'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
