@@ -2,8 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
-import 'package:redesign/view/USER/Book/booktest.dart';
-// import 'package:redesign/book.dart';
+import 'package:redesign/view/USER/Book/book/book_screen.dart';
 import 'package:redesign/view/USER/Home/home/home_screen.dart';
 import 'package:redesign/view/USER/More/menu/more_screen.dart';
 import 'package:redesign/view/USER/Play/play/play_screen.dart';
