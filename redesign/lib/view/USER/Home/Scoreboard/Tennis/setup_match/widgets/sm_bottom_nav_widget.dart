@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/match_stats/match_stats_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Tennis/live_scoring/live_scoring_screen.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 
@@ -12,9 +14,7 @@ class SmBottomNavWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer.withValues(alpha: 0.9),
         border: Border(
-          top: BorderSide(
-            color: Colors.white.withValues(alpha: 0.05),
-          ),
+          top: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
         ),
         boxShadow: [
           BoxShadow(
@@ -28,7 +28,12 @@ class SmBottomNavWidget extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 0),
+            padding: const EdgeInsets.only(
+              left: 16,
+              right: 16,
+              bottom: 16,
+              top: 0,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,7 +51,12 @@ class SmBottomNavWidget extends StatelessWidget {
                   label: 'Live',
                   isActive: false,
                   onTap: () {
-                    print("Navigate to Live");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LiveScoringScreen(),
+                      ),
+                    );
                   },
                 ),
                 _buildTab(
@@ -54,7 +64,12 @@ class SmBottomNavWidget extends StatelessWidget {
                   label: 'Stats',
                   isActive: false,
                   onTap: () {
-                    print("Navigate to Stats");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MatchStatsScreen(),
+                      ),
+                    );
                   },
                 ),
                 _buildTab(
@@ -92,13 +107,15 @@ class SmBottomNavWidget extends StatelessWidget {
               top: 0,
               left: -10,
               right: -10,
-              child: Container(
-                height: 2,
-                color: AppColors.primaryContainer,
-              ),
+              child: Container(height: 2, color: AppColors.primaryContainer),
             ),
           Padding(
-            padding: const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 8),
+            padding: const EdgeInsets.only(
+              top: 8,
+              left: 16,
+              right: 16,
+              bottom: 8,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,13 +123,17 @@ class SmBottomNavWidget extends StatelessWidget {
                 Icon(
                   icon,
                   size: 24,
-                  color: isActive ? AppColors.primaryContainer : AppColors.onSurfaceVariant,
+                  color: isActive
+                      ? AppColors.primaryContainer
+                      : AppColors.onSurfaceVariant,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   label,
                   style: AppTypography.labelCaps.copyWith(
-                    color: isActive ? AppColors.primaryContainer : AppColors.onSurfaceVariant,
+                    color: isActive
+                        ? AppColors.primaryContainer
+                        : AppColors.onSurfaceVariant,
                   ),
                 ),
               ],
