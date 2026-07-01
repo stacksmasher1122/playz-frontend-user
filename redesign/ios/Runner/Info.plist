@@ -47,5 +47,37 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>PlayZ requires location access to find sports venues and matches near you.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>PlayZ requires location access to find sports venues and matches near you.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>PlayZ requires location access to find sports venues and matches near you.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>PlayZ requires camera access to take profile photos and capture match moments.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>PlayZ requires microphone access to record audio notes and match videos.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>PlayZ requires photo library access to upload profile photos and match images.</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>PlayZ requires permission to save photos and videos to your gallery.</string>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>https</string>
+			<string>http</string>
+			<string>tel</string>
+			<string>mailto</string>
+		</array>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.712055791856-gidb3atuo344rplpa46re7211f17toa6</string>
+				</array>
+			</dict>
+		</array>
 	</dict>
 </plist>

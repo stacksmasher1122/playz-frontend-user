@@ -233,6 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const LoginHeader(),
+                        /*
                         LoginForm(
                           formKey: _formKey,
                           emailController: _emailController,
@@ -248,16 +249,51 @@ class _LoginScreenState extends State<LoginScreen> {
                           onGoogleLogin: _handleGoogleLogin,
                           onPhoneLogin: _showPhoneLoginSheet,
                         ),
+                        */
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: kSpotifyGreen,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              elevation: 0,
+                            ),
+                            onPressed: () async {
+                              setState(() => _isLoading = true);
+                              await UserPreferences.saveUserLogin(true, "Guest User", "guest@playz.com");
+                              await UserPreferences.setProfileComplete(true);
+                              if (!mounted) return;
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (_) => const UserAppNavShell()),
+                              );
+                            },
+                            child: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                    ),
+                                  )
+                                : const Text(
+                                    "Sign Up",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-                LoginSignupPrompt(
-                  onSignupTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => RegisterScreen()),
-                    );
-                  },
                 ),
               ],
             ),

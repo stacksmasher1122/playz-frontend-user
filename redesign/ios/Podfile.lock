@@ -1,0 +1,60 @@
+PODS:
+  - audio_waveforms (0.0.1):
+    - Flutter
+  - dotlottie_flutter (0.0.2):
+    - Flutter
+    - LottieFiles-dotLottie-iOS (~> 0.15.4)
+  - Flutter (1.0.0)
+  - gallery_saver_plus (0.0.1):
+    - Flutter
+  - Google-Maps-iOS-Utils (5.0.0):
+    - GoogleMaps (~> 8.0)
+  - google_maps_flutter_ios (0.0.1):
+    - Flutter
+    - Google-Maps-iOS-Utils (< 7.0, >= 5.0)
+    - GoogleMaps (< 11.0, >= 8.4)
+  - GoogleMaps (8.4.0):
+    - GoogleMaps/Maps (= 8.4.0)
+  - GoogleMaps/Base (8.4.0)
+  - GoogleMaps/Maps (8.4.0):
+    - GoogleMaps/Base
+  - LottieFiles-dotLottie-iOS (0.15.7)
+
+DEPENDENCIES:
+  - audio_waveforms (from `.symlinks/plugins/audio_waveforms/ios`)
+  - dotlottie_flutter (from `.symlinks/plugins/dotlottie_flutter/ios`)
+  - Flutter (from `Flutter`)
+  - gallery_saver_plus (from `.symlinks/plugins/gallery_saver_plus/ios`)
+  - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Google-Maps-iOS-Utils
+    - GoogleMaps
+    - LottieFiles-dotLottie-iOS
+
+EXTERNAL SOURCES:
+  audio_waveforms:
+    :path: ".symlinks/plugins/audio_waveforms/ios"
+  dotlottie_flutter:
+    :path: ".symlinks/plugins/dotlottie_flutter/ios"
+  Flutter:
+    :path: Flutter
+  gallery_saver_plus:
+    :path: ".symlinks/plugins/gallery_saver_plus/ios"
+  google_maps_flutter_ios:
+    :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
+
+SPEC CHECKSUMS:
+  audio_waveforms: a6dde7fe7c0ea05f06ffbdb0f7c1b2b2ba6cedcf
+  dotlottie_flutter: 517fe94299c2fc74ece43a51fc8f8ed2dcac6aff
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  gallery_saver_plus: 61c8a831d5975e2bf57f87bcd64379dcc7d29ff2
+  Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
+  google_maps_flutter_ios: 17552876e72723da1d41accc22f03b5f7afbde69
+  GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
+  LottieFiles-dotLottie-iOS: a1890209b0d8ea6de884b77d7950992f163f89bd
+
+PODFILE CHECKSUM: ab2228a5f83e0f86b387495ceadaa91a4af88ee3
+
+COCOAPODS: 1.16.2
