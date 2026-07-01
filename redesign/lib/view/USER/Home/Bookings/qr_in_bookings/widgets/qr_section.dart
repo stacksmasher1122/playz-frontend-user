@@ -5,7 +5,7 @@ import 'qr_status_badge.dart';
 
 class QrSection extends StatelessWidget {
   final BookingStatus status;
-  const QrSection({required this.status});
+  const QrSection({super.key, required this.status});
 
   Color get glowColor {
     switch (status) {
@@ -43,7 +43,7 @@ class QrSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(22),
                 boxShadow: [
                   BoxShadow(
-                    color: glowColor.withOpacity(0.35),
+                    color: glowColor.withValues(alpha: 0.35),
                     blurRadius: 5,
                   )
                 ],

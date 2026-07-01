@@ -39,7 +39,7 @@ class QrBookingCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: _kGreen.withOpacity(0.15),
+                  color: _kGreen.withValues(alpha: 0.15),
                   blurRadius: 20,
                   spreadRadius: 2,
                 ),
@@ -97,7 +97,7 @@ class QrBookingCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: _kGreen.withOpacity(0.15),
+        color: _kGreen.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
       ),
       child: const Row(

@@ -12,7 +12,7 @@ class HomeHeader extends StatelessWidget {
   // final ValueChanged<AppMode> onChanged;
   final _controller = Get.find<UserProfileController>();
 
-  HomeHeader({
+  HomeHeader({super.key, 
     required this.isTrainer,
     // required this.mode,
     // required this.onChanged,

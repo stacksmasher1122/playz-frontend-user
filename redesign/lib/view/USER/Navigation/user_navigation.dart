@@ -45,7 +45,7 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
           child: Container(
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withValues(alpha: 0.7),
               border: const Border(top: BorderSide(color: Colors.white12)),
             ),
             child: Row(

@@ -24,7 +24,7 @@ class SportsSelectionBottom extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
-          colors: [Colors.black, Colors.black.withOpacity(0.0)],
+          colors: [Colors.black, Colors.black.withValues(alpha: 0.0)],
         ),
       ),
       child: Column(

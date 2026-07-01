@@ -1,0 +1,153 @@
+import 'package:flutter/material.dart';
+import '../../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/team_model.dart';
+
+class DashedCirclePainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashWidth;
+  final double dashSpace;
+
+  DashedCirclePainter({
+    required this.color,
+    required this.strokeWidth,
+    required this.dashWidth,
+    required this.dashSpace,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    var circumference = size.width * 3.14159;
+    var dashCount = (circumference / (dashWidth + dashSpace)).floor();
+    var adjustedDashSpace = (circumference - (dashCount * dashWidth)) / dashCount;
+
+    var angle = 0.0;
+    for (int i = 0; i < dashCount; i++) {
+      canvas.drawArc(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+        angle,
+        (dashWidth / circumference) * 2 * 3.14159,
+        false,
+        paint,
+      );
+      angle += ((dashWidth + adjustedDashSpace) / circumference) * 2 * 3.14159;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class TeamCardWidget extends StatelessWidget {
+  final bool isHome;
+  final TeamModel? team;
+  final ValueChanged<TeamModel> onSelect;
+  final VoidCallback onUploadLogo;
+
+  const TeamCardWidget({
+    super.key,
+    required this.isHome,
+    required this.team,
+    required this.onSelect,
+    required this.onUploadLogo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade800),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: onUploadLogo,
+            child: SizedBox(
+              width: 70,
+              height: 70,
+              child: CustomPaint(
+                painter: DashedCirclePainter(
+                  color: Colors.grey.shade600,
+                  strokeWidth: 2,
+                  dashWidth: 6,
+                  dashSpace: 4,
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.grey.shade500,
+                    size: 28,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          DropdownButtonFormField<String>(
+            initialValue: team?.teamName,
+            hint: Text(
+              isHome ? 'Select Team A' : 'Select Team B',
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+            ),
+            dropdownColor: Colors.grey.shade900,
+            icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.black.withValues(alpha: 0.5),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade800),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade800),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Color(0xFFC6FF00)),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+            items: ['Team Alpha', 'Team Beta', 'FC United', 'Real FC']
+                .map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (val) {
+              if (val != null) {
+                onSelect(TeamModel(
+                  teamId: DateTime.now().millisecondsSinceEpoch.toString(),
+                  teamName: val,
+                  isHome: isHome,
+                ));
+              }
+            },
+          ),
+          const SizedBox(height: 12),
+          Text(
+            isHome ? 'HOME SIDE' : 'AWAY SIDE',
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

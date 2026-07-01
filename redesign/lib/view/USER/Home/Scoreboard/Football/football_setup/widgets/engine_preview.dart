@@ -19,11 +19,12 @@ class EnginePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (tournamentType == TournamentType.knockout) {
-      if (knockoutBracket.isEmpty)
+      if (knockoutBracket.isEmpty) {
         return const Text(
           "No matches generated",
           style: TextStyle(color: kTextMuted),
         );
+      }
       return Column(
         children: knockoutBracket
             .map(

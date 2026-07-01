@@ -25,8 +25,8 @@ class FullScreenImage extends StatelessWidget {
               imageUrl: url,
               fit: BoxFit.contain,
               placeholder: (_, __) => Shimmer.fromColors(
-                baseColor: Colors.grey.shade900.withOpacity(0.5),
-                highlightColor: Colors.grey.shade800.withOpacity(0.4),
+                baseColor: Colors.grey.shade900.withValues(alpha: 0.5),
+                highlightColor: Colors.grey.shade800.withValues(alpha: 0.4),
                 child: Container(
                   width: double.infinity,
                   height: 300,

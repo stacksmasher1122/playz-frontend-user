@@ -15,7 +15,7 @@ class CreateGroupOverlay extends StatelessWidget {
       if (!ctrl.isCreating.value) return const SizedBox.shrink();
       return Positioned.fill(
         child: Container(
-          color: Colors.black.withOpacity(0.5),
+          color: Colors.black.withValues(alpha: 0.5),
           child: const Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,

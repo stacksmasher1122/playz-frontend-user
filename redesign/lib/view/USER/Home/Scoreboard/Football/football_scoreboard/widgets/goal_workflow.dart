@@ -3,7 +3,7 @@ import '../football_scoreboard_screen.dart';
 
 class GoalWorkflow extends StatefulWidget {
   final MatchEngine engine;
-  const GoalWorkflow({required this.engine});
+  const GoalWorkflow({super.key, required this.engine});
   @override
   State<GoalWorkflow> createState() => _GoalWorkflowState();
 }
@@ -116,7 +116,7 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
         child: Container(
           margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: team.color.withOpacity(0.2),
+            color: team.color.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: team.color),
           ),

@@ -46,7 +46,7 @@ class HomeVenueTile extends StatelessWidget {
   final String rating;
   final String status;
 
-  const HomeVenueTile({
+  const HomeVenueTile({super.key, 
     required this.title,
     required this.location,
     required this.price,
@@ -61,7 +61,7 @@ class HomeVenueTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: UserHomePage.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withOpacity(0.08), width: 1),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08), width: 1),
       ),
       child: Row(
         children: [

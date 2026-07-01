@@ -8,7 +8,7 @@ class QrInfoRow extends StatelessWidget {
 
   const QrInfoRow(
     this.label,
-    this.value, {
+    this.value, {super.key, 
     this.highlight = false,
   });
 

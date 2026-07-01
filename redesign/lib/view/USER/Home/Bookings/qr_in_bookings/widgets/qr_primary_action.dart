@@ -8,7 +8,7 @@ class QrPrimaryAction extends StatelessWidget {
 
   const QrPrimaryAction(
     this.label,
-    this.icon, {
+    this.icon, {super.key, 
     this.onTap,
   });
 

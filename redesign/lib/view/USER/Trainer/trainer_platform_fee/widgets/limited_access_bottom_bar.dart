@@ -53,7 +53,7 @@ class LimitedAccessBottomBar extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.white,
                 side:
-                    BorderSide(color: Colors.white.withOpacity(0.3)),
+                    BorderSide(color: Colors.white.withValues(alpha: 0.3)),
                 padding:
                     const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
                 shape: RoundedRectangleBorder(

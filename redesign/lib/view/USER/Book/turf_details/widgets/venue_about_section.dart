@@ -58,7 +58,7 @@ class VenueAboutSection extends StatelessWidget {
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.black.withOpacity(0.7),
+                      backgroundColor: Colors.black.withValues(alpha: 0.7),
                     ),
                     icon: const Icon(Icons.directions, size: 16),
                     label: const Text('Get Directions'),

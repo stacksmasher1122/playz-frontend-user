@@ -42,7 +42,7 @@ class _MoreScreenState extends State<MoreScreen> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.7),
+      barrierColor: Colors.black.withValues(alpha: 0.7),
       builder: (ctx) => const LogoutDialog(),
     );
   }

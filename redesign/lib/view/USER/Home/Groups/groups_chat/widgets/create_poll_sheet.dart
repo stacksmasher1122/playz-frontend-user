@@ -209,7 +209,7 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: _kGreen.withOpacity(0.15),
+                          color: _kGreen.withValues(alpha: 0.15),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -239,7 +239,7 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
                       ),
                       Switch(
                         value: _allowMultiple,
-                        activeColor: _kGreen,
+                        activeThumbColor: _kGreen,
                         onChanged: (val) =>
                             setState(() => _allowMultiple = val),
                       ),

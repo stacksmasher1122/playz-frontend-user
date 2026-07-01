@@ -55,9 +55,10 @@ class ScoreboardHeader extends StatelessWidget {
               valueListenable: engine.addedSeconds,
               builder: (ctx, added, _) {
                 String timeStr = "$min:$s";
-                if (added > 0)
+                if (added > 0) {
                   timeStr +=
                       "+${(added ~/ 60) + 1}"; // Show +1 minute immediately
+                }
                 return Text(
                   timeStr,
                   style: const TextStyle(
@@ -106,7 +107,7 @@ class ScoreboardHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: col.withOpacity(0.2),
+        color: col.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(

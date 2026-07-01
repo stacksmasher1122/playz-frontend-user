@@ -61,7 +61,7 @@ class _PricingPackagesSectionState extends State<PricingPackagesSection> {
             onAddPerk: (perk) => setState(() => perks[key]!.add(perk)),
             onRemovePerk: (perk) => setState(() => perks[key]!.remove(perk)),
           );
-        }).toList(),
+        }),
 
         const SizedBox(height: 12),
 
@@ -124,7 +124,7 @@ class PackagePricingCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Switch(value: enabled, activeColor: kGreen, onChanged: onToggle),
+              Switch(value: enabled, activeThumbColor: kGreen, onChanged: onToggle),
             ],
           ),
 
@@ -293,7 +293,7 @@ class _PerksSectionState extends State<PerksSection> {
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   hintText: 'Add a perk (e.g. Injury Rehab)',
-                  hintStyle: TextStyle(color: kMuted.withOpacity(0.6)),
+                  hintStyle: TextStyle(color: kMuted.withValues(alpha: 0.6)),
                   filled: true,
                   fillColor: kCard,
                   contentPadding: const EdgeInsets.symmetric(
@@ -376,7 +376,7 @@ class PerkChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: kGreen.withOpacity(0.15),
+        color: kGreen.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: kGreen),
       ),
@@ -418,7 +418,7 @@ class SuggestionChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: active ? kGreen.withOpacity(0.2) : kCard,
+          color: active ? kGreen.withValues(alpha: 0.2) : kCard,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: active ? kGreen : Colors.grey.shade800),
         ),

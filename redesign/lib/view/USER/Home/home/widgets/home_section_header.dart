@@ -6,7 +6,7 @@ import '../home_screen.dart';
    ============================================================ */
 class HomeSectionHeader extends StatelessWidget {
   final String title;
-  const HomeSectionHeader(this.title);
+  const HomeSectionHeader(this.title, {super.key});
 
   @override
   Widget build(BuildContext context) {

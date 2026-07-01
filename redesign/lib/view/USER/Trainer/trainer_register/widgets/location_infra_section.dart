@@ -157,7 +157,7 @@ class GroundChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
-          color: selected ? kGreen.withOpacity(0.15) : kCard,
+          color: selected ? kGreen.withValues(alpha: 0.15) : kCard,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: selected ? kGreen : Colors.transparent,

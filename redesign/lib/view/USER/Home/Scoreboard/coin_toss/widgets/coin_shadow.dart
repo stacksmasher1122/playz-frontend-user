@@ -18,7 +18,7 @@ class CoinShadow extends StatelessWidget {
             gradient: RadialGradient(
               colors: [
                 Colors.black,
-                Colors.black.withOpacity(0.5),
+                Colors.black.withValues(alpha: 0.5),
                 Colors.transparent,
               ],
             ),

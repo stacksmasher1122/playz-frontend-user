@@ -24,7 +24,7 @@ class MapPickerSearchBar extends StatelessWidget {
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: kSurface.withOpacity(0.95),
+          color: kSurface.withValues(alpha: 0.95),
           borderRadius: BorderRadius.circular(30),
           border: Border.all(color: Colors.white12),
         ),

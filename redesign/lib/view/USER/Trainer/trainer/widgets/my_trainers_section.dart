@@ -73,7 +73,7 @@ class _MyTrainerCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.accent),
         boxShadow: [
-          BoxShadow(color: AppColors.accent.withOpacity(0.15), blurRadius: 12),
+          BoxShadow(color: AppColors.accent.withValues(alpha: 0.15), blurRadius: 12),
         ],
       ),
       child: Column(
@@ -208,7 +208,7 @@ class _MyTrainerCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: AppColors.accent.withOpacity(0.2),
+        color: AppColors.accent.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
@@ -272,26 +272,26 @@ class _FilterButton extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(24),
-          splashColor: AppColors.accent.withOpacity(0.2),
-          highlightColor: AppColors.accent.withOpacity(0.1),
+          splashColor: AppColors.accent.withValues(alpha: 0.2),
+          highlightColor: AppColors.accent.withValues(alpha: 0.1),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 180),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
             decoration: BoxDecoration(
               color: active
-                  ? AppColors.accent.withOpacity(0.15)
+                  ? AppColors.accent.withValues(alpha: 0.15)
                   : AppColors.surface,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: active
                     ? AppColors.accent
-                    : Colors.white.withOpacity(0.08),
+                    : Colors.white.withValues(alpha: 0.08),
                 width: 1,
               ),
               boxShadow: active
                   ? [
                       BoxShadow(
-                        color: AppColors.accent.withOpacity(0.25),
+                        color: AppColors.accent.withValues(alpha: 0.25),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),

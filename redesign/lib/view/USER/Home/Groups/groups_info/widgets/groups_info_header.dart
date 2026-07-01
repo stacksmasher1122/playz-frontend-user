@@ -51,7 +51,7 @@ class GroupsInfoHeader extends StatelessWidget {
                       : null,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       blurRadius: 15,
                       offset: const Offset(0, 5),
                     )
@@ -72,7 +72,7 @@ class GroupsInfoHeader extends StatelessWidget {
                       border: Border.all(color: _kBg, width: 3),
                       boxShadow: [
                         BoxShadow(
-                          color: _kGreen.withOpacity(0.5),
+                          color: _kGreen.withValues(alpha: 0.5),
                           blurRadius: 10,
                           spreadRadius: 1,
                         )
@@ -153,7 +153,7 @@ class GroupsInfoHeader extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black.withOpacity(0.4),
+                backgroundColor: Colors.black.withValues(alpha: 0.4),
                 foregroundColor: Colors.white,
               ),
               icon: const Icon(Icons.image),

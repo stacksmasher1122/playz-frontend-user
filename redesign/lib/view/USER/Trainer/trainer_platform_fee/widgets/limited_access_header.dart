@@ -13,7 +13,7 @@ class LimitedAccessHeader extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
           child: Container(
-            color: Colors.black.withOpacity(0.7),
+            color: Colors.black.withValues(alpha: 0.7),
             child: SafeArea(
               bottom: false,
               child: Padding(

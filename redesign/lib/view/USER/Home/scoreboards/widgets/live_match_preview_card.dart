@@ -20,10 +20,10 @@ class LiveMatchPreviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: kSurface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: kRed.withOpacity(0.15)),
+        border: Border.all(color: kRed.withValues(alpha: 0.15)),
         boxShadow: [
           BoxShadow(
-            color: kRed.withOpacity(0.05),
+            color: kRed.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

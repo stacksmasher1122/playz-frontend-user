@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Badminton/badminton_create_match.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_setup/cricket_setup_screen.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Football/football_setup/football_setup_screen.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Badminton/badminton_setup.dart';
-
+import 'package:redesign/view/USER/Home/Scoreboard/Football/create_match/football_create_match_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Tennis/setup_match/setup_match_screen.dart';
 // Widgets
 import 'widgets/select_sport_app_bar.dart';
 import 'widgets/select_sport_search_bar.dart';
@@ -52,7 +52,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           Icons.sports_soccer,
           onTap: () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (_) => const MatchSetupScreen())),
+          ).push(MaterialPageRoute(builder: (_) => const FootballCreateMatchScreen())),
         ),
         SportItem(
           'Box Cricket',
@@ -89,13 +89,15 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
         SportItem(
           'Tennis',
           Icons.sports_tennis,
-          onTap: () => _openSetup('Tennis'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const SetupMatchScreen()),
+          ),
         ),
         SportItem(
           'Badminton',
           Icons.sports,
           onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const BadmintonSetupScreen()),
+            MaterialPageRoute(builder: (_) => const BadmintonCreateMatchScreen()),
           ),
         ),
         SportItem(
@@ -165,6 +167,13 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
 
   void _openSetup(String sport) {
     setState(() => selectedSport = sport);
+
+    if (sport == 'Football') {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const FootballCreateMatchScreen()),
+      );
+      return;
+    }
 
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => SportMatchSetupScreen(sport: sport)),

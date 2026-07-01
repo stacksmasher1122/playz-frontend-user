@@ -24,7 +24,7 @@ class SocialLoginRow extends StatelessWidget {
           children: [
             Expanded(
               child: Divider(
-                color: Colors.white.withOpacity(0.12),
+                color: Colors.white.withValues(alpha: 0.12),
               ),
             ),
             Padding(
@@ -35,13 +35,13 @@ class SocialLoginRow extends StatelessWidget {
                 'or continue with',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                 ),
               ),
             ),
             Expanded(
               child: Divider(
-                color: Colors.white.withOpacity(0.12),
+                color: Colors.white.withValues(alpha: 0.12),
               ),
             ),
           ],
@@ -96,7 +96,7 @@ class _SocialButton extends StatelessWidget {
       label: Text(label, style: const TextStyle(color: AppColors.accent)),
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12),
-        side: BorderSide(color: Colors.white.withOpacity(0.15)),
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );

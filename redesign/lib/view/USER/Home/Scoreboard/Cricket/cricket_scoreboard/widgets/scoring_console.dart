@@ -24,7 +24,7 @@ class ScoringConsole extends StatelessWidget {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.4),
+            color: Colors.black.withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -47,7 +47,7 @@ class ScoringConsole extends StatelessWidget {
                 _actionButton(
                   'WICKET',
                   Icons.close_rounded,
-                  AppColors.error.withOpacity(0.2),
+                  AppColors.error.withValues(alpha: 0.2),
                   onWicket,
                   textColor: AppColors.error,
                 ),
@@ -55,7 +55,7 @@ class ScoringConsole extends StatelessWidget {
                 _actionButton(
                   'EXTRAS',
                   Icons.add_circle_outline_rounded,
-                  Colors.amber.withOpacity(0.2),
+                  Colors.amber.withValues(alpha: 0.2),
                   onExtras,
                   textColor: Colors.amber,
                 ),
@@ -123,7 +123,7 @@ class ScoringConsole extends StatelessWidget {
           boxShadow: isBound
               ? [
                   BoxShadow(
-                    color: AppColors.accent.withOpacity(0.3),
+                    color: AppColors.accent.withValues(alpha: 0.3),
                     blurRadius: 10,
                     spreadRadius: 1,
                   ),

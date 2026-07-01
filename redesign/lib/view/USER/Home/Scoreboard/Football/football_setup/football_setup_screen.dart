@@ -57,18 +57,18 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   bool _fManualControl = false;
 
   // Schedule
-  DateTime _fDate = DateTime.now();
-  TimeOfDay _fTime = const TimeOfDay(hour: 20, minute: 00);
+  final DateTime _fDate = DateTime.now();
+  final TimeOfDay _fTime = const TimeOfDay(hour: 20, minute: 00);
 
-  List<Team> _fTeams = [
+  final List<Team> _fTeams = [
     Team(name: 'Home FC', color: Colors.blueAccent, players: []),
     Team(name: 'Away United', color: Colors.redAccent, players: []),
   ];
 
   // ─── TOURNAMENT STATE ───
-  String _tName = "Champions Cup 2026";
-  String _tRegion = "International";
-  String _tSeason = "2026/27";
+  final String _tName = "Champions Cup 2026";
+  final String _tRegion = "International";
+  final String _tSeason = "2026/27";
   int _tTeamCount = 8;
   List<Team> _tTeams = [];
 
@@ -88,7 +88,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   bool _lRelegation = true;
   int _lRelegationSpots = 3;
   int _lSquadSize = 25;
-  String _lFormation = "4-3-3 Holding";
+  final String _lFormation = "4-3-3 Holding";
   bool _lDoubleRound = true;
 
   // Hybrid Settings
@@ -98,7 +98,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   // Engines Data
   List<MatchFixture> _knockoutBracket = [];
   List<MatchFixture> _leagueFixtures = [];
-  Map<String, List<Team>> _hybridGroups = {};
+  final Map<String, List<Team>> _hybridGroups = {};
 
   // UI STATE
   bool _isGenerating = false;
@@ -274,8 +274,9 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
       if (!_isGenerating &&
           (_knockoutBracket.isNotEmpty ||
               _leagueFixtures.isNotEmpty ||
-              _hybridGroups.isNotEmpty))
+              _hybridGroups.isNotEmpty)) {
         progress += 0.6;
+      }
     }
     return SetupQualityIndicator(progress: progress);
   }
@@ -716,10 +717,10 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: valid ? kAccentDim.withOpacity(0.1) : kSurfaceHighlight,
+          color: valid ? kAccentDim.withValues(alpha: 0.1) : kSurfaceHighlight,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: valid ? kSuccess : kWarning.withOpacity(0.3),
+            color: valid ? kSuccess : kWarning.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -729,7 +730,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
               _fTeams.every((t) => t.hasMinPlayers),
             ),
             _buildCheckItem(
-              "Format configured (${_fPlayersPerSide}v${_fPlayersPerSide})",
+              "Format configured (${_fPlayersPerSide}v$_fPlayersPerSide)",
               true,
             ),
             _buildCheckItem("Rules set", true),

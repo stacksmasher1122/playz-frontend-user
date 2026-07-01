@@ -12,7 +12,7 @@ class PremiumBanner extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         gradient: LinearGradient(
-          colors: [const Color(0xFF1E1E1E), const Color(0xFF1E1E1E).withOpacity(0.5)],
+          colors: [const Color(0xFF1E1E1E), const Color(0xFF1E1E1E).withValues(alpha: 0.5)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

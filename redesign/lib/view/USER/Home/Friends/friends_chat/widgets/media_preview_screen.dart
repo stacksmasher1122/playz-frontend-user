@@ -74,7 +74,7 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
           ),
           // Bottom bar with send button
           Container(
-            color: Colors.black.withOpacity(0.8),
+            color: Colors.black.withValues(alpha: 0.8),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: SafeArea(
               top: false,

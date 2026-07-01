@@ -73,7 +73,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: kGreen.withOpacity(0.6),
+                              color: kGreen.withValues(alpha: 0.6),
                               blurRadius: 30,
                               spreadRadius: 2,
                             ),

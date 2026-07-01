@@ -52,7 +52,7 @@ class StatusRow extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: kAmber.withOpacity(0.15),
+                    color: kAmber.withValues(alpha: 0.15),
                     borderRadius:
                         BorderRadius.circular(20),
                   ),

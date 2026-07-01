@@ -67,7 +67,7 @@ class GroupMessageBubble extends StatelessWidget {
                           ? msg.senderName
                           : msg.senderEmail,
                       style: TextStyle(
-                        color: _kGreen.withOpacity(0.9),
+                        color: _kGreen.withValues(alpha: 0.9),
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
                       ),
@@ -86,8 +86,8 @@ class GroupMessageBubble extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isMe
-                      ? _kGreen.withOpacity(0.15)
-                      : _kSurface.withOpacity(0.6),
+                      ? _kGreen.withValues(alpha: 0.15)
+                      : _kSurface.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(12),
                   border: Border(left: BorderSide(color: _kGreen, width: 3)),
                 ),
@@ -162,7 +162,7 @@ class GroupMessageBubble extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: isFlagged
-                ? Colors.redAccent.withOpacity(0.2)
+                ? Colors.redAccent.withValues(alpha: 0.2)
                 : (isMe ? _kGreen : _kSurface),
             borderRadius: BorderRadius.circular(20).copyWith(
               bottomRight: isMe

@@ -100,8 +100,8 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.black.withOpacity(0.65),
-                                Colors.black.withOpacity(0.35),
+                                Colors.black.withValues(alpha: 0.65),
+                                Colors.black.withValues(alpha: 0.35),
                               ],
                             ),
                           ),
@@ -120,7 +120,7 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
                                   vertical: (w * 0.014).clamp(4.0, 8.0),
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.muted.withOpacity(0.5),
+                                  color: AppColors.muted.withValues(alpha: 0.5),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(

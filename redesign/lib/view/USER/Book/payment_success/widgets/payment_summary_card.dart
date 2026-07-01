@@ -42,7 +42,7 @@ class PaymentSummaryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: _kYellow.withOpacity(0.15),
+                  color: _kYellow.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text('+10 ZC', style: TextStyle(color: _kYellow)),

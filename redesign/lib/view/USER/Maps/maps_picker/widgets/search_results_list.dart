@@ -24,12 +24,12 @@ class MapPickerSearchResults extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         constraints: const BoxConstraints(maxHeight: 250),
         decoration: BoxDecoration(
-          color: kCard.withOpacity(0.97),
+          color: kCard.withValues(alpha: 0.97),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.white10),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -42,7 +42,7 @@ class MapPickerSearchResults extends StatelessWidget {
             padding: EdgeInsets.zero,
             itemCount: mapsCtrl.searchResults.length,
             separatorBuilder: (_, __) =>
-                Divider(height: 1, color: Colors.white.withOpacity(0.05)),
+                Divider(height: 1, color: Colors.white.withValues(alpha: 0.05)),
             itemBuilder: (_, i) {
               final result = mapsCtrl.searchResults[i];
               return ListTile(

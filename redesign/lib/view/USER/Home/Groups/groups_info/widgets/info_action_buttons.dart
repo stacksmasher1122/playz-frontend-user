@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:redesign/theme/app_colors.dart';
 
 const _kSurface = Color(0xFF222222);
 const _kMuted = Colors.white54;
@@ -26,7 +25,7 @@ class InfoActionButtons extends StatelessWidget {
         width: 80,
         height: 80,
         decoration: BoxDecoration(
-          color: _kSurface.withOpacity(0.6),
+          color: _kSurface.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(

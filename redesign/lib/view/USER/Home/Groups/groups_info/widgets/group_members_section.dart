@@ -39,7 +39,7 @@ class GroupMembersSection extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: _kSurface.withOpacity(0.6),
+        color: _kSurface.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(16),
       ),
       padding: const EdgeInsets.all(16),

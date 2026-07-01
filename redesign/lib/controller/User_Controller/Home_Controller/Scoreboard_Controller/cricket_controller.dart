@@ -296,10 +296,12 @@ class CricketController extends GetxController {
     }
 
     if (ball.extraType != null) {
-      if (ball.extraType == ExtraType.wide)
+      if (ball.extraType == ExtraType.wide) {
         return '$b to $s, WIDE ball. Pressure on the bowler.';
-      if (ball.extraType == ExtraType.noBall)
+      }
+      if (ball.extraType == ExtraType.noBall) {
         return '$b to $s, NO BALL! Free hit coming up.';
+      }
       return '$b to $s, ${ball.extraRuns} ${ball.extraType!.name}(s).';
     }
 

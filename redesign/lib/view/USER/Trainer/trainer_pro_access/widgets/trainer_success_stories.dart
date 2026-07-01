@@ -119,7 +119,7 @@ class StoryCard extends StatelessWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: kGreen.withOpacity(0.15),
+                              color: kGreen.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Text(

@@ -71,7 +71,7 @@ class LoginForm extends StatelessWidget {
                   activeColor: kSpotifyGreen,
                   checkColor: Colors.black,
                   side: BorderSide(
-                    color: Colors.white.withOpacity(0.25),
+                    color: Colors.white.withValues(alpha: 0.25),
                   ),
                   onChanged: onRememberMeChanged,
                 ),
@@ -115,7 +115,7 @@ class LoginForm extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: kSpotifyGreen,
                 disabledBackgroundColor: kSpotifyGreen
-                    .withOpacity(0.5),
+                    .withValues(alpha: 0.5),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(28),
@@ -188,9 +188,9 @@ class _InputField extends StatelessWidget {
       validator: validator,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.white.withOpacity(0.7)),
+        prefixIcon: Icon(icon, color: Colors.white.withValues(alpha: 0.7)),
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
+        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.4)),
         filled: true,
         fillColor: fillColor,
         border: OutlineInputBorder(

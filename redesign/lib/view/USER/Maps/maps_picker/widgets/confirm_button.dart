@@ -28,12 +28,12 @@ class ConfirmButton extends StatelessWidget {
           height: 55,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: canConfirm ? kSpotifyGreen : kSpotifyGreen.withOpacity(0.3),
+            color: canConfirm ? kSpotifyGreen : kSpotifyGreen.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(30),
             boxShadow: canConfirm
                 ? [
                     BoxShadow(
-                      color: kSpotifyGreen.withOpacity(0.4),
+                      color: kSpotifyGreen.withValues(alpha: 0.4),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),

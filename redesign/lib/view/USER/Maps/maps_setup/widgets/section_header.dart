@@ -19,7 +19,7 @@ class SectionHeader extends StatelessWidget {
         child: Text(
           title,
           style: TextStyle(
-            color: kMuted.withOpacity(0.5),
+            color: kMuted.withValues(alpha: 0.5),
             fontSize: 10,
             letterSpacing: 1.5,
             fontWeight: FontWeight.w800,

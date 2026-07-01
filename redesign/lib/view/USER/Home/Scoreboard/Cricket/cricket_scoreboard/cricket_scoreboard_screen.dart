@@ -56,7 +56,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
     controller = Get.find<CricketController>();
   }
 
-  String get oversDisplay => '$overs.${balls}';
+  String get oversDisplay => '$overs.$balls';
   double get currentRunRate =>
       overs > 0 || balls > 0 ? totalRuns / (overs + balls / 6) : 0;
   double get requiredRunRate {
@@ -80,20 +80,23 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
 
   // Scoring Logic
   void _addRuns(int runs) {
-    if (matchStatus != 'LIVE_INNINGS_1' && matchStatus != 'LIVE_INNINGS_2')
+    if (matchStatus != 'LIVE_INNINGS_1' && matchStatus != 'LIVE_INNINGS_2') {
       return;
+    }
     int prevOvers = overs;
     controller.addRuns(runs);
     if (overs > prevOvers &&
-        (matchStatus == 'LIVE_INNINGS_1' || matchStatus == 'LIVE_INNINGS_2'))
+        (matchStatus == 'LIVE_INNINGS_1' || matchStatus == 'LIVE_INNINGS_2')) {
       _showBowlerChangeDialog();
+    }
     if (matchStatus == 'INNINGS_BREAK') _showInningsBreakDialog();
     if (matchStatus == 'MATCH_COMPLETED') _endMatch();
   }
 
   void _retireBatter(Player p, bool isHurt) {
-    if (matchStatus != 'LIVE_INNINGS_1' && matchStatus != 'LIVE_INNINGS_2')
+    if (matchStatus != 'LIVE_INNINGS_1' && matchStatus != 'LIVE_INNINGS_2') {
       return;
+    }
     final status = isHurt ? PlayerStatus.retiredHurt : PlayerStatus.retiredOut;
     final updatedBat = s.battingTeam
         .map((b) => b.name == p.name ? b.copyWith(status: status) : b)
@@ -112,13 +115,15 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
   }
 
   void _addExtra(ExtraType type, int additionalRuns) {
-    if (matchStatus != 'LIVE_INNINGS_1' && matchStatus != 'LIVE_INNINGS_2')
+    if (matchStatus != 'LIVE_INNINGS_1' && matchStatus != 'LIVE_INNINGS_2') {
       return;
+    }
     int prevOvers = overs;
     controller.addExtra(type, additionalRuns);
     if (overs > prevOvers &&
-        (matchStatus == 'LIVE_INNINGS_1' || matchStatus == 'LIVE_INNINGS_2'))
+        (matchStatus == 'LIVE_INNINGS_1' || matchStatus == 'LIVE_INNINGS_2')) {
       _showBowlerChangeDialog();
+    }
     if (matchStatus == 'INNINGS_BREAK') _showInningsBreakDialog();
     if (matchStatus == 'MATCH_COMPLETED') _endMatch();
   }
@@ -131,8 +136,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
     String? outPlayer = 'striker',
     bool crossed = false,
   }) {
-    if (matchStatus != 'LIVE_INNINGS_1' && matchStatus != 'LIVE_INNINGS_2')
+    if (matchStatus != 'LIVE_INNINGS_1' && matchStatus != 'LIVE_INNINGS_2') {
       return;
+    }
     int prevOvers = overs;
     controller.addWicket(
       type,
@@ -143,8 +149,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       crossed: crossed,
     );
     if (overs > prevOvers &&
-        (matchStatus == 'LIVE_INNINGS_1' || matchStatus == 'LIVE_INNINGS_2'))
+        (matchStatus == 'LIVE_INNINGS_1' || matchStatus == 'LIVE_INNINGS_2')) {
       _showBowlerChangeDialog();
+    }
     if (matchStatus == 'INNINGS_BREAK') _showInningsBreakDialog();
     if (matchStatus == 'MATCH_COMPLETED') _endMatch();
   }
@@ -334,7 +341,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
               Get.snackbar(
                 'Third Umpire',
                 'Checking for UltraEdge and Ball Tracking...',
-                backgroundColor: AppColors.surface.withOpacity(0.8),
+                backgroundColor: AppColors.surface.withValues(alpha: 0.8),
                 colorText: Colors.white,
                 snackPosition: SnackPosition.TOP,
               );
@@ -373,7 +380,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
         Get.snackbar(
           'Match Paused',
           'Match interrupted by $label',
-          backgroundColor: color.withOpacity(0.2),
+          backgroundColor: color.withValues(alpha: 0.2),
           colorText: color,
         );
       },

@@ -27,7 +27,7 @@ class RegisterHeader extends StatelessWidget {
           'Join the PlayZ sports community',
           style: TextStyle(
             fontSize: 14,
-            color: Colors.white.withOpacity(0.65),
+            color: Colors.white.withValues(alpha: 0.65),
           ),
         ),
       ],

@@ -42,7 +42,7 @@ class VenueTitleSection extends StatelessWidget {
                         horizontal: 12,
                         vertical: 6,
                       ),
-                      backgroundColor: AppColors.accent.withOpacity(0.15),
+                      backgroundColor: AppColors.accent.withValues(alpha: 0.15),
                       foregroundColor: AppColors.accent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),

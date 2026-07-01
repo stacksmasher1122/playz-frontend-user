@@ -121,7 +121,7 @@ class BookingDropdowns extends StatelessWidget {
                         ? const Icon(Icons.check_circle, color: _kGreen)
                         : null,
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),

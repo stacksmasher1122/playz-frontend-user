@@ -25,7 +25,7 @@ class ProfilePhotoPicker extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: imageFile == null
                     ? Border.all(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         width: 1,
                         style: BorderStyle.none,
                       )
@@ -50,7 +50,7 @@ class ProfilePhotoPicker extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.camera_alt,
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                             ),
                             const SizedBox(height: 4),
                             Text(
@@ -58,7 +58,7 @@ class ProfilePhotoPicker extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 letterSpacing: 1,
                               ),
                             ),

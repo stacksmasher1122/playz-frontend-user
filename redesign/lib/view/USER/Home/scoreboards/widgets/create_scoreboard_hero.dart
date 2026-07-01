@@ -17,7 +17,7 @@ class CreateScoreboardHero extends StatelessWidget {
         decoration: BoxDecoration(
           color: kSurface,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
         child: Stack(
           children: [
@@ -27,7 +27,7 @@ class CreateScoreboardHero extends StatelessWidget {
               child: Icon(
                 Icons.analytics_outlined,
                 size: 140,
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
               ),
             ),
             Column(
@@ -46,7 +46,7 @@ class CreateScoreboardHero extends StatelessWidget {
                 Text(
                   'Track scores for friendly matches, practice games, or local tournaments.',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 14,
                     height: 1.4,
                   ),

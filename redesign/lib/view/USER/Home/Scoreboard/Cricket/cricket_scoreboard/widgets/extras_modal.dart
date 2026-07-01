@@ -44,7 +44,7 @@ class _ExtrasModalState extends State<ExtrasModal> {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: sel ? AppColors.warning.withOpacity(0.2) : Colors.white10,
+                    color: sel ? AppColors.warning.withValues(alpha: 0.2) : Colors.white10,
                     borderRadius: BorderRadius.circular(12),
                     border: sel ? Border.all(color: AppColors.warning) : null,
                   ),
@@ -75,7 +75,7 @@ class _ExtrasModalState extends State<ExtrasModal> {
                   height: 48,
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
-                    color: sel ? AppColors.accent.withOpacity(0.2) : Colors.white10,
+                    color: sel ? AppColors.accent.withValues(alpha: 0.2) : Colors.white10,
                     borderRadius: BorderRadius.circular(12),
                     border: sel ? Border.all(color: AppColors.accent) : null,
                   ),

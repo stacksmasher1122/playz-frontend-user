@@ -75,19 +75,19 @@ class UploadCertificateCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: kCard,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.08)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
             Icon(Icons.cloud_upload_outlined, color: kGreen, size: 32),
             SizedBox(height: 10),
-            const Text(
+            Text(
               'Upload Certificate',
               style: TextStyle(color: kGreen, fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 4),
-            const Text(
+            Text(
               'PDF or JPG (Max 5MB)',
               style: TextStyle(color: kMuted, fontSize: 12),
             ),
@@ -123,7 +123,7 @@ class UploadedCertificateTile extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.08),
+              color: Colors.white.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(

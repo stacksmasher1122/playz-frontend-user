@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../bookings_screen.dart';
 
 class BookingsHeader extends StatelessWidget {
-  const BookingsHeader();
+  const BookingsHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

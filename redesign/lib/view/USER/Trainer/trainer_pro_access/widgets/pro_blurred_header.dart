@@ -15,7 +15,7 @@ class ProBlurredHeader extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
         child: Container(
           padding: EdgeInsets.fromLTRB(16, topInset + 12, 16, 16),
-          decoration: BoxDecoration(color: Colors.black.withOpacity(0.6)),
+          decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.6)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,

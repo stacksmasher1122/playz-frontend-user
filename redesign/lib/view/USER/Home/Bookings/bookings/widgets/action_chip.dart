@@ -17,12 +17,12 @@ class ActionChipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final borderColor = outlined
-        ? Colors.white.withOpacity(0.35)
+        ? Colors.white.withValues(alpha: 0.35)
         : Colors.transparent;
 
     final backgroundColor = outlined
         ? Colors.transparent
-        : Colors.white.withOpacity(0.08);
+        : Colors.white.withValues(alpha: 0.08);
 
     final contentColor = Colors.white;
 

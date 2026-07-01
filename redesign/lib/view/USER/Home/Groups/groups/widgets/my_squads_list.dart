@@ -47,7 +47,7 @@ class MySquadsList extends StatelessWidget {
                 child: Column(
                   children: [
                     Icon(Icons.group_outlined,
-                        color: Colors.white.withOpacity(0.2), size: 48),
+                        color: Colors.white.withValues(alpha: 0.2), size: 48),
                     const SizedBox(height: 12),
                     const Text(
                       'No groups yet',
@@ -61,7 +61,7 @@ class MySquadsList extends StatelessWidget {
                     Text(
                       'Create a group or join one to get started!',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.4),
+                        color: Colors.white.withValues(alpha: 0.4),
                         fontSize: 13,
                       ),
                     ),

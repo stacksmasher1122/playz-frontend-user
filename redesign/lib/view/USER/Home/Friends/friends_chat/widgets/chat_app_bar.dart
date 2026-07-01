@@ -24,7 +24,7 @@ class ChatAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black.withOpacity(0.8),
+      color: Colors.black.withValues(alpha: 0.8),
       padding: const EdgeInsets.fromLTRB(8, 12, 16, 12),
       child: Row(
         children: [

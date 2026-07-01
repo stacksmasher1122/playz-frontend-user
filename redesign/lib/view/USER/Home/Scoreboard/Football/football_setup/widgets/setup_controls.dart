@@ -89,7 +89,7 @@ class SetupSwitch extends StatelessWidget {
         style: const TextStyle(color: kTextSecondary, fontSize: 14),
       ),
       value: value,
-      activeColor: kAccent,
+      activeThumbColor: kAccent,
       contentPadding: EdgeInsets.zero,
       dense: true,
       onChanged: onChanged,
@@ -163,7 +163,7 @@ class SegmentedControl extends StatelessWidget {
                   color: isSelected ? kSurfaceHighlight : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                   border: isSelected
-                      ? Border.all(color: kAccent.withOpacity(0.5))
+                      ? Border.all(color: kAccent.withValues(alpha: 0.5))
                       : null,
                 ),
                 alignment: Alignment.center,

@@ -50,7 +50,7 @@ class TrainerInputField extends StatelessWidget {
         labelText: label,
         hintText: hint,
         labelStyle: const TextStyle(color: kMuted),
-        hintStyle: TextStyle(color: kMuted.withOpacity(0.6)),
+        hintStyle: TextStyle(color: kMuted.withValues(alpha: 0.6)),
         filled: true,
         fillColor: kCard,
         contentPadding: const EdgeInsets.symmetric(
@@ -128,7 +128,7 @@ class TrainerDropdownField extends StatelessWidget {
     final safeValue = items.contains(value) ? value : null;
 
     return DropdownButtonFormField<String>(
-      value: safeValue,
+      initialValue: safeValue,
       onChanged: onChanged,
       isExpanded: true,
       icon: const Icon(Icons.expand_more_rounded, color: kMuted),
@@ -150,7 +150,7 @@ class TrainerDropdownField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.08)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),

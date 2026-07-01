@@ -28,7 +28,7 @@ class RewardsCard extends StatelessWidget {
               /// Soft Spotify glow
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accent.withOpacity(0.25),
+                  color: AppColors.accent.withValues(alpha: 0.25),
                   blurRadius: 10,
                   offset: const Offset(0, 0),
                 ),
@@ -38,11 +38,11 @@ class RewardsCard extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [AppColors.surface, AppColors.accent.withOpacity(0.12)],
+                colors: [AppColors.surface, AppColors.accent.withValues(alpha: 0.12)],
               ),
 
               /// Thin border for contrast
-              border: Border.all(color: Colors.white.withOpacity(0.06)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
             ),
             child: Row(
               children: [
@@ -52,7 +52,7 @@ class RewardsCard extends StatelessWidget {
                   width: 42,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.accent.withOpacity(0.15),
+                    color: AppColors.accent.withValues(alpha: 0.15),
                   ),
                   child: const Icon(
                     Icons.card_giftcard,
@@ -96,7 +96,7 @@ class RewardsCard extends StatelessWidget {
                   width: 32,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.08),
+                    color: Colors.white.withValues(alpha: 0.08),
                   ),
                   child: const Icon(
                     Icons.chevron_right,

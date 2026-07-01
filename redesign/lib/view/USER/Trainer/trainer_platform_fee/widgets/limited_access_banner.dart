@@ -14,12 +14,12 @@ class LimitedAccessBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         gradient: LinearGradient(
           colors: [
-            kAmber.withOpacity(0.25),
+            kAmber.withValues(alpha: 0.25),
             Colors.black,
           ],
         ),
         border: Border.all(
-          color: kAmber.withOpacity(0.4),
+          color: kAmber.withValues(alpha: 0.4),
         ),
       ),
       child: Row(

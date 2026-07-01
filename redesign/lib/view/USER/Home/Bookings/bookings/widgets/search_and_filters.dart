@@ -3,7 +3,7 @@ import '../bookings_screen.dart';
 import 'filter_chip.dart';
 
 class BookingsSearchAndFilters extends StatelessWidget {
-  const BookingsSearchAndFilters();
+  const BookingsSearchAndFilters({super.key});
 
   @override
   Widget build(BuildContext context) {

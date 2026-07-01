@@ -13,7 +13,7 @@ class ZCoinsCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [AppColors.surface, AppColors.surface.withOpacity(0.6)],
+            colors: [AppColors.surface, AppColors.surface.withValues(alpha: 0.6)],
           ),
           borderRadius: BorderRadius.circular(16),
         ),

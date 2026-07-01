@@ -149,7 +149,7 @@ class _MatchCard extends StatelessWidget {
                 // Future improvement: View full scorecard
               },
               style: TextButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.05),
+                backgroundColor: Colors.white.withValues(alpha: 0.05),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               child: const Text('View Scorecard', style: TextStyle(color: Colors.white70)),

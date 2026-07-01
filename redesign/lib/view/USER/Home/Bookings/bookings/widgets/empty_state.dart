@@ -4,7 +4,7 @@ class BookingsEmptyState extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const BookingsEmptyState({required this.icon, required this.text});
+  const BookingsEmptyState({super.key, required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {

@@ -22,7 +22,7 @@ class CreateGroupSubmitButton extends StatelessWidget {
           onPressed: creating ? null : onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: kGreen,
-            disabledBackgroundColor: kGreen.withOpacity(0.4),
+            disabledBackgroundColor: kGreen.withValues(alpha: 0.4),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),

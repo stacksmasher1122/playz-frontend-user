@@ -50,7 +50,7 @@ class SoloQueueOptions extends StatelessWidget {
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: soloQueue,
-              activeColor: _kGreen,
+              activeThumbColor: _kGreen,
               title: const Text(
                 'Solo Queue Mode',
                 style: TextStyle(
@@ -128,7 +128,7 @@ class SoloQueueOptions extends StatelessWidget {
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
           value: splitAndPay,
-          activeColor: _kGreen,
+          activeThumbColor: _kGreen,
           title: const Text(
             'Split & Pay',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
@@ -177,7 +177,7 @@ class SoloQueueOptions extends StatelessWidget {
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
           value: bringOwnEquipment,
-          activeColor: _kGreen,
+          activeThumbColor: _kGreen,
           title: const Text(
             'Bring Your Own Equipment',
             style: TextStyle(color: Colors.white),

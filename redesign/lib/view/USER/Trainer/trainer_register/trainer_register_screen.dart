@@ -30,7 +30,7 @@ class TrainerJoinScreen extends StatefulWidget {
 class _TrainerJoinScreenState extends State<TrainerJoinScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _gender;
-  bool _isValid = true;
+  final bool _isValid = true;
 
   @override
   Widget build(BuildContext context) {

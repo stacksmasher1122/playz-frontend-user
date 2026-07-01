@@ -22,7 +22,7 @@ class StickyCtaButton extends StatelessWidget {
         color: kBg,
         boxShadow: [
           BoxShadow(
-            color: kAccent.withOpacity(0.05),
+            color: kAccent.withValues(alpha: 0.05),
             blurRadius: 32,
             offset: const Offset(0, -10),
           ),

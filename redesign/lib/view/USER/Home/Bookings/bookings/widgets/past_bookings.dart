@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'completed_booking_card.dart';
 
 class PastBookingsWidget extends StatelessWidget {
-  const PastBookingsWidget();
+  const PastBookingsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

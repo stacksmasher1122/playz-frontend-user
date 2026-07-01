@@ -6,7 +6,7 @@ class QrDangerAction extends StatelessWidget {
   final VoidCallback? onTap;
 
   const QrDangerAction(
-    this.label, {
+    this.label, {super.key, 
     this.onTap,
   });
 
@@ -23,7 +23,7 @@ class QrDangerAction extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: QrBookingConstants.red.withOpacity(0.4),
+              color: QrBookingConstants.red.withValues(alpha: 0.4),
             ),
           ),
           child: Text(

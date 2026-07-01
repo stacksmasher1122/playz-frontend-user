@@ -23,8 +23,8 @@ class _BadmintonCreateMatchScreenState extends State<BadmintonCreateMatchScreen>
   String _selectedCategory = "MEN'S SINGLES";
   String _seriesFormat = "Best of 3";
   bool _winBy2 = true;
-  int _pointsPerGame = 21;
-  int _maxPointCap = 30;
+  final int _pointsPerGame = 21;
+  final int _maxPointCap = 30;
 
   @override
   Widget build(BuildContext context) {

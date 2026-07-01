@@ -49,7 +49,7 @@ class _InteractiveSearchBarState extends State<InteractiveSearchBar> {
         boxShadow: _isFocused
             ? [
                 BoxShadow(
-                  color: kSpotifyGreen.withOpacity(0.15),
+                  color: kSpotifyGreen.withValues(alpha: 0.15),
                   blurRadius: 10,
                   spreadRadius: 1,
                 ),

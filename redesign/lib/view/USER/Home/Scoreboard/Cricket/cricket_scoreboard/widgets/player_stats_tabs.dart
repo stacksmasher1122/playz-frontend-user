@@ -129,9 +129,9 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isStriker ? AppColors.accent.withOpacity(0.1) : Colors.transparent,
+        color: isStriker ? AppColors.accent.withValues(alpha: 0.1) : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
-        border: isStriker ? Border.all(color: AppColors.accent.withOpacity(0.3)) : null,
+        border: isStriker ? Border.all(color: AppColors.accent.withValues(alpha: 0.3)) : null,
       ),
       child: Row(
         children: [
@@ -215,7 +215,7 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isCurrent ? AppColors.accent.withOpacity(0.1) : Colors.transparent,
+        color: isCurrent ? AppColors.accent.withValues(alpha: 0.1) : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -309,7 +309,7 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: ball.displayColor.withOpacity(0.1),
+                  color: ball.displayColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,

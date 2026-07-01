@@ -54,7 +54,7 @@ class AvailabilityTimeline extends StatelessWidget {
               Row(
                 children: [
                   _TimeLabel(slots.first.start),
-                  ...slots.map((s) => _TimeLabel(s.end)).toList(),
+                  ...slots.map((s) => _TimeLabel(s.end)),
                 ],
               ),
 

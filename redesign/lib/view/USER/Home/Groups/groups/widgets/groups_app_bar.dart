@@ -17,7 +17,7 @@ class GroupsAppBar extends StatelessWidget {
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withValues(alpha: 0.7),
               border: const Border(
                 bottom: BorderSide(color: Colors.white12),
               ),

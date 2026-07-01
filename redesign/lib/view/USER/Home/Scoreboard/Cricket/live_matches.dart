@@ -76,10 +76,10 @@ class _LiveMatchCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: kSurface,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: kRed.withOpacity(0.2)),
+        border: Border.all(color: kRed.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: kRed.withOpacity(0.05),
+            color: kRed.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -94,7 +94,7 @@ class _LiveMatchCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: kRed.withOpacity(0.1),
+                  color: kRed.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(

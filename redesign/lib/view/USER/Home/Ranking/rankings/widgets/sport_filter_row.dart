@@ -30,7 +30,7 @@ class SportFilterRow extends StatelessWidget {
           return ChoiceChip(
             selected: active,
             label: Text(sports[i]),
-            selectedColor: kGreen.withOpacity(0.2),
+            selectedColor: kGreen.withValues(alpha: 0.2),
             backgroundColor: kSurface,
             labelStyle: TextStyle(
               color: active ? kGreen : Colors.white,

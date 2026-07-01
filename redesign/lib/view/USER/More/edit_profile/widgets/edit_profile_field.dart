@@ -59,16 +59,16 @@ class EditProfileField extends StatelessWidget {
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.05)),
+              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.05)),
+              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                color: kEditProfileGreen.withOpacity(0.5),
+                color: kEditProfileGreen.withValues(alpha: 0.5),
               ),
             ),
           ),

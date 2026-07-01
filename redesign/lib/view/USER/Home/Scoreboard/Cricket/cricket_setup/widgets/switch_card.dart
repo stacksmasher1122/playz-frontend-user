@@ -69,7 +69,7 @@ class SwitchCard extends StatelessWidget {
             () => Switch(
               value: valueStream.value,
               onChanged: onChanged,
-              activeColor: Colors.white,
+              activeThumbColor: Colors.white,
               activeTrackColor: kGreen,
               inactiveThumbColor: kMutedText,
               inactiveTrackColor: const Color(0xFF2C2C2C),

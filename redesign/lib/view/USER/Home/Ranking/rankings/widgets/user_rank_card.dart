@@ -108,7 +108,7 @@ class _ProgressBar extends StatelessWidget {
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 6,
-            backgroundColor: Colors.white.withOpacity(0.08),
+            backgroundColor: Colors.white.withValues(alpha: 0.08),
             valueColor: const AlwaysStoppedAnimation(kGreen),
           ),
         ),
@@ -142,7 +142,7 @@ class _TrendRow extends StatelessWidget {
               height: 6,
               width: 6,
               decoration: BoxDecoration(
-                color: up ? kGreen : kMuted.withOpacity(0.4),
+                color: up ? kGreen : kMuted.withValues(alpha: 0.4),
                 shape: BoxShape.circle,
               ),
             );
@@ -175,9 +175,9 @@ class _LeaguePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withOpacity(0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Text(
         label,

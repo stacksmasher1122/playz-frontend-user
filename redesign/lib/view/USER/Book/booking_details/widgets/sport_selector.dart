@@ -57,7 +57,7 @@ class _SportPill extends StatelessWidget {
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
-          color: active ? _kGreen.withOpacity(0.15) : Colors.black,
+          color: active ? _kGreen.withValues(alpha: 0.15) : Colors.black,
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
             color: active ? _kGreen : Colors.grey.shade700,

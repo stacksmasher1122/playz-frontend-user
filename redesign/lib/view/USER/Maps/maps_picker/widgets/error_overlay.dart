@@ -21,7 +21,7 @@ class ErrorOverlay extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xFF2C1010),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.red.withOpacity(0.3)),
+            border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
           ),
           child: Row(
             children: [

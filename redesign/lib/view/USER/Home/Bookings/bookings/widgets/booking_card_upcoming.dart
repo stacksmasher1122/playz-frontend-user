@@ -5,7 +5,7 @@ import 'action_chip.dart';
 import 'status_badge.dart';
 
 class BookingCardUpcoming extends StatelessWidget {
-  const BookingCardUpcoming();
+  const BookingCardUpcoming({super.key});
 
   @override
   Widget build(BuildContext context) {

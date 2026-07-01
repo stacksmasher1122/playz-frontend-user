@@ -857,7 +857,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
           ),
           SwitchListTile(
             value: _enableLets,
-            activeColor: kAccent,
+            activeThumbColor: kAccent,
             onChanged: (v) => setState(() => _enableLets = v),
             title: const Text(
               "Enable Lets",
@@ -866,7 +866,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
           ),
           SwitchListTile(
             value: _enableFaultOverride,
-            activeColor: kAccent,
+            activeThumbColor: kAccent,
             onChanged: (v) => setState(() => _enableFaultOverride = v),
             title: const Text(
               "Enable Fault Override",
@@ -1309,7 +1309,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
   Widget _hybridToggle(String label, bool value, Function(bool) onChanged) {
     return SwitchListTile(
       value: value,
-      activeColor: kAccent,
+      activeThumbColor: kAccent,
       onChanged: onChanged,
       title: Text(label, style: const TextStyle(color: kTextPrimary)),
     );
@@ -1672,7 +1672,7 @@ Widget _leagueToggle(String label) {
   return SwitchListTile(
     value: true,
     onChanged: (_) {},
-    activeColor: kAccent,
+    activeThumbColor: kAccent,
     title: Text(label, style: const TextStyle(color: kTextPrimary)),
   );
 }

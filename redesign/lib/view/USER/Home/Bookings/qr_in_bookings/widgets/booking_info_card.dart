@@ -3,6 +3,8 @@ import 'qr_card.dart';
 import 'qr_info_row.dart';
 
 class BookingInfoCard extends StatelessWidget {
+  const BookingInfoCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return QrCard(

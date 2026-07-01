@@ -47,7 +47,7 @@ class BallTimeline extends StatelessWidget {
                   height: 36,
                   margin: const EdgeInsets.only(right: 6),
                   decoration: BoxDecoration(
-                    color: ball.displayColor.withOpacity(0.2),
+                    color: ball.displayColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   alignment: Alignment.center,

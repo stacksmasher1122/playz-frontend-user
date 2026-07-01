@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:redesign/theme/app_colors.dart';
 
 const kSurface = Color(0xFF0E0E0E);
 const kMuted = Colors.white70;

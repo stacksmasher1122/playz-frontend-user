@@ -3,7 +3,7 @@ import '../football_scoreboard_screen.dart';
 
 class CardWorkflow extends StatefulWidget {
   final MatchEngine engine;
-  const CardWorkflow({required this.engine});
+  const CardWorkflow({super.key, required this.engine});
   @override
   State<CardWorkflow> createState() => _CardWorkflowState();
 }

@@ -23,7 +23,7 @@ class LockedFeaturesCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: kGreen.withOpacity(0.12),
+            color: kGreen.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(14),
           ),
           child: Row(

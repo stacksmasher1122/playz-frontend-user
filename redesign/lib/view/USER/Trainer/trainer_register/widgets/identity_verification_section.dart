@@ -166,7 +166,7 @@ class IDUploadCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: kMuted.withOpacity(0.15)),
+            border: Border.all(color: kMuted.withValues(alpha: 0.15)),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -212,7 +212,7 @@ class SelfieCard extends StatelessWidget {
                 height: 42,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: kGreen.withOpacity(0.15),
+                  color: kGreen.withValues(alpha: 0.15),
                 ),
                 child: const Icon(Icons.camera_alt_outlined, color: kGreen),
               ),

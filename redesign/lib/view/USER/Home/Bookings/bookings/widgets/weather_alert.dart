@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../bookings_screen.dart';
 
 class BookingsWeatherAlert extends StatelessWidget {
-  const BookingsWeatherAlert();
+  const BookingsWeatherAlert({super.key});
 
   @override
   Widget build(BuildContext context) {

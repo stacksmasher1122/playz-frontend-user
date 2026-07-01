@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'cancelled_booking_card.dart';
 
 class CancelledBookingsWidget extends StatelessWidget {
-  const CancelledBookingsWidget();
+  const CancelledBookingsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

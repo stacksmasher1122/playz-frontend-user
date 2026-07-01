@@ -138,7 +138,7 @@ class _SplashScreenState extends State<SplashScreen>
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(28 + v * 26),
                               border: Border.all(
-                                color: AppColors.accent.withOpacity(0.8),
+                                color: AppColors.accent.withValues(alpha: 0.8),
                                 width: 2,
                               ),
                             ),
@@ -158,7 +158,7 @@ class _SplashScreenState extends State<SplashScreen>
                             borderRadius: BorderRadius.circular(22),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.accent.withOpacity(0.6),
+                                color: AppColors.accent.withValues(alpha: 0.6),
                                 blurRadius: 30,
                                 spreadRadius: 4,
                               ),
@@ -183,7 +183,7 @@ class _SplashScreenState extends State<SplashScreen>
                 Text(
                   "LET'S PLAY. LET'S WIN.",
                   style: TextStyle(
-                    color: AppColors.accent.withOpacity(0.9),
+                    color: AppColors.accent.withValues(alpha: 0.9),
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.2,
                   ),
@@ -230,8 +230,8 @@ class _GlassBubble {
             height: size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.accent.withOpacity(0.05),
-              border: Border.all(color: Colors.white.withOpacity(0.08)),
+              color: AppColors.accent.withValues(alpha: 0.05),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
             ),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 90, sigmaY: 90),

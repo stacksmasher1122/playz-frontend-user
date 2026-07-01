@@ -299,7 +299,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     Text(
                       'Allow anyone to see your stats',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                         fontSize: 12,
                       ),
                     ),
@@ -316,10 +316,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         _controller.setUser(UserProfileModel(docId: 'temp', isPublicProfile: value));
                       }
                     },
-                    activeColor: Colors.black,
+                    activeThumbColor: Colors.black,
                     activeTrackColor: const Color(0xFF00FF7F),
                     inactiveThumbColor: Colors.white54,
-                    inactiveTrackColor: Colors.white.withOpacity(0.1),
+                    inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
                   ),
                 ),
               ],

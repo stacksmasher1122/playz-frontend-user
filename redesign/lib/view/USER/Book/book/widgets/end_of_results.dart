@@ -47,7 +47,7 @@ class EndOfResults extends StatelessWidget {
             errorWidget: (_, __, ___) => Icon(
               Icons.sports_soccer,
               size: imageSize * 0.6,
-              color: AppColors.muted.withOpacity(0.6),
+              color: AppColors.muted.withValues(alpha: 0.6),
             ),
           ),
 

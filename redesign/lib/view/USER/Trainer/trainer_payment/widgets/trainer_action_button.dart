@@ -23,8 +23,8 @@ class TrainerActionButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(32),
-        splashColor: kGreen.withOpacity(0.15),
-        highlightColor: kGreen.withOpacity(0.08),
+        splashColor: kGreen.withValues(alpha: 0.15),
+        highlightColor: kGreen.withValues(alpha: 0.08),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -34,7 +34,7 @@ class TrainerActionButton extends StatelessWidget {
             border: Border.all(color: kGreen, width: 1.5),
             boxShadow: [
               BoxShadow(
-                color: kGreen.withOpacity(0.25),
+                color: kGreen.withValues(alpha: 0.25),
                 blurRadius: 12,
                 spreadRadius: -6,
               ),

@@ -78,7 +78,7 @@ class ScoreboardControls extends StatelessWidget {
   ) {
     return Expanded(
       child: Material(
-        color: col.withOpacity(0.15),
+        color: col.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: onTap,

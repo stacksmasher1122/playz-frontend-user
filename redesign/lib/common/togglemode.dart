@@ -49,7 +49,7 @@ class TrainerModePillToggle extends StatelessWidget {
                     borderRadius: BorderRadius.circular(height / 2),
                     boxShadow: [
                       BoxShadow(
-                        color: kSpotifyGreen.withOpacity(0.50),
+                        color: kSpotifyGreen.withValues(alpha: 0.50),
                         blurRadius: 5,
                         offset: const Offset(0, 0),
                       ),

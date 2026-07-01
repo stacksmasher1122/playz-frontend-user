@@ -3,7 +3,7 @@ import '../bookings_screen.dart';
 
 class BookingsTabs extends StatelessWidget {
   final TabController controller;
-  const BookingsTabs({required this.controller});
+  const BookingsTabs({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

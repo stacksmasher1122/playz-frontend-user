@@ -6,7 +6,7 @@ import 'qr_primary_action.dart';
 
 class QrActionSection extends StatelessWidget {
   final BookingStatus status;
-  const QrActionSection({required this.status});
+  const QrActionSection({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {

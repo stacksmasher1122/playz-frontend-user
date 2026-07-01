@@ -1,7 +1,5 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_scoreboard/cricket_scoreboard_screen.dart';
 import 'package:vibration/vibration.dart';
@@ -614,8 +612,9 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
   }
 
   void tossCoinWithVelocity(double velocity) {
-    if (controller.isAnimating || isTossCompleted || callerPrediction == null)
+    if (controller.isAnimating || isTossCompleted || callerPrediction == null) {
       return;
+    }
 
     verticalVelocityRatio = (velocity.abs() / 4000.0).clamp(0.8, 1.4);
     spinCount = 8 + Random().nextInt(7);

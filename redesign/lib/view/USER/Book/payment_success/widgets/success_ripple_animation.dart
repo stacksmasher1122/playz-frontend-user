@@ -27,7 +27,7 @@ class SuccessRippleAnimation extends StatelessWidget {
                 height: 120 * controller.value,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _kGreen.withOpacity(1 - controller.value),
+                  color: _kGreen.withValues(alpha: 1 - controller.value),
                 ),
               );
             },

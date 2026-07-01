@@ -7,7 +7,7 @@ class QrOutlinedAction extends StatelessWidget {
 
   const QrOutlinedAction(
     this.label,
-    this.icon, {
+    this.icon, {super.key, 
     this.onTap,
   });
 
@@ -24,7 +24,7 @@ class QrOutlinedAction extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
             ),
           ),
           child: Row(

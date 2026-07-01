@@ -8,7 +8,7 @@ class QrAmountRow extends StatelessWidget {
 
   const QrAmountRow(
     this.label,
-    this.value, {
+    this.value, {super.key, 
     this.highlight = false,
   });
 

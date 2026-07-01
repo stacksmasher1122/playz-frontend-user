@@ -219,7 +219,7 @@ class _SearchResultTileState extends State<_SearchResultTile> {
                     if (!group.isPublic) ...[
                       const SizedBox(width: 4),
                       Icon(Icons.lock,
-                          color: Colors.white.withOpacity(0.4), size: 12),
+                          color: Colors.white.withValues(alpha: 0.4), size: 12),
                     ],
                   ],
                 ),
@@ -227,7 +227,7 @@ class _SearchResultTileState extends State<_SearchResultTile> {
                 Text(
                   '$memberCount member${memberCount == 1 ? '' : 's'} • ${group.sport}',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                     fontSize: 11,
                   ),
                 ),

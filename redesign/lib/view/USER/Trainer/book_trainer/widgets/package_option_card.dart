@@ -37,7 +37,7 @@ class PackageOptionCard extends StatelessWidget {
               width: 1.6,
             ),
             boxShadow: selected
-                ? [BoxShadow(color: kGreen.withOpacity(0.35), blurRadius: 16)]
+                ? [BoxShadow(color: kGreen.withValues(alpha: 0.35), blurRadius: 16)]
                 : [],
           ),
           child: Column(

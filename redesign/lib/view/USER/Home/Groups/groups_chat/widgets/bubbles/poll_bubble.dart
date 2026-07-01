@@ -60,7 +60,7 @@ class PollBubble extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: _kGreen.withOpacity(0.2),
+                  color: _kGreen.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.poll, color: _kGreen, size: 20),
@@ -118,7 +118,7 @@ class PollBubble extends StatelessWidget {
                         widthFactor: percentage,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: _kGreen.withOpacity(0.8),
+                            color: _kGreen.withValues(alpha: 0.8),
                             borderRadius: BorderRadius.circular(
                               11,
                             ), // slightly smaller to fit inside border
@@ -171,7 +171,7 @@ class PollBubble extends StatelessWidget {
                 ),
               ),
             );
-          }).toList(),
+          }),
 
           const SizedBox(height: 8),
           const Divider(color: Colors.white10),

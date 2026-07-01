@@ -97,7 +97,7 @@ void showPollVotersSheet(
                           style: const TextStyle(color: Colors.white),
                         ),
                       );
-                    }).toList(),
+                    }),
                   ],
                 );
               },

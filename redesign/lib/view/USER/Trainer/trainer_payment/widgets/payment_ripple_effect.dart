@@ -29,7 +29,7 @@ class PaymentRippleEffect extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: kGreen.withOpacity(0.35 * opacity),
+              color: kGreen.withValues(alpha: 0.35 * opacity),
               width: 2.5,
             ),
           ),

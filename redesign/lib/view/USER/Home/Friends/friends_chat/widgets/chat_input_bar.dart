@@ -29,7 +29,7 @@ class ChatInputBar extends StatelessWidget {
     final chatCtrl = Get.find<ChatController>();
 
     return Container(
-      color: Colors.black.withOpacity(0.6),
+      color: Colors.black.withValues(alpha: 0.6),
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: SafeArea(
         top: false,

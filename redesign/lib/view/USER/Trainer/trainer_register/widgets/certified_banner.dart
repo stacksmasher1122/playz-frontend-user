@@ -14,8 +14,8 @@ class CertifiedBanner extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(colors: [kGreen.withOpacity(0.25), kSurface]),
-        border: Border.all(color: kGreen.withOpacity(0.4)),
+        gradient: LinearGradient(colors: [kGreen.withValues(alpha: 0.25), kSurface]),
+        border: Border.all(color: kGreen.withValues(alpha: 0.4)),
       ),
       child: Row(
         children: [
@@ -24,7 +24,7 @@ class CertifiedBanner extends StatelessWidget {
             height: 42,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: kGreen.withOpacity(0.25),
+              color: kGreen.withValues(alpha: 0.25),
             ),
             child: const Icon(Icons.verified, color: kGreen),
           ),

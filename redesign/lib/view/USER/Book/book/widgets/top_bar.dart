@@ -13,7 +13,7 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _controller = Get.find<UserProfileController>();
+    final controller = Get.find<UserProfileController>();
     final width = MediaQuery.of(context).size.width;
 
     return Padding(
@@ -82,7 +82,7 @@ class TopBar extends StatelessWidget {
 
           /// AVATAR
           Obx(() {
-            final profileImageUrl = _controller.profileImageUrl;
+            final profileImageUrl = controller.profileImageUrl;
             return ClipOval(
               child: profileImageUrl.isNotEmpty
                   ? CachedNetworkImage(

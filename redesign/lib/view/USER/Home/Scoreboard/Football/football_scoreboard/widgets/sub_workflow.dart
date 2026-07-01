@@ -3,7 +3,7 @@ import '../football_scoreboard_screen.dart';
 
 class SubWorkflow extends StatelessWidget {
   final MatchEngine engine;
-  const SubWorkflow({required this.engine});
+  const SubWorkflow({super.key, required this.engine});
 
   @override
   Widget build(BuildContext context) {

@@ -10,7 +10,7 @@ class AnnouncementBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: kYellow.withOpacity(0.15),
+        color: kYellow.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(

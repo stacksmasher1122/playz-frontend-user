@@ -58,8 +58,8 @@ class MessageBubble extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isMe
-                      ? kGreen.withOpacity(0.15)
-                      : kSurface.withOpacity(0.6),
+                      ? kGreen.withValues(alpha: 0.15)
+                      : kSurface.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(12),
                   border: const Border(left: BorderSide(color: kGreen, width: 3)),
                 ),
@@ -407,10 +407,10 @@ class _LocationBubbleState extends State<LocationBubble> {
                   ),
                   Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: pinColor.withOpacity(0.2), shape: BoxShape.circle),
+                    decoration: BoxDecoration(color: pinColor.withValues(alpha: 0.2), shape: BoxShape.circle),
                     child: Container(
                       padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(color: pinColor.withOpacity(isCurrentlyLive ? 0.5 : 0.2), shape: BoxShape.circle),
+                      decoration: BoxDecoration(color: pinColor.withValues(alpha: isCurrentlyLive ? 0.5 : 0.2), shape: BoxShape.circle),
                       child: Icon(widget.isLive ? Icons.person_pin_circle : Icons.location_on, color: pinColor, size: 28),
                     ),
                   ),
@@ -520,7 +520,11 @@ class _AudioBubbleState extends State<AudioBubble> with AutomaticKeepAliveClient
       }
       return;
     }
-    if (_isPlaying) _player.pause(); else _player.play();
+    if (_isPlaying) {
+      _player.pause();
+    } else {
+      _player.play();
+    }
   }
   @override
   void dispose() { WidgetsBinding.instance.removeObserver(this); _player.dispose(); super.dispose(); }
@@ -529,7 +533,7 @@ class _AudioBubbleState extends State<AudioBubble> with AutomaticKeepAliveClient
     super.build(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(color: widget.isMe ? kGreen.withOpacity(0.9) : kSurface, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: widget.isMe ? kGreen.withValues(alpha: 0.9) : kSurface, borderRadius: BorderRadius.circular(20)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -574,17 +578,23 @@ class _AnimatedEqualizerState extends State<AnimatedEqualizer> {
   @override
   void didUpdateWidget(covariant AnimatedEqualizer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.isPlaying != oldWidget.isPlaying) { if (widget.isPlaying) _startAnimation(); else _stopAnimation(); }
+    if (widget.isPlaying != oldWidget.isPlaying) { if (widget.isPlaying) {
+      _startAnimation();
+    } else {
+      _stopAnimation();
+    } }
   }
   void _startAnimation() {
     _animTimer?.cancel();
     _animTimer = Timer.periodic(const Duration(milliseconds: 250), (timer) {
-      if (mounted) setState(() {
+      if (mounted) {
+        setState(() {
         _heights = List.generate(7, (index) {
           double baseHeight = index == 3 ? 24.0 : (index == 2 || index == 4) ? 16.0 : 10.0;
           return (baseHeight + math.Random().nextDouble() * 12 - 6).clamp(6.0, 32.0);
         });
       });
+      }
     });
   }
   void _stopAnimation() { _animTimer?.cancel(); if (mounted) setState(() { _heights = [8, 12, 16, 20, 16, 12, 8]; }); }
@@ -727,8 +737,8 @@ class _DynamicImageBubbleState extends State<DynamicImageBubble> {
               imageUrl: widget.imageUrl,
               fit: BoxFit.cover,
               placeholder: (_, __) => Shimmer.fromColors(
-                baseColor: Colors.grey.shade900.withOpacity(0.5),
-                highlightColor: Colors.grey.shade800.withOpacity(0.4),
+                baseColor: Colors.grey.shade900.withValues(alpha: 0.5),
+                highlightColor: Colors.grey.shade800.withValues(alpha: 0.4),
                 child: Container(
                   width: size?.width ?? widget.maxWidth,
                   height: size?.height ?? 200,

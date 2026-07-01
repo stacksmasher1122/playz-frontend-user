@@ -114,7 +114,7 @@ class SelectableChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: selected ? kGreen.withOpacity(0.15) : kCard,
+          color: selected ? kGreen.withValues(alpha: 0.15) : kCard,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: selected ? kGreen : Colors.transparent,
@@ -169,10 +169,10 @@ class PreferenceToggle extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: kGreen,
-            activeTrackColor: kGreen.withOpacity(0.4),
+            activeThumbColor: kGreen,
+            activeTrackColor: kGreen.withValues(alpha: 0.4),
             inactiveThumbColor: Colors.white,
-            inactiveTrackColor: Colors.white.withOpacity(0.2),
+            inactiveTrackColor: Colors.white.withValues(alpha: 0.2),
           ),
         ],
       ),

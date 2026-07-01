@@ -35,8 +35,6 @@ class _UserHomePageState extends State<UserHomePage>
   final _controller = Get.find<UserProfileController>();
   final _eventFestController = Get.find<EventFestController>();
 
-  bool _isTrainer = false;
-
   // Lottie Optimization: Store widget in variable to avoid reload on rebuild
   Widget? _festivalLottieWidget;
   late final AnimationController _lottieController;
@@ -139,15 +137,9 @@ class _UserHomePageState extends State<UserHomePage>
   }
 
   Future<void> _loadUserData() async {
-    final isTrainer = await UserPreferences.getIsTrainer();
     final docId = await UserPreferences.getDocId();
     if (docId != null) {
       _controller.fetchUserProfile(docId);
-    }
-    if (mounted) {
-      setState(() {
-        _isTrainer = isTrainer;
-      });
     }
   }
 

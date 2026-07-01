@@ -100,7 +100,7 @@ class MenuProfileHeader extends StatelessWidget {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(color: Colors.white.withOpacity(0.15)),
+                  side: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
                 ),
               ),
               child: Text(

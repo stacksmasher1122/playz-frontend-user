@@ -15,7 +15,7 @@ class MembershipSummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: kSurface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: kGreen.withOpacity(0.4)),
+        border: Border.all(color: kGreen.withValues(alpha: 0.4)),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(

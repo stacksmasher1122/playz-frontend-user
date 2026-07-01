@@ -22,7 +22,7 @@ class AddMembersTile extends StatelessWidget {
         width: 46,
         height: 46,
         decoration: BoxDecoration(
-          color: _kGreen.withOpacity(0.2),
+          color: _kGreen.withValues(alpha: 0.2),
           shape: BoxShape.circle,
         ),
         child: const Icon(Icons.person_add, color: _kGreen),

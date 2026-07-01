@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -150,7 +149,7 @@ class _LocationSelectSliverScreenState
                       Container(
                         height: 1,
                         margin: const EdgeInsets.symmetric(horizontal: 4),
-                        color: Colors.white.withOpacity(0.05),
+                        color: Colors.white.withValues(alpha: 0.05),
                       ),
 
                       const SizedBox(height: 24),
@@ -230,7 +229,7 @@ class _LocationSelectSliverScreenState
                       child: Text(
                         "No recent locations yet",
                         style: TextStyle(
-                          color: kMuted.withOpacity(0.5),
+                          color: kMuted.withValues(alpha: 0.5),
                           fontSize: 13,
                         ),
                       ),
@@ -296,7 +295,7 @@ class _LocationSelectSliverScreenState
                       child: Text(
                         "No nearby places found",
                         style: TextStyle(
-                          color: kMuted.withOpacity(0.5),
+                          color: kMuted.withValues(alpha: 0.5),
                           fontSize: 13,
                         ),
                       ),

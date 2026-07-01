@@ -15,8 +15,8 @@ class TrainerJoinCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: onTap,
-        splashColor: AppColors.accent.withOpacity(0.15),
-        highlightColor: AppColors.accent.withOpacity(0.08),
+        splashColor: AppColors.accent.withValues(alpha: 0.15),
+        highlightColor: AppColors.accent.withValues(alpha: 0.08),
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -25,17 +25,17 @@ class TrainerJoinCard extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                AppColors.accent.withOpacity(0.18),
+                AppColors.accent.withValues(alpha: 0.18),
                 AppColors.background,
               ],
             ),
             border: Border.all(
-              color: AppColors.accent.withOpacity(0.5),
+              color: AppColors.accent.withValues(alpha: 0.5),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.accent.withOpacity(0.18),
+                color: AppColors.accent.withValues(alpha: 0.18),
                 blurRadius: 5,
                 offset: const Offset(0, 0),
               ),
@@ -49,7 +49,7 @@ class TrainerJoinCard extends StatelessWidget {
                 height: 44,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.accent.withOpacity(0.2),
+                  color: AppColors.accent.withValues(alpha: 0.2),
                 ),
                 child: const Icon(
                   Icons.verified_user_rounded,

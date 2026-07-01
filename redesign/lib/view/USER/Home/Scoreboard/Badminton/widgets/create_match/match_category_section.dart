@@ -77,7 +77,7 @@ class MatchCategorySection extends StatelessWidget {
             width: 1,
           ),
           boxShadow: isSelected
-              ? [BoxShadow(color: AppColors.accent.withOpacity(0.2), blurRadius: 8)]
+              ? [BoxShadow(color: AppColors.accent.withValues(alpha: 0.2), blurRadius: 8)]
               : [],
         ),
         child: Column(

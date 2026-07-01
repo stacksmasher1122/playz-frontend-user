@@ -93,7 +93,7 @@ class HomeQuickTile extends StatelessWidget {
   const HomeQuickTile(
     this.icon,
     this.title,
-    this.subtitle, {
+    this.subtitle, {super.key, 
     this.badge,
     this.highlight = false,
     this.destination,
@@ -119,8 +119,8 @@ class HomeQuickTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: highlight
-                  ? UserHomePage.accent.withOpacity(0.5)
-                  : Colors.white.withOpacity(0.05),
+                  ? UserHomePage.accent.withValues(alpha: 0.5)
+                  : Colors.white.withValues(alpha: 0.05),
               width: 1,
             ),
           ),
@@ -139,7 +139,7 @@ class HomeQuickTile extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: badge == 'Beta' || badge == 'New'
                           ? UserHomePage.accent
-                          : Colors.white.withOpacity(0.1),
+                          : Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
@@ -163,7 +163,7 @@ class HomeQuickTile extends StatelessWidget {
                     height: 44,
                     width: 44,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
+                      color: Colors.white.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(

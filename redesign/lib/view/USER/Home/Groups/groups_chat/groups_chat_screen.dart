@@ -154,7 +154,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                   if (!_ctrl.isRecording.value) return const SizedBox.shrink();
                   return Container(
                     padding: const EdgeInsets.all(10),
-                    color: Colors.red.withOpacity(0.8),
+                    color: Colors.red.withValues(alpha: 0.8),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -356,7 +356,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             hintText: "Edit your message...",
             hintStyle: const TextStyle(color: _kMuted),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: _kGreen.withOpacity(0.5)),
+              borderSide: BorderSide(color: _kGreen.withValues(alpha: 0.5)),
               borderRadius: BorderRadius.circular(12),
             ),
             focusedBorder: OutlineInputBorder(

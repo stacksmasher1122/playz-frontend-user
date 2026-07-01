@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:io';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 
 const kGreen = Color(0xFF6EDC6A);
@@ -25,7 +24,7 @@ class GroupImagePicker extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: kGreen.withOpacity(0.5),
+                    color: kGreen.withValues(alpha: 0.5),
                     width: 1.5,
                   ),
                   color: Colors.transparent,

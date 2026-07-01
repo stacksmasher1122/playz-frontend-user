@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_info_controller.dart';
 
 const _kSurface = Color(0xFF222222);
@@ -32,7 +31,7 @@ class FooterActions extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: _kSurface.withOpacity(0.6),
+          color: _kSurface.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(16),
         ),
         padding: const EdgeInsets.all(16),

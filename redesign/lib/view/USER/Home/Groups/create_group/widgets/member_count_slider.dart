@@ -23,7 +23,7 @@ class MemberCountSlider extends StatelessWidget {
             activeTrackColor: kGreen,
             inactiveTrackColor: kSurface,
             thumbColor: kGreen,
-            overlayColor: kGreen.withOpacity(0.2),
+            overlayColor: kGreen.withValues(alpha: 0.2),
             trackHeight: 4,
           ),
           child: Slider(

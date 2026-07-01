@@ -107,7 +107,7 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: sel ? AppColors.error.withOpacity(0.2) : Colors.white10,
+                  color: sel ? AppColors.error.withValues(alpha: 0.2) : Colors.white10,
                   borderRadius: BorderRadius.circular(12),
                   border: sel ? Border.all(color: AppColors.error) : null,
                 ),
@@ -165,7 +165,7 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: sel ? Colors.blue.withOpacity(0.2) : Colors.white10,
+                  color: sel ? Colors.blue.withValues(alpha: 0.2) : Colors.white10,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -257,8 +257,8 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
               Switch(
                 value: crossed,
                 onChanged: (v) => setState(() => crossed = v),
-                activeTrackColor: AppColors.accent.withOpacity(0.5),
-                activeColor: AppColors.accent,
+                activeTrackColor: AppColors.accent.withValues(alpha: 0.5),
+                activeThumbColor: AppColors.accent,
               ),
             ],
           ),
@@ -275,8 +275,8 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
               Switch(
                 value: newBatterOnStrike,
                 onChanged: (v) => setState(() => newBatterOnStrike = v),
-                activeTrackColor: AppColors.accent.withOpacity(0.5),
-                activeColor: AppColors.accent,
+                activeTrackColor: AppColors.accent.withValues(alpha: 0.5),
+                activeThumbColor: AppColors.accent,
               ),
             ],
           ),

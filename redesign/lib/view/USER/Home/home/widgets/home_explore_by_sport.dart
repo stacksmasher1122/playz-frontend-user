@@ -57,7 +57,7 @@ class HomeExploreBySport extends StatelessWidget {
                             ),
                           ),
 
-                          Container(color: Colors.black.withOpacity(0.25)),
+                          Container(color: Colors.black.withValues(alpha: 0.25)),
 
                           Padding(
                             padding: EdgeInsets.all(padding),

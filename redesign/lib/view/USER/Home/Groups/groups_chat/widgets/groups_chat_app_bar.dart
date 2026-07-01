@@ -35,7 +35,7 @@ class GroupsChatAppBar extends StatelessWidget {
     }
 
     return Container(
-      color: Colors.black.withOpacity(0.8),
+      color: Colors.black.withValues(alpha: 0.8),
       padding: const EdgeInsets.fromLTRB(8, 12, 16, 12),
       child: Row(
         children: [
@@ -120,7 +120,7 @@ class GroupsChatAppBar extends StatelessWidget {
                       boxShadow: hasRequests
                           ? [
                               BoxShadow(
-                                color: _kGreen.withOpacity(0.3),
+                                color: _kGreen.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 spreadRadius: 1,
                               ),

@@ -76,7 +76,7 @@ class _SwipeToReplyState extends State<SwipeToReply>
                 opacity: (_dragOffset / _triggerThreshold).clamp(0.0, 1.0),
                 child: Icon(
                   Icons.reply,
-                  color: kGreen.withOpacity(0.8),
+                  color: kGreen.withValues(alpha: 0.8),
                   size: 24,
                 ),
               ),

@@ -35,7 +35,7 @@ class BenefitRow extends StatelessWidget {
             height: 28,
             width: 28,
             decoration: BoxDecoration(
-              color: kGreen.withOpacity(0.15),
+              color: kGreen.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.check_rounded, size: 16, color: kGreen),

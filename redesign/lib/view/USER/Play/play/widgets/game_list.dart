@@ -235,7 +235,7 @@ class GameCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Divider(color: Colors.white.withOpacity(0.06), height: 1),
+            Divider(color: Colors.white.withValues(alpha: 0.06), height: 1),
             const SizedBox(height: 16),
 
             /// SECTION 4: LOCATION & JOIN BUTTON
@@ -313,7 +313,7 @@ class _Tag extends StatelessWidget {
         text,
         style: GoogleFonts.inter(
           fontSize: 10,
-          color: Colors.white.withOpacity(0.9),
+          color: Colors.white.withValues(alpha: 0.9),
           fontWeight: FontWeight.w800,
           letterSpacing: 0.5,
         ),

@@ -44,7 +44,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black.withOpacity(0.6),
+      color: Colors.black.withValues(alpha: 0.6),
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: SafeArea(
         top: false,
@@ -377,7 +377,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: _kGreen.withOpacity(0.15),
+                color: _kGreen.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: _kGreen, size: 24),
@@ -470,7 +470,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
                     ),
                   ),
                 )
-                .toList(),
+                ,
           ],
         ),
       ),

@@ -5,7 +5,7 @@ class BookingFilterChip extends StatelessWidget {
   final String label;
   final IconData? icon;
 
-  const BookingFilterChip(this.label, {this.icon});
+  const BookingFilterChip(this.label, {super.key, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class BookingFilterChip extends StatelessWidget {
             ),
           ],
         ),
-        shape: StadiumBorder(side: BorderSide(color: MyBookingsConstants.green.withOpacity(0.6))),
+        shape: StadiumBorder(side: BorderSide(color: MyBookingsConstants.green.withValues(alpha: 0.6))),
       ),
     );
   }

@@ -233,10 +233,11 @@ class MatchEngine extends ChangeNotifier {
   // ─── CLOCK ENGINE ───
 
   void toggleTimer() {
-    if (isRunning.value)
+    if (isRunning.value) {
       _stopTimer();
-    else
+    } else {
       _startTimer();
+    }
   }
 
   void _startTimer() {

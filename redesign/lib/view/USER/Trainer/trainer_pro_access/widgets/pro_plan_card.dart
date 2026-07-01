@@ -44,7 +44,7 @@ class ProPlanCard extends StatelessWidget {
           width: 1.4,
         ),
         boxShadow: selected
-            ? [BoxShadow(color: kGreen.withOpacity(0.28), blurRadius: 5)]
+            ? [BoxShadow(color: kGreen.withValues(alpha: 0.28), blurRadius: 5)]
             : [],
       ),
       child: InkWell(

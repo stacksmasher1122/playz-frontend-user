@@ -16,12 +16,12 @@ class ProValueCard extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [kGreen.withOpacity(0.25), Colors.black],
+          colors: [kGreen.withValues(alpha: 0.25), Colors.black],
         ),
-        border: Border.all(color: kGreen.withOpacity(0.25), width: 1),
+        border: Border.all(color: kGreen.withValues(alpha: 0.25), width: 1),
         boxShadow: [
           BoxShadow(
-            color: kGreen.withOpacity(0.15),
+            color: kGreen.withValues(alpha: 0.15),
             blurRadius: 5,
             offset: const Offset(0, 0),
           ),
@@ -40,7 +40,7 @@ class ProValueCard extends StatelessWidget {
                 width: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: kGreen.withOpacity(0.18),
+                  color: kGreen.withValues(alpha: 0.18),
                 ),
                 child: const Icon(
                   Icons.trending_up_rounded,

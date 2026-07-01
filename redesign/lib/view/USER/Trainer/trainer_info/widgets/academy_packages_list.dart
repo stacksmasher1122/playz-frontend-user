@@ -120,7 +120,7 @@ class PackageCard extends StatelessWidget {
           width: 1.4,
         ),
         boxShadow: active
-            ? [BoxShadow(color: kGreen.withOpacity(0.25), blurRadius: 14)]
+            ? [BoxShadow(color: kGreen.withValues(alpha: 0.25), blurRadius: 14)]
             : [],
       ),
       child: Column(

@@ -257,7 +257,7 @@ class SquadListTile extends StatelessWidget {
                                   style: TextStyle(
                                     color: unreadCount > 0
                                         ? Colors.white
-                                        : Colors.white.withOpacity(0.5),
+                                        : Colors.white.withValues(alpha: 0.5),
                                     fontSize: 13,
                                     fontWeight: unreadCount > 0
                                         ? FontWeight.w700
@@ -269,7 +269,7 @@ class SquadListTile extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8),
                                   child: Icon(Icons.lock,
-                                      color: Colors.white.withOpacity(0.3),
+                                      color: Colors.white.withValues(alpha: 0.3),
                                       size: 14),
                                 ),
                             ],

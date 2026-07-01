@@ -50,8 +50,9 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
             widget.battingTeam,
             _selectedStriker,
             (Player p) {
-              if (p.name != _selectedNonStriker?.name)
+              if (p.name != _selectedNonStriker?.name) {
                 setState(() => _selectedStriker = p);
+              }
             },
           ),
           const SizedBox(height: 16),
@@ -60,8 +61,9 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
             widget.battingTeam,
             _selectedNonStriker,
             (Player p) {
-              if (p.name != _selectedStriker?.name)
+              if (p.name != _selectedStriker?.name) {
                 setState(() => _selectedNonStriker = p);
+              }
             },
           ),
           const SizedBox(height: 16),
@@ -118,7 +120,7 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
         Container(
           height: 50,
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.muted.withOpacity(0.3)),
+            border: Border.all(color: AppColors.muted.withValues(alpha: 0.3)),
             borderRadius: BorderRadius.circular(12),
           ),
           child: DropdownButtonHideUnderline(

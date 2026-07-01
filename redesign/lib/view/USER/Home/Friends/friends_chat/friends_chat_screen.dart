@@ -164,7 +164,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   if (!_ctrl.isRecording.value) return const SizedBox.shrink();
                   return Container(
                     padding: const EdgeInsets.all(10),
-                    color: Colors.red.withOpacity(0.8),
+                    color: Colors.red.withValues(alpha: 0.8),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -375,7 +375,7 @@ class _ChatScreenState extends State<ChatScreen> {
             hintText: "Edit your message...",
             hintStyle: const TextStyle(color: kMuted),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: kGreen.withOpacity(0.5)),
+              borderSide: BorderSide(color: kGreen.withValues(alpha: 0.5)),
               borderRadius: BorderRadius.circular(12),
             ),
             focusedBorder: OutlineInputBorder(
@@ -620,7 +620,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: kGreen.withOpacity(0.15),
+                color: kGreen.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: kGreen, size: 24),
@@ -713,7 +713,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                 )
-                .toList(),
+                ,
           ],
         ),
       ),

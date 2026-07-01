@@ -121,7 +121,7 @@ class ScoreboardHeader extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.accent.withOpacity(0.2),
+                          color: AppColors.accent.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -135,7 +135,7 @@ class ScoreboardHeader extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'P${inningsNumber}  $oversDisplay Overs',
+                        'P$inningsNumber  $oversDisplay Overs',
                         style: const TextStyle(color: AppColors.muted, fontSize: 12),
                       ),
                     ],
@@ -179,7 +179,7 @@ class ScoreboardHeader extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.2),
+                color: AppColors.accent.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -197,7 +197,7 @@ class ScoreboardHeader extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.amber.withOpacity(0.15),
+                color: Colors.amber.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: Colors.amber, width: 1.2),
               ),
@@ -228,7 +228,7 @@ class ScoreboardHeader extends StatelessWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,
@@ -261,7 +261,7 @@ class ScoreboardHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.accent.withOpacity(0.2),
+        color: AppColors.accent.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(

@@ -108,7 +108,7 @@ class VenueImageSlider extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: CircleAvatar(
-        backgroundColor: Colors.black.withOpacity(0.6),
+        backgroundColor: Colors.black.withValues(alpha: 0.6),
         child: Icon(icon, color: Colors.white),
       ),
     );

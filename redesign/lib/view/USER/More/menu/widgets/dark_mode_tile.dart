@@ -19,7 +19,7 @@ class DarkModeTile extends StatelessWidget {
       child: SwitchListTile(
         value: value,
         onChanged: onChanged,
-        activeColor: AppColors.accent,
+        activeThumbColor: AppColors.accent,
         title: Text('Dark Mode', style: GoogleFonts.inter(color: Colors.white)),
       ),
     );

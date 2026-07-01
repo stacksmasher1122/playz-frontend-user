@@ -27,7 +27,7 @@ class TossImpactEffects extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: const Color(0xFFF7E7A1).withOpacity(haloOpacity),
+                color: const Color(0xFFF7E7A1).withValues(alpha: haloOpacity),
                 width: 2.5,
               ),
             ),

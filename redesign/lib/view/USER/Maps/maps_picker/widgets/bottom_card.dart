@@ -20,7 +20,7 @@ class MapPickerBottomCard extends StatelessWidget {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -46,7 +46,7 @@ class MapPickerBottomCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: kSpotifyGreen.withOpacity(0.2),
+                  color: kSpotifyGreen.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.location_on, color: kSpotifyGreen),

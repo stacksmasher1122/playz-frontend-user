@@ -103,7 +103,7 @@ class _AudioBubbleState extends State<AudioBubble>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: widget.isMe ? _kGreen.withOpacity(0.9) : _kSurface,
+        color: widget.isMe ? _kGreen.withValues(alpha: 0.9) : _kSurface,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(

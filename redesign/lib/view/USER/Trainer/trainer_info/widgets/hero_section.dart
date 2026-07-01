@@ -166,7 +166,7 @@ class _HeroSectionState extends State<HeroSection> {
   /// -------------------------------
   Widget _iconBtn(IconData icon, {VoidCallback? onTap}) {
     return Material(
-      color: Colors.black.withOpacity(0.55),
+      color: Colors.black.withValues(alpha: 0.55),
       shape: const CircleBorder(),
       child: InkWell(
         customBorder: const CircleBorder(),

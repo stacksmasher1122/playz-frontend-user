@@ -11,7 +11,7 @@ class QuickStatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 10),
       child: Row(
         children: [
           _StatTile('24', 'Matches', Icons.sports),

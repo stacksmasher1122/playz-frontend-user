@@ -139,7 +139,7 @@ class _RankRow extends StatelessWidget {
       margin: const EdgeInsets.only(top: 6),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: highlight ? kGreen.withOpacity(0.12) : Colors.transparent,
+        color: highlight ? kGreen.withValues(alpha: 0.12) : Colors.transparent,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(

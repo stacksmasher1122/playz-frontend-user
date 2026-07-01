@@ -4,6 +4,8 @@ import 'qr_amount_row.dart';
 import 'qr_card.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
+  const PaymentSummaryCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return QrCard(

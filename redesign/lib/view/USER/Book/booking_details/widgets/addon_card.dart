@@ -28,8 +28,8 @@ class AddonCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias, // 🔑 CONTAINS SPLASH
         child: InkWell(
           onTap: onTap,
-          splashColor: _kGreen.withOpacity(0.15),
-          highlightColor: _kGreen.withOpacity(0.08),
+          splashColor: _kGreen.withValues(alpha: 0.15),
+          highlightColor: _kGreen.withValues(alpha: 0.08),
           child: Ink(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(

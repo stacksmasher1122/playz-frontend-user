@@ -87,7 +87,7 @@ class Coin3D extends StatelessWidget {
                       colors: [
                         const Color(0xFF5C4613),
                         const Color(0xFF8C6A1A),
-                        const Color(0xFFF7E7A1).withOpacity(0.9),
+                        const Color(0xFFF7E7A1).withValues(alpha: 0.9),
                         const Color(0xFF8C6A1A),
                         const Color(0xFF5C4613),
                       ],
@@ -100,7 +100,7 @@ class Coin3D extends StatelessWidget {
                       ],
                     ),
                     border: Border.all(
-                      color: const Color(0xFFF7E7A1).withOpacity(0.3),
+                      color: const Color(0xFFF7E7A1).withValues(alpha: 0.3),
                       width: 0.5,
                     ),
                   ),
@@ -136,7 +136,7 @@ class Coin3D extends StatelessWidget {
                       BoxShadow(
                         color: const Color(
                           0xFFF7E7A1,
-                        ).withOpacity(glowPulse * 0.6),
+                        ).withValues(alpha: glowPulse * 0.6),
                         blurRadius: 30 * glowPulse,
                         spreadRadius: 10 * glowPulse,
                       ),
@@ -166,7 +166,7 @@ class Coin3D extends StatelessWidget {
                       BoxShadow(
                         color: const Color(
                           0xFFF7E7A1,
-                        ).withOpacity(glowPulse * 0.6),
+                        ).withValues(alpha: glowPulse * 0.6),
                         blurRadius: 30 * glowPulse,
                         spreadRadius: 10 * glowPulse,
                       ),
@@ -192,13 +192,13 @@ class Coin3D extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withOpacity(
-                      (0.2 + (0.15 * (1.0 - controllerValue))) +
+                    Colors.white.withValues(
+                      alpha: (0.2 + (0.15 * (1.0 - controllerValue))) +
                           0.1 * sin(angle * 2),
                     ),
                     Colors.transparent,
-                    Colors.black.withOpacity(
-                      (0.2 + (0.15 * (1.0 - controllerValue))) +
+                    Colors.black.withValues(
+                      alpha: (0.2 + (0.15 * (1.0 - controllerValue))) +
                           0.1 * cos(angle * 2),
                     ),
                   ],

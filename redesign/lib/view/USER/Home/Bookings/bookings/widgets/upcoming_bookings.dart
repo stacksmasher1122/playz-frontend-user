@@ -3,7 +3,7 @@ import 'booking_card_upcoming.dart';
 import 'weather_alert.dart';
 
 class UpcomingBookingsWidget extends StatelessWidget {
-  const UpcomingBookingsWidget();
+  const UpcomingBookingsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

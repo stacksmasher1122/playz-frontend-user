@@ -1,6 +1,7 @@
 /// ============================================================
 /// SHARED DATE PARSER (FIREBASE + SQLITE SAFE)
 /// ============================================================
+library;
 
 DateTime _parseDate(dynamic value) {
   if (value == null) return DateTime.now();

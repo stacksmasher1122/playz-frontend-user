@@ -39,7 +39,7 @@ class OverProgressRow extends StatelessWidget {
       height: 48,
       margin: const EdgeInsets.only(right: 8),
       decoration: BoxDecoration(
-        color: filled ? color.withOpacity(0.2) : Colors.transparent,
+        color: filled ? color.withValues(alpha: 0.2) : Colors.transparent,
         shape: BoxShape.circle,
         border: Border.all(color: color, width: 2),
       ),

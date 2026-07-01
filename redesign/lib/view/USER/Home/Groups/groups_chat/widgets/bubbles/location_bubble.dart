@@ -179,14 +179,14 @@ class _LocationBubbleState extends State<LocationBubble> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: pinColor.withOpacity(0.2),
+                      color: pinColor.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: pinColor.withOpacity(
-                          isCurrentlyLive ? 0.5 : 0.2,
+                        color: pinColor.withValues(
+                          alpha: isCurrentlyLive ? 0.5 : 0.2,
                         ),
                         shape: BoxShape.circle,
                       ),

@@ -25,7 +25,7 @@ class AnimatedCenterPin extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -53,7 +53,7 @@ class AnimatedCenterPin extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: kSpotifyGreen.withOpacity(dragging ? 0.8 : 0.5),
+                    color: kSpotifyGreen.withValues(alpha: dragging ? 0.8 : 0.5),
                     blurRadius: dragging ? 40 : 25,
                     spreadRadius: dragging ? 8 : 3,
                   ),
@@ -74,7 +74,7 @@ class AnimatedCenterPin extends StatelessWidget {
               width: 12,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.4),
+                color: Colors.black.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

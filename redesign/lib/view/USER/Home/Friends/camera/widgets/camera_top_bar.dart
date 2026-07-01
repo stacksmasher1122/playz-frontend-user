@@ -10,7 +10,7 @@ class CameraTopBar extends StatelessWidget {
       left: 16,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.4),
+          color: Colors.black.withValues(alpha: 0.4),
           shape: BoxShape.circle,
         ),
         child: IconButton(
