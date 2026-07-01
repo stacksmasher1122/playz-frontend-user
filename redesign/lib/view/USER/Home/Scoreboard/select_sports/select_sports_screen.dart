@@ -4,6 +4,8 @@ import 'package:redesign/view/USER/Home/Scoreboard/Badminton/badminton_create_ma
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_setup/cricket_setup_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Football/create_match/football_create_match_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Tennis/setup_match/setup_match_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/scored/pickleball_initialize_match_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/volleyball_initialize_match_screen.dart';
 // Widgets
 import 'widgets/select_sport_app_bar.dart';
 import 'widgets/select_sport_search_bar.dart';
@@ -72,7 +74,9 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
         SportItem(
           'Volleyball',
           Icons.sports_volleyball,
-          onTap: () => _openSetup('Volleyball'),
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const VolleyballInitializeMatchScreen())),
         ),
         SportItem(
           'Hockey',
@@ -115,7 +119,11 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
         SportItem(
           'Pickleball',
           Icons.sports_tennis,
-          onTap: () => _openSetup('Pickleball'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const PickleballInitializeMatchScreen(),
+            ),
+          ),
         ),
       ],
       'Indoor & Board': [
