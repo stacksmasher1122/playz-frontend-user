@@ -97,7 +97,9 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           'Badminton',
           Icons.sports,
           onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const BadmintonCreateMatchScreen()),
+            MaterialPageRoute(
+              builder: (_) => const BadmintonCreateMatchScreen(),
+            ),
           ),
         ),
         SportItem(
