@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CircleButton extends StatelessWidget {
   final IconData icon;
@@ -8,7 +9,7 @@ class CircleButton extends StatelessWidget {
   final double size;
   final double iconSize;
 
-  const CircleButton({
+  CircleButton({
     super.key,
     required this.icon,
     required this.color,
@@ -20,6 +21,7 @@ class CircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(

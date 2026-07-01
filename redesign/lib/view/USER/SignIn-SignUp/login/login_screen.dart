@@ -14,19 +14,20 @@ import 'widgets/login_form.dart';
 import 'widgets/social_login_row.dart';
 import 'widgets/login_signup_prompt.dart';
 import 'widgets/phone_login_sheet.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  static const Color kSurface = Color(0xFF0E0E0E);
-  static const Color kCard = Color(0xFF1A1A1A);
-  static const Color kMuted = Color(0xFFA7A7A7);
-  static const Color kSpotifyGreen = AppColors.accent;
+  static Color kSurface = Color(0xFF0E0E0E);
+  static Color kCard = Color(0xFF1A1A1A);
+  static Color kMuted = Color(0xFFA7A7A7);
+  static Color kSpotifyGreen = AppColors.accent;
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
@@ -51,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return const PhoneLoginSheet();
+        return PhoneLoginSheet();
       },
     );
   }
@@ -64,32 +65,32 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: kSurface,
-          title: const Text(
+          title: Text(
             "Reset Password",
             style: TextStyle(color: Colors.white),
           ),
           content: TextField(
             controller: resetController,
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: "Enter your email",
-              hintStyle: const TextStyle(color: kMuted),
+              hintStyle: TextStyle(color: kMuted),
               filled: true,
               fillColor: kCard,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
           actions: [
             TextButton(
-              child: const Text("Cancel"),
+              child: Text("Cancel"),
               onPressed: () => Navigator.pop(context),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: kSpotifyGreen),
-              child: const Text(
+              child: Text(
                 "Send Reset Link",
                 style: TextStyle(color: Colors.black),
               ),
@@ -101,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (!context.mounted) return;
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Password reset email sent")),
+                    SnackBar(content: Text("Password reset email sent")),
                   );
                 } catch (e) {
                   if (!context.mounted) return;
@@ -132,9 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
       final exists = await _checkAndFetchUserDoc(docId);
       if (!mounted) return;
       if (exists) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const UserAppNavShell()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => UserAppNavShell()));
       } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FavoriteSportsScreen()));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_controller.errorMessage ?? "Login failed")));
@@ -152,15 +153,15 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = FirebaseAuth.instance.currentUser;
       final docId = user?.email ?? '';
       if (docId.isEmpty) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FavoriteSportsScreen()));
         return;
       }
       final exists = await _checkAndFetchUserDoc(docId);
       if (!mounted) return;
       if (exists) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const UserAppNavShell()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => UserAppNavShell()));
       } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FavoriteSportsScreen()));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_controller.errorMessage ?? "Google Sign-In failed")));
@@ -199,32 +200,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
-          const LoginBackground(),
+          LoginBackground(),
           SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
+            physics: ClampingScrollPhysics(),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
               children: [
-                const SizedBox(height: 300),
+                SizedBox(height: 300),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(24)),
                   child: Container(
-                    padding: const EdgeInsets.all(22),
+                    padding: EdgeInsets.all(ResponsiveHelper.w(22)),
                     decoration: BoxDecoration(
                       color: kSurface,
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
                       border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.6),
                           blurRadius: 24,
-                          offset: const Offset(0, 12),
+                          offset: Offset(0, 12),
                         ),
                       ],
                     ),
@@ -232,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const LoginHeader(),
+                        LoginHeader(),
                         LoginForm(
                           formKey: _formKey,
                           emailController: _emailController,

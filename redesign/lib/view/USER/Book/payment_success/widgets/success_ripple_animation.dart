@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SuccessRippleAnimation extends StatelessWidget {
   final AnimationController controller;
 
-  const SuccessRippleAnimation({
+  SuccessRippleAnimation({
     super.key,
     required this.controller,
   });
@@ -13,9 +14,10 @@ class SuccessRippleAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SizedBox(
-      height: 120,
-      width: 120,
+      height: ResponsiveHelper.h(120),
+      width: ResponsiveHelper.w(120),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -33,13 +35,13 @@ class SuccessRippleAnimation extends StatelessWidget {
             },
           ),
           Container(
-            width: 64,
-            height: 64,
-            decoration: const BoxDecoration(
+            width: ResponsiveHelper.w(64),
+            height: ResponsiveHelper.h(64),
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: _kGreen,
             ),
-            child: const Icon(Icons.check, size: 36, color: Colors.black),
+            child: Icon(Icons.check, size: 36, color: Colors.black),
           ),
         ],
       ),

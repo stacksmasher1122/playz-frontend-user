@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import '../home_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    OFFICIAL APP INFO / FOOTER
    ============================================================ */
 class HomeOfficialAppInfo extends StatelessWidget {
-  const HomeOfficialAppInfo({super.key});
+  HomeOfficialAppInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
+        children: [
           Text(
             'PlayZ',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: ResponsiveHelper.sp(16),
               fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
             ),

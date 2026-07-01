@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../qr_in_bookings_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QrInfoRow extends StatelessWidget {
   final String label;
   final String value;
   final bool highlight;
 
-  const QrInfoRow(
+  QrInfoRow(
     this.label,
     this.value, {super.key, 
     this.highlight = false,
@@ -14,16 +15,17 @@ class QrInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(6)),
       child: Row(
         children: [
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 color: QrBookingConstants.muted,
-                fontSize: 13,
+                fontSize: ResponsiveHelper.sp(13),
               ),
             ),
           ),
@@ -33,7 +35,7 @@ class QrInfoRow extends StatelessWidget {
               textAlign: TextAlign.right,
               style: TextStyle(
                 color: highlight ? QrBookingConstants.green : Colors.white,
-                fontSize: 13,
+                fontSize: ResponsiveHelper.sp(13),
                 fontWeight:
                     highlight ? FontWeight.w700 : FontWeight.w500,
               ),

@@ -9,9 +9,10 @@ import 'widgets/ls_quick_action_grid_widget.dart';
 import 'widgets/ls_match_stats_widget.dart';
 import 'widgets/ls_point_actions_widget.dart';
 import 'widgets/ls_bottom_nav_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveScoringScreen extends StatefulWidget {
-  const LiveScoringScreen({super.key});
+  LiveScoringScreen({super.key});
 
   @override
   State<LiveScoringScreen> createState() => _LiveScoringScreenState();
@@ -34,32 +35,33 @@ class _LiveScoringScreenState extends State<LiveScoringScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
-            const LsAppbarWidget(),
+            LsAppbarWidget(),
             
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24.0), vertical: ResponsiveHelper.h(16.0)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const LsMatchDurationWidget(),
-                    const SizedBox(height: 24),
+                    LsMatchDurationWidget(),
+                    SizedBox(height: 24),
                     
-                    const LsScoreboardCardWidget(),
-                    const SizedBox(height: 24),
+                    LsScoreboardCardWidget(),
+                    SizedBox(height: 24),
                     
-                    const LsQuickActionGridWidget(),
-                    const SizedBox(height: 32),
+                    LsQuickActionGridWidget(),
+                    SizedBox(height: 32),
                     
-                    const LsMatchStatsWidget(),
+                    LsMatchStatsWidget(),
                     
                     // Extra padding so bottom nav / actions don't cover content
-                    const SizedBox(height: 120),
+                    SizedBox(height: 120),
                   ],
                 ),
               ),
@@ -68,7 +70,7 @@ class _LiveScoringScreenState extends State<LiveScoringScreen> {
         ),
       ),
       // Sticky bottom point actions just above the bottom nav
-      bottomNavigationBar: const Column(
+      bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           LsPointActionsWidget(),

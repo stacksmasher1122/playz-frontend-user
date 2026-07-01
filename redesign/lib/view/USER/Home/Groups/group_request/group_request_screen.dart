@@ -6,6 +6,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Contr
 // Internal Widgets
 import 'widgets/group_requests_app_bar.dart';
 import 'widgets/group_request_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kBg = AppColors.background;
 const _kMuted = Colors.white70;
@@ -13,10 +14,11 @@ const _kMuted = Colors.white70;
 class GroupRequestScreen extends StatelessWidget {
   final String groupId;
   
-  const GroupRequestScreen({super.key, required this.groupId});
+  GroupRequestScreen({super.key, required this.groupId});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final ctrl = Get.find<GroupsController>();
 
     return Scaffold(
@@ -26,36 +28,36 @@ class GroupRequestScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── App Bar ──
-            const GroupRequestsAppBar(),
+            GroupRequestsAppBar(),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // ── Divider ──
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
               child: Divider(color: Colors.white12, height: 1),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // ── Section Title ──
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
               child: Row(
                 children: [
-                  const Text(
+                  Text(
                     'PENDING PLAYERS',
                     style: TextStyle(
                       color: _kMuted,
-                      fontSize: 13,
+                      fontSize: ResponsiveHelper.sp(13),
                       fontWeight: FontWeight.w500,
                       letterSpacing: 1.4,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Container(
-                      height: 1,
+                      height: ResponsiveHelper.h(1),
                       color: Colors.white10,
                     ),
                   ),
@@ -63,7 +65,7 @@ class GroupRequestScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // ── Request Cards ──
             Expanded(
@@ -71,7 +73,7 @@ class GroupRequestScreen extends StatelessWidget {
                 final requests = ctrl.pendingGroupRequests;
 
                 if (requests.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
                       'No pending requests for this group',
                       style: TextStyle(color: _kMuted, fontSize: 15),
@@ -80,8 +82,8 @@ class GroupRequestScreen extends StatelessWidget {
                 }
 
                 return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                  physics: BouncingScrollPhysics(),
                   itemCount: requests.length,
                   itemBuilder: (context, index) {
                     final req = requests[index];

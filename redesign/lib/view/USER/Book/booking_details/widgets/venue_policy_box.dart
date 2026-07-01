@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VenuePolicyBox extends StatelessWidget {
-  const VenuePolicyBox({super.key});
+  VenuePolicyBox({super.key});
 
   static const _kGreen = AppColors.accent;
   static const _kMuted = Color(0xFFA7A7A7);
@@ -10,12 +11,13 @@ class VenuePolicyBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: _kCardColor, // Spotify dark surface
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Column(
@@ -24,21 +26,21 @@ class VenuePolicyBox extends StatelessWidget {
         children: [
           /// HEADER
           Row(
-            children: const [
+            children: [
               Icon(Icons.info_outline, color: _kGreen, size: 18),
               SizedBox(width: 8),
               Text(
                 'Venue Policy',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: ResponsiveHelper.sp(16),
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           /// POLICY ITEMS
           _policyItem('Non-refundable within 4 hours'),
@@ -50,19 +52,19 @@ class VenuePolicyBox extends StatelessWidget {
 
   Widget _policyItem(String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: EdgeInsets.only(bottom: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 6),
             child: Icon(Icons.circle, size: 6, color: _kMuted),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(color: _kMuted, fontSize: 13, height: 1.4),
+              style: TextStyle(color: _kMuted, fontSize: ResponsiveHelper.sp(13), height: 1.4),
             ),
           ),
         ],

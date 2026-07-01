@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kMuted = Color(0xFFA7A7A7);
 const kAmber = Color(0xFFF5C542);
 
 class LimitedAccessBanner extends StatelessWidget {
-  const LimitedAccessBanner({super.key});
+  LimitedAccessBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
         gradient: LinearGradient(
           colors: [
             kAmber.withValues(alpha: 0.25),
@@ -24,7 +26,7 @@ class LimitedAccessBanner extends StatelessWidget {
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Icon(Icons.warning_amber_rounded,
               color: kAmber, size: 22),
           SizedBox(width: 12),
@@ -37,7 +39,7 @@ class LimitedAccessBanner extends StatelessWidget {
                   "You're in Limited Access",
                   style: TextStyle(
                     color: kAmber,
-                    fontSize: 15,
+                    fontSize: ResponsiveHelper.sp(15),
                     fontWeight: FontWeight.w700,
                   ),
                 ),

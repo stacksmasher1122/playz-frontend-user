@@ -16,9 +16,10 @@ import 'widgets/setup_wizard_card.dart';
 import 'widgets/bowler_select_sheet.dart';
 import 'widgets/extras_modal.dart';
 import 'widgets/wicket_wizard_sheet.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CricketScoreboardScreen extends StatefulWidget {
-  const CricketScoreboardScreen({super.key});
+  CricketScoreboardScreen({super.key});
 
   @override
   State<CricketScoreboardScreen> createState() =>
@@ -176,13 +177,13 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       barrierDismissible: false,
       builder: (_) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text(
+        title: Text(
           'Innings Break!',
           style: TextStyle(color: Colors.white),
         ),
         content: Text(
           'Target is $target',
-          style: const TextStyle(color: Colors.white70),
+          style: TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
@@ -190,7 +191,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
               Navigator.pop(context);
               controller.startSecondInnings();
             },
-            child: const Text(
+            child: Text(
               'Prepare 2nd Innings',
               style: TextStyle(color: AppColors.accent),
             ),
@@ -206,15 +207,15 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       barrierDismissible: false,
       builder: (_) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text(
+        title: Text(
           'Match Completed',
           style: TextStyle(color: Colors.white),
         ),
         content: Text(
           matchResult,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.accent,
-            fontSize: 18,
+            fontSize: ResponsiveHelper.sp(18),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -223,7 +224,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text(
+            child: Text(
               'Finish',
               style: TextStyle(
                 color: Colors.white,
@@ -259,8 +260,8 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
       ),
       builder: (ctx) => BowlerSelectSheet(
         bowlers: bowlingTeam,
@@ -277,8 +278,8 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
       ),
       builder: (ctx) => ExtrasModal(
         onSelect: (type, runs) {
@@ -294,8 +295,8 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       context: context,
       backgroundColor: AppColors.surface,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
       ),
       builder: (ctx) => WicketWizardSheet(
         battingTeam: battingTeam,
@@ -322,18 +323,18 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text(
+        title: Text(
           'Video Referral',
           style: TextStyle(color: Colors.white),
         ),
-        content: const Text(
+        content: Text(
           'Send this decision to the third umpire?',
           style: TextStyle(color: AppColors.muted),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('CANCEL'),
+            child: Text('CANCEL'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -347,7 +348,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
-            child: const Text('PENDING'),
+            child: Text('PENDING'),
           ),
         ],
       ),
@@ -359,8 +360,8 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Match Break', style: TextStyle(color: Colors.white)),
-        content: const Text(
+        title: Text('Match Break', style: TextStyle(color: Colors.white)),
+        content: Text(
           'Select break type:',
           style: TextStyle(color: AppColors.muted),
         ),
@@ -392,24 +393,24 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
       ),
       builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(ResponsiveHelper.w(20)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Retire Batter',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: ResponsiveHelper.sp(18),
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             if (striker != null) _retireTile(ctx, striker!),
             if (nonStriker != null) _retireTile(ctx, nonStriker!),
           ],
@@ -420,7 +421,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
 
   Widget _retireTile(BuildContext ctx, Player p) {
     return ListTile(
-      title: Text(p.name, style: const TextStyle(color: Colors.white)),
+      title: Text(p.name, style: TextStyle(color: Colors.white)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -429,7 +430,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
               Navigator.pop(ctx);
               _retireBatter(p, true);
             },
-            child: const Text(
+            child: Text(
               'HURT',
               style: TextStyle(color: AppColors.warning, fontSize: 12),
             ),
@@ -439,7 +440,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
               Navigator.pop(ctx);
               _retireBatter(p, false);
             },
-            child: const Text(
+            child: Text(
               'OUT',
               style: TextStyle(color: AppColors.error, fontSize: 12),
             ),
@@ -451,12 +452,13 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Obx(() {
         if (!controller.isEngineReady.value ||
             controller.liveState.value == null) {
-          return const Center(child: CircularProgressIndicator(color: AppColors.accent));
+          return Center(child: CircularProgressIndicator(color: AppColors.accent));
         }
 
         if (matchStatus == 'INITIALIZING' ||
@@ -535,7 +537,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
                   onMatchBreak: _showBreakDialog,
                 ),
               ),
-              const SliverToBoxAdapter(child: SizedBox(height: 32)),
+              SliverToBoxAdapter(child: SizedBox(height: 32)),
             ],
           ),
         );

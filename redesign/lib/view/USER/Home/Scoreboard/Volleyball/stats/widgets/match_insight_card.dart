@@ -7,7 +7,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class MatchInsightCard extends StatelessWidget {
   final VolleyballStatsController controller;
 
-  const MatchInsightCard({super.key, required this.controller});
+  MatchInsightCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +15,13 @@ class MatchInsightCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('LIVE INSIGHTS', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Obx(() {
           return Column(
             children: controller.matchInsights.map((insight) {
               return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
+                margin: EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: AppColors.primaryContainer.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
@@ -29,8 +29,8 @@ class MatchInsightCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.lightbulb_outline, color: AppColors.primaryContainer, size: 20),
-                    const SizedBox(width: 16),
+                    Icon(Icons.lightbulb_outline, color: AppColors.primaryContainer, size: 20),
+                    SizedBox(width: 16),
                     Expanded(
                       child: Text(
                         insight,

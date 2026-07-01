@@ -5,45 +5,47 @@ import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_starting_lineup_controller.dart';
 import 'court_position_widget.dart';
 import 'select_player_bottom_sheet.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CourtWidget extends StatelessWidget {
   final VolleyballStartingLineupController controller;
 
-  const CourtWidget({super.key, required this.controller});
+  CourtWidget({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 24),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Column(
         children: [
           Row(
             children: [
-              const Expanded(child: Divider(color: AppColors.surfaceContainerHighest, thickness: 2)),
+              Expanded(child: Divider(color: AppColors.surfaceContainerHighest, thickness: 2)),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(4)),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.surfaceContainerHighest),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                   color: AppColors.surfaceContainerLowest,
                 ),
                 child: Text('NET AREA', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
               ),
-              const Expanded(child: Divider(color: AppColors.surfaceContainerHighest, thickness: 2)),
+              Expanded(child: Divider(color: AppColors.surfaceContainerHighest, thickness: 2)),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           // Front Row: P4, P3, P2
           Obx(() => GridView.count(
             crossAxisCount: 3,
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
             childAspectRatio: 0.65,

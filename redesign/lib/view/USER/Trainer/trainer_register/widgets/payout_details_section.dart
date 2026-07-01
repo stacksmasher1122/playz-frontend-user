@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'step_header.dart';
 import 'trainer_form_fields.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kMuted = Color(0xFFA7A7A7);
 
 class PayoutDetailsSection extends StatefulWidget {
-  const PayoutDetailsSection({super.key});
+  PayoutDetailsSection({super.key});
 
   @override
   State<PayoutDetailsSection> createState() => _PayoutDetailsSectionState();
@@ -26,20 +27,21 @@ class _PayoutDetailsSectionState extends State<PayoutDetailsSection> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// ───────── HEADER ─────────
-        const StepHeader(step: 8, title: 'Payout Details'),
+        StepHeader(step: 8, title: 'Payout Details'),
 
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
 
-        const Text(
+        Text(
           'Used to transfer your earnings securely',
           style: TextStyle(color: kMuted, fontSize: 12.5),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         /// ───────── ACCOUNT HOLDER NAME ─────────
         TrainerInputField(
@@ -49,7 +51,7 @@ class _PayoutDetailsSectionState extends State<PayoutDetailsSection> {
           textInputAction: TextInputAction.next,
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// ───────── ACCOUNT NUMBER ─────────
         TrainerInputField(
@@ -60,7 +62,7 @@ class _PayoutDetailsSectionState extends State<PayoutDetailsSection> {
           textInputAction: TextInputAction.next,
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// ───────── IFSC CODE ─────────
         TrainerInputField(
@@ -71,11 +73,11 @@ class _PayoutDetailsSectionState extends State<PayoutDetailsSection> {
           textInputAction: TextInputAction.done,
         ),
 
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
 
         /// ───────── SECURITY NOTE ─────────
         Row(
-          children: const [
+          children: [
             Icon(Icons.lock_outline, size: 14, color: kMuted),
             SizedBox(width: 6),
             Expanded(

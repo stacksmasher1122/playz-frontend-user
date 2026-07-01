@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_review_model.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchSummaryCard extends StatelessWidget {
   final VolleyballReviewModel reviewData;
 
-  const MatchSummaryCard({super.key, required this.reviewData});
+  MatchSummaryCard({super.key, required this.reviewData});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Column(
@@ -28,21 +30,21 @@ class MatchSummaryCard extends StatelessWidget {
                 style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold, letterSpacing: 1.5),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
                 ),
                 child: Text('LIVE RECOGNITION', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             '${reviewData.teamA.teamName} vs.\n${reviewData.teamB.teamName}',
             style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.w900, height: 1.2),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Row(
             children: [
               Expanded(
@@ -53,11 +55,11 @@ class MatchSummaryCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Row(
             children: [
               Expanded(child: _buildTeamPreview(reviewData.teamA.teamName, reviewData.teamA.primaryColor)),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(child: _buildTeamPreview(reviewData.teamB.teamName, reviewData.teamB.primaryColor)),
             ],
           ),
@@ -71,13 +73,13 @@ class MatchSummaryCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, color: AppColors.muted, size: 24),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.2)),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(value, style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -88,10 +90,10 @@ class MatchSummaryCard extends StatelessWidget {
 
   Widget _buildTeamPreview(String name, Color color) {
     return Container(
-      height: 80,
+      height: ResponsiveHelper.h(80),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Stack(
@@ -104,7 +106,7 @@ class MatchSummaryCard extends StatelessWidget {
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(ResponsiveHelper.w(8.0)),
               child: Text(
                 name.toUpperCase(),
                 style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, letterSpacing: 1.5),

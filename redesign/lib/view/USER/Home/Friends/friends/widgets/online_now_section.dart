@@ -3,43 +3,45 @@ import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/friends_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = AppColors.background;
 const kSurface = Color(0xFF0E0E0E);
 const kGreen = AppColors.accent;
 
 class OnlineNowSection extends StatelessWidget {
-  const OnlineNowSection({super.key});
+  OnlineNowSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final ctrl = Get.find<FriendsController>();
 
     return Obx(() {
       final onlineFriends = ctrl.friends.take(4).toList();
 
       if (onlineFriends.isEmpty) {
-        return const SizedBox.shrink();
+        return SizedBox.shrink();
       }
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Text(
               'Online Now',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: ResponsiveHelper.sp(20),
                 fontWeight: FontWeight.w800,
               ),
             ),
           ),
           SizedBox(
-            height: 110,
+            height: ResponsiveHelper.h(110),
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
               scrollDirection: Axis.horizontal,
               itemCount: onlineFriends.length,
               itemBuilder: (_, i) => OnlineAvatar(
@@ -58,12 +60,13 @@ class OnlineAvatar extends StatelessWidget {
   final String name;
   final String imageUrl;
 
-  const OnlineAvatar({super.key, required this.name, required this.imageUrl});
+  OnlineAvatar({super.key, required this.name, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.only(right: 20),
+      padding: EdgeInsets.only(right: 20),
       child: Column(
         children: [
           Stack(
@@ -80,7 +83,7 @@ class OnlineAvatar extends StatelessWidget {
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(3),
+                padding: EdgeInsets.all(ResponsiveHelper.w(3)),
                 child: CircleAvatar(
                   radius: 32,
                   backgroundImage: imageUrl.isNotEmpty
@@ -90,11 +93,11 @@ class OnlineAvatar extends StatelessWidget {
                 ),
               ),
               Positioned(
-                bottom: 2,
-                right: 2,
+                bottom: ResponsiveHelper.h(2),
+                right: ResponsiveHelper.w(2),
                 child: Container(
-                  height: 14,
-                  width: 14,
+                  height: ResponsiveHelper.h(14),
+                  width: ResponsiveHelper.w(14),
                   decoration: BoxDecoration(
                     color: kGreen,
                     shape: BoxShape.circle,
@@ -104,12 +107,12 @@ class OnlineAvatar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             name,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 13,
+              fontSize: ResponsiveHelper.sp(13),
               fontWeight: FontWeight.w600,
             ),
           ),

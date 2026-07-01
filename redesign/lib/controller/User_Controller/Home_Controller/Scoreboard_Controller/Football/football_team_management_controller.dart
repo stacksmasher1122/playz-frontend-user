@@ -17,7 +17,7 @@ class FootballTeamManagementController extends GetxController {
 
   void initialize() {
     isLoading.value = true;
-    Future.delayed(const Duration(milliseconds: 600), () {
+    Future.delayed(Duration(milliseconds: 600), () {
       loadTeam();
       loadPlayers();
       refreshRoster();
@@ -50,7 +50,7 @@ class FootballTeamManagementController extends GetxController {
         fitness: 'FIT',
         rating: 9.0,
         form: 'Good',
-        statistics: const PlayerStatisticsModel(goals: 12, assists: 8),
+        statistics: PlayerStatisticsModel(goals: 12, assists: 8),
       ),
       PlayerModel(
         playerId: 'P2',
@@ -61,7 +61,7 @@ class FootballTeamManagementController extends GetxController {
         captain: false,
         fitness: 'FIT',
         rating: 8.5,
-        statistics: const PlayerStatisticsModel(tackles: 4.2, passAccuracy: 89),
+        statistics: PlayerStatisticsModel(tackles: 4.2, passAccuracy: 89),
       ),
       PlayerModel(
         playerId: 'P3',
@@ -72,7 +72,7 @@ class FootballTeamManagementController extends GetxController {
         captain: false,
         fitness: 'FIT',
         rating: 8.2,
-        statistics: const PlayerStatisticsModel(saves: 12, cleanSheets: 3, recovery: 72),
+        statistics: PlayerStatisticsModel(saves: 12, cleanSheets: 3, recovery: 72),
       ),
       PlayerModel(
         playerId: 'P4',
@@ -83,7 +83,7 @@ class FootballTeamManagementController extends GetxController {
         captain: false,
         fitness: 'FIT',
         rating: 7.8,
-        statistics: const PlayerStatisticsModel(distance: 11.4, sprints: 42),
+        statistics: PlayerStatisticsModel(distance: 11.4, sprints: 42),
       ),
     ]);
   }
@@ -157,16 +157,16 @@ class FootballTeamManagementController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00),
+      backgroundColor: Color(0xFFC6FF00),
       colorText: Colors.black,
       snackPosition: SnackPosition.TOP,
-      margin: const EdgeInsets.all(16),
-      duration: const Duration(seconds: 2),
+      margin: EdgeInsets.all(16),
+      duration: Duration(seconds: 2),
     );
   }
 
@@ -174,14 +174,14 @@ class FootballTeamManagementController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.TOP,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 }

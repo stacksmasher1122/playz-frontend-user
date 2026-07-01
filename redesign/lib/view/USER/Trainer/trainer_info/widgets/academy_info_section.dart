@@ -1,40 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kCard = Color(0xFF1A1A1A);
-const Color kMuted = Color(0xFFA7A7A7);
-const Color kGreen = AppColors.accent;
-const Color kYellow = Color(0xFFFFC107);
+Color kCard = Color(0xFF1A1A1A);
+Color kMuted = Color(0xFFA7A7A7);
+Color kGreen = AppColors.accent;
+Color kYellow = Color(0xFFFFC107);
 
 class AcademyInfoSection extends StatelessWidget {
-  const AcademyInfoSection({super.key});
+  AcademyInfoSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
                 'PowerPlay Cricket Academy',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 22,
+                  fontSize: ResponsiveHelper.sp(22),
                   fontWeight: FontWeight.bold,
-                  height: 1.2,
+                  height: ResponsiveHelper.h(1.2),
                 ),
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
               decoration: BoxDecoration(
                 color: kCard,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               ),
               child: Row(
-                children: const [
+                children: [
                   Icon(Icons.star, color: kYellow, size: 14),
                   SizedBox(width: 4),
                   Text('4.9', style: TextStyle(color: Colors.white)),
@@ -43,13 +45,13 @@ class AcademyInfoSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// LOCATION
             Row(
-              children: const [
+              children: [
                 Icon(Icons.location_on_outlined, size: 16, color: kMuted),
                 SizedBox(width: 6),
                 Text(
@@ -59,16 +61,16 @@ class AcademyInfoSection extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
 
             /// OPEN STATUS (RichText)
             Row(
               children: [
-                const Icon(Icons.access_time, size: 16, color: kMuted),
-                const SizedBox(width: 6),
+                Icon(Icons.access_time, size: 16, color: kMuted),
+                SizedBox(width: 6),
                 RichText(
-                  text: const TextSpan(
-                    style: TextStyle(fontSize: 14, color: kMuted),
+                  text: TextSpan(
+                    style: TextStyle(fontSize: ResponsiveHelper.sp(14), color: kMuted),
                     children: [
                       TextSpan(
                         text: 'Open Now',
@@ -82,7 +84,7 @@ class AcademyInfoSection extends StatelessWidget {
                         style: TextStyle(
                           color: kMuted,
                           fontWeight: FontWeight.w600,
-                          fontSize: 14,
+                          fontSize: ResponsiveHelper.sp(14),
                         ),
                       ),
                     ],
@@ -91,11 +93,11 @@ class AcademyInfoSection extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
 
             /// CERTIFICATION
             Row(
-              children: const [
+              children: [
                 Icon(Icons.verified_outlined, size: 16, color: kGreen),
                 SizedBox(width: 6),
                 Text(
@@ -106,8 +108,8 @@ class AcademyInfoSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        const Text(
+        SizedBox(height: 12),
+        Text(
           'A premier cricket training center equipped with turf wickets, bowling machines, and expert coaching staff. We focus on technique, fitness, and match temperament for aspiring cricketers.',
           style: TextStyle(color: kMuted, height: 1.45),
         ),

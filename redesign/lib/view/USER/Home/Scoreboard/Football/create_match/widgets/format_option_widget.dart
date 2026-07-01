@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FormatOptionWidget extends StatelessWidget {
   final String title;
@@ -6,7 +7,7 @@ class FormatOptionWidget extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const FormatOptionWidget({
+  FormatOptionWidget({
     super.key,
     required this.title,
     required this.subtitle,
@@ -16,21 +17,22 @@ class FormatOptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           border: Border.all(
-            color: isSelected ? const Color(0xFFC6FF00) : Colors.grey.shade800,
+            color: isSelected ? Color(0xFFC6FF00) : Colors.grey.shade800,
             width: isSelected ? 2.0 : 1.0,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFFC6FF00).withValues(alpha: 0.15),
+                    color: Color(0xFFC6FF00).withValues(alpha: 0.15),
                     blurRadius: 12,
                     spreadRadius: 2,
                   )
@@ -43,17 +45,17 @@ class FormatOptionWidget extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color: isSelected ? const Color(0xFFC6FF00) : Colors.white,
-                fontSize: 16,
+                color: isSelected ? Color(0xFFC6FF00) : Colors.white,
+                fontSize: ResponsiveHelper.sp(16),
                 fontWeight: FontWeight.w900,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               subtitle,
               style: TextStyle(
-                color: isSelected ? const Color(0xFFC6FF00).withValues(alpha: 0.7) : Colors.grey,
-                fontSize: 10,
+                color: isSelected ? Color(0xFFC6FF00).withValues(alpha: 0.7) : Colors.grey,
+                fontSize: ResponsiveHelper.sp(10),
                 fontWeight: FontWeight.bold,
               ),
             ),

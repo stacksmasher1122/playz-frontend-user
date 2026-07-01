@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/match_result_model.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchInfoCardWidget extends StatelessWidget {
   final MatchResultModel result;
 
-  const MatchInfoCardWidget({super.key, required this.result});
+  MatchInfoCardWidget({super.key, required this.result});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
       ),
       child: Column(
@@ -24,7 +26,7 @@ class MatchInfoCardWidget extends StatelessWidget {
             'MATCH INFORMATION',
             style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildInfoRow('Tournament', result.tournament),
           _buildInfoRow('Court', result.court),
           _buildInfoRow('Referee', result.referee),
@@ -42,7 +44,7 @@ class MatchInfoCardWidget extends StatelessWidget {
 
   Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

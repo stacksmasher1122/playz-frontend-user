@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MyTrainersSection extends StatelessWidget {
-  const MyTrainersSection({super.key});
+  MyTrainersSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           /// HEADER
           Row(
@@ -20,11 +22,11 @@ class MyTrainersSection extends StatelessWidget {
                 'My Trainers',
                 style: GoogleFonts.inter(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: ResponsiveHelper.sp(18),
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               Text(
                 'Active & recent coaches',
                 style: GoogleFonts.inter(color: AppColors.muted, fontSize: 13),
@@ -32,7 +34,7 @@ class MyTrainersSection extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           /// FILTER CHIPS
           Wrap(
@@ -51,10 +53,10 @@ class MyTrainersSection extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           /// TRAINER CARD
-          const _MyTrainerCard(),
+          _MyTrainerCard(),
         ]),
       ),
     );
@@ -62,15 +64,16 @@ class MyTrainersSection extends StatelessWidget {
 }
 
 class _MyTrainerCard extends StatelessWidget {
-  const _MyTrainerCard();
+  _MyTrainerCard();
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.accent),
         boxShadow: [
           BoxShadow(color: AppColors.accent.withValues(alpha: 0.15), blurRadius: 12),
@@ -87,10 +90,10 @@ class _MyTrainerCard extends StatelessWidget {
                 backgroundColor: AppColors.surface,
                 child: Text(
                   'Trainer',
-                  style: GoogleFonts.inter(fontSize: 10, color: Colors.white),
+                  style: GoogleFonts.inter(fontSize: ResponsiveHelper.sp(10), color: Colors.white),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,21 +107,21 @@ class _MyTrainerCard extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: 6),
                         _statusPill('Active Package'),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       'Strength & Conditioning  •  8+ yrs',
                       style: GoogleFonts.inter(
                         color: AppColors.muted,
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.sp(12),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Row(
-                      children: const [
+                      children: [
                         Icon(Icons.star, size: 14, color: AppColors.accent),
                         SizedBox(width: 4),
                         Text('4.8', style: TextStyle(color: Colors.white)),
@@ -130,12 +133,12 @@ class _MyTrainerCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
 
           /// TAGS
           Wrap(
             spacing: 6,
-            children: const [
+            children: [
               _Tag('Baner • Pune'),
               _Tag('Adults'),
               _Tag('Pro Athletes'),
@@ -143,7 +146,7 @@ class _MyTrainerCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           /// PROGRESS BAR
           Column(
@@ -152,10 +155,10 @@ class _MyTrainerCard extends StatelessWidget {
               LinearProgressIndicator(
                 value: 4 / 8,
                 backgroundColor: AppColors.surface,
-                valueColor: const AlwaysStoppedAnimation(AppColors.accent),
+                valueColor: AlwaysStoppedAnimation(AppColors.accent),
                 minHeight: 4,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 '4 / 8 sessions completed',
                 style: GoogleFonts.inter(color: AppColors.muted, fontSize: 11),
@@ -163,7 +166,7 @@ class _MyTrainerCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           /// ACTIONS
           Row(
@@ -171,28 +174,28 @@ class _MyTrainerCard extends StatelessWidget {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () {},
-                  icon: const Icon(Icons.chat_bubble_outline),
-                  label: const Text('Chat'),
+                  icon: Icon(Icons.chat_bubble_outline),
+                  label: Text('Chat'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
                     side: BorderSide(color: Colors.white24),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () {},
-                  icon: const Icon(Icons.calendar_today, size: 16),
-                  label: const Text('View Schedule'),
+                  icon: Icon(Icons.calendar_today, size: 16),
+                  label: Text('View Schedule'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accent,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                     ),
                   ),
                 ),
@@ -206,16 +209,16 @@ class _MyTrainerCard extends StatelessWidget {
 
   Widget _statusPill(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(2)),
       decoration: BoxDecoration(
         color: AppColors.accent.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       ),
       child: Text(
         text,
         style: GoogleFonts.inter(
           color: AppColors.accent,
-          fontSize: 11,
+          fontSize: ResponsiveHelper.sp(11),
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -225,20 +228,21 @@ class _MyTrainerCard extends StatelessWidget {
 
 class _Tag extends StatelessWidget {
   final String label;
-  const _Tag(this.label);
+  _Tag(this.label);
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(5)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       ),
       child: Text(
         label,
         style: GoogleFonts.inter(
-          fontSize: 11,
+          fontSize: ResponsiveHelper.sp(11),
           color: Colors.white,
           fontWeight: FontWeight.w500,
         ),
@@ -253,7 +257,7 @@ class _FilterButton extends StatelessWidget {
   final VoidCallback onTap;
   final IconData? icon;
 
-  const _FilterButton({
+  _FilterButton({
     required this.label,
     required this.active,
     required this.onTap,
@@ -262,38 +266,39 @@ class _FilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedScale(
       scale: active ? 1 : 0.98,
-      duration: const Duration(milliseconds: 150),
+      duration: Duration(milliseconds: 150),
       curve: Curves.easeOut,
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
           splashColor: AppColors.accent.withValues(alpha: 0.2),
           highlightColor: AppColors.accent.withValues(alpha: 0.1),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+            duration: Duration(milliseconds: 180),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(9)),
             decoration: BoxDecoration(
               color: active
                   ? AppColors.accent.withValues(alpha: 0.15)
                   : AppColors.surface,
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
               border: Border.all(
                 color: active
                     ? AppColors.accent
                     : Colors.white.withValues(alpha: 0.08),
-                width: 1,
+                width: ResponsiveHelper.w(1),
               ),
               boxShadow: active
                   ? [
                       BoxShadow(
                         color: AppColors.accent.withValues(alpha: 0.25),
                         blurRadius: 12,
-                        offset: const Offset(0, 4),
+                        offset: Offset(0, 4),
                       ),
                     ]
                   : [],
@@ -307,12 +312,12 @@ class _FilterButton extends StatelessWidget {
                     size: 14,
                     color: active ? AppColors.accent : Colors.white,
                   ),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 6),
                 ],
                 Text(
                   label,
                   style: GoogleFonts.inter(
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                     fontWeight: FontWeight.w600,
                     color: active ? AppColors.accent : Colors.white,
                   ),

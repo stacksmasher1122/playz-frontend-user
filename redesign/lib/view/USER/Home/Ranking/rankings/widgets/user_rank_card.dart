@@ -1,38 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kGreen = AppColors.accent;
-const Color kSurface = Color(0xFF0E0E0E);
-const Color kMuted = Color(0xFFA7A7A7);
-const Color kGold = Color(0xFFFFC107);
-const Color kSilver = Color(0xFFB0BEC5);
-const Color kBronze = Color(0xFFCD7F32);
+Color kGreen = AppColors.accent;
+Color kSurface = Color(0xFF0E0E0E);
+Color kMuted = Color(0xFFA7A7A7);
+Color kGold = Color(0xFFFFC107);
+Color kSilver = Color(0xFFB0BEC5);
+Color kBronze = Color(0xFFCD7F32);
 
 class UserRankCard extends StatelessWidget {
-  const UserRankCard({super.key});
+  UserRankCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 6, 16, 14),
+      padding: EdgeInsets.fromLTRB(16, 6, 16, 14),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
           color: kSurface,
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
         ),
         child: Column(
           children: [
             Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 26,
                   backgroundImage: NetworkImage(
                     'https://randomuser.me/api/portraits/men/32.jpg',
                   ),
                 ),
-                const SizedBox(width: 14),
-                const Expanded(
+                SizedBox(width: 14),
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -45,13 +47,13 @@ class UserRankCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text('#42',
                         style: TextStyle(
                             color: kGreen,
-                            fontSize: 24,
+                            fontSize: ResponsiveHelper.sp(24),
                             fontWeight: FontWeight.w800)),
                     Text('Global Rank',
                         style: TextStyle(color: kMuted, fontSize: 12)),
@@ -59,13 +61,13 @@ class UserRankCard extends StatelessWidget {
                 )
               ],
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             const _ProgressBar(
               current: 1240,
               target: 1500,
               label: 'Target: Gold (1,500)',
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             const _TrendRow(),
           ],
         ),
@@ -87,6 +89,7 @@ class _ProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final progress = (current / target).clamp(0.0, 1.0);
 
     return Column(
@@ -95,21 +98,21 @@ class _ProgressBar extends StatelessWidget {
         Row(
           children: [
             Text('$current pts',
-                style: const TextStyle(
+                style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.w600)),
-            const Spacer(),
+            Spacer(),
             Text(label,
-                style: const TextStyle(color: kMuted, fontSize: 12)),
+                style: TextStyle(color: kMuted, fontSize: 12)),
           ],
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         ClipRRect(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 6,
             backgroundColor: Colors.white.withValues(alpha: 0.08),
-            valueColor: const AlwaysStoppedAnimation(kGreen),
+            valueColor: AlwaysStoppedAnimation(kGreen),
           ),
         ),
       ],
@@ -122,25 +125,26 @@ class _TrendRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final trends = [true, true, false, true, false]; // mock
 
     return Row(
       children: [
-        const Text(
+        Text(
           'Top 15% (Rising)',
           style: TextStyle(
             color: kGreen,
             fontWeight: FontWeight.w600,
-            fontSize: 12,
+            fontSize: ResponsiveHelper.sp(12),
           ),
         ),
-        const Spacer(),
+        Spacer(),
         Row(
           children: trends.map((up) {
             return Container(
-              margin: const EdgeInsets.only(left: 6),
-              height: 6,
-              width: 6,
+              margin: EdgeInsets.only(left: 6),
+              height: ResponsiveHelper.h(6),
+              width: ResponsiveHelper.w(6),
               decoration: BoxDecoration(
                 color: up ? kGreen : kMuted.withValues(alpha: 0.4),
                 shape: BoxShape.circle,
@@ -172,18 +176,19 @@ class _LeaguePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(999)),
         border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Text(
         label,
         style: TextStyle(
           color: color,
-          fontSize: 11,
+          fontSize: ResponsiveHelper.sp(11),
           fontWeight: FontWeight.w700,
           letterSpacing: 0.4,
         ),

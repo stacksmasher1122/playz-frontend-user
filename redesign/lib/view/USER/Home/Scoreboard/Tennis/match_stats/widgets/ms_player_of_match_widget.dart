@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 
 class MsPlayerOfMatchWidget extends StatelessWidget {
-  const MsPlayerOfMatchWidget({super.key});
+  MsPlayerOfMatchWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class MsPlayerOfMatchWidget extends StatelessWidget {
 
     return Obx(() {
       final stats = controller.stats.value;
-      if (stats == null) return const SizedBox.shrink();
+      if (stats == null) return SizedBox.shrink();
 
       return Container(
         decoration: BoxDecoration(
@@ -31,7 +31,7 @@ class MsPlayerOfMatchWidget extends StatelessWidget {
               width: double.infinity,
               height: 200,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
                 image: DecorationImage(
                   image: NetworkImage(stats.player1Image),
                   fit: BoxFit.cover,
@@ -64,9 +64,9 @@ class MsPlayerOfMatchWidget extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          const Icon(Icons.emoji_events, color: AppColors.primaryContainer, size: 24),
+                          Icon(Icons.emoji_events, color: AppColors.primaryContainer, size: 24),
                           SizedBox(width: ResponsiveHelper.w(8)),
-                          const Icon(Icons.star, color: AppColors.primaryContainer, size: 24),
+                          Icon(Icons.star, color: AppColors.primaryContainer, size: 24),
                         ],
                       ),
                     ],
@@ -86,7 +86,7 @@ class MsPlayerOfMatchWidget extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.smart_toy, color: AppColors.primaryContainer, size: 16),
+                            Icon(Icons.smart_toy, color: AppColors.primaryContainer, size: 16),
                             SizedBox(width: ResponsiveHelper.w(8)),
                             Text('AI INSIGHT SUMMARY', style: AppTypography.labelCaps.copyWith(color: AppColors.primaryContainer, fontSize: 9)),
                           ],

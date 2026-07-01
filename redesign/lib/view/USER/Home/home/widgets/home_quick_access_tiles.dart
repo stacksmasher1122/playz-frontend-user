@@ -6,27 +6,29 @@ import 'package:redesign/view/USER/Home/Groups/groups/groups_screen.dart';
 import 'package:redesign/view/USER/Home/Ranking/rankings/rankings_screen.dart';
 import 'package:redesign/view/USER/Home/scoreboards/scoreboards_screen.dart';
 import '../home_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    QUICK ACCESS TILES
    ============================================================ */
 class HomeQuickAccessTiles extends StatelessWidget {
-  const HomeQuickAccessTiles({super.key});
+  HomeQuickAccessTiles({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         // 2 columns for a dashboard feel
         const crossAxisCount = 2;
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
           child: GridView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
@@ -90,7 +92,7 @@ class HomeQuickTile extends StatelessWidget {
   final bool highlight;
   final Widget? destination;
 
-  const HomeQuickTile(
+  HomeQuickTile(
     this.icon,
     this.title,
     this.subtitle, {super.key, 
@@ -101,10 +103,11 @@ class HomeQuickTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         onTap: destination == null
             ? null
             : () {
@@ -113,15 +116,15 @@ class HomeQuickTile extends StatelessWidget {
                 ).push(MaterialPageRoute(builder: (_) => destination!));
               },
         child: Container(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(ResponsiveHelper.w(12)),
           decoration: BoxDecoration(
             color: UserHomePage.surface, // #181818
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             border: Border.all(
               color: highlight
                   ? UserHomePage.accent.withValues(alpha: 0.5)
                   : Colors.white.withValues(alpha: 0.05),
-              width: 1,
+              width: ResponsiveHelper.w(1),
             ),
           ),
           child: Stack(
@@ -129,10 +132,10 @@ class HomeQuickTile extends StatelessWidget {
               // Badge (BETA/NEW/Active)
               if (badge != null)
                 Positioned(
-                  top: 0,
-                  right: 0,
+                  top: ResponsiveHelper.h(0),
+                  right: ResponsiveHelper.w(0),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 6,
                       vertical: 2,
                     ),
@@ -140,12 +143,12 @@ class HomeQuickTile extends StatelessWidget {
                       color: badge == 'Beta' || badge == 'New'
                           ? UserHomePage.accent
                           : Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
                     ),
                     child: Text(
                       badge!.toUpperCase(),
                       style: GoogleFonts.inter(
-                        fontSize: 8,
+                        fontSize: ResponsiveHelper.sp(8),
                         fontWeight: FontWeight.w900,
                         color: badge == 'Beta' || badge == 'New'
                             ? Colors.black
@@ -160,11 +163,11 @@ class HomeQuickTile extends StatelessWidget {
                 children: [
                   // Icon Container
                   Container(
-                    height: 44,
-                    width: 44,
+                    height: ResponsiveHelper.h(44),
+                    width: ResponsiveHelper.w(44),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                     ),
                     child: Icon(
                       icon,
@@ -172,7 +175,7 @@ class HomeQuickTile extends StatelessWidget {
                       color: highlight ? UserHomePage.accent : Colors.white70,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   // Text Info
                   Expanded(
                     child: Column(
@@ -185,18 +188,18 @@ class HomeQuickTile extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: ResponsiveHelper.sp(14),
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Text(
                           subtitle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
                             color: UserHomePage.muted,
-                            fontSize: 11,
+                            fontSize: ResponsiveHelper.sp(11),
                             fontWeight: FontWeight.w500,
                           ),
                         ),

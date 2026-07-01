@@ -3,29 +3,31 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class EmptyRosterWidget extends StatelessWidget {
   final VoidCallback onAdd;
 
-  const EmptyRosterWidget({super.key, required this.onAdd});
+  EmptyRosterWidget({super.key, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onAdd,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 24),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
         decoration: BoxDecoration(
           color: AppColors.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         ),
         child: CustomPaint(
           painter: DashedBorderPainter(color: AppColors.surfaceContainerHighest, borderRadius: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.person_add_alt_1, color: AppColors.muted),
-              const SizedBox(width: 12),
+              Icon(Icons.person_add_alt_1, color: AppColors.muted),
+              SizedBox(width: 12),
               Text('Add more players', style: AppTypography.bodyMd.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold)),
             ],
           ),

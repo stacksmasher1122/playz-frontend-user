@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'select_sport_tile.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kMuted = Color(0xFF9E9E9E);
+Color kMuted = Color(0xFF9E9E9E);
 
 class SelectSportCategorySection extends StatelessWidget {
   final String title;
@@ -11,7 +12,7 @@ class SelectSportCategorySection extends StatelessWidget {
   final String searchQuery;
   final VoidCallback onToggle;
 
-  const SelectSportCategorySection({
+  SelectSportCategorySection({
     super.key,
     required this.title,
     required this.sports,
@@ -23,12 +24,13 @@ class SelectSportCategorySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final filtered = sports
         .where((s) => s.name.toLowerCase().contains(searchQuery))
         .toList();
 
     if (filtered.isEmpty) {
-      return const SliverToBoxAdapter(child: SizedBox.shrink());
+      return SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
     final isExpanded = expanded || searchQuery.isNotEmpty;
@@ -38,18 +40,18 @@ class SelectSportCategorySection extends StatelessWidget {
         GestureDetector(
           onTap: onToggle,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const Spacer(),
+                Spacer(),
                 Icon(
                   isExpanded
                       ? Icons.keyboard_arrow_up
@@ -62,7 +64,7 @@ class SelectSportCategorySection extends StatelessWidget {
         ),
         if (isExpanded)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final width = constraints.maxWidth;
@@ -74,7 +76,7 @@ class SelectSportCategorySection extends StatelessWidget {
 
                 return GridView.builder(
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: filtered.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: columns,
@@ -93,7 +95,7 @@ class SelectSportCategorySection extends StatelessWidget {
               },
             ),
           ),
-        const Divider(color: Colors.white12),
+        Divider(color: Colors.white12),
       ]),
     );
   }

@@ -8,9 +8,10 @@ import 'widgets/mode_selector.dart';
 import 'widgets/team_section.dart';
 import 'widgets/player_actions.dart';
 import 'widgets/bottom_next_button.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PickleballTeamManagementScreen extends StatefulWidget {
-  const PickleballTeamManagementScreen({super.key});
+  PickleballTeamManagementScreen({super.key});
 
   @override
   State<PickleballTeamManagementScreen> createState() => _PickleballTeamManagementScreenState();
@@ -28,7 +29,7 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
     
     _sectionFadeController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
     );
     _sectionFadeController.forward();
   }
@@ -45,18 +46,18 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surfaceContainerHigh,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(16))),
       ),
       builder: (context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.muted, borderRadius: BorderRadius.circular(2))),
-                const SizedBox(height: 16),
+                Container(width: ResponsiveHelper.w(40), height: ResponsiveHelper.h(4), decoration: BoxDecoration(color: AppColors.muted, borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)))),
+                SizedBox(height: 16),
                 PlayerActions(
                   onCreate: controller.createPlayer,
                   onSelect: () => controller.selectExistingPlayer(team, slot),
@@ -72,26 +73,27 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const TeamManagementAppbar(),
+      appBar: TeamManagementAppbar(),
       body: SafeArea(
         child: FadeTransition(
           opacity: _sectionFadeController,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const TeamHeaderWidget(),
-                const SizedBox(height: 24),
+                TeamHeaderWidget(),
+                SizedBox(height: 24),
                 Center(
                   child: Obx(() => ModeSelector(
                     isSingles: controller.isSingles.value,
                     onChanged: controller.changeMode,
                   )),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
                 Obx(() => TeamSection(
                   isTeamA: true,
                   players: controller.teamAPlayers,
@@ -99,7 +101,7 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
                   onRemove: (index) => controller.removePlayer(1, index),
                   onEmptySlotTap: (slot) => _showPlayerSelectionSheet(1, slot),
                 )),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Obx(() => TeamSection(
                   isTeamA: false,
                   players: controller.teamBPlayers,
@@ -107,7 +109,7 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
                   onRemove: (index) => controller.removePlayer(2, index),
                   onEmptySlotTap: (slot) => _showPlayerSelectionSheet(2, slot),
                 )),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
                 // These global action buttons trigger selection for the active empty slot or Team B as fallback.
                 PlayerActions(
                   onCreate: () {
@@ -125,7 +127,7 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
                     controller.importTournamentPlayer();
                   },
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
               ],
             ),
           ),

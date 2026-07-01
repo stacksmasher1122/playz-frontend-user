@@ -27,9 +27,10 @@ import 'widgets/setup_controls.dart';
 import 'widgets/tournament_type_selector.dart';
 import 'widgets/engine_preview.dart';
 import 'widgets/sticky_cta_button.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchSetupScreen extends StatefulWidget {
-  const MatchSetupScreen({super.key});
+  MatchSetupScreen({super.key});
 
   @override
   State<MatchSetupScreen> createState() => _MatchSetupScreenState();
@@ -58,7 +59,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
 
   // Schedule
   final DateTime _fDate = DateTime.now();
-  final TimeOfDay _fTime = const TimeOfDay(hour: 20, minute: 00);
+  final TimeOfDay _fTime = TimeOfDay(hour: 20, minute: 00);
 
   final List<Team> _fTeams = [
     Team(name: 'Home FC', color: Colors.blueAccent, players: []),
@@ -109,7 +110,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
     super.initState();
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: Duration(seconds: 2),
     )..repeat(reverse: true);
     _initTeams();
   }
@@ -135,7 +136,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   void _regenerateEngine() {
     setState(() => _isGenerating = true);
     HapticFeedback.mediumImpact();
-    Future.delayed(const Duration(milliseconds: 800), () {
+    Future.delayed(Duration(milliseconds: 800), () {
       if (!mounted) return;
       setState(() {
         if (_tournamentType == TournamentType.knockout) {
@@ -181,7 +182,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
     });
     HapticFeedback.lightImpact();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Text("Standard Friendly Rules Applied"),
         backgroundColor: kSuccess,
         duration: Duration(milliseconds: 1500),
@@ -191,6 +192,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
@@ -209,7 +211,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                   ),
                   SliverToBoxAdapter(
                     child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 400),
+                      duration: Duration(milliseconds: 400),
                       switchInCurve: Curves.easeOutCubic,
                       switchOutCurve: Curves.easeInCubic,
                       transitionBuilder: (child, animation) {
@@ -217,7 +219,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                           opacity: animation,
                           child: SlideTransition(
                             position: Tween<Offset>(
-                              begin: const Offset(0.02, 0),
+                              begin: Offset(0.02, 0),
                               end: Offset.zero,
                             ).animate(animation),
                             child: child,
@@ -229,7 +231,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                           : _buildTournamentSection(),
                     ),
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 120)),
+                  SliverToBoxAdapter(child: SizedBox(height: 120)),
                 ],
               ),
             ),
@@ -283,7 +285,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
 
   Widget _buildFriendlySection() {
     return Column(
-      key: const ValueKey('Friendly'),
+      key: ValueKey('Friendly'),
       children: [
         SmartPresetsCard(onApply: _applyFriendlyPreset),
         SetupSectionCard(
@@ -309,7 +311,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                 min: 3,
                 max: 11,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               StepperControl(
                 label: "Half Duration (mins)",
                 value: _fDuration,
@@ -347,15 +349,15 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                   onChanged: (v) => setState(() => _fPenalties = v),
                 ),
               ],
-              const Divider(color: kDivider, height: 24),
+              Divider(color: kDivider, height: 24),
               SetupSwitch(
                 label: "Manual Match Control",
                 value: _fManualControl,
                 onChanged: (v) => setState(() => _fManualControl = v),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               SegmentedControl(
-                options: const ["Count Up", "Countdown"],
+                options: ["Count Up", "Countdown"],
                 selectedIndex: _fTimerType == TimerType.countUp ? 0 : 1,
                 onSelect: (i) => setState(
                   () => _fTimerType = i == 0
@@ -398,7 +400,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
               Expanded(
                 child: Text(
                   "Starts in ~${_fTime.hour - TimeOfDay.now().hour} hours",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: kAccent,
                     fontWeight: FontWeight.bold,
                   ),
@@ -406,7 +408,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
               ),
               Text(
                 "${_fDate.day}/${_fDate.month} • ${_fTime.format(context)}",
-                style: const TextStyle(color: kTextPrimary),
+                style: TextStyle(color: kTextPrimary),
               ),
             ],
           ),
@@ -418,7 +420,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
 
   Widget _buildTournamentSection() {
     return Column(
-      key: const ValueKey('Tournament'),
+      key: ValueKey('Tournament'),
       children: [
         TournamentTypeSelector(
           selectedType: _tournamentType,
@@ -429,9 +431,9 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
             });
           },
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
+          duration: Duration(milliseconds: 400),
           child: _buildTournamentEngineUI(),
         ),
       ],
@@ -448,7 +450,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
           child: Column(
             children: [
               SetupTextField(label: "Tournament Name", initialValue: _tName),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
@@ -457,7 +459,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                       initialValue: _tSeason,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: SetupTextField(
                       label: "Region",
@@ -466,8 +468,8 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              const SetupTextField(
+              SizedBox(height: 12),
+              SetupTextField(
                 label: "Host Name",
                 initialValue: "Official Organizer",
               ),
@@ -486,7 +488,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                 min: 3,
                 max: 11,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               StepperControl(
                 label: "Half Duration (mins)",
                 value: _tDuration,
@@ -512,13 +514,13 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                 max: 64,
               ),
               if (_tournamentType == TournamentType.league) ...[
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 StepperControl(
                   label: "Relegation Spots",
                   value: _lRelegationSpots,
                   onChanged: (v) => setState(() => _lRelegationSpots = v),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 SetupSwitch(
                   label: "Double Round Robin",
                   value: _lDoubleRound,
@@ -529,7 +531,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                 ),
               ],
               if (_tournamentType == TournamentType.hybrid) ...[
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 StepperControl(
                   label: "Number of Groups",
                   value: _hGroupCount,
@@ -540,7 +542,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                   min: 2,
                   max: 8,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 StepperControl(
                   label: "Qualify per Group",
                   value: _hQualifyPerGroup,
@@ -569,7 +571,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                 onChanged: (v) => setState(() => _tPenalties = v),
               ),
               if (_tournamentType == TournamentType.knockout) ...[
-                const Divider(color: kDivider, height: 24),
+                Divider(color: kDivider, height: 24),
                 SetupSwitch(
                   label: "Third Place Playoff",
                   value: _kThirdPlace,
@@ -611,7 +613,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                   onChanged: (v) => setState(() => _lRelegation = v),
                 ),
                 if (_lRelegation) ...[
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   StepperControl(
                     label: "Relegation Spots",
                     value: _lRelegationSpots,
@@ -620,7 +622,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                     max: 4,
                   ),
                 ],
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 StepperControl(
                   label: "Squad Size",
                   value: _lSquadSize,
@@ -628,12 +630,12 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                   min: 11,
                   max: 40,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 SetupTextField(
                   label: "Teams Formation",
                   initialValue: _lFormation,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 SetupSwitch(
                   label: "Double Round Robin",
                   value: _lDoubleRound,
@@ -649,9 +651,9 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
           title: "ENGINE PREVIEW",
           icon: Icons.visibility,
           child: _isGenerating
-              ? const Center(
+              ? Center(
                   child: Padding(
-                    padding: EdgeInsets.all(24),
+                    padding: EdgeInsets.all(ResponsiveHelper.w(24)),
                     child: CircularProgressIndicator(color: kAccent),
                   ),
                 )
@@ -669,12 +671,12 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
 
   Widget _buildSystemCheck() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
           color: kSurfaceHighlight,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
         child: Column(
           children: [
@@ -689,7 +691,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
 
   Widget _buildCheckItem(String label, bool checked) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
           Icon(
@@ -697,12 +699,12 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
             color: checked ? kSuccess : kTextMuted,
             size: 16,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text(
             label,
             style: TextStyle(
               color: checked ? kTextPrimary : kTextMuted,
-              fontSize: 13,
+              fontSize: ResponsiveHelper.sp(13),
             ),
           ),
         ],
@@ -713,12 +715,12 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   Widget _buildFriendlyPreview() {
     bool valid = ValidationEngine.validateFriendly(_fTeams, _fPlayersPerSide);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
           color: valid ? kAccentDim.withValues(alpha: 0.1) : kSurfaceHighlight,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(
             color: valid ? kSuccess : kWarning.withValues(alpha: 0.3),
           ),

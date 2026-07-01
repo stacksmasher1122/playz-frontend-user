@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TeamScoreWidget extends StatelessWidget {
   final String teamName;
   final String? logoUrl;
 
-  const TeamScoreWidget({
+  TeamScoreWidget({
     super.key,
     required this.teamName,
     this.logoUrl,
@@ -12,12 +13,13 @@ class TeamScoreWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 50,
-          height: 50,
+          width: ResponsiveHelper.w(50),
+          height: ResponsiveHelper.h(50),
           decoration: BoxDecoration(
             color: Colors.black,
             shape: BoxShape.circle,
@@ -30,15 +32,15 @@ class TeamScoreWidget extends StatelessWidget {
                 : null,
           ),
           child: logoUrl == null
-              ? const Icon(Icons.shield, color: Colors.blueAccent, size: 24)
+              ? Icon(Icons.shield, color: Colors.blueAccent, size: 24)
               : null,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           teamName.toUpperCase(),
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 12,
+            fontSize: ResponsiveHelper.sp(12),
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,

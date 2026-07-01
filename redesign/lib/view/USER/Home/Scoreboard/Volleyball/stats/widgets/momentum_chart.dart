@@ -6,7 +6,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class MomentumChart extends StatelessWidget {
   final VolleyballStatsController controller;
 
-  const MomentumChart({super.key, required this.controller});
+  MomentumChart({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +20,13 @@ class MomentumChart extends StatelessWidget {
             Row(
               children: [
                 _buildLegend(AppColors.primaryContainer, 'GIANTS'),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 _buildLegend(AppColors.surfaceContainerHighest, 'WOLVES'),
               ],
             ),
           ],
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         SizedBox(
           height: 150,
           child: Row(
@@ -40,12 +40,12 @@ class MomentumChart extends StatelessWidget {
 
               return Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  padding: EdgeInsets.symmetric(horizontal: 2.0),
                   child: Container(
                     height: height,
                     decoration: BoxDecoration(
                       color: color,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(2)),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(2)),
                     ),
                   ),
                 ),
@@ -53,7 +53,7 @@ class MomentumChart extends StatelessWidget {
             }),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -71,7 +71,7 @@ class MomentumChart extends StatelessWidget {
     return Row(
       children: [
         Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-        const SizedBox(width: 6),
+        SizedBox(width: 6),
         Text(text, style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
       ],
     );

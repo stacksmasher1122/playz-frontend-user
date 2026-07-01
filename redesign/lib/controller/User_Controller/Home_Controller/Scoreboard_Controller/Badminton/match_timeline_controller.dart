@@ -29,7 +29,7 @@ class MatchTimelineController extends GetxController {
 
   void loadAchievements() {
     achievements.value = [
-      const MatchAchievementModel(
+      MatchAchievementModel(
         title: 'SMASHER',
         subtitle: 'Top speed: 412 km/h',
         icon: Icons.bolt,
@@ -37,7 +37,7 @@ class MatchTimelineController extends GetxController {
         badgeColor: Color(0xFFC6FF00), // Neon Yellow-Green
         description: 'Highest smash speed of the tournament',
       ),
-      const MatchAchievementModel(
+      MatchAchievementModel(
         title: 'THE WALL',
         subtitle: '88% Defense Success',
         icon: Icons.security,
@@ -45,7 +45,7 @@ class MatchTimelineController extends GetxController {
         badgeColor: Color(0xFFC6FF00),
         description: 'Impenetrable defense during rallies',
       ),
-      const MatchAchievementModel(
+      MatchAchievementModel(
         title: 'TACTICIAN',
         subtitle: 'Zero unforced errors set 3',
         icon: Icons.psychology,
@@ -57,7 +57,7 @@ class MatchTimelineController extends GetxController {
   }
 
   void loadMetrics() {
-    metrics.value = const MatchMetricModel(
+    metrics.value = MatchMetricModel(
       matchDuration: 74,
       longestRally: 42,
       totalSmashes: 45,
@@ -69,7 +69,7 @@ class MatchTimelineController extends GetxController {
 
   Future<void> generateAISummary() async {
     isGeneratingSummary.value = true;
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 2));
     isGeneratingSummary.value = false;
     showSuccess("AI Summary Generated Successfully");
   }
@@ -80,7 +80,7 @@ class MatchTimelineController extends GetxController {
 
   Future<void> exportPDF() async {
     isExporting.value = true;
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 2));
     isExporting.value = false;
     showSuccess("Match Result Exported as PDF Successfully");
   }
@@ -110,15 +110,15 @@ class MatchTimelineController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00), // Neon Yellow-Green
+      backgroundColor: Color(0xFFC6FF00), // Neon Yellow-Green
       colorText: Colors.black,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 
@@ -126,14 +126,14 @@ class MatchTimelineController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 }

@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CancellationPolicyBanner extends StatelessWidget {
-  const CancellationPolicyBanner({super.key});
+  CancellationPolicyBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(ResponsiveHelper.w(12)),
         decoration: BoxDecoration(
           color: Colors.red.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           border: Border.all(color: Colors.red),
         ),
         child: Row(
-          children: const [
+          children: [
             Icon(Icons.warning, color: Colors.red),
             SizedBox(width: 8),
             Expanded(

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LineChartWidget extends StatelessWidget {
   final List<double> points; // 0.0 to 1.0
   final Animation<double> animation;
 
-  const LineChartWidget({
+  LineChartWidget({
     super.key,
     required this.points,
     required this.animation,
@@ -13,11 +14,12 @@ class LineChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
         return CustomPaint(
-          size: const Size(double.infinity, 120),
+          size: Size(double.infinity, 120),
           painter: _LineChartPainter(
             points: points,
             progress: animation.value,
@@ -74,7 +76,7 @@ class _LineChartPainter extends CustomPainter {
         Offset(0, size.height / 2),
         Offset(0, size.height),
         [
-          const Color(0xFFC6FF00).withValues(alpha: 0.3), // Neon Yellow-Green
+          Color(0xFFC6FF00).withValues(alpha: 0.3), // Neon Yellow-Green
           Colors.transparent,
         ],
       );
@@ -83,7 +85,7 @@ class _LineChartPainter extends CustomPainter {
 
     // 2. Draw the jagged green line
     final strokePaint = Paint()
-      ..color = const Color(0xFFC6FF00)
+      ..color = Color(0xFFC6FF00)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0
       ..strokeJoin = StrokeJoin.round;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF161616);
 const kGreen = Color(0xFF6EDC6A);
@@ -8,7 +9,7 @@ class MemberCountSlider extends StatelessWidget {
   final double maxMembers;
   final Function(double) onChanged;
 
-  const MemberCountSlider({
+  MemberCountSlider({
     super.key,
     required this.maxMembers,
     required this.onChanged,
@@ -16,6 +17,7 @@ class MemberCountSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         SliderTheme(
@@ -35,10 +37,10 @@ class MemberCountSlider extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text('5', style: TextStyle(color: kMuted, fontSize: 11)),
               Text('50', style: TextStyle(color: kMuted, fontSize: 11)),
             ],

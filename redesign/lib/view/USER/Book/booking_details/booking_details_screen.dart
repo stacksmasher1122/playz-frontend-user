@@ -11,12 +11,13 @@ import 'widgets/confirmation_bottom_bar.dart';
 import 'widgets/date_selector.dart';
 import 'widgets/solo_queue_options.dart';
 import 'widgets/sport_selector.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBgColor = Colors.black;
 const kMuted = Color(0xFFA7A7A7);
 
 class ConfirmSlotScreen extends StatefulWidget {
-  const ConfirmSlotScreen({super.key});
+  ConfirmSlotScreen({super.key});
 
   @override
   State<ConfirmSlotScreen> createState() => _ConfirmSlotScreenState();
@@ -119,22 +120,23 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
     _timelineController.animateTo(
       offset,
-      duration: const Duration(milliseconds: 450),
+      duration: Duration(milliseconds: 450),
       curve: Curves.easeOutCubic,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBgColor,
       extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        leading: const BackButton(),
-        title: const Text('Confirm Slot'),
-        actions: const [
+        leading: BackButton(),
+        title: Text('Confirm Slot'),
+        actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
             child: Text('Step 2/3', style: TextStyle(color: kMuted)),
@@ -142,7 +144,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 110),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 110),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -150,15 +152,15 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
               selectedDate: selectedDate,
               onDateSelected: (date) => setState(() => selectedDate = date),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
-            const _SectionTitle(text: 'Sport & Ground'),
-            const SizedBox(height: 8),
+            _SectionTitle(text: 'Sport & Ground'),
+            SizedBox(height: 8),
             SportSelector(
               selectedSport: selectedSport,
               onSportSelected: (sport) => setState(() => selectedSport = sport),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             BookingDropdowns(
               selectedType: selectedType,
               selectedSize: selectedSize,
@@ -167,10 +169,10 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
               onTypeSelected: (v) => setState(() => selectedType = v),
               onSizeSelected: (v) => setState(() => selectedSize = v),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             AvailabilityTimeline(controller: _timelineController),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             BookingTimePickers(
               startTime: _startTime,
@@ -178,10 +180,10 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
               onPickStartTime: () => _pickTime(isStart: true),
               onPickEndTime: () => _pickTime(isStart: false),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
-            const _SectionTitle(text: 'Add-ons & Equipment'),
-            const SizedBox(height: 5),
+            _SectionTitle(text: 'Add-ons & Equipment'),
+            SizedBox(height: 5),
             AddonCard(
               title: 'Pro Match Ball',
               price: '+ ₹200',
@@ -200,7 +202,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
               isSelected: _selectedAddons.contains('Referee Service'),
               onTap: () => _toggleAddon('Referee Service'),
             ),
-            const SizedBox(height: 28),
+            SizedBox(height: 28),
 
             SoloQueueOptions(
               soloQueue: soloQueue,
@@ -216,9 +218,9 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
               onBringOwnEquipmentChanged: (v) =>
                   setState(() => bringOwnEquipment = v),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
-            const BookingSummary(),
+            BookingSummary(),
           ],
         ),
       ),
@@ -250,13 +252,13 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
     final picked = await showTimePicker(
       context: context,
       initialTime: isStart
-          ? (_startTime ?? const TimeOfDay(hour: 8, minute: 0))
-          : (_endTime ?? const TimeOfDay(hour: 9, minute: 0)),
+          ? (_startTime ?? TimeOfDay(hour: 8, minute: 0))
+          : (_endTime ?? TimeOfDay(hour: 9, minute: 0)),
       helpText: 'Select Hour',
       builder: (context, child) {
         return Theme(
           data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
+            colorScheme: ColorScheme.dark(
               primary: AppColors.accent,
               surface: Colors.black,
               onSurface: Colors.white,
@@ -289,17 +291,18 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
 class _SectionTitle extends StatelessWidget {
   final String text;
-  const _SectionTitle({required this.text});
+  _SectionTitle({required this.text});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
-          fontSize: 18,
+          fontSize: ResponsiveHelper.sp(18),
           fontWeight: FontWeight.bold,
         ),
       ),

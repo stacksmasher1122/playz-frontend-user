@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class DashedCirclePainter extends CustomPainter {
   final Color color;
@@ -46,7 +47,7 @@ class EmptyPositionWidget extends StatelessWidget {
   final bool isCenterActive; // To make the visually distinct solid lime circle
   final VoidCallback onTap;
 
-  const EmptyPositionWidget({
+  EmptyPositionWidget({
     super.key,
     required this.label,
     this.isCenterActive = false,
@@ -55,22 +56,23 @@ class EmptyPositionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: 50,
-            height: 50,
+            width: ResponsiveHelper.w(50),
+            height: ResponsiveHelper.h(50),
             child: isCenterActive
                 ? Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: const Color(0xFFC6FF00).withValues(alpha: 0.1),
-                      border: Border.all(color: const Color(0xFFC6FF00), width: 2),
+                      color: Color(0xFFC6FF00).withValues(alpha: 0.1),
+                      border: Border.all(color: Color(0xFFC6FF00), width: 2),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Icon(Icons.person_add_alt_1, color: Color(0xFFC6FF00), size: 24),
                     ),
                   )
@@ -86,18 +88,18 @@ class EmptyPositionWidget extends StatelessWidget {
                     ),
                   ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.6),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
             ),
             child: Text(
               label.toUpperCase(),
               style: TextStyle(
-                color: isCenterActive ? const Color(0xFFC6FF00) : Colors.grey,
-                fontSize: 10,
+                color: isCenterActive ? Color(0xFFC6FF00) : Colors.grey,
+                fontSize: ResponsiveHelper.sp(10),
                 fontWeight: FontWeight.bold,
               ),
             ),

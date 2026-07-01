@@ -5,26 +5,28 @@ import 'pitch_lines_widget.dart';
 import 'player_position_widget.dart';
 import 'empty_position_widget.dart';
 import 'goalkeeper_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FootballPitchWidget extends StatelessWidget {
-  const FootballPitchWidget({super.key});
+  FootballPitchWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<StartingLineupController>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(16.0)),
       child: AspectRatio(
         aspectRatio: 0.8, // Rectangular pitch shape
         child: Container(
           decoration: BoxDecoration(
             color: Colors.green.shade900.withValues(alpha: 0.2), // dark green tint
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFFC6FF00), width: 1.5), // Lime border
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+            border: Border.all(color: Color(0xFFC6FF00), width: 1.5), // Lime border
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFC6FF00).withValues(alpha: 0.1),
+                color: Color(0xFFC6FF00).withValues(alpha: 0.1),
                 blurRadius: 16,
                 spreadRadius: 2,
               )
@@ -33,14 +35,14 @@ class FootballPitchWidget extends StatelessWidget {
           child: Stack(
             children: [
               // 1. Pitch Lines Marking
-              const RepaintBoundary(
+              RepaintBoundary(
                 child: PitchLinesWidget(),
               ),
               
               // 2. Dynamic Player Slots based on Formation
               Obx(() {
                 final formation = controller.currentFormation.value;
-                if (formation == null) return const SizedBox();
+                if (formation == null) return SizedBox();
 
                 return LayoutBuilder(
                   builder: (context, constraints) {
@@ -54,7 +56,7 @@ class FootballPitchWidget extends StatelessWidget {
                         final yPos = (slot.y * height) - 30; // 30 is approx half of the widget height
 
                         return AnimatedPositioned(
-                          duration: const Duration(milliseconds: 300),
+                          duration: Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                           left: xPos,
                           top: yPos,
@@ -105,7 +107,7 @@ class FootballPitchWidget extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
+                  padding: EdgeInsets.only(bottom: 12.0),
                   child: Obx(() {
                     return GoalkeeperWidget(
                       goalkeeper: controller.goalkeeper.value,

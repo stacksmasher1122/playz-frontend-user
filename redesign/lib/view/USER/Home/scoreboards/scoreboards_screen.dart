@@ -10,11 +10,12 @@ import 'widgets/quick_actions_row.dart';
 import 'widgets/create_scoreboard_hero.dart';
 import 'widgets/live_matches_empty_state.dart';
 import 'widgets/live_match_preview_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = AppColors.background;
 
 class ScoreboardHubScreen extends StatefulWidget {
-  const ScoreboardHubScreen({super.key});
+  ScoreboardHubScreen({super.key});
 
   @override
   State<ScoreboardHubScreen> createState() => _ScoreboardHubScreenState();
@@ -23,20 +24,21 @@ class ScoreboardHubScreen extends StatefulWidget {
 class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
         bottom: false,
         child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           slivers: [
-            const ScoreboardAppBar(),
+            ScoreboardAppBar(),
 
             /// QUICK ACTIONS
-            const QuickActionsRow(),
+            QuickActionsRow(),
 
             /// CREATE SCOREBOARD
-            const SliverToBoxAdapter(child: CreateScoreboardHero()),
+            SliverToBoxAdapter(child: CreateScoreboardHero()),
 
             /// LIVE MATCHES REEL
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -47,7 +49,7 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const LiveMatchesEmptyState();
+                  return LiveMatchesEmptyState();
                 }
 
                 final matches = snapshot.data!.docs
@@ -55,7 +57,7 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
                     .toList();
 
                 return SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                  padding: EdgeInsets.fromLTRB(16, 0, 16, 24),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) => LiveMatchPreviewCard(match: matches[index]),

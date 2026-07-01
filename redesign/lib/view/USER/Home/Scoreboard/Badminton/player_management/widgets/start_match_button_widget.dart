@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class StartMatchButtonWidget extends StatefulWidget {
   final VoidCallback onTap;
 
-  const StartMatchButtonWidget({
+  StartMatchButtonWidget({
     super.key,
     required this.onTap,
   });
@@ -17,6 +18,7 @@ class _StartMatchButtonWidgetState extends State<StartMatchButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
@@ -26,23 +28,23 @@ class _StartMatchButtonWidgetState extends State<StartMatchButtonWidget> {
       onTapCancel: () => setState(() => _isPressed = false),
       child: AnimatedScale(
         scale: _isPressed ? 0.97 : 1.0,
-        duration: const Duration(milliseconds: 100),
+        duration: Duration(milliseconds: 100),
         child: Container(
-          margin: const EdgeInsets.fromLTRB(24, 8, 24, 32),
-          height: 60,
+          margin: EdgeInsets.fromLTRB(24, 8, 24, 32),
+          height: ResponsiveHelper.h(60),
           child: CustomPaint(
             painter: ParallelogramPainter(
-              color: const Color(0xFFC6FF00), // Neon Yellow-Green
+              color: Color(0xFFC6FF00), // Neon Yellow-Green
             ),
             child: Center(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Text(
                     'START MATCH',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.sp(16),
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.0,
                     ),

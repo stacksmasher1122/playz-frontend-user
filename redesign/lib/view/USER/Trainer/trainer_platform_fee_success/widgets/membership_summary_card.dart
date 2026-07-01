@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF0E0E0E);
 const kMuted = Color(0xFFA7A7A7);
@@ -7,27 +8,28 @@ const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
 
 class MembershipSummaryCard extends StatelessWidget {
-  const MembershipSummaryCard({super.key});
+  MembershipSummaryCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
         border: Border.all(color: kGreen.withValues(alpha: 0.4)),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
+            children: [
               Text(
                 'MEMBERSHIP ACTIVE',
                 style: TextStyle(
                   color: kMuted,
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.8,
                 ),
@@ -36,28 +38,28 @@ class MembershipSummaryCard extends StatelessWidget {
               Icon(Icons.verified_rounded, color: kGreen, size: 18),
             ],
           ),
-          const SizedBox(height: 12),
-          const Text(
+          SizedBox(height: 12),
+          Text(
             'Trainer Pro – 1 Year',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: ResponsiveHelper.sp(18),
               fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Row(
-            children: const [
+            children: [
               Icon(Icons.calendar_month_rounded, size: 16, color: kGreen),
               SizedBox(width: 6),
               Text('Valid until Dec 15, 2024', style: TextStyle(color: kGreen)),
             ],
           ),
-          const SizedBox(height: 16),
-          const PriceRow(label: 'Plan Price', value: '₹4,999.00'),
-          const PriceRow(label: 'GST (18%)', value: '₹899.82'),
-          const Divider(color: kCard),
-          const PriceRow(
+          SizedBox(height: 16),
+          PriceRow(label: 'Plan Price', value: '₹4,999.00'),
+          PriceRow(label: 'GST (18%)', value: '₹899.82'),
+          Divider(color: kCard),
+          PriceRow(
             label: 'Total Charged',
             value: '₹5,898.82',
             highlight: true,
@@ -73,7 +75,7 @@ class PriceRow extends StatelessWidget {
   final String value;
   final bool highlight;
 
-  const PriceRow({
+  PriceRow({
     super.key,
     required this.label,
     required this.value,
@@ -82,8 +84,9 @@ class PriceRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(6)),
       child: Row(
         children: [
           Expanded(

@@ -6,12 +6,13 @@ import 'widgets/benefits_unlocked_card.dart';
 import 'widgets/next_steps_card.dart';
 import 'widgets/payment_details_card.dart';
 import 'widgets/fee_success_bottom_bar.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = AppColors.background;
 const kMuted = Color(0xFFA7A7A7);
 
 class TrainerPaymentSuccessScreen extends StatefulWidget {
-  const TrainerPaymentSuccessScreen({super.key});
+  TrainerPaymentSuccessScreen({super.key});
 
   @override
   State<TrainerPaymentSuccessScreen> createState() =>
@@ -28,7 +29,7 @@ class _TrainerPaymentSuccessScreenState
     super.initState();
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: Duration(milliseconds: 1200),
     )..repeat(reverse: true);
   }
 
@@ -40,17 +41,18 @@ class _TrainerPaymentSuccessScreenState
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final bottomInset = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           padding: EdgeInsets.fromLTRB(16, 40, 16, 140 + bottomInset),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
+            children: [
               SuccessRipple(),
               SizedBox(height: 24),
 
@@ -59,7 +61,7 @@ class _TrainerPaymentSuccessScreenState
                 'Payment Successful!',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: ResponsiveHelper.sp(24),
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -94,7 +96,7 @@ class _TrainerPaymentSuccessScreenState
       ),
 
       /// BOTTOM CTA
-      bottomNavigationBar: const FeeSuccessBottomBar(),
+      bottomNavigationBar: FeeSuccessBottomBar(),
     );
   }
 }

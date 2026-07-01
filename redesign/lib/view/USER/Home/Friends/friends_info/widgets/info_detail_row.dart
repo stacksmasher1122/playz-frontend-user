@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class InfoDetailRow extends StatelessWidget {
   final IconData icon;
@@ -6,7 +7,7 @@ class InfoDetailRow extends StatelessWidget {
   final String value;
   final Color valueColor;
 
-  const InfoDetailRow({
+  InfoDetailRow({
     super.key,
     required this.icon,
     required this.title,
@@ -16,21 +17,22 @@ class InfoDetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(20)),
       child: Row(
         children: [
           Icon(icon, color: Colors.white54, size: 22),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 15,
+              fontSize: ResponsiveHelper.sp(15),
               fontWeight: FontWeight.w500,
             ),
           ),
-          const Spacer(),
+          Spacer(),
           Text(
             value,
             style: TextStyle(color: valueColor, fontSize: 15),

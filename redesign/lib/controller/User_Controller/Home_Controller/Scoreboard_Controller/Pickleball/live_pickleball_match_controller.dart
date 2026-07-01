@@ -38,7 +38,7 @@ class LivePickleballMatchController extends GetxController {
   }
 
   void startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (!isPaused.value) {
         _seconds++;
         int m = _seconds ~/ 60;
@@ -98,21 +98,21 @@ class LivePickleballMatchController extends GetxController {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surfaceContainerHigh,
-        title: const Text("End Match?", style: TextStyle(color: AppColors.primary)),
-        content: const Text("Are you sure you want to finish this match?", style: TextStyle(color: AppColors.muted)),
+        title: Text("End Match?", style: TextStyle(color: AppColors.primary)),
+        content: Text("Are you sure you want to finish this match?", style: TextStyle(color: AppColors.muted)),
         actions: [
           OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel", style: TextStyle(color: AppColors.primary)),
+            child: Text("Cancel", style: TextStyle(color: AppColors.primary)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () {
               Navigator.pop(context); // Close dialog
               finishMatch();
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const MatchResultScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => MatchResultScreen()));
             },
-            child: const Text("End Match", style: TextStyle(color: Colors.white)),
+            child: Text("End Match", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -158,7 +158,7 @@ class LivePickleballMatchController extends GetxController {
   }
 
   void goToStats() {
-    Navigator.push(Get.context!, MaterialPageRoute(builder: (_) => const PickleballStatsScreen()));
+    Navigator.push(Get.context!, MaterialPageRoute(builder: (_) => PickleballStatsScreen()));
   }
   void goToPlayers() => showSuccess("Navigating to Players");
   void goToSettings() => showSuccess("Navigating to Settings");

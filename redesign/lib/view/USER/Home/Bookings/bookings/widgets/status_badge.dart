@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class StatusBadge extends StatelessWidget {
   final String label;
   final Color color;
   final Color? textColor;
 
-  const StatusBadge(this.label, this.color, {super.key, this.textColor});
+  StatusBadge(this.label, this.color, {super.key, this.textColor});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final resolvedTextColor = textColor ?? color;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(5)),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12), // soft fill
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(999)),
         border: Border.all(
           color: color.withValues(alpha: 0.6), // 🔥 outline
-          width: 1,
+          width: ResponsiveHelper.w(1),
         ),
       ),
       child: Text(
@@ -27,7 +29,7 @@ class StatusBadge extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
           color: resolvedTextColor,
-          fontSize: 11,
+          fontSize: ResponsiveHelper.sp(11),
           fontWeight: FontWeight.w700,
           letterSpacing: 0.6,
         ),

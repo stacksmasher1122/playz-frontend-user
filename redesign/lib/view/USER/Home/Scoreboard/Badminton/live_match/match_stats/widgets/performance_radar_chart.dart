@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Badminton/performance_metric_model.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PerformanceRadarChart extends StatelessWidget {
   final PerformanceMetricModel metrics;
   final Animation<double> animation;
 
-  const PerformanceRadarChart({
+  PerformanceRadarChart({
     super.key,
     required this.metrics,
     required this.animation,
@@ -14,13 +15,14 @@ class PerformanceRadarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
         return Transform.scale(
           scale: 0.8 + (0.2 * animation.value),
           child: CustomPaint(
-            size: const Size(200, 200),
+            size: Size(200, 200),
             painter: _RadarChartPainter(
               metrics: metrics,
               progress: animation.value,
@@ -103,10 +105,10 @@ class _RadarChartPainter extends CustomPainter {
       canvas.drawPath(path, paint);
     } else {
       final fillPaint = Paint()
-        ..color = const Color(0xFFC6FF00).withValues(alpha: 0.2) // Neon Yellow-Green
+        ..color = Color(0xFFC6FF00).withValues(alpha: 0.2) // Neon Yellow-Green
         ..style = PaintingStyle.fill;
       final strokePaint = Paint()
-        ..color = const Color(0xFFC6FF00)
+        ..color = Color(0xFFC6FF00)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0;
 
@@ -128,9 +130,9 @@ class _RadarChartPainter extends CustomPainter {
 
       textPainter.text = TextSpan(
         text: labels[i],
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.grey,
-          fontSize: 10,
+          fontSize: ResponsiveHelper.sp(10),
           fontWeight: FontWeight.bold,
         ),
       );

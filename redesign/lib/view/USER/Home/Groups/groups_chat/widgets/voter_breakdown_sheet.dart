@@ -15,18 +15,18 @@ void showPollVotersSheet(
     isScrollControlled: true,
     builder: (_) => Container(
       height: MediaQuery.of(context).size.height * 0.7,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Color(0xFF1E1E1E),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   "Voter Details",
                   style: TextStyle(
                     color: Colors.white,
@@ -35,18 +35,18 @@ void showPollVotersSheet(
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
+                  icon: Icon(Icons.close, color: Colors.white),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
           ),
-          const Divider(color: Colors.white10, height: 1),
+          Divider(color: Colors.white10, height: 1),
           Expanded(
             child: ListView.separated(
               itemCount: rawOptions.length,
               separatorBuilder: (_, __) =>
-                  const Divider(color: Colors.white10, height: 1),
+                  Divider(color: Colors.white10, height: 1),
               itemBuilder: (context, index) {
                 final opt = rawOptions[index];
                 String id = opt['id'].toString();
@@ -59,16 +59,16 @@ void showPollVotersSheet(
                   if (list.contains(id)) voterEmails.add(entry.key);
                 }
 
-                if (voterEmails.isEmpty) return const SizedBox.shrink();
+                if (voterEmails.isEmpty) return SizedBox.shrink();
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                       child: Text(
                         text,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: _kGreen,
                           fontWeight: FontWeight.bold,
                         ),
@@ -81,20 +81,20 @@ void showPollVotersSheet(
 
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: const Color(0xFF333333),
+                          backgroundColor: Color(0xFF333333),
                           backgroundImage: image != null
                               ? NetworkImage(image)
                               : null,
                           child: image == null
                               ? Text(
                                   name[0].toUpperCase(),
-                                  style: const TextStyle(color: Colors.white),
+                                  style: TextStyle(color: Colors.white),
                                 )
                               : null,
                         ),
                         title: Text(
                           name,
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white),
                         ),
                       );
                     }),

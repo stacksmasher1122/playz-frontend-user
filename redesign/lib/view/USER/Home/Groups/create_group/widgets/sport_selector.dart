@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF161616);
 const kGreen = Color(0xFF6EDC6A);
@@ -9,7 +10,7 @@ class SportSelector extends StatelessWidget {
   final String selectedSport;
   final Function(String) onSportSelected;
 
-  const SportSelector({
+  SportSelector({
     super.key,
     required this.sports,
     required this.selectedSport,
@@ -18,32 +19,33 @@ class SportSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       child: Row(
         children: sports.map((sport) {
           final isSelected = selectedSport == sport;
           return Padding(
-            padding: const EdgeInsets.only(right: 12),
+            padding: EdgeInsets.only(right: 12),
             child: InkWell(
               onTap: () => onSportSelected(sport),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(10)),
                 decoration: BoxDecoration(
                   color: isSelected ? Colors.transparent : kSurface,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                   border: Border.all(
                     color: isSelected ? kGreen : Colors.transparent,
-                    width: 1,
+                    width: ResponsiveHelper.w(1),
                   ),
                 ),
                 child: Text(
                   sport,
                   style: TextStyle(
                     color: isSelected ? kGreen : kMuted,
-                    fontSize: 13,
+                    fontSize: ResponsiveHelper.sp(13),
                     fontWeight: FontWeight.w600,
                   ),
                 ),

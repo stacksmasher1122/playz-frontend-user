@@ -2,9 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PmAppbarWidget extends StatefulWidget {
-  const PmAppbarWidget({super.key});
+  PmAppbarWidget({super.key});
 
   @override
   State<PmAppbarWidget> createState() => _PmAppbarWidgetState();
@@ -13,11 +14,12 @@ class PmAppbarWidget extends StatefulWidget {
 class _PmAppbarWidgetState extends State<PmAppbarWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.surface.withValues(alpha: 0.8),
-        border: const Border(
+        border: Border(
           bottom: BorderSide(color: Colors.white10, width: 1),
         ),
       ),
@@ -25,7 +27,7 @@ class _PmAppbarWidgetState extends State<PmAppbarWidget> {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 12.0,
             ),
@@ -33,12 +35,12 @@ class _PmAppbarWidgetState extends State<PmAppbarWidget> {
               children: [
                 // Profile Image
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: ResponsiveHelper.w(40),
+                  height: ResponsiveHelper.h(40),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white10, width: 1),
-                    image: const DecorationImage(
+                    image: DecorationImage(
                       image: NetworkImage(
                         'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
                       ),
@@ -46,7 +48,7 @@ class _PmAppbarWidgetState extends State<PmAppbarWidget> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
 
                 // Title
                 Text(
@@ -56,11 +58,11 @@ class _PmAppbarWidgetState extends State<PmAppbarWidget> {
                   ),
                 ),
 
-                const Spacer(),
+                Spacer(),
 
                 // Action Buttons
                 _buildIconButton(Icons.search),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 _buildIconButton(Icons.settings),
               ],
             ),
@@ -78,7 +80,7 @@ class _PmAppbarWidgetState extends State<PmAppbarWidget> {
 class _IconButtonItem extends StatefulWidget {
   final IconData icon;
 
-  const _IconButtonItem({required this.icon});
+  _IconButtonItem({required this.icon});
 
   @override
   State<_IconButtonItem> createState() => _IconButtonItemState();
@@ -89,12 +91,13 @@ class _IconButtonItemState extends State<_IconButtonItem> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
       onExit: (_) => setState(() => isHovered = false),
       child: Container(
-        width: 40,
-        height: 40,
+        width: ResponsiveHelper.w(40),
+        height: ResponsiveHelper.h(40),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.transparent,

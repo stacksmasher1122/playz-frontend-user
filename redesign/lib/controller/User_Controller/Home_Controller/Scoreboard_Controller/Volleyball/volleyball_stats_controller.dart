@@ -40,7 +40,7 @@ class VolleyballStatsController extends GetxController {
     isLoading.value = true;
     
     // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(Duration(milliseconds: 600));
 
     _generateTeamStats();
     _generateMomentum();

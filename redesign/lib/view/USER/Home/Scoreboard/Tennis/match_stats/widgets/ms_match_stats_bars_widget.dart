@@ -3,23 +3,25 @@ import 'package:get/get.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/match_stats_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MsMatchStatsBarsWidget extends StatelessWidget {
-  const MsMatchStatsBarsWidget({super.key});
+  MsMatchStatsBarsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<MatchStatsController>();
 
     return Obx(() {
       final stats = controller.stats.value;
-      if (stats == null) return const SizedBox.shrink();
+      if (stats == null) return SizedBox.shrink();
 
       return Container(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(ResponsiveHelper.w(24)),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.02),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
         child: Column(
@@ -29,7 +31,7 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
               'MATCH STATS',
               style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, letterSpacing: 2.0),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             
             _buildStatBar(
               label: 'ACES',
@@ -38,7 +40,7 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
               color1: AppColors.primaryContainer,
               color2: AppColors.onSurfaceVariant,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildStatBar(
               label: 'D.FAULTS',
               val1: stats.p1DoubleFaults,
@@ -47,7 +49,7 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
               color2: AppColors.error,
               reverse: true, // p2 had more, so they get the error color
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildStatBar(
               label: 'WINNERS',
               val1: stats.p1Winners,
@@ -55,7 +57,7 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
               color1: AppColors.primaryContainer,
               color2: AppColors.onSurfaceVariant,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildStatBar(
               label: 'U.ERRORS',
               val1: stats.p1UnforcedErrors,
@@ -64,7 +66,7 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
               color2: AppColors.error,
               reverse: true,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             _buildStatBar(
               label: 'SERVE %',
               val1: stats.p1FirstServePercent,
@@ -104,12 +106,12 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
             Text(str2, style: AppTypography.labelCaps.copyWith(color: color2, fontSize: 10)),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Container(
-          height: 8,
+          height: ResponsiveHelper.h(8),
           decoration: BoxDecoration(
             color: AppColors.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
           ),
           child: Row(
             children: [
@@ -118,7 +120,7 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: color1,
-                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(ResponsiveHelper.w(4)), bottomLeft: Radius.circular(ResponsiveHelper.w(4))),
                     boxShadow: color1 == AppColors.primaryContainer 
                         ? [BoxShadow(color: AppColors.primaryContainer.withValues(alpha: 0.5), blurRadius: 8)] 
                         : null,
@@ -130,7 +132,7 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: color2,
-                    borderRadius: const BorderRadius.only(topRight: Radius.circular(4), bottomRight: Radius.circular(4)),
+                    borderRadius: BorderRadius.only(topRight: Radius.circular(ResponsiveHelper.w(4)), bottomRight: Radius.circular(ResponsiveHelper.w(4))),
                   ),
                 ),
               ),

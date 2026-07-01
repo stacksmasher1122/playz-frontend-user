@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QrTopBar extends StatelessWidget {
-  const QrTopBar({super.key});
+  QrTopBar({super.key});
 
   static const _kMuted = Color(0xFFA7A7A7);
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       children: [
         IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
                 'Show this QR Code at the Venue',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: ResponsiveHelper.sp(18),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -35,7 +37,7 @@ class QrTopBar extends StatelessWidget {
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.share, color: Colors.white),
+          icon: Icon(Icons.share, color: Colors.white),
           onPressed: () {},
         ),
       ],

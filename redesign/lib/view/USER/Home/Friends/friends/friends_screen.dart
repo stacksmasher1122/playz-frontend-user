@@ -11,11 +11,12 @@ import 'widgets/online_now_section.dart';
 import 'widgets/build_squad_cta.dart';
 import 'widgets/suggested_players_section.dart';
 import 'widgets/messages_list_section.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = AppColors.background;
 
 class FriendsHubScreen extends StatefulWidget {
-  const FriendsHubScreen({super.key});
+  FriendsHubScreen({super.key});
 
   @override
   State<FriendsHubScreen> createState() => _FriendsHubScreenState();
@@ -36,6 +37,7 @@ class _FriendsHubScreenState extends State<FriendsHubScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
@@ -44,9 +46,9 @@ class _FriendsHubScreenState extends State<FriendsHubScreen> {
           children: [
             // ── Main scroll content ──
             CustomScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               slivers: [
-                const FriendsAppBar(),
+                FriendsAppBar(),
                 SliverToBoxAdapter(
                   child: SearchBarWidget(
                     controller: _searchController,
@@ -59,23 +61,23 @@ class _FriendsHubScreenState extends State<FriendsHubScreen> {
                     },
                   ),
                 ),
-                const SliverToBoxAdapter(child: OnlineNowSection()),
-                const SliverToBoxAdapter(child: MessagesListSection()),
-                const SliverToBoxAdapter(child: BuildSquadCTA()),
-                const SliverToBoxAdapter(child: SuggestedPlayersSection()),
-                const SliverToBoxAdapter(child: SizedBox(height: 32)),
+                SliverToBoxAdapter(child: OnlineNowSection()),
+                SliverToBoxAdapter(child: MessagesListSection()),
+                SliverToBoxAdapter(child: BuildSquadCTA()),
+                SliverToBoxAdapter(child: SuggestedPlayersSection()),
+                SliverToBoxAdapter(child: SizedBox(height: 32)),
               ],
             ),
 
             // ── Search results overlay ──
             Obx(() {
               if (!_ctrl.isSearching.value || _ctrl.searchResults.isEmpty) {
-                return const SizedBox.shrink();
+                return SizedBox.shrink();
               }
               return Positioned(
-                top: 120, // below app bar + search bar
-                left: 16,
-                right: 16,
+                top: ResponsiveHelper.h(120), // below app bar + search bar
+                left: ResponsiveHelper.w(16),
+                right: ResponsiveHelper.w(16),
                 child: GestureDetector(
                   onTap: () {
                     _searchController.clear();

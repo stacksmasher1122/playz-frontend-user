@@ -2,9 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PmBottomNavWidget extends StatefulWidget {
-  const PmBottomNavWidget({super.key});
+  PmBottomNavWidget({super.key});
 
   @override
   State<PmBottomNavWidget> createState() => _PmBottomNavWidgetState();
@@ -13,27 +14,28 @@ class PmBottomNavWidget extends StatefulWidget {
 class _PmBottomNavWidgetState extends State<PmBottomNavWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      height: 80,
+      height: ResponsiveHelper.h(80),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer.withValues(alpha: 0.9),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(ResponsiveHelper.w(24)),
+          topRight: Radius.circular(ResponsiveHelper.w(24)),
         ),
-        border: const Border(top: BorderSide(color: Colors.white10, width: 1)),
+        border: Border(top: BorderSide(color: Colors.white10, width: 1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 20,
-            offset: const Offset(0, -5),
+            offset: Offset(0, -5),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(ResponsiveHelper.w(24)),
+          topRight: Radius.circular(ResponsiveHelper.w(24)),
         ),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
@@ -61,7 +63,7 @@ class _TabItem extends StatefulWidget {
   final IconData icon;
   final bool isActive;
 
-  const _TabItem({
+  _TabItem({
     required this.label,
     required this.icon,
     required this.isActive,
@@ -76,6 +78,7 @@ class _TabItemState extends State<_TabItem> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
       onExit: (_) => setState(() => isHovered = false),
@@ -89,8 +92,8 @@ class _TabItemState extends State<_TabItem> {
           }
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 80,
+          duration: Duration(milliseconds: 200),
+          width: ResponsiveHelper.w(80),
           decoration: BoxDecoration(
             color: isHovered && !widget.isActive
                 ? Colors.white.withValues(alpha: 0.05)
@@ -100,7 +103,7 @@ class _TabItemState extends State<_TabItem> {
                 color: widget.isActive
                     ? AppColors.primaryContainer
                     : Colors.transparent,
-                width: 2,
+                width: ResponsiveHelper.w(2),
               ),
             ),
           ),
@@ -114,7 +117,7 @@ class _TabItemState extends State<_TabItem> {
                     ? AppColors.primaryContainer
                     : AppColors.onSurfaceVariant,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 widget.label,
                 style: AppTypography.labelCaps10.copyWith(

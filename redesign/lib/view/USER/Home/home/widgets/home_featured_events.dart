@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import '../home_screen.dart';
 import 'home_section_header.dart';
 import 'home_shimmer.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    FEATURED EVENTS
    ============================================================ */
 class HomeFeaturedEvents extends StatefulWidget {
-  const HomeFeaturedEvents({super.key});
+  HomeFeaturedEvents({super.key});
 
   @override
   State<HomeFeaturedEvents> createState() => _HomeFeaturedEventsState();
@@ -45,13 +46,13 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
     _controller = PageController(viewportFraction: 0.86);
 
     Future.doWhile(() async {
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(Duration(seconds: 5));
       if (!mounted) return false;
 
       _index = (_index + 1) % _events.length;
       _controller.animateToPage(
         _index,
-        duration: const Duration(milliseconds: 600),
+        duration: Duration(milliseconds: 600),
         curve: Curves.easeInOut,
       );
       return true;
@@ -66,13 +67,14 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: const HomeSectionHeader('Featured Events'),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+          child: HomeSectionHeader('Featured Events'),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         LayoutBuilder(
           builder: (context, constraints) {
             final w = constraints.maxWidth;
@@ -98,7 +100,7 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
                       right: index == _events.length - 1 ? 20 : 16,
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
@@ -107,8 +109,8 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
                             imageUrl: event['image']!,
                             fit: BoxFit.cover,
                             cacheKey: event['image'],
-                            placeholder: (context, _) => const HomeShimmer(),
-                            errorWidget: (context, _, __) => const Center(
+                            placeholder: (context, _) => HomeShimmer(),
+                            errorWidget: (context, _, __) => Center(
                               child: Icon(
                                 Icons.broken_image,
                                 color: Colors.white54,
@@ -145,7 +147,7 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: UserHomePage.accent,
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                                   ),
                                   child: Text(
                                     event['tag']!,
@@ -159,7 +161,7 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
                                   ),
                                 ),
 
-                                const Spacer(),
+                                Spacer(),
 
                                 /// TITLE
                                 Text(
@@ -173,7 +175,7 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
                                   ),
                                 ),
 
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
 
                                 /// SUBTITLE
                                 Text(

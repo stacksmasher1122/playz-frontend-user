@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ScoreButtonWidget extends StatefulWidget {
   final String playerName;
   final VoidCallback onTap;
 
-  const ScoreButtonWidget({
+  ScoreButtonWidget({
     super.key,
     required this.playerName,
     required this.onTap,
@@ -19,6 +20,7 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
@@ -30,40 +32,40 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> {
         color: Colors.transparent, // Expand tap area
         child: Column(
           children: [
-            const Text(
+            Text(
               '+1 POINT',
               style: TextStyle(
                 color: Colors.grey,
-                fontSize: 10,
+                fontSize: ResponsiveHelper.sp(10),
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.5,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               widget.playerName.toUpperCase(),
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: ResponsiveHelper.sp(24),
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.0,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             AnimatedScale(
               scale: _isPressed ? 0.9 : 1.0,
-              duration: const Duration(milliseconds: 100),
+              duration: Duration(milliseconds: 100),
               child: Container(
-                width: 70,
-                height: 70,
+                width: ResponsiveHelper.w(70),
+                height: ResponsiveHelper.h(70),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                   border: Border.all(
                     color: Colors.grey.shade700,
-                    width: 2,
+                    width: ResponsiveHelper.w(2),
                   ),
                 ),
-                child: const Center(
+                child: Center(
                   child: Icon(
                     Icons.add,
                     color: Color(0xFFC6FF00), // Neon Yellow-Green

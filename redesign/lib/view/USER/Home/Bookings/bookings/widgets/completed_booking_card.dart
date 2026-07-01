@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import '../bookings_screen.dart';
 import 'action_chip.dart';
 import 'status_badge.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CompletedBookingCard extends StatelessWidget {
-  const CompletedBookingCard({super.key});
+  CompletedBookingCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
       decoration: BoxDecoration(
         color: MyBookingsConstants.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,28 +25,28 @@ class CompletedBookingCard extends StatelessWidget {
             children: [
               /// VENUE IMAGE
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                 child: Image.network(
                   'https://images.unsplash.com/photo-1517649763962-0c623066013b',
-                  height: 52,
-                  width: 52,
+                  height: ResponsiveHelper.h(52),
+                  width: ResponsiveHelper.w(52),
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
 
               /// INFO
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'Smash Zone',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 15,
+                        fontSize: ResponsiveHelper.sp(15),
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -71,13 +73,13 @@ class CompletedBookingCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           /// ACTIONS
           Row(
             children: [
               ActionChipWidget(Icons.download_outlined, 'Invoice', onTap: () {}),
-              const Spacer(),
+              Spacer(),
               ActionChipWidget(
                 Icons.refresh_rounded,
                 'Book Again',

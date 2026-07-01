@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'step_header.dart';
 import 'trainer_form_fields.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
@@ -9,7 +10,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kSurface = Color(0xFF0E0E0E);
 
 class PricingPackagesSection extends StatefulWidget {
-  const PricingPackagesSection({super.key});
+  PricingPackagesSection({super.key});
 
   @override
   State<PricingPackagesSection> createState() => _PricingPackagesSectionState();
@@ -42,15 +43,16 @@ class _PricingPackagesSectionState extends State<PricingPackagesSection> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// HEADER
-        const StepHeader(step: 6, title: 'Pricing & Packages'),
+        StepHeader(step: 6, title: 'Pricing & Packages'),
 
-        const SizedBox(height: 16),
-        const PerksSection(),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
+        PerksSection(),
+        SizedBox(height: 16),
         ...enabled.keys.map((key) {
           return PackagePricingCard(
             title: key,
@@ -63,9 +65,9 @@ class _PricingPackagesSectionState extends State<PricingPackagesSection> {
           );
         }),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
-        const Text(
+        Text(
           'Note: Final pricing is subject to platform review.',
           style: TextStyle(color: kMuted, fontSize: 12),
         ),
@@ -83,7 +85,7 @@ class PackagePricingCard extends StatelessWidget {
   final ValueChanged<String> onAddPerk;
   final ValueChanged<String> onRemovePerk;
 
-  const PackagePricingCard({
+  PackagePricingCard({
     super.key,
     required this.title,
     required this.enabled,
@@ -96,16 +98,17 @@ class PackagePricingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
+      duration: Duration(milliseconds: 250),
+      margin: EdgeInsets.only(bottom: 14),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(
           color: enabled ? kGreen : Colors.transparent,
-          width: 1.2,
+          width: ResponsiveHelper.w(1.2),
         ),
       ),
       child: Column(
@@ -117,9 +120,9 @@ class PackagePricingCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 15,
+                    fontSize: ResponsiveHelper.sp(15),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -129,7 +132,7 @@ class PackagePricingCard extends StatelessWidget {
           ),
 
           if (enabled) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             /// PRICE INPUT
             TrainerInputField(
@@ -139,19 +142,19 @@ class PackagePricingCard extends StatelessWidget {
               keyboardType: TextInputType.number,
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             /// PERKS
-            const Text(
+            Text(
               'Included Perks',
               style: TextStyle(
                 color: kMuted,
-                fontSize: 13,
+                fontSize: ResponsiveHelper.sp(13),
                 fontWeight: FontWeight.w500,
               ),
             ),
 
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
 
             Wrap(
               spacing: 8,
@@ -163,7 +166,7 @@ class PackagePricingCard extends StatelessWidget {
                   .toList(),
             ),
 
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
 
             AddPerkField(onAdd: onAddPerk),
           ],
@@ -175,7 +178,7 @@ class PackagePricingCard extends StatelessWidget {
 
 class AddPerkField extends StatefulWidget {
   final ValueChanged<String> onAdd;
-  const AddPerkField({super.key, required this.onAdd});
+  AddPerkField({super.key, required this.onAdd});
 
   @override
   State<AddPerkField> createState() => _AddPerkFieldState();
@@ -186,27 +189,28 @@ class _AddPerkFieldState extends State<AddPerkField> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       children: [
         Expanded(
           child: TextField(
             controller: controller,
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: 'Add a perk (e.g. Video Analysis)',
-              hintStyle: const TextStyle(color: kMuted),
+              hintStyle: TextStyle(color: kMuted),
               filled: true,
               fillColor: kSurface,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         IconButton(
-          icon: const Icon(Icons.add_circle, color: kGreen),
+          icon: Icon(Icons.add_circle, color: kGreen),
           onPressed: () {
             if (controller.text.trim().isNotEmpty) {
               widget.onAdd(controller.text.trim());
@@ -220,7 +224,7 @@ class _AddPerkFieldState extends State<AddPerkField> {
 }
 
 class PerksSection extends StatefulWidget {
-  const PerksSection({super.key});
+  PerksSection({super.key});
 
   @override
   State<PerksSection> createState() => _PerksSectionState();
@@ -249,24 +253,25 @@ class _PerksSectionState extends State<PerksSection> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final perks = packagePerks[selectedPackage]!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// TITLE
-        const Text(
+        Text(
           'Package Perks',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 15,
+            fontSize: ResponsiveHelper.sp(15),
             fontWeight: FontWeight.w700,
           ),
         ),
 
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         /// ACTIVE PERKS (CHIPS)
         Wrap(
@@ -282,7 +287,7 @@ class _PerksSectionState extends State<PerksSection> {
           }).toList(),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// ADD PERK INPUT
         Row(
@@ -290,30 +295,30 @@ class _PerksSectionState extends State<PerksSection> {
             Expanded(
               child: TextField(
                 controller: perkController,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   hintText: 'Add a perk (e.g. Injury Rehab)',
                   hintStyle: TextStyle(color: kMuted.withValues(alpha: 0.6)),
                   filled: true,
                   fillColor: kCard,
-                  contentPadding: const EdgeInsets.symmetric(
+                  contentPadding: EdgeInsets.symmetric(
                     horizontal: 14,
                     vertical: 12,
                   ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: kGreen),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+                    borderSide: BorderSide(color: kGreen),
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             IconButton(
-              icon: const Icon(Icons.add_circle, color: kGreen),
+              icon: Icon(Icons.add_circle, color: kGreen),
               onPressed: () {
                 final text = perkController.text.trim();
                 if (text.isEmpty) return;
@@ -330,19 +335,19 @@ class _PerksSectionState extends State<PerksSection> {
           ],
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// SUGGESTED PERKS
-        const Text(
+        Text(
           'Suggested',
           style: TextStyle(
             color: kMuted,
-            fontSize: 13,
+            fontSize: ResponsiveHelper.sp(13),
             fontWeight: FontWeight.w600,
           ),
         ),
 
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
 
         Wrap(
           spacing: 8,
@@ -369,15 +374,16 @@ class PerkChip extends StatelessWidget {
   final String text;
   final VoidCallback onRemove;
 
-  const PerkChip({super.key, required this.text, required this.onRemove});
+  PerkChip({super.key, required this.text, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
       decoration: BoxDecoration(
         color: kGreen.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(color: kGreen),
       ),
       child: Row(
@@ -385,12 +391,12 @@ class PerkChip extends StatelessWidget {
         children: [
           Text(
             text,
-            style: const TextStyle(color: kGreen, fontWeight: FontWeight.w600),
+            style: TextStyle(color: kGreen, fontWeight: FontWeight.w600),
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           GestureDetector(
             onTap: onRemove,
-            child: const Icon(Icons.close, size: 14, color: kGreen),
+            child: Icon(Icons.close, size: 14, color: kGreen),
           ),
         ],
       ),
@@ -403,7 +409,7 @@ class SuggestionChip extends StatelessWidget {
   final bool active;
   final VoidCallback onTap;
 
-  const SuggestionChip({
+  SuggestionChip({
     super.key,
     required this.text,
     required this.active,
@@ -412,14 +418,15 @@ class SuggestionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
         decoration: BoxDecoration(
           color: active ? kGreen.withValues(alpha: 0.2) : kCard,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
           border: Border.all(color: active ? kGreen : Colors.grey.shade800),
         ),
         child: Text(

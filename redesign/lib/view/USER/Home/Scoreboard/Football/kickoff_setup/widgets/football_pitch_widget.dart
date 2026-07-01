@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/kickoff_setup_controller.dart';
 import 'team_side_widget.dart';
 import 'kickoff_ball_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FootballKickoffPitchWidget extends StatelessWidget {
-  const FootballKickoffPitchWidget({super.key});
+  FootballKickoffPitchWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<KickoffSetupController>();
 
     return AspectRatio(
@@ -16,13 +18,13 @@ class FootballKickoffPitchWidget extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.black, // Dark background
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: Colors.grey.shade800),
         ),
         child: Stack(
           children: [
             // Pitch Markings (Custom Painter)
-            const RepaintBoundary(
+            RepaintBoundary(
               child: _PitchMarkingsWidget(),
             ),
             
@@ -79,10 +81,10 @@ class FootballKickoffPitchWidget extends StatelessWidget {
                 0.5, // Slightly below center
               );
               return AnimatedAlign(
-                duration: const Duration(milliseconds: 400),
+                duration: Duration(milliseconds: 400),
                 curve: Curves.easeInOut,
                 alignment: alignment,
-                child: const RepaintBoundary(
+                child: RepaintBoundary(
                   child: KickoffBallWidget(),
                 ),
               );
@@ -95,10 +97,11 @@ class FootballKickoffPitchWidget extends StatelessWidget {
 }
 
 class _PitchMarkingsWidget extends StatelessWidget {
-  const _PitchMarkingsWidget();
+  _PitchMarkingsWidget();
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return CustomPaint(
       painter: _KickoffPitchPainter(),
       child: Container(),
@@ -150,17 +153,17 @@ class _KickoffPitchPainter extends CustomPainter {
       
     final leftRect = Rect.fromCenter(
       center: Offset(size.width * 0.25, size.height * 0.5),
-      width: 70,
-      height: 80,
+      width: ResponsiveHelper.w(70),
+      height: ResponsiveHelper.h(80),
     );
-    canvas.drawRRect(RRect.fromRectAndRadius(leftRect, const Radius.circular(16)), dropZonePaint);
+    canvas.drawRRect(RRect.fromRectAndRadius(leftRect, Radius.circular(ResponsiveHelper.w(16))), dropZonePaint);
 
     final rightRect = Rect.fromCenter(
       center: Offset(size.width * 0.75, size.height * 0.5),
-      width: 70,
-      height: 80,
+      width: ResponsiveHelper.w(70),
+      height: ResponsiveHelper.h(80),
     );
-    canvas.drawRRect(RRect.fromRectAndRadius(rightRect, const Radius.circular(16)), dropZonePaint);
+    canvas.drawRRect(RRect.fromRectAndRadius(rightRect, Radius.circular(ResponsiveHelper.w(16))), dropZonePaint);
   }
 
   @override

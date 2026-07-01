@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchContextCard extends StatelessWidget {
   final double winProbability;
@@ -7,7 +8,7 @@ class MatchContextCard extends StatelessWidget {
   final int partnershipBalls;
   final double requiredRunRate;
 
-  const MatchContextCard({
+  MatchContextCard({
     super.key,
     required this.winProbability,
     required this.partnershipRuns,
@@ -17,12 +18,13 @@ class MatchContextCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
       ),
       child: Row(
         children: [
@@ -58,19 +60,19 @@ class MatchContextCard extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.muted,
-            fontSize: 10,
+            fontSize: ResponsiveHelper.sp(10),
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: TextStyle(
             color: color,
-            fontSize: 16,
+            fontSize: ResponsiveHelper.sp(16),
             fontWeight: FontWeight.w700,
           ),
         ),

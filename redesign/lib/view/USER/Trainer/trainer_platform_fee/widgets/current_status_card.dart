@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'fee_card_wrapper.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kMuted = Color(0xFFA7A7A7);
 const kAmber = Color(0xFFF5C542);
 
 class CurrentStatusCard extends StatelessWidget {
-  const CurrentStatusCard({super.key});
+  CurrentStatusCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const FeeCardWrapper(
+    ResponsiveHelper.init(context);
+    return FeeCardWrapper(
       title: 'CURRENT STATUS',
       children: [
         StatusRow('Membership Plan', 'None'),
@@ -29,7 +31,7 @@ class StatusRow extends StatelessWidget {
   final String value;
   final bool badge;
 
-  const StatusRow(
+  StatusRow(
     this.label,
     this.value, {
     super.key,
@@ -38,35 +40,35 @@ class StatusRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8)),
       child: Row(
         children: [
           Expanded(
             child: Text(label,
                 style:
-                    const TextStyle(color: kMuted)),
+                    TextStyle(color: kMuted)),
           ),
           badge
               ? Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
                   decoration: BoxDecoration(
                     color: kAmber.withValues(alpha: 0.15),
                     borderRadius:
-                        BorderRadius.circular(20),
+                        BorderRadius.circular(ResponsiveHelper.w(20)),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Limited',
                     style: TextStyle(
                       color: kAmber,
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.sp(12),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                 )
               : Text(value,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: Colors.white)),
         ],
       ),

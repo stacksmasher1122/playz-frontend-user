@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerScoreWidget extends StatelessWidget {
   final String label;
@@ -8,7 +9,7 @@ class PlayerScoreWidget extends StatelessWidget {
   final bool isWinning;
   final CrossAxisAlignment alignment;
 
-  const PlayerScoreWidget({
+  PlayerScoreWidget({
     super.key,
     required this.label,
     required this.playerName,
@@ -20,19 +21,20 @@ class PlayerScoreWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: alignment,
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.grey,
-            fontSize: 10,
+            fontSize: ResponsiveHelper.sp(10),
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Row(
           mainAxisSize: MainAxisSize.min,
           textDirection: alignment == CrossAxisAlignment.end ? TextDirection.rtl : TextDirection.ltr,
@@ -43,9 +45,9 @@ class PlayerScoreWidget extends StatelessWidget {
                   right: alignment == CrossAxisAlignment.start ? 8 : 0,
                   left: alignment == CrossAxisAlignment.end ? 8 : 0,
                 ),
-                width: 8,
-                height: 8,
-                decoration: const BoxDecoration(
+                width: ResponsiveHelper.w(8),
+                height: ResponsiveHelper.h(8),
+                decoration: BoxDecoration(
                   color: Color(0xFFC6FF00), // Neon Yellow-Green
                   shape: BoxShape.circle,
                 ),
@@ -54,21 +56,21 @@ class PlayerScoreWidget extends StatelessWidget {
               playerName,
               style: TextStyle(
                 color: isServing ? Colors.white : Colors.grey.shade300,
-                fontSize: 20,
+                fontSize: ResponsiveHelper.sp(20),
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.0,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         // Game Progress Bar Mock (2 of 3 games)
         Row(
           mainAxisSize: MainAxisSize.min,
           textDirection: alignment == CrossAxisAlignment.end ? TextDirection.rtl : TextDirection.ltr,
           children: [
             _buildProgressSegment(true),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             _buildProgressSegment(false),
           ],
         ),
@@ -78,11 +80,11 @@ class PlayerScoreWidget extends StatelessWidget {
 
   Widget _buildProgressSegment(bool won) {
     return Container(
-      width: 24,
-      height: 4,
+      width: ResponsiveHelper.w(24),
+      height: ResponsiveHelper.h(4),
       decoration: BoxDecoration(
-        color: won ? const Color(0xFFC6FF00) : Colors.grey.shade800,
-        borderRadius: BorderRadius.circular(2),
+        color: won ? Color(0xFFC6FF00) : Colors.grey.shade800,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
       ),
     );
   }

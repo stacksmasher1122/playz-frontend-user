@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueImageSlider extends StatelessWidget {
   final List<String> images;
@@ -9,7 +10,7 @@ class VenueImageSlider extends StatelessWidget {
   final int currentPage;
   final ValueChanged<int> onPageChanged;
 
-  const VenueImageSlider({
+  VenueImageSlider({
     super.key,
     required this.images,
     required this.pageController,
@@ -19,6 +20,7 @@ class VenueImageSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final size = MediaQuery.of(context).size;
 
     return Stack(
@@ -45,33 +47,33 @@ class VenueImageSlider extends StatelessWidget {
 
         /// TOP ICONS
         Positioned(
-          top: 35,
-          left: 16,
+          top: ResponsiveHelper.h(35),
+          left: ResponsiveHelper.w(16),
           child: _circleIcon(context, Icons.arrow_back, onTap: () => Navigator.pop(context)),
         ),
         Positioned(
-          top: 35,
-          right: 16,
+          top: ResponsiveHelper.h(35),
+          right: ResponsiveHelper.w(16),
           child: _circleIcon(context, Icons.favorite_border),
         ),
 
         /// PAGE INDICATORS
         Positioned(
-          bottom: 25,
-          right: 25,
+          bottom: ResponsiveHelper.h(25),
+          right: ResponsiveHelper.w(25),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
               images.length,
               (index) => Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
+                margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4)),
                 width: currentPage == index ? 20 : 6,
-                height: 6,
+                height: ResponsiveHelper.h(6),
                 decoration: BoxDecoration(
                   color: currentPage == index
                       ? AppColors.accent
                       : Colors.grey[200],
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
                 ),
               ),
             ),
@@ -79,8 +81,8 @@ class VenueImageSlider extends StatelessWidget {
         ),
 
         Positioned(
-          bottom: 10,
-          left: 10,
+          bottom: ResponsiveHelper.h(10),
+          left: ResponsiveHelper.w(10),
           child: _greenBadge('CROSSFIT & GYM'),
         ),
       ],
@@ -89,14 +91,14 @@ class VenueImageSlider extends StatelessWidget {
 
   Widget _greenBadge(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
       decoration: BoxDecoration(
         color: AppColors.accent,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
       ),
       child: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
         ),

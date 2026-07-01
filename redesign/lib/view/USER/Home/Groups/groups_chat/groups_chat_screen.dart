@@ -11,6 +11,7 @@ import 'widgets/groups_chat_app_bar.dart';
 import 'widgets/groups_chat_input_bar.dart';
 import 'widgets/groups_swipe_to_reply.dart';
 import 'widgets/bubbles/message_bubble.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kBg = AppColors.surface;
@@ -22,7 +23,7 @@ class GroupChatScreen extends StatefulWidget {
   final String groupPic;
   final int memberCount;
 
-  const GroupChatScreen({
+  GroupChatScreen({
     super.key,
     required this.groupId,
     required this.groupName,
@@ -60,7 +61,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0.0,
-          duration: const Duration(milliseconds: 250),
+          duration: Duration(milliseconds: 250),
           curve: Curves.easeOut,
         );
       }
@@ -69,6 +70,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: _kBg,
       body: SafeArea(
@@ -100,7 +102,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                   child: Obx(() {
                     if (_ctrl.messages.isEmpty &&
                         _ctrl.pendingMessages.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Text(
                           "Start the group conversation! 🏆",
                           style: TextStyle(color: _kMuted, fontSize: 15),
@@ -109,11 +111,11 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                     }
 
                     return ListView.builder(
-                      key: const PageStorageKey("group_chat_list"),
+                      key: PageStorageKey("group_chat_list"),
                       controller: _scrollController,
-                      physics: const BouncingScrollPhysics(),
+                      physics: BouncingScrollPhysics(),
                       reverse: true,
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 10,
                       ),
@@ -151,11 +153,11 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
                 /// 🔥 RECORDING INDICATOR
                 Obx(() {
-                  if (!_ctrl.isRecording.value) return const SizedBox.shrink();
+                  if (!_ctrl.isRecording.value) return SizedBox.shrink();
                   return Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: EdgeInsets.all(ResponsiveHelper.w(10)),
                     color: Colors.red.withValues(alpha: 0.8),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.mic, color: Colors.white),
@@ -172,24 +174,24 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 /// 🔥 REPLY PREVIEW BAR
                 Obx(() {
                   final reply = _ctrl.replyToMessage.value;
-                  if (reply == null) return const SizedBox.shrink();
+                  if (reply == null) return SizedBox.shrink();
                   return Container(
-                    color: const Color(0xFF1A1A1A),
-                    padding: const EdgeInsets.symmetric(
+                    color: Color(0xFF1A1A1A),
+                    padding: EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 8,
                     ),
                     child: Row(
                       children: [
                         Container(
-                          width: 4,
-                          height: 40,
+                          width: ResponsiveHelper.w(4),
+                          height: ResponsiveHelper.h(40),
                           decoration: BoxDecoration(
                             color: _kGreen,
-                            borderRadius: BorderRadius.circular(2),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,20 +203,20 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                     : (reply.senderName.isNotEmpty
                                           ? reply.senderName
                                           : reply.senderEmail),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: _kGreen,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  fontSize: ResponsiveHelper.sp(12),
                                 ),
                               ),
-                              const SizedBox(height: 2),
+                              SizedBox(height: 2),
                               Text(
                                 reply.type == 'text'
                                     ? reply.content
                                     : '📎 ${reply.type}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white60,
-                                  fontSize: 13,
+                                  fontSize: ResponsiveHelper.sp(13),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -223,7 +225,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.close,
                             color: Colors.white60,
                             size: 18,
@@ -246,12 +248,12 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             // 🔥 UPLOAD OVERLAY
             Obx(() {
               if (!_ctrl.isUploadingMedia.value) {
-                return const SizedBox.shrink();
+                return SizedBox.shrink();
               }
               return Positioned.fill(
                 child: Container(
                   color: Colors.black54,
-                  child: const Center(
+                  child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -286,19 +288,19 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF2B2B2B),
-          borderRadius: BorderRadius.circular(16),
+          color: Color(0xFF2B2B2B),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16), horizontal: ResponsiveHelper.w(8)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // Reply
             ListTile(
-              leading: const Icon(Icons.reply, color: Colors.white),
-              title: const Text("Reply", style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.reply, color: Colors.white),
+              title: Text("Reply", style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
                 _ctrl.setReplyTo(msg);
@@ -307,8 +309,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             // Edit (only for own text messages that are not flagged)
             if (isMe && msg.type == 'text' && msg.status != 'flagged')
               ListTile(
-                leading: const Icon(Icons.edit, color: Colors.white),
-                title: const Text(
+                leading: Icon(Icons.edit, color: Colors.white),
+                title: Text(
                   "Edit",
                   style: TextStyle(color: Colors.white),
                 ),
@@ -320,8 +322,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             // Delete (only for own messages)
             if (isMe)
               ListTile(
-                leading: const Icon(Icons.delete, color: Colors.redAccent),
-                title: const Text(
+                leading: Icon(Icons.delete, color: Colors.redAccent),
+                title: Text(
                   "Delete",
                   style: TextStyle(color: Colors.redAccent),
                 ),
@@ -341,34 +343,34 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: const Color(0xFF2B2B2B),
-        title: const Text(
+        backgroundColor: Color(0xFF2B2B2B),
+        title: Text(
           "Edit Message",
           style: TextStyle(color: Colors.white),
         ),
         content: TextField(
           controller: editController,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white),
           autofocus: true,
           maxLines: 5,
           minLines: 1,
           decoration: InputDecoration(
             hintText: "Edit your message...",
-            hintStyle: const TextStyle(color: _kMuted),
+            hintStyle: TextStyle(color: _kMuted),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: _kGreen.withValues(alpha: 0.5)),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: _kGreen),
-              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: _kGreen),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
+            child: Text(
               "Cancel",
               style: TextStyle(color: Colors.white60),
             ),
@@ -381,7 +383,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
               }
               Navigator.pop(context);
             },
-            child: const Text("Save", style: TextStyle(color: _kGreen)),
+            child: Text("Save", style: TextStyle(color: _kGreen)),
           ),
         ],
       ),

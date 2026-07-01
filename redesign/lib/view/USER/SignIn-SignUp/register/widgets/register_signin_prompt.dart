@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterSigninPrompt extends StatelessWidget {
   final VoidCallback onSigninTap;
 
-  const RegisterSigninPrompt({super.key, required this.onSigninTap});
+  RegisterSigninPrompt({super.key, required this.onSigninTap});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     const spotifyGreen = Color(0xFF1DB954);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24, top: 12),
+      padding: EdgeInsets.only(bottom: ResponsiveHelper.h(24), top: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -18,17 +20,17 @@ class RegisterSigninPrompt extends StatelessWidget {
             'Already have an account?',
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.6),
-              fontSize: 13,
+              fontSize: ResponsiveHelper.sp(13),
             ),
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           GestureDetector(
             onTap: onSigninTap,
-            child: const Text(
+            child: Text(
               'Sign in',
               style: TextStyle(
                 color: spotifyGreen,
-                fontSize: 13,
+                fontSize: ResponsiveHelper.sp(13),
                 fontWeight: FontWeight.w600,
               ),
             ),

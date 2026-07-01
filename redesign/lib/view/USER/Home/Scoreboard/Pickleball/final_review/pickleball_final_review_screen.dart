@@ -8,9 +8,10 @@ import 'widgets/teams_vs_card.dart';
 import 'widgets/match_stats_grid.dart';
 import 'widgets/advanced_settings_card.dart';
 import 'widgets/start_match_button.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PickleballFinalReviewScreen extends StatefulWidget {
-  const PickleballFinalReviewScreen({super.key});
+  PickleballFinalReviewScreen({super.key});
 
   @override
   State<PickleballFinalReviewScreen> createState() => _PickleballFinalReviewScreenState();
@@ -29,7 +30,7 @@ class _PickleballFinalReviewScreenState extends State<PickleballFinalReviewScree
     
     _fadeController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
     );
     _fadeAnimation = CurvedAnimation(parent: _fadeController, curve: Curves.easeIn);
     
@@ -45,32 +46,33 @@ class _PickleballFinalReviewScreenState extends State<PickleballFinalReviewScree
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const FinalReviewAppbar(),
+      appBar: FinalReviewAppbar(),
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const FinalReviewHeader(),
-                const SizedBox(height: 24),
+                FinalReviewHeader(),
+                SizedBox(height: 24),
                 Obx(() => TeamsVsCard(
                   reviewData: controller.reviewData.value,
                   onEditTeams: () => controller.editTeams(context),
                 )),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Obx(() => MatchStatsGrid(
                   reviewData: controller.reviewData.value,
                 )),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Obx(() => AdvancedSettingsCard(
                   reviewData: controller.reviewData.value,
                 )),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
               ],
             ),
           ),

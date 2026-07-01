@@ -25,7 +25,7 @@ class SearchBarDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       height: maxExtent,
       color: kBg,
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 14),
       child: InteractiveSearchBar(
         controller: searchController,
         mapsCtrl: mapsCtrl,

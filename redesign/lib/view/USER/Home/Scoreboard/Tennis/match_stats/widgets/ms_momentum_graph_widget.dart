@@ -2,17 +2,19 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MsMomentumGraphWidget extends StatelessWidget {
-  const MsMomentumGraphWidget({super.key});
+  MsMomentumGraphWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.02),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Column(
@@ -29,16 +31,16 @@ class MsMomentumGraphWidget extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.primaryContainer, shape: BoxShape.circle)),
-                      const SizedBox(width: 4),
+                      Container(width: ResponsiveHelper.w(8), height: ResponsiveHelper.h(8), decoration: BoxDecoration(color: AppColors.primaryContainer, shape: BoxShape.circle)),
+                      SizedBox(width: 4),
                       Text('ALCARAZ', style: AppTypography.labelCaps.copyWith(color: AppColors.primary, fontSize: 10)),
                     ],
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Row(
                     children: [
-                      Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.onSurfaceVariant, shape: BoxShape.circle)),
-                      const SizedBox(width: 4),
+                      Container(width: ResponsiveHelper.w(8), height: ResponsiveHelper.h(8), decoration: BoxDecoration(color: AppColors.onSurfaceVariant, shape: BoxShape.circle)),
+                      SizedBox(width: 4),
                       Text('SINNER', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, fontSize: 10)),
                     ],
                   ),
@@ -46,17 +48,17 @@ class MsMomentumGraphWidget extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
           
           SizedBox(
-            height: 200,
+            height: ResponsiveHelper.h(200),
             width: double.infinity,
             child: CustomPaint(
               painter: _MomentumPainter(),
             ),
           ),
           
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -114,7 +116,7 @@ class _MomentumPainter extends CustomPainter {
     fillPath.close();
 
     final fillGradient = ui.Gradient.linear(
-      const Offset(0, 0),
+      Offset(0, 0),
       Offset(0, size.height),
       [
         AppColors.primaryContainer.withValues(alpha: 0.3),

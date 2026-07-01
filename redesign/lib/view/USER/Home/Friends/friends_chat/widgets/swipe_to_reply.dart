@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 
@@ -8,7 +9,7 @@ class SwipeToReply extends StatefulWidget {
   final bool isMe;
   final VoidCallback onSwiped;
 
-  const SwipeToReply({
+  SwipeToReply({
     super.key,
     required this.child,
     required this.isMe,
@@ -31,7 +32,7 @@ class _SwipeToReplyState extends State<SwipeToReply>
     super.initState();
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 200),
     );
   }
 
@@ -43,6 +44,7 @@ class _SwipeToReplyState extends State<SwipeToReply>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       // WhatsApp style: always swipe right to reply
       onHorizontalDragUpdate: (details) {
@@ -71,7 +73,7 @@ class _SwipeToReplyState extends State<SwipeToReply>
         children: [
           if (_dragOffset > 10)
             Padding(
-              padding: const EdgeInsets.only(left: 8),
+              padding: EdgeInsets.only(left: 8),
               child: Opacity(
                 opacity: (_dragOffset / _triggerThreshold).clamp(0.0, 1.0),
                 child: Icon(

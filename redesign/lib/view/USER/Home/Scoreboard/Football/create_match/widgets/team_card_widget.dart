@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/team_model.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class DashedCirclePainter extends CustomPainter {
   final Color color;
@@ -48,7 +49,7 @@ class TeamCardWidget extends StatelessWidget {
   final ValueChanged<TeamModel> onSelect;
   final VoidCallback onUploadLogo;
 
-  const TeamCardWidget({
+  TeamCardWidget({
     super.key,
     required this.isHome,
     required this.team,
@@ -58,12 +59,13 @@ class TeamCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Column(
@@ -73,8 +75,8 @@ class TeamCardWidget extends StatelessWidget {
           GestureDetector(
             onTap: onUploadLogo,
             child: SizedBox(
-              width: 70,
-              height: 70,
+              width: ResponsiveHelper.w(70),
+              height: ResponsiveHelper.h(70),
               child: CustomPaint(
                 painter: DashedCirclePainter(
                   color: Colors.grey.shade600,
@@ -92,7 +94,7 @@ class TeamCardWidget extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           DropdownButtonFormField<String>(
             initialValue: team?.teamName,
             hint: Text(
@@ -100,24 +102,24 @@ class TeamCardWidget extends StatelessWidget {
               style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
             ),
             dropdownColor: Colors.grey.shade900,
-            icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+            style: TextStyle(color: Colors.white, fontSize: 14),
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.black.withValues(alpha: 0.5),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 borderSide: BorderSide(color: Colors.grey.shade800),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 borderSide: BorderSide(color: Colors.grey.shade800),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Color(0xFFC6FF00)),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                borderSide: BorderSide(color: Color(0xFFC6FF00)),
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
             ),
             items: ['Team Alpha', 'Team Beta', 'FC United', 'Real FC']
                 .map((String value) {
@@ -136,12 +138,12 @@ class TeamCardWidget extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             isHome ? 'HOME SIDE' : 'AWAY SIDE',
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.grey,
-              fontSize: 10,
+              fontSize: ResponsiveHelper.sp(10),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
             ),

@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_match_statistics_controller.dart';
+import '../../../../../../../theme/responsive_helper.dart';
 
 class LiveMatchHeaderWidget extends StatelessWidget {
-  const LiveMatchHeaderWidget({super.key});
+  LiveMatchHeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<FootballMatchStatisticsController>();
 
     return Obx(() {
       final match = controller.match.value;
-      
+
       return Container(
-        margin: const EdgeInsets.all(16.0),
-        padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+        margin: EdgeInsets.all(ResponsiveHelper.w(16)),
+        padding: EdgeInsets.symmetric(
+          vertical: ResponsiveHelper.h(24),
+          horizontal: ResponsiveHelper.w(16),
+        ),
         decoration: BoxDecoration(
           color: Colors.grey.shade900.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
           border: Border.all(color: Colors.grey.shade800),
         ),
         child: Column(
@@ -26,53 +31,53 @@ class LiveMatchHeaderWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 6,
-                  height: 6,
-                  decoration: const BoxDecoration(
+                  width: ResponsiveHelper.w(6),
+                  height: ResponsiveHelper.h(6),
+                  decoration: BoxDecoration(
                     color: Colors.red,
                     shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: ResponsiveHelper.w(6)),
                 Text(
                   '${match.matchStatus} • ${match.currentMinute}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.red,
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.0,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveHelper.h(24)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildTeamCol(match.homeTeam, match.homeLogo),
+                _buildTeamCol(context, match.homeTeam, match.homeLogo),
                 Column(
                   children: [
                     Text(
                       '${match.homeScore} - ${match.awayScore}',
-                      style: const TextStyle(
-                        color: Color(0xFFC6FF00), // Lime Green
-                        fontSize: 48,
+                      style: TextStyle(
+                        color: Color(0xFFC6FF00),
+                        fontSize: ResponsiveHelper.sp(48),
                         fontWeight: FontWeight.w900,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: ResponsiveHelper.h(4)),
                     Text(
                       match.stadium.toUpperCase(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.grey,
-                        fontSize: 10,
+                        fontSize: ResponsiveHelper.sp(10),
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.5,
                       ),
                     ),
                   ],
                 ),
-                _buildTeamCol(match.awayTeam, match.awayLogo),
+                _buildTeamCol(context, match.awayTeam, match.awayLogo),
               ],
             ),
           ],
@@ -81,33 +86,37 @@ class LiveMatchHeaderWidget extends StatelessWidget {
     });
   }
 
-  Widget _buildTeamCol(String name, String logoUrl) {
+  Widget _buildTeamCol(BuildContext context, String name, String logoUrl) {
     return Column(
       children: [
         Container(
-          width: 70,
-          height: 70,
-          padding: const EdgeInsets.all(4),
+          width: ResponsiveHelper.w(70),
+          height: ResponsiveHelper.h(70),
+          padding: EdgeInsets.all(ResponsiveHelper.w(4)),
           decoration: BoxDecoration(
             color: Colors.black,
             shape: BoxShape.circle,
             border: Border.all(color: Colors.grey.shade800),
           ),
           child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.grey, // Placeholder for actual image
+            decoration: BoxDecoration(
+              color: Colors.grey,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.shield, color: Colors.white, size: 32),
+            child: Icon(
+              Icons.shield,
+              color: Colors.white,
+              size: ResponsiveHelper.w(32),
+            ),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: ResponsiveHelper.h(12)),
         Text(
-          name.replaceAll(' ', '\n'), // Multi-line if needed, or just let it naturally wrap
+          name.replaceAll(' ', '\n'),
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 14,
+            fontSize: ResponsiveHelper.sp(14),
             fontWeight: FontWeight.bold,
           ),
         ),

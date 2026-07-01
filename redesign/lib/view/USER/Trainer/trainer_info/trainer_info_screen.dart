@@ -12,11 +12,12 @@ import 'widgets/academy_reviews_section.dart';
 import 'widgets/academy_gallery_preview.dart';
 import 'widgets/certifications_badges.dart';
 import 'widgets/academy_detail_bottom_bar.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kBg = Colors.black;
+Color kBg = Colors.black;
 
 class AcademyDetailScreen extends StatefulWidget {
-  const AcademyDetailScreen({super.key});
+  AcademyDetailScreen({super.key});
 
   @override
   State<AcademyDetailScreen> createState() => _AcademyDetailScreenState();
@@ -25,43 +26,44 @@ class AcademyDetailScreen extends StatefulWidget {
 class _AcademyDetailScreenState extends State<AcademyDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       extendBody: true,
       body: CustomScrollView(
         slivers: [
-          const HeroSection(),
+          HeroSection(),
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 120),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                const AcademyInfoSection(),
-                const SizedBox(height: 16),
-                const ActivityRow(),
-                const SizedBox(height: 16),
-                const StudentTypeSelector(),
-                const SizedBox(height: 16),
-                const AnnouncementBanner(),
-                const SizedBox(height: 24),
-                const LocationMapCard(),
-                const SizedBox(height: 24),
-                const AcademyPackagesList(),
-                const SizedBox(height: 24),
-                const FacilityInfoGrid(),
-                const SizedBox(height: 24),
-                const SafetyAmenitiesTags(),
-                const SizedBox(height: 24),
-                const AcademyReviewsSection(),
-                const SizedBox(height: 24),
-                const AcademyGalleryPreview(),
-                const SizedBox(height: 24),
-                const CertificationsBadges(),
+                AcademyInfoSection(),
+                SizedBox(height: 16),
+                ActivityRow(),
+                SizedBox(height: 16),
+                StudentTypeSelector(),
+                SizedBox(height: 16),
+                AnnouncementBanner(),
+                SizedBox(height: 24),
+                LocationMapCard(),
+                SizedBox(height: 24),
+                AcademyPackagesList(),
+                SizedBox(height: 24),
+                FacilityInfoGrid(),
+                SizedBox(height: 24),
+                SafetyAmenitiesTags(),
+                SizedBox(height: 24),
+                AcademyReviewsSection(),
+                SizedBox(height: 24),
+                AcademyGalleryPreview(),
+                SizedBox(height: 24),
+                CertificationsBadges(),
               ]),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: const AcademyDetailBottomBar(),
+      bottomNavigationBar: AcademyDetailBottomBar(),
     );
   }
 }

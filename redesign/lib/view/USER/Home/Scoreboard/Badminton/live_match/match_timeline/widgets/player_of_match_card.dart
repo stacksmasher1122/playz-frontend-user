@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerOfMatchCard extends StatefulWidget {
   final String playerName;
@@ -7,7 +8,7 @@ class PlayerOfMatchCard extends StatefulWidget {
   final String tournamentRank;
   final int formRating; // 1-5
 
-  const PlayerOfMatchCard({
+  PlayerOfMatchCard({
     super.key,
     required this.playerName,
     required this.description,
@@ -29,10 +30,10 @@ class _PlayerOfMatchCardState extends State<PlayerOfMatchCard> with SingleTicker
     super.initState();
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: Duration(milliseconds: 1200),
     );
     _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: const Interval(0.3, 1.0, curve: Curves.easeIn)),
+      CurvedAnimation(parent: _animController, curve: Interval(0.3, 1.0, curve: Curves.easeIn)),
     );
     _animController.forward();
   }
@@ -45,15 +46,16 @@ class _PlayerOfMatchCardState extends State<PlayerOfMatchCard> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return FadeTransition(
       opacity: _opacity,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
         decoration: BoxDecoration(
           color: Colors.grey.shade900,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: Colors.grey.shade800),
-          image: const DecorationImage(
+          image: DecorationImage(
             // Since we don't have the exact asset, use a solid dark gradient over a placeholder
             image: AssetImage('assets/images/placeholder_player.png'), // Will fail gracefully if missing
             fit: BoxFit.cover,
@@ -65,9 +67,9 @@ class _PlayerOfMatchCardState extends State<PlayerOfMatchCard> with SingleTicker
           ),
         ),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(ResponsiveHelper.w(24)),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -82,46 +84,46 @@ class _PlayerOfMatchCardState extends State<PlayerOfMatchCard> with SingleTicker
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
                 decoration: BoxDecoration(
                   color: Colors.amber.shade300, // AMBER/GOLD badge
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
                 ),
-                child: const Text(
+                child: Text(
                   'PLAYER OF THE MATCH',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 10,
+                    fontSize: ResponsiveHelper.sp(10),
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 widget.playerName.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 28,
+                  fontSize: ResponsiveHelper.sp(28),
                   fontWeight: FontWeight.w900,
                   fontStyle: FontStyle.italic,
-                  height: 1.1,
+                  height: ResponsiveHelper.h(1.1),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 widget.description,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white70,
-                  fontSize: 12,
-                  height: 1.4,
+                  fontSize: ResponsiveHelper.sp(12),
+                  height: ResponsiveHelper.h(1.4),
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildStatColumn('WIN STREAK', widget.winStreak, const Color(0xFFC6FF00)),
+                  _buildStatColumn('WIN STREAK', widget.winStreak, Color(0xFFC6FF00)),
                   _buildStatColumn('TOURNAMENT RANK', widget.tournamentRank, Colors.white),
                   _buildFormColumn('FORM', widget.formRating),
                 ],
@@ -139,18 +141,18 @@ class _PlayerOfMatchCardState extends State<PlayerOfMatchCard> with SingleTicker
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.grey,
-            fontSize: 10,
+            fontSize: ResponsiveHelper.sp(10),
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: TextStyle(
             color: valueColor,
-            fontSize: 18,
+            fontSize: ResponsiveHelper.sp(18),
             fontWeight: FontWeight.w900,
           ),
         ),
@@ -164,26 +166,26 @@ class _PlayerOfMatchCardState extends State<PlayerOfMatchCard> with SingleTicker
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.grey,
-            fontSize: 10,
+            fontSize: ResponsiveHelper.sp(10),
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(5, (index) {
             final isFilled = index < rating;
             return Container(
-              margin: const EdgeInsets.only(right: 4),
-              width: 10,
-              height: 10,
+              margin: EdgeInsets.only(right: 4),
+              width: ResponsiveHelper.w(10),
+              height: ResponsiveHelper.h(10),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isFilled ? const Color(0xFFC6FF00) : Colors.transparent, // Neon Yellow-Green
+                color: isFilled ? Color(0xFFC6FF00) : Colors.transparent, // Neon Yellow-Green
                 border: Border.all(
-                  color: isFilled ? const Color(0xFFC6FF00) : Colors.grey.shade700,
+                  color: isFilled ? Color(0xFFC6FF00) : Colors.grey.shade700,
                 ),
               ),
             );

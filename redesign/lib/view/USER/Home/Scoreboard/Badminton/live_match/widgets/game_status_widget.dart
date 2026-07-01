@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class GameStatusWidget extends StatelessWidget {
   final int currentGame;
   final int playerOneScore;
   final int playerTwoScore;
 
-  const GameStatusWidget({
+  GameStatusWidget({
     super.key,
     required this.currentGame,
     required this.playerOneScore,
@@ -14,18 +15,19 @@ class GameStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         Text(
           'GAME $currentGame',
-          style: const TextStyle(
+          style: TextStyle(
             color: Color(0xFFC6FF00), // Neon Yellow-Green
-            fontSize: 12,
+            fontSize: ResponsiveHelper.sp(12),
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,13 +36,13 @@ class GameStatusWidget extends StatelessWidget {
               score: playerOneScore,
               isWinning: playerOneScore >= playerTwoScore,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8.0)),
               child: Text(
                 ':',
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 24,
+                  fontSize: ResponsiveHelper.sp(24),
                   fontWeight: FontWeight.w300,
                 ),
               ),
@@ -60,15 +62,16 @@ class _AnimatedScoreNumber extends StatelessWidget {
   final int score;
   final bool isWinning;
 
-  const _AnimatedScoreNumber({
+  _AnimatedScoreNumber({
     required this.score,
     required this.isWinning,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       transitionBuilder: (Widget child, Animation<double> animation) {
         return ScaleTransition(
           scale: animation,
@@ -85,8 +88,8 @@ class _AnimatedScoreNumber extends StatelessWidget {
           color: isWinning ? Colors.white : Colors.grey.shade400,
           fontSize: isWinning ? 48 : 42, // Emphasize winning score
           fontWeight: isWinning ? FontWeight.w900 : FontWeight.bold,
-          height: 1.0,
-          fontFeatures: const [FontFeature.tabularFigures()],
+          height: ResponsiveHelper.h(1.0),
+          fontFeatures: [FontFeature.tabularFigures()],
         ),
       ),
     );

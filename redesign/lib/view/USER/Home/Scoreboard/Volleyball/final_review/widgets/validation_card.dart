@@ -3,19 +3,21 @@ import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_final_review_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ValidationCard extends StatelessWidget {
   final VolleyballFinalReviewController controller;
 
-  const ValidationCard({super.key, required this.controller});
+  ValidationCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Column(
@@ -23,20 +25,20 @@ class ValidationCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.checklist, color: AppColors.muted, size: 16),
-              const SizedBox(width: 8),
+              Icon(Icons.checklist, color: AppColors.muted, size: 16),
+              SizedBox(width: 8),
               Text('STATUS CHECK', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.5)),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Obx(() => _buildCheckItem('Team A Lineup Validated', controller.teamAReady.value)),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Obx(() => _buildCheckItem('Team B Lineup Validated', controller.teamBReady.value)),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Obx(() => _buildCheckItem('Official Table Ready', controller.officialReady.value)),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Obx(() => _buildCheckItem('Match Configuration Valid', controller.configurationValid.value)),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Obx(() => _buildCheckItem('Rotation Verified', controller.rotationReady.value)),
         ],
       ),
@@ -51,7 +53,7 @@ class ValidationCard extends StatelessWidget {
           color: isValid ? AppColors.primaryContainer : AppColors.error,
           size: 20,
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Text(
           label,
           style: AppTypography.bodyMd.copyWith(

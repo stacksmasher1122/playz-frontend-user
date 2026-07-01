@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kMuted = Colors.white70;
 
 class FriendsAppBar extends StatelessWidget {
-  const FriendsAppBar({super.key});
+  FriendsAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+        padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
         child: Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -20,7 +22,7 @@ class FriendsAppBar extends StatelessWidget {
                     'Friends Hub',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 22,
+                      fontSize: ResponsiveHelper.sp(22),
                       fontWeight: FontWeight.w800,
                     ),
                   ),

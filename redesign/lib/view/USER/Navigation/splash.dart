@@ -11,9 +11,10 @@ import 'package:redesign/view/USER/SignIn-SignUp/favorite_sports/favorite_sports
 import 'package:redesign/view/USER/SignIn-SignUp/onboarding/onboarding_screen.dart';
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -37,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
     /// Logo animation
     _logoController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 900),
+      duration: Duration(milliseconds: 900),
     );
 
     _logoScale = Tween<double>(begin: 0.6, end: 1).animate(
@@ -52,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
     /// Single ripple
     _rippleController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1400),
+      duration: Duration(milliseconds: 1400),
     );
 
     _rippleAnim = CurvedAnimation(
@@ -68,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen>
       _glassBubbles.add(_GlassBubble(vsync: this));
     }
 
-    Timer(const Duration(seconds: 3), _goNext);
+    Timer(Duration(seconds: 3), _goNext);
   }
 
   void _goNext() async {
@@ -81,18 +82,18 @@ class _SplashScreenState extends State<SplashScreen>
       if (isProfileComplete) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const UserAppNavShell()),
+          MaterialPageRoute(builder: (_) => UserAppNavShell()),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
+          MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
         );
       }
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+        MaterialPageRoute(builder: (_) => OnboardingScreen()),
       );
     }
   }
@@ -109,6 +110,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -139,7 +141,7 @@ class _SplashScreenState extends State<SplashScreen>
                               borderRadius: BorderRadius.circular(28 + v * 26),
                               border: Border.all(
                                 color: AppColors.accent.withValues(alpha: 0.8),
-                                width: 2,
+                                width: ResponsiveHelper.w(2),
                               ),
                             ),
                           ),
@@ -151,11 +153,11 @@ class _SplashScreenState extends State<SplashScreen>
                       child: ScaleTransition(
                         scale: _logoScale,
                         child: Container(
-                          width: 90,
-                          height: 90,
+                          width: ResponsiveHelper.w(90),
+                          height: ResponsiveHelper.h(90),
                           decoration: BoxDecoration(
                             color: AppColors.accent,
-                            borderRadius: BorderRadius.circular(22),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
                             boxShadow: [
                               BoxShadow(
                                 color: AppColors.accent.withValues(alpha: 0.6),
@@ -164,7 +166,7 @@ class _SplashScreenState extends State<SplashScreen>
                               ),
                             ],
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.flash_on,
                             color: Colors.black,
                             size: 40,
@@ -174,12 +176,12 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ],
                 ),
-                const SizedBox(height: 28),
-                const Text(
+                SizedBox(height: 28),
+                Text(
                   'PlayZ',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
+                  style: TextStyle(fontSize: ResponsiveHelper.sp(32), fontWeight: FontWeight.w800),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Text(
                   "LET'S PLAY. LET'S WIN.",
                   style: TextStyle(
@@ -250,11 +252,12 @@ class _GlassBubble {
    NEXT SCREEN PLACEHOLDER
    ============================================================ */
 class DummyNextScreen extends StatelessWidget {
-  const DummyNextScreen({super.key});
+  DummyNextScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    ResponsiveHelper.init(context);
+    return Scaffold(
       backgroundColor: AppColors.surface,
       body: Center(
         child: Text('Next Screen', style: TextStyle(color: Colors.white)),

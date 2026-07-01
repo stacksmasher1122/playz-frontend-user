@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kBg = AppColors.background;
+Color kBg = AppColors.background;
 
 class SelectSportAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const SelectSportAppBar({super.key});
+  SelectSportAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SliverAppBar(
       pinned: true,
       backgroundColor: kBg,
       elevation: 0,
-      leading: const BackButton(),
-      title: const Text(
+      leading: BackButton(),
+      title: Text(
         'Select Sport',
         style: TextStyle(fontWeight: FontWeight.w700),
       ),
@@ -21,5 +23,5 @@ class SelectSportAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

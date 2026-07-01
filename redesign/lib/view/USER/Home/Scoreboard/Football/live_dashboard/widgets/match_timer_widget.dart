@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchTimerWidget extends StatelessWidget {
   final String currentHalf;
   final int currentMinute;
 
-  const MatchTimerWidget({
+  MatchTimerWidget({
     super.key,
     required this.currentHalf,
     required this.currentMinute,
@@ -12,28 +13,29 @@ class MatchTimerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           currentHalf,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.grey,
-            fontSize: 12,
+            fontSize: ResponsiveHelper.sp(12),
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(width: 8),
-        const Text(
+        SizedBox(width: 8),
+        Text(
           '•',
           style: TextStyle(color: Colors.grey, fontSize: 12),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(
           "$currentMinute'",
-          style: const TextStyle(
+          style: TextStyle(
             color: Color(0xFFC6FF00), // Lime Green
-            fontSize: 14,
+            fontSize: ResponsiveHelper.sp(14),
             fontWeight: FontWeight.bold,
           ),
         ),

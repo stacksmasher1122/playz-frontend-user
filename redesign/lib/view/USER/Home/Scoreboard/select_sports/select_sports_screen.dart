@@ -12,11 +12,12 @@ import 'widgets/select_sport_search_bar.dart';
 import 'widgets/select_sport_tile.dart';
 import 'widgets/select_sport_category_section.dart';
 import 'widgets/sport_match_setup_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kBg = AppColors.background;
+Color kBg = AppColors.background;
 
 class SelectSportScreen extends StatefulWidget {
-  const SelectSportScreen({super.key});
+  SelectSportScreen({super.key});
 
   @override
   State<SelectSportScreen> createState() => _SelectSportScreenState();
@@ -54,7 +55,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           Icons.sports_soccer,
           onTap: () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (_) => const FootballCreateMatchScreen())),
+          ).push(MaterialPageRoute(builder: (_) => FootballCreateMatchScreen())),
         ),
         SportItem(
           'Box Cricket',
@@ -76,7 +77,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           Icons.sports_volleyball,
           onTap: () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (_) => const VolleyballInitializeMatchScreen())),
+          ).push(MaterialPageRoute(builder: (_) => VolleyballInitializeMatchScreen())),
         ),
         SportItem(
           'Hockey',
@@ -94,7 +95,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           'Tennis',
           Icons.sports_tennis,
           onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const SetupMatchScreen()),
+            MaterialPageRoute(builder: (_) => SetupMatchScreen()),
           ),
         ),
         SportItem(
@@ -102,7 +103,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           Icons.sports,
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => const BadmintonCreateMatchScreen(),
+              builder: (_) => BadmintonCreateMatchScreen(),
             ),
           ),
         ),
@@ -121,7 +122,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           Icons.sports_tennis,
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => const PickleballInitializeMatchScreen(),
+              builder: (_) => PickleballInitializeMatchScreen(),
             ),
           ),
         ),
@@ -180,7 +181,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
 
     if (sport == 'Football') {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const FootballCreateMatchScreen()),
+        MaterialPageRoute(builder: (_) => FootballCreateMatchScreen()),
       );
       return;
     }
@@ -192,12 +193,13 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            const SelectSportAppBar(),
+            SelectSportAppBar(),
             SelectSportSearchBar(
               onChanged: (v) => setState(() => searchQuery = v.toLowerCase()),
             ),
@@ -215,7 +217,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
                 },
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
         ),
       ),

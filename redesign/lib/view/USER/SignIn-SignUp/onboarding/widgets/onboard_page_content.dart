@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import '../onboarding_models.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class OnboardPageContent extends StatelessWidget {
   final OnboardData data;
 
-  const OnboardPageContent({super.key, required this.data});
+  OnboardPageContent({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// Illustration / Image
           Expanded(
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
               child: Image.network(
                 data.image,
                 fit: BoxFit.cover,
@@ -25,45 +27,45 @@ class OnboardPageContent extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
 
           /// Tag / Chip
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
             decoration: BoxDecoration(
               color: AppColors.accent.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
             ),
             child: Text(
               data.tag,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.accent,
-                fontSize: 12,
+                fontSize: ResponsiveHelper.sp(12),
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           /// Title
           Text(
             data.title,
-            style: const TextStyle(
-              fontSize: 28,
+            style: TextStyle(
+              fontSize: ResponsiveHelper.sp(28),
               fontWeight: FontWeight.w800,
-              height: 1.2,
+              height: ResponsiveHelper.h(1.2),
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           /// Subtitle
           Text(
             data.subtitle,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyle(
+              fontSize: ResponsiveHelper.sp(14),
               color: Color(0xFF9CA3AF),
-              height: 1.5,
+              height: ResponsiveHelper.h(1.5),
             ),
           ),
         ],

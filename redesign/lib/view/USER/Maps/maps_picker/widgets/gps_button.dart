@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class GpsButton extends StatelessWidget {
-  const GpsButton({super.key});
+  GpsButton({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final mapsCtrl = Get.find<MapsController>();
 
     return GestureDetector(
@@ -23,23 +25,23 @@ class GpsButton extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.4),
               blurRadius: 10,
-              offset: const Offset(0, 4),
+              offset: Offset(0, 4),
             ),
           ],
         ),
-        padding: const EdgeInsets.all(14),
+        padding: EdgeInsets.all(ResponsiveHelper.w(14)),
         child: Obx(() {
           if (mapsCtrl.isLoading.value) {
-            return const SizedBox(
-              width: 24,
-              height: 24,
+            return SizedBox(
+              width: ResponsiveHelper.w(24),
+              height: ResponsiveHelper.h(24),
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 color: kSpotifyGreen,
               ),
             );
           }
-          return const Icon(Icons.my_location, color: Colors.white);
+          return Icon(Icons.my_location, color: Colors.white);
         }),
       ),
     );

@@ -38,7 +38,7 @@ class LiveFootballDashboardController extends GetxController {
 
   void initialize() {
     Future.microtask(() => isLoading.value = true);
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       loadMatch();
       syncStateFromModels();
       startLiveTimer();
@@ -48,7 +48,7 @@ class LiveFootballDashboardController extends GetxController {
 
   void loadMatch() {
     // Static dummy data matching screenshot
-    match.value = const LiveMatchModel(
+    match.value = LiveMatchModel(
       matchId: '8829-X',
       teamAName: 'TEAM A',
       teamBName: 'TEAM B',
@@ -61,7 +61,7 @@ class LiveFootballDashboardController extends GetxController {
       possessionB: 42,
     );
 
-    statsA.value = const TeamStatisticsModel(
+    statsA.value = TeamStatisticsModel(
       possession: 58,
       shots: 12,
       shotsOnTarget: 7,
@@ -76,7 +76,7 @@ class LiveFootballDashboardController extends GetxController {
       xpPoints: 2.41,
     );
 
-    statsB.value = const TeamStatisticsModel(
+    statsB.value = TeamStatisticsModel(
       possession: 42,
       shots: 6,
       shotsOnTarget: 3,
@@ -118,7 +118,7 @@ class LiveFootballDashboardController extends GetxController {
   void startLiveTimer() {
     isLive.value = true;
     _liveTimer?.cancel();
-    _liveTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    _liveTimer = Timer.periodic(Duration(seconds: 10), (timer) {
       if (isLive.value) {
         currentMinute.value += 1;
         
@@ -159,17 +159,17 @@ class LiveFootballDashboardController extends GetxController {
     Get.bottomSheet(
       Container(
         color: Colors.grey.shade900,
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Which team scored?', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 24),
+            Text('Which team scored?', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC6FF00)),
+                  style: ElevatedButton.styleFrom(backgroundColor: Color(0xFFC6FF00)),
                   onPressed: () {
                     Get.back();
                     scoreA.value += 1;
@@ -177,10 +177,10 @@ class LiveFootballDashboardController extends GetxController {
                     _addEvent("Goal", "A", "Player scored");
                     showSuccess("Goal recorded for Team A!");
                   },
-                  child: const Text('Team A', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                  child: Text('Team A', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                 ),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC6FF00)),
+                  style: ElevatedButton.styleFrom(backgroundColor: Color(0xFFC6FF00)),
                   onPressed: () {
                     Get.back();
                     scoreB.value += 1;
@@ -188,7 +188,7 @@ class LiveFootballDashboardController extends GetxController {
                     _addEvent("Goal", "B", "Player scored");
                     showSuccess("Goal recorded for Team B!");
                   },
-                  child: const Text('Team B', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                  child: Text('Team B', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                 ),
               ],
             )
@@ -247,16 +247,16 @@ class LiveFootballDashboardController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00),
+      backgroundColor: Color(0xFFC6FF00),
       colorText: Colors.black,
       snackPosition: SnackPosition.TOP,
-      margin: const EdgeInsets.all(16),
-      duration: const Duration(seconds: 2),
+      margin: EdgeInsets.all(16),
+      duration: Duration(seconds: 2),
     );
   }
 
@@ -264,14 +264,14 @@ class LiveFootballDashboardController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.TOP,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 

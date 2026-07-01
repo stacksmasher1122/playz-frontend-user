@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TrainerJoinCard extends StatelessWidget {
   final VoidCallback onTap;
 
-  const TrainerJoinCard({super.key, required this.onTap});
+  TrainerJoinCard({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         onTap: onTap,
         splashColor: AppColors.accent.withValues(alpha: 0.15),
         highlightColor: AppColors.accent.withValues(alpha: 0.08),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -31,13 +33,13 @@ class TrainerJoinCard extends StatelessWidget {
             ),
             border: Border.all(
               color: AppColors.accent.withValues(alpha: 0.5),
-              width: 1,
+              width: ResponsiveHelper.w(1),
             ),
             boxShadow: [
               BoxShadow(
                 color: AppColors.accent.withValues(alpha: 0.18),
                 blurRadius: 5,
-                offset: const Offset(0, 0),
+                offset: Offset(0, 0),
               ),
             ],
           ),
@@ -45,20 +47,20 @@ class TrainerJoinCard extends StatelessWidget {
             children: [
               /// LEFT ICON
               Container(
-                width: 44,
-                height: 44,
+                width: ResponsiveHelper.w(44),
+                height: ResponsiveHelper.h(44),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: AppColors.accent.withValues(alpha: 0.2),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.verified_user_rounded,
                   color: AppColors.accent,
                   size: 22,
                 ),
               ),
 
-              const SizedBox(width: 14),
+              SizedBox(width: 14),
 
               /// TEXT CONTENT
               Expanded(
@@ -69,36 +71,36 @@ class TrainerJoinCard extends StatelessWidget {
                       'Are you a Trainer?',
                       style: GoogleFonts.inter(
                         color: Colors.white,
-                        fontSize: 15,
+                        fontSize: ResponsiveHelper.sp(15),
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       'Join us to manage sessions, earnings, and your player roster — all in one dashboard.',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
                         color: AppColors.muted,
-                        fontSize: 12.5,
-                        height: 1.4,
+                        fontSize: ResponsiveHelper.sp(12.5),
+                        height: ResponsiveHelper.h(1.4),
                       ),
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
 
               /// CTA BUTTON
               Container(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: 14,
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.accent,
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
                   border: Border.all(color: AppColors.accent, width: 1),
                 ),
                 child: Row(
@@ -107,7 +109,7 @@ class TrainerJoinCard extends StatelessWidget {
                       'Register',
                       style: GoogleFonts.inter(
                         color: AppColors.background,
-                        fontSize: 12.5,
+                        fontSize: ResponsiveHelper.sp(12.5),
                         fontWeight: FontWeight.w700,
                       ),
                     ),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../cricket_setup_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RulesSwitchCard extends StatelessWidget {
   final RxBool valueStream;
   final Function(bool) onChanged;
 
-  const RulesSwitchCard({
+  RulesSwitchCard({
     super.key,
     required this.valueStream,
     required this.onChanged,
@@ -14,46 +15,47 @@ class RulesSwitchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
       ),
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(ResponsiveHelper.w(12)),
             decoration: BoxDecoration(
-              color: const Color(0xFF3B2828), // Slight red tint for rules
-              borderRadius: BorderRadius.circular(14),
+              color: Color(0xFF3B2828), // Slight red tint for rules
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.gavel_rounded,
               color: kRed,
               size: 24,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Formal ICC Rules',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 4),
-                const Text(
+                SizedBox(height: 4),
+                Text(
                   'Disable to allow single\nbatter (Last Man Standing)',
                   style: TextStyle(
                     color: kMutedText,
-                    fontSize: 13,
-                    height: 1.2,
+                    fontSize: ResponsiveHelper.sp(13),
+                    height: ResponsiveHelper.h(1.2),
                   ),
                 ),
               ],
@@ -66,7 +68,7 @@ class RulesSwitchCard extends StatelessWidget {
               activeThumbColor: Colors.white,
               activeTrackColor: kRed,
               inactiveThumbColor: kMutedText,
-              inactiveTrackColor: const Color(0xFF2C2C2C),
+              inactiveTrackColor: Color(0xFF2C2C2C),
               thumbColor: WidgetStateProperty.resolveWith<Color>((
                 Set<WidgetState> states,
               ) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kMuted = Color(0xFFA7A7A7);
 const kSurface = Color(0xFF0E0E0E);
@@ -8,7 +9,7 @@ class FeeCardWrapper extends StatelessWidget {
   final List<Widget> children;
   final Widget? trailing;
 
-  const FeeCardWrapper({
+  FeeCardWrapper({
     super.key,
     required this.title,
     required this.children,
@@ -17,11 +18,12 @@ class FeeCardWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
       ),
       child: Column(
         crossAxisAlignment:
@@ -31,18 +33,18 @@ class FeeCardWrapper extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   color: kMuted,
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.8,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               if (trailing != null) trailing!,
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ...children,
         ],
       ),

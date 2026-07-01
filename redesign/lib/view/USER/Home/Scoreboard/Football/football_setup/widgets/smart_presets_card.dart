@@ -1,45 +1,47 @@
 import 'package:flutter/material.dart';
 import 'setup_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SmartPresetsCard extends StatelessWidget {
   final VoidCallback onApply;
 
-  const SmartPresetsCard({super.key, required this.onApply});
+  SmartPresetsCard({super.key, required this.onApply});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(8)),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
           color: kSurfaceHighlight,
           border: Border.all(color: kAccentDim),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(ResponsiveHelper.w(8)),
               decoration: BoxDecoration(
                 color: kAccentDim,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
               ),
-              child: const Icon(Icons.auto_awesome, color: kAccent, size: 20),
+              child: Icon(Icons.auto_awesome, color: kAccent, size: 20),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "Quick Setup",
                     style: TextStyle(
                       color: kTextPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Text(
+                  Text(
                     "Used in 72% of friendly games",
                     style: TextStyle(color: kTextSecondary, fontSize: 11),
                   ),
@@ -48,7 +50,7 @@ class SmartPresetsCard extends StatelessWidget {
             ),
             TextButton(
               onPressed: onApply,
-              child: const Text(
+              child: Text(
                 "Apply Standard",
                 style: TextStyle(color: kAccent, fontWeight: FontWeight.bold),
               ),

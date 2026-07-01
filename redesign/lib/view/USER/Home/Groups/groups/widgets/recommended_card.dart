@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kMuted = Colors.white70;
@@ -10,7 +11,7 @@ class RecommendedCard extends StatelessWidget {
   final String status;
   final String imageUrl;
 
-  const RecommendedCard({
+  RecommendedCard({
     super.key,
     required this.name,
     required this.members,
@@ -20,13 +21,14 @@ class RecommendedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
-          color: const Color(0xFF161616),
-          borderRadius: BorderRadius.circular(32),
+          color: Color(0xFF161616),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(32)),
         ),
         child: Row(
           children: [
@@ -34,32 +36,32 @@ class RecommendedCard extends StatelessWidget {
               radius: 24,
               backgroundColor: Colors.white,
               child: Padding(
-                padding: const EdgeInsets.all(4.0),
+                padding: EdgeInsets.all(ResponsiveHelper.w(4.0)),
                 child: CircleAvatar(
                   radius: 20,
                   backgroundImage: NetworkImage(imageUrl),
                 ),
               ),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 15,
+                      fontSize: ResponsiveHelper.sp(15),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     '$members • $status',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: kMuted,
-                      fontSize: 10,
+                      fontSize: ResponsiveHelper.sp(10),
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.5,
                     ),
@@ -73,16 +75,16 @@ class RecommendedCard extends StatelessWidget {
                 backgroundColor: kGreen,
                 foregroundColor: Colors.black,
                 elevation: 0,
-                minimumSize: const Size(64, 32),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                minimumSize: Size(64, 32),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'JOIN',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.w800,
                 ),
               ),

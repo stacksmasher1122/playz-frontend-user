@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SeriesFormatSection extends StatelessWidget {
   final String selectedFormat;
   final ValueChanged<String> onFormatChanged;
 
-  const SeriesFormatSection({
+  SeriesFormatSection({
     super.key,
     required this.selectedFormat,
     required this.onFormatChanged,
@@ -13,33 +14,34 @@ class SeriesFormatSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(12),
+        color: Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "SERIES FORMAT",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: ResponsiveHelper.sp(12),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.5,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           Row(
             children: [
               _buildRadioOption("Best of 1"),
-              const SizedBox(width: 24),
+              SizedBox(width: 24),
               _buildRadioOption("Best of 3"),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               _buildRadioOption("Best of 5"),
@@ -58,21 +60,21 @@ class SeriesFormatSection extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 20,
-            height: 20,
+            width: ResponsiveHelper.w(20),
+            height: ResponsiveHelper.h(20),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
                 color: isSelected ? AppColors.accent : AppColors.muted,
-                width: 2,
+                width: ResponsiveHelper.w(2),
               ),
             ),
             child: isSelected
                 ? Center(
                     child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
+                      width: ResponsiveHelper.w(10),
+                      height: ResponsiveHelper.h(10),
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.accent,
                       ),
@@ -80,12 +82,12 @@ class SeriesFormatSection extends StatelessWidget {
                   )
                 : null,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: ResponsiveHelper.sp(16),
               fontWeight: FontWeight.w600,
             ),
           ),

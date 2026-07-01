@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 enum SystemStatus { connected, waiting, offline, ready }
 
 class StatusChip extends StatelessWidget {
   final SystemStatus status;
 
-  const StatusChip({super.key, required this.status});
+  StatusChip({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     Color bgColor;
     Color textColor;
     String text;
@@ -44,16 +46,16 @@ class StatusChip extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: textColor, size: 12),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(text, style: AppTypography.labelCaps10.copyWith(color: textColor, fontWeight: FontWeight.bold)),
         ],
       ),

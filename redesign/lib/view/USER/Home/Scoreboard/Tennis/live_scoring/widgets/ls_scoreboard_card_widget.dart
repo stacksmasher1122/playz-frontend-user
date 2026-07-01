@@ -3,18 +3,20 @@ import 'package:get/get.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/live_scoring_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LsScoreboardCardWidget extends StatelessWidget {
-  const LsScoreboardCardWidget({super.key});
+  LsScoreboardCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveScoringController>();
 
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Obx(() {
@@ -64,28 +66,28 @@ class LsScoreboardCardWidget extends StatelessWidget {
         children: [
           // Left neon indicator if serving
           Container(
-            width: 6,
+            width: ResponsiveHelper.w(6),
             decoration: BoxDecoration(
               color: isServing ? AppColors.primaryContainer : Colors.transparent,
               borderRadius: isTopRow
-                  ? const BorderRadius.only(topLeft: Radius.circular(16))
-                  : const BorderRadius.only(bottomLeft: Radius.circular(16)),
+                  ? BorderRadius.only(topLeft: Radius.circular(ResponsiveHelper.w(16)))
+                  : BorderRadius.only(bottomLeft: Radius.circular(ResponsiveHelper.w(16))),
             ),
           ),
           
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(ResponsiveHelper.w(20.0)),
               child: Row(
                 children: [
                   // Server icon placeholder
                   SizedBox(
-                    width: 32,
+                    width: ResponsiveHelper.w(32),
                     child: isServing 
-                        ? const Icon(Icons.sports_tennis, color: AppColors.primaryContainer)
+                        ? Icon(Icons.sports_tennis, color: AppColors.primaryContainer)
                         : null,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   
                   // Name and info
                   Expanded(
@@ -98,10 +100,10 @@ class LsScoreboardCardWidget extends StatelessWidget {
                           style: AppTypography.headlineLg.copyWith(
                             color: isServing ? AppColors.primary : AppColors.onSurfaceVariant,
                             fontWeight: FontWeight.w800,
-                            height: 1.1,
+                            height: ResponsiveHelper.h(1.1),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text(
                           'RANK $rank | $country',
                           style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
@@ -112,20 +114,20 @@ class LsScoreboardCardWidget extends StatelessWidget {
                   
                   // Score components
                   _buildScoreColumn('SET', sets.toString(), isServing),
-                  const SizedBox(width: 24),
+                  SizedBox(width: 24),
                   _buildScoreColumn('GAMES', games, isServing),
-                  const SizedBox(width: 24),
+                  SizedBox(width: 24),
                   
                   // Large points
                   SizedBox(
-                    width: 64,
+                    width: ResponsiveHelper.w(64),
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         points,
                         style: TextStyle(
                           fontFamily: 'Sora',
-                          fontSize: 48,
+                          fontSize: ResponsiveHelper.sp(48),
                           fontWeight: FontWeight.w900,
                           color: isServing ? AppColors.primary : AppColors.onSurfaceVariant.withValues(alpha: 0.5),
                         ),
@@ -146,7 +148,7 @@ class LsScoreboardCardWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(label, style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, fontSize: 10)),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: AppTypography.headlineMd.copyWith(

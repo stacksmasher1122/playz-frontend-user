@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AddonCard extends StatelessWidget {
   final String title;
@@ -7,7 +8,7 @@ class AddonCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const AddonCard({
+  AddonCard({
     super.key,
     required this.title,
     required this.price,
@@ -20,24 +21,25 @@ class AddonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(6)),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         clipBehavior: Clip.antiAlias, // 🔑 CONTAINS SPLASH
         child: InkWell(
           onTap: onTap,
           splashColor: _kGreen.withValues(alpha: 0.15),
           highlightColor: _kGreen.withValues(alpha: 0.08),
           child: Ink(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(ResponsiveHelper.w(16)),
             decoration: BoxDecoration(
               color: Colors.black, // Spotify dark base
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               border: Border.all(
                 color: isSelected ? _kGreen : Colors.grey.shade800,
-                width: 1.2,
+                width: ResponsiveHelper.w(1.2),
               ),
             ),
             child: Row(
@@ -45,21 +47,21 @@ class AddonCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14,
+                      fontSize: ResponsiveHelper.sp(14),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
                 Text(
                   price,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: _kGreen,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Icon(
                   isSelected ? Icons.check_circle : Icons.circle_outlined,
                   color: isSelected ? _kGreen : _kMuted,

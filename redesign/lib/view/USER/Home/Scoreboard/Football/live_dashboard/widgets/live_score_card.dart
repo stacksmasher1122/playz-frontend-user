@@ -4,25 +4,27 @@ import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboa
 import 'team_score_widget.dart';
 import 'match_timer_widget.dart';
 import 'score_board_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveScoreCard extends StatelessWidget {
-  const LiveScoreCard({super.key});
+  LiveScoreCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveFootballDashboardController>();
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Obx(() {
         final match = controller.match.value;
-        if (match == null) return const SizedBox.shrink();
+        if (match == null) return SizedBox.shrink();
 
         return Column(
           children: [
@@ -30,7 +32,7 @@ class LiveScoreCard extends StatelessWidget {
               currentHalf: controller.currentHalf.value,
               currentMinute: controller.currentMinute.value,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

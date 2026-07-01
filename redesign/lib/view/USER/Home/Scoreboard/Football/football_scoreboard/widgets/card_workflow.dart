@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../football_scoreboard_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CardWorkflow extends StatefulWidget {
   final MatchEngine engine;
-  const CardWorkflow({super.key, required this.engine});
+  CardWorkflow({super.key, required this.engine});
   @override
   State<CardWorkflow> createState() => _CardWorkflowState();
 }
@@ -14,9 +15,10 @@ class _CardWorkflowState extends State<CardWorkflow> {
 
   @override // Simplify for brevity: Team -> Player -> Type (Yellow/Red)
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     if (selectedSide == null) {
       return Container(
-        height: 300,
+        height: ResponsiveHelper.h(300),
         color: kSurface,
         child: Row(
           children: [
@@ -31,7 +33,7 @@ class _CardWorkflowState extends State<CardWorkflow> {
           ? widget.engine.homeTeam
           : widget.engine.awayTeam;
       return Container(
-        height: 500,
+        height: ResponsiveHelper.h(500),
         color: kSurface,
         child: ListView(
           children: team.pitchPlayers
@@ -39,7 +41,7 @@ class _CardWorkflowState extends State<CardWorkflow> {
                 (p) => ListTile(
                   title: Text(
                     p.name,
-                    style: const TextStyle(color: kTextPrimary),
+                    style: TextStyle(color: kTextPrimary),
                   ),
                   onTap: () => setState(() => selectedPlayer = p),
                 ),
@@ -49,7 +51,7 @@ class _CardWorkflowState extends State<CardWorkflow> {
       );
     }
     return Container(
-      height: 300,
+      height: ResponsiveHelper.h(300),
       color: kSurface,
       child: Row(
         children: [
@@ -65,9 +67,9 @@ class _CardWorkflowState extends State<CardWorkflow> {
                 Navigator.pop(context);
               },
               child: Container(
-                margin: const EdgeInsets.all(16),
+                margin: EdgeInsets.all(ResponsiveHelper.w(16)),
                 color: kYellow,
-                child: const Center(
+                child: Center(
                   child: Text(
                     "YELLOW",
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -88,9 +90,9 @@ class _CardWorkflowState extends State<CardWorkflow> {
                 Navigator.pop(context);
               },
               child: Container(
-                margin: const EdgeInsets.all(16),
+                margin: EdgeInsets.all(ResponsiveHelper.w(16)),
                 color: kRed,
-                child: const Center(
+                child: Center(
                   child: Text(
                     "RED",
                     style: TextStyle(
@@ -113,7 +115,7 @@ class _CardWorkflowState extends State<CardWorkflow> {
       child: Container(
         color: kSurface,
         child: Center(
-          child: Text(t.name, style: const TextStyle(color: kTextPrimary)),
+          child: Text(t.name, style: TextStyle(color: kTextPrimary)),
         ),
       ),
     ),

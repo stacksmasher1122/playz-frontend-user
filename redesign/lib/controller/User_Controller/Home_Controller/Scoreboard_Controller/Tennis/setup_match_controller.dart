@@ -7,7 +7,7 @@ class SetupMatchController extends GetxController {
   final umpireNameController = TextEditingController();
   final courtNumberController = TextEditingController();
 
-  final Rx<MatchSetupModel> matchSetup = const MatchSetupModel().obs;
+  final Rx<MatchSetupModel> matchSetup = MatchSetupModel().obs;
 
   @override
   void onClose() {
@@ -70,7 +70,7 @@ class SetupMatchController extends GetxController {
         backgroundColor: Colors.red.shade900,
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
-        margin: const EdgeInsets.all(16),
+        margin: EdgeInsets.all(16),
       );
       return;
     }
@@ -82,7 +82,7 @@ class SetupMatchController extends GetxController {
 
     // User wants Navigator.push to PlayerManagementScreen
     // Since we are mocking, if the screen doesn't exist, we can just print. But the prompt said:
-    // "Navigator.push(context, MaterialPageRoute(builder: (_) => const PlayerManagementScreen()))"
+    // "Navigator.push(context, MaterialPageRoute(builder: (_) => PlayerManagementScreen()))"
     // I will mock a placeholder if needed, or assume it exists. Actually I'll use the one from Tennis if available.
     // For now, let's implement the routing as requested.
   }

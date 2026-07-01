@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SummaryCardWidget extends StatelessWidget {
   final IconData icon;
@@ -8,7 +9,7 @@ class SummaryCardWidget extends StatelessWidget {
   final String value;
   final String? unit;
 
-  const SummaryCardWidget({
+  SummaryCardWidget({
     super.key,
     required this.icon,
     required this.label,
@@ -18,27 +19,28 @@ class SummaryCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: AppColors.muted, size: 24),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(value, style: AppTypography.headlineLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
               if (unit != null) ...[
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(unit!, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
               ],
             ],

@@ -10,6 +10,7 @@ import 'widgets/privacy_selector.dart';
 import 'widgets/member_count_slider.dart';
 import 'widgets/create_group_submit_button.dart';
 import 'widgets/create_group_overlay.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = Color(0xFF0C0C0C);
 const kSurface = Color(0xFF161616);
@@ -17,7 +18,7 @@ const kGreen = Color(0xFF6EDC6A);
 const kMuted = Colors.white54;
 
 class CreateGroupScreen extends StatefulWidget {
-  const CreateGroupScreen({super.key});
+  CreateGroupScreen({super.key});
 
   @override
   State<CreateGroupScreen> createState() => _CreateGroupScreenState();
@@ -78,20 +79,21 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Create Group',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.sp(20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -100,23 +102,23 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         children: [
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(20)),
+              physics: BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Photo section
-                  const GroupImagePicker(),
-                  const SizedBox(height: 32),
+                  GroupImagePicker(),
+                  SizedBox(height: 32),
 
                   // Group Name
                   _buildSectionTitle('GROUP NAME'),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   CreateGroupTextField(
                     controller: _nameController,
                     hint: 'Enter your squad name',
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Group Description
                   Row(
@@ -125,43 +127,43 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       _buildSectionTitle('GROUP DESCRIPTION'),
                       Text(
                         '$_descLength / 200',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: kMuted,
-                          fontSize: 10,
+                          fontSize: ResponsiveHelper.sp(10),
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   CreateGroupTextField(
                     controller: _descController,
                     hint: 'Tell players what this group is about...',
                     maxLines: 4,
                     maxLength: 200,
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Select Sport
                   _buildSectionTitle('SELECT SPORT'),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   SportSelector(
                     sports: _sports,
                     selectedSport: _selectedSport,
                     onSportSelected: (sport) =>
                         setState(() => _selectedSport = sport),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Group Privacy
                   _buildSectionTitle('GROUP PRIVACY'),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   PrivacySelector(
                     isPublic: _isPublic,
                     onPrivacyChanged: (val) => setState(() => _isPublic = val),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Maximum Members
                   Row(
@@ -169,40 +171,39 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     children: [
                       _buildSectionTitle('MAXIMUM MEMBERS'),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
+                        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
                         decoration: BoxDecoration(
                           color: kSurface,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
                         ),
                         child: Text(
                           _maxMembers.toInt().toString(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: kGreen,
-                            fontSize: 13,
+                            fontSize: ResponsiveHelper.sp(13),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   MemberCountSlider(
                     maxMembers: _maxMembers,
                     onChanged: (val) => setState(() => _maxMembers = val),
                   ),
-                  const SizedBox(height: 48),
+                  SizedBox(height: 48),
 
                   // Create Group Button
                   CreateGroupSubmitButton(onPressed: _handleCreate),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
           ),
 
           // Full-screen loading overlay during creation
-          const CreateGroupOverlay(),
+          CreateGroupOverlay(),
         ],
       ),
     );
@@ -211,9 +212,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Widget _buildSectionTitle(String text) {
     return Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         color: kMuted,
-        fontSize: 10,
+        fontSize: ResponsiveHelper.sp(10),
         fontWeight: FontWeight.bold,
         letterSpacing: 1.2,
       ),

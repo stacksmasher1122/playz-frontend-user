@@ -10,6 +10,7 @@ import 'widgets/group_media_section.dart';
 import 'widgets/group_members_section.dart';
 import 'widgets/moderation_section.dart';
 import 'widgets/footer_actions.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kBg = AppColors.surface;
@@ -17,7 +18,7 @@ const _kBg = AppColors.surface;
 class GroupsInfoScreen extends StatefulWidget {
   final String groupId;
 
-  const GroupsInfoScreen({super.key, required this.groupId});
+  GroupsInfoScreen({super.key, required this.groupId});
 
   @override
   State<GroupsInfoScreen> createState() => _GroupsInfoScreenState();
@@ -39,16 +40,17 @@ class _GroupsInfoScreenState extends State<GroupsInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: _kBg,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           "SQUAD",
           style: TextStyle(
             color: _kGreen,
@@ -58,7 +60,7 @@ class _GroupsInfoScreenState extends State<GroupsInfoScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: Icon(Icons.more_vert, color: Colors.white),
             onPressed: () {},
           ),
         ],
@@ -66,27 +68,27 @@ class _GroupsInfoScreenState extends State<GroupsInfoScreen> {
       body: Obx(() {
         final group = _ctrl.currentGroup.value;
         if (group == null) {
-          return const Center(child: CircularProgressIndicator(color: _kGreen));
+          return Center(child: CircularProgressIndicator(color: _kGreen));
         }
 
         return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(20)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GroupsInfoHeader(group: group, ctrl: _ctrl),
-              const SizedBox(height: 24),
-              const InfoActionButtons(),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
+              InfoActionButtons(),
+              SizedBox(height: 24),
               GroupMediaSection(ctrl: _ctrl),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               GroupMembersSection(group: group, ctrl: _ctrl),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               if (_ctrl.isAdmin.value) ModerationSection(group: group, ctrl: _ctrl),
-              if (_ctrl.isAdmin.value) const SizedBox(height: 16),
+              if (_ctrl.isAdmin.value) SizedBox(height: 16),
               FooterActions(ctrl: _ctrl),
-              const SizedBox(height: 40),
+              SizedBox(height: 40),
             ],
           ),
         );

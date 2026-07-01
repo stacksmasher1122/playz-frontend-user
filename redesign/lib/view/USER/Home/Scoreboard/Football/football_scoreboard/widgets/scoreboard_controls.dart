@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../football_scoreboard_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ScoreboardControls extends StatelessWidget {
   final MatchEngine engine;
@@ -7,7 +8,7 @@ class ScoreboardControls extends StatelessWidget {
   final VoidCallback showCardModal;
   final VoidCallback showSubModal;
 
-  const ScoreboardControls({
+  ScoreboardControls({
     super.key,
     required this.engine,
     required this.showGoalModal,
@@ -17,8 +18,9 @@ class ScoreboardControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       color: kSurfaceHighlight,
       child: SafeArea(
         top: false,
@@ -33,9 +35,9 @@ class ScoreboardControls extends StatelessWidget {
                   Icons.sports_soccer,
                   showGoalModal,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 _buildBigBtn("CARD", kYellow, Icons.style, showCardModal),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 _buildBigBtn(
                   "SUB",
                   kAccent,
@@ -44,7 +46,7 @@ class ScoreboardControls extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
@@ -58,7 +60,7 @@ class ScoreboardControls extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: _buildAuxBtn("PHASE", Icons.flag, engine.endPhase),
                 ),
@@ -79,17 +81,17 @@ class ScoreboardControls extends StatelessWidget {
     return Expanded(
       child: Material(
         color: col.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           child: SizedBox(
-            height: 70,
+            height: ResponsiveHelper.h(70),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(icon, color: col, size: 28),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   label,
                   style: TextStyle(color: col, fontWeight: FontWeight.bold),
@@ -110,12 +112,12 @@ class ScoreboardControls extends StatelessWidget {
   }) {
     return Material(
       color: isActive ? kAccent : kSurface,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         child: SizedBox(
-          height: 50,
+          height: ResponsiveHelper.h(50),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -124,7 +126,7 @@ class ScoreboardControls extends StatelessWidget {
                 color: isActive ? Colors.black : kTextSecondary,
                 size: 18,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(

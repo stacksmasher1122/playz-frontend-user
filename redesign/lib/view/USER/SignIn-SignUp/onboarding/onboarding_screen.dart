@@ -6,21 +6,22 @@ import 'onboarding_models.dart';
 import 'widgets/onboard_top_bar.dart';
 import 'widgets/onboard_page_content.dart';
 import 'widgets/onboard_bottom_controls.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  OnboardingScreen({super.key});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  static const Color bg = AppColors.surface;
+  static Color bg = AppColors.surface;
 
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
-  final List<OnboardData> _pages = const [
+  final List<OnboardData> _pages = [
     OnboardData(
       tag: '#1 SPORTS APP',
       title: 'India’s Sports Community,\nin Your Pocket',
@@ -56,7 +57,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       _finishOnboarding();
     } else {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 350),
+        duration: Duration(milliseconds: 350),
         curve: Curves.easeOut,
       );
     }
@@ -65,12 +66,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _finishOnboarding() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      MaterialPageRoute(builder: (_) => LoginScreen()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: bg,
       body: SafeArea(

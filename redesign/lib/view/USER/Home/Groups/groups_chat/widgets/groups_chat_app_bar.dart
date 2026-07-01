@@ -5,6 +5,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/view/USER/Home/Groups/groups_info/groups_info_screen.dart';
 import 'package:redesign/view/USER/Home/Groups/group_request/group_request_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
@@ -16,7 +17,7 @@ class GroupsChatAppBar extends StatelessWidget {
   final String pic;
   final int memberCount;
 
-  const GroupsChatAppBar({
+  GroupsChatAppBar({
     super.key,
     required this.groupId,
     required this.name,
@@ -26,6 +27,7 @@ class GroupsChatAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final groupsCtrl = Get.find<GroupsController>();
     final isAdmin = groupsCtrl.isGroupAdmin(groupId);
 
@@ -36,12 +38,12 @@ class GroupsChatAppBar extends StatelessWidget {
 
     return Container(
       color: Colors.black.withValues(alpha: 0.8),
-      padding: const EdgeInsets.fromLTRB(8, 12, 16, 12),
+      padding: EdgeInsets.fromLTRB(8, 12, 16, 12),
       child: Row(
         children: [
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios_new,
               color: Colors.white,
               size: 20,
@@ -66,10 +68,10 @@ class GroupsChatAppBar extends StatelessWidget {
                         ? CachedNetworkImageProvider(pic) as ImageProvider
                         : null,
                     child: pic.isEmpty
-                        ? const Icon(Icons.group, color: _kMuted)
+                        ? Icon(Icons.group, color: _kMuted)
                         : null,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,9 +79,9 @@ class GroupsChatAppBar extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: ResponsiveHelper.sp(16),
                             fontWeight: FontWeight.bold,
                           ),
                           maxLines: 1,
@@ -87,9 +89,9 @@ class GroupsChatAppBar extends StatelessWidget {
                         ),
                         Text(
                           '$memberCount member${memberCount == 1 ? '' : 's'}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: _kMuted,
-                            fontSize: 11,
+                            fontSize: ResponsiveHelper.sp(11),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -115,7 +117,7 @@ class GroupsChatAppBar extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: hasRequests ? _kGreen : Colors.transparent,
-                        width: 2,
+                        width: ResponsiveHelper.w(2),
                       ),
                       boxShadow: hasRequests
                           ? [
@@ -137,7 +139,7 @@ class GroupsChatAppBar extends StatelessWidget {
                           ),
                         );
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.person_add_outlined,
                         color: Colors.white,
                         size: 26,
@@ -146,23 +148,23 @@ class GroupsChatAppBar extends StatelessWidget {
                   ),
                   if (hasRequests)
                     Positioned(
-                      right: 0,
-                      top: 0,
+                      right: ResponsiveHelper.w(0),
+                      top: ResponsiveHelper.h(0),
                       child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
+                        padding: EdgeInsets.all(ResponsiveHelper.w(4)),
+                        decoration: BoxDecoration(
                           color: _kGreen,
                           shape: BoxShape.circle,
                         ),
-                        constraints: const BoxConstraints(
+                        constraints: BoxConstraints(
                           minWidth: 18,
                           minHeight: 18,
                         ),
                         child: Text(
                           '$count',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.black,
-                            fontSize: 10,
+                            fontSize: ResponsiveHelper.sp(10),
                             fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,

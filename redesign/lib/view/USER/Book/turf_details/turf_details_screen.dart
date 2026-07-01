@@ -10,9 +10,10 @@ import 'widgets/venue_booking_bar.dart';
 import 'widgets/venue_image_slider.dart';
 import 'widgets/venue_reviews_section.dart';
 import 'widgets/venue_title_section.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TurfDetailScreen extends StatefulWidget {
-  const TurfDetailScreen({super.key});
+  TurfDetailScreen({super.key});
 
   @override
   State<TurfDetailScreen> createState() => _TurfDetailScreenState();
@@ -31,6 +32,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -52,24 +54,24 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
 
             /// CONTENT
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 80),
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 80),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  const VenueTitleSection(),
-                  const SizedBox(height: 24),
+                  VenueTitleSection(),
+                  SizedBox(height: 24),
                   VenueAboutSection(
                     isExpanded: _expanded,
                     onToggleExpand: () => setState(() => _expanded = !_expanded),
                   ),
-                  const SizedBox(height: 24),
-                  const VenueAmenitiesGrid(),
-                  const SizedBox(height: 24),
-                  const CancellationPolicyBanner(),
-                  const SizedBox(height: 24),
-                  const RecentBookingsSocial(),
-                  const SizedBox(height: 24),
-                  const VenueReviewsSection(),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
+                  VenueAmenitiesGrid(),
+                  SizedBox(height: 24),
+                  CancellationPolicyBanner(),
+                  SizedBox(height: 24),
+                  RecentBookingsSocial(),
+                  SizedBox(height: 24),
+                  VenueReviewsSection(),
+                  SizedBox(height: 24),
                   RecommendedVenuesList(images: images),
                 ]),
               ),
@@ -82,7 +84,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
           onBookNow: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const ConfirmSlotScreen(),
+                builder: (context) => ConfirmSlotScreen(),
               ),
             );
           },

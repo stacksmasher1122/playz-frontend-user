@@ -13,6 +13,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/chat_controller.dart';
 import 'full_screen_image.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kSurface = Color(0xFF222222);
@@ -25,7 +26,7 @@ class MessageBubble extends StatelessWidget {
   final ChatController ctrl;
   final String friendName;
 
-  const MessageBubble({
+  MessageBubble({
     super.key,
     required this.msg,
     required this.isMe,
@@ -36,10 +37,11 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: EdgeInsets.only(bottom: 12),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
@@ -51,8 +53,8 @@ class MessageBubble extends StatelessWidget {
             // ── Reply quote ──
             if (msg.replyToId != null && msg.replyToContent != null)
               Container(
-                margin: const EdgeInsets.only(bottom: 4),
-                padding: const EdgeInsets.symmetric(
+                margin: EdgeInsets.only(bottom: 4),
+                padding: EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 8,
                 ),
@@ -60,8 +62,8 @@ class MessageBubble extends StatelessWidget {
                   color: isMe
                       ? kGreen.withValues(alpha: 0.15)
                       : kSurface.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(12),
-                  border: const Border(left: BorderSide(color: kGreen, width: 3)),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                  border: Border(left: BorderSide(color: kGreen, width: 3)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,18 +75,18 @@ class MessageBubble extends StatelessWidget {
                           : (friendName.isNotEmpty
                                 ? friendName
                                 : (msg.replyToSender ?? "")),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: kGreen,
                         fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                        fontSize: ResponsiveHelper.sp(11),
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       msg.replyToContent!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white60,
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.sp(12),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -95,27 +97,27 @@ class MessageBubble extends StatelessWidget {
 
             // ── Main content ──
             _buildContent(context),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   timeStr,
-                  style: const TextStyle(color: kMuted, fontSize: 11),
+                  style: TextStyle(color: kMuted, fontSize: 11),
                 ),
                 if (msg.isEdited) ...[
-                  const SizedBox(width: 4),
-                  const Text(
+                  SizedBox(width: 4),
+                  Text(
                     "edited",
                     style: TextStyle(
                       color: Colors.white38,
-                      fontSize: 10,
+                      fontSize: ResponsiveHelper.sp(10),
                       fontStyle: FontStyle.italic,
                     ),
                   ),
                 ],
                 if (isMe) ...[
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   Icon(
                     msg.isRead ? Icons.done_all : Icons.done,
                     size: 16,
@@ -134,23 +136,23 @@ class MessageBubble extends StatelessWidget {
     switch (msg.type) {
       case 'text':
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
           decoration: BoxDecoration(
             color: isMe ? kGreen : kSurface,
-            borderRadius: BorderRadius.circular(20).copyWith(
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)).copyWith(
               bottomRight: isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(20),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(20)),
               bottomLeft: !isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(20),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(20)),
             ),
           ),
           child: Text(
             msg.content,
             style: TextStyle(
               color: isMe ? Colors.black : Colors.white,
-              fontSize: 16,
+              fontSize: ResponsiveHelper.sp(16),
               fontWeight: isMe ? FontWeight.w500 : FontWeight.w400,
             ),
           ),
@@ -175,16 +177,16 @@ class MessageBubble extends StatelessWidget {
         if (caption.isEmpty) return imageWidget;
 
         return Container(
-          padding: const EdgeInsets.all(4),
+          padding: EdgeInsets.all(ResponsiveHelper.w(4)),
           decoration: BoxDecoration(
             color: isMe ? kGreen : kSurface,
-            borderRadius: BorderRadius.circular(16).copyWith(
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)).copyWith(
               bottomRight: isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(16),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(16)),
               bottomLeft: !isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(16),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(16)),
             ),
           ),
           child: Column(
@@ -193,12 +195,12 @@ class MessageBubble extends StatelessWidget {
             children: [
               imageWidget,
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(6)),
                 child: Text(
                   caption,
                   style: TextStyle(
                     color: isMe ? Colors.black : Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                   ),
                 ),
               ),
@@ -223,16 +225,16 @@ class MessageBubble extends StatelessWidget {
         if (caption.isEmpty) return videoWidget;
 
         return Container(
-          padding: const EdgeInsets.all(4),
+          padding: EdgeInsets.all(ResponsiveHelper.w(4)),
           decoration: BoxDecoration(
             color: isMe ? kGreen : kSurface,
-            borderRadius: BorderRadius.circular(16).copyWith(
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)).copyWith(
               bottomRight: isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(16),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(16)),
               bottomLeft: !isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(16),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(16)),
             ),
           ),
           child: Column(
@@ -241,12 +243,12 @@ class MessageBubble extends StatelessWidget {
             children: [
               videoWidget,
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(6)),
                 child: Text(
                   caption,
                   style: TextStyle(
                     color: isMe ? Colors.black : Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                   ),
                 ),
               ),
@@ -271,7 +273,7 @@ class LocationBubble extends StatefulWidget {
   final bool isMe;
   final bool isLive;
 
-  const LocationBubble({
+  LocationBubble({
     super.key,
     required this.content,
     required this.isMe,
@@ -314,7 +316,7 @@ class _LocationBubbleState extends State<LocationBubble> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 30), (_) {
+    _timer = Timer.periodic(Duration(seconds: 30), (_) {
       if (mounted) setState(() {});
     });
   }
@@ -327,6 +329,7 @@ class _LocationBubbleState extends State<LocationBubble> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     double lat = 0.0;
     double lng = 0.0;
     String name = 'Location Pin';
@@ -375,12 +378,12 @@ class _LocationBubbleState extends State<LocationBubble> {
     final pinColor = isCurrentlyLive ? kGreen : Colors.white54;
 
     return Container(
-      width: 260,
+      width: ResponsiveHelper.w(260),
       decoration: BoxDecoration(
-        color: const Color(0xFF2B2B2B),
-        borderRadius: BorderRadius.circular(16).copyWith(
-          bottomRight: widget.isMe ? const Radius.circular(4) : const Radius.circular(16),
-          bottomLeft: !widget.isMe ? const Radius.circular(4) : const Radius.circular(16),
+        color: Color(0xFF2B2B2B),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)).copyWith(
+          bottomRight: widget.isMe ? Radius.circular(ResponsiveHelper.w(4)) : Radius.circular(ResponsiveHelper.w(16)),
+          bottomLeft: !widget.isMe ? Radius.circular(ResponsiveHelper.w(4)) : Radius.circular(ResponsiveHelper.w(16)),
         ),
         border: Border.all(color: Colors.white10),
       ),
@@ -389,27 +392,27 @@ class _LocationBubbleState extends State<LocationBubble> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(16))),
             child: SizedBox(
-              height: 120,
+              height: ResponsiveHelper.h(120),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   ColorFiltered(
-                    colorFilter: isCurrentlyLive ? const ColorFilter.mode(Colors.transparent, BlendMode.multiply) : const ColorFilter.mode(Colors.black38, BlendMode.darken),
+                    colorFilter: isCurrentlyLive ? ColorFilter.mode(Colors.transparent, BlendMode.multiply) : ColorFilter.mode(Colors.black38, BlendMode.darken),
                     child: CachedNetworkImage(
                       imageUrl: mapUrl,
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      placeholder: (_, __) => Container(color: const Color(0xFF1E1E1E)),
-                      errorWidget: (_, __, ___) => Container(color: const Color(0xFF1E1E1E), child: const Center(child: Icon(Icons.map, color: Colors.white24))),
+                      placeholder: (_, __) => Container(color: Color(0xFF1E1E1E)),
+                      errorWidget: (_, __, ___) => Container(color: Color(0xFF1E1E1E), child: Center(child: Icon(Icons.map, color: Colors.white24))),
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                     decoration: BoxDecoration(color: pinColor.withValues(alpha: 0.2), shape: BoxShape.circle),
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: EdgeInsets.all(ResponsiveHelper.w(4)),
                       decoration: BoxDecoration(color: pinColor.withValues(alpha: isCurrentlyLive ? 0.5 : 0.2), shape: BoxShape.circle),
                       child: Icon(widget.isLive ? Icons.person_pin_circle : Icons.location_on, color: pinColor, size: 28),
                     ),
@@ -419,7 +422,7 @@ class _LocationBubbleState extends State<LocationBubble> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(ResponsiveHelper.w(12)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -427,41 +430,41 @@ class _LocationBubbleState extends State<LocationBubble> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(color: Color(0xFF1E1E1E), shape: BoxShape.circle),
+                      padding: EdgeInsets.all(ResponsiveHelper.w(8)),
+                      decoration: BoxDecoration(color: Color(0xFF1E1E1E), shape: BoxShape.circle),
                       child: Icon(widget.isLive ? Icons.share_location : Icons.location_on, color: pinColor, size: 20),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (widget.isLive) Text(liveText, style: TextStyle(color: pinColor, fontSize: 12, fontWeight: FontWeight.bold)),
-                          Text(name, style: TextStyle(color: widget.isLive && !isCurrentlyLive ? Colors.white54 : Colors.white, fontSize: 14, fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
+                          if (widget.isLive) Text(liveText, style: TextStyle(color: pinColor, fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.bold)),
+                          Text(name, style: TextStyle(color: widget.isLive && !isCurrentlyLive ? Colors.white54 : Colors.white, fontSize: ResponsiveHelper.sp(14), fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
                           if (address.isNotEmpty) ...[
-                            const SizedBox(height: 2),
-                            Text(address, style: const TextStyle(color: kMuted, fontSize: 12), maxLines: 2, overflow: TextOverflow.ellipsis),
+                            SizedBox(height: 2),
+                            Text(address, style: TextStyle(color: kMuted, fontSize: 12), maxLines: 2, overflow: TextOverflow.ellipsis),
                           ],
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 SizedBox(
-                  height: 40, width: double.infinity,
+                  height: ResponsiveHelper.h(40), width: double.infinity,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: widget.isLive && !isCurrentlyLive ? Colors.white12 : kGreen,
                       foregroundColor: widget.isLive && !isCurrentlyLive ? Colors.white : Colors.black,
-                      elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), padding: EdgeInsets.zero,
+                      elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(20))), padding: EdgeInsets.zero,
                     ),
                     onPressed: () async {
                       final uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$lat,$lng');
                       if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
                     },
-                    icon: const Text("OPEN IN GOOGLE MAPS", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                    label: const Icon(Icons.open_in_new, size: 16),
+                    icon: Text("OPEN IN GOOGLE MAPS", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    label: Icon(Icons.open_in_new, size: 16),
                   ),
                 ),
               ],
@@ -476,7 +479,7 @@ class _LocationBubbleState extends State<LocationBubble> {
 class AudioBubble extends StatefulWidget {
   final String url;
   final bool isMe;
-  const AudioBubble({super.key, required this.url, required this.isMe});
+  AudioBubble({super.key, required this.url, required this.isMe});
   @override
   State<AudioBubble> createState() => _AudioBubbleState();
 }
@@ -530,10 +533,11 @@ class _AudioBubbleState extends State<AudioBubble> with AutomaticKeepAliveClient
   void dispose() { WidgetsBinding.instance.removeObserver(this); _player.dispose(); super.dispose(); }
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     super.build(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(color: widget.isMe ? kGreen.withValues(alpha: 0.9) : kSurface, borderRadius: BorderRadius.circular(20)),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
+      decoration: BoxDecoration(color: widget.isMe ? kGreen.withValues(alpha: 0.9) : kSurface, borderRadius: BorderRadius.circular(ResponsiveHelper.w(20))),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -541,19 +545,19 @@ class _AudioBubbleState extends State<AudioBubble> with AutomaticKeepAliveClient
             onTap: _playPause,
             child: CircleAvatar(
               radius: 20, backgroundColor: widget.isMe ? Colors.white : kGreen,
-              child: _isLoading ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: widget.isMe ? Colors.black : Colors.white))
+              child: _isLoading ? SizedBox(width: ResponsiveHelper.w(20), height: ResponsiveHelper.h(20), child: CircularProgressIndicator(strokeWidth: 2, color: widget.isMe ? Colors.black : Colors.white))
               : Icon(_isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.black),
             ),
           ),
-          const SizedBox(width: 10),
-          SizedBox(width: 80, child: AnimatedEqualizer(isPlaying: _isPlaying, isMe: widget.isMe)),
-          const SizedBox(width: 8),
+          SizedBox(width: 10),
+          SizedBox(width: ResponsiveHelper.w(80), child: AnimatedEqualizer(isPlaying: _isPlaying, isMe: widget.isMe)),
+          SizedBox(width: 8),
           StreamBuilder<Duration>(
             stream: _player.positionStream,
             builder: (context, snapshot) {
-              if (!_isPrepared) return Text("Audio", style: TextStyle(color: widget.isMe ? Colors.black87 : Colors.white70, fontSize: 12, fontWeight: FontWeight.w600));
+              if (!_isPrepared) return Text("Audio", style: TextStyle(color: widget.isMe ? Colors.black87 : Colors.white70, fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.w600));
               final pos = snapshot.data ?? Duration.zero;
-              return Text("${pos.inMinutes}:${(pos.inSeconds % 60).toString().padLeft(2, '0')}", style: TextStyle(color: widget.isMe ? Colors.black87 : Colors.white70, fontSize: 12, fontWeight: FontWeight.w600));
+              return Text("${pos.inMinutes}:${(pos.inSeconds % 60).toString().padLeft(2, '0')}", style: TextStyle(color: widget.isMe ? Colors.black87 : Colors.white70, fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.w600));
             },
           ),
         ],
@@ -565,7 +569,7 @@ class _AudioBubbleState extends State<AudioBubble> with AutomaticKeepAliveClient
 class AnimatedEqualizer extends StatefulWidget {
   final bool isPlaying;
   final bool isMe;
-  const AnimatedEqualizer({super.key, required this.isPlaying, required this.isMe});
+  AnimatedEqualizer({super.key, required this.isPlaying, required this.isMe});
   @override
   State<AnimatedEqualizer> createState() => _AnimatedEqualizerState();
 }
@@ -586,7 +590,7 @@ class _AnimatedEqualizerState extends State<AnimatedEqualizer> {
   }
   void _startAnimation() {
     _animTimer?.cancel();
-    _animTimer = Timer.periodic(const Duration(milliseconds: 250), (timer) {
+    _animTimer = Timer.periodic(Duration(milliseconds: 250), (timer) {
       if (mounted) {
         setState(() {
         _heights = List.generate(7, (index) {
@@ -602,13 +606,14 @@ class _AnimatedEqualizerState extends State<AnimatedEqualizer> {
   void dispose() { _animTimer?.cancel(); super.dispose(); }
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center,
       children: List.generate(7, (index) {
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 250), margin: const EdgeInsets.symmetric(horizontal: 2.5),
-          width: 5, height: _heights[index],
-          decoration: BoxDecoration(color: widget.isMe ? Colors.black87 : kGreen, borderRadius: BorderRadius.circular(4)),
+          duration: Duration(milliseconds: 250), margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(2.5)),
+          width: ResponsiveHelper.w(5), height: _heights[index],
+          decoration: BoxDecoration(color: widget.isMe ? Colors.black87 : kGreen, borderRadius: BorderRadius.circular(ResponsiveHelper.w(4))),
         );
       }),
     );
@@ -618,7 +623,7 @@ class _AnimatedEqualizerState extends State<AnimatedEqualizer> {
 class VideoBubble extends StatefulWidget {
   final String url;
   final ChatController ctrl;
-  const VideoBubble({super.key, required this.url, required this.ctrl});
+  VideoBubble({super.key, required this.url, required this.ctrl});
   @override
   State<VideoBubble> createState() => _VideoBubbleState();
 }
@@ -650,28 +655,29 @@ class _VideoBubbleState extends State<VideoBubble> with AutomaticKeepAliveClient
   void dispose() { WidgetsBinding.instance.removeObserver(this); _chewieController?.dispose(); _videoController?.dispose(); super.dispose(); }
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     super.build(context);
     if (!_isInit) {
       return GestureDetector(
         onTap: _initVideo,
         child: Container(
-          height: 220, width: 260, decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(16)),
+          height: ResponsiveHelper.h(220), width: ResponsiveHelper.w(260), decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(ResponsiveHelper.w(16))),
           child: Stack(
             alignment: Alignment.center,
             children: [
-              if (_isLoading) const CircularProgressIndicator(color: kGreen) else const Icon(Icons.play_circle_fill, color: Colors.white70, size: 64),
-              Positioned(top: 8, right: 8, child: Container(decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle), child: IconButton(icon: const Icon(Icons.download, color: Colors.white, size: 20), onPressed: () => widget.ctrl.downloadVideo(widget.url)))),
+              if (_isLoading) CircularProgressIndicator(color: kGreen) else Icon(Icons.play_circle_fill, color: Colors.white70, size: 64),
+              Positioned(top: ResponsiveHelper.h(8), right: ResponsiveHelper.w(8), child: Container(decoration: BoxDecoration(color: Colors.black54, shape: BoxShape.circle), child: IconButton(icon: Icon(Icons.download, color: Colors.white, size: 20), onPressed: () => widget.ctrl.downloadVideo(widget.url)))),
             ],
           ),
         ),
       );
     }
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       child: Stack(
         children: [
           ConstrainedBox(constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7), child: AspectRatio(aspectRatio: _videoController!.value.aspectRatio, child: Chewie(controller: _chewieController!))),
-          Positioned(top: 8, right: 8, child: Container(decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle), child: IconButton(icon: const Icon(Icons.download, color: Colors.white, size: 20), onPressed: () => widget.ctrl.downloadVideo(widget.url)))),
+          Positioned(top: ResponsiveHelper.h(8), right: ResponsiveHelper.w(8), child: Container(decoration: BoxDecoration(color: Colors.black54, shape: BoxShape.circle), child: IconButton(icon: Icon(Icons.download, color: Colors.white, size: 20), onPressed: () => widget.ctrl.downloadVideo(widget.url)))),
         ],
       ),
     );
@@ -682,7 +688,7 @@ class DynamicImageBubble extends StatefulWidget {
   final String imageUrl;
   final double maxWidth;
   final double maxHeight;
-  const DynamicImageBubble({super.key, required this.imageUrl, required this.maxWidth, required this.maxHeight});
+  DynamicImageBubble({super.key, required this.imageUrl, required this.maxWidth, required this.maxHeight});
   @override
   State<DynamicImageBubble> createState() => _DynamicImageBubbleState();
 }
@@ -694,7 +700,7 @@ class _DynamicImageBubbleState extends State<DynamicImageBubble> {
   void initState() { super.initState(); _resolveImageSize(); }
   void _resolveImageSize() {
     final imageProvider = CachedNetworkImageProvider(widget.imageUrl);
-    final stream = imageProvider.resolve(const ImageConfiguration());
+    final stream = imageProvider.resolve(ImageConfiguration());
     stream.addListener(ImageStreamListener((ImageInfo info, bool _) {
       if (!mounted) return;
       final imgW = info.image.width.toDouble();
@@ -709,15 +715,16 @@ class _DynamicImageBubbleState extends State<DynamicImageBubble> {
   }
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     if (_hasError) {
       return Container(
-        height: 200,
-        width: 250,
+        height: ResponsiveHelper.h(200),
+        width: ResponsiveHelper.w(250),
         decoration: BoxDecoration(
           color: kSurface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        child: const Icon(Icons.error, color: Colors.white),
+        child: Icon(Icons.error, color: Colors.white),
       );
     }
     final size = _resolvedSize;
@@ -729,7 +736,7 @@ class _DynamicImageBubbleState extends State<DynamicImageBubble> {
       child: Hero(
         tag: widget.imageUrl,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           child: SizedBox(
             width: size?.width,
             height: size?.height,
@@ -744,15 +751,15 @@ class _DynamicImageBubbleState extends State<DynamicImageBubble> {
                   height: size?.height ?? 200,
                   decoration: BoxDecoration(
                     color: Colors.black,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                   ),
                 ),
               ),
               errorWidget: (_, __, ___) => Container(
-                height: 200,
-                width: 250,
+                height: ResponsiveHelper.h(200),
+                width: ResponsiveHelper.w(250),
                 color: kSurface,
-                child: const Icon(Icons.error, color: Colors.white),
+                child: Icon(Icons.error, color: Colors.white),
               ),
             ),
           ),

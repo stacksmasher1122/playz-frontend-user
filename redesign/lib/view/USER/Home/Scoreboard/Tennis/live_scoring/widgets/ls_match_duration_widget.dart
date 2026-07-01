@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/live_scoring_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LsMatchDurationWidget extends StatelessWidget {
-  const LsMatchDurationWidget({super.key});
+  LsMatchDurationWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveScoringController>();
 
     return Row(
@@ -22,7 +24,7 @@ class LsMatchDurationWidget extends StatelessWidget {
               'MATCH DURATION',
               style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Obx(() => Text(
               controller.matchStats.value.duration,
               style: AppTypography.headlineLg.copyWith(color: AppColors.primary),
@@ -32,32 +34,32 @@ class LsMatchDurationWidget extends StatelessWidget {
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
               decoration: BoxDecoration(
                 color: AppColors.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.pause, color: AppColors.onSurfaceVariant, size: 16),
-                  const SizedBox(width: 8),
+                  Icon(Icons.pause, color: AppColors.onSurfaceVariant, size: 16),
+                  SizedBox(width: 8),
                   Text('PAUSE', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant)),
                 ],
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
               decoration: BoxDecoration(
                 color: AppColors.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.undo, color: AppColors.onSurfaceVariant, size: 16),
-                  const SizedBox(width: 8),
+                  Icon(Icons.undo, color: AppColors.onSurfaceVariant, size: 16),
+                  SizedBox(width: 8),
                   Text('UNDO', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant)),
                 ],
               ),

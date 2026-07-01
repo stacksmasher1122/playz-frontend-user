@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ShutterButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  const ShutterButton({super.key, required this.onTap});
+  ShutterButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(4),
+        padding: EdgeInsets.all(ResponsiveHelper.w(4)),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(color: Colors.white, width: 3),
         ),
         child: Container(
-          width: 72,
-          height: 72,
-          decoration: const BoxDecoration(
+          width: ResponsiveHelper.w(72),
+          height: ResponsiveHelper.h(72),
+          decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
           ),

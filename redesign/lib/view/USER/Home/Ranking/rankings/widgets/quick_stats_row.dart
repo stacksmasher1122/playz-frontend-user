@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kGreen = AppColors.accent;
-const Color kSurface = Color(0xFF0E0E0E);
-const Color kMuted = Color(0xFFA7A7A7);
+Color kGreen = AppColors.accent;
+Color kSurface = Color(0xFF0E0E0E);
+Color kMuted = Color(0xFFA7A7A7);
 
 class QuickStatsRow extends StatelessWidget {
-  const QuickStatsRow({super.key});
+  QuickStatsRow({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    ResponsiveHelper.init(context);
+    return Padding(
       padding: EdgeInsets.fromLTRB(16, 8, 16, 10),
       child: Row(
         children: [
@@ -34,23 +36,24 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: EdgeInsets.all(ResponsiveHelper.w(14)),
         decoration: BoxDecoration(
           color: kSurface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
         child: Column(
           children: [
             Icon(icon, color: kGreen, size: 20),
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
             Text(value,
-                style: const TextStyle(
+                style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w800)),
             Text(label,
-                style: const TextStyle(color: kMuted, fontSize: 12)),
+                style: TextStyle(color: kMuted, fontSize: 12)),
           ],
         ),
       ),

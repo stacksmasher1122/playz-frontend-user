@@ -13,6 +13,7 @@ import 'package:redesign/view/USER/Maps/maps_picker/maps_picker_screen.dart';
 import 'attachment_icon.dart';
 import 'media_preview_screen.dart';
 import 'create_poll_sheet.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
@@ -21,7 +22,7 @@ class GroupsChatInputBar extends StatefulWidget {
   final GroupChatController ctrl;
   final VoidCallback onScrollToBottom;
 
-  const GroupsChatInputBar({
+  GroupsChatInputBar({
     super.key,
     required this.ctrl,
     required this.onScrollToBottom,
@@ -43,9 +44,10 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       color: Colors.black.withValues(alpha: 0.6),
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: SafeArea(
         top: false,
         child: Row(
@@ -54,13 +56,13 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1E1E1E),
-                  borderRadius: BorderRadius.circular(24),
+                  color: Color(0xFF1E1E1E),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                 ),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.emoji_emotions_outlined,
                         color: Colors.white60,
                       ),
@@ -69,23 +71,23 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
                     Expanded(
                       child: TextField(
                         controller: _msgController,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                         textCapitalization: TextCapitalization.sentences,
                         minLines: 1,
                         maxLines: 5,
                         onChanged: (val) {
                           setState(() => _isTyping = val.trim().isNotEmpty);
                         },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: "Type a message...",
                           hintStyle: TextStyle(color: _kMuted, fontSize: 16),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 12),
+                          contentPadding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
                         ),
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.attach_file,
                         color: Colors.white60,
                       ),
@@ -93,7 +95,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
                     ),
                     if (!_isTyping)
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.camera_alt_outlined,
                           color: Colors.white60,
                         ),
@@ -103,7 +105,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
 
             // Send/Mic Button
             GestureDetector(
@@ -124,7 +126,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
               child: Obx(() {
                 final isRec = widget.ctrl.isRecording.value;
                 return AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: Duration(milliseconds: 200),
                   height: isRec ? 56 : 48,
                   width: isRec ? 56 : 48,
                   decoration: BoxDecoration(
@@ -152,7 +154,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
   Future<void> _openCamera() async {
     final capturedPath = await Navigator.push<String?>(
       context,
-      MaterialPageRoute(builder: (_) => const CameraScreen()),
+      MaterialPageRoute(builder: (_) => CameraScreen()),
     );
 
     if (capturedPath != null && mounted) {
@@ -232,12 +234,12 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF2B2B2B),
-          borderRadius: BorderRadius.circular(16),
+          color: Color(0xFF2B2B2B),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(24)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -281,7 +283,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
                       context: context,
                       isScrollControlled: true,
                       backgroundColor: Colors.transparent,
-                      builder: (_) => const CreatePollSheet(),
+                      builder: (_) => CreatePollSheet(),
                     );
                   },
                 ),
@@ -298,12 +300,12 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E1E1E),
-          borderRadius: BorderRadius.circular(16),
+          color: Color(0xFF1E1E1E),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -317,14 +319,14 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
                 _showLiveLocationDurationSheet(context);
               },
             ),
-            const Divider(color: Colors.white10, height: 1),
+            Divider(color: Colors.white10, height: 1),
             _buildLocationOptionTile(
               icon: Icons.my_location,
               title: "Send Current Location",
               subtitle: "Precise to 5 meters",
               onTap: () => _handleCurrentLocationOption(context),
             ),
-            const Divider(color: Colors.white10, height: 1),
+            Divider(color: Colors.white10, height: 1),
             _buildLocationOptionTile(
               icon: Icons.map,
               title: "Select from Map",
@@ -334,7 +336,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
                 final selectedLoc = await Navigator.push<LocationData>(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const MapPickerScreen(isSelectOnly: true),
+                    builder: (_) => MapPickerScreen(isSelectOnly: true),
                   ),
                 );
 
@@ -371,34 +373,34 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(16)),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(ResponsiveHelper.w(10)),
               decoration: BoxDecoration(
                 color: _kGreen.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: _kGreen, size: 24),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.sp(16),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: const TextStyle(color: _kMuted, fontSize: 13),
+                    style: TextStyle(color: _kMuted, fontSize: 13),
                   ),
                 ],
               ),
@@ -411,40 +413,40 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
 
   void _showLiveLocationDurationSheet(BuildContext context) {
     final durations = [
-      {'label': '15 minutes', 'duration': const Duration(minutes: 15)},
-      {'label': '30 minutes', 'duration': const Duration(minutes: 30)},
-      {'label': '45 minutes', 'duration': const Duration(minutes: 45)},
-      {'label': '1 hour', 'duration': const Duration(hours: 1)},
-      {'label': '2 hours', 'duration': const Duration(hours: 2)},
-      {'label': '4 hours', 'duration': const Duration(hours: 4)},
+      {'label': '15 minutes', 'duration': Duration(minutes: 15)},
+      {'label': '30 minutes', 'duration': Duration(minutes: 30)},
+      {'label': '45 minutes', 'duration': Duration(minutes: 45)},
+      {'label': '1 hour', 'duration': Duration(hours: 1)},
+      {'label': '2 hours', 'duration': Duration(hours: 2)},
+      {'label': '4 hours', 'duration': Duration(hours: 4)},
     ];
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E1E1E),
-          borderRadius: BorderRadius.circular(16),
+          color: Color(0xFF1E1E1E),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(8)),
               child: Text(
                 "Select Duration",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: ResponsiveHelper.sp(18),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const Divider(color: Colors.white10, height: 16),
+            Divider(color: Colors.white10, height: 16),
             ...durations
                 .map(
                   (d) => InkWell(
@@ -456,15 +458,15 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
                       );
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 14,
                       ),
                       child: Text(
                         d['label'] as String,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: ResponsiveHelper.sp(16),
                         ),
                       ),
                     ),
@@ -487,7 +489,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
       context: context,
       barrierDismissible: false,
       builder: (_) =>
-          const Center(child: CircularProgressIndicator(color: _kGreen)),
+          Center(child: CircularProgressIndicator(color: _kGreen)),
     );
 
     await mapsCtrl.detectCurrentLocation();
@@ -520,7 +522,7 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
       context: context,
       barrierDismissible: false,
       builder: (_) =>
-          const Center(child: CircularProgressIndicator(color: _kGreen)),
+          Center(child: CircularProgressIndicator(color: _kGreen)),
     );
 
     await mapsCtrl.detectCurrentLocation();

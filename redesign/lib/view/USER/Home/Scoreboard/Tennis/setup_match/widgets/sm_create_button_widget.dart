@@ -5,9 +5,10 @@ import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../theme/app_dimensions.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/setup_match_controller.dart';
 import '../../player_management/player_management_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SmCreateButtonWidget extends StatefulWidget {
-  const SmCreateButtonWidget({super.key});
+  SmCreateButtonWidget({super.key});
 
   @override
   State<SmCreateButtonWidget> createState() => _SmCreateButtonWidgetState();
@@ -18,12 +19,13 @@ class _SmCreateButtonWidgetState extends State<SmCreateButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<SetupMatchController>();
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(top: AppDimensions.xl),
-      padding: const EdgeInsets.symmetric(vertical: AppDimensions.lg),
+      margin: EdgeInsets.only(top: AppDimensions.xl),
+      padding: EdgeInsets.symmetric(vertical: AppDimensions.lg),
       child: GestureDetector(
         onTapDown: (_) => setState(() => _isPressed = true),
         onTapUp: (_) => setState(() => _isPressed = false),
@@ -32,22 +34,22 @@ class _SmCreateButtonWidgetState extends State<SmCreateButtonWidget> {
           controller.createMatchSession(context);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const PlayerManagementScreen()),
+            MaterialPageRoute(builder: (_) => PlayerManagementScreen()),
           );
         },
         child: AnimatedScale(
           scale: _isPressed ? 0.95 : 1.0,
-          duration: const Duration(milliseconds: 100),
+          duration: Duration(milliseconds: 100),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: AppDimensions.md),
+            padding: EdgeInsets.symmetric(vertical: AppDimensions.md),
             decoration: BoxDecoration(
               color: AppColors.primaryContainer,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.primaryContainer.withValues(alpha: 0.4),
                   blurRadius: 15,
-                  offset: const Offset(-2, -2),
+                  offset: Offset(-2, -2),
                 )
               ],
             ),

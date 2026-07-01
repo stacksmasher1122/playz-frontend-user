@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ToggleRuleTile extends StatelessWidget {
   final String title;
@@ -8,7 +9,7 @@ class ToggleRuleTile extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const ToggleRuleTile({
+  ToggleRuleTile({
     super.key,
     required this.title,
     required this.subtitle,
@@ -18,8 +19,9 @@ class ToggleRuleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -28,7 +30,7 @@ class ToggleRuleTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(subtitle, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
               ],
             ),
@@ -43,7 +45,7 @@ class ToggleRuleTile extends StatelessWidget {
             thumbIcon: MaterialStateProperty.resolveWith<Icon?>(
               (Set<MaterialState> states) {
                 if (states.contains(MaterialState.selected)) {
-                  return const Icon(Icons.check, color: AppColors.primaryContainer);
+                  return Icon(Icons.check, color: AppColors.primaryContainer);
                 }
                 return null;
               },

@@ -9,9 +9,10 @@ import 'widgets/trainers_toggle.dart';
 import 'widgets/my_trainers_section.dart';
 import 'widgets/other_trainers_section.dart';
 import 'widgets/trainer_end_of_results.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TrainerDiscoveryScreen extends StatefulWidget {
-  const TrainerDiscoveryScreen({super.key});
+  TrainerDiscoveryScreen({super.key});
 
   @override
   State<TrainerDiscoveryScreen> createState() => _TrainerDiscoveryScreenState();
@@ -36,6 +37,7 @@ class _TrainerDiscoveryScreenState extends State<TrainerDiscoveryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       extendBody: true,
@@ -44,7 +46,7 @@ class _TrainerDiscoveryScreenState extends State<TrainerDiscoveryScreen> {
         bottom: false,
         child: CustomScrollView(
           slivers: [
-            const SliverToBoxAdapter(child: TrainerDiscoveryHeader()),
+            SliverToBoxAdapter(child: TrainerDiscoveryHeader()),
             SliverToBoxAdapter(
               child: TrainersToggle(
                 isMyTrainers: showMyTrainers,
@@ -54,11 +56,11 @@ class _TrainerDiscoveryScreenState extends State<TrainerDiscoveryScreen> {
 
             /// SWITCH
             if (showMyTrainers)
-              const MyTrainersSection()
+              MyTrainersSection()
             else ...[
-              const OtherTrainersSection(),
-              const SliverToBoxAdapter(child: TrainerEndOfResults()),
-              const SliverToBoxAdapter(child: SizedBox(height: 40)),
+              OtherTrainersSection(),
+              SliverToBoxAdapter(child: TrainerEndOfResults()),
+              SliverToBoxAdapter(child: SizedBox(height: 40)),
             ],
           ],
         ),

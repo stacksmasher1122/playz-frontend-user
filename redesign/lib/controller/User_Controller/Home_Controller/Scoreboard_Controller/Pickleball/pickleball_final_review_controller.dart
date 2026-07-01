@@ -48,10 +48,10 @@ class PickleballFinalReviewController extends GetxController {
 
   void startMatch(BuildContext context) async {
     isStarting.value = true;
-    await Future.delayed(const Duration(milliseconds: 1500));
+    await Future.delayed(Duration(milliseconds: 1500));
     isStarting.value = false;
     showSuccess("Match started successfully!");
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const LivePickleballMatchScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (_) => LivePickleballMatchScreen()));
   }
 
   void showSuccess(String msg) {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FormationChipWidget extends StatelessWidget {
   final String name;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const FormationChipWidget({
+  FormationChipWidget({
     super.key,
     required this.name,
     required this.isSelected,
@@ -14,19 +15,20 @@ class FormationChipWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        margin: const EdgeInsets.only(right: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        duration: Duration(milliseconds: 200),
+        margin: EdgeInsets.only(right: 12),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFC6FF00) : Colors.grey.shade900,
-          borderRadius: BorderRadius.circular(12),
+          color: isSelected ? Color(0xFFC6FF00) : Colors.grey.shade900,
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFFC6FF00).withValues(alpha: 0.3),
+                    color: Color(0xFFC6FF00).withValues(alpha: 0.3),
                     blurRadius: 12,
                     spreadRadius: 2,
                   )
@@ -37,7 +39,7 @@ class FormationChipWidget extends StatelessWidget {
           name,
           style: TextStyle(
             color: isSelected ? Colors.black : Colors.white,
-            fontSize: 16,
+            fontSize: ResponsiveHelper.sp(16),
             fontWeight: FontWeight.w900,
           ),
         ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../football_scoreboard_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class GoalWorkflow extends StatefulWidget {
   final MatchEngine engine;
-  const GoalWorkflow({super.key, required this.engine});
+  GoalWorkflow({super.key, required this.engine});
   @override
   State<GoalWorkflow> createState() => _GoalWorkflowState();
 }
@@ -15,11 +16,12 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
       ),
       child: Column(
         children: [
@@ -36,14 +38,14 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
     if (step == 2) title = "SELECT ASSIST (Optional)";
 
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: kDivider)),
       ),
       child: Center(
         child: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             color: kTextPrimary,
             fontWeight: FontWeight.bold,
           ),
@@ -76,7 +78,7 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
           return ListTile(
             title: Text(
               step == 2 ? "No Assist" : "Own Goal / Unknown",
-              style: const TextStyle(color: kTextMuted),
+              style: TextStyle(color: kTextMuted),
             ),
             onTap: () => _finish(null),
           );
@@ -87,10 +89,10 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
             backgroundColor: kSurfaceHighlight,
             child: Text(
               "${p.number}",
-              style: const TextStyle(color: kTextPrimary),
+              style: TextStyle(color: kTextPrimary),
             ),
           ),
-          title: Text(p.name, style: const TextStyle(color: kTextPrimary)),
+          title: Text(p.name, style: TextStyle(color: kTextPrimary)),
           onTap: () {
             if (step == 1) {
               setState(() {
@@ -114,23 +116,23 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
           step = 1;
         }),
         child: Container(
-          margin: const EdgeInsets.all(16),
+          margin: EdgeInsets.all(ResponsiveHelper.w(16)),
           decoration: BoxDecoration(
             color: team.color.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             border: Border.all(color: team.color),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.shield, color: team.color, size: 48),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 team.name,
-                style: const TextStyle(
+                style: TextStyle(
                   color: kTextPrimary,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: ResponsiveHelper.sp(18),
                 ),
               ),
             ],

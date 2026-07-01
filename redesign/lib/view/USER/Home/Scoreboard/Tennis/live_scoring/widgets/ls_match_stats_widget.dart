@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/live_scoring_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LsMatchStatsWidget extends StatelessWidget {
-  const LsMatchStatsWidget({super.key});
+  LsMatchStatsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveScoringController>();
 
     return Column(
@@ -18,7 +20,7 @@ class LsMatchStatsWidget extends StatelessWidget {
           'LIVE MATCH STATS',
           style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, letterSpacing: 2.0),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         
         Obx(() {
           final stats = controller.matchStats.value;
@@ -31,7 +33,7 @@ class LsMatchStatsWidget extends StatelessWidget {
                 pctA: stats.playerAFirstServePercent / 100,
                 pctB: stats.playerBFirstServePercent / 100,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               _buildStatRow(
                 label: 'ACES',
                 valA: '${stats.playerAAces}',
@@ -39,7 +41,7 @@ class LsMatchStatsWidget extends StatelessWidget {
                 pctA: stats.playerAAces / (stats.playerAAces + stats.playerBAces == 0 ? 1 : stats.playerAAces + stats.playerBAces),
                 pctB: stats.playerBAces / (stats.playerAAces + stats.playerBAces == 0 ? 1 : stats.playerAAces + stats.playerBAces),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               _buildStatRow(
                 label: 'NET POINTS',
                 valA: '${stats.playerANetPointsWon}/${stats.playerANetPointsTotal}',
@@ -71,7 +73,7 @@ class LsMatchStatsWidget extends StatelessWidget {
             Text(valB, style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontSize: 16)),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Row(
           children: [
             Expanded(
@@ -80,26 +82,26 @@ class LsMatchStatsWidget extends StatelessWidget {
                 child: FractionallySizedBox(
                   widthFactor: pctA.clamp(0.0, 1.0),
                   child: Container(
-                    height: 6,
+                    height: ResponsiveHelper.h(6),
                     decoration: BoxDecoration(
                       color: AppColors.primaryContainer,
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                     ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: FractionallySizedBox(
                   widthFactor: pctB.clamp(0.0, 1.0),
                   child: Container(
-                    height: 6,
+                    height: ResponsiveHelper.h(6),
                     decoration: BoxDecoration(
                       color: AppColors.primaryContainer,
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                     ),
                   ),
                 ),

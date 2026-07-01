@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_state_models.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AdvancedActionsGrid extends StatelessWidget {
   final Player? striker;
@@ -10,7 +11,7 @@ class AdvancedActionsGrid extends StatelessWidget {
   final VoidCallback onRetireBatter;
   final VoidCallback onMatchBreak;
 
-  const AdvancedActionsGrid({
+  AdvancedActionsGrid({
     super.key,
     required this.striker,
     required this.nonStriker,
@@ -22,8 +23,9 @@ class AdvancedActionsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(ResponsiveHelper.w(16)),
       child: Column(
         children: [
           Row(
@@ -42,7 +44,7 @@ class AdvancedActionsGrid extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
             children: [
               _advBtn(Icons.person_off, 'Retire Batter', 'Hurt / Out', () {
@@ -50,7 +52,7 @@ class AdvancedActionsGrid extends StatelessWidget {
                   onRetireBatter();
                 }
               }),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               _advBtn(
                 Icons.pause_circle_outline,
                 'Match Break',
@@ -74,30 +76,30 @@ class AdvancedActionsGrid extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
           decoration: BoxDecoration(
             color: AppColors.surface,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
           ),
           child: Row(
             children: [
               Icon(icon, color: AppColors.muted, size: 22),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 13,
+                        fontSize: ResponsiveHelper.sp(13),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       subtitle,
-                      style: const TextStyle(color: AppColors.muted, fontSize: 11),
+                      style: TextStyle(color: AppColors.muted, fontSize: 11),
                     ),
                   ],
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingTimePickers extends StatelessWidget {
   final TimeOfDay? startTime;
@@ -7,7 +8,7 @@ class BookingTimePickers extends StatelessWidget {
   final VoidCallback onPickStartTime;
   final VoidCallback onPickEndTime;
 
-  const BookingTimePickers({
+  BookingTimePickers({
     super.key,
     required this.startTime,
     required this.endTime,
@@ -17,8 +18,9 @@ class BookingTimePickers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Row(
         children: [
           /// START TIME
@@ -30,7 +32,7 @@ class BookingTimePickers extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
 
           /// END TIME
           Expanded(
@@ -51,7 +53,7 @@ class _TimeCard extends StatelessWidget {
   final TimeOfDay? time;
   final VoidCallback onTap;
 
-  const _TimeCard({
+  _TimeCard({
     required this.label,
     required this.time,
     required this.onTap,
@@ -62,14 +64,15 @@ class _TimeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
         decoration: BoxDecoration(
           color: Colors.black,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
           border: Border.all(color: _kGreen, width: 1.2),
         ),
         child: Column(
@@ -80,15 +83,15 @@ class _TimeCard extends StatelessWidget {
             Text(
               label,
               maxLines: 1,
-              style: const TextStyle(
+              style: TextStyle(
                 color: _kMuted,
-                fontSize: 12,
+                fontSize: ResponsiveHelper.sp(12),
                 fontWeight: FontWeight.w500,
-                height: 1.1,
+                height: ResponsiveHelper.h(1.1),
               ),
             ),
 
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
 
             /// TIME + ICON ROW (PROPERLY ALIGNED)
             Row(
@@ -98,13 +101,13 @@ class _TimeCard extends StatelessWidget {
                   _formatTime(time),
                   style: TextStyle(
                     color: time == null ? _kMuted : Colors.white,
-                    fontSize: 18,
+                    fontSize: ResponsiveHelper.sp(18),
                     fontWeight: FontWeight.bold,
-                    height: 1.1,
+                    height: ResponsiveHelper.h(1.1),
                   ),
                 ),
-                const Spacer(),
-                const Icon(Icons.access_time, color: _kGreen, size: 18),
+                Spacer(),
+                Icon(Icons.access_time, color: _kGreen, size: 18),
               ],
             ),
           ],

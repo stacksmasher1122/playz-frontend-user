@@ -20,6 +20,7 @@ import 'widgets/message_bubble.dart';
 import 'widgets/swipe_to_reply.dart';
 import 'widgets/attachment_icon.dart';
 import 'widgets/media_preview_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kBg = AppColors.surface;
@@ -31,7 +32,7 @@ class ChatScreen extends StatefulWidget {
   final String friendPic;
   final bool isOnline;
 
-  const ChatScreen({
+  ChatScreen({
     super.key,
     required this.friendEmail,
     required this.friendName,
@@ -72,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0.0,
-          duration: const Duration(milliseconds: 250),
+          duration: Duration(milliseconds: 250),
           curve: Curves.easeOut,
         );
       }
@@ -81,6 +82,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
@@ -113,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Expanded(
                   child: Obx(() {
                     if (_ctrl.messages.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Text(
                           "Say hi to start the conversation! 👋",
                           style: TextStyle(color: kMuted, fontSize: 15),
@@ -122,11 +124,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     }
 
                     return ListView.builder(
-                      key: const PageStorageKey("chat_list"),
+                      key: PageStorageKey("chat_list"),
                       controller: _scrollController,
-                      physics: const BouncingScrollPhysics(),
+                      physics: BouncingScrollPhysics(),
                       reverse: true,
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 10,
                       ),
@@ -161,11 +163,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
                 /// 🔥 RECORDING INDICATOR
                 Obx(() {
-                  if (!_ctrl.isRecording.value) return const SizedBox.shrink();
+                  if (!_ctrl.isRecording.value) return SizedBox.shrink();
                   return Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: EdgeInsets.all(ResponsiveHelper.w(10)),
                     color: Colors.red.withValues(alpha: 0.8),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.mic, color: Colors.white),
@@ -182,24 +184,24 @@ class _ChatScreenState extends State<ChatScreen> {
                 /// 🔥 REPLY PREVIEW BAR
                 Obx(() {
                   final reply = _ctrl.replyToMessage.value;
-                  if (reply == null) return const SizedBox.shrink();
+                  if (reply == null) return SizedBox.shrink();
                   return Container(
-                    color: const Color(0xFF1A1A1A),
-                    padding: const EdgeInsets.symmetric(
+                    color: Color(0xFF1A1A1A),
+                    padding: EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 8,
                     ),
                     child: Row(
                       children: [
                         Container(
-                          width: 4,
-                          height: 40,
+                          width: ResponsiveHelper.w(4),
+                          height: ResponsiveHelper.h(40),
                           decoration: BoxDecoration(
                             color: kGreen,
-                            borderRadius: BorderRadius.circular(2),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,20 +213,20 @@ class _ChatScreenState extends State<ChatScreen> {
                                     : (widget.friendName.isNotEmpty
                                           ? widget.friendName
                                           : reply.senderEmail),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: kGreen,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  fontSize: ResponsiveHelper.sp(12),
                                 ),
                               ),
-                              const SizedBox(height: 2),
+                              SizedBox(height: 2),
                               Text(
                                 reply.type == 'text'
                                     ? reply.content
                                     : '📎 ${reply.type}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white60,
-                                  fontSize: 13,
+                                  fontSize: ResponsiveHelper.sp(13),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -233,7 +235,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.close,
                             color: Colors.white60,
                             size: 18,
@@ -269,12 +271,12 @@ class _ChatScreenState extends State<ChatScreen> {
             // 🔥 UPLOAD OVERLAY
             Obx(() {
               if (!_ctrl.isUploadingMedia.value) {
-                return const SizedBox.shrink();
+                return SizedBox.shrink();
               }
               return Positioned.fill(
                 child: Container(
                   color: Colors.black54,
-                  child: const Center(
+                  child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -308,18 +310,18 @@ class _ChatScreenState extends State<ChatScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF2B2B2B),
-          borderRadius: BorderRadius.circular(16),
+          color: Color(0xFF2B2B2B),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16), horizontal: ResponsiveHelper.w(8)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.reply, color: Colors.white),
-              title: const Text("Reply", style: TextStyle(color: Colors.white)),
+              leading: Icon(Icons.reply, color: Colors.white),
+              title: Text("Reply", style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
                 _ctrl.setReplyTo(msg);
@@ -327,8 +329,8 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             if (isMe && msg.type == 'text')
               ListTile(
-                leading: const Icon(Icons.edit, color: Colors.white),
-                title: const Text(
+                leading: Icon(Icons.edit, color: Colors.white),
+                title: Text(
                   "Edit",
                   style: TextStyle(color: Colors.white),
                 ),
@@ -339,8 +341,8 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             if (isMe)
               ListTile(
-                leading: const Icon(Icons.delete, color: Colors.redAccent),
-                title: const Text(
+                leading: Icon(Icons.delete, color: Colors.redAccent),
+                title: Text(
                   "Delete",
                   style: TextStyle(color: Colors.redAccent),
                 ),
@@ -360,34 +362,34 @@ class _ChatScreenState extends State<ChatScreen> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: const Color(0xFF2B2B2B),
-        title: const Text(
+        backgroundColor: Color(0xFF2B2B2B),
+        title: Text(
           "Edit Message",
           style: TextStyle(color: Colors.white),
         ),
         content: TextField(
           controller: editController,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white),
           autofocus: true,
           maxLines: 5,
           minLines: 1,
           decoration: InputDecoration(
             hintText: "Edit your message...",
-            hintStyle: const TextStyle(color: kMuted),
+            hintStyle: TextStyle(color: kMuted),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: kGreen.withValues(alpha: 0.5)),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: kGreen),
-              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: kGreen),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
+            child: Text(
               "Cancel",
               style: TextStyle(color: Colors.white60),
             ),
@@ -400,7 +402,7 @@ class _ChatScreenState extends State<ChatScreen> {
               }
               Navigator.pop(context);
             },
-            child: const Text("Save", style: TextStyle(color: kGreen)),
+            child: Text("Save", style: TextStyle(color: kGreen)),
           ),
         ],
       ),
@@ -410,7 +412,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> _openCamera() async {
     final capturedPath = await Navigator.push<String?>(
       context,
-      MaterialPageRoute(builder: (_) => const CameraScreen()),
+      MaterialPageRoute(builder: (_) => CameraScreen()),
     );
 
     if (capturedPath != null && mounted) {
@@ -489,12 +491,12 @@ class _ChatScreenState extends State<ChatScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF2B2B2B),
-          borderRadius: BorderRadius.circular(16),
+          color: Color(0xFF2B2B2B),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(24)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -541,12 +543,12 @@ class _ChatScreenState extends State<ChatScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E1E1E),
-          borderRadius: BorderRadius.circular(16),
+          color: Color(0xFF1E1E1E),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -560,14 +562,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 _showLiveLocationDurationSheet(context);
               },
             ),
-            const Divider(color: Colors.white10, height: 1),
+            Divider(color: Colors.white10, height: 1),
             _buildLocationOptionTile(
               icon: Icons.my_location,
               title: "Send Current Location",
               subtitle: "Precise to 5 meters",
               onTap: () => _handleCurrentLocationOption(context),
             ),
-            const Divider(color: Colors.white10, height: 1),
+            Divider(color: Colors.white10, height: 1),
             _buildLocationOptionTile(
               icon: Icons.map,
               title: "Select from Map",
@@ -577,7 +579,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 final selectedLoc = await Navigator.push<LocationData>(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const MapPickerScreen(isSelectOnly: true),
+                    builder: (_) => MapPickerScreen(isSelectOnly: true),
                   ),
                 );
 
@@ -614,34 +616,34 @@ class _ChatScreenState extends State<ChatScreen> {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(16)),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(ResponsiveHelper.w(10)),
               decoration: BoxDecoration(
                 color: kGreen.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: kGreen, size: 24),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.sp(16),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: const TextStyle(color: kMuted, fontSize: 13),
+                    style: TextStyle(color: kMuted, fontSize: 13),
                   ),
                 ],
               ),
@@ -654,40 +656,40 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _showLiveLocationDurationSheet(BuildContext context) {
     final durations = [
-      {'label': '15 minutes', 'duration': const Duration(minutes: 15)},
-      {'label': '30 minutes', 'duration': const Duration(minutes: 30)},
-      {'label': '45 minutes', 'duration': const Duration(minutes: 45)},
-      {'label': '1 hour', 'duration': const Duration(hours: 1)},
-      {'label': '2 hours', 'duration': const Duration(hours: 2)},
-      {'label': '4 hours', 'duration': const Duration(hours: 4)},
+      {'label': '15 minutes', 'duration': Duration(minutes: 15)},
+      {'label': '30 minutes', 'duration': Duration(minutes: 30)},
+      {'label': '45 minutes', 'duration': Duration(minutes: 45)},
+      {'label': '1 hour', 'duration': Duration(hours: 1)},
+      {'label': '2 hours', 'duration': Duration(hours: 2)},
+      {'label': '4 hours', 'duration': Duration(hours: 4)},
     ];
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E1E1E),
-          borderRadius: BorderRadius.circular(16),
+          color: Color(0xFF1E1E1E),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(8)),
               child: Text(
                 "Select Duration",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: ResponsiveHelper.sp(18),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const Divider(color: Colors.white10, height: 16),
+            Divider(color: Colors.white10, height: 16),
             ...durations
                 .map(
                   (d) => InkWell(
@@ -699,15 +701,15 @@ class _ChatScreenState extends State<ChatScreen> {
                       );
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 14,
                       ),
                       child: Text(
                         d['label'] as String,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: ResponsiveHelper.sp(16),
                         ),
                       ),
                     ),
@@ -730,7 +732,7 @@ class _ChatScreenState extends State<ChatScreen> {
       context: context,
       barrierDismissible: false,
       builder: (_) =>
-          const Center(child: CircularProgressIndicator(color: kGreen)),
+          Center(child: CircularProgressIndicator(color: kGreen)),
     );
 
     await mapsCtrl.detectCurrentLocation();
@@ -763,7 +765,7 @@ class _ChatScreenState extends State<ChatScreen> {
       context: context,
       barrierDismissible: false,
       builder: (_) =>
-          const Center(child: CircularProgressIndicator(color: kGreen)),
+          Center(child: CircularProgressIndicator(color: kGreen)),
     );
 
     await mapsCtrl.detectCurrentLocation();

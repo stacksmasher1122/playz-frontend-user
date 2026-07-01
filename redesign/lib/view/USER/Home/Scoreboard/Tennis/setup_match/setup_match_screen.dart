@@ -14,7 +14,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 
 class SetupMatchScreen extends StatefulWidget {
-  const SetupMatchScreen({super.key});
+  SetupMatchScreen({super.key});
 
   @override
   State<SetupMatchScreen> createState() => _SetupMatchScreenState();
@@ -42,12 +42,12 @@ class _SetupMatchScreenState extends State<SetupMatchScreen> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          const SmBackgroundEffectWidget(),
+          SmBackgroundEffectWidget(),
           
           SafeArea(
             child: Column(
               children: [
-                const SmAppbarWidget(),
+                SmAppbarWidget(),
                 
                 Expanded(
                   child: SingleChildScrollView(
@@ -55,10 +55,10 @@ class _SetupMatchScreenState extends State<SetupMatchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SmBreadcrumbWidget(),
-                        const SmBasicInfoCardWidget(),
+                        SmBreadcrumbWidget(),
+                        SmBasicInfoCardWidget(),
                         SizedBox(height: ResponsiveHelper.h(24)),
-                        const SmCategorySelectorWidget(),
+                        SmCategorySelectorWidget(),
                         SizedBox(height: ResponsiveHelper.h(24)),
                         
                         LayoutBuilder(
@@ -67,24 +67,24 @@ class _SetupMatchScreenState extends State<SetupMatchScreen> {
                               return Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Expanded(child: SmSetFormatCardWidget()),
+                                  Expanded(child: SmSetFormatCardWidget()),
                                   SizedBox(width: ResponsiveHelper.w(16)),
-                                  const Expanded(child: SmMatchSettingsCardWidget()),
+                                  Expanded(child: SmMatchSettingsCardWidget()),
                                 ],
                               );
                             } else {
                               return Column(
                                 children: [
-                                  const SmSetFormatCardWidget(),
+                                  SmSetFormatCardWidget(),
                                   SizedBox(height: ResponsiveHelper.h(16)),
-                                  const SmMatchSettingsCardWidget(),
+                                  SmMatchSettingsCardWidget(),
                                 ],
                               );
                             }
                           }
                         ),
                         
-                        const SmCreateButtonWidget(),
+                        SmCreateButtonWidget(),
                         // Bottom padding to ensure scroll clears the fixed bottom nav
                         SizedBox(height: ResponsiveHelper.h(100)),
                       ],

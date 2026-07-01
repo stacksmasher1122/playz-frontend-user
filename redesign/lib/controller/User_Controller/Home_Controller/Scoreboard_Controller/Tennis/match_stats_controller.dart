@@ -11,7 +11,7 @@ class MatchStatsController extends GetxController {
   }
 
   void _loadMockData() {
-    stats.value = const MatchStatsModel(
+    stats.value = MatchStatsModel(
       player1Name: 'Carlos Alcaraz',
       player1Country: 'ESP',
       player1Rank: 'ATP #2',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QuickStatCard extends StatelessWidget {
   final String label;
@@ -7,7 +8,7 @@ class QuickStatCard extends StatelessWidget {
   final IconData? backgroundIcon;
   final Color valueColor;
 
-  const QuickStatCard({
+  QuickStatCard({
     super.key,
     required this.label,
     required this.value,
@@ -18,11 +19,12 @@ class QuickStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Stack(
@@ -44,14 +46,14 @@ class QuickStatCard extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.2,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
@@ -60,18 +62,18 @@ class QuickStatCard extends StatelessWidget {
                     value,
                     style: TextStyle(
                       color: valueColor,
-                      fontSize: 32,
+                      fontSize: ResponsiveHelper.sp(32),
                       fontWeight: FontWeight.w900,
-                      height: 1.0,
+                      height: ResponsiveHelper.h(1.0),
                     ),
                   ),
                   if (suffix != null) ...[
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       suffix!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.grey,
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.sp(12),
                         fontWeight: FontWeight.bold,
                       ),
                     ),

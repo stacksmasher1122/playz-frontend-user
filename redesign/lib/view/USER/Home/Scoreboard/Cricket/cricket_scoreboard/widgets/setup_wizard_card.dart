@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_state_models.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SetupWizardCard extends StatefulWidget {
   final CricketController controller;
   final List<Player> battingTeam;
   final List<Player> bowlingTeam;
 
-  const SetupWizardCard({
+  SetupWizardCard({
     super.key,
     required this.controller,
     required this.battingTeam,
@@ -26,25 +27,26 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(24),
-      margin: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
+      margin: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+          Text(
             'Start Innings',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: ResponsiveHelper.sp(24),
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           _buildPlayerSelector(
             'Select Striker',
             widget.battingTeam,
@@ -55,7 +57,7 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
               }
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildPlayerSelector(
             'Select Non-Striker',
             widget.battingTeam,
@@ -66,7 +68,7 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
               }
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildPlayerSelector(
             'Select Opening Bowler',
             widget.bowlingTeam,
@@ -75,7 +77,7 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
               setState(() => _selectedBowler = p);
             },
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
           ElevatedButton(
             onPressed:
                 (_selectedStriker != null &&
@@ -91,11 +93,11 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
                 : null,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
-              minimumSize: const Size(double.infinity, 50),
+              minimumSize: Size(double.infinity, 50),
             ),
-            child: const Text(
+            child: Text(
               'Start Match',
-              style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.black, fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -115,21 +117,21 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: AppColors.muted, fontSize: 14)),
-        const SizedBox(height: 8),
+        Text(label, style: TextStyle(color: AppColors.muted, fontSize: 14)),
+        SizedBox(height: 8),
         Container(
-          height: 50,
+          height: ResponsiveHelper.h(50),
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.muted.withValues(alpha: 0.3)),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<Player>(
               isExpanded: true,
               dropdownColor: AppColors.card,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
               value: selected,
-              hint: const Text(
+              hint: Text(
                 'Select a player',
                 style: TextStyle(color: Colors.white54),
               ),
@@ -139,7 +141,7 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
                       value: p,
                       child: Text(
                         p.name,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   )

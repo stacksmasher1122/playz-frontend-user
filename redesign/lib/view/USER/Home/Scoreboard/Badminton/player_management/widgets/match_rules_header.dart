@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchRulesHeader extends StatelessWidget {
-  const MatchRulesHeader({super.key});
+  MatchRulesHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24.0), vertical: ResponsiveHelper.h(8.0)),
       child: Row(
         children: [
           Container(
-            width: 8,
-            height: 8,
-            decoration: const BoxDecoration(
+            width: ResponsiveHelper.w(8),
+            height: ResponsiveHelper.h(8),
+            decoration: BoxDecoration(
               color: Color(0xFFC6FF00), // Neon Yellow-Green
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 8),
-          const Text(
+          SizedBox(width: 8),
+          Text(
             'MATCH RULES',
             style: TextStyle(
               color: Colors.grey,
-              fontSize: 12,
+              fontSize: ResponsiveHelper.sp(12),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.5,
             ),

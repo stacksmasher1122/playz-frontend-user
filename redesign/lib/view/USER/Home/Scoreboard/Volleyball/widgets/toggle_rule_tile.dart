@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ToggleRuleTile extends StatelessWidget {
   final String label;
   final RxBool value;
   final Function(bool) onChanged;
 
-  const ToggleRuleTile({
+  ToggleRuleTile({
     super.key,
     required this.label,
     required this.value,
@@ -17,12 +18,13 @@ class ToggleRuleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      height: 48,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      height: ResponsiveHelper.h(48),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Row(

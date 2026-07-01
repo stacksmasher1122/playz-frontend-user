@@ -6,15 +6,17 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Cont
 // Internal Widgets
 import 'widgets/friends_requests_app_bar.dart';
 import 'widgets/request_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = AppColors.background;
 const kMuted = Colors.white70;
 
 class FriendsRequestsScreen extends StatelessWidget {
-  const FriendsRequestsScreen({super.key});
+  FriendsRequestsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final ctrl = Get.find<FriendsController>();
 
     return Scaffold(
@@ -24,36 +26,36 @@ class FriendsRequestsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── App Bar ──
-            const FriendsRequestsAppBar(),
+            FriendsRequestsAppBar(),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // ── Divider ──
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
               child: Divider(color: Colors.white12, height: 1),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // ── Section Title ──
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
               child: Row(
                 children: [
-                  const Text(
+                  Text(
                     'PENDING REQUESTS',
                     style: TextStyle(
                       color: kMuted,
-                      fontSize: 13,
+                      fontSize: ResponsiveHelper.sp(13),
                       fontWeight: FontWeight.w500,
                       letterSpacing: 1.4,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Container(
-                      height: 1,
+                      height: ResponsiveHelper.h(1),
                       color: Colors.white10,
                     ),
                   ),
@@ -61,7 +63,7 @@ class FriendsRequestsScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // ── Request Cards ──
             Expanded(
@@ -69,7 +71,7 @@ class FriendsRequestsScreen extends StatelessWidget {
                 final requests = ctrl.pendingRequests;
 
                 if (requests.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
                       'No pending requests',
                       style: TextStyle(color: kMuted, fontSize: 15),
@@ -78,8 +80,8 @@ class FriendsRequestsScreen extends StatelessWidget {
                 }
 
                 return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                  physics: BouncingScrollPhysics(),
                   itemCount: requests.length,
                   itemBuilder: (context, index) {
                     final req = requests[index];

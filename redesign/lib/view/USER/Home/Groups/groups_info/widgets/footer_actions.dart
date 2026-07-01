@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_info_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kSurface = Color(0xFF222222);
 const _kMuted = Colors.white54;
@@ -8,16 +9,17 @@ const _kMuted = Colors.white54;
 class FooterActions extends StatelessWidget {
   final GroupInfoController ctrl;
 
-  const FooterActions({super.key, required this.ctrl});
+  FooterActions({super.key, required this.ctrl});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         _buildFooterTile(Icons.logout, "Leave Group", Colors.redAccent, () {
           _showConfirmation(context, "Leave Group", "Are you sure you want to leave this group?", ctrl.leaveGroup);
         }),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         _buildFooterTile(Icons.thumb_down_alt_outlined, "Report Group", Colors.redAccent, () {
            Get.snackbar('Reported', 'The group has been reported for review.',
               backgroundColor: _kSurface, colorText: Colors.white);
@@ -32,18 +34,18 @@ class FooterActions extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: _kSurface.withValues(alpha: 0.6),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         child: Row(
           children: [
             Icon(icon, color: color, size: 24),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Text(
               title,
               style: TextStyle(
                 color: color,
-                fontSize: 14,
+                fontSize: ResponsiveHelper.sp(14),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -58,12 +60,12 @@ class FooterActions extends StatelessWidget {
       context: context,
       builder: (_) => AlertDialog(
         backgroundColor: _kSurface,
-        title: Text(title, style: const TextStyle(color: Colors.white)),
-        content: Text(content, style: const TextStyle(color: _kMuted)),
+        title: Text(title, style: TextStyle(color: Colors.white)),
+        content: Text(content, style: TextStyle(color: _kMuted)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel", style: TextStyle(color: Colors.white)),
+            child: Text("Cancel", style: TextStyle(color: Colors.white)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
@@ -71,7 +73,7 @@ class FooterActions extends StatelessWidget {
               Navigator.pop(context);
               onConfirm();
             },
-            child: const Text("Confirm", style: TextStyle(color: Colors.white)),
+            child: Text("Confirm", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

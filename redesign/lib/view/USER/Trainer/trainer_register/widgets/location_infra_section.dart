@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'step_header.dart';
 import 'trainer_form_fields.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
 const kMuted = Color(0xFFA7A7A7);
 
 class LocationInfraSection extends StatefulWidget {
-  const LocationInfraSection({super.key});
+  LocationInfraSection({super.key});
 
   @override
   State<LocationInfraSection> createState() => _LocationInfraSectionState();
@@ -32,20 +33,21 @@ class _LocationInfraSectionState extends State<LocationInfraSection> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// ───────── HEADER ─────────
-        const StepHeader(step: 6, title: 'Location & Infra'),
+        StepHeader(step: 6, title: 'Location & Infra'),
 
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         /// ───────── TRAINING GROUND ─────────
-        const Text(
+        Text(
           'Training Ground',
           style: TextStyle(color: kMuted, fontSize: 13),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
 
         Row(
           children: [
@@ -56,7 +58,7 @@ class _LocationInfraSectionState extends State<LocationInfraSection> {
                 setState(() => isRentedGround = false);
               },
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: 10),
             GroundChip(
               label: 'Rented / Partner',
               selected: isRentedGround,
@@ -67,14 +69,14 @@ class _LocationInfraSectionState extends State<LocationInfraSection> {
           ],
         ),
 
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
 
         /// ───────── LOCATION INPUT ─────────
-        const Text(
+        Text(
           'Training Location',
           style: TextStyle(color: kMuted, fontSize: 13),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
 
         TrainerInputField(
           label: 'Full Address',
@@ -82,7 +84,7 @@ class _LocationInfraSectionState extends State<LocationInfraSection> {
           controller: addressController,
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         Row(
           children: [
@@ -93,7 +95,7 @@ class _LocationInfraSectionState extends State<LocationInfraSection> {
                 controller: areaController,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: TrainerInputField(
                 label: 'City',
@@ -104,21 +106,21 @@ class _LocationInfraSectionState extends State<LocationInfraSection> {
           ],
         ),
 
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
 
         /// ───────── FACILITY PHOTOS ─────────
-        const Text(
+        Text(
           'Facility Photos',
           style: TextStyle(color: kMuted, fontSize: 13),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         SizedBox(
-          height: 96,
+          height: ResponsiveHelper.h(96),
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: facilityPhotos.length + 1,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            separatorBuilder: (_, __) => SizedBox(width: 12),
             itemBuilder: (context, index) {
               if (index == 0) {
                 return AddPhotoTile(
@@ -142,7 +144,7 @@ class GroundChip extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  const GroundChip({
+  GroundChip({
     super.key,
     required this.label,
     required this.selected,
@@ -151,17 +153,18 @@ class GroundChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(18), vertical: ResponsiveHelper.h(10)),
         decoration: BoxDecoration(
           color: selected ? kGreen.withValues(alpha: 0.15) : kCard,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
           border: Border.all(
             color: selected ? kGreen : Colors.transparent,
-            width: 1.2,
+            width: ResponsiveHelper.w(1.2),
           ),
         ),
         child: Text(
@@ -178,20 +181,21 @@ class GroundChip extends StatelessWidget {
 
 class AddPhotoTile extends StatelessWidget {
   final VoidCallback onTap;
-  const AddPhotoTile({super.key, required this.onTap});
+  AddPhotoTile({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 96,
+        width: ResponsiveHelper.w(96),
         decoration: BoxDecoration(
           color: kCard,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: Colors.grey.shade800),
         ),
-        child: const Icon(Icons.add_rounded, color: kMuted, size: 28),
+        child: Icon(Icons.add_rounded, color: kMuted, size: 28),
       ),
     );
   }
@@ -199,13 +203,14 @@ class AddPhotoTile extends StatelessWidget {
 
 class PhotoPreviewTile extends StatelessWidget {
   final String imageUrl;
-  const PhotoPreviewTile({super.key, required this.imageUrl});
+  PhotoPreviewTile({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: Image.network(imageUrl, width: 96, height: 96, fit: BoxFit.cover),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+      child: Image.network(imageUrl, width: ResponsiveHelper.w(96), height: ResponsiveHelper.h(96), fit: BoxFit.cover),
     );
   }
 }

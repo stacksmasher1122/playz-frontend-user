@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ScoringConsole extends StatelessWidget {
   final VoidCallback onUndo;
@@ -7,7 +8,7 @@ class ScoringConsole extends StatelessWidget {
   final VoidCallback onExtras;
   final Function(int) onNormalRun;
 
-  const ScoringConsole({
+  ScoringConsole({
     super.key,
     required this.onUndo,
     required this.onWicket,
@@ -17,16 +18,17 @@ class ScoringConsole extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(32))),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.4),
             blurRadius: 20,
-            offset: const Offset(0, -5),
+            offset: Offset(0, -5),
           ),
         ],
       ),
@@ -43,7 +45,7 @@ class ScoringConsole extends StatelessWidget {
                   Colors.white24,
                   onUndo,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 _actionButton(
                   'WICKET',
                   Icons.close_rounded,
@@ -51,7 +53,7 @@ class ScoringConsole extends StatelessWidget {
                   onWicket,
                   textColor: AppColors.error,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 _actionButton(
                   'EXTRAS',
                   Icons.add_circle_outline_rounded,
@@ -61,7 +63,7 @@ class ScoringConsole extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [0, 1, 2, 3, 4, 6].map((runs) {
@@ -85,20 +87,20 @@ class ScoringConsole extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
           decoration: BoxDecoration(
             color: bg,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
           ),
           child: Column(
             children: [
               Icon(icon, color: textColor, size: 20),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 label,
                 style: TextStyle(
                   color: textColor,
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.5,
                 ),
@@ -115,8 +117,8 @@ class ScoringConsole extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 52,
-        height: 52,
+        width: ResponsiveHelper.w(52),
+        height: ResponsiveHelper.h(52),
         decoration: BoxDecoration(
           color: isBound ? AppColors.accent : Colors.white10,
           shape: BoxShape.circle,
@@ -135,7 +137,7 @@ class ScoringConsole extends StatelessWidget {
           '$runs',
           style: TextStyle(
             color: isBound ? Colors.black : Colors.white,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.sp(20),
             fontWeight: FontWeight.w800,
           ),
         ),

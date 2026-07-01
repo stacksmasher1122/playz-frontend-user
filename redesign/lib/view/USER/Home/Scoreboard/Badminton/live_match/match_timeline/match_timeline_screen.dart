@@ -6,9 +6,10 @@ import 'widgets/key_metrics_card.dart';
 import 'widgets/player_of_match_card.dart';
 import 'widgets/achievement_section.dart';
 import 'widgets/action_button_grid.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchTimelineScreen extends StatefulWidget {
-  const MatchTimelineScreen({super.key});
+  MatchTimelineScreen({super.key});
 
   @override
   State<MatchTimelineScreen> createState() => _MatchTimelineScreenState();
@@ -34,9 +35,10 @@ class _MatchTimelineScreenState extends State<MatchTimelineScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Center(
+        return Center(
           child: CircularProgressIndicator(
             color: Color(0xFFC6FF00), // Neon Yellow-Green
           ),
@@ -46,12 +48,12 @@ class _MatchTimelineScreenState extends State<MatchTimelineScreen> {
       return SingleChildScrollView(
         child: Column(
           children: [
-            const WinnerSummaryCard(),
-            const KeyMetricsCard(),
+            WinnerSummaryCard(),
+            KeyMetricsCard(),
             Obx(() {
               // We could store full object in Rx or individual fields. Let's use static mock data for Player of Match here
               // The requirements specified these static mock values in the controller loadWinner section or directly here
-              return const PlayerOfMatchCard(
+              return PlayerOfMatchCard(
                 playerName: 'VIKTOR AXELSEN',
                 description: 'Dominant performance with consistent precision. Maintained 94% smash accuracy in the final set.',
                 winStreak: '12-0',
@@ -59,9 +61,9 @@ class _MatchTimelineScreenState extends State<MatchTimelineScreen> {
                 formRating: 4, // 4 out of 5
               );
             }),
-            const AchievementSection(),
-            const ActionButtonGrid(),
-            const SizedBox(height: 24), // Bottom padding before bottom nav
+            AchievementSection(),
+            ActionButtonGrid(),
+            SizedBox(height: 24), // Bottom padding before bottom nav
           ],
         ),
       );

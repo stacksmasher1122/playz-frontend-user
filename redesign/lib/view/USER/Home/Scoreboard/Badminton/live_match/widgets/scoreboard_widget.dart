@@ -3,17 +3,19 @@ import 'package:get/get.dart';
 import '../../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Badminton/live_match_controller.dart';
 import 'player_score_widget.dart';
 import 'game_status_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ScoreboardWidget extends StatelessWidget {
-  const ScoreboardWidget({super.key});
+  ScoreboardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveMatchController>();
 
     return RepaintBoundary(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24.0), vertical: ResponsiveHelper.h(24.0)),
         child: Obx(() {
           final isPlayerOneServing = controller.serverPlayer.value == 'AXELSEN';
           

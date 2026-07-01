@@ -8,9 +8,10 @@ import 'widgets/football_pitch_widget.dart';
 import 'widgets/squad_header_widget.dart';
 import 'widgets/squad_list_widget.dart';
 import 'widgets/confirm_squad_button.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class StartingLineupScreen extends StatefulWidget {
-  const StartingLineupScreen({super.key});
+  StartingLineupScreen({super.key});
 
   @override
   State<StartingLineupScreen> createState() => _StartingLineupScreenState();
@@ -29,7 +30,7 @@ class _StartingLineupScreenState extends State<StartingLineupScreen> with Single
 
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
     );
     _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeIn),
@@ -46,12 +47,13 @@ class _StartingLineupScreenState extends State<StartingLineupScreen> with Single
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: const StartingLineupAppbar(),
+      appBar: StartingLineupAppbar(),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(
               color: Color(0xFFC6FF00), // Lime Green
             ),
@@ -64,15 +66,15 @@ class _StartingLineupScreenState extends State<StartingLineupScreen> with Single
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const TacticHeaderWidget(),
-                const FormationSelectorWidget(),
-                const FootballPitchWidget(),
+                TacticHeaderWidget(),
+                FormationSelectorWidget(),
+                FootballPitchWidget(),
                 SquadHeaderWidget(
                   onFilter: () => controller.filterPlayers(''),
                   onSearch: () => controller.searchPlayers(''),
                 ),
-                const SquadListWidget(),
-                const SizedBox(height: 24),
+                SquadListWidget(),
+                SizedBox(height: 24),
               ],
             ),
           ),

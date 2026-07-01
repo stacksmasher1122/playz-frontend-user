@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveBottomNavigation extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTabSelected;
 
-  const LiveBottomNavigation({
+  LiveBottomNavigation({
     super.key,
     required this.selectedIndex,
     required this.onTabSelected,
@@ -14,9 +15,10 @@ class LiveBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surfaceContainerHigh,
         border: Border(top: BorderSide(color: AppColors.surfaceContainerHighest, width: 1)),
       ),
@@ -59,7 +61,7 @@ class _NavBarItem extends StatefulWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _NavBarItem({
+  _NavBarItem({
     required this.icon,
     required this.label,
     required this.isSelected,
@@ -76,7 +78,7 @@ class _NavBarItemState extends State<_NavBarItem> with SingleTickerProviderState
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(vsync: this, duration: const Duration(milliseconds: 100));
+    _scaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
   }
 
   @override
@@ -87,6 +89,7 @@ class _NavBarItemState extends State<_NavBarItem> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTapDown: (_) => _scaleController.forward(),
       onTapUp: (_) {
@@ -98,26 +101,26 @@ class _NavBarItemState extends State<_NavBarItem> with SingleTickerProviderState
       child: ScaleTransition(
         scale: Tween<double>(begin: 1.0, end: 0.9).animate(_scaleController),
         child: SizedBox(
-          width: 70,
+          width: ResponsiveHelper.w(70),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                height: 3,
+                duration: Duration(milliseconds: 200),
+                height: ResponsiveHelper.h(3),
                 width: widget.isSelected ? 24 : 0,
                 decoration: BoxDecoration(
                   color: AppColors.primaryContainer,
-                  borderRadius: BorderRadius.circular(1.5),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(1.5)),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Icon(
                 widget.icon,
                 color: widget.isSelected ? AppColors.primary : AppColors.muted,
                 size: 24,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 widget.label,
                 style: AppTypography.labelCaps10.copyWith(
@@ -125,7 +128,7 @@ class _NavBarItemState extends State<_NavBarItem> with SingleTickerProviderState
                   fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
             ],
           ),
         ),

@@ -2,14 +2,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_dimensions.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SmAppbarWidget extends StatelessWidget {
-  const SmAppbarWidget({super.key});
+  SmAppbarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(
+      padding: EdgeInsets.symmetric(
         horizontal: AppDimensions.lg,
         vertical: AppDimensions.sm,
       ),
@@ -31,13 +33,13 @@ class SmAppbarWidget extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: ResponsiveHelper.w(40),
+                    height: ResponsiveHelper.h(40),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: AppColors.primaryContainer,
-                        width: 1,
+                        width: ResponsiveHelper.w(1),
                       ),
                     ),
                     child: ClipOval(
@@ -48,12 +50,12 @@ class SmAppbarWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: AppDimensions.md),
-                  const Text(
+                  SizedBox(width: AppDimensions.md),
+                  Text(
                     'PlayZ Match Center',
                     style: TextStyle(
                       fontFamily: 'Sora',
-                      fontSize: 24,
+                      fontSize: ResponsiveHelper.sp(24),
                       fontWeight: FontWeight.w600,
                       color: AppColors.primaryContainer,
                     ),
@@ -64,13 +66,13 @@ class SmAppbarWidget extends StatelessWidget {
                 onTap: () {
                   print('Settings tapped');
                 },
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                 hoverColor: AppColors.primaryContainer.withValues(alpha: 0.1),
                 child: Container(
-                  width: 40,
-                  height: 40,
+                  width: ResponsiveHelper.w(40),
+                  height: ResponsiveHelper.h(40),
                   alignment: Alignment.center,
-                  child: const Icon(
+                  child: Icon(
                     Icons.settings, // Fallback for material_symbols_outlined settings
                     color: AppColors.onSurfaceVariant,
                     size: 24,

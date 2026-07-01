@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kCard = Color(0xFF1A1A1A);
 const kMuted = Color(0xFFA7A7A7);
 const kYellow = Color(0xFFFFC107);
 
 class AcademySummaryCard extends StatelessWidget {
-  const AcademySummaryCard({super.key});
+  AcademySummaryCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       ),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
             child: CachedNetworkImage(
               imageUrl:
                   'https://images.unsplash.com/photo-1546519638-68e109498ffc',
-              width: 52,
-              height: 52,
+              width: ResponsiveHelper.w(52),
+              height: ResponsiveHelper.h(52),
               fit: BoxFit.cover,
               placeholder: (_, __) => Shimmer.fromColors(
                 baseColor: Colors.grey.shade900,
@@ -34,11 +36,11 @@ class AcademySummaryCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'PowerPlay Cricket Academy',
                   style: TextStyle(

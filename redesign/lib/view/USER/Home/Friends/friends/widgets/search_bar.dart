@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF0E0E0E);
 const kMuted = Colors.white70;
@@ -9,7 +10,7 @@ class SearchBarWidget extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
 
-  const SearchBarWidget({
+  SearchBarWidget({
     super.key,
     required this.controller,
     required this.focusNode,
@@ -19,30 +20,31 @@ class SearchBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 12),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14)),
         decoration: BoxDecoration(
           color: kSurface,
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
         ),
         child: TextField(
           controller: controller,
           focusNode: focusNode,
           onChanged: onChanged,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
-            icon: const Icon(Icons.search, color: kMuted),
+            icon: Icon(Icons.search, color: kMuted),
             hintText: 'Find friends, squads, or nearby players...',
-            hintStyle: const TextStyle(color: kMuted),
+            hintStyle: TextStyle(color: kMuted),
             border: InputBorder.none,
             suffixIcon: ValueListenableBuilder<TextEditingValue>(
               valueListenable: controller,
               builder: (_, value, __) {
-                if (value.text.isEmpty) return const SizedBox.shrink();
+                if (value.text.isEmpty) return SizedBox.shrink();
                 return IconButton(
-                  icon: const Icon(Icons.close, color: kMuted, size: 20),
+                  icon: Icon(Icons.close, color: kMuted, size: 20),
                   onPressed: onClear,
                 );
               },

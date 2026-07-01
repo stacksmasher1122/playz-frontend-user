@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
-  const SectionHeader({super.key, required this.title});
+  SectionHeader({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
       child: Row(
         children: [
           Expanded(
@@ -19,7 +21,7 @@ class SectionHeader extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.inter(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: ResponsiveHelper.sp(18),
                 fontWeight: FontWeight.w700,
               ),
             ),

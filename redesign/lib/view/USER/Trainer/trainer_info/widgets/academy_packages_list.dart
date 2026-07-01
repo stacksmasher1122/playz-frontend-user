@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kCard = Color(0xFF1A1A1A);
-const Color kMuted = Color(0xFFA7A7A7);
-const Color kGreen = AppColors.accent;
+Color kCard = Color(0xFF1A1A1A);
+Color kMuted = Color(0xFFA7A7A7);
+Color kGreen = AppColors.accent;
 
 class AcademyPackagesList extends StatefulWidget {
-  const AcademyPackagesList({super.key});
+  AcademyPackagesList({super.key});
 
   @override
   State<AcademyPackagesList> createState() => _AcademyPackagesListState();
@@ -63,16 +64,17 @@ class _AcademyPackagesListState extends State<AcademyPackagesList> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          children: const [
+          children: [
             Text(
               'Packages',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: ResponsiveHelper.sp(18),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -80,14 +82,14 @@ class _AcademyPackagesListState extends State<AcademyPackagesList> {
             Text('View all', style: TextStyle(color: kGreen)),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         ...List.generate(packages.length, (index) {
           final pkg = packages[index];
           final bool active = index == selectedIndex;
 
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.only(bottom: 12),
             child: GestureDetector(
               onTap: () {
                 setState(() => selectedIndex = index);
@@ -105,19 +107,20 @@ class PackageCard extends StatelessWidget {
   final PackageModel model;
   final bool active;
 
-  const PackageCard({super.key, required this.model, required this.active});
+  PackageCard({super.key, required this.model, required this.active});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      padding: const EdgeInsets.all(16),
+      duration: Duration(milliseconds: 250),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(
           color: active ? kGreen : Colors.transparent,
-          width: 1.4,
+          width: ResponsiveHelper.w(1.4),
         ),
         boxShadow: active
             ? [BoxShadow(color: kGreen.withValues(alpha: 0.25), blurRadius: 14)]
@@ -128,17 +131,17 @@ class PackageCard extends StatelessWidget {
         children: [
           if (model.badge != null)
             Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              margin: EdgeInsets.only(bottom: 8),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
               decoration: BoxDecoration(
                 color: kGreen,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
               ),
               child: Text(
                 model.badge!,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.black,
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -149,18 +152,18 @@ class PackageCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   model.title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               Text(
                 model.price,
-                style: const TextStyle(
+                style: TextStyle(
                   color: kGreen,
-                  fontSize: 16,
+                  fontSize: ResponsiveHelper.sp(16),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -168,23 +171,23 @@ class PackageCard extends StatelessWidget {
           ),
 
           if (model.subtitle != null) ...[
-            const SizedBox(height: 4),
-            Text(model.subtitle!, style: const TextStyle(color: kMuted)),
+            SizedBox(height: 4),
+            Text(model.subtitle!, style: TextStyle(color: kMuted)),
           ],
 
           /// FEATURES (ONLY WHEN ACTIVE)
           AnimatedCrossFade(
-            firstChild: const SizedBox.shrink(),
+            firstChild: SizedBox.shrink(),
             secondChild: Column(
               children: model.features
                   .map(
                     (f) => Padding(
-                      padding: const EdgeInsets.only(top: 8),
+                      padding: EdgeInsets.only(top: 8),
                       child: Row(
                         children: [
-                          const Icon(Icons.check, color: kGreen, size: 16),
-                          const SizedBox(width: 8),
-                          Text(f, style: const TextStyle(color: kMuted)),
+                          Icon(Icons.check, color: kGreen, size: 16),
+                          SizedBox(width: 8),
+                          Text(f, style: TextStyle(color: kMuted)),
                         ],
                       ),
                     ),
@@ -194,7 +197,7 @@ class PackageCard extends StatelessWidget {
             crossFadeState: active
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
           ),
         ],
       ),

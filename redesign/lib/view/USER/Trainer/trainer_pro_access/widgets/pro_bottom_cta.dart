@@ -3,6 +3,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'pro_plan_card.dart';
 import 'package:redesign/view/USER/Trainer/trainer_platform_fee/trainer_platform_fee_screen.dart';
 import 'package:redesign/view/USER/Trainer/trainer_platform_fee_success/trainer_platform_fee_success_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
@@ -12,7 +13,7 @@ class ProBottomCTA extends StatelessWidget {
   final List<ProPlan> plans;
   final ValueNotifier<int> selectedIndex;
 
-  const ProBottomCTA({
+  ProBottomCTA({
     super.key,
     required this.plans,
     required this.selectedIndex,
@@ -20,6 +21,7 @@ class ProBottomCTA extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SafeArea(
       top: false,
       child: ValueListenableBuilder<int>(
@@ -28,8 +30,8 @@ class ProBottomCTA extends StatelessWidget {
           final plan = plans[i];
 
           return Container(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
-            decoration: const BoxDecoration(
+            padding: EdgeInsets.fromLTRB(16, 14, 16, 16),
+            decoration: BoxDecoration(
               color: Colors.black,
               border: Border(top: BorderSide(color: kCard)),
             ),
@@ -43,41 +45,41 @@ class ProBottomCTA extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Selected Plan',
                             style: TextStyle(
                               color: kMuted,
-                              fontSize: 12,
+                              fontSize: ResponsiveHelper.sp(12),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: 2),
                           Text(
                             plan.title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14.5,
+                              fontSize: ResponsiveHelper.sp(14.5),
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Text(
                       plan.price,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: kGreen,
-                        fontSize: 18,
+                        fontSize: ResponsiveHelper.sp(18),
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                   ],
                 ),
 
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
 
                 /// ───── Primary CTA Button ─────
                 SizedBox(
@@ -86,30 +88,30 @@ class ProBottomCTA extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => const TrainerPaymentSuccessScreen(),
+                          builder: (_) => TrainerPaymentSuccessScreen(),
                         ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kGreen,
                       foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(32)),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Continue to Payment',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: ResponsiveHelper.sp(16),
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
 
                 /// ───── Skip Option ─────
                 GestureDetector(
@@ -117,15 +119,15 @@ class ProBottomCTA extends StatelessWidget {
                     // handle skip
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => const TrainerLimitedAccessScreen(),
+                        builder: (_) => TrainerLimitedAccessScreen(),
                       ),
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     'Skip for now (Limited Access)',
                     style: TextStyle(
                       color: kMuted,
-                      fontSize: 13,
+                      fontSize: ResponsiveHelper.sp(13),
                       decoration: TextDecoration.underline,
                     ),
                   ),

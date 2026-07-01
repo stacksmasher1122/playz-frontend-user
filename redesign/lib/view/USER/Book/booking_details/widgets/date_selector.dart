@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class DateSelector extends StatelessWidget {
   final DateTime? selectedDate;
   final ValueChanged<DateTime> onDateSelected;
 
-  const DateSelector({
+  DateSelector({
     super.key,
     required this.selectedDate,
     required this.onDateSelected,
@@ -16,20 +17,21 @@ class DateSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final DateTime today = DateTime.now();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionTitle(text: 'Select Date'),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// Height is constrained, not fixed (prevents overflow)
         ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 90),
+          constraints: BoxConstraints(maxHeight: 90),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
             itemCount: 7,
             itemBuilder: (_, index) {
               final date = today.add(Duration(days: index));
@@ -43,15 +45,15 @@ class DateSelector extends StatelessWidget {
               return GestureDetector(
                 onTap: () => onDateSelected(date),
                 child: Container(
-                  width: 72,
-                  margin: const EdgeInsets.only(right: 12),
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  width: ResponsiveHelper.w(72),
+                  margin: EdgeInsets.only(right: 12),
+                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8)),
                   decoration: BoxDecoration(
                     color: selected ? _kGreen : Colors.black,
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
                     border: Border.all(
                       color: selected ? _kGreen : Colors.grey.shade800,
-                      width: 1.2,
+                      width: ResponsiveHelper.w(1.2),
                     ),
                   ),
 
@@ -65,19 +67,19 @@ class DateSelector extends StatelessWidget {
                         index == 0 ? 'TODAY' : day.toUpperCase(),
                         maxLines: 1,
                         overflow: TextOverflow.clip,
-                        textHeightBehavior: const TextHeightBehavior(
+                        textHeightBehavior: TextHeightBehavior(
                           applyHeightToFirstAscent: false,
                         ),
                         style: TextStyle(
                           color: selected ? Colors.black : _kMuted,
-                          fontSize: 11,
+                          fontSize: ResponsiveHelper.sp(11),
                           fontWeight: FontWeight.w600,
-                          height: 1.1,
+                          height: ResponsiveHelper.h(1.1),
                           letterSpacing: 0.6,
                         ),
                       ),
 
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6),
 
                       /// DATE NUMBER
                       Text(
@@ -86,13 +88,13 @@ class DateSelector extends StatelessWidget {
                         overflow: TextOverflow.clip,
                         style: TextStyle(
                           color: selected ? Colors.black : Colors.white,
-                          fontSize: 20,
+                          fontSize: ResponsiveHelper.sp(20),
                           fontWeight: FontWeight.bold,
-                          height: 1.0,
+                          height: ResponsiveHelper.h(1.0),
                         ),
                       ),
 
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
 
                       /// MONTH
                       Text(
@@ -101,8 +103,8 @@ class DateSelector extends StatelessWidget {
                         overflow: TextOverflow.clip,
                         style: TextStyle(
                           color: selected ? Colors.black : _kMuted,
-                          fontSize: 11,
-                          height: 1.0,
+                          fontSize: ResponsiveHelper.sp(11),
+                          height: ResponsiveHelper.h(1.0),
                           letterSpacing: 0.6,
                         ),
                       ),
@@ -147,17 +149,18 @@ class DateSelector extends StatelessWidget {
 
 class _SectionTitle extends StatelessWidget {
   final String text;
-  const _SectionTitle({required this.text});
+  _SectionTitle({required this.text});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
-          fontSize: 18,
+          fontSize: ResponsiveHelper.sp(18),
           fontWeight: FontWeight.bold,
         ),
       ),

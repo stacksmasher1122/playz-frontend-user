@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MapPickerBottomCard extends StatelessWidget {
   final Widget addressPreview;
   final Widget confirmButton;
 
-  const MapPickerBottomCard({
+  MapPickerBottomCard({
     super.key,
     required this.addressPreview,
     required this.confirmButton,
@@ -13,16 +14,17 @@ class MapPickerBottomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 20),
+      padding: EdgeInsets.fromLTRB(16, 10, 16, 20),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 20,
-            offset: const Offset(0, -5),
+            offset: Offset(0, -5),
           ),
         ],
       ),
@@ -31,12 +33,12 @@ class MapPickerBottomCard extends StatelessWidget {
         children: [
           // Drag handle
           Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.only(bottom: 16),
+            width: ResponsiveHelper.w(40),
+            height: ResponsiveHelper.h(4),
+            margin: EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
               color: Colors.white24,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
             ),
           ),
 
@@ -44,19 +46,19 @@ class MapPickerBottomCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(ResponsiveHelper.w(12)),
                 decoration: BoxDecoration(
                   color: kSpotifyGreen.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                 ),
-                child: const Icon(Icons.location_on, color: kSpotifyGreen),
+                child: Icon(Icons.location_on, color: kSpotifyGreen),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(child: addressPreview),
             ],
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Confirm button with state logic
           confirmButton,

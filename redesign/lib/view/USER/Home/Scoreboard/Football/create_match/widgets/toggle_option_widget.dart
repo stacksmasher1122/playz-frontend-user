@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ToggleOptionWidget extends StatelessWidget {
   final String label;
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const ToggleOptionWidget({
+  ToggleOptionWidget({
     super.key,
     required this.label,
     required this.value,
@@ -14,8 +15,9 @@ class ToggleOptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -23,7 +25,7 @@ class ToggleOptionWidget extends StatelessWidget {
             label,
             style: TextStyle(
               color: value ? Colors.white : Colors.grey,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -32,7 +34,7 @@ class ToggleOptionWidget extends StatelessWidget {
               value: value,
               onChanged: onChanged,
               activeThumbColor: Colors.black,
-              activeTrackColor: const Color(0xFFC6FF00), // Lime Green
+              activeTrackColor: Color(0xFFC6FF00), // Lime Green
               inactiveThumbColor: Colors.grey,
               inactiveTrackColor: Colors.grey.shade800,
             ),

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_chat_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
 
 class CreatePollSheet extends StatefulWidget {
-  const CreatePollSheet({super.key});
+  CreatePollSheet({super.key});
 
   @override
   State<CreatePollSheet> createState() => _CreatePollSheetState();
@@ -51,32 +52,33 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(20))),
       ),
       child: Column(
         children: [
           // Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(16)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   "Create Poll",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: ResponsiveHelper.sp(20),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
+                  icon: Icon(Icons.close, color: Colors.white),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -87,73 +89,73 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
             child: ListView(
               padding: EdgeInsets.fromLTRB(20, 0, 20, bottomInset + 80),
               children: [
-                const Text(
+                Text(
                   "QUESTION",
                   style: TextStyle(
                     color: _kMuted,
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 TextField(
                   controller: _questionCtrl,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                   maxLines: 3,
                   minLines: 1,
                   decoration: InputDecoration(
                     hintText: "Ask a question...",
-                    hintStyle: const TextStyle(color: Colors.white38),
+                    hintStyle: TextStyle(color: Colors.white38),
                     filled: true,
-                    fillColor: const Color(0xFF2A2A2A),
+                    fillColor: Color(0xFF2A2A2A),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
-                const Text(
+                Text(
                   "OPTIONS",
                   style: TextStyle(
                     color: _kMuted,
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 ...List.generate(_optionsCtrls.length, (index) {
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                    padding: EdgeInsets.only(bottom: 8),
                     child: TextField(
                       controller: _optionsCtrls[index],
-                      style: const TextStyle(color: Colors.white, fontSize: 15),
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                       decoration: InputDecoration(
                         hintText: "Option ${index + 1}",
-                        hintStyle: const TextStyle(color: Colors.white38),
+                        hintStyle: TextStyle(color: Colors.white38),
                         prefixIcon: Padding(
-                          padding: const EdgeInsets.all(14),
+                          padding: EdgeInsets.all(ResponsiveHelper.w(14)),
                           child: Text(
                             "${index + 1}",
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: _kMuted,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                         filled: true,
-                        fillColor: const Color(0xFF2A2A2A),
-                        contentPadding: const EdgeInsets.symmetric(
+                        fillColor: Color(0xFF2A2A2A),
+                        contentPadding: EdgeInsets.symmetric(
                           vertical: 0,
                           horizontal: 16,
                         ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                           borderSide: BorderSide.none,
                         ),
                       ),
@@ -164,14 +166,14 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
                 if (_optionsCtrls.length < 12)
                   InkWell(
                     onTap: _addOption,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14)),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white10),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
@@ -192,34 +194,34 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
                     ),
                   ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Allow Multiple Switch
                 Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2A2A2A),
-                    borderRadius: BorderRadius.circular(16),
+                    color: Color(0xFF2A2A2A),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                   ),
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                         decoration: BoxDecoration(
                           color: _kGreen.withValues(alpha: 0.15),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.checklist,
                           color: _kGreen,
                           size: 20,
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      const Expanded(
+                      SizedBox(width: 16),
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -267,11 +269,11 @@ extension on Widget {
         this,
         Positioned(
           bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-          right: 16,
+          right: ResponsiveHelper.w(16),
           child: FloatingActionButton(
             backgroundColor: _kGreen,
             onPressed: onPressed,
-            child: const Icon(Icons.send, color: Colors.black),
+            child: Icon(Icons.send, color: Colors.black),
           ),
         ),
       ],

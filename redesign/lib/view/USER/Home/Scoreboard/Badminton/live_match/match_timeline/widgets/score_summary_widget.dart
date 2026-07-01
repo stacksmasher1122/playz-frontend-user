@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ScoreSummaryWidget extends StatelessWidget {
   final List<String> gameScores;
 
-  const ScoreSummaryWidget({
+  ScoreSummaryWidget({
     super.key,
     required this.gameScores,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       children: gameScores.map((score) {
         // Simple mock logic to determine if the game was won by player 1 (winner)
@@ -24,15 +26,15 @@ class ScoreSummaryWidget extends StatelessWidget {
 
         return Expanded(
           child: Container(
-            margin: const EdgeInsets.only(right: 8.0),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            margin: EdgeInsets.only(right: 8.0),
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
             decoration: BoxDecoration(
               color: Colors.grey.shade900,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
               border: Border(
                 left: BorderSide(
-                  color: isWin ? const Color(0xFFC6FF00) : Colors.transparent, // Neon Yellow-Green
-                  width: 4,
+                  color: isWin ? Color(0xFFC6FF00) : Colors.transparent, // Neon Yellow-Green
+                  width: ResponsiveHelper.w(4),
                 ),
               ),
             ),
@@ -41,9 +43,9 @@ class ScoreSummaryWidget extends StatelessWidget {
               score,
               style: TextStyle(
                 color: isWin ? Colors.white : Colors.grey.shade600,
-                fontSize: 14,
+                fontSize: ResponsiveHelper.sp(14),
                 fontWeight: FontWeight.bold,
-                fontFeatures: const [FontFeature.tabularFigures()],
+                fontFeatures: [FontFeature.tabularFigures()],
               ),
             ),
           ),

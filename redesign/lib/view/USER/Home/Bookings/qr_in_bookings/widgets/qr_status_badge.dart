@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QrStatusBadge extends StatelessWidget {
   final String label;
   final Color color;
 
-  const QrStatusBadge(this.label, this.color, {super.key});
+  QrStatusBadge(this.label, this.color, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(999)),
         border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
       child: Text(
@@ -20,7 +22,7 @@ class QrStatusBadge extends StatelessWidget {
         style: TextStyle(
           color: color,
           fontWeight: FontWeight.w700,
-          fontSize: 12,
+          fontSize: ResponsiveHelper.sp(12),
         ),
       ),
     );

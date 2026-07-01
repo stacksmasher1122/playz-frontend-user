@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RecentBookingsSocial extends StatelessWidget {
-  const RecentBookingsSocial({super.key});
+  RecentBookingsSocial({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Row(
-        children: const [
+        children: [
           CircleAvatar(
             radius: 18,
             backgroundImage: NetworkImage('https://i.pravatar.cc/100'),

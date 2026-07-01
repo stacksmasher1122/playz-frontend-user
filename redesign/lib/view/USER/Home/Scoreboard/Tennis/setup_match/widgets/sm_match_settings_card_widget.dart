@@ -5,23 +5,25 @@ import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../theme/app_dimensions.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/setup_match_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SmMatchSettingsCardWidget extends StatelessWidget {
-  const SmMatchSettingsCardWidget({super.key});
+  SmMatchSettingsCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<SetupMatchController>();
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(ResponsiveHelper.w(24)),
           decoration: BoxDecoration(
-            color: const Color(0x001a1a1a).withValues(alpha: 0.8),
-            borderRadius: BorderRadius.circular(12),
+            color: Color(0x001a1a1a).withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
             backgroundBlendMode: BlendMode.dstATop,
           ),
@@ -32,11 +34,11 @@ class SmMatchSettingsCardWidget extends StatelessWidget {
                 'MATCH SETTINGS',
                 style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
               ),
-              const SizedBox(height: AppDimensions.md),
+              SizedBox(height: AppDimensions.md),
               Obx(() => _buildToggleRow('No-Ad Scoring', controller.matchSetup.value.noAdScoring, controller.toggleNoAdScoring)),
-              const SizedBox(height: AppDimensions.md),
+              SizedBox(height: AppDimensions.md),
               Obx(() => _buildToggleRow('Advantage Rule', controller.matchSetup.value.advantageRule, controller.toggleAdvantageRule)),
-              const SizedBox(height: AppDimensions.md),
+              SizedBox(height: AppDimensions.md),
               Obx(() => _buildToggleRow('Match Tie-break', controller.matchSetup.value.matchTiebreak, controller.toggleMatchTiebreak)),
             ],
           ),
@@ -57,13 +59,13 @@ class SmMatchSettingsCardWidget extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 48,
-            height: 24,
-            padding: const EdgeInsets.all(4),
+            duration: Duration(milliseconds: 200),
+            width: ResponsiveHelper.w(48),
+            height: ResponsiveHelper.h(24),
+            padding: EdgeInsets.all(ResponsiveHelper.w(4)),
             decoration: BoxDecoration(
               color: value ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               boxShadow: value
                   ? [
                       BoxShadow(
@@ -76,9 +78,9 @@ class SmMatchSettingsCardWidget extends StatelessWidget {
             child: Align(
               alignment: value ? Alignment.centerRight : Alignment.centerLeft,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: 16,
-                height: 16,
+                duration: Duration(milliseconds: 200),
+                width: ResponsiveHelper.w(16),
+                height: ResponsiveHelper.h(16),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: value ? AppColors.onPrimaryContainer : AppColors.onSurfaceVariant,

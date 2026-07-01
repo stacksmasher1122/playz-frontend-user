@@ -11,7 +11,7 @@ class GameData {
   final String type;
   final bool isFull;
 
-  const GameData({
+  GameData({
     required this.hostName,
     required this.time,
     required this.price,

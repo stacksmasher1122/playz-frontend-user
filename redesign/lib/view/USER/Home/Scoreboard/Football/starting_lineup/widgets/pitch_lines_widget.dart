@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PitchLinesWidget extends StatelessWidget {
-  const PitchLinesWidget({super.key});
+  PitchLinesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return CustomPaint(
       painter: _PitchPainter(),
       child: Container(),
@@ -16,7 +18,7 @@ class _PitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFC6FF00).withValues(alpha: 0.3)
+      ..color = Color(0xFFC6FF00).withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 

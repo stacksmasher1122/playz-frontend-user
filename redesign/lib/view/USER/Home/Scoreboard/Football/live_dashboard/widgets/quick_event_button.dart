@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QuickEventButton extends StatefulWidget {
   final String title;
@@ -6,7 +7,7 @@ class QuickEventButton extends StatefulWidget {
   final bool isPrimary;
   final VoidCallback onTap;
 
-  const QuickEventButton({
+  QuickEventButton({
     super.key,
     required this.title,
     required this.icon,
@@ -27,7 +28,7 @@ class _QuickEventButtonState extends State<QuickEventButton> with SingleTickerPr
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 100),
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(_controller);
   }
@@ -40,8 +41,9 @@ class _QuickEventButtonState extends State<QuickEventButton> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = widget.isPrimary ? const Color(0xFFC6FF00) : Colors.grey.shade900.withValues(alpha: 0.5);
-    final iconColor = widget.isPrimary ? Colors.black : const Color(0xFFFFC107); // Using amber for cards/icons if not primary
+    ResponsiveHelper.init(context);
+    final bgColor = widget.isPrimary ? Color(0xFFC6FF00) : Colors.grey.shade900.withValues(alpha: 0.5);
+    final iconColor = widget.isPrimary ? Colors.black : Color(0xFFFFC107); // Using amber for cards/icons if not primary
     final textColor = widget.isPrimary ? Colors.black : Colors.white;
 
     return GestureDetector(
@@ -60,12 +62,12 @@ class _QuickEventButtonState extends State<QuickEventButton> with SingleTickerPr
         child: Container(
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             border: widget.isPrimary ? null : Border.all(color: Colors.grey.shade800),
             boxShadow: widget.isPrimary
                 ? [
                     BoxShadow(
-                      color: const Color(0xFFC6FF00).withValues(alpha: 0.4),
+                      color: Color(0xFFC6FF00).withValues(alpha: 0.4),
                       blurRadius: 10,
                       spreadRadius: 1,
                     )
@@ -76,12 +78,12 @@ class _QuickEventButtonState extends State<QuickEventButton> with SingleTickerPr
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(widget.icon, color: iconColor, size: 28),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 widget.title.toUpperCase(),
                 style: TextStyle(
                   color: textColor,
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
                 ),

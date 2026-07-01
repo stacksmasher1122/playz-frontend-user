@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterHeader extends StatelessWidget {
-  const RegisterHeader({super.key});
+  RegisterHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         Image.asset(
           'assets/logo.png',
-          height: 60,
-          width: 60,
+          height: ResponsiveHelper.h(60),
+          width: ResponsiveHelper.w(60),
           fit: BoxFit.contain,
         ),
-        const SizedBox(height: 16),
-        const Text(
+        SizedBox(height: 16),
+        Text(
           'Create Account',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: ResponsiveHelper.sp(24),
             fontWeight: FontWeight.w700,
             color: Colors.white,
           ),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Text(
           'Join the PlayZ sports community',
           style: TextStyle(
-            fontSize: 14,
+            fontSize: ResponsiveHelper.sp(14),
             color: Colors.white.withValues(alpha: 0.65),
           ),
         ),

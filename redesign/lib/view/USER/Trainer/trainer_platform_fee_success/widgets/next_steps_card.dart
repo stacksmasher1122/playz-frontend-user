@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'fee_success_simple_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class NextStepsCard extends StatelessWidget {
-  const NextStepsCard({super.key});
+  NextStepsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const FeeSuccessSimpleCard(
+    ResponsiveHelper.init(context);
+    return FeeSuccessSimpleCard(
       title: 'NEXT STEPS',
       children: [
         StepRow(
@@ -38,7 +40,7 @@ class StepRow extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  const StepRow({
+  StepRow({
     super.key,
     required this.step,
     required this.title,
@@ -47,41 +49,42 @@ class StepRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
+      padding: EdgeInsets.only(bottom: 14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 28,
-            width: 28,
-            decoration: const BoxDecoration(
+            height: ResponsiveHelper.h(28),
+            width: ResponsiveHelper.w(28),
+            decoration: BoxDecoration(
               color: kGreen,
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
             child: Text(
               step,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w800,
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(subtitle, style: const TextStyle(color: kMuted)),
+                SizedBox(height: 4),
+                Text(subtitle, style: TextStyle(color: kMuted)),
               ],
             ),
           ),

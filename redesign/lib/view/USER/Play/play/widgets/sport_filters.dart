@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SportFilters extends StatelessWidget {
-  const SportFilters({super.key});
+  SportFilters({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final sports = [
       ('Cricket', Icons.sports_cricket),
       ('Football', Icons.sports_soccer),
@@ -14,16 +16,16 @@ class SportFilters extends StatelessWidget {
     ];
 
     return SizedBox(
-      height: 44,
+      height: ResponsiveHelper.h(44),
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
         scrollDirection: Axis.horizontal,
         itemBuilder: (_, i) {
           final active = i == 0;
           return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14)),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
               border: Border.all(
                 color: active ? AppColors.accent : Colors.transparent,
               ),
@@ -36,7 +38,7 @@ class SportFilters extends StatelessWidget {
                   size: 16,
                   color: active ? AppColors.accent : Colors.white,
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Text(
                   sports[i].$1,
                   style: GoogleFonts.inter(
@@ -48,7 +50,7 @@ class SportFilters extends StatelessWidget {
             ),
           );
         },
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        separatorBuilder: (_, __) => SizedBox(width: 12),
         itemCount: sports.length,
       ),
     );

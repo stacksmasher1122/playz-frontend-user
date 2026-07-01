@@ -11,6 +11,7 @@ import 'video_bubble.dart';
 import 'audio_bubble.dart';
 import 'location_bubble.dart';
 import 'poll_bubble.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
@@ -22,7 +23,7 @@ class GroupMessageBubble extends StatelessWidget {
   final String timeStr;
   final GroupChatController ctrl;
 
-  const GroupMessageBubble({
+  GroupMessageBubble({
     super.key,
     required this.msg,
     required this.isMe,
@@ -32,10 +33,11 @@ class GroupMessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: EdgeInsets.only(bottom: 12),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
@@ -47,13 +49,13 @@ class GroupMessageBubble extends StatelessWidget {
             // ── Sender name (only for other people's messages) ──
             if (!isMe)
               Padding(
-                padding: const EdgeInsets.only(left: 4, bottom: 2),
+                padding: EdgeInsets.only(left: ResponsiveHelper.w(4), bottom: 2),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (msg.senderPic.isNotEmpty)
                       Padding(
-                        padding: const EdgeInsets.only(right: 6),
+                        padding: EdgeInsets.only(right: 6),
                         child: CircleAvatar(
                           radius: 10,
                           backgroundColor: _kSurface,
@@ -69,7 +71,7 @@ class GroupMessageBubble extends StatelessWidget {
                       style: TextStyle(
                         color: _kGreen.withValues(alpha: 0.9),
                         fontWeight: FontWeight.w600,
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.sp(12),
                       ),
                     ),
                   ],
@@ -79,8 +81,8 @@ class GroupMessageBubble extends StatelessWidget {
             // ── Reply quote ──
             if (msg.replyToId != null && msg.replyToContent != null)
               Container(
-                margin: const EdgeInsets.only(bottom: 4),
-                padding: const EdgeInsets.symmetric(
+                margin: EdgeInsets.only(bottom: 4),
+                padding: EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 8,
                 ),
@@ -88,7 +90,7 @@ class GroupMessageBubble extends StatelessWidget {
                   color: isMe
                       ? _kGreen.withValues(alpha: 0.15)
                       : _kSurface.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                   border: Border(left: BorderSide(color: _kGreen, width: 3)),
                 ),
                 child: Column(
@@ -97,18 +99,18 @@ class GroupMessageBubble extends StatelessWidget {
                   children: [
                     Text(
                       msg.replyToSender ?? "",
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: _kGreen,
                         fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                        fontSize: ResponsiveHelper.sp(11),
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       msg.replyToContent!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white60,
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.sp(12),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -119,32 +121,32 @@ class GroupMessageBubble extends StatelessWidget {
 
             // ── Main content ──
             _buildContent(context),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   timeStr,
-                  style: const TextStyle(color: _kMuted, fontSize: 11),
+                  style: TextStyle(color: _kMuted, fontSize: 11),
                 ),
                 if (msg.isEdited && msg.status != 'flagged') ...[
-                  const SizedBox(width: 4),
-                  const Text(
+                  SizedBox(width: 4),
+                  Text(
                     "edited",
                     style: TextStyle(
                       color: Colors.white38,
-                      fontSize: 10,
+                      fontSize: ResponsiveHelper.sp(10),
                       fontStyle: FontStyle.italic,
                     ),
                   ),
                 ],
                 if (msg.status == 'pending') ...[
-                  const SizedBox(width: 4),
-                  const Icon(Icons.access_time, size: 10, color: _kMuted),
+                  SizedBox(width: 4),
+                  Icon(Icons.access_time, size: 10, color: _kMuted),
                 ],
                 if (msg.status == 'flagged') ...[
-                  const SizedBox(width: 4),
-                  const Icon(Icons.warning, size: 10, color: Colors.redAccent),
+                  SizedBox(width: 4),
+                  Icon(Icons.warning, size: 10, color: Colors.redAccent),
                 ],
               ],
             ),
@@ -159,18 +161,18 @@ class GroupMessageBubble extends StatelessWidget {
       case 'text':
         final isFlagged = msg.status == 'flagged';
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
           decoration: BoxDecoration(
             color: isFlagged
                 ? Colors.redAccent.withValues(alpha: 0.2)
                 : (isMe ? _kGreen : _kSurface),
-            borderRadius: BorderRadius.circular(20).copyWith(
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)).copyWith(
               bottomRight: isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(20),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(20)),
               bottomLeft: !isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(20),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(20)),
             ),
           ),
           child: Text(
@@ -179,7 +181,7 @@ class GroupMessageBubble extends StatelessWidget {
               color: isFlagged
                   ? Colors.redAccent
                   : (isMe ? Colors.black : Colors.white),
-              fontSize: 16,
+              fontSize: ResponsiveHelper.sp(16),
               fontWeight: isMe && !isFlagged
                   ? FontWeight.w500
                   : FontWeight.w400,
@@ -207,16 +209,16 @@ class GroupMessageBubble extends StatelessWidget {
         if (caption.isEmpty) return imageWidget;
 
         return Container(
-          padding: const EdgeInsets.all(4),
+          padding: EdgeInsets.all(ResponsiveHelper.w(4)),
           decoration: BoxDecoration(
             color: isMe ? _kGreen : _kSurface,
-            borderRadius: BorderRadius.circular(16).copyWith(
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)).copyWith(
               bottomRight: isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(16),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(16)),
               bottomLeft: !isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(16),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(16)),
             ),
           ),
           child: Column(
@@ -225,12 +227,12 @@ class GroupMessageBubble extends StatelessWidget {
             children: [
               imageWidget,
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(6)),
                 child: Text(
                   caption,
                   style: TextStyle(
                     color: isMe ? Colors.black : Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                   ),
                 ),
               ),
@@ -255,16 +257,16 @@ class GroupMessageBubble extends StatelessWidget {
         if (caption.isEmpty) return videoWidget;
 
         return Container(
-          padding: const EdgeInsets.all(4),
+          padding: EdgeInsets.all(ResponsiveHelper.w(4)),
           decoration: BoxDecoration(
             color: isMe ? _kGreen : _kSurface,
-            borderRadius: BorderRadius.circular(16).copyWith(
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)).copyWith(
               bottomRight: isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(16),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(16)),
               bottomLeft: !isMe
-                  ? const Radius.circular(4)
-                  : const Radius.circular(16),
+                  ? Radius.circular(ResponsiveHelper.w(4))
+                  : Radius.circular(ResponsiveHelper.w(16)),
             ),
           ),
           child: Column(
@@ -273,12 +275,12 @@ class GroupMessageBubble extends StatelessWidget {
             children: [
               videoWidget,
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(6)),
                 child: Text(
                   caption,
                   style: TextStyle(
                     color: isMe ? Colors.black : Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                   ),
                 ),
               ),

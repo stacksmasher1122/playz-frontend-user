@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ModeSelector extends StatelessWidget {
   final bool isSingles;
   final ValueChanged<bool> onChanged;
 
-  const ModeSelector({
+  ModeSelector({
     super.key,
     required this.isSingles,
     required this.onChanged,
@@ -14,12 +15,13 @@ class ModeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      width: 240,
-      height: 48,
+      width: ResponsiveHelper.w(240),
+      height: ResponsiveHelper.h(48),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
       ),
       child: Row(
         children: [
@@ -27,10 +29,10 @@ class ModeSelector extends StatelessWidget {
             child: GestureDetector(
               onTap: () => onChanged(true),
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
+                duration: Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                   color: isSingles ? AppColors.primaryContainer : Colors.transparent,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                 ),
                 child: Center(
                   child: Text(
@@ -49,10 +51,10 @@ class ModeSelector extends StatelessWidget {
             child: GestureDetector(
               onTap: () => onChanged(false),
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
+                duration: Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                   color: !isSingles ? AppColors.primaryContainer : Colors.transparent,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                 ),
                 child: Center(
                   child: Text(

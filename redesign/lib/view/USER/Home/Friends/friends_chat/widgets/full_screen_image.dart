@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FullScreenImage extends StatelessWidget {
   final String url;
 
-  const FullScreenImage({super.key, required this.url});
+  FullScreenImage({super.key, required this.url});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: Hero(
@@ -29,7 +31,7 @@ class FullScreenImage extends StatelessWidget {
                 highlightColor: Colors.grey.shade800.withValues(alpha: 0.4),
                 child: Container(
                   width: double.infinity,
-                  height: 300,
+                  height: ResponsiveHelper.h(300),
                   color: Colors.black,
                 ),
               ),

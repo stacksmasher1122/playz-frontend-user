@@ -1,26 +1,28 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueBookingBar extends StatelessWidget {
   final VoidCallback onBookNow;
 
-  const VenueBookingBar({
+  VenueBookingBar({
     super.key,
     required this.onBookNow,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: const BoxDecoration(
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+              topLeft: Radius.circular(ResponsiveHelper.w(20)),
+              topRight: Radius.circular(ResponsiveHelper.w(20)),
             ),
             color: Color.fromRGBO(0, 0, 0, 0.9),
             border: Border(
@@ -29,12 +31,12 @@ class VenueBookingBar extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
                   'Starts from ₹1000/hr',
                   style: TextStyle(
                     color: AppColors.accent,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -42,16 +44,16 @@ class VenueBookingBar extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accent,
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 14,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
                   ),
                 ),
                 onPressed: onBookNow,
-                child: const Text(
+                child: Text(
                   'Book Now',
                   style: TextStyle(color: Colors.black),
                 ),

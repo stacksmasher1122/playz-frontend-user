@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FootballCreateMatchAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const FootballCreateMatchAppbar({super.key});
+  FootballCreateMatchAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.menu, color: Colors.white),
+        icon: Icon(Icons.menu, color: Colors.white),
         onPressed: () {},
       ),
-      title: const Text(
+      title: Text(
         'PRO SCOUT LIVE',
         style: TextStyle(
           color: Color(0xFFC6FF00), // Lime Green
-          fontSize: 14,
+          fontSize: ResponsiveHelper.sp(14),
           fontWeight: FontWeight.w900,
           letterSpacing: 1.5,
         ),
@@ -24,11 +26,11 @@ class FootballCreateMatchAppbar extends StatelessWidget implements PreferredSize
       centerTitle: true,
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 16.0),
+          padding: EdgeInsets.only(right: 16.0),
           child: CircleAvatar(
             radius: 16,
             backgroundColor: Colors.grey.shade800,
-            child: const Icon(
+            child: Icon(
               Icons.person,
               color: Colors.white,
               size: 20,
@@ -45,5 +47,5 @@ class FootballCreateMatchAppbar extends StatelessWidget implements PreferredSize
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

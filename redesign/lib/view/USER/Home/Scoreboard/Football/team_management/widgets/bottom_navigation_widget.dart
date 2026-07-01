@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
-  const BottomNavigationWidget({super.key});
+  BottomNavigationWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.only(top: 8, bottom: 16),
+      padding: EdgeInsets.only(top: ResponsiveHelper.h(8), bottom: 16),
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.95),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(ResponsiveHelper.w(24)),
+          topRight: Radius.circular(ResponsiveHelper.w(24)),
         ),
         border: Border(
           top: BorderSide(color: Colors.grey.shade900),
@@ -46,22 +48,22 @@ class BottomNavigationWidget extends StatelessWidget {
       },
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
-              color: isSelected ? const Color(0xFFC6FF00) : Colors.grey,
+              color: isSelected ? Color(0xFFC6FF00) : Colors.grey,
               size: 24,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? const Color(0xFFC6FF00) : Colors.grey,
-                fontSize: 10,
+                color: isSelected ? Color(0xFFC6FF00) : Colors.grey,
+                fontSize: ResponsiveHelper.sp(10),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PrimaryActionButton extends StatefulWidget {
   final VoidCallback onTap;
   final bool isLoading;
 
-  const PrimaryActionButton({
+  PrimaryActionButton({
     super.key,
     required this.onTap,
     this.isLoading = false,
@@ -24,7 +25,7 @@ class _PrimaryActionButtonState extends State<PrimaryActionButton> with SingleTi
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: Duration(milliseconds: 150),
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
@@ -39,6 +40,7 @@ class _PrimaryActionButtonState extends State<PrimaryActionButton> with SingleTi
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
       onTapUp: (_) {
@@ -52,34 +54,34 @@ class _PrimaryActionButtonState extends State<PrimaryActionButton> with SingleTi
         scale: _scaleAnimation,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
           decoration: BoxDecoration(
             color: AppColors.primaryContainer,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
             boxShadow: [
               BoxShadow(
                 color: AppColors.primaryContainer.withOpacity(0.3),
                 blurRadius: 12,
-                offset: const Offset(0, 4),
+                offset: Offset(0, 4),
               ),
             ],
           ),
           child: Center(
             child: widget.isLoading
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
+                ? SizedBox(
+                    width: ResponsiveHelper.w(24),
+                    height: ResponsiveHelper.h(24),
                     child: CircularProgressIndicator(
                       color: Colors.black,
                       strokeWidth: 2.5,
                     ),
                   )
-                : const Text(
+                : Text(
                     'INITIALIZE MATCH',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w900,
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.sp(16),
                       letterSpacing: 1.2,
                     ),
                   ),

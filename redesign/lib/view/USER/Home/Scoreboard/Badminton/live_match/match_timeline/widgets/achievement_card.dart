@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Badminton/match_achievement_model.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AchievementCard extends StatefulWidget {
   final MatchAchievementModel achievement;
   final int index;
 
-  const AchievementCard({
+  AchievementCard({
     super.key,
     required this.achievement,
     required this.index,
@@ -25,7 +26,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
     super.initState();
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
     );
     
     // Staggered delay based on index
@@ -38,7 +39,7 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
     _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeOut),
     );
-    _slide = Tween<Offset>(begin: const Offset(0.05, 0), end: Offset.zero).animate(
+    _slide = Tween<Offset>(begin: Offset(0.05, 0), end: Offset.zero).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
     );
   }
@@ -51,22 +52,23 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return FadeTransition(
       opacity: _opacity,
       child: SlideTransition(
         position: _slide,
         child: Container(
-          margin: const EdgeInsets.only(bottom: 12.0),
-          padding: const EdgeInsets.all(16),
+          margin: EdgeInsets.only(bottom: 12.0),
+          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
           decoration: BoxDecoration(
             color: Colors.grey.shade900.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             border: Border.all(color: Colors.grey.shade800),
           ),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(ResponsiveHelper.w(12)),
                 decoration: BoxDecoration(
                   color: widget.achievement.badgeColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
@@ -77,26 +79,26 @@ class _AchievementCardState extends State<AchievementCard> with SingleTickerProv
                   size: 20,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       widget.achievement.title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: ResponsiveHelper.sp(14),
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.5,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       widget.achievement.subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.grey,
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.sp(12),
                       ),
                     ),
                   ],

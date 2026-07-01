@@ -9,9 +9,10 @@ import 'package:redesign/view/USER/Home/home/home_screen.dart';
 import 'package:redesign/view/USER/More/menu/more_screen.dart';
 import 'package:redesign/view/USER/Play/play/play_screen.dart';
 import 'package:redesign/view/USER/Trainer/trainer/trainer_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class UserAppNavShell extends StatefulWidget {
-  const UserAppNavShell({super.key});
+  UserAppNavShell({super.key});
 
   @override
   State<UserAppNavShell> createState() => _UserAppNavShellState();
@@ -20,7 +21,7 @@ class UserAppNavShell extends StatefulWidget {
 class _UserAppNavShellState extends State<UserAppNavShell> {
   int _currentIndex = 0;
 
-  final _pages = const [
+  final _pages = [
     UserHomePage(),
     BookTurfScreen(),
     GameDiaryScreen(),
@@ -35,6 +36,7 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       extendBody: true,
@@ -43,10 +45,10 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
-            height: 80,
+            height: ResponsiveHelper.h(80),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.7),
-              border: const Border(top: BorderSide(color: Colors.white12)),
+              border: Border(top: BorderSide(color: Colors.white12)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -96,11 +98,11 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
                             size: 26,
                             color: selected ? AppColors.accent : Colors.white60,
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             item.label,
                             style: TextStyle(
-                              fontSize: 11,
+                              fontSize: ResponsiveHelper.sp(11),
                               fontWeight: selected
                                   ? FontWeight.w600
                                   : FontWeight.w400,
@@ -128,7 +130,7 @@ class _NavItem {
   final String label;
   final int index;
 
-  const _NavItem({
+  _NavItem({
     required this.filled,
     required this.outlined,
     required this.label,

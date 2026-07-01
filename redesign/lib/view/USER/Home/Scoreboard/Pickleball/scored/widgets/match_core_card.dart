@@ -5,6 +5,7 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/pickleball_initialize_match_controller.dart';
 import 'match_text_field.dart';
 import 'match_dropdown.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchCoreCard extends StatelessWidget {
   final PickleballInitializeMatchController controller;
@@ -12,7 +13,7 @@ class MatchCoreCard extends StatelessWidget {
   final TextEditingController courtController;
   final TextEditingController refereeController;
 
-  const MatchCoreCard({
+  MatchCoreCard({
     super.key,
     required this.controller,
     required this.nameController,
@@ -22,11 +23,12 @@ class MatchCoreCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,27 +36,27 @@ class MatchCoreCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 20,
-                height: 20,
+                width: ResponsiveHelper.w(20),
+                height: ResponsiveHelper.h(20),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: AppColors.warning, width: 2),
                 ),
-                child: const Center(
-                  child: Text('i', style: TextStyle(color: AppColors.warning, fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Center(
+                  child: Text('i', style: TextStyle(color: AppColors.warning, fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.bold)),
                 ),
               ),
-              const SizedBox(width: 8),
-              const Text('Match Core Details', style: AppTypography.headlineMd),
+              SizedBox(width: 8),
+              Text('Match Core Details', style: AppTypography.headlineMd),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           MatchTextField(
             label: "Match Name",
             hint: "e.g., Quarter-Finals: Masters Open",
             controller: nameController,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Obx(() => MatchDropdown(
             label: "Tournament (Optional)",
             hint: "Select Tournament",
@@ -64,13 +66,13 @@ class MatchCoreCard extends StatelessWidget {
               if (v != null) controller.selectedTournament.value = v;
             },
           )),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           MatchTextField(
             label: "Court Number",
             hint: "Court #",
             controller: courtController,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Obx(() => MatchTextField(
             label: "Date & Time",
             hint: controller.selectedDate.value == null 
@@ -78,7 +80,7 @@ class MatchCoreCard extends StatelessWidget {
                 : "${controller.selectedDate.value!.day.toString().padLeft(2, '0')}-${controller.selectedDate.value!.month.toString().padLeft(2, '0')}-${controller.selectedDate.value!.year} ${controller.selectedDate.value!.hour.toString().padLeft(2, '0')}:${controller.selectedDate.value!.minute.toString().padLeft(2, '0')}",
             controller: TextEditingController(),
             readOnly: true,
-            suffixIcon: const Icon(Icons.calendar_today, color: AppColors.muted, size: 20),
+            suffixIcon: Icon(Icons.calendar_today, color: AppColors.muted, size: 20),
             onTap: () async {
               DateTime? pickedDate = await showDatePicker(
                 context: context,
@@ -88,7 +90,7 @@ class MatchCoreCard extends StatelessWidget {
                 builder: (context, child) {
                   return Theme(
                     data: Theme.of(context).copyWith(
-                      colorScheme: const ColorScheme.dark(
+                      colorScheme: ColorScheme.dark(
                         primary: AppColors.primaryContainer,
                         onPrimary: AppColors.onPrimaryContainer,
                         surface: AppColors.surfaceContainer,
@@ -107,7 +109,7 @@ class MatchCoreCard extends StatelessWidget {
                   builder: (context, child) {
                     return Theme(
                       data: Theme.of(context).copyWith(
-                        colorScheme: const ColorScheme.dark(
+                        colorScheme: ColorScheme.dark(
                           primary: AppColors.primaryContainer,
                           onPrimary: AppColors.onPrimaryContainer,
                           surface: AppColors.surfaceContainer,
@@ -130,7 +132,7 @@ class MatchCoreCard extends StatelessWidget {
               }
             },
           )),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           MatchTextField(
             label: "Referee (Optional)",
             hint: "Assign Official",

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF0E0E0E);
 const kGreen = AppColors.accent;
 const kMuted = Colors.white70;
 
 class SuggestedPlayersSection extends StatelessWidget {
-  const SuggestedPlayersSection({super.key});
+  SuggestedPlayersSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
-      children: const [
+      children: [
         SectionHeader('Suggested Players', action: 'View Map'),
         SuggestedPlayerCard(
           name: 'Rahul S.',
@@ -33,7 +35,7 @@ class SuggestedPlayerCard extends StatelessWidget {
   final String level;
   final String meta;
 
-  const SuggestedPlayerCard({
+  SuggestedPlayerCard({
     super.key,
     required this.name,
     required this.level,
@@ -42,23 +44,24 @@ class SuggestedPlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
+      padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: EdgeInsets.all(ResponsiveHelper.w(14)),
         decoration: BoxDecoration(
           color: kSurface,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
         ),
         child: Row(
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 22,
               backgroundImage: NetworkImage(
                 'https://randomuser.me/api/portraits/women/44.jpg',
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,24 +70,24 @@ class SuggestedPlayerCard extends StatelessWidget {
                     children: [
                       Text(
                         name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       LevelBadge(level),
                     ],
                   ),
                   Text(
                     meta,
-                    style: const TextStyle(color: kMuted, fontSize: 12),
+                    style: TextStyle(color: kMuted, fontSize: 12),
                   ),
                 ],
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.person_add_alt, color: Colors.white),
+              icon: Icon(Icons.person_add_alt, color: Colors.white),
               onPressed: () {},
             ),
           ],
@@ -96,16 +99,17 @@ class SuggestedPlayerCard extends StatelessWidget {
 
 class LevelBadge extends StatelessWidget {
   final String label;
-  const LevelBadge(this.label, {super.key});
+  LevelBadge(this.label, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final color = label == 'Pro' ? kGreen : kMuted;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(3)),
       decoration: BoxDecoration(
         color: color.withAlpha(38),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
       ),
       child: Text(label, style: TextStyle(color: color, fontSize: 11)),
     );
@@ -116,27 +120,28 @@ class SectionHeader extends StatelessWidget {
   final String title;
   final String? action;
 
-  const SectionHeader(this.title, {super.key, this.action});
+  SectionHeader(this.title, {super.key, this.action});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: ResponsiveHelper.sp(16),
               fontWeight: FontWeight.w800,
             ),
           ),
-          const Spacer(),
+          Spacer(),
           if (action != null)
             Text(
               action!,
-              style: const TextStyle(
+              style: TextStyle(
                 color: kGreen,
                 fontWeight: FontWeight.w600,
               ),

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayTabs extends StatelessWidget {
-  const PlayTabs({super.key});
+  PlayTabs({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(8)),
       child: Row(
         children: [
           Text(
@@ -18,7 +20,7 @@ class PlayTabs extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(width: 20),
+          SizedBox(width: 20),
           Text(
             'All Games',
             style: GoogleFonts.inter(

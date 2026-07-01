@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
 import 'setup_constants.dart';
 import 'setup_models.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SetupHeader extends StatelessWidget {
   final MatchMode mode;
 
-  const SetupHeader({super.key, required this.mode});
+  SetupHeader({super.key, required this.mode});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
       color: kBg,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const BackButton(color: kTextPrimary),
+          BackButton(color: kTextPrimary),
           Text(
             mode == MatchMode.friendly ? 'FRIENDLY MATCH' : 'TOURNAMENT SETUP',
-            style: const TextStyle(
+            style: TextStyle(
               color: kTextPrimary,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.more_vert, color: kTextSecondary),
+            icon: Icon(Icons.more_vert, color: kTextSecondary),
             onPressed: () {},
           ),
         ],

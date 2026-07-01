@@ -8,12 +8,14 @@ import 'widgets/match_location_card.dart';
 import 'widgets/match_rules_section.dart';
 import 'widgets/host_reliability_card.dart';
 import 'widgets/match_join_bar.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchDetailScreen extends StatelessWidget {
-  const MatchDetailScreen({super.key});
+  MatchDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final padding = MediaQuery.of(context).size.width * 0.05;
 
     return Scaffold(
@@ -22,12 +24,12 @@ class MatchDetailScreen extends StatelessWidget {
         children: [
           CustomScrollView(
             slivers: [
-              const MatchDetailHero(),
+              MatchDetailHero(),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(padding, 24, padding, 120),
                   child: Column(
-                    children: const [
+                    children: [
                       MatchSlotsCard(),
                       SizedBox(height: 20),
                       CompetitivenessCard(),
@@ -45,7 +47,7 @@ class MatchDetailScreen extends StatelessWidget {
               ),
             ],
           ),
-          const MatchJoinBar(),
+          MatchJoinBar(),
         ],
       ),
     );

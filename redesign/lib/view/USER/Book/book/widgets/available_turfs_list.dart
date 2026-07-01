@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../book_screen.dart';
 import 'turf_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AvailableTurfsList extends StatelessWidget {
-  const AvailableTurfsList({super.key});
+  AvailableTurfsList({super.key});
 
   static final _turfs = [
     TurfData(
@@ -37,13 +38,14 @@ class AvailableTurfsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
       child: Column(
         children: _turfs
             .map(
               (turf) => Padding(
-                padding: const EdgeInsets.only(bottom: 18),
+                padding: EdgeInsets.only(bottom: 18),
                 child: TurfCard(data: turf),
               ),
             )

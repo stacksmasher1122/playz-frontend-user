@@ -8,6 +8,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/model/User_Models/Home_Models/Groups_Model/groups_model.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/view/USER/Home/Groups/groups_chat/groups_chat_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF0E0E0E);
 const kGreen = AppColors.accent;
@@ -16,7 +17,7 @@ const kMuted = Colors.white70;
 class SquadListTile extends StatelessWidget {
   final GroupModel group;
 
-  const SquadListTile({super.key, required this.group});
+  SquadListTile({super.key, required this.group});
 
   String _sportEmoji(String sport) {
     switch (sport.toLowerCase()) {
@@ -41,6 +42,7 @@ class SquadListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final memberCount = group.members.length;
     final ctrl = Get.find<GroupsController>();
     final myEmail = ctrl.myEmail;
@@ -145,7 +147,7 @@ class SquadListTile extends StatelessWidget {
                 );
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
                 child: Row(
                   children: [
                     // Group Avatar
@@ -156,8 +158,8 @@ class SquadListTile extends StatelessWidget {
                             child: ClipOval(
                               child: CachedNetworkImage(
                                 imageUrl: group.imageUrl,
-                                width: 56,
-                                height: 56,
+                                width: ResponsiveHelper.w(56),
+                                height: ResponsiveHelper.h(56),
                                 fit: BoxFit.cover,
                                 placeholder: (_, __) => _buildShimmerCircle(),
                                 errorWidget: (_, __, ___) => _buildDefaultAvatar(),
@@ -171,14 +173,14 @@ class SquadListTile extends StatelessWidget {
                               group.name.isNotEmpty
                                   ? group.name[0].toUpperCase()
                                   : 'G',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: kGreen,
-                                fontSize: 22,
+                                fontSize: ResponsiveHelper.sp(22),
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                           ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,16 +196,16 @@ class SquadListTile extends StatelessWidget {
                                         group.name,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 16,
+                                          fontSize: ResponsiveHelper.sp(16),
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 4),
+                                    SizedBox(width: 4),
                                     Text(_sportEmoji(group.sport),
-                                        style: const TextStyle(fontSize: 14)),
+                                        style: TextStyle(fontSize: 14)),
                                   ],
                                 ),
                               ),
@@ -214,7 +216,7 @@ class SquadListTile extends StatelessWidget {
                                     displayTime,
                                     style: TextStyle(
                                       color: unreadCount > 0 ? kGreen : kMuted,
-                                      fontSize: 11,
+                                      fontSize: ResponsiveHelper.sp(11),
                                       fontWeight: unreadCount > 0
                                           ? FontWeight.w800
                                           : FontWeight.w600,
@@ -222,21 +224,20 @@ class SquadListTile extends StatelessWidget {
                                     ),
                                   ),
                                   if (unreadCount > 0) ...[
-                                    const SizedBox(height: 6),
+                                    SizedBox(height: 6),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 2),
+                                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
                                       decoration: BoxDecoration(
                                         color: kGreen,
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                                       ),
                                       child: Text(
                                         unreadCount > 20
                                             ? '20+'
                                             : unreadCount.toString(),
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 10,
+                                          fontSize: ResponsiveHelper.sp(10),
                                           fontWeight: FontWeight.w800,
                                         ),
                                       ),
@@ -246,7 +247,7 @@ class SquadListTile extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Row(
                             children: [
                               Expanded(
@@ -258,7 +259,7 @@ class SquadListTile extends StatelessWidget {
                                     color: unreadCount > 0
                                         ? Colors.white
                                         : Colors.white.withValues(alpha: 0.5),
-                                    fontSize: 13,
+                                    fontSize: ResponsiveHelper.sp(13),
                                     fontWeight: unreadCount > 0
                                         ? FontWeight.w700
                                         : FontWeight.w400,
@@ -267,7 +268,7 @@ class SquadListTile extends StatelessWidget {
                               ),
                               if (!group.isPublic)
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 8),
+                                  padding: EdgeInsets.only(left: 8),
                                   child: Icon(Icons.lock,
                                       color: Colors.white.withValues(alpha: 0.3),
                                       size: 14),
@@ -300,12 +301,12 @@ class SquadListTile extends StatelessWidget {
 
   Widget _buildShimmerCircle() {
     return Shimmer.fromColors(
-      baseColor: const Color(0xFF2A2A2A),
-      highlightColor: const Color(0xFF3A3A3A),
+      baseColor: Color(0xFF2A2A2A),
+      highlightColor: Color(0xFF3A3A3A),
       child: Container(
-        width: 56,
-        height: 56,
-        decoration: const BoxDecoration(
+        width: ResponsiveHelper.w(56),
+        height: ResponsiveHelper.h(56),
+        decoration: BoxDecoration(
           color: Color(0xFF2A2A2A),
           shape: BoxShape.circle,
         ),
@@ -315,13 +316,13 @@ class SquadListTile extends StatelessWidget {
 
   Widget _buildDefaultAvatar() {
     return Container(
-      width: 56,
-      height: 56,
-      decoration: const BoxDecoration(
+      width: ResponsiveHelper.w(56),
+      height: ResponsiveHelper.h(56),
+      decoration: BoxDecoration(
         color: kSurface,
         shape: BoxShape.circle,
       ),
-      child: const Icon(Icons.group, color: kMuted, size: 24),
+      child: Icon(Icons.group, color: kMuted, size: 24),
     );
   }
 }

@@ -2,24 +2,26 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'home_section_header.dart';
 import 'home_shimmer.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    EXPLORE BY SPORT
    ============================================================ */
 class HomeExploreBySport extends StatelessWidget {
-  const HomeExploreBySport({super.key});
+  HomeExploreBySport({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final sports = ['Cricket', 'Football', 'Badminton', 'Tennis'];
 
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: const HomeSectionHeader('Explore by Sport'),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+          child: HomeSectionHeader('Explore by Sport'),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         LayoutBuilder(
           builder: (context, constraints) {
             final w = constraints.maxWidth;
@@ -32,14 +34,14 @@ class HomeExploreBySport extends StatelessWidget {
               height: cardHeight,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(left: 20, right: 14),
+                padding: EdgeInsets.only(left: ResponsiveHelper.w(20), right: 14),
                 itemCount: sports.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 14),
+                separatorBuilder: (_, __) => SizedBox(width: 14),
                 itemBuilder: (context, index) {
                   return SizedBox(
                     width: cardWidth,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
@@ -50,8 +52,8 @@ class HomeExploreBySport extends StatelessWidget {
                             cacheKey:
                                 'https://images.unsplash.com/photo-1521412644187-c49fa049e84d',
                             fit: BoxFit.cover,
-                            placeholder: (_, __) => const HomeShimmer(),
-                            errorWidget: (_, __, ___) => const Icon(
+                            placeholder: (_, __) => HomeShimmer(),
+                            errorWidget: (_, __, ___) => Icon(
                               Icons.broken_image,
                               color: Colors.white24,
                             ),

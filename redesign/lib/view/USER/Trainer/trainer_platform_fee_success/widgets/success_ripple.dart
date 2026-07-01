@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 
 class SuccessRipple extends StatefulWidget {
-  const SuccessRipple({super.key});
+  SuccessRipple({super.key});
 
   @override
   State<SuccessRipple> createState() => _SuccessRippleState();
@@ -19,7 +20,7 @@ class _SuccessRippleState extends State<SuccessRipple>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2200),
+      duration: Duration(milliseconds: 2200),
     )..repeat();
   }
 
@@ -31,13 +32,14 @@ class _SuccessRippleState extends State<SuccessRipple>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedScale(
       scale: 1,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
       curve: Curves.easeOutBack,
       child: SizedBox(
-        height: 140,
-        width: 140,
+        height: ResponsiveHelper.h(140),
+        width: ResponsiveHelper.w(140),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -46,13 +48,13 @@ class _SuccessRippleState extends State<SuccessRipple>
 
             /// Core success circle
             Container(
-              height: 72,
-              width: 72,
-              decoration: const BoxDecoration(
+              height: ResponsiveHelper.h(72),
+              width: ResponsiveHelper.w(72),
+              decoration: BoxDecoration(
                 color: kGreen,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.check_rounded,
                 color: Colors.white,
                 size: 36,
@@ -69,10 +71,11 @@ class RippleWave extends StatelessWidget {
   final AnimationController controller;
   final double delay;
 
-  const RippleWave({required this.controller, required this.delay, super.key});
+  RippleWave({required this.controller, required this.delay, super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedBuilder(
       animation: controller,
       builder: (_, __) {
@@ -86,8 +89,8 @@ class RippleWave extends StatelessWidget {
           child: Transform.scale(
             scale: scale,
             child: Container(
-              height: 72,
-              width: 72,
+              height: ResponsiveHelper.h(72),
+              width: ResponsiveHelper.w(72),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(color: kGreen, width: 2),

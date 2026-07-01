@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/live_football_dashboard_controller.dart';
 import 'statistics_progress_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PossessionCardWidget extends StatelessWidget {
-  const PossessionCardWidget({super.key});
+  PossessionCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveFootballDashboardController>();
 
     return Obx(() {

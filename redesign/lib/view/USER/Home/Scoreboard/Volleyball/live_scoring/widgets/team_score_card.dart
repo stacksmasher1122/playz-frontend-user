@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TeamScoreCard extends StatelessWidget {
   final String teamName;
@@ -8,7 +9,7 @@ class TeamScoreCard extends StatelessWidget {
   final int score;
   final bool isServing;
 
-  const TeamScoreCard({
+  TeamScoreCard({
     super.key,
     required this.teamName,
     required this.setsWon,
@@ -18,24 +19,25 @@ class TeamScoreCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Stack(
         children: [
           if (isServing)
             Positioned(
-              left: 0,
-              top: 0,
-              bottom: 0,
+              left: ResponsiveHelper.w(0),
+              top: ResponsiveHelper.h(0),
+              bottom: ResponsiveHelper.h(0),
               child: Container(
-                width: 4,
-                decoration: const BoxDecoration(
+                width: ResponsiveHelper.w(4),
+                decoration: BoxDecoration(
                   color: AppColors.primaryContainer,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(16), bottomLeft: Radius.circular(16)),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(ResponsiveHelper.w(16)), bottomLeft: Radius.circular(ResponsiveHelper.w(16))),
                   boxShadow: [
                     BoxShadow(color: AppColors.primaryContainer, blurRadius: 8, spreadRadius: 2),
                   ],
@@ -43,7 +45,7 @@ class TeamScoreCard extends StatelessWidget {
               ),
             ),
           Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: EdgeInsets.all(ResponsiveHelper.w(24.0)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -59,7 +61,7 @@ class TeamScoreCard extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                       decoration: BoxDecoration(
                         color: AppColors.surfaceContainerHighest,
                         shape: BoxShape.circle,
@@ -71,23 +73,23 @@ class TeamScoreCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
                     score.toString(),
-                    style: const TextStyle(fontSize: 120, fontWeight: FontWeight.w900, color: AppColors.primary, height: 1),
+                    style: TextStyle(fontSize: ResponsiveHelper.sp(120), fontWeight: FontWeight.w900, color: AppColors.primary, height: 1),
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 // Mock Rally indicators (Win, Loss, Win)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildRallyIndicator(true),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     _buildRallyIndicator(false),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     _buildRallyIndicator(true),
                   ],
                 ),
@@ -101,11 +103,11 @@ class TeamScoreCard extends StatelessWidget {
 
   Widget _buildRallyIndicator(bool won) {
     return Container(
-      width: 32,
-      height: 4,
+      width: ResponsiveHelper.w(32),
+      height: ResponsiveHelper.h(4),
       decoration: BoxDecoration(
         color: won ? AppColors.primaryContainer : AppColors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(2),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
       ),
     );
   }

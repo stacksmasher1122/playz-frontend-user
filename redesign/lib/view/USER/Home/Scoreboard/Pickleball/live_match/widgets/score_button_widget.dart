@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ScoreButtonWidget extends StatefulWidget {
   final String teamName;
   final VoidCallback onTap;
   final bool isActive;
 
-  const ScoreButtonWidget({
+  ScoreButtonWidget({
     super.key,
     required this.teamName,
     required this.onTap,
@@ -24,7 +25,7 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> with SingleTicker
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(vsync: this, duration: const Duration(milliseconds: 100));
+    _scaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
   }
 
   @override
@@ -35,6 +36,7 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTapDown: (_) => _scaleController.forward(),
       onTapUp: (_) {
@@ -45,12 +47,12 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> with SingleTicker
       child: ScaleTransition(
         scale: Tween<double>(begin: 1.0, end: 0.95).animate(_scaleController),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          height: 140,
-          padding: const EdgeInsets.symmetric(vertical: 24),
+          duration: Duration(milliseconds: 300),
+          height: ResponsiveHelper.h(140),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
           decoration: BoxDecoration(
             color: widget.isActive ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             border: Border.all(color: widget.isActive ? AppColors.primaryContainer : AppColors.surfaceContainerHighest, width: 1),
           ),
           child: Column(
@@ -63,13 +65,13 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> with SingleTicker
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 '+1',
                 style: AppTypography.displayMd.copyWith(
                   color: widget.isActive ? Colors.black : AppColors.primary,
                   fontWeight: FontWeight.w900,
-                  height: 1.0,
+                  height: ResponsiveHelper.h(1.0),
                 ),
               ),
             ],

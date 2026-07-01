@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RuleInfoCard extends StatelessWidget {
   final String label;
   final String value;
   final String subtitle;
 
-  const RuleInfoCard({
+  RuleInfoCard({
     super.key,
     required this.label,
     required this.value,
@@ -14,11 +15,12 @@ class RuleInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.8), // dark card
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.grey.shade800, width: 1.0),
       ),
       child: Column(
@@ -26,28 +28,28 @@ class RuleInfoCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.grey,
-              fontSize: 10,
+              fontSize: ResponsiveHelper.sp(10),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.5,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: ResponsiveHelper.sp(24),
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             subtitle,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.grey,
-              fontSize: 10,
+              fontSize: ResponsiveHelper.sp(10),
             ),
           ),
         ],

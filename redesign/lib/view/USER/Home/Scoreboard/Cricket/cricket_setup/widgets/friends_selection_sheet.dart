@@ -4,12 +4,13 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/friends_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';
 import '../cricket_setup_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FriendsSelectionSheet extends StatelessWidget {
   final CricketController controller;
   final bool isHome;
 
-  const FriendsSelectionSheet({
+  FriendsSelectionSheet({
     super.key,
     required this.controller,
     required this.isHome,
@@ -17,11 +18,12 @@ class FriendsSelectionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     // Inject the real friends controller
     final FriendsController friendsCtrl = Get.put(FriendsController());
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       height: MediaQuery.of(context).size.height * 0.6,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,23 +31,23 @@ class FriendsSelectionSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Select Players',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: ResponsiveHelper.sp(20),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Obx(
                 () => Text(
                   '( ${isHome ? controller.homeTeamRoster.length : controller.awayTeamRoster.length} / ${controller.maxAllowedPlayers} )',
-                  style: const TextStyle(color: kMutedText, fontSize: 14),
+                  style: TextStyle(color: kMutedText, fontSize: 14),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Expanded(
             child: Obx(() {
               final currentUser = controller.currentUserFriendModel.value;
@@ -53,7 +55,7 @@ class FriendsSelectionSheet extends StatelessWidget {
               if (friendsCtrl.isLoading.value &&
                   friendsCtrl.friends.isEmpty &&
                   currentUser == null) {
-                return const Center(
+                return Center(
                   child: CircularProgressIndicator(color: kGreen),
                 );
               }
@@ -65,7 +67,7 @@ class FriendsSelectionSheet extends StatelessWidget {
               allSelectable.addAll(friendsCtrl.friends);
 
               if (allSelectable.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
                     'No players found.',
                     style: TextStyle(color: kMutedText),
@@ -102,17 +104,17 @@ class FriendsSelectionSheet extends StatelessWidget {
                           ? NetworkImage(friend.profileImageUrl)
                           : null,
                       child: friend.profileImageUrl.isEmpty
-                          ? const Icon(Icons.person, color: Colors.white)
+                          ? Icon(Icons.person, color: Colors.white)
                           : null,
                     ),
                     title: Text(
                       finalName,
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white),
                     ),
                     trailing: isSelected
-                        ? const Icon(Icons.check_circle, color: kGreen)
+                        ? Icon(Icons.check_circle, color: kGreen)
                         : IconButton(
-                            icon: const Icon(Icons.add, color: kMutedText),
+                            icon: Icon(Icons.add, color: kMutedText),
                             onPressed: () {
                               controller.addTeamPlayer(isHome, friend);
                             },

@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kSurface = Color(0xFF0E0E0E);
-const Color kMuted = Color(0xFF9E9E9E);
+Color kSurface = Color(0xFF0E0E0E);
+Color kMuted = Color(0xFF9E9E9E);
 
 class SelectSportSearchBar extends StatelessWidget {
   final ValueChanged<String> onChanged;
 
-  const SelectSportSearchBar({super.key, required this.onChanged});
+  SelectSportSearchBar({super.key, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+        padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
         child: TextField(
           onChanged: onChanged,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: 'Search sports...',
-            hintStyle: const TextStyle(color: kMuted),
-            prefixIcon: const Icon(Icons.search, color: kMuted),
+            hintStyle: TextStyle(color: kMuted),
+            prefixIcon: Icon(Icons.search, color: kMuted),
             filled: true,
             fillColor: kSurface,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
               borderSide: BorderSide.none,
             ),
           ),

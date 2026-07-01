@@ -14,9 +14,10 @@ import 'widgets/bottom_card.dart';
 import 'widgets/address_preview.dart';
 import 'widgets/confirm_button.dart';
 import 'widgets/error_overlay.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /// Dark Map Style JSON
-const String _darkMapStyle = '''
+String _darkMapStyle = '''
 [
   {"elementType":"geometry","stylers":[{"color":"#212121"}]},
   {"elementType":"labels.icon","stylers":[{"visibility":"off"}]},
@@ -45,7 +46,7 @@ const String _darkMapStyle = '''
 class MapPickerScreen extends StatefulWidget {
   final bool isSelectOnly;
 
-  const MapPickerScreen({
+  MapPickerScreen({
     super.key,
     this.isSelectOnly = false,
   });
@@ -60,7 +61,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
   final _searchController = TextEditingController();
   final _searchFocus = FocusNode();
 
-  LatLng _lastCameraPos = const LatLng(18.5204, 73.8567); // Default: Pune
+  LatLng _lastCameraPos = LatLng(18.5204, 73.8567); // Default: Pune
 
   @override
   void initState() {
@@ -91,33 +92,33 @@ class _MapPickerScreenState extends State<MapPickerScreen>
     await showModalBottomSheet(
       context: context,
       backgroundColor: kCard,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
       ),
       builder: (ctx) {
         return Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 30),
+          padding: EdgeInsets.fromLTRB(20, 16, 20, 30),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
+                width: ResponsiveHelper.w(40),
+                height: ResponsiveHelper.h(4),
+                margin: EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
                   color: Colors.white24,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                 ),
               ),
-              const Text(
+              Text(
                 'Save Location As',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: ResponsiveHelper.sp(18),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
@@ -135,22 +136,22 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                       Navigator.pop(ctx);
                     },
                     child: Container(
-                      width: 80,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      width: ResponsiveHelper.w(80),
+                      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                       decoration: BoxDecoration(
                         color: kSurface,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                         border: Border.all(color: Colors.white10),
                       ),
                       child: Column(
                         children: [
                           Icon(icons[label], color: kSpotifyGreen, size: 28),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             label,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 12,
+                              fontSize: ResponsiveHelper.sp(12),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -160,13 +161,13 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
                   selected = null;
                   Navigator.pop(ctx);
                 },
-                child: const Text(
+                child: Text(
                   'Skip',
                   style: TextStyle(color: kMuted, fontSize: 14),
                 ),
@@ -184,6 +185,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       resizeToAvoidBottomInset: false,
@@ -222,15 +224,15 @@ class _MapPickerScreenState extends State<MapPickerScreen>
           }),
 
           // ─── CENTER PIN + LABEL ─────────────────────────────
-          const Center(child: AnimatedCenterPin()),
+          Center(child: AnimatedCenterPin()),
 
           // ─── TOP BAR + SEARCH ───────────────────────────────
           SafeArea(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const MapPickerTopBar(),
-                const SizedBox(height: 12),
+                MapPickerTopBar(),
+                SizedBox(height: 12),
                 MapPickerSearchBar(
                   searchController: _searchController,
                   searchFocus: _searchFocus,
@@ -245,9 +247,9 @@ class _MapPickerScreenState extends State<MapPickerScreen>
           ),
 
           // ─── GPS BUTTON ─────────────────────────────────────
-          const Positioned(
-            right: 16,
-            bottom: 220,
+          Positioned(
+            right: ResponsiveHelper.w(16),
+            bottom: ResponsiveHelper.h(220),
             child: GpsButton(),
           ),
 
@@ -255,7 +257,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
           Align(
             alignment: Alignment.bottomCenter,
             child: MapPickerBottomCard(
-              addressPreview: const AddressPreview(),
+              addressPreview: AddressPreview(),
               confirmButton: ConfirmButton(
                 onConfirm: () async {
                   if (widget.isSelectOnly) {
@@ -270,7 +272,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
           ),
 
           // ─── ERROR OVERLAY ──────────────────────────────────
-          const ErrorOverlay(),
+          ErrorOverlay(),
         ],
       ),
     );

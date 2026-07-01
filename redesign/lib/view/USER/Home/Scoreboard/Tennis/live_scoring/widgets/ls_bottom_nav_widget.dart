@@ -2,25 +2,27 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LsBottomNavWidget extends StatelessWidget {
-  const LsBottomNavWidget({super.key});
+  LsBottomNavWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer.withValues(alpha: 0.9),
         border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, -2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 8, offset: Offset(0, -2)),
         ],
       ),
       child: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 0),
+            padding: EdgeInsets.only(left: ResponsiveHelper.w(16), right: ResponsiveHelper.w(16), bottom: ResponsiveHelper.h(16), top: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -65,7 +67,7 @@ class LsBottomNavWidget extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
       hoverColor: AppColors.surfaceBright.withValues(alpha: 0.1),
       child: Stack(
         clipBehavior: Clip.none,
@@ -73,13 +75,13 @@ class LsBottomNavWidget extends StatelessWidget {
         children: [
           if (isActive)
             Positioned(
-              top: 0,
+              top: ResponsiveHelper.h(0),
               left: -10,
               right: -10,
-              child: Container(height: 2, color: AppColors.primaryContainer),
+              child: Container(height: ResponsiveHelper.h(2), color: AppColors.primaryContainer),
             ),
           Padding(
-            padding: const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 8),
+            padding: EdgeInsets.only(top: ResponsiveHelper.h(8), left: ResponsiveHelper.w(16), right: ResponsiveHelper.w(16), bottom: 8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,7 +91,7 @@ class LsBottomNavWidget extends StatelessWidget {
                   size: 24,
                   color: isActive ? AppColors.primaryContainer : AppColors.onSurfaceVariant,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   label,
                   style: AppTypography.labelCaps.copyWith(

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/live_football_dashboard_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveDashboardAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const LiveDashboardAppbar({super.key});
+  LiveDashboardAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveFootballDashboardController>();
 
     return AppBar(
@@ -14,7 +16,7 @@ class LiveDashboardAppbar extends StatelessWidget implements PreferredSizeWidget
       elevation: 0,
       centerTitle: true,
       leading: IconButton(
-        icon: const Icon(Icons.menu, color: Colors.white), // hamburger
+        icon: Icon(Icons.menu, color: Colors.white), // hamburger
         onPressed: () {
           // Open drawer or handle menu
         },
@@ -22,41 +24,41 @@ class LiveDashboardAppbar extends StatelessWidget implements PreferredSizeWidget
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+          Text(
             'PRO SCOUT LIVE',
             style: TextStyle(
               color: Color(0xFFC6FF00), // Lime Green
-              fontSize: 18,
+              fontSize: ResponsiveHelper.sp(18),
               fontWeight: FontWeight.w900,
               letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Obx(() {
-            if (!controller.isLive.value) return const SizedBox.shrink();
+            if (!controller.isLive.value) return SizedBox.shrink();
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
               decoration: BoxDecoration(
                 color: Colors.red.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                 border: Border.all(color: Colors.red),
               ),
               child: Row(
                 children: [
                   Container(
-                    width: 6,
-                    height: 6,
-                    decoration: const BoxDecoration(
+                    width: ResponsiveHelper.w(6),
+                    height: ResponsiveHelper.h(6),
+                    decoration: BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  const Text(
+                  SizedBox(width: 4),
+                  Text(
                     'LIVE',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 10,
+                      fontSize: ResponsiveHelper.sp(10),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -68,7 +70,7 @@ class LiveDashboardAppbar extends StatelessWidget implements PreferredSizeWidget
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.account_circle_outlined, color: Colors.white),
+          icon: Icon(Icons.account_circle_outlined, color: Colors.white),
           onPressed: () {},
         ),
       ],
@@ -76,5 +78,5 @@ class LiveDashboardAppbar extends StatelessWidget implements PreferredSizeWidget
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

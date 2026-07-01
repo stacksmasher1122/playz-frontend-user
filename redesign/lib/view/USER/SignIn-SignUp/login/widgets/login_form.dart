@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LoginForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -10,7 +11,7 @@ class LoginForm extends StatelessWidget {
   final VoidCallback onForgotPassword;
   final VoidCallback onLogin;
 
-  const LoginForm({
+  LoginForm({
     super.key,
     required this.formKey,
     required this.emailController,
@@ -24,6 +25,7 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     const kSpotifyGreen = Color(0xFF1DB954);
     const kCard = Color(0xFF1A1A1A);
 
@@ -31,7 +33,7 @@ class LoginForm extends StatelessWidget {
       key: formKey,
       child: Column(
         children: [
-          const SizedBox(height: 26),
+          SizedBox(height: 26),
 
           /// 📧 EMAIL
           _InputField(
@@ -44,7 +46,7 @@ class LoginForm extends StatelessWidget {
                 : null,
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           /// 🔒 PASSWORD
           _InputField(
@@ -59,7 +61,7 @@ class LoginForm extends StatelessWidget {
                 : null,
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           /// ☑ REMEMBER + FORGOT
           Row(
@@ -76,27 +78,27 @@ class LoginForm extends StatelessWidget {
                   onChanged: onRememberMeChanged,
                 ),
               ),
-              const Text(
+              Text(
                 'Remember me',
                 style: TextStyle(
-                  fontSize: 12.5,
+                  fontSize: ResponsiveHelper.sp(12.5),
                   color: Colors.white70,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               TextButton(
                 onPressed: onForgotPassword,
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 8,
                     vertical: 6,
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'Forgot password?',
                   style: TextStyle(
                     color: kSpotifyGreen,
-                    fontSize: 12.5,
+                    fontSize: ResponsiveHelper.sp(12.5),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -104,12 +106,12 @@ class LoginForm extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
 
           /// 🟢 PRIMARY CTA
           SizedBox(
             width: double.infinity,
-            height: 52,
+            height: ResponsiveHelper.h(52),
             child: ElevatedButton(
               onPressed: isLoading ? null : onLogin,
               style: ElevatedButton.styleFrom(
@@ -118,22 +120,22 @@ class LoginForm extends StatelessWidget {
                     .withValues(alpha: 0.5),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
                 ),
               ),
               child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
+                duration: Duration(milliseconds: 200),
                 child: isLoading
-                    ? const SizedBox(
+                    ? SizedBox(
                         key: ValueKey('loader'),
-                        height: 22,
-                        width: 22,
+                        height: ResponsiveHelper.h(22),
+                        width: ResponsiveHelper.w(22),
                         child: CircularProgressIndicator(
                           strokeWidth: 2.2,
                           color: Colors.black,
                         ),
                       )
-                    : const Row(
+                    : Row(
                         key: ValueKey('text'),
                         mainAxisAlignment:
                             MainAxisAlignment.center,
@@ -141,7 +143,7 @@ class LoginForm extends StatelessWidget {
                           Text(
                             'Sign In',
                             style: TextStyle(
-                              fontSize: 15.5,
+                              fontSize: ResponsiveHelper.sp(15.5),
                               fontWeight: FontWeight.w700,
                               color: Colors.black,
                             ),
@@ -171,7 +173,7 @@ class _InputField extends StatelessWidget {
   final Color fillColor;
   final String? Function(String?)? validator;
 
-  const _InputField({
+  _InputField({
     required this.controller,
     required this.icon,
     required this.hint,
@@ -182,11 +184,12 @@ class _InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return TextFormField(
       controller: controller,
       obscureText: obscure,
       validator: validator,
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         prefixIcon: Icon(icon, color: Colors.white.withValues(alpha: 0.7)),
         hintText: hint,
@@ -194,7 +197,7 @@ class _InputField extends StatelessWidget {
         filled: true,
         fillColor: fillColor,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
           borderSide: BorderSide.none,
         ),
       ),

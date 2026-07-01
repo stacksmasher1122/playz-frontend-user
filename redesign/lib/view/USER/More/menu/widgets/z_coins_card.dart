@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ZCoinsCard extends StatelessWidget {
-  const ZCoinsCard({super.key});
+  ZCoinsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [AppColors.surface, AppColors.surface.withValues(alpha: 0.6)],
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
         child: Row(
           children: [
-            const Icon(Icons.monetization_on, color: AppColors.accent),
-            const SizedBox(width: 10),
+            Icon(Icons.monetization_on, color: AppColors.accent),
+            SizedBox(width: 10),
             Expanded(
               child: Text(
                 'Z Coins Balance\n340',
@@ -30,7 +32,7 @@ class ZCoinsCard extends StatelessWidget {
                 ),
               ),
             ),
-            const Icon(Icons.chevron_right, color: Colors.white),
+            Icon(Icons.chevron_right, color: Colors.white),
           ],
         ),
       ),

@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import '../match_detail_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchRulesSection extends StatelessWidget {
-  const MatchRulesSection({super.key});
+  MatchRulesSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "RULES",
           style: TextStyle(
-            fontSize: 12,
+            fontSize: ResponsiveHelper.sp(12),
             letterSpacing: 1,
             color: MatchDetailColors.textSecondary,
           ),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         Wrap(
           spacing: 12,
           runSpacing: 12,
-          children: const [
+          children: [
             _RuleChip("Best of 3"),
             _RuleChip("21 pts"),
             _RuleChip("Shuttles Provided"),
@@ -35,15 +37,16 @@ class MatchRulesSection extends StatelessWidget {
 class _RuleChip extends StatelessWidget {
   final String label;
 
-  const _RuleChip(this.label);
+  _RuleChip(this.label);
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(10)),
       decoration: BoxDecoration(
         color: MatchDetailColors.surfaceSoft,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
       ),
       child: Text(label),
     );

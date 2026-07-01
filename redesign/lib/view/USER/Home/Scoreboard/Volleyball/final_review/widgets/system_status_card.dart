@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'status_chip.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SystemStatusCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final SystemStatus status;
 
-  const SystemStatusCard({
+  SystemStatusCard({
     super.key,
     required this.icon,
     required this.title,
@@ -17,35 +18,36 @@ class SystemStatusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     Color iconBgColor = Colors.blueAccent;
     if (status == SystemStatus.ready) iconBgColor = AppColors.primaryContainer;
     if (status == SystemStatus.offline) iconBgColor = AppColors.error;
 
     return Container(
-      padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
+      margin: EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(ResponsiveHelper.w(12)),
             decoration: BoxDecoration(
               color: iconBgColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             ),
             child: Icon(icon, color: Colors.white),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 StatusChip(status: status),
               ],
             ),

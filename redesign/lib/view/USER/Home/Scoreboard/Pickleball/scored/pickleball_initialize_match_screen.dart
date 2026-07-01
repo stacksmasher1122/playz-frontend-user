@@ -12,9 +12,10 @@ import 'widgets/advanced_options_card.dart';
 import 'widgets/primary_action_button.dart';
 import 'widgets/secondary_action_button.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/team_management/pickleball_team_management_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PickleballInitializeMatchScreen extends StatefulWidget {
-  const PickleballInitializeMatchScreen({super.key});
+  PickleballInitializeMatchScreen({super.key});
 
   @override
   State<PickleballInitializeMatchScreen> createState() => _PickleballInitializeMatchScreenState();
@@ -44,12 +45,12 @@ class _PickleballInitializeMatchScreenState extends State<PickleballInitializeMa
 
     _fadeController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero).animate(
+    _slideAnimation = Tween<Offset>(begin: Offset(0, 0.05), end: Offset.zero).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
 
@@ -74,7 +75,7 @@ class _PickleballInitializeMatchScreenState extends State<PickleballInitializeMa
       () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const PickleballTeamManagementScreen()),
+          MaterialPageRoute(builder: (_) => PickleballTeamManagementScreen()),
         );
       },
     );
@@ -82,61 +83,62 @@ class _PickleballInitializeMatchScreenState extends State<PickleballInitializeMa
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const PickleballAppbar(),
+      appBar: PickleballAppbar(),
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: SlideTransition(
             position: _slideAnimation,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Create New Match', style: AppTypography.headlineLg),
-                    const SizedBox(height: 8),
+                    Text('Create New Match', style: AppTypography.headlineLg),
+                    SizedBox(height: 8),
                     Text(
                       'Initialize a high-intensity pickleball encounter. Define your tournament context, court allocation, and performance rules.',
                       style: AppTypography.bodyMd.copyWith(color: AppColors.muted),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     MatchCoreCard(
                       controller: controller,
                       nameController: matchNameController,
                       courtController: courtNumberController,
                       refereeController: refereeController,
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     Obx(() => CategoryChipGroup(
                       options: controller.categoryOptions,
                       selected: controller.selectedCategory.value,
                       onSelect: controller.selectCategory,
                     )),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     Obx(() => FormatChipGroup(
                       options: controller.formatOptions,
                       selected: controller.selectedFormat.value,
                       onSelect: controller.selectFormat,
                     )),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     CustomRulesCard(controller: controller),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     AdvancedOptionsCard(controller: controller),
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
                     Obx(() => PrimaryActionButton(
                       onTap: _onInitializeTap,
                       isLoading: controller.isLoading.value,
                     )),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     SecondaryActionButton(
                       text: "Save as Template",
                       onTap: () => controller.saveTemplate(),
                     ),
-                    const SizedBox(height: 32), // bottom padding
+                    SizedBox(height: 32), // bottom padding
                   ],
                 ),
               ),

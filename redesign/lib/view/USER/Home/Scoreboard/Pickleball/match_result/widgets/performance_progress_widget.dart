@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PerformanceProgressWidget extends StatefulWidget {
   final String label;
@@ -8,7 +9,7 @@ class PerformanceProgressWidget extends StatefulWidget {
   final String labelA;
   final String labelB;
 
-  const PerformanceProgressWidget({
+  PerformanceProgressWidget({
     super.key,
     required this.label,
     required this.ratioA,
@@ -27,7 +28,7 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000));
+    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
     _fillAnimation = Tween<double>(begin: 0.0, end: widget.ratioA).animate(CurvedAnimation(
       parent: _animController,
       curve: Curves.easeOutCubic,
@@ -43,27 +44,28 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return RepaintBoundary(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Row(
               children: [
                 SizedBox(
-                  width: 40,
+                  width: ResponsiveHelper.w(40),
                   child: Text(widget.labelA, style: AppTypography.bodySm.copyWith(color: AppColors.primaryContainer)),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Container(
-                    height: 6,
+                    height: ResponsiveHelper.h(6),
                     decoration: BoxDecoration(
                       color: AppColors.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                     ),
                     child: AnimatedBuilder(
                       animation: _fillAnimation,
@@ -74,7 +76,7 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
                           child: Container(
                             decoration: BoxDecoration(
                               color: AppColors.primaryContainer,
-                              borderRadius: BorderRadius.circular(3),
+                              borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                             ),
                           ),
                         );
@@ -82,9 +84,9 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 SizedBox(
-                  width: 40,
+                  width: ResponsiveHelper.w(40),
                   child: Text(widget.labelB, style: AppTypography.bodySm.copyWith(color: AppColors.muted), textAlign: TextAlign.right),
                 ),
               ],

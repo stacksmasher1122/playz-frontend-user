@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class OfferTimerBanner extends StatelessWidget {
   final String text;
-  const OfferTimerBanner({super.key, required this.text});
+  OfferTimerBanner({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SliverToBoxAdapter(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: const BoxDecoration(
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(10)),
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFFD32F2F), Color(0xFFB71C1C)],
           ),
@@ -19,17 +21,17 @@ class OfferTimerBanner extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.timer, color: Colors.white, size: 16),
-              const SizedBox(width: 6),
+              Icon(Icons.timer, color: Colors.white, size: 16),
+              SizedBox(width: 6),
               Flexible(
                 child: Text(
                   'SPECIAL OFFER ENDS IN $text',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 12.5,
+                    fontSize: ResponsiveHelper.sp(12.5),
                   ),
                 ),
               ),

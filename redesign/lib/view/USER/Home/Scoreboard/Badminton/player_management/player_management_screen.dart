@@ -9,9 +9,10 @@ import 'widgets/points_stepper_widget.dart';
 import 'widgets/rule_info_card.dart';
 import 'widgets/warmup_slider_widget.dart';
 import 'widgets/start_match_button_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerManagementScreen extends StatefulWidget {
-  const PlayerManagementScreen({super.key});
+  PlayerManagementScreen({super.key});
 
   @override
   State<PlayerManagementScreen> createState() => _PlayerManagementScreenState();
@@ -36,15 +37,16 @@ class _PlayerManagementScreenState extends State<PlayerManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: Colors.black, // fallback if AppColors.background is not used
-      appBar: const PlayerManagementAppbar(),
+      appBar: PlayerManagementAppbar(),
       body: SingleChildScrollView(
         child: Obx(() {
           if (controller.isLoading.value) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(32.0),
+                padding: EdgeInsets.all(ResponsiveHelper.w(32.0)),
                 child: CircularProgressIndicator(color: Color(0xFFC6FF00)),
               ),
             );
@@ -58,7 +60,7 @@ class _PlayerManagementScreenState extends State<PlayerManagementScreen> {
                 playerTwo: controller.playerTwo.value,
                 totalGames: controller.totalGames.value,
               ),
-              const MatchRulesHeader(),
+              MatchRulesHeader(),
               GamesSliderWidget(
                 totalGames: controller.totalGames.value,
                 onChanged: controller.updateNumberOfGames,
@@ -69,7 +71,7 @@ class _PlayerManagementScreenState extends State<PlayerManagementScreen> {
                 onDecrement: controller.decrementPoints,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24.0), vertical: ResponsiveHelper.h(12.0)),
                 child: Row(
                   children: [
                     Expanded(
@@ -79,7 +81,7 @@ class _PlayerManagementScreenState extends State<PlayerManagementScreen> {
                         subtitle: 'At Mid-Game',
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: RuleInfoCard(
                         label: 'INTERVALS',
@@ -94,7 +96,7 @@ class _PlayerManagementScreenState extends State<PlayerManagementScreen> {
                 warmupDuration: controller.warmupDuration.value,
                 onChanged: controller.updateWarmupDuration,
               ),
-              const SizedBox(height: 24), // Space before sticky bottom
+              SizedBox(height: 24), // Space before sticky bottom
             ],
           );
         }),

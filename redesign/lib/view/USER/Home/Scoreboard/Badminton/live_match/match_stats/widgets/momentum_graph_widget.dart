@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MomentumGraphWidget extends StatelessWidget {
   final List<double> momentumBars; // Normalized values 0.0 to 1.0
 
-  const MomentumGraphWidget({
+  MomentumGraphWidget({
     super.key,
     required this.momentumBars,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         final double spacing = 4.0;
         final double barWidth = (constraints.maxWidth - (spacing * (momentumBars.length - 1))) / momentumBars.length;
         
         return SizedBox(
-          height: 40,
+          height: ResponsiveHelper.h(40),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,7 +41,7 @@ class _AnimatedMomentumBar extends StatefulWidget {
   final double height;
   final double value;
 
-  const _AnimatedMomentumBar({
+  _AnimatedMomentumBar({
     required this.width,
     required this.height,
     required this.value,
@@ -58,7 +60,7 @@ class _AnimatedMomentumBarState extends State<_AnimatedMomentumBar> with SingleT
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: Duration(milliseconds: 1000),
     );
     // Add staggered delay based on x position would be ideal, but random or single fast anim works for mock
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
@@ -73,6 +75,7 @@ class _AnimatedMomentumBarState extends State<_AnimatedMomentumBar> with SingleT
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
@@ -82,13 +85,13 @@ class _AnimatedMomentumBarState extends State<_AnimatedMomentumBar> with SingleT
           height: widget.height * _animation.value,
           decoration: BoxDecoration(
             color: isPeak 
-                ? const Color(0xFFC6FF00) // Neon highlight for peaks
+                ? Color(0xFFC6FF00) // Neon highlight for peaks
                 : Colors.grey.shade800.withValues(alpha: 0.5 + (0.5 * widget.value)),
             borderRadius: BorderRadius.circular(widget.width / 2),
             boxShadow: isPeak
                 ? [
                     BoxShadow(
-                      color: const Color(0xFFC6FF00).withValues(alpha: 0.3),
+                      color: Color(0xFFC6FF00).withValues(alpha: 0.3),
                       blurRadius: 8,
                       spreadRadius: 1,
                     )

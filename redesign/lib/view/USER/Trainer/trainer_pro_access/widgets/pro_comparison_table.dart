@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF0E0E0E);
 const kMuted = Color(0xFFA7A7A7);
@@ -7,11 +8,12 @@ const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
 
 class ProComparisonTable extends StatelessWidget {
-  const ProComparisonTable({super.key});
+  ProComparisonTable({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const rows = [
+    ResponsiveHelper.init(context);
+     final rows = [
       ComparisonRow(feature: 'Verified Badge', basic: false, pro: true),
       ComparisonRow(feature: 'Unlimited Students', basic: false, pro: true),
       ComparisonRow(feature: 'Secure Payments', basic: true, pro: true),
@@ -22,26 +24,26 @@ class ProComparisonTable extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'FREE VS PRO COMPARISON',
             style: TextStyle(
               color: kMuted,
-              fontSize: 12.5,
+              fontSize: ResponsiveHelper.sp(12.5),
               fontWeight: FontWeight.w700,
               letterSpacing: 0.8,
             ),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           /// Header Row
           Row(
-            children: const [
+            children: [
               Expanded(
                 flex: 2,
                 child: Text(
@@ -58,7 +60,7 @@ class ProComparisonTable extends StatelessWidget {
                     'BASIC',
                     style: TextStyle(
                       color: kMuted,
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.sp(12),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -70,7 +72,7 @@ class ProComparisonTable extends StatelessWidget {
                     'PRO',
                     style: TextStyle(
                       color: kGreen,
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.sp(12),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -79,13 +81,13 @@ class ProComparisonTable extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 8),
-          const Divider(color: kCard, height: 1),
+          SizedBox(height: 8),
+          Divider(color: kCard, height: 1),
 
           /// Rows
           ...rows.map(
             (row) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(10)),
               child: Row(
                 children: [
                   Expanded(
@@ -94,9 +96,9 @@ class ProComparisonTable extends StatelessWidget {
                       row.feature,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 13.5,
+                        fontSize: ResponsiveHelper.sp(13.5),
                       ),
                     ),
                   ),
@@ -123,7 +125,7 @@ class ComparisonRow {
   final bool basic;
   final bool pro;
 
-  const ComparisonRow({
+  ComparisonRow({
     required this.feature,
     required this.basic,
     required this.pro,
@@ -134,12 +136,13 @@ class CheckIcon extends StatelessWidget {
   final bool enabled;
   final bool highlight;
 
-  const CheckIcon({super.key, required this.enabled, this.highlight = false});
+  CheckIcon({super.key, required this.enabled, this.highlight = false});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     if (!enabled) {
-      return const Icon(Icons.close_rounded, size: 18, color: kMuted);
+      return Icon(Icons.close_rounded, size: 18, color: kMuted);
     }
 
     return Icon(

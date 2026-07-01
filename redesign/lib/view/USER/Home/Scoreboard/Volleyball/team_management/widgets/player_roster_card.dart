@@ -7,13 +7,14 @@ import 'team_header_card.dart';
 import 'player_tile.dart';
 import 'empty_roster_widget.dart';
 import 'add_player_dialog.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerRosterCard extends StatelessWidget {
   final bool isTeamA;
   final VolleyballTeamModel team;
   final VolleyballTeamManagementController controller;
 
-  const PlayerRosterCard({
+  PlayerRosterCard({
     super.key,
     required this.isTeamA,
     required this.team,
@@ -22,18 +23,19 @@ class PlayerRosterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TeamHeaderCard(isTeamA: isTeamA, team: team, controller: controller),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -47,14 +49,14 @@ class PlayerRosterCard extends StatelessWidget {
                     onPressed: () => controller.bulkImportPlayers(isTeamA),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.primary,
-                      side: const BorderSide(color: AppColors.surfaceContainerHighest),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      side: BorderSide(color: AppColors.surfaceContainerHighest),
+                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
                       minimumSize: Size.zero,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
                     ),
                     child: Text('BULK\nADD', textAlign: TextAlign.center, style: AppTypography.labelCaps10.copyWith(fontSize: 10)),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: () {
                       showDialog(
@@ -65,20 +67,20 @@ class PlayerRosterCard extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryContainer,
                       foregroundColor: AppColors.onPrimaryContainer,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
                       minimumSize: Size.zero,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
                     ),
-                    child: Text('+\nNEW', textAlign: TextAlign.center, style: AppTypography.labelCaps10.copyWith(fontSize: 10, fontWeight: FontWeight.bold)),
+                    child: Text('+\nNEW', textAlign: TextAlign.center, style: AppTypography.labelCaps10.copyWith(fontSize: ResponsiveHelper.sp(10), fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: team.players.length,
             itemBuilder: (context, index) {
               return PlayerTile(

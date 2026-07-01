@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 
@@ -8,7 +9,7 @@ class GroupsSwipeToReply extends StatefulWidget {
   final bool isMe;
   final VoidCallback onSwiped;
 
-  const GroupsSwipeToReply({
+  GroupsSwipeToReply({
     super.key,
     required this.child,
     required this.isMe,
@@ -31,7 +32,7 @@ class _GroupsSwipeToReplyState extends State<GroupsSwipeToReply>
     super.initState();
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 200),
     );
   }
 
@@ -43,6 +44,7 @@ class _GroupsSwipeToReplyState extends State<GroupsSwipeToReply>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
         if (details.delta.dx > 0) {
@@ -70,7 +72,7 @@ class _GroupsSwipeToReplyState extends State<GroupsSwipeToReply>
         children: [
           if (_dragOffset > 10)
             Padding(
-              padding: const EdgeInsets.only(left: 8),
+              padding: EdgeInsets.only(left: 8),
               child: Opacity(
                 opacity: (_dragOffset / _triggerThreshold).clamp(0.0, 1.0),
                 child: Icon(

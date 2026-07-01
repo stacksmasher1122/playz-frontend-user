@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ProfilePhotoPicker extends StatelessWidget {
   final File? imageFile;
   final VoidCallback onPickImage;
 
-  const ProfilePhotoPicker({
+  ProfilePhotoPicker({
     super.key,
     required this.imageFile,
     required this.onPickImage,
@@ -13,20 +14,21 @@ class ProfilePhotoPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Center(
       child: GestureDetector(
         onTap: onPickImage,
         child: Stack(
           children: [
             Container(
-              width: 100,
-              height: 100,
+              width: ResponsiveHelper.w(100),
+              height: ResponsiveHelper.h(100),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: imageFile == null
                     ? Border.all(
                         color: Colors.white.withValues(alpha: 0.15),
-                        width: 1,
+                        width: ResponsiveHelper.w(1),
                         style: BorderStyle.none,
                       )
                     : null,
@@ -35,8 +37,8 @@ class ProfilePhotoPicker extends StatelessWidget {
                   ? ClipOval(
                       child: Image.file(
                         imageFile!,
-                        width: 100,
-                        height: 100,
+                        width: ResponsiveHelper.w(100),
+                        height: ResponsiveHelper.h(100),
                         fit: BoxFit.cover,
                       ),
                     )
@@ -52,11 +54,11 @@ class ProfilePhotoPicker extends StatelessWidget {
                               Icons.camera_alt,
                               color: Colors.white.withValues(alpha: 0.5),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               'ADD PHOTO',
                               style: TextStyle(
-                                fontSize: 9,
+                                fontSize: ResponsiveHelper.sp(9),
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white.withValues(alpha: 0.5),
                                 letterSpacing: 1,
@@ -68,17 +70,17 @@ class ProfilePhotoPicker extends StatelessWidget {
                     ),
             ),
             Positioned(
-              bottom: 0,
-              right: 0,
+              bottom: ResponsiveHelper.h(0),
+              right: ResponsiveHelper.w(0),
               child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.all(ResponsiveHelper.w(4)),
+                decoration: BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.circle,
                 ),
                 child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
+                  padding: EdgeInsets.all(ResponsiveHelper.w(4)),
+                  decoration: BoxDecoration(
                     color: Color(0xFF00FF7F),
                     shape: BoxShape.circle,
                   ),

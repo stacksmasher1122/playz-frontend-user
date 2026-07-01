@@ -113,7 +113,7 @@ class LeagueEngine {
           MatchFixture(
             home: fixtures[i].away,
             away: fixtures[i].home,
-            date: fixtures[i].date.add(const Duration(days: 90)),
+            date: fixtures[i].date.add(Duration(days: 90)),
             roundName: "Week ${numRounds + (i ~/ halfSize) + 1}",
           ),
         );

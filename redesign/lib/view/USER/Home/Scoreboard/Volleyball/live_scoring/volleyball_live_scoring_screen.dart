@@ -10,11 +10,12 @@ import 'widgets/point_button.dart';
 import 'widgets/bottom_action_bar.dart';
 import 'widgets/latest_action_card.dart';
 import 'widgets/bottom_navigation.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VolleyballLiveScoringScreen extends StatefulWidget {
   final VolleyballReviewModel reviewData;
 
-  const VolleyballLiveScoringScreen({super.key, required this.reviewData});
+  VolleyballLiveScoringScreen({super.key, required this.reviewData});
 
   @override
   State<VolleyballLiveScoringScreen> createState() => _VolleyballLiveScoringScreenState();
@@ -38,13 +39,14 @@ class _VolleyballLiveScoringScreenState extends State<VolleyballLiveScoringScree
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: Color(0xFF111111),
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () {
             controller.pauseMatch();
             Navigator.pop(context);
@@ -52,48 +54,48 @@ class _VolleyballLiveScoringScreenState extends State<VolleyballLiveScoringScree
         ),
         title: Row(
           children: [
-            const Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
-            const SizedBox(width: 8),
+            Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
+            SizedBox(width: 8),
             Text('PLAYZ SCOREBOARD', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
           ],
         ),
         actions: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
             decoration: BoxDecoration(
               color: AppColors.primaryContainer.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             child: Row(
               children: [
                 Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(color: AppColors.primaryContainer, shape: BoxShape.circle),
+                  width: ResponsiveHelper.w(8),
+                  height: ResponsiveHelper.h(8),
+                  decoration: BoxDecoration(color: AppColors.primaryContainer, shape: BoxShape.circle),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text('LIVE', style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold)),
               ],
             ),
           ),
-          const SizedBox(width: 16),
-          const Icon(Icons.account_circle, color: AppColors.muted),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
+          Icon(Icons.account_circle, color: AppColors.muted),
+          SizedBox(width: 16),
         ],
       ),
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(24.0)),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 800),
+                  constraints: BoxConstraints(maxWidth: 800),
                   child: Column(
                     children: [
                       // Score Cards Area
                       SizedBox(
-                        height: 280,
+                        height: ResponsiveHelper.h(280),
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
@@ -107,7 +109,7 @@ class _VolleyballLiveScoringScreenState extends State<VolleyballLiveScoringScree
                                     isServing: controller.isTeamAServing.value,
                                   )),
                                 ),
-                                const SizedBox(width: 16),
+                                SizedBox(width: 16),
                                 Expanded(
                                   child: Obx(() => TeamScoreCard(
                                     teamName: widget.reviewData.teamB.teamName,
@@ -119,30 +121,30 @@ class _VolleyballLiveScoringScreenState extends State<VolleyballLiveScoringScree
                               ],
                             ),
                             Positioned(
-                              top: 40,
+                              top: ResponsiveHelper.h(40),
                               child: FloatingSetTimer(controller: controller),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                       
                       // Point Buttons Area
                       Row(
                         children: [
                           Expanded(
                             child: SizedBox(
-                              height: 240,
+                              height: ResponsiveHelper.h(240),
                               child: PointButton(
                                 onPressed: controller.addPointTeamA,
                                 isPrimary: true,
                               ),
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: 16),
                           Expanded(
                             child: SizedBox(
-                              height: 240,
+                              height: ResponsiveHelper.h(240),
                               child: PointButton(
                                 onPressed: controller.addPointTeamB,
                                 isPrimary: false,
@@ -151,15 +153,15 @@ class _VolleyballLiveScoringScreenState extends State<VolleyballLiveScoringScree
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                       
                       // Bottom Actions (Undo, Pause)
                       BottomActionBar(controller: controller),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                       
                       // Latest Action Log
                       LatestActionCard(controller: controller),
-                      const SizedBox(height: 48), // Padding before nav
+                      SizedBox(height: 48), // Padding before nav
                     ],
                   ),
                 ),
@@ -168,7 +170,7 @@ class _VolleyballLiveScoringScreenState extends State<VolleyballLiveScoringScree
           ),
           
           // Fixed Bottom Navigation
-          const BottomNavigation(selectedIndex: 0),
+          BottomNavigation(selectedIndex: 0),
         ],
       ),
     );

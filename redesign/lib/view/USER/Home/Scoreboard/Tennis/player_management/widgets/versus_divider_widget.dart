@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VersusDividerWidget extends StatelessWidget {
-  const VersusDividerWidget({super.key});
+  VersusDividerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      width: 64,
-      height: 64,
+      width: ResponsiveHelper.w(64),
+      height: ResponsiveHelper.h(64),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: AppColors.background,
         border: Border.all(
           color: AppColors.surfaceContainerHighest,
-          width: 4,
+          width: ResponsiveHelper.w(4),
         ),
       ),
       child: Center(

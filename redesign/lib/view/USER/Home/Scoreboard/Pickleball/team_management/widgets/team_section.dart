@@ -4,6 +4,7 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/pickleball_player_model.dart';
 import 'player_card.dart';
 import 'empty_player_slot.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TeamSection extends StatelessWidget {
   final bool isTeamA;
@@ -12,7 +13,7 @@ class TeamSection extends StatelessWidget {
   final Function(int index) onRemove;
   final Function(int slot) onEmptySlotTap;
 
-  const TeamSection({
+  TeamSection({
     super.key,
     required this.isTeamA,
     required this.players,
@@ -23,6 +24,7 @@ class TeamSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -42,9 +44,9 @@ class TeamSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         AnimatedSize(
-          duration: const Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           child: Column(
             children: List.generate(maxPlayers, (index) {

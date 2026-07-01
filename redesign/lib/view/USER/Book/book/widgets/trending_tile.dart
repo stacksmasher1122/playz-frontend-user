@@ -4,36 +4,38 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
 import '../book_screen.dart';
 import 'trending_image_shimmer.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TrendingTile extends StatelessWidget {
   final TrendingData data;
-  const TrendingTile({super.key, required this.data});
+  TrendingTile({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SizedBox(
-      width: 150,
+      width: ResponsiveHelper.w(150),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// ✅ IMAGE WITH CACHE + SHIMMER
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(ResponsiveHelper.w(16)),
               ),
               child: CachedNetworkImage(
                 imageUrl: data.image,
                 cacheKey: data.image,
-                height: 100,
+                height: ResponsiveHelper.h(100),
                 width: double.infinity,
                 fit: BoxFit.cover,
-                placeholder: (_, __) => const TrendingImageShimmer(),
-                errorWidget: (_, __, ___) => const Center(
+                placeholder: (_, __) => TrendingImageShimmer(),
+                errorWidget: (_, __, ___) => Center(
                   child: Icon(
                     Icons.broken_image,
                     color: Colors.white54,
@@ -44,7 +46,7 @@ class TrendingTile extends StatelessWidget {
             ),
 
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(ResponsiveHelper.w(10)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -57,14 +59,14 @@ class TrendingTile extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     '⭐ ${data.rating} • ${data.distance}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.inter(
                       color: AppColors.muted,
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.sp(12),
                     ),
                   ),
                 ],

@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ErrorBreakdownCard extends StatelessWidget {
   final Map<String, dynamic> errors;
 
-  const ErrorBreakdownCard({super.key, required this.errors});
+  ErrorBreakdownCard({super.key, required this.errors});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
       ),
       child: Column(
@@ -23,14 +25,14 @@ class ErrorBreakdownCard extends StatelessWidget {
             'Error Breakdown',
             style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           ...errors.entries.map((entry) {
             bool isPositive = entry.key == "Winners";
             return Column(
               children: [
                 _buildErrorRow(entry.key, entry.value['A'], entry.value['B'], isPositive),
                 if (entry.key != errors.keys.last)
-                  const Divider(color: AppColors.surfaceContainerHighest, height: 24),
+                  Divider(color: AppColors.surfaceContainerHighest, height: 24),
               ],
             );
           }),
@@ -61,8 +63,8 @@ class ErrorBreakdownCard extends StatelessWidget {
               valA.toString().padLeft(2, '0'),
               style: AppTypography.headlineMd.copyWith(color: colorA, fontWeight: FontWeight.bold),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8.0)),
               child: Text('|', style: TextStyle(color: AppColors.surfaceContainerHighest, fontSize: 20)),
             ),
             Text(

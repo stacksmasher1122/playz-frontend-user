@@ -10,9 +10,10 @@ import 'widgets/create_match/custom_settings_section.dart';
 import 'widgets/create_match/setup_checklist.dart';
 import 'widgets/create_match/next_button.dart';
 import 'player_management/player_management_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BadmintonCreateMatchScreen extends StatefulWidget {
-  const BadmintonCreateMatchScreen({super.key});
+  BadmintonCreateMatchScreen({super.key});
 
   @override
   State<BadmintonCreateMatchScreen> createState() =>
@@ -28,53 +29,54 @@ class _BadmintonCreateMatchScreenState extends State<BadmintonCreateMatchScreen>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
-            const BadmintonCreateMatchAppBar(),
+            BadmintonCreateMatchAppBar(),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(16)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const StepBadge(),
-                    const SizedBox(height: 12),
-                    const Text(
+                    StepBadge(),
+                    SizedBox(height: 12),
+                    Text(
                       "CREATE MATCH",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 28,
+                        fontSize: ResponsiveHelper.sp(28),
                         fontWeight: FontWeight.w900,
                         letterSpacing: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
+                    SizedBox(height: 8),
+                    Text(
                       "Define the core parameters for the professional\ncourt session.",
                       style: TextStyle(color: AppColors.muted, height: 1.4),
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
                     
-                    const MatchFormSection(),
-                    const SizedBox(height: 32),
+                    MatchFormSection(),
+                    SizedBox(height: 32),
                     
                     MatchCategorySection(
                       selectedCategory: _selectedCategory,
                       onCategoryChanged: (val) => setState(() => _selectedCategory = val),
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
                     
                     SeriesFormatSection(
                       selectedFormat: _seriesFormat,
                       onFormatChanged: (val) => setState(() => _seriesFormat = val),
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
                     
-                    const PremiumBanner(),
-                    const SizedBox(height: 32),
+                    PremiumBanner(),
+                    SizedBox(height: 32),
                     
                     CustomSettingsSection(
                       pointsPerGame: _pointsPerGame,
@@ -82,10 +84,10 @@ class _BadmintonCreateMatchScreenState extends State<BadmintonCreateMatchScreen>
                       maxPointCap: _maxPointCap,
                       onWinBy2Changed: (val) => setState(() => _winBy2 = val ?? false),
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
                     
-                    const SetupChecklist(),
-                    const SizedBox(height: 40),
+                    SetupChecklist(),
+                    SizedBox(height: 40),
                   ],
                 ),
               ),
@@ -93,7 +95,7 @@ class _BadmintonCreateMatchScreenState extends State<BadmintonCreateMatchScreen>
             NextButton(onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const PlayerManagementScreen()),
+                MaterialPageRoute(builder: (_) => PlayerManagementScreen()),
               );
             }),
           ],

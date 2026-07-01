@@ -5,14 +5,16 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_starting_lineup_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'player_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AvailablePlayersList extends StatelessWidget {
   final VolleyballStartingLineupController controller;
 
-  const AvailablePlayersList({super.key, required this.controller});
+  AvailablePlayersList({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,16 +28,16 @@ class AvailablePlayersList extends StatelessWidget {
             )),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         SizedBox(
-          height: 140,
+          height: ResponsiveHelper.h(140),
           child: Obx(() => ScrollConfiguration(
             behavior: ScrollConfiguration.of(context).copyWith(
               dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse, PointerDeviceKind.trackpad},
             ),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               itemCount: controller.currentState.availablePlayers.length,
               itemBuilder: (context, index) {
                 return PlayerCard(

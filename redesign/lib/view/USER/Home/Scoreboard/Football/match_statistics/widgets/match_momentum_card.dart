@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_match_statistics_controller.dart';
-
+import '../../../../../../../theme/responsive_helper.dart';
 
 class MatchMomentumCard extends StatelessWidget {
-  const MatchMomentumCard({super.key});
+  MatchMomentumCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<FootballMatchStatisticsController>();
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      padding: const EdgeInsets.all(24.0),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16),
+        vertical: ResponsiveHelper.h(8),
+      ),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Column(
@@ -23,22 +27,28 @@ class MatchMomentumCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.show_chart, color: Color(0xFFC6FF00), size: 20),
-              const SizedBox(width: 8),
+              Icon(
+                Icons.show_chart,
+                color: Color(0xFFC6FF00),
+                size: ResponsiveHelper.w(20),
+              ),
+              SizedBox(width: ResponsiveHelper.w(8)),
               Text(
                 'MATCH MOMENTUM',
                 style: TextStyle(
-                  color: const Color(0xFFC6FF00).withValues(alpha: 0.8),
-                  fontSize: 12,
+                  color: Color(0xFFC6FF00).withValues(alpha: 0.8),
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: ResponsiveHelper.h(24)),
           Obx(() {
-            return MomentumChartWidget(points: controller.momentumPoints.toList());
+            return MomentumChartWidget(
+              points: controller.momentumPoints.toList(),
+            );
           }),
         ],
       ),
@@ -46,10 +56,9 @@ class MatchMomentumCard extends StatelessWidget {
   }
 }
 
-
 class MomentumChartWidget extends StatelessWidget {
   final dynamic points;
-  const MomentumChartWidget({super.key, this.points});
+  MomentumChartWidget({super.key, this.points});
   @override
-  Widget build(BuildContext context) => const SizedBox();
+  Widget build(BuildContext context) => SizedBox();
 }

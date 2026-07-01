@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/model/User_Models/Home_Models/Groups_Model/groups_model.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_info_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kSurface = Color(0xFF222222);
@@ -11,7 +12,7 @@ class ModerationSection extends StatelessWidget {
   final GroupModel group;
   final GroupInfoController ctrl;
 
-  const ModerationSection({
+  ModerationSection({
     super.key,
     required this.group,
     required this.ctrl,
@@ -19,16 +20,17 @@ class ModerationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
         color: _kSurface.withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Icons.shield_outlined, color: _kGreen, size: 20),
               SizedBox(width: 8),
@@ -36,20 +38,20 @@ class ModerationSection extends StatelessWidget {
                 "MODERATION",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // ── Toggle: Profanity Filter for Members ──
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -57,7 +59,7 @@ class ModerationSection extends StatelessWidget {
                       "Profanity Filter (Members)",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: ResponsiveHelper.sp(14),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -80,11 +82,11 @@ class ModerationSection extends StatelessWidget {
 
           // ── Toggle: Profanity Filter for Admins (only if Members is ON) ──
           if (group.profanityModerationMembers) ...[
-            const Divider(color: Colors.white12, height: 24),
+            Divider(color: Colors.white12, height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -92,7 +94,7 @@ class ModerationSection extends StatelessWidget {
                         "Profanity Filter (Admins)",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: ResponsiveHelper.sp(14),
                           fontWeight: FontWeight.w600,
                         ),
                       ),

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveMatchAppbar extends StatefulWidget implements PreferredSizeWidget {
-  const LiveMatchAppbar({super.key});
+  LiveMatchAppbar({super.key});
 
   @override
   State<LiveMatchAppbar> createState() => _LiveMatchAppbarState();
   
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
 class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProviderStateMixin {
@@ -20,7 +21,7 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
     super.initState();
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: Duration(seconds: 1),
     )..repeat(reverse: true);
   }
 
@@ -32,19 +33,20 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AppBar(
       backgroundColor: AppColors.background,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+        icon: Icon(Icons.arrow_back, color: AppColors.primary),
         onPressed: () => Navigator.pop(context),
       ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.sports_tennis, color: AppColors.primaryContainer, size: 24),
-          const SizedBox(width: 8),
-          const Text('MATCH CENTER', style: AppTypography.headlineMd),
+          Icon(Icons.sports_tennis, color: AppColors.primaryContainer, size: 24),
+          SizedBox(width: 8),
+          Text('MATCH CENTER', style: AppTypography.headlineMd),
         ],
       ),
       centerTitle: false,
@@ -52,26 +54,26 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
       actions: [
         Center(
           child: Container(
-            margin: const EdgeInsets.only(right: 12),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            margin: EdgeInsets.only(right: 12),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.surfaceContainerHighest),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             ),
             child: Row(
               children: [
                 FadeTransition(
                   opacity: Tween<double>(begin: 0.3, end: 1.0).animate(_pulseController),
                   child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
+                    width: ResponsiveHelper.w(8),
+                    height: ResponsiveHelper.h(8),
+                    decoration: BoxDecoration(
                       color: AppColors.primaryContainer,
                       shape: BoxShape.circle,
                     ),
                   ),
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Text(
                   'LIVE',
                   style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold),
@@ -81,13 +83,13 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 16.0),
+          padding: EdgeInsets.only(right: 16.0),
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.primaryContainer, width: 1.5),
             ),
-            child: const CircleAvatar(
+            child: CircleAvatar(
               radius: 16,
               backgroundImage: NetworkImage('https://i.pravatar.cc/100'),
             ),

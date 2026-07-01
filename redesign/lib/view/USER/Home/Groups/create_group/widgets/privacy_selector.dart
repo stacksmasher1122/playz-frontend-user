@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF161616);
 const kGreen = Color(0xFF6EDC6A);
@@ -8,7 +9,7 @@ class PrivacySelector extends StatelessWidget {
   final bool isPublic;
   final Function(bool) onPrivacyChanged;
 
-  const PrivacySelector({
+  PrivacySelector({
     super.key,
     required this.isPublic,
     required this.onPrivacyChanged,
@@ -16,6 +17,7 @@ class PrivacySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       children: [
         Expanded(
@@ -27,7 +29,7 @@ class PrivacySelector extends StatelessWidget {
             onTap: () => onPrivacyChanged(true),
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         Expanded(
           child: _PrivacyCard(
             title: 'Private',
@@ -49,7 +51,7 @@ class _PrivacyCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _PrivacyCard({
+  _PrivacyCard({
     required this.title,
     required this.icon,
     required this.isPublicCard,
@@ -59,17 +61,18 @@ class _PrivacyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(20)),
         decoration: BoxDecoration(
           color: kSurface,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           border: Border.all(
             color: isSelected ? kGreen : Colors.transparent,
-            width: 1.5,
+            width: ResponsiveHelper.w(1.5),
           ),
         ),
         child: Column(
@@ -79,12 +82,12 @@ class _PrivacyCard extends StatelessWidget {
               color: isSelected ? kGreen : kMuted,
               size: 24,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               title,
               style: TextStyle(
                 color: isSelected ? Colors.white : kMuted,
-                fontSize: 14,
+                fontSize: ResponsiveHelper.sp(14),
                 fontWeight: FontWeight.w700,
               ),
             ),

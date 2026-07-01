@@ -5,7 +5,7 @@ class PlayerManagementController extends GetxController {
   final Rx<TennisPlayerModel?> playerA = Rx<TennisPlayerModel?>(null);
   final Rx<TennisPlayerModel?> playerB = Rx<TennisPlayerModel?>(null);
 
-  final List<TennisPlayerModel> suggestedPlayers = const [
+  final List<TennisPlayerModel> suggestedPlayers = [
     TennisPlayerModel(
       id: '1',
       name: 'Roger Federer',
@@ -39,7 +39,7 @@ class PlayerManagementController extends GetxController {
   void onInit() {
     super.onInit();
     // Mock initial state for Player A (Server) as per screenshot
-    playerA.value = const TennisPlayerModel(
+    playerA.value = TennisPlayerModel(
       id: '0',
       name: 'Carlos Alcaraz',
       club: 'Real Sociedad Tenis',

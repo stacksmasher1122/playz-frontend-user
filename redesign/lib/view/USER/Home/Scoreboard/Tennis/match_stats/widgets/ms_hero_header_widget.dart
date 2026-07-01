@@ -3,23 +3,25 @@ import 'package:get/get.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/match_stats_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MsHeroHeaderWidget extends StatelessWidget {
-  const MsHeroHeaderWidget({super.key});
+  MsHeroHeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<MatchStatsController>();
 
     return Obx(() {
       final stats = controller.stats.value;
-      if (stats == null) return const SizedBox.shrink();
+      if (stats == null) return SizedBox.shrink();
 
       return Container(
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(32), horizontal: ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.02),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
         child: Column(
@@ -31,18 +33,18 @@ class MsHeroHeaderWidget extends StatelessWidget {
                   'PLAYER 1',
                   style: AppTypography.labelCaps.copyWith(color: AppColors.primaryContainer),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   stats.player1Name,
                   style: AppTypography.headlineLg.copyWith(color: AppColors.primary),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildBadge(stats.player1Country),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     _buildBadge(stats.player1Rank),
                   ],
                 ),
@@ -51,7 +53,7 @@ class MsHeroHeaderWidget extends StatelessWidget {
             
             // Score
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
+              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
               child: Column(
                 children: [
                   Row(
@@ -59,27 +61,27 @@ class MsHeroHeaderWidget extends StatelessWidget {
                     children: [
                       Text(
                         stats.player1SetsWon.toString(),
-                        style: const TextStyle(fontFamily: 'Sora', fontSize: 64, fontWeight: FontWeight.w800, color: AppColors.primaryContainer, height: 1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(64), fontWeight: FontWeight.w800, color: AppColors.primaryContainer, height: 1),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
                         child: Text(
                           ':',
-                          style: TextStyle(fontFamily: 'Sora', fontSize: 64, fontWeight: FontWeight.w800, color: AppColors.surfaceContainerHighest, height: 1),
+                          style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(64), fontWeight: FontWeight.w800, color: AppColors.surfaceContainerHighest, height: 1),
                         ),
                       ),
                       Text(
                         stats.player2SetsWon.toString(),
-                        style: const TextStyle(fontFamily: 'Sora', fontSize: 64, fontWeight: FontWeight.w800, color: AppColors.onSurface, height: 1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(64), fontWeight: FontWeight.w800, color: AppColors.onSurface, height: 1),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
                     decoration: BoxDecoration(
                       color: AppColors.primaryContainer.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
                       border: Border.all(color: AppColors.primaryContainer.withValues(alpha: 0.2)),
                     ),
                     child: Text(
@@ -98,18 +100,18 @@ class MsHeroHeaderWidget extends StatelessWidget {
                   'PLAYER 2',
                   style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   stats.player2Name,
                   style: AppTypography.headlineLg.copyWith(color: AppColors.onSurfaceVariant),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildBadge(stats.player2Country),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     _buildBadge(stats.player2Rank),
                   ],
                 ),
@@ -123,10 +125,10 @@ class MsHeroHeaderWidget extends StatelessWidget {
 
   Widget _buildBadge(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
       ),
       child: Text(
         text,

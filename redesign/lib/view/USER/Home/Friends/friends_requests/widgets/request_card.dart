@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kCardBg = Color(0xFF1A1A1A);
 const kGreen = AppColors.accent;
@@ -12,7 +13,7 @@ class RequestCard extends StatefulWidget {
   final VoidCallback onApprove;
   final VoidCallback onDecline;
 
-  const RequestCard({
+  RequestCard({
     super.key,
     required this.request,
     required this.onApprove,
@@ -34,7 +35,7 @@ class _RequestCardState extends State<RequestCard>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: Duration(milliseconds: 150),
     );
     _scaleAnim = Tween<double>(begin: 1.0, end: 0.95).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
@@ -54,17 +55,18 @@ class _RequestCardState extends State<RequestCard>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final req = widget.request;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: 12),
       child: ScaleTransition(
         scale: _scaleAnim,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
           decoration: BoxDecoration(
             color: kCardBg,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
             border: Border.all(color: Colors.white.withAlpha(10)),
           ),
           child: Row(
@@ -76,21 +78,21 @@ class _RequestCardState extends State<RequestCard>
                     ? CachedNetworkImageProvider(req.fromProfilePic)
                         as ImageProvider
                     : null,
-                backgroundColor: const Color(0xFF0E0E0E),
+                backgroundColor: Color(0xFF0E0E0E),
                 child: req.fromProfilePic.isEmpty
-                    ? const Icon(Icons.person, color: kMuted)
+                    ? Icon(Icons.person, color: kMuted)
                     : null,
               ),
 
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
 
               // ── Name ──
               Expanded(
                 child: Text(
                   req.fromName.isNotEmpty ? req.fromName : req.fromEmail,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 17,
+                    fontSize: ResponsiveHelper.sp(17),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -105,29 +107,29 @@ class _RequestCardState extends State<RequestCard>
                 },
                 onTapCancel: () => _controller.reverse(),
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
+                  duration: Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 22,
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
                     color: _approved ? kGreen.withAlpha(38) : kGreen,
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                     boxShadow: _approved
                         ? []
                         : [
                             BoxShadow(
                               color: kGreen.withAlpha(89),
                               blurRadius: 10,
-                              offset: const Offset(0, 3),
+                              offset: Offset(0, 3),
                             ),
                           ],
                   ),
                   child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
+                    duration: Duration(milliseconds: 250),
                     child: _approved
-                        ? const Row(
+                        ? Row(
                             mainAxisSize: MainAxisSize.min,
                             key: ValueKey('approved'),
                             children: [
@@ -138,18 +140,18 @@ class _RequestCardState extends State<RequestCard>
                                 style: TextStyle(
                                   color: kGreen,
                                   fontWeight: FontWeight.w700,
-                                  fontSize: 14,
+                                  fontSize: ResponsiveHelper.sp(14),
                                 ),
                               ),
                             ],
                           )
-                        : const Text(
+                        : Text(
                             'Approve',
                             key: ValueKey('approve'),
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: ResponsiveHelper.sp(14),
                             ),
                           ),
                   ),

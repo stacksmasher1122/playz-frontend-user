@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Badminton/timeline_model.dart';
 import 'momentum_graph_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class GameTimelineCard extends StatelessWidget {
   final TimelineModel timeline;
 
-  const GameTimelineCard({
+  GameTimelineCard({
     super.key,
     required this.timeline,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.only(bottom: 16.0),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Column(
@@ -25,63 +27,63 @@ class GameTimelineCard extends StatelessWidget {
         children: [
           Text(
             'GAME 0${timeline.gameNumber}',
-            style: const TextStyle(
+            style: TextStyle(
               color: Color(0xFFC6FF00), // Neon Yellow-Green
-              fontSize: 10,
+              fontSize: ResponsiveHelper.sp(10),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
                 '${timeline.playerOneScore} — ${timeline.playerTwoScore}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 28,
+                  fontSize: ResponsiveHelper.sp(28),
                   fontWeight: FontWeight.w900,
                   fontFeatures: [FontFeature.tabularFigures()],
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Text(
                 timeline.duration,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'MOMENTUM GRAPH',
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
                 ),
               ),
               Text(
                 timeline.description,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white, // In screenshot, it is sometimes green or white
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           MomentumGraphWidget(
             momentumBars: timeline.momentumBars,
           ),

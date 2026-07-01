@@ -4,25 +4,27 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_initialize_match_controller.dart';
 import 'package:get/get.dart';
 import 'official_dropdown_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchInformationCard extends StatelessWidget {
   final VolleyballInitializeMatchController controller;
 
-  const MatchInformationCard({super.key, required this.controller});
+  MatchInformationCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           )
         ],
       ),
@@ -30,13 +32,13 @@ class MatchInformationCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTextField('MATCH NAME', 'e.g. Inter-City Finals', (val) => controller.matchName.value = val),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           _buildTextField('TOURNAMENT (OPTIONAL)', 'e.g. National Open 2024', (val) => controller.tournament.value = val),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           _buildDateTimeField(context),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           _buildVenueField(),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           OfficialDropdownWidget(
             label: 'REFEREE ASSIGNMENT',
             hint: 'Select Lead Official...',
@@ -52,7 +54,7 @@ class MatchInformationCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         TextFormField(
           style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
           decoration: InputDecoration(
@@ -61,18 +63,18 @@ class MatchInformationCard extends StatelessWidget {
             filled: true,
             fillColor: AppColors.surfaceContainerLowest,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.surfaceContainerHighest),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.surfaceContainerHighest),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primaryContainer),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderSide: BorderSide(color: AppColors.primaryContainer),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(16)),
           ),
           onChanged: onChanged,
         ),
@@ -85,18 +87,18 @@ class MatchInformationCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('DATE & TIME', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         InkWell(
           onTap: () {
             controller.pickDate(context);
             controller.pickTime(context);
           },
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(16)),
             decoration: BoxDecoration(
               color: AppColors.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               border: Border.all(color: AppColors.surfaceContainerHighest),
             ),
             child: Row(
@@ -106,7 +108,7 @@ class MatchInformationCard extends StatelessWidget {
                   controller.date.value.isEmpty ? 'dd-mm-yyyy --:--' : '${controller.date.value} ${controller.time.value}',
                   style: AppTypography.bodyMd.copyWith(color: controller.date.value.isEmpty ? AppColors.muted : AppColors.primary),
                 )),
-                const Icon(Icons.calendar_today, color: AppColors.muted, size: 20),
+                Icon(Icons.calendar_today, color: AppColors.muted, size: 20),
               ],
             ),
           ),
@@ -120,28 +122,28 @@ class MatchInformationCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('VENUE / COURT', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         TextFormField(
           style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
           decoration: InputDecoration(
             hintText: 'Court 04 - Stadium Center',
             hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
-            prefixIcon: const Icon(Icons.location_on_outlined, color: AppColors.muted),
+            prefixIcon: Icon(Icons.location_on_outlined, color: AppColors.muted),
             filled: true,
             fillColor: AppColors.surfaceContainerLowest,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.surfaceContainerHighest),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.surfaceContainerHighest),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primaryContainer),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderSide: BorderSide(color: AppColors.primaryContainer),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(16)),
           ),
           onChanged: (val) => controller.selectVenue(val),
         ),

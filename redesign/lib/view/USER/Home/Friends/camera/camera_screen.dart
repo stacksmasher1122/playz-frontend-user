@@ -7,9 +7,10 @@ import 'package:redesign/theme/app_colors.dart';
 import 'widgets/camera_top_bar.dart';
 import 'widgets/camera_bottom_controls.dart';
 import 'widgets/camera_capture_overlay.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({super.key});
+  CameraScreen({super.key});
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -37,7 +38,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       if (_cameras.isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No camera available')),
+            SnackBar(content: Text('No camera available')),
           );
         }
         return;
@@ -116,8 +117,9 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     if (!_isInit || _controller == null) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: Colors.black,
         body: Center(
           child: CircularProgressIndicator(color: AppColors.accent),
@@ -136,7 +138,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
           ),
 
           // ── Top Controls ──
-          const CameraTopBar(),
+          CameraTopBar(),
 
           // ── Bottom Controls ──
           CameraBottomControls(
@@ -146,7 +148,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
           
           // ── Loading Overlay (While capturing) ──
           if (_isTakingPicture)
-            const CameraCaptureOverlay(),
+            CameraCaptureOverlay(),
         ],
       ),
     );

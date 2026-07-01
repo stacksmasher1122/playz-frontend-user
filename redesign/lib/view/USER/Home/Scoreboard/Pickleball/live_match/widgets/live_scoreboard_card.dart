@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'serving_indicator.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveScoreboardCard extends StatelessWidget {
   final int scoreA;
@@ -10,7 +11,7 @@ class LiveScoreboardCard extends StatelessWidget {
   final AnimationController glowController;
   final AnimationController pulseController;
 
-  const LiveScoreboardCard({
+  LiveScoreboardCard({
     super.key,
     required this.scoreA,
     required this.scoreB,
@@ -21,12 +22,13 @@ class LiveScoreboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return RepaintBoundary(
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(ResponsiveHelper.w(24)),
         decoration: BoxDecoration(
           color: AppColors.card,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
         ),
         child: Column(
@@ -35,7 +37,7 @@ class LiveScoreboardCard extends StatelessWidget {
               isServingLeft: isServingTeamA,
               pulseController: pulseController,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             IntrinsicHeight(
               child: Row(
                 children: [
@@ -45,10 +47,10 @@ class LiveScoreboardCard extends StatelessWidget {
                       isServing: isServingTeamA,
                     ),
                   ),
-                  const VerticalDivider(
+                  VerticalDivider(
                     color: AppColors.surfaceContainerHighest,
                     thickness: 1,
-                    width: 1,
+                    width: ResponsiveHelper.w(1),
                   ),
                   Expanded(
                     child: _buildScoreDisplay(
@@ -68,7 +70,7 @@ class LiveScoreboardCard extends StatelessWidget {
   Widget _buildScoreDisplay({required int score, required bool isServing}) {
     return Center(
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         transitionBuilder: (child, animation) {
           return ScaleTransition(
             scale: animation,
@@ -84,10 +86,10 @@ class LiveScoreboardCard extends StatelessWidget {
               '$score',
               style: TextStyle(
                 fontFamily: 'Inter', // Assuming standard body font
-                fontSize: 100, // Massive font size
+                fontSize: ResponsiveHelper.sp(100), // Massive font size
                 fontWeight: FontWeight.w900,
                 color: isServing ? AppColors.primaryContainer : AppColors.muted,
-                height: 1.0,
+                height: ResponsiveHelper.h(1.0),
                 shadows: isServing
                     ? [
                         BoxShadow(

@@ -1,39 +1,41 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/player_model.dart';
 import 'player_status_chip.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerCardWidget extends StatelessWidget {
   final PlayerModel player;
 
-  const PlayerCardWidget({super.key, required this.player});
+  PlayerCardWidget({super.key, required this.player});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final bool isAvailable = !player.isLocked;
 
     Widget cardContent = Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(6)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: isAvailable ? 1.0 : 0.5),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Row(
         children: [
           // Avatar with Jersey overlay
           SizedBox(
-            width: 50,
-            height: 50,
+            width: ResponsiveHelper.w(50),
+            height: ResponsiveHelper.h(50),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  width: 50,
-                  height: 50,
+                  width: ResponsiveHelper.w(50),
+                  height: ResponsiveHelper.h(50),
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                     color: Colors.black,
                   ),
                   clipBehavior: Clip.hardEdge,
@@ -45,16 +47,16 @@ class PlayerCardWidget extends StatelessWidget {
                   bottom: -4,
                   left: -4,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
                     decoration: BoxDecoration(
-                      color: isAvailable ? const Color(0xFFC6FF00) : Colors.grey.shade600,
-                      borderRadius: BorderRadius.circular(4),
+                      color: isAvailable ? Color(0xFFC6FF00) : Colors.grey.shade600,
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
                     ),
                     child: Text(
                       player.jerseyNumber,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.black,
-                        fontSize: 10,
+                        fontSize: ResponsiveHelper.sp(10),
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -63,7 +65,7 @@ class PlayerCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           // Info
           Expanded(
             child: Column(
@@ -73,16 +75,16 @@ class PlayerCardWidget extends StatelessWidget {
                   player.name,
                   style: TextStyle(
                     color: isAvailable ? Colors.white : Colors.grey.shade500,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   '${player.position} • ${player.fitness}',
                   style: TextStyle(
                     color: Colors.grey.shade600,
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                   ),
                 ),
               ],
@@ -93,13 +95,13 @@ class PlayerCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               PlayerStatusChip(status: player.availability),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               if (isAvailable)
                 Text(
                   'Form: ${player.form}',
                   style: TextStyle(
                     color: Colors.grey.shade400,
-                    fontSize: 10,
+                    fontSize: ResponsiveHelper.sp(10),
                   ),
                 )
               else
@@ -107,12 +109,12 @@ class PlayerCardWidget extends StatelessWidget {
                   'Return: ${player.returnWeeks}',
                   style: TextStyle(
                     color: Colors.grey.shade600,
-                    fontSize: 10,
+                    fontSize: ResponsiveHelper.sp(10),
                   ),
                 ),
             ],
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Icon(
             isAvailable ? Icons.drag_indicator : Icons.lock_outline,
             color: Colors.grey.shade600,

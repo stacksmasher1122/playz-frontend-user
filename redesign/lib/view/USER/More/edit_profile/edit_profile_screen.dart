@@ -10,9 +10,10 @@ import 'widgets/edit_profile_app_bar.dart';
 import 'widgets/profile_photo_picker.dart';
 import 'widgets/edit_profile_field.dart';
 import 'widgets/public_profile_toggle.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  EditProfileScreen({super.key});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -75,7 +76,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       debugPrint("Pick image error: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to pick image")),
+          SnackBar(content: Text("Failed to pick image")),
         );
       }
     }
@@ -84,7 +85,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _saveProfile() async {
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Name is required")),
+        SnackBar(content: Text("Name is required")),
       );
       return;
     }
@@ -92,7 +93,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final user = _controller.rxUser.value;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("User data not found")),
+        SnackBar(content: Text("User data not found")),
       );
       return;
     }
@@ -113,7 +114,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (success) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile updated successfully")),
+        SnackBar(content: Text("Profile updated successfully")),
       );
       Navigator.pop(context);
     }
@@ -121,22 +122,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kEditProfileBg,
       appBar: EditProfileAppBar(onSave: _saveProfile),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Profile Photo section
             ProfilePhotoPicker(
               imageFile: _imageFile,
               onPickImage: _pickImage,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             EditProfileField(
               label: 'FULL NAME',
@@ -144,7 +146,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               icon: Icons.person,
               controller: _nameController,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             EditProfileField(
               label: 'EMAIL ADDRESS',
@@ -152,7 +154,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               icon: Icons.email,
               controller: _emailController,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             EditProfileField(
               label: 'PHONE NUMBER',
@@ -160,7 +162,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               icon: Icons.phone,
               controller: _phoneController,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             EditProfileField(
               label: 'DATE OF BIRTH',
@@ -171,13 +173,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               onTap: () async {
                 final date = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now().subtract(const Duration(days: 365 * 18)),
+                  initialDate: DateTime.now().subtract(Duration(days: 365 * 18)),
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
                   builder: (context, child) {
                     return Theme(
                       data: Theme.of(context).copyWith(
-                        colorScheme: const ColorScheme.dark(
+                        colorScheme: ColorScheme.dark(
                           primary: kEditProfileGreen,
                           onPrimary: Colors.black,
                           surface: Color(0xFF282828),
@@ -196,7 +198,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }
               },
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             EditProfileField(
               label: 'BIO',
@@ -206,11 +208,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               maxLines: 3,
             ),
 
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             // Public Profile Toggle
-            const PublicProfileToggle(),
-            const SizedBox(height: 40),
+            PublicProfileToggle(),
+            SizedBox(height: 40),
           ],
         ),
       ),

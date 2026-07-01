@@ -92,13 +92,13 @@ class PickleballTeamManagementController extends GetxController {
     if (validateTeams()) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const PickleballFinalReviewScreen()),
+        MaterialPageRoute(builder: (_) => PickleballFinalReviewScreen()),
       );
     } else {
       // Bypass validation for UI phase
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const PickleballFinalReviewScreen()),
+        MaterialPageRoute(builder: (_) => PickleballFinalReviewScreen()),
       );
     }
   }

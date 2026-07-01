@@ -37,7 +37,7 @@ class FootballCreateMatchController extends GetxController {
   void loadInitialData() {
     isLoading.value = true;
     // Mock loading delay
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       isLoading.value = false;
     });
   }
@@ -68,11 +68,11 @@ class FootballCreateMatchController extends GetxController {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      lastDate: DateTime.now().add(Duration(days: 365)),
       builder: (context, child) {
         return Theme(
           data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
+            colorScheme: ColorScheme.dark(
               primary: Color(0xFFC6FF00), // Lime green
               onPrimary: Colors.black,
               surface: Color(0xFF1E1E1E),
@@ -91,7 +91,7 @@ class FootballCreateMatchController extends GetxController {
         builder: (context, child) {
           return Theme(
             data: ThemeData.dark().copyWith(
-              colorScheme: const ColorScheme.dark(
+              colorScheme: ColorScheme.dark(
                 primary: Color(0xFFC6FF00),
                 onPrimary: Colors.black,
                 surface: Color(0xFF1E1E1E),
@@ -170,15 +170,15 @@ class FootballCreateMatchController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00),
+      backgroundColor: Color(0xFFC6FF00),
       colorText: Colors.black,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 
@@ -186,14 +186,14 @@ class FootballCreateMatchController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 }

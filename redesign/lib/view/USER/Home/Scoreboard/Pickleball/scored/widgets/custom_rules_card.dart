@@ -4,22 +4,24 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/pickleball_initialize_match_controller.dart';
 import 'toggle_rule_tile.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CustomRulesCard extends StatelessWidget {
   final PickleballInitializeMatchController controller;
 
-  const CustomRulesCard({
+  CustomRulesCard({
     super.key,
     required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
       ),
       child: Column(
@@ -27,26 +29,26 @@ class CustomRulesCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.settings, color: AppColors.primaryContainer, size: 20),
-              const SizedBox(width: 8),
-              const Text('Custom Rules', style: AppTypography.headlineMd),
+              Icon(Icons.settings, color: AppColors.primaryContainer, size: 20),
+              SizedBox(width: 8),
+              Text('Custom Rules', style: AppTypography.headlineMd),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Obx(() => ToggleRuleTile(
             title: "Win By 2",
             subtitle: "Standard tournament rule",
             value: controller.winByTwo.value,
             onChanged: (v) => controller.toggleWinByTwo(),
           )),
-          const Divider(color: AppColors.surfaceContainerHighest, height: 1),
+          Divider(color: AppColors.surfaceContainerHighest, height: 1),
           Obx(() => ToggleRuleTile(
             title: "Rally Scoring",
             subtitle: "Point on every serve",
             value: controller.rallyScoring.value,
             onChanged: (v) => controller.toggleRallyScoring(),
           )),
-          const Divider(color: AppColors.surfaceContainerHighest, height: 1),
+          Divider(color: AppColors.surfaceContainerHighest, height: 1),
           Obx(() => ToggleRuleTile(
             title: "Traditional",
             subtitle: "Server scores only",

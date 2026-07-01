@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ScoreBoardWidget extends StatelessWidget {
   final int scoreA;
   final int scoreB;
 
-  const ScoreBoardWidget({
+  ScoreBoardWidget({
     super.key,
     required this.scoreA,
     required this.scoreB,
@@ -12,18 +13,19 @@ class ScoreBoardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _AnimatedScore(score: scoreA),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0)),
           child: Text(
             '-',
             style: TextStyle(
               color: Colors.grey,
-              fontSize: 40,
+              fontSize: ResponsiveHelper.sp(40),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -37,16 +39,17 @@ class ScoreBoardWidget extends StatelessWidget {
 class _AnimatedScore extends StatelessWidget {
   final int score;
 
-  const _AnimatedScore({required this.score});
+  _AnimatedScore({required this.score});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       transitionBuilder: (Widget child, Animation<double> animation) {
         return SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0.0, -0.5),
+            begin: Offset(0.0, -0.5),
             end: Offset.zero,
           ).animate(animation),
           child: FadeTransition(opacity: animation, child: child),
@@ -55,9 +58,9 @@ class _AnimatedScore extends StatelessWidget {
       child: Text(
         '$score',
         key: ValueKey<int>(score),
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
-          fontSize: 48,
+          fontSize: ResponsiveHelper.sp(48),
           fontWeight: FontWeight.w900,
         ),
       ),

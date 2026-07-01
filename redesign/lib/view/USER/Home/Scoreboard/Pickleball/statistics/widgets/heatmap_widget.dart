@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class HeatmapWidget extends StatelessWidget {
-  const HeatmapWidget({super.key});
+  HeatmapWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return RepaintBoundary(
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(ResponsiveHelper.w(20)),
         decoration: BoxDecoration(
           color: AppColors.card,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
         ),
         child: Column(
@@ -25,21 +27,21 @@ class HeatmapWidget extends StatelessWidget {
                   'Heat Map: Shot Placement',
                   style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
                 ),
-                const Icon(Icons.grid_view, color: AppColors.primaryContainer, size: 24),
+                Icon(Icons.grid_view, color: AppColors.primaryContainer, size: 24),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Container(
-              height: 200,
+              height: ResponsiveHelper.h(200),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: AppColors.background.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
               ),
               child: Stack(
                 children: [
                   CustomPaint(
-                    size: const Size(double.infinity, 200),
+                    size: Size(double.infinity, 200),
                     painter: CourtGridPainter(),
                   ),
                   Center(
@@ -84,7 +86,7 @@ class CourtGridPainter extends CustomPainter {
     canvas.drawLine(Offset(size.width / 2 + 40, size.height / 2), Offset(size.width, size.height / 2), paint);
 
     // Mock heat gradient overlay
-    final rect = Rect.fromCenter(center: Offset(size.width * 0.75, size.height * 0.75), width: 100, height: 100);
+    final rect = Rect.fromCenter(center: Offset(size.width * 0.75, size.height * 0.75), width: ResponsiveHelper.w(100), height: 100);
     final gradient = RadialGradient(
       colors: [AppColors.primaryContainer.withOpacity(0.4), Colors.transparent],
     ).createShader(rect);

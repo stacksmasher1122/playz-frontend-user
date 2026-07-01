@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ActionToolbarWidget extends StatelessWidget {
   final VoidCallback onUndo;
@@ -6,7 +7,7 @@ class ActionToolbarWidget extends StatelessWidget {
   final VoidCallback onEndMatch;
   final bool isPaused;
 
-  const ActionToolbarWidget({
+  ActionToolbarWidget({
     super.key,
     required this.onUndo,
     required this.onPause,
@@ -16,10 +17,11 @@ class ActionToolbarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       width: double.infinity,
       color: Colors.grey.shade900,
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -53,7 +55,7 @@ class _ActionButton extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _ActionButton({
+  _ActionButton({
     required this.icon,
     required this.label,
     required this.color,
@@ -62,18 +64,19 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Row(
         children: [
           Icon(icon, color: color, size: 16),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text(
             label,
             style: TextStyle(
               color: color,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
               fontWeight: FontWeight.bold,
             ),
           ),

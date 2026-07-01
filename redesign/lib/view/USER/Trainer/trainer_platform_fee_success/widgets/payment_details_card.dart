@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'fee_success_simple_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class PaymentDetailsCard extends StatelessWidget {
-  const PaymentDetailsCard({super.key});
+  PaymentDetailsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return FeeSuccessSimpleCard(
       title: 'PAYMENT DETAILS',
       trailing: OutlinedButton.icon(
         onPressed: () {},
-        icon: const Icon(Icons.download_rounded, size: 16),
-        label: const Text('PDF'),
+        icon: Icon(Icons.download_rounded, size: 16),
+        label: Text('PDF'),
         style: OutlinedButton.styleFrom(
           foregroundColor: kGreen,
-          side: const BorderSide(color: kGreen),
+          side: BorderSide(color: kGreen),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
           ),
         ),
       ),
-      children: const [
+      children: [
         DetailRow('Method', 'UPI (Google Pay)'),
         DetailRow('Transaction ID', 'TXN88291039', mono: true),
         DetailRow('Date', 'Dec 15, 2023, 10:42 AM'),
@@ -38,16 +40,17 @@ class DetailRow extends StatelessWidget {
   final String value;
   final bool mono;
 
-  const DetailRow(this.label, this.value, {super.key, this.mono = false});
+  DetailRow(this.label, this.value, {super.key, this.mono = false});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(6)),
       child: Row(
         children: [
           Expanded(
-            child: Text(label, style: const TextStyle(color: kMuted)),
+            child: Text(label, style: TextStyle(color: kMuted)),
           ),
           Text(
             value,

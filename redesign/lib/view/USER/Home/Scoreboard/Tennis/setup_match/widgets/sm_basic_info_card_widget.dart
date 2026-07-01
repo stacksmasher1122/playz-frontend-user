@@ -6,23 +6,25 @@ import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../theme/app_dimensions.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/setup_match_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SmBasicInfoCardWidget extends StatelessWidget {
-  const SmBasicInfoCardWidget({super.key});
+  SmBasicInfoCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<SetupMatchController>();
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(ResponsiveHelper.w(24)),
           decoration: BoxDecoration(
-            color: const Color(0x001a1a1a).withValues(alpha: 0.8),
-            borderRadius: BorderRadius.circular(12),
+            color: Color(0x001a1a1a).withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
             backgroundBlendMode: BlendMode.dstATop,
           ),
@@ -30,7 +32,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildMatchNameField(controller),
-              const SizedBox(height: AppDimensions.gutter),
+              SizedBox(height: AppDimensions.gutter),
               
               LayoutBuilder(
                 builder: (context, constraints) {
@@ -38,7 +40,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
                     return Row(
                       children: [
                         Expanded(child: _buildTournamentDropdown(controller)),
-                        const SizedBox(width: AppDimensions.gutter),
+                        SizedBox(width: AppDimensions.gutter),
                         Expanded(child: _buildDateTimePicker(context, controller)),
                       ],
                     );
@@ -46,7 +48,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
                     return Column(
                       children: [
                         _buildTournamentDropdown(controller),
-                        const SizedBox(height: AppDimensions.gutter),
+                        SizedBox(height: AppDimensions.gutter),
                         _buildDateTimePicker(context, controller),
                       ],
                     );
@@ -54,7 +56,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
                 },
               ),
               
-              const SizedBox(height: AppDimensions.gutter),
+              SizedBox(height: AppDimensions.gutter),
               
               LayoutBuilder(
                 builder: (context, constraints) {
@@ -62,7 +64,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
                     return Row(
                       children: [
                         Expanded(child: _buildCourtNumberField(controller)),
-                        const SizedBox(width: AppDimensions.gutter),
+                        SizedBox(width: AppDimensions.gutter),
                         Expanded(child: _buildChairUmpireField(controller)),
                       ],
                     );
@@ -70,7 +72,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
                     return Column(
                       children: [
                         _buildCourtNumberField(controller),
-                        const SizedBox(height: AppDimensions.gutter),
+                        SizedBox(height: AppDimensions.gutter),
                         _buildChairUmpireField(controller),
                       ],
                     );
@@ -92,13 +94,13 @@ class SmBasicInfoCardWidget extends StatelessWidget {
           'MATCH NAME',
           style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
         ),
-        const SizedBox(height: AppDimensions.sm),
+        SizedBox(height: AppDimensions.sm),
         TextField(
           controller: controller.matchNameController,
           style: AppTypography.headlineMd.copyWith(color: AppColors.primary),
           decoration: InputDecoration(
             border: InputBorder.none,
-            focusedBorder: const UnderlineInputBorder(
+            focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
             ),
             enabledBorder: UnderlineInputBorder(
@@ -106,7 +108,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
             ),
             hintText: "e.g., Club Championship Final",
             hintStyle: AppTypography.headlineMd.copyWith(color: AppColors.onSurfaceVariant),
-            contentPadding: const EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: 0),
+            contentPadding: EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: 0),
             fillColor: Colors.transparent,
             filled: true,
           ),
@@ -124,16 +126,16 @@ class SmBasicInfoCardWidget extends StatelessWidget {
           'TOURNAMENT',
           style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
         ),
-        const SizedBox(height: AppDimensions.sm),
+        SizedBox(height: AppDimensions.sm),
         Obx(() {
           return DropdownButtonFormField<String>(
             initialValue: controller.matchSetup.value.tournament,
             dropdownColor: AppColors.surfaceContainerHigh,
-            icon: const Icon(Icons.arrow_drop_down, color: AppColors.onSurfaceVariant),
+            icon: Icon(Icons.arrow_drop_down, color: AppColors.onSurfaceVariant),
             style: AppTypography.bodyMd.copyWith(color: AppColors.onSurface),
             decoration: InputDecoration(
               border: InputBorder.none,
-              focusedBorder: const UnderlineInputBorder(
+              focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
               ),
               enabledBorder: UnderlineInputBorder(
@@ -142,7 +144,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
               fillColor: Colors.transparent,
               filled: true,
             ),
-            items: const ["Summer Open 2024", "Inter-Club League", "Grand Slam Qualifier"]
+            items: ["Summer Open 2024", "Inter-Club League", "Grand Slam Qualifier"]
                 .map((t) => DropdownMenuItem(value: t, child: Text(t)))
                 .toList(),
             onChanged: (val) {
@@ -162,7 +164,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
           'DATE & TIME',
           style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
         ),
-        const SizedBox(height: AppDimensions.sm),
+        SizedBox(height: AppDimensions.sm),
         Obx(() {
           final dt = controller.matchSetup.value.dateTime;
           final dtString = dt != null ? DateFormat('dd MMM yyyy, HH:mm').format(dt) : "mm/dd/yyyy, --:-- --";
@@ -174,7 +176,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
             style: AppTypography.bodyMd.copyWith(color: AppColors.onSurface),
             decoration: InputDecoration(
               border: InputBorder.none,
-              focusedBorder: const UnderlineInputBorder(
+              focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
               ),
               enabledBorder: UnderlineInputBorder(
@@ -182,7 +184,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
               ),
               fillColor: Colors.transparent,
               filled: true,
-              suffixIcon: const Icon(Icons.calendar_today, color: AppColors.onSurfaceVariant, size: 18),
+              suffixIcon: Icon(Icons.calendar_today, color: AppColors.onSurfaceVariant, size: 18),
             ),
             onTap: () async {
               final date = await showDatePicker(
@@ -215,13 +217,13 @@ class SmBasicInfoCardWidget extends StatelessWidget {
           'COURT NUMBER',
           style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
         ),
-        const SizedBox(height: AppDimensions.sm),
+        SizedBox(height: AppDimensions.sm),
         TextField(
           controller: controller.courtNumberController,
           style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
           decoration: InputDecoration(
             border: InputBorder.none,
-            focusedBorder: const UnderlineInputBorder(
+            focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
             ),
             enabledBorder: UnderlineInputBorder(
@@ -229,7 +231,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
             ),
             hintText: "Court 1 (Center)",
             hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant),
-            contentPadding: const EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: 0),
+            contentPadding: EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: 0),
             fillColor: Colors.transparent,
             filled: true,
           ),
@@ -247,13 +249,13 @@ class SmBasicInfoCardWidget extends StatelessWidget {
           'CHAIR UMPIRE',
           style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
         ),
-        const SizedBox(height: AppDimensions.sm),
+        SizedBox(height: AppDimensions.sm),
         TextField(
           controller: controller.umpireNameController,
           style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
           decoration: InputDecoration(
             border: InputBorder.none,
-            focusedBorder: const UnderlineInputBorder(
+            focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
             ),
             enabledBorder: UnderlineInputBorder(
@@ -261,7 +263,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
             ),
             hintText: "Enter Name",
             hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant),
-            contentPadding: const EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: 0),
+            contentPadding: EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: 0),
             fillColor: Colors.transparent,
             filled: true,
           ),

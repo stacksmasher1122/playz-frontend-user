@@ -16,12 +16,13 @@ import 'widgets/location_infra_section.dart';
 import 'widgets/identity_verification_section.dart';
 import 'widgets/payout_details_section.dart';
 import 'widgets/agreements_section.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kBg = AppColors.background;
-const Color kGreen = AppColors.accent;
+Color kBg = AppColors.background;
+Color kGreen = AppColors.accent;
 
 class TrainerJoinScreen extends StatefulWidget {
-  const TrainerJoinScreen({super.key});
+  TrainerJoinScreen({super.key});
 
   @override
   State<TrainerJoinScreen> createState() => _TrainerJoinScreenState();
@@ -34,6 +35,7 @@ class _TrainerJoinScreenState extends State<TrainerJoinScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
@@ -42,126 +44,126 @@ class _TrainerJoinScreenState extends State<TrainerJoinScreen> {
           children: [
             /// CONTENT
             SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 140),
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 140),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const JoinAppBar(),
-                    const SizedBox(height: 20),
-                    const CertifiedBanner(),
-                    const SizedBox(height: 28),
-                    const StepHeader(step: 1, title: 'Personal Information'),
-                    const SizedBox(height: 20),
-                    const ProfilePhotoUploader(),
-                    const SizedBox(height: 24),
+                    JoinAppBar(),
+                    SizedBox(height: 20),
+                    CertifiedBanner(),
+                    SizedBox(height: 28),
+                    StepHeader(step: 1, title: 'Personal Information'),
+                    SizedBox(height: 20),
+                    ProfilePhotoUploader(),
+                    SizedBox(height: 24),
 
-                    const TrainerInputField(
+                    TrainerInputField(
                       label: 'Full Name *',
                       initial: 'Rahul Sharma',
                     ),
-                    const SizedBox(height: 16),
-                    const TrainerVerifiedField(
+                    SizedBox(height: 16),
+                    TrainerVerifiedField(
                       label: 'Mobile Number *',
                       value: '9876543210',
                     ),
-                    const SizedBox(height: 16),
-                    const TrainerInputField(
+                    SizedBox(height: 16),
+                    TrainerInputField(
                       label: 'Email Address *',
                       initial: 'rahul.sharma@example.com',
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Row(
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: TrainerInputField(
                             label: 'Date of Birth',
                             hint: 'DD/MM/YYYY',
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Expanded(
                           child: TrainerDropdownField(
                             label: 'Gender',
                             value: _gender,
-                            items: const ['Male', 'Female', 'Other'],
+                            items: ['Male', 'Female', 'Other'],
                             onChanged: (v) => setState(() => _gender = v),
                           ),
                         ),
                       ],
                     ),
 
-                    const SizedBox(height: 32),
-                    const StepHeader(step: 2, title: 'Professional Details'),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 32),
+                    StepHeader(step: 2, title: 'Professional Details'),
+                    SizedBox(height: 20),
 
                     /// PRIMARY SPORT
                     TrainerDropdownField(
                       label: 'Primary Sport',
                       value: 'Cricket',
-                      items: const ['Cricket', 'Football', 'Fitness', 'Yoga'],
+                      items: ['Cricket', 'Football', 'Fitness', 'Yoga'],
                       onChanged: (String? value) {},
                     ),
 
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
 
                     /// SPECIALIZATION
-                    const TrainerInputField(
+                    TrainerInputField(
                       label: 'Specialization',
                       hint: 'e.g. Batting Coach, Pace Bowling',
                     ),
 
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
 
                     /// CURRENT ACADEMY (OPTIONAL)
-                    const TrainerInputField(
+                    TrainerInputField(
                       label: 'Current Academy / Club (Optional)',
                       hint: 'e.g. PowerPlay Academy',
                     ),
 
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
 
                     /// EXPERIENCE
-                    const TrainerInputField(
+                    TrainerInputField(
                       label: 'Years of Experience',
                       hint: 'e.g. 5',
                       keyboardType: TextInputType.number,
                     ),
 
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
 
                     /// SHORT BIO
-                    const TrainerBioField(),
+                    TrainerBioField(),
 
-                    const SizedBox(height: 20),
-                    const CertificationsSection(),
+                    SizedBox(height: 20),
+                    CertificationsSection(),
 
-                    const SizedBox(height: 32),
-                    const CoachingPreferencesSection(),
-                    const SizedBox(height: 32),
-                    const AvailabilitySection(),
-                    const SizedBox(height: 32),
-                    const PricingPackagesSection(),
-                    const SizedBox(height: 32),
-                    const LocationInfraSection(),
-                    const SizedBox(height: 32),
-                    const IdentityVerificationSection(),
-                    const SizedBox(height: 32),
-                    const PayoutDetailsSection(),
-                    const SizedBox(height: 32),
-                    const AgreementsSection(),
+                    SizedBox(height: 32),
+                    CoachingPreferencesSection(),
+                    SizedBox(height: 32),
+                    AvailabilitySection(),
+                    SizedBox(height: 32),
+                    PricingPackagesSection(),
+                    SizedBox(height: 32),
+                    LocationInfraSection(),
+                    SizedBox(height: 32),
+                    IdentityVerificationSection(),
+                    SizedBox(height: 32),
+                    PayoutDetailsSection(),
+                    SizedBox(height: 32),
+                    AgreementsSection(),
 
-                    const SizedBox(height: 120),
+                    SizedBox(height: 120),
 
                     /// CTA
-                    const SizedBox(height: 25),
+                    SizedBox(height: 25),
                     ElevatedButton(
                       onPressed: _isValid
                           ? () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (_) => const TrainerProAccessScreen(),
+                                  builder: (_) => TrainerProAccessScreen(),
                                 ),
                               );
                             }
@@ -169,15 +171,15 @@ class _TrainerJoinScreenState extends State<TrainerJoinScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: kGreen,
                         foregroundColor: Colors.black,
-                        minimumSize: const Size.fromHeight(54),
+                        minimumSize: Size.fromHeight(54),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32),
+                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(32)),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Continue',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: ResponsiveHelper.sp(16),
                           fontWeight: FontWeight.w700,
                         ),
                       ),

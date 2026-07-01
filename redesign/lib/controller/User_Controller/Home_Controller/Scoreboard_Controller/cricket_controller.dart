@@ -166,7 +166,7 @@ class CricketController extends GetxController {
       );
       return;
     }
-    Get.to(() => const CoinFlipScreen());
+    Get.to(() => CoinFlipScreen());
   }
 
   // ════════════════════ MATCH LIFECYCLE ════════════════════
@@ -177,7 +177,7 @@ class CricketController extends GetxController {
   ) async {
     try {
       isLoading.value = true;
-      final String matchId = const Uuid().v4();
+      final String matchId = Uuid().v4();
       final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
       final String safeUserId = currentUserId ?? 'local_user';
 
@@ -243,14 +243,14 @@ class CricketController extends GetxController {
       _initEngine(newMatch);
       _listenToFirestore(matchId);
 
-      Get.offAll(() => const CricketScoreboardScreen());
+      Get.offAll(() => CricketScoreboardScreen());
     } catch (e) {
       if (Get.context != null) {
         Get.snackbar(
           'Error',
           'Failed to create match: $e',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: const Color(0xFF2A2A2A),
+          backgroundColor: Color(0xFF2A2A2A),
           colorText: Colors.white,
         );
       }
@@ -334,7 +334,7 @@ class CricketController extends GetxController {
       }
 
       _listenToFirestore(matchId);
-      Get.to(() => const CricketScoreboardScreen());
+      Get.to(() => CricketScoreboardScreen());
     } else {
       Get.snackbar('Error', 'Match data not found localy.');
     }

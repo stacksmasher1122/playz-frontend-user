@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /// ─────────────────────────────────────────
 /// 🎨 SPOTIFY DARK TOKENS
@@ -298,7 +299,7 @@ class HybridScheduleEngine {
 /// ─────────────────────────────────────────
 
 class BadmintonSetupScreen extends StatefulWidget {
-  const BadmintonSetupScreen({super.key});
+  BadmintonSetupScreen({super.key});
 
   @override
   State<BadmintonSetupScreen> createState() => _BadmintonSetupScreenState();
@@ -499,6 +500,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
@@ -508,7 +510,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
             if (_mode == SetupMode.tournament)
               _sliver(_tournamentFormatSelector()),
             ..._buildContent().map((w) => _sliver(w)),
-            const SliverToBoxAdapter(child: SizedBox(height: 40)),
+            SliverToBoxAdapter(child: SizedBox(height: 40)),
           ],
         ),
       ),
@@ -552,7 +554,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
             onSquadChanged: (v) => setState(() => _squadSize = v),
           ),
           TeamManagementCard(teams: _leagueTeams, squadSize: _squadSize),
-          const LeagueRuleEngineCard(),
+          LeagueRuleEngineCard(),
           StandingsLogicCard(
             win: _pointsWin,
             loss: _pointsLoss,
@@ -590,17 +592,17 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
 
   SliverToBoxAdapter _sliver(Widget child) => SliverToBoxAdapter(
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(10)),
       child: child,
     ),
   );
 
   Widget _card({required Widget child}) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.all(ResponsiveHelper.w(18)),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
       ),
       child: child,
     );
@@ -611,11 +613,11 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          duration: Duration(milliseconds: 250),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14)),
           decoration: BoxDecoration(
             color: selected ? kAccent : Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
           ),
           alignment: Alignment.center,
           child: Text(
@@ -633,7 +635,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
   Widget _sectionTitle(String text) {
     return Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         color: kTextSecondary,
         letterSpacing: 1.2,
         fontWeight: FontWeight.bold,
@@ -648,8 +650,8 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
           valid ? Icons.check_circle : Icons.error,
           color: valid ? kSuccess : kWarning,
         ),
-        const SizedBox(width: 8),
-        Text(text, style: const TextStyle(color: kTextPrimary)),
+        SizedBox(width: 8),
+        Text(text, style: TextStyle(color: kTextPrimary)),
       ],
     );
   }
@@ -664,17 +666,17 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: kTextPrimary)),
+        Text(label, style: TextStyle(color: kTextPrimary)),
         Row(
           children: [
             IconButton(
               onPressed: value > min ? () => onChanged(value - 1) : null,
-              icon: const Icon(Icons.remove, color: kTextSecondary),
+              icon: Icon(Icons.remove, color: kTextSecondary),
             ),
-            Text("$value", style: const TextStyle(color: kTextPrimary)),
+            Text("$value", style: TextStyle(color: kTextPrimary)),
             IconButton(
               onPressed: value < max ? () => onChanged(value + 1) : null,
-              icon: const Icon(Icons.add, color: kTextSecondary),
+              icon: Icon(Icons.add, color: kTextSecondary),
             ),
           ],
         ),
@@ -689,7 +691,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
           ok ? Icons.check_circle : Icons.error,
           color: ok ? kSuccess : kDanger,
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(label, style: TextStyle(color: ok ? kSuccess : kDanger)),
       ],
     );
@@ -745,14 +747,14 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "MATCH FORMAT",
             style: TextStyle(
               color: kTextSecondary,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               _segButton("Singles", !_isDoubles, () {
@@ -763,17 +765,17 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
               }),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             _isDoubles ? "2 vs 2" : "1 vs 1",
-            style: const TextStyle(
+            style: TextStyle(
               color: kTextPrimary,
-              fontSize: 16,
+              fontSize: ResponsiveHelper.sp(16),
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
-          const Text(
+          SizedBox(height: 8),
+          Text(
             "3 × 21 pts • Cap 30 • Interval at 11",
             style: TextStyle(color: kTextMuted),
           ),
@@ -802,13 +804,13 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
             team.name,
             style: TextStyle(color: team.color, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ...team.players.map((p) => _playerChip(team, p)),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           ElevatedButton(
             onPressed: () => _addPlayer(team),
             style: ElevatedButton.styleFrom(backgroundColor: team.color),
-            child: const Text("+ Add Player"),
+            child: Text("+ Add Player"),
           ),
         ],
       ),
@@ -817,22 +819,22 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
 
   Widget _playerChip(FriendlyTeam team, Player p) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.all(ResponsiveHelper.w(10)),
       decoration: BoxDecoration(
         color: kCardElevated,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       ),
       child: Row(
         children: [
-          const CircleAvatar(radius: 14),
-          const SizedBox(width: 10),
+          CircleAvatar(radius: 14),
+          SizedBox(width: 10),
           Expanded(
-            child: Text(p.name, style: const TextStyle(color: kTextPrimary)),
+            child: Text(p.name, style: TextStyle(color: kTextPrimary)),
           ),
           IconButton(
             onPressed: () => _removePlayer(team, p),
-            icon: const Icon(Icons.close, color: kDanger),
+            icon: Icon(Icons.close, color: kDanger),
           ),
         ],
       ),
@@ -848,7 +850,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "RULES ENGINE (BWF STD)",
             style: TextStyle(
               color: kTextSecondary,
@@ -859,7 +861,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
             value: _enableLets,
             activeThumbColor: kAccent,
             onChanged: (v) => setState(() => _enableLets = v),
-            title: const Text(
+            title: Text(
               "Enable Lets",
               style: TextStyle(color: kTextPrimary),
             ),
@@ -868,7 +870,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
             value: _enableFaultOverride,
             activeThumbColor: kAccent,
             onChanged: (v) => setState(() => _enableFaultOverride = v),
-            title: const Text(
+            title: Text(
               "Enable Fault Override",
               style: TextStyle(color: kTextPrimary),
             ),
@@ -887,14 +889,14 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "PRE-MATCH PROTOCOL",
             style: TextStyle(
               color: kTextSecondary,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
             children: [
               _segButton("Team A", _coinWinner == TeamSide.a, () {
@@ -919,29 +921,29 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "SERVICE ENGINE",
             style: TextStyle(
               color: kTextSecondary,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           DropdownButton<TeamSide>(
             dropdownColor: kCardElevated,
             value: _servingTeam,
-            hint: const Text(
+            hint: Text(
               "Serving Team",
               style: TextStyle(color: kTextMuted),
             ),
-            items: const [
+            items: [
               DropdownMenuItem(value: TeamSide.a, child: Text("Team A")),
               DropdownMenuItem(value: TeamSide.b, child: Text("Team B")),
             ],
             onChanged: (v) => setState(() => _servingTeam = v),
           ),
-          const SizedBox(height: 12),
-          const Text(
+          SizedBox(height: 12),
+          Text(
             "Start Side: Even (Right)",
             style: TextStyle(color: kTextSecondary),
           ),
@@ -959,14 +961,14 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "MATCH VALIDATION",
             style: TextStyle(
               color: kTextSecondary,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _check("Roster valid", _isRosterValid),
           _check("Coin toss complete", _isCoinComplete),
           _check("Service ready", _isServiceReady),
@@ -987,12 +989,12 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: kAccent,
           foregroundColor: Colors.black,
-          padding: const EdgeInsets.symmetric(vertical: 18),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(18)),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
           ),
         ),
-        child: const Text(
+        child: Text(
           "Initialize Match →",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -1013,28 +1015,28 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _sectionTitle("STRUCTURE ENGINE"),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             "Participants: $_koParticipants",
-            style: const TextStyle(color: kTextPrimary),
+            style: TextStyle(color: kTextPrimary),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             "Rounds: $rounds",
-            style: const TextStyle(color: kTextSecondary),
+            style: TextStyle(color: kTextSecondary),
           ),
           Text(
             "Matches: $matches",
-            style: const TextStyle(color: kTextSecondary),
+            style: TextStyle(color: kTextSecondary),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: kAccent),
             onPressed: () {
               _shuffleBracket = !_shuffleBracket;
               _generateKnockoutBracket();
             },
-            child: const Text("Shuffle Bracket"),
+            child: Text("Shuffle Bracket"),
           ),
         ],
       ),
@@ -1053,19 +1055,19 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _sectionTitle("SEEDING ENGINE"),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ..._seeds.map(
             (seed) => ListTile(
               title: Text(
                 "Seed ${seed.position}",
-                style: const TextStyle(color: kTextPrimary),
+                style: TextStyle(color: kTextPrimary),
               ),
               subtitle: Text(
                 seed.player ?? "Unassigned",
-                style: const TextStyle(color: kTextMuted),
+                style: TextStyle(color: kTextMuted),
               ),
               trailing: IconButton(
-                icon: const Icon(Icons.add, color: kAccent),
+                icon: Icon(Icons.add, color: kAccent),
                 onPressed: () {
                   setState(() {
                     seed.player = "Player ${seed.position}";
@@ -1074,7 +1076,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             valid ? "VALID ✓" : "INCOMPLETE",
             style: TextStyle(color: valid ? kSuccess : kDanger),
@@ -1094,19 +1096,19 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _sectionTitle("BRACKET PREVIEW"),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ..._bracket.map(
             (match) => AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(12),
+              duration: Duration(milliseconds: 250),
+              margin: EdgeInsets.only(bottom: 8),
+              padding: EdgeInsets.all(ResponsiveHelper.w(12)),
               decoration: BoxDecoration(
                 color: kCardElevated,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               ),
               child: Text(
                 "${match.player1} vs ${match.player2}",
-                style: const TextStyle(color: kTextPrimary),
+                style: TextStyle(color: kTextPrimary),
               ),
             ),
           ),
@@ -1121,7 +1123,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
 
   Widget _hybridDescriptionCard() {
     return _card(
-      child: const Text(
+      child: Text(
         "Group Stage + Knockout\n\nPlayers compete in round robin groups first. Top performers qualify for elimination bracket.",
         style: TextStyle(color: kTextSecondary),
       ),
@@ -1166,31 +1168,31 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
             _groupCount = v;
             _regenerateHybrid();
           }),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           SizedBox(
-            height: 100,
+            height: ResponsiveHelper.h(100),
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: _groups
                   .map(
                     (g) => Container(
-                      width: 140,
-                      margin: const EdgeInsets.only(right: 12),
-                      padding: const EdgeInsets.all(12),
+                      width: ResponsiveHelper.w(140),
+                      margin: EdgeInsets.only(right: 12),
+                      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
                       decoration: BoxDecoration(
                         color: kCardElevated,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             g.name,
-                            style: const TextStyle(color: kTextPrimary),
+                            style: TextStyle(color: kTextPrimary),
                           ),
                           Text(
                             "${g.participants.length} Players",
-                            style: const TextStyle(color: kTextMuted),
+                            style: TextStyle(color: kTextMuted),
                           ),
                         ],
                       ),
@@ -1224,10 +1226,10 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
             min: 1,
             max: (_hybridTotalParticipants ~/ _groupCount) - 1,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             "$_hybridTotalParticipants → $ko → Champion",
-            style: const TextStyle(color: kTextSecondary),
+            style: TextStyle(color: kTextSecondary),
           ),
         ],
       ),
@@ -1243,25 +1245,25 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Knockout Preview", style: TextStyle(color: kTextPrimary)),
-          const SizedBox(height: 12),
+          Text("Knockout Preview", style: TextStyle(color: kTextPrimary)),
+          SizedBox(height: 12),
           SizedBox(
-            height: 120,
+            height: ResponsiveHelper.h(120),
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: _hybridKnockoutMatches
                   .map(
                     (m) => Container(
-                      width: 180,
-                      margin: const EdgeInsets.only(right: 12),
-                      padding: const EdgeInsets.all(12),
+                      width: ResponsiveHelper.w(180),
+                      margin: EdgeInsets.only(right: 12),
+                      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
                       decoration: BoxDecoration(
                         color: kCardElevated,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                       ),
                       child: Text(
                         "${m.playerA} vs ${m.playerB}",
-                        style: const TextStyle(color: kTextPrimary),
+                        style: TextStyle(color: kTextPrimary),
                       ),
                     ),
                   )
@@ -1311,7 +1313,7 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
       value: value,
       activeThumbColor: kAccent,
       onChanged: onChanged,
-      title: Text(label, style: const TextStyle(color: kTextPrimary)),
+      title: Text(label, style: TextStyle(color: kTextPrimary)),
     );
   }
 
@@ -1338,10 +1340,10 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
             min: 1,
             max: 20,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             "Estimated Duration: $days Day(s)",
-            style: const TextStyle(color: kTextSecondary),
+            style: TextStyle(color: kTextSecondary),
           ),
         ],
       ),
@@ -1370,14 +1372,14 @@ class _BadmintonSetupScreenState extends State<BadmintonSetupScreen> {
 
   Widget _hybridCreateButton() {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       child: ElevatedButton(
         onPressed: _isHybridValid ? () {} : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: kAccent,
-          minimumSize: const Size(double.infinity, 56),
+          minimumSize: Size(double.infinity, 56),
         ),
-        child: const Text(
+        child: Text(
           "Create Hybrid Tournament →",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -1394,7 +1396,7 @@ class TournamentIdentityCard extends StatelessWidget {
   final String name;
   final ValueChanged<String> onNameChanged;
 
-  const TournamentIdentityCard({
+  TournamentIdentityCard({
     super.key,
     required this.name,
     required this.onNameChanged,
@@ -1402,15 +1404,16 @@ class TournamentIdentityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return _leagueCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _leagueSection("TOURNAMENT IDENTITY"),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           TextField(
-            style: const TextStyle(color: kTextPrimary),
-            decoration: const InputDecoration(
+            style: TextStyle(color: kTextPrimary),
+            decoration: InputDecoration(
               hintText: "Tournament Name",
               hintStyle: TextStyle(color: kTextMuted),
             ),
@@ -1429,7 +1432,7 @@ class LeagueStructureEngineCard extends StatelessWidget {
   final ValueChanged<int> onTeamsChanged;
   final ValueChanged<int> onSquadChanged;
 
-  const LeagueStructureEngineCard({
+  LeagueStructureEngineCard({
     super.key,
     required this.teams,
     required this.squadSize,
@@ -1439,6 +1442,7 @@ class LeagueStructureEngineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final matches = LeagueEngine.calculateMatches(teams);
 
     return _leagueCard(
@@ -1446,13 +1450,13 @@ class LeagueStructureEngineCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _leagueSection("STRUCTURE ENGINE"),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _leagueStepper("Total Teams", teams, onTeamsChanged),
           _leagueStepper("Squad Size", squadSize, onSquadChanged),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             "Total Matches: $matches",
-            style: const TextStyle(color: kTextSecondary),
+            style: TextStyle(color: kTextSecondary),
           ),
         ],
       ),
@@ -1464,7 +1468,7 @@ class TeamManagementCard extends StatelessWidget {
   final List<LeagueTeam> teams;
   final int squadSize;
 
-  const TeamManagementCard({
+  TeamManagementCard({
     super.key,
     required this.teams,
     required this.squadSize,
@@ -1472,21 +1476,22 @@ class TeamManagementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return _leagueCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _leagueSection("TEAM MANAGEMENT"),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ...teams.map(
             (t) => Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(12),
+              margin: EdgeInsets.only(bottom: 8),
+              padding: EdgeInsets.all(ResponsiveHelper.w(12)),
               decoration: BoxDecoration(
                 color: kCardElevated,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               ),
-              child: Text(t.name, style: const TextStyle(color: kTextPrimary)),
+              child: Text(t.name, style: TextStyle(color: kTextPrimary)),
             ),
           ),
         ],
@@ -1496,16 +1501,17 @@ class TeamManagementCard extends StatelessWidget {
 }
 
 class LeagueRuleEngineCard extends StatelessWidget {
-  const LeagueRuleEngineCard({super.key});
+  LeagueRuleEngineCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return _leagueCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _leagueSection("RULE ENGINE"),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _leagueToggle("Rally Scoring System"),
           _leagueToggle("Max Score Cap (30)"),
           _leagueToggle("Interval at 11"),
@@ -1522,7 +1528,7 @@ class StandingsLogicCard extends StatelessWidget {
   final List<String> tieBreakers;
   final Function(int, int) onReorder;
 
-  const StandingsLogicCard({
+  StandingsLogicCard({
     super.key,
     required this.win,
     required this.loss,
@@ -1532,30 +1538,31 @@ class StandingsLogicCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return _leagueCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _leagueSection("STANDINGS LOGIC"),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             "Points for Win: $win",
-            style: const TextStyle(color: kTextPrimary),
+            style: TextStyle(color: kTextPrimary),
           ),
           Text(
             "Points for Loss: $loss",
-            style: const TextStyle(color: kTextPrimary),
+            style: TextStyle(color: kTextPrimary),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ReorderableListView(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             onReorder: onReorder,
             children: tieBreakers
                 .map(
                   (e) => ListTile(
                     key: ValueKey(e),
-                    title: Text(e, style: const TextStyle(color: kTextPrimary)),
+                    title: Text(e, style: TextStyle(color: kTextPrimary)),
                   ),
                 )
                 .toList(),
@@ -1569,22 +1576,23 @@ class StandingsLogicCard extends StatelessWidget {
 class MatchGeneratorCard extends StatelessWidget {
   final List<LeagueMatch> matches;
 
-  const MatchGeneratorCard({super.key, required this.matches});
+  MatchGeneratorCard({super.key, required this.matches});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return _leagueCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _leagueSection("MATCH GENERATOR"),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ...matches
               .take(4)
               .map(
                 (m) => Text(
                   "${m.home.name} vs ${m.away.name}",
-                  style: const TextStyle(color: kTextPrimary),
+                  style: TextStyle(color: kTextPrimary),
                 ),
               ),
         ],
@@ -1596,10 +1604,11 @@ class MatchGeneratorCard extends StatelessWidget {
 class LeagueSystemCheckCard extends StatelessWidget {
   final bool valid;
 
-  const LeagueSystemCheckCard({super.key, required this.valid});
+  LeagueSystemCheckCard({super.key, required this.valid});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return _leagueCard(
       child: Row(
         children: [
@@ -1607,7 +1616,7 @@ class LeagueSystemCheckCard extends StatelessWidget {
             valid ? Icons.check_circle : Icons.error,
             color: valid ? kSuccess : kDanger,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text(
             valid ? "League Ready" : "Configuration Incomplete",
             style: TextStyle(color: valid ? kSuccess : kDanger),
@@ -1621,19 +1630,20 @@ class LeagueSystemCheckCard extends StatelessWidget {
 class CreateLeagueButton extends StatelessWidget {
   final bool enabled;
 
-  const CreateLeagueButton({super.key, required this.enabled});
+  CreateLeagueButton({super.key, required this.enabled});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       child: ElevatedButton(
         onPressed: enabled ? () {} : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: enabled ? kAccent : kCardInteractive,
-          minimumSize: const Size(double.infinity, 56),
+          minimumSize: Size(double.infinity, 56),
         ),
-        child: const Text(
+        child: Text(
           "Create League Tournament →",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -1648,10 +1658,10 @@ class CreateLeagueButton extends StatelessWidget {
 
 Widget _leagueCard({required Widget child}) {
   return Container(
-    padding: const EdgeInsets.all(18),
+    padding: EdgeInsets.all(ResponsiveHelper.w(18)),
     decoration: BoxDecoration(
       color: kCard,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
     ),
     child: child,
   );
@@ -1660,7 +1670,7 @@ Widget _leagueCard({required Widget child}) {
 Widget _leagueSection(String title) {
   return Text(
     title,
-    style: const TextStyle(
+    style: TextStyle(
       color: kTextSecondary,
       letterSpacing: 1.2,
       fontWeight: FontWeight.bold,
@@ -1673,7 +1683,7 @@ Widget _leagueToggle(String label) {
     value: true,
     onChanged: (_) {},
     activeThumbColor: kAccent,
-    title: Text(label, style: const TextStyle(color: kTextPrimary)),
+    title: Text(label, style: TextStyle(color: kTextPrimary)),
   );
 }
 
@@ -1681,17 +1691,17 @@ Widget _leagueStepper(String label, int value, Function(int) onChange) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Text(label, style: const TextStyle(color: kTextPrimary)),
+      Text(label, style: TextStyle(color: kTextPrimary)),
       Row(
         children: [
           IconButton(
             onPressed: () => onChange(max(2, value - 1)),
-            icon: const Icon(Icons.remove, color: kTextSecondary),
+            icon: Icon(Icons.remove, color: kTextSecondary),
           ),
-          Text("$value", style: const TextStyle(color: kTextPrimary)),
+          Text("$value", style: TextStyle(color: kTextPrimary)),
           IconButton(
             onPressed: () => onChange(value + 1),
-            icon: const Icon(Icons.add, color: kTextSecondary),
+            icon: Icon(Icons.add, color: kTextSecondary),
           ),
         ],
       ),

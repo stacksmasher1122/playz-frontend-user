@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/starting_lineup_controller.dart';
 import 'formation_chip_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FormationSelectorWidget extends StatelessWidget {
-  const FormationSelectorWidget({super.key});
+  FormationSelectorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<StartingLineupController>();
 
     return SizedBox(
-      height: 50,
+      height: ResponsiveHelper.h(50),
       child: Obx(() {
         return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
           scrollDirection: Axis.horizontal,
           itemCount: controller.formations.length,
           itemBuilder: (context, index) {

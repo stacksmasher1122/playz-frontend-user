@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kCard = Color(0xFF1A1A1A);
-const Color kMuted = Color(0xFFA7A7A7);
-const Color kGreen = AppColors.accent;
+Color kCard = Color(0xFF1A1A1A);
+Color kMuted = Color(0xFFA7A7A7);
+Color kGreen = AppColors.accent;
 
 class FacilityInfoGrid extends StatelessWidget {
-  const FacilityInfoGrid({super.key});
+  FacilityInfoGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Facility Info',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: ResponsiveHelper.sp(18),
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
 
         GridView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
@@ -35,7 +37,7 @@ class FacilityInfoGrid extends StatelessWidget {
           ),
           itemCount: 4,
           itemBuilder: (_, index) {
-            final items = const [
+            final items = [
               FacilityData('Surface', 'Astro Turf + Grass', Icons.grass),
               FacilityData(
                 'Equipment',
@@ -56,36 +58,37 @@ class FacilityInfoGrid extends StatelessWidget {
 class FacilityTile extends StatelessWidget {
   final FacilityData data;
 
-  const FacilityTile({super.key, required this.data});
+  FacilityTile({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(data.icon, color: kGreen, size: 18),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             data.title,
-            style: const TextStyle(color: kMuted, fontSize: 11, height: 1.1),
+            style: TextStyle(color: kMuted, fontSize: ResponsiveHelper.sp(11), height: 1.1),
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
           Text(
             data.value,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
               fontWeight: FontWeight.w600,
-              height: 1.2,
+              height: ResponsiveHelper.h(1.2),
             ),
           ),
         ],
@@ -99,5 +102,5 @@ class FacilityData {
   final String value;
   final IconData icon;
 
-  const FacilityData(this.title, this.value, this.icon);
+  FacilityData(this.title, this.value, this.icon);
 }

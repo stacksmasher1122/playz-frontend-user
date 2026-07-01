@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import '../qr_in_bookings_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QrWeatherAlert extends StatelessWidget {
-  const QrWeatherAlert({super.key});
+  QrWeatherAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: const LinearGradient(
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        gradient: LinearGradient(
           colors: [Color(0xFF3A2C00), Color(0xFF1E1400)],
         ),
       ),
-      child: const Row(
+      child: Row(
         children: [
           Icon(Icons.cloud_outlined, color: QrBookingConstants.amber),
           SizedBox(width: 10),

@@ -23,9 +23,9 @@ class PlayerManagementController extends GetxController {
 
   void loadPlayers() async {
     isLoading.value = true;
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(Duration(milliseconds: 600));
     
-    playerOne.value = const PlayerModel(
+    playerOne.value = PlayerModel(
       id: 1,
       name: 'Viktor Axelsen',
       avatar: 'https://i.pravatar.cc/150?img=11', // network placeholder
@@ -34,7 +34,7 @@ class PlayerManagementController extends GetxController {
       isSelected: true,
     );
     
-    playerTwo.value = const PlayerModel(
+    playerTwo.value = PlayerModel(
       id: 2,
       name: 'Lee Zii Jia',
       avatar: 'https://i.pravatar.cc/150?img=12', // network placeholder
@@ -105,7 +105,7 @@ class PlayerManagementController extends GetxController {
       showSuccess('Match Configured! Starting...');
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const LiveMatchScreen()),
+        MaterialPageRoute(builder: (_) => LiveMatchScreen()),
       );
     }
   }
@@ -118,15 +118,15 @@ class PlayerManagementController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00), // Neon Yellow-Green
+      backgroundColor: Color(0xFFC6FF00), // Neon Yellow-Green
       colorText: Colors.black,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 
@@ -134,14 +134,14 @@ class PlayerManagementController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 }

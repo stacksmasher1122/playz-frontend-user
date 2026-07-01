@@ -2,48 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ErrorOverlay extends StatelessWidget {
-  const ErrorOverlay({super.key});
+  ErrorOverlay({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final mapsCtrl = Get.find<MapsController>();
 
     return Obx(() {
-      if (!mapsCtrl.hasError.value) return const SizedBox.shrink();
+      if (!mapsCtrl.hasError.value) return SizedBox.shrink();
       return Positioned(
-        left: 16,
-        right: 16,
-        bottom: 200,
+        left: ResponsiveHelper.w(16),
+        right: ResponsiveHelper.w(16),
+        bottom: ResponsiveHelper.h(200),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
           decoration: BoxDecoration(
-            color: const Color(0xFF2C1010),
-            borderRadius: BorderRadius.circular(16),
+            color: Color(0xFF2C1010),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
           ),
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.warning_amber_rounded,
                 color: Colors.orangeAccent,
                 size: 28,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       mapsCtrl.errorMessage.value,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 13,
+                        fontSize: ResponsiveHelper.sp(13),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     GestureDetector(
                       onTap: () {
                         if (mapsCtrl.errorMessage.value.contains('Settings')) {
@@ -54,21 +56,21 @@ class ErrorOverlay extends StatelessWidget {
                         }
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
                           color: kSpotifyGreen,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                         ),
                         child: Text(
                           mapsCtrl.errorMessage.value.contains('Settings')
                               ? 'Open Settings'
                               : 'Retry',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.black,
-                            fontSize: 12,
+                            fontSize: ResponsiveHelper.sp(12),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -79,7 +81,7 @@ class ErrorOverlay extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () => mapsCtrl.hasError.value = false,
-                child: const Icon(Icons.close, color: Colors.white38, size: 20),
+                child: Icon(Icons.close, color: Colors.white38, size: 20),
               ),
             ],
           ),

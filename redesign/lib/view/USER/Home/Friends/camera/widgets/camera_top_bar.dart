@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CameraTopBar extends StatelessWidget {
-  const CameraTopBar({super.key});
+  CameraTopBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Positioned(
-      top: 40,
-      left: 16,
+      top: ResponsiveHelper.h(40),
+      left: ResponsiveHelper.w(16),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.4),
           shape: BoxShape.circle,
         ),
         child: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white, size: 28),
+          icon: Icon(Icons.close, color: Colors.white, size: 28),
           onPressed: () => Navigator.pop(context),
         ),
       ),

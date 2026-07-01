@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -9,7 +10,7 @@ class RegisterForm extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onRegister;
 
-  const RegisterForm({
+  RegisterForm({
     super.key,
     required this.formKey,
     required this.nameController,
@@ -22,6 +23,7 @@ class RegisterForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     const spotifyGreen = Color(0xFF1DB954);
     const inputColor = Color(0xFF222222);
 
@@ -29,7 +31,7 @@ class RegisterForm extends StatelessWidget {
       key: formKey,
       child: Column(
         children: [
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           _InputField(
             controller: nameController,
             icon: Icons.person_outline,
@@ -38,7 +40,7 @@ class RegisterForm extends StatelessWidget {
             validator: (v) =>
                 v == null || v.isEmpty ? 'Required' : null,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _InputField(
             controller: emailController,
             icon: Icons.email_outlined,
@@ -47,7 +49,7 @@ class RegisterForm extends StatelessWidget {
             validator: (v) =>
                 v == null || v.isEmpty ? 'Required' : null,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _InputField(
             controller: passwordController,
             icon: Icons.lock_outline,
@@ -58,7 +60,7 @@ class RegisterForm extends StatelessWidget {
                 ? 'Min 6 characters'
                 : null,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _InputField(
             controller: confirmPasswordController,
             icon: Icons.lock_outline,
@@ -69,31 +71,31 @@ class RegisterForm extends StatelessWidget {
                 ? 'Passwords do not match'
                 : null,
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           /// CREATE ACCOUNT BUTTON
           SizedBox(
             width: double.infinity,
-            height: 54,
+            height: ResponsiveHelper.h(54),
             child: ElevatedButton(
               onPressed: isLoading ? null : onRegister,
               style: ElevatedButton.styleFrom(
                 backgroundColor: spotifyGreen,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                 ),
                 elevation: 0,
               ),
               child: isLoading
-                  ? const CircularProgressIndicator(
+                  ? CircularProgressIndicator(
                       strokeWidth: 2,
                       color: Colors.black,
                     )
-                  : const Text(
+                  : Text(
                       'Create Account',
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16,
+                        fontSize: ResponsiveHelper.sp(16),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -113,7 +115,7 @@ class _InputField extends StatelessWidget {
   final Color fillColor;
   final String? Function(String?)? validator;
 
-  const _InputField({
+  _InputField({
     required this.controller,
     required this.icon,
     required this.hint,
@@ -124,19 +126,20 @@ class _InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return TextFormField(
       controller: controller,
       obscureText: obscure,
       validator: validator,
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         prefixIcon: Icon(icon, color: Colors.white70),
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white38),
+        hintStyle: TextStyle(color: Colors.white38),
         filled: true,
         fillColor: fillColor,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
           borderSide: BorderSide.none,
         ),
       ),

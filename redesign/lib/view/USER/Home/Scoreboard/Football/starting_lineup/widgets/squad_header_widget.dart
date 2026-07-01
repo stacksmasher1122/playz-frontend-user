@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SquadHeaderWidget extends StatelessWidget {
   final VoidCallback onFilter;
   final VoidCallback onSearch;
 
-  const SquadHeaderWidget({
+  SquadHeaderWidget({
     super.key,
     required this.onFilter,
     required this.onSearch,
@@ -12,23 +13,24 @@ class SquadHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Squad Hub',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: ResponsiveHelper.sp(20),
               fontWeight: FontWeight.w900,
             ),
           ),
           Row(
             children: [
               _buildIconButton(Icons.filter_list, onFilter),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               _buildIconButton(Icons.search, onSearch),
             ],
           ),
@@ -41,10 +43,10 @@ class SquadHeaderWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(ResponsiveHelper.w(8)),
         decoration: BoxDecoration(
           color: Colors.grey.shade900,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
         ),
         child: Icon(icon, color: Colors.white, size: 20),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ProfileSetupField extends StatelessWidget {
   final String label;
@@ -10,7 +11,7 @@ class ProfileSetupField extends StatelessWidget {
   final bool readOnly;
   final VoidCallback? onTap;
 
-  const ProfileSetupField({
+  ProfileSetupField({
     super.key,
     required this.label,
     required this.hint,
@@ -24,55 +25,56 @@ class ProfileSetupField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white54,
-            fontSize: 10,
+            fontSize: ResponsiveHelper.sp(10),
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         TextField(
           controller: controller,
           maxLines: maxLines,
           readOnly: readOnly,
           onTap: onTap,
-          style: const TextStyle(color: Colors.white, fontSize: 15),
+          style: TextStyle(color: Colors.white, fontSize: 15),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white24),
+            hintStyle: TextStyle(color: Colors.white24),
             prefixIcon: maxLines == 1
                 ? Icon(icon, color: Colors.white38, size: 20)
                 : Padding(
-                    padding: const EdgeInsets.only(bottom: 40),
+                    padding: EdgeInsets.only(bottom: 40),
                     child: Icon(icon, color: Colors.white38, size: 20),
                   ),
             suffixIcon: suffixIcon != null
                 ? Icon(suffixIcon, color: Colors.white38, size: 20)
                 : null,
             filled: true,
-            fillColor: const Color(0xFF141414),
+            fillColor: Color(0xFF141414),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16,
               vertical: maxLines > 1 ? 16 : 18,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
               borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
               borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
               borderSide: BorderSide(
-                color: const Color(0xFF00FF7F).withValues(alpha: 0.5),
+                color: Color(0xFF00FF7F).withValues(alpha: 0.5),
               ),
             ),
           ),

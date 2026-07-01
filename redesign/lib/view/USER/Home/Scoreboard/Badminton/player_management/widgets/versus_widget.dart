@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VersusWidget extends StatelessWidget {
   final String gamesLabel;
 
-  const VersusWidget({
+  VersusWidget({
     super.key,
     required this.gamesLabel,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -20,26 +22,26 @@ class VersusWidget extends StatelessWidget {
             Transform.rotate(
               angle: -0.2,
               child: Container(
-                width: 60,
-                height: 40,
+                width: ResponsiveHelper.w(60),
+                height: ResponsiveHelper.h(40),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      const Color(0xFFC6FF00).withValues(alpha: 0.1),
-                      const Color(0xFFC6FF00).withValues(alpha: 0.0),
+                      Color(0xFFC6FF00).withValues(alpha: 0.1),
+                      Color(0xFFC6FF00).withValues(alpha: 0.0),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 ),
               ),
             ),
-            const Text(
+            Text(
               'VS',
               style: TextStyle(
                 color: Color(0xFFC6FF00), // Neon Yellow-Green
-                fontSize: 32,
+                fontSize: ResponsiveHelper.sp(32),
                 fontWeight: FontWeight.w900,
                 fontStyle: FontStyle.italic,
                 letterSpacing: 2.0,
@@ -47,18 +49,18 @@ class VersusWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(4)),
           decoration: BoxDecoration(
             color: Colors.grey.shade800,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
           ),
           child: Text(
             gamesLabel,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 10,
+              fontSize: ResponsiveHelper.sp(10),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
             ),

@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BadmintonCreateMatchAppBar extends StatelessWidget {
-  const BadmintonCreateMatchAppBar({super.key});
+  BadmintonCreateMatchAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                icon: Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () => Navigator.pop(context),
               ),
-              const SizedBox(width: 8),
-              const Text(
+              SizedBox(width: 8),
+              Text(
                 "MATCH CENTER",
                 style: TextStyle(
                   color: AppColors.muted,
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.5,
                 ),
@@ -31,17 +33,17 @@ class BadmintonCreateMatchAppBar extends StatelessWidget {
           ),
           Row(
             children: [
-              const Text(
+              Text(
                 "NEW MATCH",
                 style: TextStyle(
                   color: AppColors.muted,
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.5,
                 ),
               ),
-              const SizedBox(width: 8),
-              const Icon(Icons.timer_outlined, color: AppColors.muted, size: 20),
+              SizedBox(width: 8),
+              Icon(Icons.timer_outlined, color: AppColors.muted, size: 20),
             ],
           ),
         ],

@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerPoolSection extends StatelessWidget {
-  const PlayerPoolSection({super.key});
+  PlayerPoolSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Player Pool",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         SizedBox(
-          height: 110,
+          height: ResponsiveHelper.h(110),
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: 4,
-            separatorBuilder: (_, __) => const SizedBox(width: 18),
+            separatorBuilder: (_, __) => SizedBox(width: 18),
             itemBuilder: (context, index) {
               return Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: const BoxDecoration(
+                    padding: EdgeInsets.all(ResponsiveHelper.w(3)),
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
                         colors: [Colors.green, Colors.yellow, Colors.red],
@@ -37,10 +39,10 @@ class PlayerPoolSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     "Player ${index + 1}",
-                    style: const TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12),
                   ),
                 ],
               );

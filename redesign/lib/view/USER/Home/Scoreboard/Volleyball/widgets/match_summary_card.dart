@@ -3,26 +3,28 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_initialize_match_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchSummaryCard extends StatelessWidget {
   final VolleyballInitializeMatchController controller;
 
-  const MatchSummaryCard({super.key, required this.controller});
+  MatchSummaryCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('MATCH SUMMARY', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Obx(() => Column(
             children: [
               _buildSummaryRow('Format', controller.format.value == 'B3' ? 'Best of 3' : controller.format.value == 'B5' ? 'Best of 5' : 'Custom'),
@@ -38,7 +40,7 @@ class MatchSummaryCard extends StatelessWidget {
 
   Widget _buildSummaryRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

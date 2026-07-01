@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingDropdowns extends StatelessWidget {
   final String? selectedType;
@@ -9,7 +10,7 @@ class BookingDropdowns extends StatelessWidget {
   final ValueChanged<String> onTypeSelected;
   final ValueChanged<String> onSizeSelected;
 
-  const BookingDropdowns({
+  BookingDropdowns({
     super.key,
     required this.selectedType,
     required this.selectedSize,
@@ -24,8 +25,9 @@ class BookingDropdowns extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = constraints.maxWidth > 500;
@@ -76,13 +78,13 @@ class BookingDropdowns extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: _kBottomSheetColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
       ),
       builder: (_) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,13 +92,13 @@ class BookingDropdowns extends StatelessWidget {
                 /// TITLE
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: ResponsiveHelper.sp(18),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 /// OPTIONS
                 ...options.map((option) {
@@ -118,7 +120,7 @@ class BookingDropdowns extends StatelessWidget {
                       ),
                     ),
                     trailing: isSelected
-                        ? const Icon(Icons.check_circle, color: _kGreen)
+                        ? Icon(Icons.check_circle, color: _kGreen)
                         : null,
                   );
                 }),
@@ -136,7 +138,7 @@ class _DropdownCard extends StatelessWidget {
   final String? value;
   final VoidCallback onTap;
 
-  const _DropdownCard({
+  _DropdownCard({
     required this.label,
     this.value,
     required this.onTap,
@@ -147,14 +149,15 @@ class _DropdownCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
         decoration: BoxDecoration(
           color: _kCardColor,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
           border: Border.all(color: Colors.grey.shade800, width: 1),
         ),
         child: Row(
@@ -167,27 +170,27 @@ class _DropdownCard extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: _kMuted,
-                      fontSize: 11,
+                      fontSize: ResponsiveHelper.sp(11),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     value ?? 'Select',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: value == null ? _kMuted : Colors.white,
-                      fontSize: 14,
+                      fontSize: ResponsiveHelper.sp(14),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
               ),
             ),
-            const Icon(
+            Icon(
               Icons.keyboard_arrow_down_rounded,
               color: _kMuted,
               size: 22,

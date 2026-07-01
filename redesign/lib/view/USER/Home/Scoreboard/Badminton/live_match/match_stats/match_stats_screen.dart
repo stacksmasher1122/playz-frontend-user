@@ -6,9 +6,10 @@ import 'widgets/performance_metrics_card.dart';
 import 'widgets/point_distribution_card.dart';
 import 'widgets/game_timeline_section.dart';
 import 'widgets/dominance_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchStatsScreen extends StatefulWidget {
-  const MatchStatsScreen({super.key});
+  MatchStatsScreen({super.key});
 
   @override
   State<MatchStatsScreen> createState() => _MatchStatsScreenState();
@@ -36,9 +37,10 @@ class _MatchStatsScreenState extends State<MatchStatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Center(
+        return Center(
           child: CircularProgressIndicator(
             color: Color(0xFFC6FF00), // Neon Yellow-Green
           ),
@@ -47,7 +49,7 @@ class _MatchStatsScreenState extends State<MatchStatsScreen> {
 
       return SingleChildScrollView(
         child: Column(
-          children: const [
+          children: [
             SizedBox(height: 16),
             QuickStatsGrid(),
             PerformanceMetricsCard(),

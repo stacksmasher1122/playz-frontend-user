@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Badminton/point_history_model.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PointHistoryCard extends StatelessWidget {
   final PointHistoryModel point;
 
-  const PointHistoryCard({
+  PointHistoryCard({
     super.key,
     required this.point,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      width: 90,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      width: ResponsiveHelper.w(90),
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12), horizontal: ResponsiveHelper.w(8)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Column(
@@ -26,28 +28,28 @@ class PointHistoryCard extends StatelessWidget {
         children: [
           Text(
             'PT ${point.pointNumber}',
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.grey,
-              fontSize: 10,
+              fontSize: ResponsiveHelper.sp(10),
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             point.score,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: ResponsiveHelper.sp(16),
               fontWeight: FontWeight.bold,
               fontFeatures: [FontFeature.tabularFigures()],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             point.pointType,
-            style: const TextStyle(
+            style: TextStyle(
               color: Color(0xFFC6FF00), // Neon Yellow-Green
-              fontSize: 10,
+              fontSize: ResponsiveHelper.sp(10),
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
             ),

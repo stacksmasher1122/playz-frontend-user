@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kSurface = Color(0xFF222222);
@@ -11,7 +12,7 @@ class AudioBubble extends StatefulWidget {
   final String url;
   final bool isMe;
 
-  const AudioBubble({super.key, required this.url, required this.isMe});
+  AudioBubble({super.key, required this.url, required this.isMe});
 
   @override
   State<AudioBubble> createState() => _AudioBubbleState();
@@ -98,13 +99,14 @@ class _AudioBubbleState extends State<AudioBubble>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     super.build(context);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
       decoration: BoxDecoration(
         color: widget.isMe ? _kGreen.withValues(alpha: 0.9) : _kSurface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -117,8 +119,8 @@ class _AudioBubbleState extends State<AudioBubble>
               backgroundColor: widget.isMe ? Colors.white : _kGreen,
               child: _isLoading
                   ? SizedBox(
-                      width: 20,
-                      height: 20,
+                      width: ResponsiveHelper.w(20),
+                      height: ResponsiveHelper.h(20),
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         color: widget.isMe ? Colors.black : Colors.white,
@@ -131,15 +133,15 @@ class _AudioBubbleState extends State<AudioBubble>
             ),
           ),
 
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
 
           /// RANDOM ANIMATED Equalizer
           SizedBox(
-            width: 80,
+            width: ResponsiveHelper.w(80),
             child: AnimatedEqualizer(isPlaying: _isPlaying, isMe: widget.isMe),
           ),
 
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
 
           /// DURATION
           StreamBuilder<Duration>(
@@ -150,7 +152,7 @@ class _AudioBubbleState extends State<AudioBubble>
                   "Audio",
                   style: TextStyle(
                     color: widget.isMe ? Colors.black87 : Colors.white70,
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                     fontWeight: FontWeight.w600,
                   ),
                 );
@@ -164,7 +166,7 @@ class _AudioBubbleState extends State<AudioBubble>
                 durStr,
                 style: TextStyle(
                   color: widget.isMe ? Colors.black87 : Colors.white70,
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.w600,
                   ),
                 );
@@ -180,7 +182,7 @@ class AnimatedEqualizer extends StatefulWidget {
   final bool isPlaying;
   final bool isMe;
 
-  const AnimatedEqualizer({super.key, required this.isPlaying, required this.isMe});
+  AnimatedEqualizer({super.key, required this.isPlaying, required this.isMe});
 
   @override
   State<AnimatedEqualizer> createState() => _AnimatedEqualizerState();
@@ -210,7 +212,7 @@ class _AnimatedEqualizerState extends State<AnimatedEqualizer> {
 
   void _startAnimation() {
     _animTimer?.cancel();
-    _animTimer = Timer.periodic(const Duration(milliseconds: 250), (timer) {
+    _animTimer = Timer.periodic(Duration(milliseconds: 250), (timer) {
       if (mounted) {
         setState(() {
           _heights = List.generate(7, (index) {
@@ -244,18 +246,19 @@ class _AnimatedEqualizerState extends State<AnimatedEqualizer> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: List.generate(7, (index) {
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          margin: const EdgeInsets.symmetric(horizontal: 2.5),
-          width: 5,
+          duration: Duration(milliseconds: 250),
+          margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(2.5)),
+          width: ResponsiveHelper.w(5),
           height: _heights[index],
           decoration: BoxDecoration(
             color: widget.isMe ? Colors.black87 : _kGreen,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
           ),
         );
       }),

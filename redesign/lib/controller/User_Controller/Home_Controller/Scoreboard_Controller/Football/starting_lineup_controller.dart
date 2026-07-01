@@ -21,19 +21,19 @@ class StartingLineupController extends GetxController {
   final Rx<FormationModel?> currentFormation = Rx<FormationModel?>(null);
 
   final List<PlayerModel> _mockAllSquad = [
-    const PlayerModel(id: 'p1', name: 'Rodrygo Goes', jerseyNumber: '11', position: 'RW/LW', overall: 94, fitness: '94 PACE', availability: 'fit', form: '🔥'),
-    const PlayerModel(id: 'p2', name: 'Jude Bellingham', jerseyNumber: '5', position: 'CAM/CM', overall: 88, fitness: '88 PHY', availability: 'fit', form: '⭐'),
-    const PlayerModel(id: 'p3', name: 'David Alaba', jerseyNumber: '4', position: 'CB/LB', overall: 85, fitness: 'INJURED', availability: 'out', form: '', returnWeeks: '2w', isLocked: true),
-    const PlayerModel(id: 'p4', name: 'Luka Modric', jerseyNumber: '10', position: 'CM', overall: 91, fitness: '91 PAS', availability: 'fit', form: '📈'),
-    const PlayerModel(id: 'p5', name: 'Vini Jr', jerseyNumber: '7', position: 'LW', overall: 96, fitness: '96 PACE', availability: 'fit', form: '🔥'),
-    const PlayerModel(id: 'p6', name: 'Mbappé', jerseyNumber: '9', position: 'ST', overall: 97, fitness: '97 SHO', availability: 'fit', form: '⭐'),
-    const PlayerModel(id: 'p7', name: 'Valverde', jerseyNumber: '15', position: 'CM', overall: 89, fitness: '90 PHY', availability: 'fit', form: '🔥'),
-    const PlayerModel(id: 'p8', name: 'Courtois', jerseyNumber: '1', position: 'GK', overall: 90, fitness: '90 REF', availability: 'fit', form: '⭐', isGoalkeeper: true),
+    PlayerModel(id: 'p1', name: 'Rodrygo Goes', jerseyNumber: '11', position: 'RW/LW', overall: 94, fitness: '94 PACE', availability: 'fit', form: '🔥'),
+    PlayerModel(id: 'p2', name: 'Jude Bellingham', jerseyNumber: '5', position: 'CAM/CM', overall: 88, fitness: '88 PHY', availability: 'fit', form: '⭐'),
+    PlayerModel(id: 'p3', name: 'David Alaba', jerseyNumber: '4', position: 'CB/LB', overall: 85, fitness: 'INJURED', availability: 'out', form: '', returnWeeks: '2w', isLocked: true),
+    PlayerModel(id: 'p4', name: 'Luka Modric', jerseyNumber: '10', position: 'CM', overall: 91, fitness: '91 PAS', availability: 'fit', form: '📈'),
+    PlayerModel(id: 'p5', name: 'Vini Jr', jerseyNumber: '7', position: 'LW', overall: 96, fitness: '96 PACE', availability: 'fit', form: '🔥'),
+    PlayerModel(id: 'p6', name: 'Mbappé', jerseyNumber: '9', position: 'ST', overall: 97, fitness: '97 SHO', availability: 'fit', form: '⭐'),
+    PlayerModel(id: 'p7', name: 'Valverde', jerseyNumber: '15', position: 'CM', overall: 89, fitness: '90 PHY', availability: 'fit', form: '🔥'),
+    PlayerModel(id: 'p8', name: 'Courtois', jerseyNumber: '1', position: 'GK', overall: 90, fitness: '90 REF', availability: 'fit', form: '⭐', isGoalkeeper: true),
   ];
 
   void initialize() {
     Future.microtask(() => isLoading.value = true);
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       loadPlayers();
       loadFormation();
       
@@ -78,7 +78,7 @@ class StartingLineupController extends GetxController {
 
   void loadFormation() {
     if (selectedFormation.value == '4-3-3') {
-      currentFormation.value = const FormationModel(
+      currentFormation.value = FormationModel(
         id: '1',
         name: '4-3-3',
         positions: [
@@ -100,15 +100,15 @@ class StartingLineupController extends GetxController {
         id: '2',
         name: selectedFormation.value,
         positions: [
-          const PositionSlot(label: 'FW1', x: 0.3, y: 0.15),
-          const PositionSlot(label: 'FW2', x: 0.7, y: 0.15),
-          const PositionSlot(label: 'M1', x: 0.2, y: 0.4),
-          const PositionSlot(label: 'M2', x: 0.5, y: 0.45),
-          const PositionSlot(label: 'M3', x: 0.8, y: 0.4),
-          const PositionSlot(label: 'D1', x: 0.1, y: 0.75),
-          const PositionSlot(label: 'D2', x: 0.35, y: 0.8),
-          const PositionSlot(label: 'D3', x: 0.65, y: 0.8),
-          const PositionSlot(label: 'D4', x: 0.9, y: 0.75),
+          PositionSlot(label: 'FW1', x: 0.3, y: 0.15),
+          PositionSlot(label: 'FW2', x: 0.7, y: 0.15),
+          PositionSlot(label: 'M1', x: 0.2, y: 0.4),
+          PositionSlot(label: 'M2', x: 0.5, y: 0.45),
+          PositionSlot(label: 'M3', x: 0.8, y: 0.4),
+          PositionSlot(label: 'D1', x: 0.1, y: 0.75),
+          PositionSlot(label: 'D2', x: 0.35, y: 0.8),
+          PositionSlot(label: 'D3', x: 0.65, y: 0.8),
+          PositionSlot(label: 'D4', x: 0.9, y: 0.75),
         ],
       );
     }
@@ -207,7 +207,7 @@ class StartingLineupController extends GetxController {
     validateFormation();
     // UI Phase bypass: Always allow navigation regardless of validation
     // if (isFormationValid.value) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => const KickoffSetupScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => KickoffSetupScreen()));
     // } else {
     //   showError("Complete your lineup before continuing.");
     // }
@@ -269,15 +269,15 @@ class StartingLineupController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00), // Lime Green
+      backgroundColor: Color(0xFFC6FF00), // Lime Green
       colorText: Colors.black,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 
@@ -285,14 +285,14 @@ class StartingLineupController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 

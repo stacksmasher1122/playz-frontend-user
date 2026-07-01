@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'setup_constants.dart';
 import 'setup_models.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SetupModeToggle extends StatelessWidget {
   final MatchMode mode;
   final Function(MatchMode) onModeChanged;
 
-  const SetupModeToggle({
+  SetupModeToggle({
     super.key,
     required this.mode,
     required this.onModeChanged,
@@ -15,18 +16,19 @@ class SetupModeToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      padding: EdgeInsets.fromLTRB(24, 0, 24, 24),
       child: Container(
-        height: 50,
+        height: ResponsiveHelper.h(50),
         decoration: BoxDecoration(
           color: kSurfaceHighlight,
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(25)),
         ),
         child: Stack(
           children: [
             AnimatedAlign(
-              duration: const Duration(milliseconds: 300),
+              duration: Duration(milliseconds: 300),
               curve: Curves.easeOutBack,
               alignment: mode == MatchMode.friendly
                   ? Alignment.centerLeft
@@ -35,12 +37,12 @@ class SetupModeToggle extends StatelessWidget {
                 width: (MediaQuery.of(context).size.width - 48) / 2,
                 decoration: BoxDecoration(
                   color: kAccent,
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(25)),
                   boxShadow: [
                     BoxShadow(
                       color: kAccent.withValues(alpha: 0.3),
                       blurRadius: 12,
-                      offset: const Offset(0, 4),
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
@@ -69,11 +71,11 @@ class SetupModeToggle extends StatelessWidget {
         },
         child: Center(
           child: AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
             style: TextStyle(
               color: isSelected ? Colors.black : kTextSecondary,
               fontWeight: FontWeight.bold,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
             ),
             child: Text(label),
           ),

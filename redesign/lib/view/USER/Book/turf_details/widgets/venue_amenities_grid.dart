@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueAmenitiesGrid extends StatelessWidget {
-  const VenueAmenitiesGrid({super.key});
+  VenueAmenitiesGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final items = [
       Icons.local_parking,
       Icons.water_drop,
@@ -23,19 +25,19 @@ class VenueAmenitiesGrid extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Amenities',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: ResponsiveHelper.sp(18),
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Wrap(
             spacing: 12,
             runSpacing: 12,
@@ -43,18 +45,18 @@ class VenueAmenitiesGrid extends StatelessWidget {
               items.length,
               (index) => Container(
                 width: MediaQuery.of(context).size.width / 2 - 22,
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(ResponsiveHelper.w(12)),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade900,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                 ),
                 child: Column(
                   children: [
                     Icon(items[index], color: Colors.white),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
                     Text(
                       labels[index],
-                      style: const TextStyle(color: Color(0xFFA7A7A7)),
+                      style: TextStyle(color: Color(0xFFA7A7A7)),
                     ),
                   ],
                 ),

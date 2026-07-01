@@ -4,22 +4,24 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/live_pickleball_match_controller.dart';
 import 'performance_progress.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PerformanceCard extends StatelessWidget {
   final LivePickleballMatchController controller;
 
-  const PerformanceCard({
+  PerformanceCard({
     super.key,
     required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
       ),
       child: Column(
@@ -41,7 +43,7 @@ class PerformanceCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Obx(() => PerformanceProgress(
             label: 'WIN PERCENTAGE',
             valueA: '${(controller.winPercentageA.value * 100).toInt()}%',

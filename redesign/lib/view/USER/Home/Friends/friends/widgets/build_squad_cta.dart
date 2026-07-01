@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 
 class BuildSquadCTA extends StatelessWidget {
-  const BuildSquadCTA({super.key});
+  BuildSquadCTA({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
       child: Container(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.all(ResponsiveHelper.w(18)),
         decoration: BoxDecoration(
           color: kGreen,
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
         ),
         child: Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -26,7 +28,7 @@ class BuildSquadCTA extends StatelessWidget {
                     'Build a New Squad',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.sp(16),
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -44,10 +46,10 @@ class BuildSquadCTA extends StatelessWidget {
                 backgroundColor: Colors.black,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
                 ),
               ),
-              child: const Text('Start Now'),
+              child: Text('Start Now'),
             ),
           ],
         ),

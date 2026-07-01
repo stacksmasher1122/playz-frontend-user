@@ -13,7 +13,7 @@ import 'widgets/timeline_card.dart';
 import 'widgets/match_insight_card.dart';
 
 class VolleyballStatsScreen extends StatefulWidget {
-  const VolleyballStatsScreen({super.key});
+  VolleyballStatsScreen({super.key});
 
   @override
   State<VolleyballStatsScreen> createState() => _VolleyballStatsScreenState();
@@ -37,24 +37,24 @@ class _VolleyballStatsScreenState extends State<VolleyballStatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: Color(0xFF111111),
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
           children: [
-            const Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
-            const SizedBox(width: 8),
+            Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
+            SizedBox(width: 8),
             Text('PLAYZ SCOREBOARD', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
           ],
         ),
         actions: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: AppColors.error.withOpacity(0.2),
               borderRadius: BorderRadius.circular(16),
@@ -64,51 +64,51 @@ class _VolleyballStatsScreenState extends State<VolleyballStatsScreen> {
                 Container(
                   width: 8,
                   height: 8,
-                  decoration: const BoxDecoration(color: AppColors.error, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: AppColors.error, shape: BoxShape.circle),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text('LIVE', style: AppTypography.labelCaps10.copyWith(color: AppColors.error, fontWeight: FontWeight.bold)),
               ],
             ),
           ),
-          const SizedBox(width: 16),
-          const Icon(Icons.account_circle, color: AppColors.muted),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
+          Icon(Icons.account_circle, color: AppColors.muted),
+          SizedBox(width: 16),
         ],
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator(color: AppColors.primaryContainer));
+          return Center(child: CircularProgressIndicator(color: AppColors.primaryContainer));
         }
 
         return Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 600),
+                    constraints: BoxConstraints(maxWidth: 600),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         MatchScoreHeader(controller: controller),
-                        const SizedBox(height: 32),
+                        SizedBox(height: 32),
                         
                         MomentumChart(controller: controller),
-                        const SizedBox(height: 32),
+                        SizedBox(height: 32),
                         
                         TeamStatisticsCard(controller: controller),
-                        const SizedBox(height: 32),
+                        SizedBox(height: 32),
                         
                         TopScorerCard(controller: controller),
-                        const SizedBox(height: 32),
+                        SizedBox(height: 32),
                         
                         TimelineCard(controller: controller),
-                        const SizedBox(height: 32),
+                        SizedBox(height: 32),
                         
                         MatchInsightCard(controller: controller),
-                        const SizedBox(height: 48), // Padding before nav
+                        SizedBox(height: 48), // Padding before nav
                       ],
                     ),
                   ),
@@ -116,7 +116,7 @@ class _VolleyballStatsScreenState extends State<VolleyballStatsScreen> {
               ),
             ),
             // Fixed Bottom Navigation - hardcoded to index 2 (Stats)
-            const BottomNavigation(selectedIndex: 2),
+            BottomNavigation(selectedIndex: 2),
           ],
         );
       }),

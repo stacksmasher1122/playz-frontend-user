@@ -3,6 +3,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_player_model.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CourtPositionWidget extends StatelessWidget {
   final int position;
@@ -10,7 +11,7 @@ class CourtPositionWidget extends StatelessWidget {
   final Function(VolleyballPlayerModel) onAccept;
   final VoidCallback onTap;
 
-  const CourtPositionWidget({
+  CourtPositionWidget({
     super.key,
     required this.position,
     required this.player,
@@ -20,6 +21,7 @@ class CourtPositionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return DragTarget<VolleyballPlayerModel>(
       onAcceptWithDetails: (details) {
         onAccept(details.data);
@@ -30,12 +32,12 @@ class CourtPositionWidget extends StatelessWidget {
         return GestureDetector(
           onTap: onTap,
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
             decoration: BoxDecoration(
               color: isHovering 
                   ? AppColors.primaryContainer.withOpacity(0.2)
                   : (player != null ? AppColors.surfaceContainerHigh : AppColors.surfaceContainerLowest),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
               border: Border.all(
                 color: isHovering 
                     ? AppColors.primaryContainer 
@@ -53,8 +55,8 @@ class CourtPositionWidget extends StatelessWidget {
             child: Stack(
               children: [
                 Positioned(
-                  top: 8,
-                  left: 8,
+                  top: ResponsiveHelper.h(8),
+                  left: ResponsiveHelper.w(8),
                   child: Text(
                     'P$position',
                     style: AppTypography.labelCaps10.copyWith(color: AppColors.muted),
@@ -63,12 +65,12 @@ class CourtPositionWidget extends StatelessWidget {
                 if (player == null)
                   Center(
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: AppColors.muted.withOpacity(0.5)),
                       ),
-                      child: const Icon(Icons.add, color: AppColors.muted, size: 24),
+                      child: Icon(Icons.add, color: AppColors.muted, size: 24),
                     ),
                   )
                 else
@@ -77,17 +79,17 @@ class CourtPositionWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
                           decoration: BoxDecoration(
                             color: AppColors.primaryContainer,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                           ),
                           child: Text(
                             player!.jerseyNumber,
                             style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimaryContainer, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text(
                           player!.name.toUpperCase(),
                           style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, letterSpacing: 1.2),
@@ -100,11 +102,11 @@ class CourtPositionWidget extends StatelessWidget {
                   ),
                 if (player != null && player!.isCaptain)
                   Positioned(
-                    bottom: 8,
-                    right: 8,
+                    bottom: ResponsiveHelper.h(8),
+                    right: ResponsiveHelper.w(8),
                     child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
+                      padding: EdgeInsets.all(ResponsiveHelper.w(4)),
+                      decoration: BoxDecoration(
                         color: AppColors.primaryContainer,
                         shape: BoxShape.circle,
                       ),

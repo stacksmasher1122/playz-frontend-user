@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF161616);
 const kMuted = Colors.white54;
@@ -9,7 +10,7 @@ class CreateGroupTextField extends StatelessWidget {
   final int maxLines;
   final int? maxLength;
 
-  const CreateGroupTextField({
+  CreateGroupTextField({
     super.key,
     required this.controller,
     required this.hint,
@@ -19,20 +20,21 @@ class CreateGroupTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(4)),
       decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       ),
       child: TextField(
         controller: controller,
-        style: const TextStyle(color: Colors.white, fontSize: 14),
+        style: TextStyle(color: Colors.white, fontSize: 14),
         maxLines: maxLines,
         maxLength: maxLength,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(color: kMuted, fontSize: 14),
+          hintStyle: TextStyle(color: kMuted, fontSize: 14),
           border: InputBorder.none,
           counterText: '',
         ),

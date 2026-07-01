@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ServicePointsCard extends StatefulWidget {
   final double percentage; // 0.0 to 1.0
 
-  const ServicePointsCard({
+  ServicePointsCard({
     super.key,
     required this.percentage,
   });
@@ -21,7 +22,7 @@ class _ServicePointsCardState extends State<ServicePointsCard> with SingleTicker
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: Duration(milliseconds: 1000),
     );
     _animation = Tween<double>(begin: 0.0, end: widget.percentage).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
@@ -33,7 +34,7 @@ class _ServicePointsCardState extends State<ServicePointsCard> with SingleTicker
   void didUpdateWidget(ServicePointsCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.percentage != widget.percentage) {
-      _controller.duration = const Duration(milliseconds: 500);
+      _controller.duration = Duration(milliseconds: 500);
       _animation = Tween<double>(
         begin: oldWidget.percentage, 
         end: widget.percentage,
@@ -50,11 +51,12 @@ class _ServicePointsCardState extends State<ServicePointsCard> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(20)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Row(
@@ -64,21 +66,21 @@ class _ServicePointsCardState extends State<ServicePointsCard> with SingleTicker
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'SERVICE POINTS WON',
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: 10,
+                    fontSize: ResponsiveHelper.sp(10),
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   '${(widget.percentage * 100).toInt()}%',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: ResponsiveHelper.sp(24),
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -86,25 +88,25 @@ class _ServicePointsCardState extends State<ServicePointsCard> with SingleTicker
             ),
           ),
           SizedBox(
-            width: 100,
-            height: 6,
+            width: ResponsiveHelper.w(100),
+            height: ResponsiveHelper.h(6),
             child: AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
                 return Stack(
                   children: [
                     Container(
-                      width: 100,
+                      width: ResponsiveHelper.w(100),
                       decoration: BoxDecoration(
                         color: Colors.grey.shade800,
-                        borderRadius: BorderRadius.circular(3),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                       ),
                     ),
                     Container(
                       width: 100 * _animation.value,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFC6FF00), // Neon Yellow-Green
-                        borderRadius: BorderRadius.circular(3),
+                        color: Color(0xFFC6FF00), // Neon Yellow-Green
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                       ),
                     ),
                   ],

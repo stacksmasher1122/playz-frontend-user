@@ -4,13 +4,14 @@ import 'widgets/payment_ripple_effect.dart';
 import 'widgets/academy_summary_card.dart';
 import 'widgets/package_purchased_card.dart';
 import 'widgets/trainer_action_button.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = AppColors.background;
 const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class PaymentSuccessScreen extends StatefulWidget {
-  const PaymentSuccessScreen({super.key});
+  PaymentSuccessScreen({super.key});
 
   @override
   State<PaymentSuccessScreen> createState() => _PaymentSuccessScreenState();
@@ -27,12 +28,12 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
 
     _successController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: Duration(milliseconds: 700),
     )..forward();
 
     _rippleController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: Duration(seconds: 2),
     )..repeat();
   }
 
@@ -45,17 +46,18 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+          padding: EdgeInsets.fromLTRB(16, 24, 16, 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               /// SUCCESS ICON
               SizedBox(
-                height: 140,
+                height: ResponsiveHelper.h(140),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -66,8 +68,8 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                         curve: Curves.easeOutBack,
                       ),
                       child: Container(
-                        width: 64,
-                        height: 64,
+                        width: ResponsiveHelper.w(64),
+                        height: ResponsiveHelper.h(64),
                         decoration: BoxDecoration(
                           color: kGreen,
                           shape: BoxShape.circle,
@@ -79,7 +81,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                             ),
                           ],
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.check_rounded,
                           color: Colors.black,
                           size: 36,
@@ -90,18 +92,18 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                 ),
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
 
               /// SUCCESS TEXT
               FadeTransition(
                 opacity: _successController,
                 child: Column(
-                  children: const [
+                  children: [
                     Text(
                       'Payment Successful!',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 22,
+                        fontSize: ResponsiveHelper.sp(22),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -111,25 +113,25 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: kMuted,
-                        fontSize: 14,
-                        height: 1.4,
+                        fontSize: ResponsiveHelper.sp(14),
+                        height: ResponsiveHelper.h(1.4),
                       ),
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 28),
+              SizedBox(height: 28),
 
               /// ACADEMY CARD
-              const AcademySummaryCard(),
+              AcademySummaryCard(),
 
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               /// PACKAGE CARD
-              const PackagePurchasedCard(),
+              PackagePurchasedCard(),
 
-              const SizedBox(height: 28),
+              SizedBox(height: 28),
 
               /// ACTIONS
               TrainerActionButton(
@@ -140,15 +142,15 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                 },
               ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               GestureDetector(
                 onTap: () => Navigator.pop(context),
-                child: const Text(
+                child: Text(
                   'Back to Home',
                   style: TextStyle(
                     color: kMuted,
-                    fontSize: 14,
+                    fontSize: ResponsiveHelper.sp(14),
                     decoration: TextDecoration.underline,
                   ),
                 ),

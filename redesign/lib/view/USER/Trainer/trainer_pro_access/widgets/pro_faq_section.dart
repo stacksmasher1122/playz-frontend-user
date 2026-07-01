@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 const kCard = Color(0xFF1A1A1A);
 
 class ProFaqSection extends StatelessWidget {
-  const ProFaqSection({super.key});
+  ProFaqSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         Text(
           'FREQUENTLY ASKED QUESTIONS',
           style: TextStyle(
             color: kMuted,
-            fontSize: 12.5,
+            fontSize: ResponsiveHelper.sp(12.5),
             fontWeight: FontWeight.w700,
             letterSpacing: 0.8,
           ),
@@ -50,29 +52,30 @@ class FaqTile extends StatelessWidget {
   final String question;
   final String answer;
 
-  const FaqTile({super.key, required this.question, required this.answer});
+  FaqTile({super.key, required this.question, required this.answer});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return ExpansionTile(
-      tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+      tilePadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       collapsedBackgroundColor: kCard,
       backgroundColor: kCard,
       iconColor: kGreen,
       collapsedIconColor: kMuted,
       title: Text(
         question,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w600,
         ),
       ),
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: Text(
             answer,
-            style: const TextStyle(color: kMuted, height: 1.4),
+            style: TextStyle(color: kMuted, height: 1.4),
           ),
         ),
       ],

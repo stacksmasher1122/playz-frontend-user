@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 
 class InteractiveSearchBar extends StatefulWidget {
   final TextEditingController controller;
   final MapsController mapsCtrl;
 
-  const InteractiveSearchBar({
+  InteractiveSearchBar({
     super.key,
     required this.controller,
     required this.mapsCtrl,
@@ -37,11 +38,12 @@ class _InteractiveSearchBarState extends State<InteractiveSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 200),
       decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
         border: Border.all(
           color: _isFocused ? kSpotifyGreen : Colors.white12,
           width: _isFocused ? 1.5 : 1,
@@ -60,14 +62,14 @@ class _InteractiveSearchBarState extends State<InteractiveSearchBar> {
         controller: widget.controller,
         focusNode: _focusNode,
         cursorColor: kSpotifyGreen,
-        style: const TextStyle(color: Colors.white, fontSize: 14),
+        style: TextStyle(color: Colors.white, fontSize: 14),
         decoration: InputDecoration(
           hintText: "Search turfs, areas, or streets...",
-          hintStyle: const TextStyle(color: kMuted, fontSize: 13),
-          prefixIcon: const Icon(Icons.search, color: kMuted, size: 20),
+          hintStyle: TextStyle(color: kMuted, fontSize: 13),
+          prefixIcon: Icon(Icons.search, color: kMuted, size: 20),
           suffixIcon: widget.controller.text.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.close, color: kMuted, size: 18),
+                  icon: Icon(Icons.close, color: kMuted, size: 18),
                   onPressed: () {
                     widget.controller.clear();
                     widget.mapsCtrl.searchResults.clear();
@@ -76,7 +78,7 @@ class _InteractiveSearchBarState extends State<InteractiveSearchBar> {
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 11),
+          contentPadding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(11)),
         ),
         onChanged: (query) {
           setState(() {});

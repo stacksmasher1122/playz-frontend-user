@@ -1,12 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SmBackgroundEffectWidget extends StatelessWidget {
-  const SmBackgroundEffectWidget({super.key});
+  SmBackgroundEffectWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return IgnorePointer(
       child: LayoutBuilder(
         builder: (context, constraints) {

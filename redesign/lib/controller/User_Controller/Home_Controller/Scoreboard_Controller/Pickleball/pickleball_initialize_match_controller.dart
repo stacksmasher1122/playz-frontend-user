@@ -101,7 +101,7 @@ class PickleballInitializeMatchController extends GetxController {
   void initializeMatch(String name, String court, DateTime? date, VoidCallback onSuccess) async {
     if (validateForm(name, court, date)) {
       isLoading.value = true;
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 1));
       isLoading.value = false;
       onSuccess();
     } else {

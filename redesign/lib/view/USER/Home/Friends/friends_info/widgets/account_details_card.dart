@@ -3,37 +3,39 @@ import 'package:intl/intl.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/player_info_model.dart';
 import 'info_detail_row.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color _kGreen = AppColors.accent;
-const Color _kSurface = Color(0xFF222222);
+Color _kGreen = AppColors.accent;
+Color _kSurface = Color(0xFF222222);
 
 class AccountDetailsCard extends StatelessWidget {
   final PlayerInfoModel info;
 
-  const AccountDetailsCard({super.key, required this.info});
+  AccountDetailsCard({super.key, required this.info});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             "ACCOUNT DETAILS",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: ResponsiveHelper.sp(12),
               fontWeight: FontWeight.w800,
               letterSpacing: 2.0,
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
             color: _kSurface,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
           ),
           child: Column(
             children: [
@@ -43,9 +45,9 @@ class AccountDetailsCard extends StatelessWidget {
                 value: info.username,
                 valueColor: _kGreen,
               ),
-              const Divider(
+              Divider(
                 color: Colors.white12,
-                height: 1,
+                height: ResponsiveHelper.h(1),
                 indent: 20,
                 endIndent: 20,
               ),
@@ -57,9 +59,9 @@ class AccountDetailsCard extends StatelessWidget {
                     : "-",
                 valueColor: Colors.white,
               ),
-              const Divider(
+              Divider(
                 color: Colors.white12,
-                height: 1,
+                height: ResponsiveHelper.h(1),
                 indent: 20,
                 endIndent: 20,
               ),

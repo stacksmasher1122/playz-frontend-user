@@ -6,11 +6,11 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class TeamStatisticsCard extends StatelessWidget {
   final VolleyballStatsController controller;
 
-  const TeamStatisticsCard({super.key, required this.controller});
+  TeamStatisticsCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    if (controller.teamAStats.value == null || controller.teamBStats.value == null) return const SizedBox.shrink();
+    if (controller.teamAStats.value == null || controller.teamBStats.value == null) return SizedBox.shrink();
     
     var statsA = controller.teamAStats.value!;
     var statsB = controller.teamBStats.value!;
@@ -19,7 +19,7 @@ class TeamStatisticsCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('TEAM STATS', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         _buildStatRow('ATTACK SUCCESS', '${statsA.attackSuccessPercent}%', '${statsB.attackSuccessPercent}%', statsA.attackSuccessPercent, statsB.attackSuccessPercent),
         _buildStatRow('BLOCKS', '${statsA.blocks}', '${statsB.blocks}', statsA.blocks, statsB.blocks),
         _buildStatRow('ACES', '${statsA.aces.toString().padLeft(2, '0')}', '${statsB.aces.toString().padLeft(2, '0')}', statsA.aces, statsB.aces),
@@ -35,7 +35,7 @@ class TeamStatisticsCard extends StatelessWidget {
     double ratioB = rawB / total;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding: EdgeInsets.only(bottom: 24.0),
       child: Column(
         children: [
           Row(
@@ -46,14 +46,14 @@ class TeamStatisticsCard extends StatelessWidget {
               Text(valB, style: AppTypography.bodyLg.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold)),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 flex: (ratioA * 100).toInt(),
                 child: Container(height: 4, color: AppColors.primaryContainer),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Expanded(
                 flex: (ratioB * 100).toInt(),
                 child: Container(height: 4, color: AppColors.surfaceContainerHighest),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class StatsTileWidget extends StatelessWidget {
   final String title;
   final String value;
   final bool isPrimary; // True if it should have lime border/color (e.g. XP Gained)
 
-  const StatsTileWidget({
+  StatsTileWidget({
     super.key,
     required this.title,
     required this.value,
@@ -14,11 +15,12 @@ class StatsTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Row(
@@ -26,13 +28,13 @@ class StatsTileWidget extends StatelessWidget {
           // Left accent border if primary
           if (isPrimary)
             Container(
-              width: 4,
-              height: 40,
+              width: ResponsiveHelper.w(4),
+              height: ResponsiveHelper.h(40),
               decoration: BoxDecoration(
-                color: const Color(0xFFC6FF00),
-                borderRadius: BorderRadius.circular(2),
+                color: Color(0xFFC6FF00),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
               ),
-              margin: const EdgeInsets.only(right: 12),
+              margin: EdgeInsets.only(right: 12),
             ),
           Expanded(
             child: Column(
@@ -41,18 +43,18 @@ class StatsTileWidget extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.grey,
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Text(
                   value,
                   style: TextStyle(
-                    color: isPrimary ? const Color(0xFFC6FF00) : Colors.white,
-                    fontSize: 28,
+                    color: isPrimary ? Color(0xFFC6FF00) : Colors.white,
+                    fontSize: ResponsiveHelper.sp(28),
                     fontWeight: FontWeight.w300,
                   ),
                 ),

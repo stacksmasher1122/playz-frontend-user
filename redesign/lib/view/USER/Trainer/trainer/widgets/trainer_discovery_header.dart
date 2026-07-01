@@ -10,17 +10,19 @@ import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
 import 'package:redesign/view/USER/Trainer/trainer_register/trainer_register_screen.dart';
 
 import 'trainer_join_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TrainerDiscoveryHeader extends StatelessWidget {
-  const TrainerDiscoveryHeader({super.key});
+  TrainerDiscoveryHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<UserProfileController>();
     final width = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
       child: Column(
         children: [
           Row(
@@ -32,7 +34,7 @@ class TrainerDiscoveryHeader extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
-                            const LocationSelectSliverScreen(),
+                            LocationSelectSliverScreen(),
                       ),
                     );
                   },
@@ -43,7 +45,7 @@ class TrainerDiscoveryHeader extends StatelessWidget {
                         color: AppColors.accent,
                         size: width < 360 ? 18 : 22,
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       Flexible(
                         child: Obx(() {
                           final mapsCtrl = Get.find<MapsController>();
@@ -76,7 +78,7 @@ class TrainerDiscoveryHeader extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
 
               /// NOTIFICATIONS BELL
               Icon(
@@ -84,7 +86,7 @@ class TrainerDiscoveryHeader extends StatelessWidget {
                 color: Colors.white,
                 size: width < 360 ? 20 : 24,
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
 
               /// AVATAR
               Obx(() {
@@ -103,8 +105,8 @@ class TrainerDiscoveryHeader extends StatelessWidget {
                           ),
                           errorWidget: (_, __, ___) => CircleAvatar(
                             radius: width < 360 ? 16 : 18,
-                            backgroundColor: const Color(0xFF1A1A1A),
-                            child: const Icon(
+                            backgroundColor: Color(0xFF1A1A1A),
+                            child: Icon(
                               Icons.person,
                               color: Colors.white38,
                             ),
@@ -112,8 +114,8 @@ class TrainerDiscoveryHeader extends StatelessWidget {
                         )
                       : CircleAvatar(
                           radius: width < 360 ? 16 : 18,
-                          backgroundColor: const Color(0xFF1A1A1A),
-                          child: const Icon(
+                          backgroundColor: Color(0xFF1A1A1A),
+                          child: Icon(
                             Icons.person,
                             color: Colors.white38,
                           ),
@@ -122,24 +124,24 @@ class TrainerDiscoveryHeader extends StatelessWidget {
               }),
             ],
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           TextField(
             cursorColor: AppColors.accent,
             style: GoogleFonts.inter(color: Colors.white),
             decoration: InputDecoration(
               hintText: 'Search trainers, sports...',
               hintStyle: GoogleFonts.inter(color: AppColors.muted),
-              prefixIcon: const Icon(Icons.search, color: AppColors.muted),
-              suffixIcon: const Icon(Icons.tune, color: AppColors.muted),
+              prefixIcon: Icon(Icons.search, color: AppColors.muted),
+              suffixIcon: Icon(Icons.tune, color: AppColors.muted),
               filled: true,
               fillColor: AppColors.surface,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           TrainerJoinCard(
             onTap: () {
               Navigator.of(context).push(

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class GamesSliderWidget extends StatelessWidget {
   final int totalGames;
   final ValueChanged<double> onChanged;
 
-  const GamesSliderWidget({
+  GamesSliderWidget({
     super.key,
     required this.totalGames,
     required this.onChanged,
@@ -12,12 +13,13 @@ class GamesSliderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.8), // dark glass card
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.grey.shade800, width: 1.0),
       ),
       child: Column(
@@ -26,39 +28,39 @@ class GamesSliderWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Number of Games',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: ResponsiveHelper.sp(14),
                 ),
               ),
               Text(
                 '$totalGames',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Color(0xFFC6FF00), // Neon Yellow-Green
-                  fontSize: 20,
+                  fontSize: ResponsiveHelper.sp(20),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
-              const Text(
+              Text(
                 '1',
-                style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Colors.grey, fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.bold),
               ),
               Expanded(
                 child: SliderTheme(
                   data: SliderThemeData(
-                    activeTrackColor: const Color(0xFFC6FF00),
+                    activeTrackColor: Color(0xFFC6FF00),
                     inactiveTrackColor: Colors.grey.shade800,
-                    thumbColor: const Color(0xFFC6FF00),
+                    thumbColor: Color(0xFFC6FF00),
                     trackHeight: 4.0,
-                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10.0),
-                    overlayColor: const Color(0xFFC6FF00).withValues(alpha: 0.2),
+                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.0),
+                    overlayColor: Color(0xFFC6FF00).withValues(alpha: 0.2),
                   ),
                   child: Slider(
                     value: totalGames.toDouble(),
@@ -69,9 +71,9 @@ class GamesSliderWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              const Text(
+              Text(
                 '5',
-                style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Colors.grey, fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.bold),
               ),
             ],
           ),

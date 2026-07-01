@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'step_header.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
 const kMuted = Color(0xFFA7A7A7);
 
 class AvailabilitySection extends StatefulWidget {
-  const AvailabilitySection({super.key});
+  AvailabilitySection({super.key});
 
   @override
   State<AvailabilitySection> createState() => _AvailabilitySectionState();
@@ -26,25 +27,26 @@ class _AvailabilitySectionState extends State<AvailabilitySection> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// STEP HEADER
-        const StepHeader(step: 5, title: 'Availability'),
+        StepHeader(step: 5, title: 'Availability'),
 
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         /// DAYS
-        const Text(
+        Text(
           'Days Available',
           style: TextStyle(
             color: kMuted,
-            fontSize: 13,
+            fontSize: ResponsiveHelper.sp(13),
             fontWeight: FontWeight.w500,
           ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,19 +68,19 @@ class _AvailabilitySectionState extends State<AvailabilitySection> {
           }),
         ),
 
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
 
         /// TIME SLOTS
-        const Text(
+        Text(
           'Preferred Time Slots',
           style: TextStyle(
             color: kMuted,
-            fontSize: 13,
+            fontSize: ResponsiveHelper.sp(13),
             fontWeight: FontWeight.w500,
           ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         Wrap(
           spacing: 12,
@@ -108,7 +110,7 @@ class DayCircle extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  const DayCircle({
+  DayCircle({
     super.key,
     required this.label,
     required this.selected,
@@ -117,13 +119,14 @@ class DayCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return InkWell(
-      customBorder: const CircleBorder(),
+      customBorder: CircleBorder(),
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 42,
-        height: 42,
+        duration: Duration(milliseconds: 200),
+        width: ResponsiveHelper.w(42),
+        height: ResponsiveHelper.h(42),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -146,7 +149,7 @@ class TimeSlotChip extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  const TimeSlotChip({
+  TimeSlotChip({
     super.key,
     required this.label,
     required this.selected,
@@ -155,18 +158,19 @@ class TimeSlotChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(10)),
         decoration: BoxDecoration(
           color: selected ? kGreen.withValues(alpha: 0.15) : kCard,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
           border: Border.all(
             color: selected ? kGreen : Colors.transparent,
-            width: 1.2,
+            width: ResponsiveHelper.w(1.2),
           ),
         ),
         child: Text(
@@ -174,7 +178,7 @@ class TimeSlotChip extends StatelessWidget {
           style: TextStyle(
             color: selected ? kGreen : Colors.white,
             fontWeight: FontWeight.w600,
-            fontSize: 13,
+            fontSize: ResponsiveHelper.sp(13),
           ),
         ),
       ),

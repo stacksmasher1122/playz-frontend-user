@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class DarkModeTile extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const DarkModeTile({
+  DarkModeTile({
     super.key,
     required this.value,
     required this.onChanged,
@@ -14,8 +15,9 @@ class DarkModeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: SwitchListTile(
         value: value,
         onChanged: onChanged,

@@ -6,6 +6,7 @@ import 'package:redesign/model/User_Models/Home_Models/Groups_Model/group_chat_m
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_chat_controller.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import '../voter_breakdown_sheet.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
@@ -13,10 +14,11 @@ const _kMuted = Colors.white38;
 class PollBubble extends StatelessWidget {
   final GroupChatMessageModel msg;
 
-  const PollBubble({super.key, required this.msg});
+  PollBubble({super.key, required this.msg});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     Map<String, dynamic> payload = {};
     try {
       payload = jsonDecode(msg.content);
@@ -44,12 +46,12 @@ class PollBubble extends StatelessWidget {
     }
 
     return Container(
-      width: 280,
-      margin: const EdgeInsets.only(top: 4, bottom: 4),
-      padding: const EdgeInsets.all(16),
+      width: ResponsiveHelper.w(280),
+      margin: EdgeInsets.only(top: ResponsiveHelper.h(4), bottom: 4),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
-        color: const Color(0xFF262626),
-        borderRadius: BorderRadius.circular(16),
+        color: Color(0xFF262626),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,27 +60,27 @@ class PollBubble extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                 decoration: BoxDecoration(
                   color: _kGreen.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.poll, color: _kGreen, size: 20),
+                child: Icon(Icons.poll, color: _kGreen, size: 20),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Text(
                   question,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           ...rawOptions.map((opt) {
             String id = opt['id'].toString();
             String text = opt['text'].toString();
@@ -94,21 +96,21 @@ class PollBubble extends StatelessWidget {
             }
 
             return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: EdgeInsets.only(bottom: 8),
               child: InkWell(
                 onTap: () {
                   ctrl.togglePollVote(msg.id, id);
                 },
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                 child: Stack(
                   children: [
                     // Background & Progress bar
                     Container(
-                      height: 48,
+                      height: ResponsiveHelper.h(48),
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF333333),
-                        borderRadius: BorderRadius.circular(12),
+                        color: Color(0xFF333333),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                         border: Border.all(
                           color: iVotedForThis ? _kGreen : Colors.transparent,
                         ),
@@ -129,13 +131,13 @@ class PollBubble extends StatelessWidget {
                     // Foreground content
                     Positioned.fill(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
                         child: Row(
                           children: [
                             Expanded(
                               child: Text(
                                 text,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -154,7 +156,7 @@ class PollBubble extends StatelessWidget {
                                 ),
                               ),
                             if (iVotedForThis) ...[
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Icon(
                                 Icons.check_circle,
                                 color: percentage > 0.5
@@ -173,8 +175,8 @@ class PollBubble extends StatelessWidget {
             );
           }),
 
-          const SizedBox(height: 8),
-          const Divider(color: Colors.white10),
+          SizedBox(height: 8),
+          Divider(color: Colors.white10),
 
           InkWell(
             onTap: () {
@@ -188,23 +190,23 @@ class PollBubble extends StatelessWidget {
               showPollVotersSheet(context, rawVotes, rawOptions, groupMembers);
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "View votes",
                     style: TextStyle(
                       color: _kGreen,
-                      fontSize: 13,
+                      fontSize: ResponsiveHelper.sp(13),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     "$totalVotes VOTES",
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: _kMuted,
-                      fontSize: 11,
+                      fontSize: ResponsiveHelper.sp(11),
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1,
                     ),

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LoginBackground extends StatelessWidget {
-  const LoginBackground({super.key});
+  LoginBackground({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final size = MediaQuery.of(context).size;
 
     return Stack(
@@ -15,10 +17,10 @@ class LoginBackground extends StatelessWidget {
         Container(
           height: size.height * 0.45,
           width: double.infinity,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(48),
-              bottomRight: Radius.circular(48),
+              bottomLeft: Radius.circular(ResponsiveHelper.w(48)),
+              bottomRight: Radius.circular(ResponsiveHelper.w(48)),
             ),
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -36,7 +38,7 @@ class LoginBackground extends StatelessWidget {
         /// ABSTRACT BACKGROUND SHAPE
         Positioned(
           top: -10,
-          left: 30,
+          left: ResponsiveHelper.w(30),
           right: -50,
           child: Opacity(
             opacity: 0.8,
@@ -48,7 +50,7 @@ class LoginBackground extends StatelessWidget {
                 style: GoogleFonts.luckiestGuy(
                   fontSize: size.width * 1.1,
                   color: Colors.white,
-                  height: 1,
+                  height: ResponsiveHelper.h(1),
                   letterSpacing: -8,
                 ),
               ),

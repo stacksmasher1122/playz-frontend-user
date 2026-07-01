@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color _kGreen = AppColors.accent;
-const Color _kSurface = Color(0xFF222222);
-const Color _kMuted = Colors.white60;
+Color _kGreen = AppColors.accent;
+Color _kSurface = Color(0xFF222222);
+Color _kMuted = Colors.white60;
 
 class InfoStatCard extends StatelessWidget {
   final IconData icon;
   final String value;
   final String label;
 
-  const InfoStatCard({
+  InfoStatCard({
     super.key,
     required this.icon,
     required this.value,
@@ -19,11 +20,12 @@ class InfoStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
       child: Container(
-        height: 145,
-        decoration: const BoxDecoration(color: _kSurface),
+        height: ResponsiveHelper.h(145),
+        decoration: BoxDecoration(color: _kSurface),
         child: Stack(
           children: [
             // Background arc decoration
@@ -31,19 +33,19 @@ class InfoStatCard extends StatelessWidget {
               top: -40,
               right: -40,
               child: Container(
-                width: 110,
-                height: 110,
+                width: ResponsiveHelper.w(110),
+                height: ResponsiveHelper.h(110),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: _kGreen.withValues(alpha: 0.15),
-                    width: 18,
+                    width: ResponsiveHelper.w(18),
                   ),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(ResponsiveHelper.w(20)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,18 +56,18 @@ class InfoStatCard extends StatelessWidget {
                     children: [
                       Text(
                         value,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 34,
+                          fontSize: ResponsiveHelper.sp(34),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         label,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: _kMuted,
-                          fontSize: 9,
+                          fontSize: ResponsiveHelper.sp(9),
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.2,
                         ),

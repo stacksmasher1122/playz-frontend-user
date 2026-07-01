@@ -2,39 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/live_football_dashboard_controller.dart';
 import 'quick_event_button.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QuickEventGridWidget extends StatelessWidget {
-  const QuickEventGridWidget({super.key});
+  QuickEventGridWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveFootballDashboardController>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
+            children: [
               Icon(Icons.bolt, color: Colors.grey, size: 16),
               SizedBox(width: 8),
               Text(
                 'QUICK EVENT TRACKER',
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           // Goal Button (Full width)
           SizedBox(
             width: double.infinity,
-            height: 80,
+            height: ResponsiveHelper.h(80),
             child: QuickEventButton(
               title: 'Goal',
               icon: Icons.sports_soccer,
@@ -42,12 +44,12 @@ class QuickEventGridWidget extends StatelessWidget {
               onTap: controller.recordGoal,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           // 2x2 Grid for others
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
             childAspectRatio: 1.8,

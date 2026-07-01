@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import '../../../../../../../theme/responsive_helper.dart';
 
 class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({super.key});
+  LoadingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    ResponsiveHelper.init(context);
+    return Center(
       child: CircularProgressIndicator(color: Color(0xFFC6FF00)),
     );
   }

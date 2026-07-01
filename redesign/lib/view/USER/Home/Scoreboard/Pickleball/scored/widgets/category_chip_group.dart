@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CategoryChipGroup extends StatelessWidget {
   final List<String> options;
   final String selected;
   final ValueChanged<String> onSelect;
 
-  const CategoryChipGroup({
+  CategoryChipGroup({
     super.key,
     required this.options,
     required this.selected,
@@ -16,11 +17,12 @@ class CategoryChipGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("Match Category", style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         RepaintBoundary(
           child: Wrap(
             spacing: 8,
@@ -42,7 +44,7 @@ class MatchCustomChip extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const MatchCustomChip({
+  MatchCustomChip({
     super.key,
     required this.label,
     required this.isSelected,
@@ -51,14 +53,15 @@ class MatchCustomChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(10)),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
         ),
         child: Text(
           label,

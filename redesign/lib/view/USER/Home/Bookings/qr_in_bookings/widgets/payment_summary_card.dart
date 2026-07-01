@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import '../qr_in_bookings_screen.dart';
 import 'qr_amount_row.dart';
 import 'qr_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
-  const PaymentSummaryCard({super.key});
+  PaymentSummaryCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return QrCard(
       title: 'Payment Summary',
       child: Column(
-        children: const [
+        children: [
           QrAmountRow('Court Fee', '₹1,200'),
           QrAmountRow('Conv. Fee', '₹40'),
           Divider(color: Colors.white12),

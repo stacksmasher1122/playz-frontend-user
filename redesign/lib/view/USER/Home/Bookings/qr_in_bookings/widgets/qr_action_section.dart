@@ -3,13 +3,15 @@ import '../qr_in_bookings_screen.dart';
 import 'qr_danger_action.dart';
 import 'qr_outlined_action.dart';
 import 'qr_primary_action.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QrActionSection extends StatelessWidget {
   final BookingStatus status;
-  const QrActionSection({super.key, required this.status});
+  QrActionSection({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Wrap(
       spacing: 12,
       runSpacing: 12,

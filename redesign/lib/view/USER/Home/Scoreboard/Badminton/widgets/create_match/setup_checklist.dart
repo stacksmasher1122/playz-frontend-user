@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SetupChecklist extends StatelessWidget {
-  const SetupChecklist({super.key});
+  SetupChecklist({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(12),
+        color: Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader("SETUP CHECKLIST"),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           _buildChecklistItem("Match name defined", isDone: true),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildChecklistItem("Standard category active", isDone: true),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildChecklistItem("Player management (Next step)", isDone: false),
         ],
       ),
@@ -30,9 +32,9 @@ class SetupChecklist extends StatelessWidget {
   Widget _buildSectionHeader(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         color: Colors.white,
-        fontSize: 12,
+        fontSize: ResponsiveHelper.sp(12),
         fontWeight: FontWeight.bold,
         letterSpacing: 1.5,
       ),
@@ -47,12 +49,12 @@ class SetupChecklist extends StatelessWidget {
           color: isDone ? AppColors.accent : AppColors.muted,
           size: 20,
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Text(
           text,
           style: TextStyle(
             color: isDone ? Colors.white : AppColors.muted,
-            fontSize: 14,
+            fontSize: ResponsiveHelper.sp(14),
           ),
         ),
       ],

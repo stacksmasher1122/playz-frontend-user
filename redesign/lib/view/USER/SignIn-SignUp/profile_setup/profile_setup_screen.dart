@@ -11,10 +11,11 @@ import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 
 import 'widgets/profile_photo_picker.dart';
 import 'widgets/profile_setup_field.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   final List<String> selectedSports;
-  const ProfileSetupScreen({super.key, required this.selectedSports});
+  ProfileSetupScreen({super.key, required this.selectedSports});
 
   @override
   State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
@@ -97,7 +98,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       debugPrint("Pick image error: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to pick image")),
+          SnackBar(content: Text("Failed to pick image")),
         );
       }
     }
@@ -106,7 +107,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   Future<void> _completeSetup() async {
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Name is required")),
+        SnackBar(content: Text("Name is required")),
       );
       return;
     }
@@ -117,7 +118,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
     if (docId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("An email or phone number is required.")),
+        SnackBar(content: Text("An email or phone number is required.")),
       );
       return;
     }
@@ -148,7 +149,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const UserAppNavShell()),
+        MaterialPageRoute(builder: (_) => UserAppNavShell()),
         (route) => false,
       );
     }
@@ -156,33 +157,34 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
           children: [
-            const Text(
+            Text(
               'STEP 2 OF 2',
               style: TextStyle(
                 color: kMuted,
-                fontSize: 11,
+                fontSize: ResponsiveHelper.sp(11),
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.5,
               ),
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(height: 3, width: 30, color: kSpotifyGreen),
-                const SizedBox(width: 4),
-                Container(height: 3, width: 30, color: kSpotifyGreen),
+                Container(height: ResponsiveHelper.h(3), width: ResponsiveHelper.w(30), color: kSpotifyGreen),
+                SizedBox(width: 4),
+                Container(height: ResponsiveHelper.h(3), width: ResponsiveHelper.w(30), color: kSpotifyGreen),
               ],
             ),
           ],
@@ -190,38 +192,38 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Complete your profile',
               style: GoogleFonts.inter(
-                fontSize: 28,
+                fontSize: ResponsiveHelper.sp(28),
                 fontWeight: FontWeight.w800,
                 color: Colors.white,
                 letterSpacing: -0.5,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               'Tell us a bit about yourself to get started.',
-              style: GoogleFonts.inter(fontSize: 15, color: Colors.white70),
+              style: GoogleFonts.inter(fontSize: ResponsiveHelper.sp(15), color: Colors.white70),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             ProfilePhotoPicker(
               imageFile: _imageFile,
               onPickImage: _pickImage,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             ProfileSetupField(
               label: 'FULL NAME',
               hint: 'Alex Morgan',
               icon: Icons.person,
               controller: _nameController,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ProfileSetupField(
               label: 'PHONE NUMBER',
               hint: '+1 (555) 000-1234',
@@ -229,7 +231,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               controller: _phoneController,
               readOnly: _isPhoneBound,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ProfileSetupField(
               label: 'EMAIL ADDRESS',
               hint: 'alex.morgan@example.com',
@@ -237,7 +239,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               controller: _emailController,
               readOnly: _isEmailBound,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ProfileSetupField(
               label: 'DATE OF BIRTH',
               hint: 'mm/dd/yyyy',
@@ -247,13 +249,13 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               onTap: () async {
                 final date = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now().subtract(const Duration(days: 365 * 18)),
+                  initialDate: DateTime.now().subtract(Duration(days: 365 * 18)),
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
                   builder: (context, child) {
                     return Theme(
                       data: Theme.of(context).copyWith(
-                        colorScheme: const ColorScheme.dark(
+                        colorScheme: ColorScheme.dark(
                           primary: Color(0xFF00FF7F),
                           onPrimary: Colors.black,
                           surface: kCard,
@@ -272,7 +274,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 }
               },
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ProfileSetupField(
               label: 'BIO',
               hint: "Tell us about your favorite sports,\nteams, or what you're looking for...",
@@ -280,27 +282,27 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               controller: _bioController,
               maxLines: 3,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Public Profile',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: ResponsiveHelper.sp(16),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       'Allow anyone to see your stats',
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.5),
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.sp(12),
                       ),
                     ),
                   ],
@@ -317,31 +319,31 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       }
                     },
                     activeThumbColor: Colors.black,
-                    activeTrackColor: const Color(0xFF00FF7F),
+                    activeTrackColor: Color(0xFF00FF7F),
                     inactiveThumbColor: Colors.white54,
                     inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: ResponsiveHelper.h(56),
               child: ElevatedButton(
                 onPressed: () => _controller.isLoading.value ? null : _completeSetup(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00FF7F),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                  backgroundColor: Color(0xFF00FF7F),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(28))),
                   elevation: 0,
                 ),
                 child: Obx(
                   () => _controller.isLoading.value
-                      ? const CircularProgressIndicator(color: Colors.black)
-                      : const Text(
+                      ? CircularProgressIndicator(color: Colors.black)
+                      : Text(
                           'Complete Setup',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: ResponsiveHelper.sp(16),
                             fontWeight: FontWeight.w700,
                             color: Colors.black,
                           ),
@@ -349,14 +351,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-            const Center(
+            SizedBox(height: 24),
+            Center(
               child: Text(
                 'By continuing, you agree to our Terms of Service',
                 style: TextStyle(color: Colors.white54, fontSize: 12),
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
           ],
         ),
       ),

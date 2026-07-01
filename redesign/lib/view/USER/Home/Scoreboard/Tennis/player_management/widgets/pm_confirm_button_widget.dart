@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/player_management_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PmConfirmButtonWidget extends StatelessWidget {
-  const PmConfirmButtonWidget({super.key});
+  PmConfirmButtonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<PlayerManagementController>();
 
     return Obx(() {
@@ -35,15 +37,15 @@ class PmConfirmButtonWidget extends StatelessWidget {
           }
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: Duration(milliseconds: 200),
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(24)),
           decoration: BoxDecoration(
             color: AppColors.surfaceContainerHigh,
             border: Border(
               top: BorderSide(
                 color: canConfirm ? AppColors.primaryContainer : Colors.transparent,
-                width: 2,
+                width: ResponsiveHelper.w(2),
               ),
             ),
           ),

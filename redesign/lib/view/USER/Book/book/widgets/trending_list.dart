@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../book_screen.dart';
 import 'trending_tile.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TrendingList extends StatelessWidget {
-  const TrendingList({super.key});
+  TrendingList({super.key});
 
   static final _trending = [
     TrendingData(
@@ -28,13 +29,14 @@ class TrendingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SizedBox(
-      height: 170,
+      height: ResponsiveHelper.h(170),
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
         itemCount: _trending.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 14),
+        separatorBuilder: (_, __) => SizedBox(width: 14),
         itemBuilder: (_, i) => TrendingTile(data: _trending[i]),
       ),
     );

@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class StartingLineupAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const StartingLineupAppbar({super.key});
+  StartingLineupAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AppBar(
       backgroundColor: Colors.black.withValues(alpha: 0.85),
       elevation: 0,
       centerTitle: true,
       leading: IconButton(
-        icon: const Icon(Icons.menu, color: Colors.white),
+        icon: Icon(Icons.menu, color: Colors.white),
         onPressed: () {},
       ),
-      title: const Text(
+      title: Text(
         'PRO SCOUT LIVE',
         style: TextStyle(
           color: Color(0xFFC6FF00), // Lime Green
-          fontSize: 20,
+          fontSize: ResponsiveHelper.sp(20),
           fontWeight: FontWeight.w900,
           letterSpacing: 1.0,
         ),
@@ -25,12 +27,12 @@ class StartingLineupAppbar extends StatelessWidget implements PreferredSizeWidge
       actions: [
         IconButton(
           icon: Container(
-            padding: const EdgeInsets.all(4),
+            padding: EdgeInsets.all(ResponsiveHelper.w(4)),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: Colors.grey.shade600),
             ),
-            child: const Icon(Icons.person_outline, color: Colors.white, size: 20),
+            child: Icon(Icons.person_outline, color: Colors.white, size: 20),
           ),
           onPressed: () {},
         ),
@@ -39,5 +41,5 @@ class StartingLineupAppbar extends StatelessWidget implements PreferredSizeWidge
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

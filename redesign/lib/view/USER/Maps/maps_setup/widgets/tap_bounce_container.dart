@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TapBounceContainer extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
 
-  const TapBounceContainer({super.key, required this.child, this.onTap});
+  TapBounceContainer({super.key, required this.child, this.onTap});
 
   @override
   State<TapBounceContainer> createState() => _TapBounceContainerState();
@@ -15,6 +16,7 @@ class _TapBounceContainerState extends State<TapBounceContainer> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) => setState(() => _isPressed = false),
@@ -22,7 +24,7 @@ class _TapBounceContainerState extends State<TapBounceContainer> {
       onTap: widget.onTap,
       child: AnimatedScale(
         scale: _isPressed ? 0.97 : 1.0,
-        duration: const Duration(milliseconds: 100),
+        duration: Duration(milliseconds: 100),
         child: widget.child,
       ),
     );

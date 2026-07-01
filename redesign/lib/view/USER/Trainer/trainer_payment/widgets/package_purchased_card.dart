@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
@@ -8,42 +9,43 @@ const kYellow = Color(0xFFFFC107);
 const kSurface = AppColors.surface;
 
 class PackagePurchasedCard extends StatelessWidget {
-  const PackagePurchasedCard({super.key});
+  PackagePurchasedCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(18),
-        border: const Border(
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+        border: Border(
           left: BorderSide(color: kGreen, width: 3),
         ),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'PACKAGE PURCHASED',
             style: TextStyle(
               color: kGreen,
-              fontSize: 11,
+              fontSize: ResponsiveHelper.sp(11),
               fontWeight: FontWeight.w600,
               letterSpacing: 1,
             ),
           ),
-          const SizedBox(height: 8),
-          const Text(
+          SizedBox(height: 8),
+          Text(
             '1-Day Trial Access',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: ResponsiveHelper.sp(18),
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 6),
-          const Row(
+          SizedBox(height: 6),
+          Row(
             children: [
               Icon(Icons.calendar_today, size: 14, color: kMuted),
               SizedBox(width: 6),
@@ -52,16 +54,16 @@ class PackagePurchasedCard extends StatelessWidget {
             ],
           ),
 
-          const Divider(color: Colors.grey),
+          Divider(color: Colors.grey),
 
           _infoRow('Amount Paid', '₹150.00'),
           _infoRow('Rewards Earned', '+15 Z Coins',
               valueColor: kYellow),
 
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           Row(
-            children: const [
+            children: [
               Text('Transaction ID',
                   style: TextStyle(color: kMuted, fontSize: 12)),
               Spacer(),
@@ -75,11 +77,11 @@ class PackagePurchasedCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           Wrap(
             spacing: 8,
-            children: const [
+            children: [
               PackageFeatureChip(label: 'Kit Provided'),
               PackageFeatureChip(label: '1 Hr Net Practice'),
             ],
@@ -92,11 +94,11 @@ class PackagePurchasedCard extends StatelessWidget {
   Widget _infoRow(String label, String value,
       {Color valueColor = Colors.white}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(4)),
       child: Row(
         children: [
-          Text(label, style: const TextStyle(color: kMuted)),
-          const Spacer(),
+          Text(label, style: TextStyle(color: kMuted)),
+          Spacer(),
           Text(value,
               style: TextStyle(
                   color: valueColor, fontWeight: FontWeight.w600)),
@@ -108,22 +110,23 @@ class PackagePurchasedCard extends StatelessWidget {
 
 class PackageFeatureChip extends StatelessWidget {
   final String label;
-  const PackageFeatureChip({super.key, required this.label});
+  PackageFeatureChip({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       padding:
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
       decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
       ),
       child: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
-          fontSize: 12,
+          fontSize: ResponsiveHelper.sp(12),
         ),
       ),
     );

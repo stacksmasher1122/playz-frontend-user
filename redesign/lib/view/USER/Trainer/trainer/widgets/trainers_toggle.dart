@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TrainersToggle extends StatelessWidget {
   final bool isMyTrainers;
   final ValueChanged<bool> onChanged;
 
-  const TrainersToggle({
+  TrainersToggle({
     super.key,
     required this.isMyTrainers,
     required this.onChanged,
@@ -14,12 +15,13 @@ class TrainersToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-      padding: const EdgeInsets.all(4),
+      margin: EdgeInsets.fromLTRB(16, 8, 16, 12),
+      padding: EdgeInsets.all(ResponsiveHelper.w(4)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
       ),
       child: Row(
         children: [
@@ -47,12 +49,12 @@ class TrainersToggle extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
+          duration: Duration(milliseconds: 220),
           curve: Curves.easeOut,
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
           decoration: BoxDecoration(
             color: active ? AppColors.accent : Colors.transparent,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
           ),
           child: Text(
             label,

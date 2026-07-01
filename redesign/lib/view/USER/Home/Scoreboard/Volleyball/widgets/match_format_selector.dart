@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchFormatSelector extends StatelessWidget {
   final RxString selectedFormat;
   final Function(String) onSelect;
 
-  const MatchFormatSelector({
+  MatchFormatSelector({
     super.key,
     required this.selectedFormat,
     required this.onSelect,
@@ -15,24 +16,25 @@ class MatchFormatSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(color: AppColors.surfaceContainerHighest),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('MATCH FORMAT', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Obx(() => Row(
             children: [
               Expanded(child: _buildFormatCard('B3', 'BEST OF 3')),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(child: _buildFormatCard('B5', 'BEST OF 5')),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(child: _buildFormatCard('C', 'CUSTOM')),
             ],
           )),
@@ -46,11 +48,11 @@ class MatchFormatSelector extends StatelessWidget {
     return GestureDetector(
       onTap: () => onSelect(id),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(20)),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primaryContainer : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
         ),
         child: Column(
@@ -62,13 +64,13 @@ class MatchFormatSelector extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               label,
               style: AppTypography.labelCaps10.copyWith(
                 color: isSelected ? AppColors.onPrimaryContainer.withOpacity(0.7) : AppColors.muted,
                 fontWeight: FontWeight.bold,
-                fontSize: 10,
+                fontSize: ResponsiveHelper.sp(10),
               ),
             ),
           ],

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ActionButtonsWidget extends StatelessWidget {
   final VoidCallback onReturn;
   final VoidCallback onShare;
 
-  const ActionButtonsWidget({
+  ActionButtonsWidget({
     super.key,
     required this.onReturn,
     required this.onShare,
@@ -14,6 +15,7 @@ class ActionButtonsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         _ActionButton(
@@ -21,7 +23,7 @@ class ActionButtonsWidget extends StatelessWidget {
           onTap: onReturn,
           isPrimary: true,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _ActionButton(
           label: 'Share Results',
           onTap: onShare,
@@ -37,7 +39,7 @@ class _ActionButton extends StatefulWidget {
   final VoidCallback onTap;
   final bool isPrimary;
 
-  const _ActionButton({
+  _ActionButton({
     required this.label,
     required this.onTap,
     required this.isPrimary,
@@ -53,7 +55,7 @@ class _ActionButtonState extends State<_ActionButton> with SingleTickerProviderS
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(vsync: this, duration: const Duration(milliseconds: 100));
+    _scaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
   }
 
   @override
@@ -64,6 +66,7 @@ class _ActionButtonState extends State<_ActionButton> with SingleTickerProviderS
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTapDown: (_) => _scaleController.forward(),
       onTapUp: (_) {
@@ -75,10 +78,10 @@ class _ActionButtonState extends State<_ActionButton> with SingleTickerProviderS
         scale: Tween<double>(begin: 1.0, end: 0.97).animate(_scaleController),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
           decoration: BoxDecoration(
             color: widget.isPrimary ? AppColors.primaryContainer : AppColors.background,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             border: widget.isPrimary ? null : Border.all(color: AppColors.surfaceContainerHighest, width: 1),
           ),
           child: Center(

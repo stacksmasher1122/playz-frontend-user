@@ -4,11 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/Play/match_detail/match_detail_screen.dart';
 import '../play_models.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class GameList extends StatelessWidget {
-  const GameList({super.key});
+  GameList({super.key});
 
-  static const _games = [
+  static final _games = [
     GameData(
       hostName: 'Deepankar Shrikant Rokade Patil',
       time: 'Thu 4 Dec, 06:30',
@@ -52,10 +53,11 @@ class GameList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       itemCount: _games.length,
       itemBuilder: (_, i) => GameCard(data: _games[i]),
     );
@@ -64,18 +66,18 @@ class GameList extends StatelessWidget {
 
 class GameCard extends StatelessWidget {
   final GameData data;
-  const GameCard({super.key, required this.data});
+  GameCard({super.key, required this.data});
 
   Color _typeColor(String type) {
     switch (type.toLowerCase()) {
       case 'casual':
-        return const Color(0xFF1E3A8A); // blue
+        return Color(0xFF1E3A8A); // blue
       case 'competitive':
-        return const Color(0xFF4C1D95); // purple
+        return Color(0xFF4C1D95); // purple
       case 'tournament':
-        return const Color(0xFF7C2D12); // amber/brown
+        return Color(0xFF7C2D12); // amber/brown
       default:
-        return const Color(0xFF2A2A2A);
+        return Color(0xFF2A2A2A);
     }
   }
 
@@ -87,21 +89,22 @@ class GameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final progress = data.currentPlayers / data.maxPlayers;
 
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const MatchDetailScreen()),
+          MaterialPageRoute(builder: (context) => MatchDetailScreen()),
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.only(bottom: 16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: const LinearGradient(
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [Color(0xFF141414), Color(0xFF0E0E0E)],
@@ -114,20 +117,20 @@ class GameCard extends StatelessWidget {
             Row(
               children: [
                 _Tag(data.type.toUpperCase(), color: _typeColor(data.type)),
-                const SizedBox(width: 8),
-                _Tag(data.sport.toUpperCase(), color: const Color(0xFF2A2A2A)),
-                const Spacer(),
+                SizedBox(width: 8),
+                _Tag(data.sport.toUpperCase(), color: Color(0xFF2A2A2A)),
+                Spacer(),
                 Text(
                   data.price,
                   style: GoogleFonts.inter(
                     color: AppColors.accent,
-                    fontSize: 18,
+                    fontSize: ResponsiveHelper.sp(18),
                     fontWeight: FontWeight.w800,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             /// SECTION 2: HOST INFO & PLAYER COUNT
             Row(
@@ -138,30 +141,30 @@ class GameCard extends StatelessWidget {
                     ClipOval(
                       child: CachedNetworkImage(
                         imageUrl: data.avatarUrl,
-                        width: 52,
-                        height: 52,
+                        width: ResponsiveHelper.w(52),
+                        height: ResponsiveHelper.h(52),
                         fit: BoxFit.cover,
                       ),
                     ),
                     Positioned(
-                      right: 0,
-                      bottom: 0,
+                      right: ResponsiveHelper.w(0),
+                      bottom: ResponsiveHelper.h(0),
                       child: Container(
-                        width: 14,
-                        height: 14,
+                        width: ResponsiveHelper.w(14),
+                        height: ResponsiveHelper.h(14),
                         decoration: BoxDecoration(
                           color: AppColors.accent,
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: AppColors.surface,
-                            width: 2,
+                            width: ResponsiveHelper.w(2),
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 // Name and Time
                 Expanded(
                   child: Column(
@@ -171,23 +174,23 @@ class GameCard extends StatelessWidget {
                         _shortName(data.hostName),
                         style: GoogleFonts.inter(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: ResponsiveHelper.sp(16),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.access_time,
                             color: Colors.white54,
                             size: 14,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             data.time,
                             style: GoogleFonts.inter(
                               color: Colors.white54,
-                              fontSize: 13,
+                              fontSize: ResponsiveHelper.sp(13),
                             ),
                           ),
                         ],
@@ -205,14 +208,14 @@ class GameCard extends StatelessWidget {
                       style: GoogleFonts.inter(
                         color: data.isFull ? Colors.white54 : AppColors.accent,
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: ResponsiveHelper.sp(15),
                       ),
                     ),
-                    const Text(
+                    Text(
                       'PLAYERS',
                       style: TextStyle(
                         color: Colors.white38,
-                        fontSize: 10,
+                        fontSize: ResponsiveHelper.sp(10),
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -220,29 +223,29 @@ class GameCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             /// SECTION 3: PROGRESS BAR
             ClipRRect(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
               child: LinearProgressIndicator(
                 value: progress,
                 backgroundColor: Colors.white10,
                 color: progress >= 0.7
-                    ? const Color(0xFFF59E0B)
+                    ? Color(0xFFF59E0B)
                     : AppColors.accent,
                 minHeight: 4,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Divider(color: Colors.white.withValues(alpha: 0.06), height: 1),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             /// SECTION 4: LOCATION & JOIN BUTTON
             Row(
               children: [
-                const Icon(Icons.location_on, color: Colors.white24, size: 14),
-                const SizedBox(width: 6),
+                Icon(Icons.location_on, color: Colors.white24, size: 14),
+                SizedBox(width: 6),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,20 +256,20 @@ class GameCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.inter(
                           color: Colors.white70,
-                          fontSize: 13,
+                          fontSize: ResponsiveHelper.sp(13),
                         ),
                       ),
                       Text(
                         data.distance,
                         style: GoogleFonts.inter(
                           color: Colors.white38,
-                          fontSize: 11,
+                          fontSize: ResponsiveHelper.sp(11),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 // Join Button
                 ElevatedButton(
                   onPressed: data.isFull ? null : () {},
@@ -275,16 +278,16 @@ class GameCard extends StatelessWidget {
                     foregroundColor: Colors.black,
                     disabledBackgroundColor: Colors.white10,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
                     ),
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 22,
                       vertical: 10,
                     ),
                   ),
                   child: Text(
                     data.isFull ? 'Full' : 'Join',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -299,20 +302,21 @@ class GameCard extends StatelessWidget {
 class _Tag extends StatelessWidget {
   final String text;
   final Color color;
-  const _Tag(this.text, {required this.color});
+  _Tag(this.text, {required this.color});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
       ),
       child: Text(
         text,
         style: GoogleFonts.inter(
-          fontSize: 10,
+          fontSize: ResponsiveHelper.sp(10),
           color: Colors.white.withValues(alpha: 0.9),
           fontWeight: FontWeight.w800,
           letterSpacing: 0.5,

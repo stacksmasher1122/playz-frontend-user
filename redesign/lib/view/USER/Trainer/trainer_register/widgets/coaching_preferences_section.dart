@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'step_header.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
 const kMuted = Color(0xFFA7A7A7);
 
 class CoachingPreferencesSection extends StatefulWidget {
-  const CoachingPreferencesSection({super.key});
+  CoachingPreferencesSection({super.key});
 
   @override
   State<CoachingPreferencesSection> createState() =>
@@ -25,24 +26,25 @@ class _CoachingPreferencesSectionState
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// STEP HEADER
-        const StepHeader(step: 4, title: 'Coaching Preferences'),
+        StepHeader(step: 4, title: 'Coaching Preferences'),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
-        const Text(
+        Text(
           'Coaching Level (Select all that apply)',
           style: TextStyle(
             color: kMuted,
-            fontSize: 13,
+            fontSize: ResponsiveHelper.sp(13),
             fontWeight: FontWeight.w500,
           ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// LEVEL CHIPS
         Wrap(
@@ -64,7 +66,7 @@ class _CoachingPreferencesSectionState
           }).toList(),
         ),
 
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
 
         /// TOGGLES
         PreferenceToggle(
@@ -73,7 +75,7 @@ class _CoachingPreferencesSectionState
           onChanged: (v) => setState(() => _willingToTravel = v),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         PreferenceToggle(
           label: 'Online Coaching Available?',
@@ -81,7 +83,7 @@ class _CoachingPreferencesSectionState
           onChanged: (v) => setState(() => _onlineCoaching = v),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         PreferenceToggle(
           label: 'Comfortable training women/girls?',
@@ -98,7 +100,7 @@ class SelectableChip extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  const SelectableChip({
+  SelectableChip({
     super.key,
     required this.label,
     required this.selected,
@@ -107,18 +109,19 @@ class SelectableChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(10)),
         decoration: BoxDecoration(
           color: selected ? kGreen.withValues(alpha: 0.15) : kCard,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
           border: Border.all(
             color: selected ? kGreen : Colors.transparent,
-            width: 1.2,
+            width: ResponsiveHelper.w(1.2),
           ),
         ),
         child: Text(
@@ -126,7 +129,7 @@ class SelectableChip extends StatelessWidget {
           style: TextStyle(
             color: selected ? kGreen : Colors.white,
             fontWeight: FontWeight.w600,
-            fontSize: 13,
+            fontSize: ResponsiveHelper.sp(13),
           ),
         ),
       ),
@@ -139,7 +142,7 @@ class PreferenceToggle extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const PreferenceToggle({
+  PreferenceToggle({
     super.key,
     required this.label,
     required this.value,
@@ -148,21 +151,22 @@ class PreferenceToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(12)),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       ),
       child: Row(
         children: [
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: 14,
+                fontSize: ResponsiveHelper.sp(14),
               ),
             ),
           ),

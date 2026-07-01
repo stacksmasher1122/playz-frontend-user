@@ -3,9 +3,10 @@ import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/player_management_controller.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ConfirmParticipantsButton extends StatefulWidget {
-  const ConfirmParticipantsButton({super.key});
+  ConfirmParticipantsButton({super.key});
 
   @override
   State<ConfirmParticipantsButton> createState() => _ConfirmParticipantsButtonState();
@@ -17,6 +18,7 @@ class _ConfirmParticipantsButtonState extends State<ConfirmParticipantsButton> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<PlayerManagementController>();
 
     return MouseRegion(
@@ -32,17 +34,17 @@ class _ConfirmParticipantsButtonState extends State<ConfirmParticipantsButton> {
         onTapCancel: () => setState(() => _isActive = false),
         child: AnimatedScale(
           scale: _isActive ? 0.98 : 1.0,
-          duration: const Duration(milliseconds: 100),
+          duration: Duration(milliseconds: 100),
           child: Container(
             width: double.infinity,
-            margin: const EdgeInsets.only(top: 40),
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+            margin: EdgeInsets.only(top: 40),
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(24)),
             decoration: BoxDecoration(
               color: _isHovered ? AppColors.primaryContainer : AppColors.surfaceContainerHighest,
-              border: const Border(
+              border: Border(
                 top: BorderSide(
                   color: AppColors.primaryContainer,
-                  width: 2,
+                  width: ResponsiveHelper.w(2),
                 ),
               ),
             ),
@@ -56,8 +58,8 @@ class _ConfirmParticipantsButtonState extends State<ConfirmParticipantsButton> {
                   ),
                 ),
                 AnimatedSlide(
-                  offset: _isHovered ? const Offset(0.3, 0) : Offset.zero,
-                  duration: const Duration(milliseconds: 200),
+                  offset: _isHovered ? Offset(0.3, 0) : Offset.zero,
+                  duration: Duration(milliseconds: 200),
                   child: Icon(
                     Icons.arrow_forward,
                     color: _isHovered ? AppColors.onPrimary : AppColors.primaryContainer,

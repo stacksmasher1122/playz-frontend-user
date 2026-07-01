@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_match_statistics_controller.dart';
+import '../../../../../../../theme/responsive_helper.dart';
 import 'comparison_progress_bar.dart';
 
 class TeamComparisonCard extends StatelessWidget {
-  const TeamComparisonCard({super.key});
+  TeamComparisonCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<FootballMatchStatisticsController>();
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      padding: const EdgeInsets.all(24.0),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16),
+        vertical: ResponsiveHelper.h(8),
+      ),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Obx(() {
@@ -27,60 +32,60 @@ class TeamComparisonCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.show_chart,
                   color: Color(0xFFC6FF00),
-                  size: 20,
+                  size: ResponsiveHelper.w(20),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: ResponsiveHelper.w(8)),
                 Text(
                   'TEAM COMPARISON',
                   style: TextStyle(
-                    color: const Color(0xFFC6FF00).withValues(alpha: 0.8),
-                    fontSize: 12,
+                    color: Color(0xFFC6FF00).withValues(alpha: 0.8),
+                    fontSize: ResponsiveHelper.sp(12),
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.0,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveHelper.h(24)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   '${home.possession.toInt()}%',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
+                Text(
                   'POSSESSION',
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: 11,
+                    fontSize: ResponsiveHelper.sp(11),
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
                   ),
                 ),
                 Text(
                   '${away.possession.toInt()}%',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: ResponsiveHelper.h(12)),
             ComparisonProgressBar(
               homePercentage: home.possession.toDouble(),
               awayPercentage: away.possession.toDouble(),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveHelper.h(24)),
             StatisticsRowWidget(
               title: 'Shots',
               homeValue: '${home.shots}',
@@ -121,7 +126,7 @@ class StatisticsRowWidget extends StatelessWidget {
   final dynamic awayValue;
   final bool? isHighlightHome;
   final bool? isHighlightAway;
-  const StatisticsRowWidget({
+  StatisticsRowWidget({
     super.key,
     required this.title,
     required this.homeValue,
@@ -132,8 +137,9 @@ class StatisticsRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
       child: Column(
         children: [
           Row(
@@ -143,17 +149,17 @@ class StatisticsRowWidget extends StatelessWidget {
                 homeValue.toString(),
                 style: TextStyle(
                   color: (isHighlightHome ?? false)
-                      ? const Color(0xFFC6FF00)
+                      ? Color(0xFFC6FF00)
                       : Colors.white,
-                  fontSize: 16,
+                  fontSize: ResponsiveHelper.sp(16),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 title.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 11,
+                  fontSize: ResponsiveHelper.sp(11),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5,
                 ),
@@ -162,15 +168,15 @@ class StatisticsRowWidget extends StatelessWidget {
                 awayValue.toString(),
                 style: TextStyle(
                   color: (isHighlightAway ?? false)
-                      ? const Color(0xFFC6FF00)
+                      ? Color(0xFFC6FF00)
                       : Colors.white,
-                  fontSize: 16,
+                  fontSize: ResponsiveHelper.sp(16),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: ResponsiveHelper.h(8)),
           _buildStatBar(homeValue, awayValue),
         ],
       ),
@@ -189,17 +195,17 @@ class StatisticsRowWidget extends StatelessWidget {
       homeFlex = 1;
       awayFlex = 1;
     } else if (homeFlex == 0) {
-      homeFlex = 1; // Minimum flex to avoid crash
+      homeFlex = 1;
     } else if (awayFlex == 0) {
       awayFlex = 1;
     }
 
     return Container(
-      height: 4,
+      height: ResponsiveHelper.h(4),
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(2),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
       ),
       child: Row(
         children: [
@@ -208,11 +214,11 @@ class StatisticsRowWidget extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: (isHighlightHome ?? false)
-                    ? const Color(0xFFC6FF00)
+                    ? Color(0xFFC6FF00)
                     : Colors.white.withValues(alpha: 0.5),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(2),
-                  bottomLeft: Radius.circular(2),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(ResponsiveHelper.w(2)),
+                  bottomLeft: Radius.circular(ResponsiveHelper.w(2)),
                 ),
               ),
             ),
@@ -222,11 +228,11 @@ class StatisticsRowWidget extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: (isHighlightAway ?? false)
-                    ? const Color(0xFFC6FF00)
+                    ? Color(0xFFC6FF00)
                     : Colors.grey.shade700,
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(2),
-                  bottomRight: Radius.circular(2),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(ResponsiveHelper.w(2)),
+                  bottomRight: Radius.circular(ResponsiveHelper.w(2)),
                 ),
               ),
             ),

@@ -3,23 +3,25 @@ import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/kickoff_setup_controller.dart';
 import 'stadium_banner_widget.dart';
 import 'info_card_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueCardWidget extends StatelessWidget {
-  const VenueCardWidget({super.key});
+  VenueCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<KickoffSetupController>();
 
     return Obx(() {
       final venue = controller.venue.value;
-      if (venue == null) return const SizedBox();
+      if (venue == null) return SizedBox();
 
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
         decoration: BoxDecoration(
           color: Colors.grey.shade900.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: Colors.grey.shade800),
         ),
         clipBehavior: Clip.hardEdge,
@@ -30,7 +32,7 @@ class VenueCardWidget extends StatelessWidget {
               venueName: venue.venueName,
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
               child: Column(
                 children: [
                   Row(
@@ -41,7 +43,7 @@ class VenueCardWidget extends StatelessWidget {
                           value: '${venue.duration} MINS',
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: InfoCardWidget(
                           label: 'FORMAT',
@@ -50,27 +52,27 @@ class VenueCardWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   _buildInfoRow('Weather', Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.cloud_outlined, color: Colors.white, size: 16),
-                      const SizedBox(width: 6),
+                      Icon(Icons.cloud_outlined, color: Colors.white, size: 16),
+                      SizedBox(width: 6),
                       Text(
                         '${venue.weatherTemp} ${venue.weatherCondition}',
-                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                        style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ],
                   )),
                   Divider(color: Colors.grey.shade800, height: 24),
                   _buildInfoRow('Match Official', Text(
                     venue.referee,
-                    style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Colors.white, fontSize: ResponsiveHelper.sp(14), fontWeight: FontWeight.bold),
                   )),
                   Divider(color: Colors.grey.shade800, height: 24),
                   _buildInfoRow('Recording System', Text(
                     venue.recordingSystem,
-                    style: const TextStyle(color: Color(0xFFC6FF00), fontSize: 14, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Color(0xFFC6FF00), fontSize: ResponsiveHelper.sp(14), fontWeight: FontWeight.bold),
                   )),
                 ],
               ),
@@ -87,9 +89,9 @@ class VenueCardWidget extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.grey,
-            fontSize: 14,
+            fontSize: ResponsiveHelper.sp(14),
           ),
         ),
         valueWidget,

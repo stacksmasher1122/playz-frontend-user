@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kGreen = AppColors.accent;
+Color kGreen = AppColors.accent;
 
 class StudentTypeSelector extends StatefulWidget {
-  const StudentTypeSelector({super.key});
+  StudentTypeSelector({super.key});
 
   @override
   State<StudentTypeSelector> createState() => _StudentTypeSelectorState();
@@ -17,18 +18,19 @@ class _StudentTypeSelectorState extends State<StudentTypeSelector> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Student Type',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 16,
+            fontSize: ResponsiveHelper.sp(16),
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         Wrap(
           spacing: 10,
           children: types.map((type) {
@@ -36,14 +38,14 @@ class _StudentTypeSelectorState extends State<StudentTypeSelector> {
             return GestureDetector(
               onTap: () => setState(() => selected = type),
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(
+                duration: Duration(milliseconds: 200),
+                padding: EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
                   color: active ? kGreen : Colors.black,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                   border: Border.all(color: kGreen, width: 1),
                 ),
                 child: Text(
@@ -51,7 +53,7 @@ class _StudentTypeSelectorState extends State<StudentTypeSelector> {
                   style: TextStyle(
                     color: active ? Colors.black : kGreen,
                     fontWeight: FontWeight.w600,
-                    fontSize: 13,
+                    fontSize: ResponsiveHelper.sp(13),
                   ),
                 ),
               ),

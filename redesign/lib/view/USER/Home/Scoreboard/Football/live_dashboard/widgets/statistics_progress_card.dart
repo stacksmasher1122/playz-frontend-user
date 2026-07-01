@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class StatisticsProgressCard extends StatelessWidget {
   final String title;
@@ -6,7 +7,7 @@ class StatisticsProgressCard extends StatelessWidget {
   final int valueB;
   final bool isPercentage;
 
-  const StatisticsProgressCard({
+  StatisticsProgressCard({
     super.key,
     required this.title,
     required this.valueA,
@@ -16,16 +17,17 @@ class StatisticsProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final total = valueA + valueB;
     final flexA = total == 0 ? 1 : valueA;
     final flexB = total == 0 ? 1 : valueB;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(6.0)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.grey.shade800),
       ),
       child: Column(
@@ -36,9 +38,9 @@ class StatisticsProgressCard extends StatelessWidget {
             children: [
               Text(
                 title.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
                 ),
@@ -47,18 +49,18 @@ class StatisticsProgressCard extends StatelessWidget {
                 children: [
                   Text(
                     '$valueA${isPercentage ? '%' : ''}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Color(0xFFC6FF00), // Lime Green
-                      fontSize: 14,
+                      fontSize: ResponsiveHelper.sp(14),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Text(
                     '$valueB${isPercentage ? '%' : ''}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14,
+                      fontSize: ResponsiveHelper.sp(14),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -66,22 +68,22 @@ class StatisticsProgressCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
             child: Row(
               children: [
                 Expanded(
                   flex: flexA,
                   child: Container(
-                    height: 8,
-                    color: const Color(0xFFC6FF00),
+                    height: ResponsiveHelper.h(8),
+                    color: Color(0xFFC6FF00),
                   ),
                 ),
                 Expanded(
                   flex: flexB,
                   child: Container(
-                    height: 8,
+                    height: ResponsiveHelper.h(8),
                     color: Colors.grey.shade800,
                   ),
                 ),

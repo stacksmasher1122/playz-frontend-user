@@ -9,9 +9,10 @@ import 'widgets/match_format_card.dart';
 import 'widgets/rules_configuration_card.dart';
 import 'widgets/bottom_action_widget.dart';
 import '../starting_lineup/starting_lineup_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FootballCreateMatchScreen extends StatefulWidget {
-  const FootballCreateMatchScreen({super.key});
+  FootballCreateMatchScreen({super.key});
 
   @override
   State<FootballCreateMatchScreen> createState() => _FootballCreateMatchScreenState();
@@ -30,7 +31,7 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
 
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
     );
     _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeIn),
@@ -47,12 +48,13 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: Colors.black, // Dark background
-      appBar: const FootballCreateMatchAppbar(),
+      appBar: FootballCreateMatchAppbar(),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(
               color: Color(0xFFC6FF00), // Lime Green
             ),
@@ -66,23 +68,23 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeaderSection(),
-                const GeneralInformationCard(),
-                const TeamSelectionCard(),
-                const LogisticsCard(),
-                const MatchFormatCard(),
-                const RulesConfigurationCard(),
+                GeneralInformationCard(),
+                TeamSelectionCard(),
+                LogisticsCard(),
+                MatchFormatCard(),
+                RulesConfigurationCard(),
                 BottomActionWidget(
                   onCreate: () {
                     if (controller.validateForm()) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const StartingLineupScreen()),
+                        MaterialPageRoute(builder: (_) => StartingLineupScreen()),
                       );
                     }
                   },
                   onSaveTemplate: controller.saveAsTemplate,
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
               ],
             ),
           ),
@@ -93,28 +95,28 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
 
   Widget _buildHeaderSection() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Create Match',
             style: TextStyle(
               color: Color(0xFFC6FF00), // Lime Green
-              fontSize: 28,
+              fontSize: ResponsiveHelper.sp(28),
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Configure a new professional match session for real-time scouting and analytics.',
             style: TextStyle(
               color: Colors.grey.shade500,
-              fontSize: 14,
-              height: 1.4,
+              fontSize: ResponsiveHelper.sp(14),
+              height: ResponsiveHelper.h(1.4),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
         ],
       ),
     );

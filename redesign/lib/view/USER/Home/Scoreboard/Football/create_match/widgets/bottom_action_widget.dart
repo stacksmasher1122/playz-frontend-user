@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BottomActionWidget extends StatelessWidget {
   final VoidCallback onCreate;
   final VoidCallback onSaveTemplate;
 
-  const BottomActionWidget({
+  BottomActionWidget({
     super.key,
     required this.onCreate,
     required this.onSaveTemplate,
@@ -12,8 +13,9 @@ class BottomActionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(16.0)),
       child: Column(
         children: [
           Container(
@@ -21,10 +23,10 @@ class BottomActionWidget extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFC6FF00).withValues(alpha: 0.3), // Lime Green glow
+                  color: Color(0xFFC6FF00).withValues(alpha: 0.3), // Lime Green glow
                   blurRadius: 16,
                   spreadRadius: 2,
-                  offset: const Offset(0, 4),
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
@@ -32,24 +34,24 @@ class BottomActionWidget extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: onCreate,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC6FF00), // Lime Green
-                    borderRadius: BorderRadius.circular(10),
+                    color: Color(0xFFC6FF00), // Lime Green
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                   ),
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const [
+                    children: [
                       Icon(Icons.sports_soccer, color: Colors.black, size: 20),
                       SizedBox(width: 8),
                       Text(
                         'CREATE MATCH',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 14,
+                          fontSize: ResponsiveHelper.sp(14),
                           fontWeight: FontWeight.w900,
                           letterSpacing: 0.5,
                         ),
@@ -60,27 +62,27 @@ class BottomActionWidget extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
               border: Border.all(color: Colors.grey.shade600),
             ),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
                 onTap: onSaveTemplate,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                   alignment: Alignment.center,
-                  child: const Text(
+                  child: Text(
                     'SAVE AS TEMPLATE',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14,
+                      fontSize: ResponsiveHelper.sp(14),
                       fontWeight: FontWeight.w900,
                       letterSpacing: 0.5,
                     ),

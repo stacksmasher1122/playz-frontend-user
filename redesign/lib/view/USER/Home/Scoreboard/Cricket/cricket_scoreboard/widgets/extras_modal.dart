@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_state_models.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ExtrasModal extends StatefulWidget {
   final Function(ExtraType, int) onSelect;
-  const ExtrasModal({super.key, required this.onSelect});
+  ExtrasModal({super.key, required this.onSelect});
 
   @override
   State<ExtrasModal> createState() => _ExtrasModalState();
@@ -16,21 +17,22 @@ class _ExtrasModalState extends State<ExtrasModal> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Select Extra Type',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: ResponsiveHelper.sp(18),
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -39,13 +41,13 @@ class _ExtrasModalState extends State<ExtrasModal> {
               return GestureDetector(
                 onTap: () => setState(() => selectedType = t),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
                     color: sel ? AppColors.warning.withValues(alpha: 0.2) : Colors.white10,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                     border: sel ? Border.all(color: AppColors.warning) : null,
                   ),
                   child: Text(
@@ -59,24 +61,24 @@ class _ExtrasModalState extends State<ExtrasModal> {
               );
             }).toList(),
           ),
-          const SizedBox(height: 20),
-          const Text(
+          SizedBox(height: 20),
+          Text(
             'Additional Runs',
             style: TextStyle(color: AppColors.muted, fontSize: 12),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: [0, 1, 2, 3, 4].map((r) {
               final sel = additionalRuns == r;
               return GestureDetector(
                 onTap: () => setState(() => additionalRuns = r),
                 child: Container(
-                  width: 48,
-                  height: 48,
-                  margin: const EdgeInsets.only(right: 8),
+                  width: ResponsiveHelper.w(48),
+                  height: ResponsiveHelper.h(48),
+                  margin: EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     color: sel ? AppColors.accent.withValues(alpha: 0.2) : Colors.white10,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                     border: sel ? Border.all(color: AppColors.accent) : null,
                   ),
                   alignment: Alignment.center,
@@ -91,7 +93,7 @@ class _ExtrasModalState extends State<ExtrasModal> {
               );
             }).toList(),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -100,12 +102,12 @@ class _ExtrasModalState extends State<ExtrasModal> {
                   : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accent,
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14)),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'CONFIRM',
                 style: TextStyle(
                   color: Colors.black,

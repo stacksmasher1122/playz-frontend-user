@@ -29,10 +29,10 @@ class LiveMatchController extends GetxController {
     
     // Static mock data points
     pointHistory.value = [
-      const PointHistoryModel(pointNumber: 33, playerName: 'Axelsen', score: '18 - 16', pointType: 'SMASH', time: '14:23', description: 'Cross court smash'),
-      const PointHistoryModel(pointNumber: 32, playerName: 'Axelsen', score: '17 - 16', pointType: 'NET', time: '14:22', description: 'Net kill'),
-      const PointHistoryModel(pointNumber: 31, playerName: 'Axelsen', score: '17 - 15', pointType: 'DRIVE', time: '14:20', description: 'Fast drive'),
-      const PointHistoryModel(pointNumber: 30, playerName: 'Ginting', score: '16 - 15', pointType: 'OUT', time: '14:18', description: 'Wide clear'),
+      PointHistoryModel(pointNumber: 33, playerName: 'Axelsen', score: '18 - 16', pointType: 'SMASH', time: '14:23', description: 'Cross court smash'),
+      PointHistoryModel(pointNumber: 32, playerName: 'Axelsen', score: '17 - 16', pointType: 'NET', time: '14:22', description: 'Net kill'),
+      PointHistoryModel(pointNumber: 31, playerName: 'Axelsen', score: '17 - 15', pointType: 'DRIVE', time: '14:20', description: 'Fast drive'),
+      PointHistoryModel(pointNumber: 30, playerName: 'Ginting', score: '16 - 15', pointType: 'OUT', time: '14:18', description: 'Wide clear'),
     ];
     
     isLoading.value = false;
@@ -41,7 +41,7 @@ class LiveMatchController extends GetxController {
   void startTimer() {
     _timer?.cancel();
     if (!isPaused.value) {
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         _secondsElapsed++;
         _updateMatchDurationString();
       });
@@ -159,15 +159,15 @@ class LiveMatchController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00), // Neon Yellow-Green
+      backgroundColor: Color(0xFFC6FF00), // Neon Yellow-Green
       colorText: Colors.black,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 
@@ -175,14 +175,14 @@ class LiveMatchController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 

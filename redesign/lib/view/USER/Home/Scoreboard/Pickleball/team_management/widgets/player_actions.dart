@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerActions extends StatelessWidget {
   final VoidCallback onCreate;
   final VoidCallback onSelect;
   final VoidCallback onImport;
 
-  const PlayerActions({
+  PlayerActions({
     super.key,
     required this.onCreate,
     required this.onSelect,
@@ -32,6 +33,7 @@ class PlayerActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         _buildButton(
@@ -41,7 +43,7 @@ class PlayerActions extends StatelessWidget {
           textColor: Colors.black,
           onTap: onCreate,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildButton(
           text: 'SELECT EXISTING',
           icon: Icons.search,
@@ -49,7 +51,7 @@ class PlayerActions extends StatelessWidget {
           textColor: AppColors.primary,
           onTap: onSelect,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildButton(
           text: 'IMPORT FROM TOURNAMENT',
           icon: Icons.cloud_download_outlined,
@@ -69,7 +71,7 @@ class _AnimatedActionBtn extends StatefulWidget {
   final Color textColor;
   final VoidCallback onTap;
 
-  const _AnimatedActionBtn({
+  _AnimatedActionBtn({
     required this.text,
     required this.icon,
     required this.bgColor,
@@ -87,7 +89,7 @@ class _AnimatedActionBtnState extends State<_AnimatedActionBtn> with SingleTicke
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 100));
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
   }
 
   @override
@@ -98,6 +100,7 @@ class _AnimatedActionBtnState extends State<_AnimatedActionBtn> with SingleTicke
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
       onTapUp: (_) {
@@ -109,16 +112,16 @@ class _AnimatedActionBtnState extends State<_AnimatedActionBtn> with SingleTicke
         scale: Tween<double>(begin: 1.0, end: 0.97).animate(_controller),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
           decoration: BoxDecoration(
             color: widget.bgColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(widget.icon, color: widget.textColor, size: 20),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 widget.text,
                 style: AppTypography.labelCaps.copyWith(color: widget.textColor, fontWeight: FontWeight.bold),

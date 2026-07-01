@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'cancelled_booking_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CancelledBookingsWidget extends StatelessWidget {
-  const CancelledBookingsWidget({super.key});
+  CancelledBookingsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-      children: const [CancelledBookingCard()],
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 32),
+      children: [CancelledBookingCard()],
     );
   }
 }

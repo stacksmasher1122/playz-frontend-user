@@ -43,7 +43,7 @@ class VolleyballLiveScoringController extends GetxController {
     if (matchFinished.value) return;
     isPaused.value = false;
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       matchSeconds.value++;
     });
   }
@@ -162,7 +162,7 @@ class VolleyballLiveScoringController extends GetxController {
   void _endMatch(String winner) {
     matchFinished.value = true;
     pauseMatch();
-    Get.snackbar("Match Complete", "$winner has won the match!", backgroundColor: AppColors.primaryContainer, colorText: Colors.black, duration: const Duration(seconds: 5));
+    Get.snackbar("Match Complete", "$winner has won the match!", backgroundColor: AppColors.primaryContainer, colorText: Colors.black, duration: Duration(seconds: 5));
     // Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballMatchSummaryScreen()));
   }
 

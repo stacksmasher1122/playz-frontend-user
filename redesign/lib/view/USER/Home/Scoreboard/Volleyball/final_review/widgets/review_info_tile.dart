@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ReviewInfoTile extends StatelessWidget {
   final String label;
   final String value;
   final bool isLast;
 
-  const ReviewInfoTile({super.key, required this.label, required this.value, this.isLast = false});
+  ReviewInfoTile({super.key, required this.label, required this.value, this.isLast = false});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -23,7 +25,7 @@ class ReviewInfoTile extends StatelessWidget {
             ],
           ),
         ),
-        if (!isLast) const Divider(color: AppColors.surfaceContainerHighest, height: 1),
+        if (!isLast) Divider(color: AppColors.surfaceContainerHighest, height: 1),
       ],
     );
   }

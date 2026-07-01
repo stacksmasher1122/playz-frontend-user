@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AttachmentIcon extends StatelessWidget {
   final IconData icon;
@@ -6,7 +7,7 @@ class AttachmentIcon extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const AttachmentIcon({
+  AttachmentIcon({
     super.key,
     required this.icon,
     required this.color,
@@ -16,6 +17,7 @@ class AttachmentIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return InkWell(
       onTap: onTap,
       child: Column(
@@ -26,10 +28,10 @@ class AttachmentIcon extends StatelessWidget {
             backgroundColor: color.withValues(alpha: 0.2),
             child: Icon(icon, color: color, size: 28),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(color: Colors.white, fontSize: 13),
+            style: TextStyle(color: Colors.white, fontSize: 13),
           ),
         ],
       ),

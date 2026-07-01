@@ -3,11 +3,12 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/match_result_controller.dart';
 import 'series_score_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class WinnerCard extends StatefulWidget {
   final MatchResultController controller;
 
-  const WinnerCard({super.key, required this.controller});
+  WinnerCard({super.key, required this.controller});
 
   @override
   State<WinnerCard> createState() => _WinnerCardState();
@@ -19,7 +20,7 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 600));
     _animController.forward();
   }
 
@@ -31,21 +32,22 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return RepaintBoundary(
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(4)),
             decoration: BoxDecoration(
               color: AppColors.primaryContainer,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             child: Text(
               'WINNER',
               style: AppTypography.labelCaps10.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -56,19 +58,19 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
                 )),
                 child: _buildAvatar(isWinner: true),
               ),
-              const SizedBox(width: 24),
+              SizedBox(width: 24),
               Text('VS', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-              const SizedBox(width: 24),
+              SizedBox(width: 24),
               FadeTransition(
                 opacity: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                   parent: _animController,
-                  curve: const Interval(0.3, 1.0, curve: Curves.easeIn),
+                  curve: Interval(0.3, 1.0, curve: Curves.easeIn),
                 )),
                 child: _buildAvatar(isWinner: false),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -76,16 +78,16 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
                 widget.controller.winnerName.value,
                 style: AppTypography.headlineMd.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Text('vs', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Text(
                 widget.controller.runnerUp.value,
                 style: AppTypography.headlineMd.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           SeriesScoreWidget(
             winnerGames: widget.controller.winnerGames.value,
             runnerGames: widget.controller.runnerGames.value,
@@ -100,13 +102,13 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
     return Stack(
       children: [
         Container(
-          width: 80,
-          height: 80,
+          width: ResponsiveHelper.w(80),
+          height: ResponsiveHelper.h(80),
           decoration: BoxDecoration(
             color: AppColors.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           ),
-          child: const Center(
+          child: Center(
             child: Icon(Icons.group, color: AppColors.muted, size: 40),
           ),
         ),
@@ -115,13 +117,13 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
             bottom: -4,
             right: -4,
             child: Container(
-              width: 24,
-              height: 24,
-              decoration: const BoxDecoration(
+              width: ResponsiveHelper.w(24),
+              height: ResponsiveHelper.h(24),
+              decoration: BoxDecoration(
                 color: AppColors.primaryContainer,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check, color: Colors.black, size: 16),
+              child: Icon(Icons.check, color: Colors.black, size: 16),
             ),
           ),
       ],

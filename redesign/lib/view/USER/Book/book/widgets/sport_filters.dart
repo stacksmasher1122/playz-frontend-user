@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SportFilters extends StatefulWidget {
-  const SportFilters({super.key});
+  SportFilters({super.key});
 
   @override
   State<SportFilters> createState() => _SportFiltersState();
@@ -12,7 +13,7 @@ class SportFilters extends StatefulWidget {
 class _SportFiltersState extends State<SportFilters> {
   int _selectedIndex = 0;
 
-  final List<String> sports = const [
+  final List<String> sports = [
     'All Sports',
     'Football',
     'Cricket',
@@ -23,18 +24,19 @@ class _SportFiltersState extends State<SportFilters> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SizedBox(
-      height: 40,
+      height: ResponsiveHelper.h(40),
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
         itemCount: sports.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        separatorBuilder: (_, __) => SizedBox(width: 10),
         itemBuilder: (_, i) {
           final bool isSelected = i == _selectedIndex;
 
           return InkWell(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
             onTap: () {
               setState(() {
                 _selectedIndex = i;
@@ -45,21 +47,21 @@ class _SportFiltersState extends State<SportFilters> {
               // onSportSelected(sports[i]);
             },
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              duration: Duration(milliseconds: 200),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: isSelected
                     ? AppColors.accent // green background
                     : AppColors.surface,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
               ),
               child: Text(
                 sports[i],
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.inter(
-                  fontSize: 13,
+                  fontSize: ResponsiveHelper.sp(13),
                   fontWeight: FontWeight.w600,
                   color: isSelected
                       ? Colors

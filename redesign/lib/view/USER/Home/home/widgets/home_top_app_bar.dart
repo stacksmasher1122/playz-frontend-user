@@ -7,6 +7,7 @@ import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
 import 'home_shimmer.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    TOP APP BAR
@@ -18,10 +19,11 @@ class HomeTopAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final width = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
       child: Row(
         children: [
           /// LOCATION TEXT + DROPDOWN ICON together
@@ -30,7 +32,7 @@ class HomeTopAppBar extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const LocationSelectSliverScreen(),
+                    builder: (context) => LocationSelectSliverScreen(),
                   ),
                 );
               },
@@ -41,7 +43,7 @@ class HomeTopAppBar extends StatelessWidget {
                     color: AppColors.accent,
                     size: width < 360 ? 18 : 22,
                   ),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 6),
                   Flexible(
                     child: Obx(() {
                       final mapsCtrl = Get.find<MapsController>();
@@ -74,7 +76,7 @@ class HomeTopAppBar extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
 
           /// NOTIFICATIONS BELL
           Icon(
@@ -82,7 +84,7 @@ class HomeTopAppBar extends StatelessWidget {
             color: Colors.white,
             size: width < 360 ? 20 : 24,
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
 
           /// AVATAR
           Obx(() {
@@ -103,14 +105,14 @@ class HomeTopAppBar extends StatelessWidget {
                         width: width < 360 ? 32 : 36,
                         height: width < 360 ? 32 : 36,
                         borderRadius: 20,
-                        child: const Icon(Icons.person, color: Colors.white38),
+                        child: Icon(Icons.person, color: Colors.white38),
                       ),
                     )
                   : HomeShimmer(
                       width: width < 360 ? 32 : 36,
                       height: width < 360 ? 32 : 36,
                       borderRadius: 20,
-                      child: const Icon(Icons.person, color: Colors.white38),
+                      child: Icon(Icons.person, color: Colors.white38),
                     ),
             );
           }),

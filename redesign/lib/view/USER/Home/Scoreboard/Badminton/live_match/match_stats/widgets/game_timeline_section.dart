@@ -2,29 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Badminton/match_stats_controller.dart';
 import 'game_timeline_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class GameTimelineSection extends StatelessWidget {
-  const GameTimelineSection({super.key});
+  GameTimelineSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<MatchStatsController>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'GAME TIMELINE',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
               fontWeight: FontWeight.w900,
               fontStyle: FontStyle.italic,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Obx(() {
             return Column(
               children: controller.timeline.map((item) {

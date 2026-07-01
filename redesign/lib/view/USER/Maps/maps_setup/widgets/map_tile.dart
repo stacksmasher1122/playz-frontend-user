@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 
 class MapTile extends StatelessWidget {
-  const MapTile({super.key});
+  MapTile({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -22,22 +24,22 @@ class MapTile extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 12,
-            offset: const Offset(0, 6),
+            offset: Offset(0, 6),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(ResponsiveHelper.w(10)),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
             ),
-            child: const Icon(Icons.location_on_outlined, color: Colors.white),
+            child: Icon(Icons.location_on_outlined, color: Colors.white),
           ),
-          const SizedBox(width: 14),
-          const Expanded(
+          SizedBox(width: 14),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -56,7 +58,7 @@ class MapTile extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.chevron_right, color: Colors.white70),
+          Icon(Icons.chevron_right, color: Colors.white70),
         ],
       ),
     );

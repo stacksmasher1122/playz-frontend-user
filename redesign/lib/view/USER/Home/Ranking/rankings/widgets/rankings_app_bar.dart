@@ -1,48 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kGreen = AppColors.accent;
-const Color kSurface = Color(0xFF0E0E0E);
+Color kGreen = AppColors.accent;
+Color kSurface = Color(0xFF0E0E0E);
 
 class RankingsAppBar extends StatelessWidget {
-  const RankingsAppBar({super.key});
+  RankingsAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const Text(
+                Text(
                   'Rankings',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 26,
+                    fontSize: ResponsiveHelper.sp(26),
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const Spacer(),
+                Spacer(),
                 const _HeaderIcon(Icons.share),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
                 const _HeaderIcon(Icons.info_outline),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
               decoration: BoxDecoration(
                 color: kGreen.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
               ),
-              child: const Text(
+              child: Text(
                 'Season 12 · 14 days left',
                 style: TextStyle(
                   color: kGreen,
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -60,14 +62,15 @@ class _HeaderIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(999)),
         onTap: () {},
         child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: const BoxDecoration(
+          padding: EdgeInsets.all(ResponsiveHelper.w(8)),
+          decoration: BoxDecoration(
             color: kSurface,
             shape: BoxShape.circle,
           ),

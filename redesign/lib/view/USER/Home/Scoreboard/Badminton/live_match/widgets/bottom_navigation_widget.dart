@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Badminton/live_match_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
-  const BottomNavigationWidget({super.key});
+  BottomNavigationWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveMatchController>();
 
     return Container(
       color: Colors.black, // fallback
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
       child: SafeArea(
         child: Obx(() {
           final selectedIndex = controller.selectedTabIndex.value;
@@ -57,7 +59,7 @@ class _BottomNavItem extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _BottomNavItem({
+  _BottomNavItem({
     required this.icon,
     required this.label,
     required this.isSelected,
@@ -66,15 +68,16 @@ class _BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(12)),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFC6FF00) : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          color: isSelected ? Color(0xFFC6FF00) : Colors.transparent,
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -84,12 +87,12 @@ class _BottomNavItem extends StatelessWidget {
               color: isSelected ? Colors.black : Colors.white,
               size: 24,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
                 color: isSelected ? Colors.black : Colors.white,
-                fontSize: 12,
+                fontSize: ResponsiveHelper.sp(12),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),

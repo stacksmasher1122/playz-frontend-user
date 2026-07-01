@@ -12,12 +12,13 @@ import 'widgets/section_header.dart';
 import 'widgets/sport_filters.dart';
 import 'widgets/top_bar.dart';
 import 'widgets/trending_list.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    BOOK TURF SCREEN
    ============================================================ */
 class BookTurfScreen extends StatefulWidget {
-  const BookTurfScreen({super.key});
+  BookTurfScreen({super.key});
 
   @override
   State<BookTurfScreen> createState() => _BookTurfScreenState();
@@ -41,6 +42,7 @@ class _BookTurfScreenState extends State<BookTurfScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       extendBody: true,
@@ -48,8 +50,8 @@ class _BookTurfScreenState extends State<BookTurfScreen> {
         top: true,
         bottom: false,
         child: ListView(
-          padding: const EdgeInsets.only(bottom: 80),
-          children: const [
+          padding: EdgeInsets.only(bottom: 80),
+          children: [
             TopBar(),
             SizedBox(height: 14),
             SearchBarWidget(),

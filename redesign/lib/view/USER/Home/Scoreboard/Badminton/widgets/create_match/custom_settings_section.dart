@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CustomSettingsSection extends StatelessWidget {
   final int pointsPerGame;
@@ -7,7 +8,7 @@ class CustomSettingsSection extends StatelessWidget {
   final int maxPointCap;
   final ValueChanged<bool?> onWinBy2Changed;
 
-  const CustomSettingsSection({
+  CustomSettingsSection({
     super.key,
     required this.pointsPerGame,
     required this.winBy2,
@@ -17,10 +18,11 @@ class CustomSettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(12),
+        color: Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -28,24 +30,24 @@ class CustomSettingsSection extends StatelessWidget {
           initiallyExpanded: true,
           iconColor: Colors.white,
           collapsedIconColor: Colors.white,
-          title: const Text(
+          title: Text(
             "CUSTOM SETTINGS",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: ResponsiveHelper.sp(12),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.5,
             ),
           ),
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
+              padding: EdgeInsets.only(left: ResponsiveHelper.w(16), right: ResponsiveHelper.w(16), bottom: 20),
               child: Column(
                 children: [
                   _buildSettingRow("Points Per Game", pointsPerGame.toString()),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   _buildSettingCheckbox("Win By 2 Rule", winBy2, onWinBy2Changed),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   _buildSettingRow("Max Point Cap", maxPointCap.toString()),
                 ],
               ),
@@ -60,17 +62,17 @@ class CustomSettingsSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: const TextStyle(color: AppColors.muted, fontSize: 14)),
+        Text(title, style: TextStyle(color: AppColors.muted, fontSize: 14)),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
           decoration: BoxDecoration(
             color: AppColors.background,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
             border: Border.all(color: Colors.grey.shade800),
           ),
           child: Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.accent,
               fontWeight: FontWeight.bold,
             ),
@@ -84,17 +86,17 @@ class CustomSettingsSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: const TextStyle(color: AppColors.muted, fontSize: 14)),
+        Text(title, style: TextStyle(color: AppColors.muted, fontSize: 14)),
         SizedBox(
-          height: 24,
-          width: 24,
+          height: ResponsiveHelper.h(24),
+          width: ResponsiveHelper.w(24),
           child: Checkbox(
             value: value,
             onChanged: onChanged,
             activeColor: AppColors.accent,
             checkColor: Colors.black,
             side: BorderSide(color: Colors.grey.shade600),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(4))),
           ),
         ),
       ],

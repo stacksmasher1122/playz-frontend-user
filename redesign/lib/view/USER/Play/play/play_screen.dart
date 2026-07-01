@@ -11,9 +11,10 @@ import 'widgets/date_selector.dart';
 import 'widgets/play_action_row.dart';
 import 'widgets/game_list.dart';
 import 'widgets/end_of_results.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class GameDiaryScreen extends StatefulWidget {
-  const GameDiaryScreen({super.key});
+  GameDiaryScreen({super.key});
 
   @override
   State<GameDiaryScreen> createState() => _GameDiaryScreenState();
@@ -37,6 +38,7 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       extendBody: true,
       backgroundColor: AppColors.background,
@@ -44,7 +46,7 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> {
         top: true,
         bottom: false,
         child: ListView(
-          children: const [
+          children: [
             PlayTopBar(),
             PlayTabs(),
             SizedBox(height: 12),

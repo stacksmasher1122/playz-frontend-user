@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Badminton/live_match_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveMatchAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const LiveMatchAppbar({super.key});
+  LiveMatchAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveMatchController>();
 
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+        icon: Icon(Icons.arrow_back_rounded, color: Colors.white),
         onPressed: () => Navigator.pop(context),
       ),
-      title: const Text(
+      title: Text(
         'MATCH CENTER',
         style: TextStyle(
           color: Colors.white,
-          fontSize: 14,
+          fontSize: ResponsiveHelper.sp(14),
           letterSpacing: 1.5,
           fontWeight: FontWeight.bold,
         ),
@@ -28,27 +30,27 @@ class LiveMatchAppbar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       actions: [
         Container(
-          margin: const EdgeInsets.only(right: 16.0, top: 12, bottom: 12),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          margin: EdgeInsets.only(right: ResponsiveHelper.w(16.0), top: ResponsiveHelper.h(12), bottom: 12),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(4)),
           decoration: BoxDecoration(
             color: Colors.grey.shade900,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             border: Border.all(color: Colors.grey.shade800),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 Icons.timer_outlined,
                 color: Color(0xFFC6FF00), // Neon Yellow-Green
                 size: 14,
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Obx(() => Text(
                     controller.matchDuration.value,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.sp(12),
                       fontWeight: FontWeight.bold,
                       fontFeatures: [FontFeature.tabularFigures()],
                     ),
@@ -61,5 +63,5 @@ class LiveMatchAppbar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

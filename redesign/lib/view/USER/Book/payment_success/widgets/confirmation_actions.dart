@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ConfirmationActions extends StatelessWidget {
   final VoidCallback onGoToBookings;
   final VoidCallback onInviteFriends;
 
-  const ConfirmationActions({
+  ConfirmationActions({
     super.key,
     required this.onGoToBookings,
     required this.onInviteFriends,
@@ -15,6 +16,7 @@ class ConfirmationActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         SizedBox(
@@ -23,28 +25,28 @@ class ConfirmationActions extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: _kGreen,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
             ),
             onPressed: onGoToBookings,
-            child: const Text(
+            child: Text(
               'Go to My Bookings',
               style: TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         OutlinedButton(
           style: OutlinedButton.styleFrom(
             side: BorderSide(color: Colors.grey.shade800),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14), horizontal: ResponsiveHelper.w(32)),
           ),
           onPressed: onInviteFriends,
-          child: const Text(
+          child: Text(
             'Invite Friends',
             style: TextStyle(color: Colors.white),
           ),

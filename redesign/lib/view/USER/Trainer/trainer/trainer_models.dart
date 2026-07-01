@@ -11,7 +11,7 @@ class DiscoveryItem {
   final List<String> tags;
   final List<IconData> sports;
 
-  const DiscoveryItem({
+  DiscoveryItem({
     required this.name,
     required this.subtitle,
     required this.rating,

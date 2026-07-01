@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class StadiumBannerWidget extends StatelessWidget {
   final String status;
   final String venueName;
 
-  const StadiumBannerWidget({
+  StadiumBannerWidget({
     super.key,
     required this.status,
     required this.venueName,
@@ -12,10 +13,11 @@ class StadiumBannerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      height: 150,
+      height: ResponsiveHelper.h(150),
       width: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.black,
         // Since we cannot use actual assets without knowing them, a mock gradient/image setup
         image: DecorationImage(
@@ -34,34 +36,34 @@ class StadiumBannerWidget extends StatelessWidget {
             ],
           ),
         ),
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         alignment: Alignment.bottomLeft,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
               decoration: BoxDecoration(
-                color: const Color(0xFFC6FF00), // Lime Green
-                borderRadius: BorderRadius.circular(12),
+                color: Color(0xFFC6FF00), // Lime Green
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               ),
               child: Text(
                 status,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.black,
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.w900,
                   letterSpacing: 0.5,
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               venueName,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: ResponsiveHelper.sp(18),
                 fontWeight: FontWeight.bold,
               ),
             ),

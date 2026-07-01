@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kBg = AppColors.background;
+Color kBg = AppColors.background;
 
 class SportMatchSetupScreen extends StatelessWidget {
   final String sport;
 
-  const SportMatchSetupScreen({super.key, required this.sport});
+  SportMatchSetupScreen({super.key, required this.sport});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       appBar: AppBar(
@@ -20,9 +22,9 @@ class SportMatchSetupScreen extends StatelessWidget {
       body: Center(
         child: Text(
           'Setup screen for $sport',
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: ResponsiveHelper.sp(18),
             fontWeight: FontWeight.w700,
           ),
         ),

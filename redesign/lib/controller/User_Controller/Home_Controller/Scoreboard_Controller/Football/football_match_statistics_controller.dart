@@ -31,23 +31,23 @@ class FootballMatchStatisticsController extends GetxController {
   void onInit() {
     super.onInit();
     // Initialize required Rx objects with dummy models to satisfy late init before loading
-    match = const MatchStatisticsModel(
+    match = MatchStatisticsModel(
       matchId: '', matchStatus: '', currentMinute: '', homeScore: 0, awayScore: 0,
       stadium: '', matchTime: '', homeTeam: '', awayTeam: '', homeLogo: '', awayLogo: '',
     ).obs;
     
-    homeStatistics = const TeamStatisticsModel(
+    homeStatistics = TeamStatisticsModel(
       possession: 0, shots: 0, shotsOnTarget: 0, passes: 0, passAccuracy: 0, corners: 0, interceptions: 0, fouls: 0, yellowCards: 0, redCards: 0, expectedGoals: 0.0, xpPoints: 0.0,
     ).obs;
     
-    awayStatistics = const TeamStatisticsModel(
+    awayStatistics = TeamStatisticsModel(
       possession: 0, shots: 0, shotsOnTarget: 0, passes: 0, passAccuracy: 0, corners: 0, interceptions: 0, fouls: 0, yellowCards: 0, redCards: 0, expectedGoals: 0.0, xpPoints: 0.0,
     ).obs;
   }
 
   void initialize() {
     isLoading.value = true;
-    Future.delayed(const Duration(milliseconds: 800), () {
+    Future.delayed(Duration(milliseconds: 800), () {
       loadStatistics();
       loadComparison();
       loadMomentum();
@@ -57,7 +57,7 @@ class FootballMatchStatisticsController extends GetxController {
   }
 
   void loadStatistics() {
-    match.value = const MatchStatisticsModel(
+    match.value = MatchStatisticsModel(
       matchId: 'M1',
       matchStatus: 'LIVE',
       currentMinute: '78\'',
@@ -72,22 +72,22 @@ class FootballMatchStatisticsController extends GetxController {
     );
 
     players.assignAll([
-      const PlayerStatisticsModel(
+      PlayerStatisticsModel(
         playerId: 'P1', playerName: 'Erling Haaland', playerImage: 'https://via.placeholder.com/150',
         jerseyNumber: '9', position: 'CF', minutesPlayed: 78, goals: 1, assists: 0, expectedGoals: 0.84,
         rating: 8.5, yellowCard: false, redCard: false, teamName: 'MAN CITY',
       ),
-      const PlayerStatisticsModel(
+      PlayerStatisticsModel(
         playerId: 'P2', playerName: 'Kevin De Bruyne', playerImage: 'https://via.placeholder.com/150',
         jerseyNumber: '17', position: 'CAM', minutesPlayed: 78, goals: 0, assists: 1, expectedGoals: 0.32,
         rating: 8.0, yellowCard: false, redCard: false, teamName: 'MAN CITY',
       ),
-      const PlayerStatisticsModel(
+      PlayerStatisticsModel(
         playerId: 'P3', playerName: 'Martin Ødegaard', playerImage: 'https://via.placeholder.com/150',
         jerseyNumber: '8', position: 'CAM', minutesPlayed: 78, goals: 0, assists: 0, expectedGoals: 0.15,
         rating: 7.2, yellowCard: false, redCard: false, teamName: 'ARSENAL',
       ),
-      const PlayerStatisticsModel(
+      PlayerStatisticsModel(
         playerId: 'P4', playerName: 'Declan Rice', playerImage: 'https://via.placeholder.com/150',
         jerseyNumber: '41', position: 'CDM', minutesPlayed: 78, goals: 0, assists: 0, expectedGoals: 0.05,
         rating: 6.8, yellowCard: true, redCard: false, teamName: 'ARSENAL',
@@ -99,7 +99,7 @@ class FootballMatchStatisticsController extends GetxController {
 
   void refreshStatistics() {
     isLoading.value = true;
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       isLoading.value = false;
       showSuccess('Refresh Completed');
     });
@@ -138,10 +138,10 @@ class FootballMatchStatisticsController extends GetxController {
   }
 
   void loadComparison() {
-    homeStatistics.value = const TeamStatisticsModel(
+    homeStatistics.value = TeamStatisticsModel(
       possession: 62, shots: 14, shotsOnTarget: 8, passes: 512, passAccuracy: 85, corners: 9, interceptions: 10, fouls: 12, yellowCards: 1, redCards: 0, expectedGoals: 2.1, xpPoints: 2.1,
     );
-    awayStatistics.value = const TeamStatisticsModel(
+    awayStatistics.value = TeamStatisticsModel(
       possession: 38, shots: 6, shotsOnTarget: 3, passes: 324, passAccuracy: 75, corners: 4, interceptions: 6, fouls: 15, yellowCards: 3, redCards: 0, expectedGoals: 0.9, xpPoints: 1.2,
     );
     
@@ -162,16 +162,16 @@ class FootballMatchStatisticsController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00),
+      backgroundColor: Color(0xFFC6FF00),
       colorText: Colors.black,
       snackPosition: SnackPosition.TOP,
-      margin: const EdgeInsets.all(16),
-      duration: const Duration(seconds: 2),
+      margin: EdgeInsets.all(16),
+      duration: Duration(seconds: 2),
     );
   }
 
@@ -179,14 +179,14 @@ class FootballMatchStatisticsController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.TOP,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 }

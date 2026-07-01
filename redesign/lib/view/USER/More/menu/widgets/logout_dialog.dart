@@ -5,58 +5,60 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Friends_SQF/friendsSqflite.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/login/login_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LogoutDialog extends StatelessWidget {
-  const LogoutDialog({super.key});
+  LogoutDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Dialog(
-      backgroundColor: const Color(0xFF1A1A1A),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      backgroundColor: Color(0xFF1A1A1A),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(24))),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(28), vertical: ResponsiveHelper.h(32)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // Icon
             Container(
-              width: 56,
-              height: 56,
+              width: ResponsiveHelper.w(56),
+              height: ResponsiveHelper.h(56),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.red.withValues(alpha: 0.15),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.logout_rounded,
                 color: Colors.redAccent,
                 size: 28,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               'Logout',
               style: GoogleFonts.inter(
                 color: Colors.white,
-                fontSize: 22,
+                fontSize: ResponsiveHelper.sp(22),
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               'Are you sure you want to logout? You will need to sign in again to access your matches and profile.',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 color: Colors.white54,
-                fontSize: 13,
-                height: 1.5,
+                fontSize: ResponsiveHelper.sp(13),
+                height: ResponsiveHelper.h(1.5),
               ),
             ),
-            const SizedBox(height: 28),
+            SizedBox(height: 28),
             // Logout Button
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: ResponsiveHelper.h(50),
               child: ElevatedButton(
                 onPressed: () async {
                   Navigator.pop(context); // Close dialog
@@ -66,14 +68,14 @@ class LogoutDialog extends StatelessWidget {
                   if (!context.mounted) return;
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    MaterialPageRoute(builder: (_) => LoginScreen()),
                     (route) => false,
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accent,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(25)),
                   ),
                   elevation: 0,
                 ),
@@ -81,13 +83,13 @@ class LogoutDialog extends StatelessWidget {
                   'Logout',
                   style: GoogleFonts.inter(
                     color: Colors.black,
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             // Cancel Button
             GestureDetector(
               onTap: () => Navigator.pop(context),
@@ -95,7 +97,7 @@ class LogoutDialog extends StatelessWidget {
                 'Cancel',
                 style: GoogleFonts.inter(
                   color: Colors.white,
-                  fontSize: 15,
+                  fontSize: ResponsiveHelper.sp(15),
                   fontWeight: FontWeight.w600,
                 ),
               ),

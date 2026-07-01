@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import '../match_detail_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class CompetitivenessCard extends StatelessWidget {
-  const CompetitivenessCard({super.key});
+  CompetitivenessCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(22),
+      padding: EdgeInsets.all(ResponsiveHelper.w(22)),
       decoration: BoxDecoration(
         color: MatchDetailColors.surfaceSoft,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
       ),
       child: Row(
         children: [
-          const SizedBox(
-            width: 70,
-            height: 70,
+          SizedBox(
+            width: ResponsiveHelper.w(70),
+            height: ResponsiveHelper.h(70),
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -33,14 +35,14 @@ class CompetitivenessCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 20),
-          const Expanded(
+          SizedBox(width: 20),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "Competitiveness",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: ResponsiveHelper.sp(16), fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 6),
                 Text(

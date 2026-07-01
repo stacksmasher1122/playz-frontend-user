@@ -5,9 +5,10 @@ import '../profile_setup/profile_setup_screen.dart';
 import 'widgets/favorite_sports_header.dart';
 import 'widgets/sports_selection_grid.dart';
 import 'widgets/sports_selection_bottom.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FavoriteSportsScreen extends StatefulWidget {
-  const FavoriteSportsScreen({super.key});
+  FavoriteSportsScreen({super.key});
 
   @override
   State<FavoriteSportsScreen> createState() => _FavoriteSportsScreenState();
@@ -62,6 +63,7 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final bool canProceed = _selectedSports.length >= 4;
 
     return Scaffold(
@@ -70,27 +72,27 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
           children: [
-            const Text(
+            Text(
               'STEP 1 OF 2',
               style: TextStyle(
                 color: kMuted,
-                fontSize: 11,
+                fontSize: ResponsiveHelper.sp(11),
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.5,
               ),
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(height: 3, width: 30, color: kSpotifyGreen),
-                const SizedBox(width: 4),
-                Container(height: 3, width: 30, color: Colors.white24),
+                Container(height: ResponsiveHelper.h(3), width: ResponsiveHelper.w(30), color: kSpotifyGreen),
+                SizedBox(width: 4),
+                Container(height: ResponsiveHelper.h(3), width: ResponsiveHelper.w(30), color: Colors.white24),
               ],
             ),
           ],
@@ -100,7 +102,7 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const FavoriteSportsHeader(),
+          FavoriteSportsHeader(),
           SportsSelectionGrid(
             sports: _sports,
             gradients: _gradients,

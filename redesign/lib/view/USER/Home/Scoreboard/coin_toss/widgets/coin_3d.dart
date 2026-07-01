@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class Coin3D extends StatelessWidget {
   final double angle;
@@ -19,7 +20,7 @@ class Coin3D extends StatelessWidget {
   final bool isTossing;
   final bool isIdle;
 
-  const Coin3D({
+  Coin3D({
     super.key,
     required this.angle,
     required this.verticalShift,
@@ -39,6 +40,7 @@ class Coin3D extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     const double thickness = 14.0;
     const int layers = 11;
 
@@ -76,8 +78,8 @@ class Coin3D extends StatelessWidget {
                     -thickness / 2 + (i * thickness / layers),
                   ),
                 child: Container(
-                  width: 200,
-                  height: 200,
+                  width: ResponsiveHelper.w(200),
+                  height: ResponsiveHelper.h(200),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: SweepGradient(
@@ -85,11 +87,11 @@ class Coin3D extends StatelessWidget {
                       startAngle: 0,
                       endAngle: 2 * pi,
                       colors: [
-                        const Color(0xFF5C4613),
-                        const Color(0xFF8C6A1A),
-                        const Color(0xFFF7E7A1).withValues(alpha: 0.9),
-                        const Color(0xFF8C6A1A),
-                        const Color(0xFF5C4613),
+                        Color(0xFF5C4613),
+                        Color(0xFF8C6A1A),
+                        Color(0xFFF7E7A1).withValues(alpha: 0.9),
+                        Color(0xFF8C6A1A),
+                        Color(0xFF5C4613),
                       ],
                       stops: [
                         0.0,
@@ -100,19 +102,19 @@ class Coin3D extends StatelessWidget {
                       ],
                     ),
                     border: Border.all(
-                      color: const Color(0xFFF7E7A1).withValues(alpha: 0.3),
-                      width: 0.5,
+                      color: Color(0xFFF7E7A1).withValues(alpha: 0.3),
+                      width: ResponsiveHelper.w(0.5),
                     ),
                   ),
                 ),
               ),
             Container(
-              width: 200,
-              height: 200,
+              width: ResponsiveHelper.w(200),
+              height: ResponsiveHelper.h(200),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFFF7E7A1), width: 2),
-                gradient: const LinearGradient(
+                border: Border.all(color: Color(0xFFF7E7A1), width: 2),
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
@@ -134,7 +136,7 @@ class Coin3D extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(
+                        color: Color(
                           0xFFF7E7A1,
                         ).withValues(alpha: glowPulse * 0.6),
                         blurRadius: 30 * glowPulse,
@@ -144,9 +146,9 @@ class Coin3D extends StatelessWidget {
                   ),
                   child: SvgPicture.asset(
                     "assets/Emblem_of_India.svg",
-                    width: 140,
-                    height: 140,
-                    colorFilter: const ColorFilter.mode(
+                    width: ResponsiveHelper.w(140),
+                    height: ResponsiveHelper.h(140),
+                    colorFilter: ColorFilter.mode(
                       Colors.white,
                       BlendMode.srcIn,
                     ),
@@ -164,7 +166,7 @@ class Coin3D extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(
+                        color: Color(
                           0xFFF7E7A1,
                         ).withValues(alpha: glowPulse * 0.6),
                         blurRadius: 30 * glowPulse,
@@ -174,9 +176,9 @@ class Coin3D extends StatelessWidget {
                   ),
                   child: SvgPicture.asset(
                     "assets/Indian_Rupee_symbol.svg",
-                    width: 120,
-                    height: 120,
-                    colorFilter: const ColorFilter.mode(
+                    width: ResponsiveHelper.w(120),
+                    height: ResponsiveHelper.h(120),
+                    colorFilter: ColorFilter.mode(
                       Colors.white,
                       BlendMode.srcIn,
                     ),
@@ -184,8 +186,8 @@ class Coin3D extends StatelessWidget {
                 ),
               ),
             Container(
-              width: 200,
-              height: 200,
+              width: ResponsiveHelper.w(200),
+              height: ResponsiveHelper.h(200),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
@@ -202,7 +204,7 @@ class Coin3D extends StatelessWidget {
                           0.1 * cos(angle * 2),
                     ),
                   ],
-                  stops: const [0.0, 0.5, 1.0],
+                  stops: [0.0, 0.5, 1.0],
                 ),
               ),
             ),

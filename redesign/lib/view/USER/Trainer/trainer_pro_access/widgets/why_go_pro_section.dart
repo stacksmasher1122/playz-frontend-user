@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class WhyGoProSection extends StatelessWidget {
-  const WhyGoProSection({super.key});
+  WhyGoProSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         Text(
           'WHY GO PRO?',
           style: TextStyle(
             color: kMuted,
-            fontSize: 12.5,
+            fontSize: ResponsiveHelper.sp(12.5),
             fontWeight: FontWeight.w700,
             letterSpacing: 0.8,
           ),
@@ -55,7 +57,7 @@ class WhyGoProItem extends StatelessWidget {
   final String title;
   final String description;
 
-  const WhyGoProItem({
+  WhyGoProItem({
     super.key,
     required this.icon,
     required this.title,
@@ -64,38 +66,39 @@ class WhyGoProItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 36,
-          width: 36,
+          height: ResponsiveHelper.h(36),
+          width: ResponsiveHelper.w(36),
           decoration: BoxDecoration(
             color: kGreen.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
           ),
           child: Icon(icon, size: 18, color: kGreen),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 14.5,
+                  fontSize: ResponsiveHelper.sp(14.5),
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 description,
-                style: const TextStyle(
+                style: TextStyle(
                   color: kMuted,
-                  fontSize: 13,
-                  height: 1.45,
+                  fontSize: ResponsiveHelper.sp(13),
+                  height: ResponsiveHelper.h(1.45),
                 ),
               ),
             ],

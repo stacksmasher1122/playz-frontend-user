@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ComparisonProgressWidget extends StatelessWidget {
   final String label;
@@ -10,7 +11,7 @@ class ComparisonProgressWidget extends StatelessWidget {
   final String valueB;
   final AnimationController animController;
 
-  const ComparisonProgressWidget({
+  ComparisonProgressWidget({
     super.key,
     required this.label,
     required this.summary,
@@ -22,6 +23,7 @@ class ComparisonProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -32,7 +34,7 @@ class ComparisonProgressWidget extends StatelessWidget {
             Text(summary, style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold)),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Row(
           children: [
             Expanded(
@@ -44,17 +46,17 @@ class ComparisonProgressWidget extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     widthFactor: Curves.easeOut.transform(animController.value),
                     child: Container(
-                      height: 8,
-                      decoration: const BoxDecoration(
+                      height: ResponsiveHelper.h(8),
+                      decoration: BoxDecoration(
                         color: AppColors.primaryContainer,
-                        borderRadius: BorderRadius.horizontal(left: Radius.circular(4)),
+                        borderRadius: BorderRadius.horizontal(left: Radius.circular(ResponsiveHelper.w(4))),
                       ),
                     ),
                   );
                 }
               ),
             ),
-            const SizedBox(width: 2),
+            SizedBox(width: 2),
             Expanded(
               flex: ((1 - ratioA) * 100).toInt(),
               child: AnimatedBuilder(
@@ -64,10 +66,10 @@ class ComparisonProgressWidget extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     widthFactor: Curves.easeOut.transform(animController.value),
                     child: Container(
-                      height: 8,
-                      decoration: const BoxDecoration(
+                      height: ResponsiveHelper.h(8),
+                      decoration: BoxDecoration(
                         color: AppColors.surfaceContainerHighest,
-                        borderRadius: BorderRadius.horizontal(right: Radius.circular(4)),
+                        borderRadius: BorderRadius.horizontal(right: Radius.circular(ResponsiveHelper.w(4))),
                       ),
                     ),
                   );
@@ -76,7 +78,7 @@ class ComparisonProgressWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

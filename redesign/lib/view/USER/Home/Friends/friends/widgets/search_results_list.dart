@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kSurface = Color(0xFF0E0E0E);
 const kGreen = AppColors.accent;
@@ -10,7 +11,7 @@ class SearchResultsList extends StatelessWidget {
   final List<Map<String, dynamic>> results;
   final Function(Map<String, dynamic>) onAdd;
 
-  const SearchResultsList({
+  SearchResultsList({
     super.key,
     required this.results,
     required this.onAdd,
@@ -18,6 +19,7 @@ class SearchResultsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -25,25 +27,25 @@ class SearchResultsList extends StatelessWidget {
           maxHeight: MediaQuery.of(context).size.height * 0.55,
         ),
         decoration: BoxDecoration(
-          color: const Color(0xFF141414),
-          borderRadius: BorderRadius.circular(18),
+          color: Color(0xFF141414),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
           border: Border.all(color: Colors.white.withAlpha(12)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withAlpha(180),
               blurRadius: 24,
-              offset: const Offset(0, 8),
+              offset: Offset(0, 8),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
           child: ListView.separated(
             shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8)),
             itemCount: results.length,
             separatorBuilder: (_, __) =>
-                const Divider(color: Colors.white10, height: 1),
+                Divider(color: Colors.white10, height: 1),
             itemBuilder: (_, i) {
               final user = results[i];
               return SearchResultTile(user: user, onAdd: () => onAdd(user));
@@ -59,7 +61,7 @@ class SearchResultTile extends StatefulWidget {
   final Map<String, dynamic> user;
   final VoidCallback onAdd;
 
-  const SearchResultTile({super.key, required this.user, required this.onAdd});
+  SearchResultTile({super.key, required this.user, required this.onAdd});
 
   @override
   State<SearchResultTile> createState() => _SearchResultTileState();
@@ -70,6 +72,7 @@ class _SearchResultTileState extends State<SearchResultTile> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final name = widget.user['fullName'] ?? 'Unknown';
     final pic = widget.user['profileImageUrl'] ?? '';
     final alreadyFriend = widget.user['alreadyFriend'] == true;
@@ -99,7 +102,7 @@ class _SearchResultTileState extends State<SearchResultTile> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(8)),
       child: Row(
         children: [
           CircleAvatar(
@@ -109,16 +112,16 @@ class _SearchResultTileState extends State<SearchResultTile> {
                 : null,
             backgroundColor: kSurface,
             child: pic.isEmpty
-                ? const Icon(Icons.person, color: kMuted)
+                ? Icon(Icons.person, color: kMuted)
                 : null,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Text(
               name,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 15,
+                fontSize: ResponsiveHelper.sp(15),
                 fontWeight: FontWeight.w600,
               ),
               maxLines: 1,
@@ -133,18 +136,18 @@ class _SearchResultTileState extends State<SearchResultTile> {
                   }
                 : null,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
+              duration: Duration(milliseconds: 250),
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
               decoration: BoxDecoration(
                 color: buttonColor,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
               ),
               child: Text(
                 buttonLabel,
                 style: TextStyle(
                   color: textColor,
-                  fontSize: 13,
+                  fontSize: ResponsiveHelper.sp(13),
                   fontWeight: FontWeight.w700,
                 ),
               ),

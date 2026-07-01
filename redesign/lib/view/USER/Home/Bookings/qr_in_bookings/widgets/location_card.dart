@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
 import '../qr_in_bookings_screen.dart';
 import 'qr_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LocationCard extends StatelessWidget {
-  const LocationCard({super.key});
+  LocationCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return QrCard(
       title: 'Location',
-      trailing: const Text('2.5 km away',
+      trailing: Text('2.5 km away',
           style: TextStyle(color: QrBookingConstants.green, fontWeight: FontWeight.w600)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Plot No 45, behind FC Road, Shivajinagar, Pune, Maharashtra 411005',
             style: TextStyle(color: QrBookingConstants.muted),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
               ),
             ),
             onPressed: () {},
-            icon: const Icon(Icons.near_me_outlined),
-            label: const Text('Get Directions'),
+            icon: Icon(Icons.near_me_outlined),
+            label: Text('Get Directions'),
           )
         ],
       ),

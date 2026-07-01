@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MvpAnalysisCard extends StatefulWidget {
-  const MvpAnalysisCard({super.key});
+  MvpAnalysisCard({super.key});
 
   @override
   State<MvpAnalysisCard> createState() => _MvpAnalysisCardState();
@@ -15,7 +16,7 @@ class _MvpAnalysisCardState extends State<MvpAnalysisCard> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 600));
     _animController.forward();
   }
 
@@ -27,6 +28,7 @@ class _MvpAnalysisCardState extends State<MvpAnalysisCard> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return ScaleTransition(
       scale: Tween<double>(begin: 0.9, end: 1.0).animate(CurvedAnimation(
         parent: _animController,
@@ -38,10 +40,10 @@ class _MvpAnalysisCardState extends State<MvpAnalysisCard> with SingleTickerProv
           curve: Curves.easeIn,
         )),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(ResponsiveHelper.w(24)),
           decoration: BoxDecoration(
             color: AppColors.primaryContainer,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,22 +55,22 @@ class _MvpAnalysisCardState extends State<MvpAnalysisCard> with SingleTickerProv
                     'MVP ANALYSIS',
                     style: AppTypography.labelCaps10.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
                   ),
-                  const Icon(Icons.emoji_events, color: Colors.black, size: 20),
+                  Icon(Icons.emoji_events, color: Colors.black, size: 20),
                 ],
               ),
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16),
+              Text(
                 'J. Smith dominated the kitchen with 12 winners.',
                 style: TextStyle(
                   fontFamily: 'Inter',
-                  fontSize: 20,
+                  fontSize: ResponsiveHelper.sp(20),
                   fontWeight: FontWeight.w900,
                   fontStyle: FontStyle.italic,
                   color: Colors.black,
-                  height: 1.2,
+                  height: ResponsiveHelper.h(1.2),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

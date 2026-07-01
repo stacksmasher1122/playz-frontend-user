@@ -9,9 +9,10 @@ import 'widgets/ms_momentum_graph_widget.dart';
 import 'widgets/ms_set_breakdown_widget.dart';
 import 'widgets/ms_player_of_match_widget.dart';
 import 'widgets/ms_bottom_nav_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchStatsScreen extends StatefulWidget {
-  const MatchStatsScreen({super.key});
+  MatchStatsScreen({super.key});
 
   @override
   State<MatchStatsScreen> createState() => _MatchStatsScreenState();
@@ -34,38 +35,39 @@ class _MatchStatsScreenState extends State<MatchStatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
-            const MsAppbarWidget(),
+            MsAppbarWidget(),
             
             Expanded(
               child: Obx(() {
                 if (controller.stats.value == null) {
-                  return const Center(child: CircularProgressIndicator(color: AppColors.primaryContainer));
+                  return Center(child: CircularProgressIndicator(color: AppColors.primaryContainer));
                 }
                 
                 return SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(16.0)),
                   child: Column(
                     children: [
-                      const MsHeroHeaderWidget(),
-                      const SizedBox(height: 24),
+                      MsHeroHeaderWidget(),
+                      SizedBox(height: 24),
                       
-                      const MsMatchStatsBarsWidget(),
-                      const SizedBox(height: 24),
+                      MsMatchStatsBarsWidget(),
+                      SizedBox(height: 24),
                       
-                      const MsMomentumGraphWidget(),
-                      const SizedBox(height: 24),
+                      MsMomentumGraphWidget(),
+                      SizedBox(height: 24),
                       
-                      const MsSetBreakdownWidget(),
-                      const SizedBox(height: 24),
+                      MsSetBreakdownWidget(),
+                      SizedBox(height: 24),
                       
-                      const MsPlayerOfMatchWidget(),
+                      MsPlayerOfMatchWidget(),
                       
-                      const SizedBox(height: 120),
+                      SizedBox(height: 120),
                     ],
                   ),
                 );
@@ -74,7 +76,7 @@ class _MatchStatsScreenState extends State<MatchStatsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const MsBottomNavWidget(),
+      bottomNavigationBar: MsBottomNavWidget(),
     );
   }
 }

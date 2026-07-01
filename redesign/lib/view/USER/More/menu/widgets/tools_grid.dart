@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ToolsGrid extends StatelessWidget {
-  const ToolsGrid({super.key});
+  ToolsGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final tools = const [
+    ResponsiveHelper.init(context);
+    final tools = [
       ('My Bookings', Icons.event),
       ('My Games & Teams', Icons.emoji_events),
       ('My Groups', Icons.groups),
@@ -19,13 +21,13 @@ class ToolsGrid extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: GridView.builder(
         padding: EdgeInsets.zero,
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         itemCount: tools.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
@@ -36,9 +38,9 @@ class ToolsGrid extends StatelessWidget {
           return Container(
             decoration: BoxDecoration(
               color: highlight ? AppColors.accent : AppColors.surface,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(ResponsiveHelper.w(10)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -46,14 +48,14 @@ class ToolsGrid extends StatelessWidget {
                   tools[i].$2,
                   color: highlight ? Colors.black : Colors.white,
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Text(
                   tools[i].$1,
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     color: highlight ? Colors.black : Colors.white,
-                    fontSize: 11,
+                    fontSize: ResponsiveHelper.sp(11),
                     fontWeight: FontWeight.w600,
                   ),
                 ),

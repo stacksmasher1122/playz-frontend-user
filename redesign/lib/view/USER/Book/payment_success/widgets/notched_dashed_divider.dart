@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class NotchedDashedDivider extends StatelessWidget {
-  const NotchedDashedDivider({super.key});
+  NotchedDashedDivider({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SizedBox(
-      height: 32,
+      height: ResponsiveHelper.h(32),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -17,12 +19,12 @@ class NotchedDashedDivider extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Container(
-              width: 16,
-              height: 32,
-              decoration: const BoxDecoration(
+              width: ResponsiveHelper.w(16),
+              height: ResponsiveHelper.h(32),
+              decoration: BoxDecoration(
                 color: Colors.black, // matches background
                 borderRadius: BorderRadius.horizontal(
-                  right: Radius.circular(16),
+                  right: Radius.circular(ResponsiveHelper.w(16)),
                 ),
               ),
             ),
@@ -32,12 +34,12 @@ class NotchedDashedDivider extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: Container(
-              width: 16,
-              height: 32,
-              decoration: const BoxDecoration(
+              width: ResponsiveHelper.w(16),
+              height: ResponsiveHelper.h(32),
+              decoration: BoxDecoration(
                 color: Colors.black,
                 borderRadius: BorderRadius.horizontal(
-                  left: Radius.circular(16),
+                  left: Radius.circular(ResponsiveHelper.w(16)),
                 ),
               ),
             ),

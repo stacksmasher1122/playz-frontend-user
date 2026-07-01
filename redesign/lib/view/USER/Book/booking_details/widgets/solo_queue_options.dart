@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SoloQueueOptions extends StatelessWidget {
   final bool soloQueue;
@@ -14,7 +15,7 @@ class SoloQueueOptions extends StatelessWidget {
   final ValueChanged<bool> onSplitAndPayChanged;
   final ValueChanged<bool> onBringOwnEquipmentChanged;
 
-  const SoloQueueOptions({
+  SoloQueueOptions({
     super.key,
     required this.soloQueue,
     required this.players,
@@ -34,14 +35,15 @@ class SoloQueueOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
           color: AppColors.surface, // Spotify dark surface
           border: Border.all(color: _kGreen),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,14 +53,14 @@ class SoloQueueOptions extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               value: soloQueue,
               activeThumbColor: _kGreen,
-              title: const Text(
+              title: Text(
                 'Solo Queue Mode',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              subtitle: const Text(
+              subtitle: Text(
                 'Allow others to join and split cost',
                 style: TextStyle(color: _kMuted),
               ),
@@ -67,12 +69,12 @@ class SoloQueueOptions extends StatelessWidget {
 
             /// EXTRA OPTIONS (ONLY WHEN ENABLED)
             AnimatedCrossFade(
-              firstChild: const SizedBox.shrink(),
+              firstChild: SizedBox.shrink(),
               secondChild: _soloQueueExtras(context),
               crossFadeState: soloQueue
                   ? CrossFadeState.showSecond
                   : CrossFadeState.showFirst,
-              duration: const Duration(milliseconds: 250),
+              duration: Duration(milliseconds: 250),
               sizeCurve: Curves.easeOut,
             ),
           ],
@@ -89,47 +91,47 @@ class SoloQueueOptions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         /// TOTAL PLAYERS
-        const Text(
+        Text(
           'Total Players Needed',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
               onPressed: players > 1 ? () => onPlayersChanged(players - 1) : null,
-              icon: const Icon(Icons.remove),
+              icon: Icon(Icons.remove),
               color: Colors.white,
             ),
             Text(
               '$players Players',
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: ResponsiveHelper.sp(16),
                 fontWeight: FontWeight.bold,
               ),
             ),
             IconButton(
               onPressed: () => onPlayersChanged(players + 1),
-              icon: const Icon(Icons.add),
+              icon: Icon(Icons.add),
               color: Colors.white,
             ),
           ],
         ),
 
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
 
         /// SPLIT & PAY TOGGLE
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
           value: splitAndPay,
           activeThumbColor: _kGreen,
-          title: const Text(
+          title: Text(
             'Split & Pay',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
@@ -137,22 +139,22 @@ class SoloQueueOptions extends StatelessWidget {
             splitAndPay
                 ? 'Each player pays ₹$perPersonAmount'
                 : 'Host pays full amount',
-            style: const TextStyle(color: _kMuted),
+            style: TextStyle(color: _kMuted),
           ),
           onChanged: onSplitAndPayChanged,
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         /// MATCHMAKING RADIUS (UP TO 20 KM)
-        const Text(
+        Text(
           'Matchmaking Radius',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             valueIndicatorColor: _kGreen, // background of label
-            valueIndicatorTextStyle: const TextStyle(
+            valueIndicatorTextStyle: TextStyle(
               color: Colors.black, // 👈 label text color
               fontWeight: FontWeight.w500,
             ),
@@ -171,33 +173,33 @@ class SoloQueueOptions extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// BRING YOUR OWN EQUIPMENT
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
           value: bringOwnEquipment,
           activeThumbColor: _kGreen,
-          title: const Text(
+          title: Text(
             'Bring Your Own Equipment',
             style: TextStyle(color: Colors.white),
           ),
-          subtitle: const Text(
+          subtitle: Text(
             'Players will bring their own gear',
             style: TextStyle(color: _kMuted),
           ),
           onChanged: onBringOwnEquipmentChanged,
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// SUMMARY CARD
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(ResponsiveHelper.w(12)),
           decoration: BoxDecoration(
             border: Border.all(color: _kGreen),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             color: AppColors.surface,
           ),
           child: Text(
@@ -205,7 +207,7 @@ class SoloQueueOptions extends StatelessWidget {
                 ? 'Posting for $players Players • ₹$perPersonAmount / person • ${radius.toInt()} km'
                 : 'Posting for $players Players • Host pays ₹$baseSlotPrice • ${radius.toInt()} km'
                       '${bringOwnEquipment ? ' • BYO Equipment' : ''}',
-            style: const TextStyle(color: _kGreen, fontWeight: FontWeight.w600),
+            style: TextStyle(color: _kGreen, fontWeight: FontWeight.w600),
           ),
         ),
       ],

@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kCard = Color(0xFF1A1A1A);
-const Color kMuted = Color(0xFFA7A7A7);
-const Color kGreen = AppColors.accent;
-const Color kYellow = Color(0xFFFFC107);
+Color kCard = Color(0xFF1A1A1A);
+Color kMuted = Color(0xFFA7A7A7);
+Color kGreen = AppColors.accent;
+Color kYellow = Color(0xFFFFC107);
 
 class AcademyReviewsSection extends StatelessWidget {
-  const AcademyReviewsSection({super.key});
+  AcademyReviewsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          children: const [
+          children: [
             Text(
               'Reviews (128)',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: ResponsiveHelper.sp(18),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -28,15 +30,15 @@ class AcademyReviewsSection extends StatelessWidget {
             Text('View All', style: TextStyle(color: kGreen)),
           ],
         ),
-        const SizedBox(height: 12),
-        const ReviewTile(
+        SizedBox(height: 12),
+        ReviewTile(
           name: 'Rohan M.',
           rating: 5,
           text:
               'Best academy for kids in Kothrud. Coaches are patient and the ground is well maintained.',
         ),
-        const SizedBox(height: 10),
-        const ReviewTile(
+        SizedBox(height: 10),
+        ReviewTile(
           name: 'Priya S.',
           rating: 4,
           text:
@@ -52,7 +54,7 @@ class ReviewTile extends StatelessWidget {
   final int rating;
   final String text;
 
-  const ReviewTile({
+  ReviewTile({
     super.key,
     required this.name,
     required this.rating,
@@ -61,11 +63,12 @@ class ReviewTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,17 +78,17 @@ class ReviewTile extends StatelessWidget {
               CircleAvatar(
                 radius: 14,
                 backgroundColor: Colors.grey.shade700,
-                child: const Icon(Icons.person, size: 16, color: Colors.white),
+                child: Icon(Icons.person, size: 16, color: Colors.white),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 name,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               Row(
                 children: List.generate(
                   5,
@@ -98,8 +101,8 @@ class ReviewTile extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(text, style: const TextStyle(color: kMuted, height: 1.4)),
+          SizedBox(height: 8),
+          Text(text, style: TextStyle(color: kMuted, height: 1.4)),
         ],
       ),
     );

@@ -69,7 +69,7 @@ class VolleyballInitializeMatchController extends GetxController {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.dark(
+            colorScheme: ColorScheme.dark(
               primary: AppColors.primaryContainer,
               onPrimary: AppColors.primary,
               surface: AppColors.surfaceContainerHighest,
@@ -92,7 +92,7 @@ class VolleyballInitializeMatchController extends GetxController {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.dark(
+            colorScheme: ColorScheme.dark(
               primary: AppColors.primaryContainer,
               onPrimary: AppColors.primary,
               surface: AppColors.surfaceContainerHighest,
@@ -136,11 +136,11 @@ class VolleyballInitializeMatchController extends GetxController {
   void initializeMatch(BuildContext context) {
     if (validateForm()) {
       loading.value = true;
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 1), () {
         loading.value = false;
         Get.snackbar("Success", "Match Initialized!", backgroundColor: AppColors.primaryContainer, colorText: Colors.black);
         
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const VolleyballTeamManagementScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballTeamManagementScreen()));
       });
     }
   }

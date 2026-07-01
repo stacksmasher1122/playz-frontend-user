@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchTimelineAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const MatchTimelineAppbar({super.key});
+  MatchTimelineAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+        icon: Icon(Icons.arrow_back_rounded, color: Colors.white),
         onPressed: () => Navigator.pop(context),
       ),
-      title: const Text(
+      title: Text(
         'MATCH CENTER',
         style: TextStyle(
           color: Color(0xFFC6FF00), // Neon Yellow-Green
-          fontSize: 14,
+          fontSize: ResponsiveHelper.sp(14),
           letterSpacing: 1.5,
           fontWeight: FontWeight.w900,
           fontStyle: FontStyle.italic,
@@ -25,16 +27,16 @@ class MatchTimelineAppbar extends StatelessWidget implements PreferredSizeWidget
       centerTitle: true,
       actions: [
         Container(
-          margin: const EdgeInsets.only(right: 16.0, top: 12, bottom: 12),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          margin: EdgeInsets.only(right: ResponsiveHelper.w(16.0), top: ResponsiveHelper.h(12), bottom: 12),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(4)),
           decoration: BoxDecoration(
             color: Colors.grey.shade900,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             border: Border.all(color: Colors.grey.shade800),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Icon(
                 Icons.timer_outlined,
                 color: Colors.white,
@@ -45,7 +47,7 @@ class MatchTimelineAppbar extends StatelessWidget implements PreferredSizeWidget
                 'FINAL RESULT',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
                 ),
@@ -58,5 +60,5 @@ class MatchTimelineAppbar extends StatelessWidget implements PreferredSizeWidget
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

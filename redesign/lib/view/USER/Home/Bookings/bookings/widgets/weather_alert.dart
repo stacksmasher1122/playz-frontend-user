@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import '../bookings_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingsWeatherAlert extends StatelessWidget {
-  const BookingsWeatherAlert({super.key});
+  BookingsWeatherAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 12, 16, 6),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.fromLTRB(16, 12, 16, 6),
+      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: const LinearGradient(
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        gradient: LinearGradient(
           colors: [Color(0xFF4A1C1C), Color(0xFF2A0F0F)],
         ),
       ),
-      child: const Row(
+      child: Row(
         children: [
           Icon(Icons.umbrella, color: MyBookingsConstants.amber),
           SizedBox(width: 10),

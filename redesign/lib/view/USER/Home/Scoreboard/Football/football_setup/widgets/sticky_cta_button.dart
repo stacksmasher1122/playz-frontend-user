@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'setup_constants.dart';
 import 'setup_models.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class StickyCtaButton extends StatelessWidget {
   final MatchMode mode;
   final bool isActive;
   final VoidCallback onTap;
 
-  const StickyCtaButton({
+  StickyCtaButton({
     super.key,
     required this.mode,
     required this.isActive,
@@ -16,15 +17,16 @@ class StickyCtaButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
         color: kBg,
         boxShadow: [
           BoxShadow(
             color: kAccent.withValues(alpha: 0.05),
             blurRadius: 32,
-            offset: const Offset(0, -10),
+            offset: Offset(0, -10),
           ),
         ],
       ),
@@ -33,18 +35,18 @@ class StickyCtaButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: kAccent,
           foregroundColor: Colors.black,
-          minimumSize: const Size(double.infinity, 56),
+          minimumSize: Size(double.infinity, 56),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
           ),
           elevation: 0,
         ),
         child: Text(
           mode == MatchMode.friendly ? "START MATCH" : "CREATE TOURNAMENT",
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w900,
             letterSpacing: 1.2,
-            fontSize: 16,
+            fontSize: ResponsiveHelper.sp(16),
           ),
         ),
       ),

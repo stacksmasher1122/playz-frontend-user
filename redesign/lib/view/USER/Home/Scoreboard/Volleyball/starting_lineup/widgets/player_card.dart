@@ -4,15 +4,17 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_player_model.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_starting_lineup_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerCard extends StatelessWidget {
   final VolleyballPlayerModel player;
   final VolleyballStartingLineupController controller;
 
-  const PlayerCard({super.key, required this.player, required this.controller});
+  PlayerCard({super.key, required this.player, required this.controller});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Obx(() {
       bool isOnCourt = controller.currentState.courtPlayers.containsValue(player);
 
@@ -33,11 +35,11 @@ class PlayerCard extends StatelessWidget {
 
   Widget _buildCardContent({required bool isDragging, required bool isOnCourt}) {
     return Container(
-      width: 100,
-      margin: const EdgeInsets.only(right: 12),
+      width: ResponsiveHelper.w(100),
+      margin: EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         border: Border.all(color: isOnCourt ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
         boxShadow: isDragging ? [
           BoxShadow(
@@ -50,16 +52,16 @@ class PlayerCard extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(ResponsiveHelper.w(12)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 50,
-                  height: 50,
+                  width: ResponsiveHelper.w(50),
+                  height: ResponsiveHelper.h(50),
                   decoration: BoxDecoration(
                     color: AppColors.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                     border: Border.all(color: AppColors.surfaceContainerHighest),
                   ),
                   child: Center(
@@ -69,7 +71,7 @@ class PlayerCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Text(
                   player.name.toUpperCase(),
                   style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, letterSpacing: 1.2),
@@ -77,7 +79,7 @@ class PlayerCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   player.position,
                   style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontSize: 8),
@@ -89,15 +91,15 @@ class PlayerCard extends StatelessWidget {
           ),
           if (isOnCourt)
             Positioned(
-              top: 4,
-              right: 4,
+              top: ResponsiveHelper.h(4),
+              right: ResponsiveHelper.w(4),
               child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.all(ResponsiveHelper.w(4)),
+                decoration: BoxDecoration(
                   color: AppColors.primaryContainer,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check, color: AppColors.onPrimaryContainer, size: 12),
+                child: Icon(Icons.check, color: AppColors.onPrimaryContainer, size: 12),
               ),
             ),
         ],

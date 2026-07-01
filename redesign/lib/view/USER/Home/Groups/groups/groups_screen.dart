@@ -6,15 +6,17 @@ import 'widgets/groups_app_bar.dart';
 import 'widgets/search_and_filters.dart';
 import 'widgets/my_squads_list.dart';
 import 'widgets/recommended_for_you_section.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = AppColors.background;
 
 class GroupsScreen extends StatelessWidget {
-  const GroupsScreen({super.key});
+  GroupsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    ResponsiveHelper.init(context);
+    return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
         top: true,

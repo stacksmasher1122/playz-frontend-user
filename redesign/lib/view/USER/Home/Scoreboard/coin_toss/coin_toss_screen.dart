@@ -13,11 +13,12 @@ import 'widgets/coin_shadow.dart';
 import 'widgets/swipe_hint.dart';
 import 'widgets/toss_impact_effects.dart';
 import 'widgets/toss_result_display.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 enum CoinState { idle, anticipating, tossing, landed }
 
 class CoinFlipScreen extends StatefulWidget {
-  const CoinFlipScreen({super.key});
+  CoinFlipScreen({super.key});
 
   @override
   State<CoinFlipScreen> createState() => _CoinFlipScreenState();
@@ -86,37 +87,37 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
     });
 
     controller = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: Duration(milliseconds: 2000),
       vsync: this,
     );
 
     shakeController = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: Duration(milliseconds: 150),
       vsync: this,
     );
 
     idleController = AnimationController(
-      duration: const Duration(seconds: 4),
+      duration: Duration(seconds: 4),
       vsync: this,
     )..repeat(reverse: true);
 
     resultController = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
       vsync: this,
     );
 
     haloController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 500),
       vsync: this,
     );
 
     flashController = AnimationController(
-      duration: const Duration(milliseconds: 80),
+      duration: Duration(milliseconds: 80),
       vsync: this,
     );
 
     wobbleController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       vsync: this,
     );
 
@@ -129,7 +130,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
     rotationAnimation = Tween<double>(begin: 0, end: pi * 10).animate(
       CurvedAnimation(
         parent: controller,
-        curve: const Interval(0.08, 1.0, curve: Curves.easeOutExpo),
+        curve: Interval(0.08, 1.0, curve: Curves.easeOutExpo),
       ),
     );
 
@@ -208,25 +209,25 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
 
     shakeAnimation = TweenSequence<Offset>([
       TweenSequenceItem(
-        tween: Tween<Offset>(begin: Offset.zero, end: const Offset(3, 2)),
+        tween: Tween<Offset>(begin: Offset.zero, end: Offset(3, 2)),
         weight: 25,
       ),
       TweenSequenceItem(
         tween: Tween<Offset>(
-          begin: const Offset(3, 2),
-          end: const Offset(-3, -2),
+          begin: Offset(3, 2),
+          end: Offset(-3, -2),
         ),
         weight: 25,
       ),
       TweenSequenceItem(
         tween: Tween<Offset>(
-          begin: const Offset(-3, -2),
-          end: const Offset(1, 0),
+          begin: Offset(-3, -2),
+          end: Offset(1, 0),
         ),
         weight: 25,
       ),
       TweenSequenceItem(
-        tween: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero),
+        tween: Tween<Offset>(begin: Offset(1, 0), end: Offset.zero),
         weight: 25,
       ),
     ]).animate(shakeController);
@@ -234,15 +235,15 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
     resultOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: resultController,
-        curve: const Interval(0.4, 1.0, curve: Curves.easeOut),
+        curve: Interval(0.4, 1.0, curve: Curves.easeOut),
       ),
     );
 
-    resultSlide = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero)
+    resultSlide = Tween<Offset>(begin: Offset(0, 0.5), end: Offset.zero)
         .animate(
           CurvedAnimation(
             parent: resultController,
-            curve: const Interval(0.4, 1.0, curve: Curves.easeOutCubic),
+            curve: Interval(0.4, 1.0, curve: Curves.easeOutCubic),
           ),
         );
 
@@ -259,7 +260,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
         ]).animate(
           CurvedAnimation(
             parent: resultController,
-            curve: const Interval(0.5, 1.0, curve: Curves.easeInOut),
+            curve: Interval(0.5, 1.0, curve: Curves.easeInOut),
           ),
         );
 
@@ -331,15 +332,15 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
     Vibration.vibrate(pattern: [0, 50, 40, 60]);
     _playSound("land.mp3");
 
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(Duration(milliseconds: 200), () {
       if (mounted) wobbleController.forward(from: 0);
     });
 
-    Future.delayed(const Duration(milliseconds: 150), () {
+    Future.delayed(Duration(milliseconds: 150), () {
       if (mounted) resultController.forward(from: 0);
     });
 
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(Duration(milliseconds: 2000), () {
       if (mounted) _showDecisionBottomSheet();
     });
   }
@@ -349,15 +350,15 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
       context: context,
       isDismissible: false,
       enableDrag: false,
-      backgroundColor: const Color(0xFF1E1E1E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      backgroundColor: Color(0xFF1E1E1E),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
       ),
       builder: (ctx) {
         return PopScope(
           canPop: false,
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: EdgeInsets.all(ResponsiveHelper.w(24.0)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -365,22 +366,22 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                   'TOSS TIME',
                   style: GoogleFonts.outfit(
                     color: Colors.white54,
-                    fontSize: 14,
+                    fontSize: ResponsiveHelper.sp(14),
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   "$callerTeamName's Call",
                   style: GoogleFonts.outfit(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: ResponsiveHelper.sp(24),
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Row(
                   children: [
                     Expanded(
@@ -390,23 +391,23 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                           Navigator.pop(ctx);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF7E7A1),
+                          backgroundColor: Color(0xFFF7E7A1),
                           foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'HEADS',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: ResponsiveHelper.sp(18),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
@@ -414,17 +415,17 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                           Navigator.pop(ctx);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF7E7A1),
+                          backgroundColor: Color(0xFFF7E7A1),
                           foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'TAILS',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: ResponsiveHelper.sp(18),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -432,7 +433,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
               ],
             ),
           ),
@@ -451,15 +452,15 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
       context: context,
       isDismissible: false,
       enableDrag: false,
-      backgroundColor: const Color(0xFF1E1E1E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      backgroundColor: Color(0xFF1E1E1E),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
       ),
       builder: (ctx) {
         return PopScope(
           canPop: false,
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: EdgeInsets.all(ResponsiveHelper.w(24.0)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -467,27 +468,27 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                   'TOSS WON BY',
                   style: GoogleFonts.outfit(
                     color: Colors.white54,
-                    fontSize: 14,
+                    fontSize: ResponsiveHelper.sp(14),
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   winner,
                   style: GoogleFonts.outfit(
-                    color: const Color(0xFF56F174),
-                    fontSize: 28,
+                    color: Color(0xFF56F174),
+                    fontSize: ResponsiveHelper.sp(28),
                     fontWeight: FontWeight.w800,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Text(
                   'What will they do first?',
-                  style: const TextStyle(color: Colors.white70, fontSize: 16),
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Row(
                   children: [
                     Expanded(
@@ -502,7 +503,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const CricketScoreboardScreen(),
+                                      CricketScoreboardScreen(),
                                 ),
                                 (route) => false,
                               );
@@ -521,21 +522,21 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'BAT',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: ResponsiveHelper.sp(18),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
@@ -548,7 +549,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const CricketScoreboardScreen(),
+                                      CricketScoreboardScreen(),
                                 ),
                                 (route) => false,
                               );
@@ -567,15 +568,15 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'BOWL',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: ResponsiveHelper.sp(18),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -583,7 +584,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
               ],
             ),
           ),
@@ -634,7 +635,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
           ).animate(
             CurvedAnimation(
               parent: controller,
-              curve: const Interval(0.08, 1.0, curve: Curves.easeOutExpo),
+              curve: Interval(0.08, 1.0, curve: Curves.easeOutExpo),
             ),
           );
 
@@ -664,6 +665,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -694,7 +696,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                     children: [
                       CoinShadow(shadowValue: shadowAnimation.value),
 
-                      if (currentState == CoinState.idle) const SwipeHint(),
+                      if (currentState == CoinState.idle) SwipeHint(),
 
                       TossImpactEffects(
                         haloRadius: haloRadius.value,

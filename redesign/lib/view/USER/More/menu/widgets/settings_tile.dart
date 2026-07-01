@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SettingsTile extends StatelessWidget {
   final IconData icon;
@@ -7,7 +8,7 @@ class SettingsTile extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const SettingsTile({
+  SettingsTile({
     super.key,
     required this.icon,
     required this.label,
@@ -17,13 +18,14 @@ class SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: ListTile(
         onTap: onTap,
         leading: Icon(icon, color: color),
         title: Text(label, style: GoogleFonts.inter(color: color)),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white24),
+        trailing: Icon(Icons.chevron_right, color: Colors.white24),
       ),
     );
   }

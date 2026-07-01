@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 
 class FullScreenVideo extends StatefulWidget {
   final String url;
 
-  const FullScreenVideo({super.key, required this.url});
+  FullScreenVideo({super.key, required this.url});
 
   @override
   State<FullScreenVideo> createState() => _FullScreenVideoState();
@@ -44,8 +45,9 @@ class _FullScreenVideoState extends State<FullScreenVideo> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     if (_chewieController == null || !_videoController.value.isInitialized) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: Colors.black,
         body: Center(child: CircularProgressIndicator(color: kGreen)),
       );
@@ -55,7 +57,7 @@ class _FullScreenVideoState extends State<FullScreenVideo> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: Hero(

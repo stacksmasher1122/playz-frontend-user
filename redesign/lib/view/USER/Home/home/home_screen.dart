@@ -13,18 +13,19 @@ import 'widgets/home_official_app_info.dart';
 import 'widgets/home_popular_venues.dart';
 import 'widgets/home_quick_access_tiles.dart';
 import 'widgets/home_top_app_bar.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    USER HOME PAGE
    ============================================================ */
 class UserHomePage extends StatefulWidget {
-  const UserHomePage({super.key});
+  UserHomePage({super.key});
 
   // Spotify-style palette
-  static const Color bg = AppColors.background;
-  static const Color surface = Color(0xFF181818);
-  static const Color accent = AppColors.accent;
-  static const Color muted = Color(0xFF9CA3AF);
+  static Color bg = AppColors.background;
+  static Color surface = Color(0xFF181818);
+  static Color accent = AppColors.accent;
+  static Color muted = Color(0xFF9CA3AF);
 
   @override
   State<UserHomePage> createState() => _UserHomePageState();
@@ -108,7 +109,7 @@ class _UserHomePageState extends State<UserHomePage>
                                 .round(),
                       );
                       // Wait for page transition to finish before playing
-                      Future.delayed(const Duration(milliseconds: 500), () {
+                      Future.delayed(Duration(milliseconds: 500), () {
                         if (mounted) {
                           _lottieController.value = startingProgress;
                           _lottieController.animateTo(endProgress).then((_) {
@@ -124,7 +125,7 @@ class _UserHomePageState extends State<UserHomePage>
                     },
                     errorBuilder: (context, error, stackTrace) {
                       debugPrint("Error loading lottie: $error");
-                      return const SizedBox.shrink();
+                      return SizedBox.shrink();
                     },
                   ),
                 ), // Closes Padding
@@ -145,6 +146,7 @@ class _UserHomePageState extends State<UserHomePage>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       extendBody: true,
       backgroundColor: UserHomePage.bg,
@@ -154,10 +156,10 @@ class _UserHomePageState extends State<UserHomePage>
         child: Stack(
           children: [
             ListView(
-              padding: const EdgeInsets.fromLTRB(0, 0, 00, 80),
+              padding: EdgeInsets.fromLTRB(0, 0, 00, 80),
               children: [
                 HomeTopAppBar(),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 20)),
+                Padding(padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20))),
                 SizedBox(height: 20),
                 HomeHeroCTA(),
                 SizedBox(height: 28),

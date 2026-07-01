@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import '../football_scoreboard_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ScoreboardHeader extends StatelessWidget {
   final MatchEngine engine;
 
-  const ScoreboardHeader({
+  ScoreboardHeader({
     super.key,
     required this.engine,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(20)),
       color: kSurface,
       child: Column(
         children: [
@@ -61,9 +63,9 @@ class ScoreboardHeader extends StatelessWidget {
                 }
                 return Text(
                   timeStr,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: kAccent,
-                    fontSize: 28,
+                    fontSize: ResponsiveHelper.sp(28),
                     fontWeight: FontWeight.bold,
                     fontFamily: 'monospace',
                   ),
@@ -72,7 +74,7 @@ class ScoreboardHeader extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         ValueListenableBuilder<MatchPhase>(
           valueListenable: engine.phase,
           builder: (_, p, __) => _buildPhaseBadge(p),
@@ -105,14 +107,14 @@ class ScoreboardHeader extends StatelessWidget {
         break;
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(2)),
       decoration: BoxDecoration(
         color: col.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
       ),
       child: Text(
         label,
-        style: TextStyle(color: col, fontSize: 10, fontWeight: FontWeight.bold),
+        style: TextStyle(color: col, fontSize: ResponsiveHelper.sp(10), fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -128,22 +130,22 @@ class ScoreboardHeader extends StatelessWidget {
         children: [
           Text(
             team.name,
-            style: const TextStyle(
+            style: TextStyle(
               color: kTextSecondary,
               fontWeight: FontWeight.bold,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           ValueListenableBuilder<int>(
             valueListenable: score,
             builder: (_, val, __) => Text(
               "$val",
-              style: const TextStyle(
+              style: TextStyle(
                 color: kTextPrimary,
-                fontSize: 48,
+                fontSize: ResponsiveHelper.sp(48),
                 fontWeight: FontWeight.bold,
               ),
             ),

@@ -5,19 +5,21 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 import 'momentum_chart_widget.dart';
 import 'timeline_widget.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class GameBreakdownCard extends StatelessWidget {
   final PickleballStatsController controller;
 
-  const GameBreakdownCard({super.key, required this.controller});
+  GameBreakdownCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
       ),
       child: Column(
@@ -41,12 +43,12 @@ class GameBreakdownCard extends StatelessWidget {
               )),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Obx(() => MomentumChartWidget(
             momentumData: controller.momentumData,
             selectedGame: controller.selectedGame.value,
           )),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Obx(() => TimelineWidget(
             timeline: controller.statsModel.value.timeline,
           )),
@@ -59,11 +61,11 @@ class GameBreakdownCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => controller.selectGame(label),
       child: Container(
-        margin: const EdgeInsets.only(left: 8),
+        margin: EdgeInsets.only(left: 8),
         padding: EdgeInsets.symmetric(horizontal: isSelected ? 12 : 8, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(20), // Pill vs circle badge
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)), // Pill vs circle badge
           shape: isSelected ? BoxShape.rectangle : BoxShape.rectangle, // Approximating circle via radius if short
         ),
         child: Text(

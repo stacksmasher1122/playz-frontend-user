@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SuccessDialog extends StatefulWidget {
-  const SuccessDialog({super.key});
+  SuccessDialog({super.key});
 
   @override
   State<SuccessDialog> createState() => _SuccessDialogState();
@@ -18,7 +19,7 @@ class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProvider
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
     );
     _scaleAnimation = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
     _controller.forward();
@@ -32,50 +33,51 @@ class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return ScaleTransition(
       scale: _scaleAnimation,
       child: Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(ResponsiveHelper.w(24)),
           decoration: BoxDecoration(
             color: AppColors.card,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 64,
-                height: 64,
-                decoration: const BoxDecoration(
+                width: ResponsiveHelper.w(64),
+                height: ResponsiveHelper.h(64),
+                decoration: BoxDecoration(
                   color: AppColors.primaryContainer,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check, color: Colors.black, size: 32),
+                child: Icon(Icons.check, color: Colors.black, size: 32),
               ),
-              const SizedBox(height: 24),
-              const Text(
+              SizedBox(height: 24),
+              Text(
                 'Match Initialized Successfully',
                 style: AppTypography.headlineMd,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.surfaceContainerHigh,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14)),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                     ),
                   ),
                   onPressed: () {
                     Navigator.pop(context); // Close dialog
                   },
-                  child: const Text('Done', style: TextStyle(color: AppColors.primary)),
+                  child: Text('Done', style: TextStyle(color: AppColors.primary)),
                 ),
               ),
             ],

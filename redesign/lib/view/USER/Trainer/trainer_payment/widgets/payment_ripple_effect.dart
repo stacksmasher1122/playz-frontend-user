@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 
@@ -7,7 +8,7 @@ class PaymentRippleEffect extends StatelessWidget {
   final AnimationController controller;
   final double baseSize;
 
-  const PaymentRippleEffect({
+  PaymentRippleEffect({
     super.key,
     required this.controller,
     this.baseSize = 96,
@@ -15,6 +16,7 @@ class PaymentRippleEffect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedBuilder(
       animation: controller,
       builder: (_, __) {
@@ -30,7 +32,7 @@ class PaymentRippleEffect extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(
               color: kGreen.withValues(alpha: 0.35 * opacity),
-              width: 2.5,
+              width: ResponsiveHelper.w(2.5),
             ),
           ),
         );

@@ -10,9 +10,10 @@ import 'widgets/match_controls_widget.dart';
 import 'widgets/performance_card.dart';
 import 'widgets/bottom_end_match_button.dart';
 import 'widgets/live_bottom_navigation.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LivePickleballMatchScreen extends StatefulWidget {
-  const LivePickleballMatchScreen({super.key});
+  LivePickleballMatchScreen({super.key});
 
   @override
   State<LivePickleballMatchScreen> createState() => _LivePickleballMatchScreenState();
@@ -31,12 +32,12 @@ class _LivePickleballMatchScreenState extends State<LivePickleballMatchScreen> w
     
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: Duration(seconds: 1),
     )..repeat(reverse: true);
     
     _glowController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: Duration(milliseconds: 1500),
     )..repeat(reverse: true);
   }
 
@@ -50,17 +51,18 @@ class _LivePickleballMatchScreenState extends State<LivePickleballMatchScreen> w
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const LiveMatchAppbar(),
+      appBar: LiveMatchAppbar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               MatchHeaderWidget(controller: controller),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               Obx(() => LiveScoreboardCard(
                 scoreA: controller.teamAScore.value,
                 scoreB: controller.teamBScore.value,
@@ -68,7 +70,7 @@ class _LivePickleballMatchScreenState extends State<LivePickleballMatchScreen> w
                 glowController: _glowController,
                 pulseController: _pulseController,
               )),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Obx(() => Row(
                 children: [
                   Expanded(
@@ -78,7 +80,7 @@ class _LivePickleballMatchScreenState extends State<LivePickleballMatchScreen> w
                       onTap: controller.increaseTeamAScore,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: ScoreButtonWidget(
                       teamName: 'TEAM B',
@@ -88,16 +90,16 @@ class _LivePickleballMatchScreenState extends State<LivePickleballMatchScreen> w
                   ),
                 ],
               )),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Obx(() => MatchControlsWidget(
                 onUndo: controller.undoPoint,
                 onTimeout: controller.startTimeout,
                 onPause: () => controller.isPaused.value ? controller.resumeMatch() : controller.pauseMatch(),
                 isPaused: controller.isPaused.value,
               )),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               PerformanceCard(controller: controller),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
             ],
           ),
         ),

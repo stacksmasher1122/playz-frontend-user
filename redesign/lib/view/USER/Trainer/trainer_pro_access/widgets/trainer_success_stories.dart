@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
@@ -12,7 +13,7 @@ class Story {
   final String imageUrl;
   final bool verified;
 
-  const Story({
+  Story({
     required this.name,
     required this.role,
     required this.quote,
@@ -21,7 +22,7 @@ class Story {
   });
 }
 
-const _stories = [
+final _stories = [
   Story(
     name: 'Rahul Sharma',
     role: 'Cricket Coach • Pune',
@@ -39,30 +40,31 @@ const _stories = [
 ];
 
 class TrainerSuccessStories extends StatelessWidget {
-  const TrainerSuccessStories({super.key});
+  TrainerSuccessStories({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'TRAINER SUCCESS STORIES',
           style: TextStyle(
             color: kMuted,
-            fontSize: 12.5,
+            fontSize: ResponsiveHelper.sp(12.5),
             fontWeight: FontWeight.w700,
             letterSpacing: 0.8,
           ),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         SizedBox(
-          height: 160,
+          height: ResponsiveHelper.h(160),
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
+            physics: BouncingScrollPhysics(),
             itemCount: _stories.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            separatorBuilder: (_, __) => SizedBox(width: 12),
             itemBuilder: (_, i) => StoryCard(story: _stories[i]),
           ),
         ),
@@ -73,16 +75,17 @@ class TrainerSuccessStories extends StatelessWidget {
 
 class StoryCard extends StatelessWidget {
   final Story story;
-  const StoryCard({super.key, required this.story});
+  StoryCard({super.key, required this.story});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      width: 280,
-      padding: const EdgeInsets.all(16),
+      width: ResponsiveHelper.w(280),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +96,7 @@ class StoryCard extends StatelessWidget {
                 radius: 18,
                 backgroundImage: NetworkImage(story.imageUrl),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +108,7 @@ class StoryCard extends StatelessWidget {
                             story.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
                             ),
@@ -113,48 +116,48 @@ class StoryCard extends StatelessWidget {
                         ),
                         if (story.verified)
                           Container(
-                            margin: const EdgeInsets.only(left: 6),
-                            padding: const EdgeInsets.symmetric(
+                            margin: EdgeInsets.only(left: 6),
+                            padding: EdgeInsets.symmetric(
                               horizontal: 6,
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
                               color: kGreen.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                             ),
-                            child: const Text(
+                            child: Text(
                               'VERIFIED',
                               style: TextStyle(
                                 color: kGreen,
-                                fontSize: 9,
+                                fontSize: ResponsiveHelper.sp(9),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                       ],
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       story.role,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: kMuted, fontSize: 12),
+                      style: TextStyle(color: kMuted, fontSize: 12),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Expanded(
             child: Text(
               '"${story.quote}"',
               maxLines: 4,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white70,
                 fontStyle: FontStyle.italic,
-                height: 1.4,
+                height: ResponsiveHelper.h(1.4),
               ),
             ),
           ),

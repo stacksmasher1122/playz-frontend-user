@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../theme/app_dimensions.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerQuickActionsWidget extends StatefulWidget {
-  const PlayerQuickActionsWidget({super.key});
+  PlayerQuickActionsWidget({super.key});
 
   @override
   State<PlayerQuickActionsWidget> createState() =>
@@ -14,6 +15,7 @@ class PlayerQuickActionsWidget extends StatefulWidget {
 class _PlayerQuickActionsWidgetState extends State<PlayerQuickActionsWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       children: [
         Expanded(
@@ -24,7 +26,7 @@ class _PlayerQuickActionsWidgetState extends State<PlayerQuickActionsWidget> {
             onTap: () => debugPrint("Existing clicked"),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: _buildActionButton(
             icon: Icons.person_add,
@@ -58,7 +60,7 @@ class _ActionButtonItem extends StatefulWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _ActionButtonItem({
+  _ActionButtonItem({
     required this.icon,
     required this.iconColor,
     required this.label,
@@ -74,14 +76,15 @@ class _ActionButtonItemState extends State<_ActionButtonItem> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
       onExit: (_) => setState(() => isHovered = false),
       child: GestureDetector(
         onTap: widget.onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: 48,
+          duration: Duration(milliseconds: 200),
+          height: ResponsiveHelper.h(48),
           decoration: BoxDecoration(
             color: AppColors.surfaceContainer,
             borderRadius: BorderRadius.circular(AppDimensions.borderRadiusXl),
@@ -95,7 +98,7 @@ class _ActionButtonItemState extends State<_ActionButtonItem> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(widget.icon, color: widget.iconColor, size: 20),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 widget.label,
                 style: AppTypography.labelCaps10.copyWith(

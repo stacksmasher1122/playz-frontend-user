@@ -2,14 +2,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_dimensions.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MsAppbarWidget extends StatelessWidget {
-  const MsAppbarWidget({super.key});
+  MsAppbarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(
+      padding: EdgeInsets.symmetric(
         horizontal: AppDimensions.lg,
         vertical: AppDimensions.sm,
       ),
@@ -27,35 +29,35 @@ class MsAppbarWidget extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: ResponsiveHelper.w(40),
+                    height: ResponsiveHelper.h(40),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(color: AppColors.primaryContainer, width: 1),
-                      image: const DecorationImage(
+                      image: DecorationImage(
                         image: NetworkImage('https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&q=80&w=40'),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  const SizedBox(width: AppDimensions.sm),
-                  const Column(
+                  SizedBox(width: AppDimensions.sm),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         'PlayZ Match',
-                        style: TextStyle(fontFamily: 'Sora', fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.primaryContainer, height: 1.1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.primaryContainer, height: 1.1),
                       ),
                       Text(
                         'Center',
-                        style: TextStyle(fontFamily: 'Sora', fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.primaryContainer, height: 1.1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.primaryContainer, height: 1.1),
                       ),
                     ],
                   ),
                 ],
               ),
-              const Icon(Icons.settings, color: AppColors.onSurfaceVariant, size: 24),
+              Icon(Icons.settings, color: AppColors.onSurfaceVariant, size: 24),
             ],
           ),
         ),

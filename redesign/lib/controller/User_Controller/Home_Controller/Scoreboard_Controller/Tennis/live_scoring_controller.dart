@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import '../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Tennis/live_match_stats_model.dart';
 
 class LiveScoringController extends GetxController {
-  final Rx<LiveMatchStatsModel> matchStats = const LiveMatchStatsModel().obs;
+  final Rx<LiveMatchStatsModel> matchStats = LiveMatchStatsModel().obs;
 
   void addPointPlayerA() {
     String currentPoints = matchStats.value.playerAPoints;

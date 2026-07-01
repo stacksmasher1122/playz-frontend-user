@@ -64,7 +64,7 @@ class VolleyballFinalReviewController extends GetxController {
     );
 
     // Run initial validations
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    Future.delayed(Duration(milliseconds: 1500), () {
       _runAllValidations();
       loading.value = false;
     });

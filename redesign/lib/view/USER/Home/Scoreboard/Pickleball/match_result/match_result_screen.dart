@@ -14,9 +14,10 @@ import 'widgets/achievement_card_widget.dart';
 import 'widgets/match_info_card_widget.dart';
 import 'widgets/action_buttons_widget.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/live_match/widgets/live_bottom_navigation.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchResultScreen extends StatefulWidget {
-  const MatchResultScreen({super.key});
+  MatchResultScreen({super.key});
 
   @override
   State<MatchResultScreen> createState() => _MatchResultScreenState();
@@ -31,7 +32,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
     super.initState();
     controller = Get.put(MatchResultController());
     
-    _entranceController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+    _entranceController = AnimationController(vsync: this, duration: Duration(milliseconds: 600));
     _entranceController.forward();
   }
 
@@ -44,9 +45,10 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const ResultHeaderWidget(),
+      appBar: ResultHeaderWidget(),
       body: SafeArea(
         child: FadeTransition(
           opacity: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -54,17 +56,17 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
             curve: Curves.easeIn,
           )),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
             child: Obx(() {
-              if (controller.matchResult.value.matchId.isEmpty) return const SizedBox.shrink();
+              if (controller.matchResult.value.matchId.isEmpty) return SizedBox.shrink();
               final result = controller.matchResult.value;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   WinnerCard(controller: controller),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   GameBreakdownWidget(games: result.games),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   Row(
                     children: [
                       Expanded(
@@ -74,7 +76,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
                           value: result.duration,
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       Expanded(
                         child: SummaryCardWidget(
                           icon: Icons.show_chart,
@@ -85,7 +87,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Row(
                     children: [
                       Expanded(
@@ -95,7 +97,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
                           value: '${result.analytics['avgRally'] ?? 0}',
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       Expanded(
                         child: SummaryCardWidget(
                           icon: Icons.bolt,
@@ -106,27 +108,27 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   MvpCardWidget(
                     teamName: result.mvpTeamName,
                     winRate: result.mvpWinRate,
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   AnalyticsCardWidget(analytics: result.analytics),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   TopPlayersWidget(players: result.players),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   AchievementCardWidget(achievements: result.achievements),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   MatchInfoCardWidget(result: result),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   ActionButtonsWidget(
                     onReturn: () => controller.returnDashboard(context),
                     onShare: controller.shareResult,
                   ),
-                  const SizedBox(height: 40),
-                  const _CertifiedBadge(),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 40),
+                  _CertifiedBadge(),
+                  SizedBox(height: 24),
                 ],
               );
             }),
@@ -144,10 +146,11 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
 }
 
 class _CertifiedBadge extends StatelessWidget {
-  const _CertifiedBadge();
+  _CertifiedBadge();
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         Icon(
@@ -155,7 +158,7 @@ class _CertifiedBadge extends StatelessWidget {
           size: 80,
           color: AppColors.primaryContainer.withOpacity(0.2),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           'CERTIFIED MATCH RESULT • ID: PB-99021',
           style: AppTypography.labelCaps10.copyWith(color: AppColors.muted),

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ProVideoCard extends StatelessWidget {
-  const ProVideoCard({super.key});
+  ProVideoCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return ClipRRect(
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
       child: AspectRatio(
         aspectRatio: 16 / 9,
         child: Stack(
@@ -25,16 +27,16 @@ class ProVideoCard extends StatelessWidget {
               ),
             ),
             Container(color: Colors.black45),
-            const Icon(Icons.play_circle_fill, size: 64, color: Colors.white),
+            Icon(Icons.play_circle_fill, size: 64, color: Colors.white),
             Positioned(
-              left: 12,
-              bottom: 12,
-              right: 12,
+              left: ResponsiveHelper.w(12),
+              bottom: ResponsiveHelper.h(12),
+              right: ResponsiveHelper.w(12),
               child: Text(
                 'See how top trainers are winning',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
                 ),

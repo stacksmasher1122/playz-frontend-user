@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/chat_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kMuted = Colors.white38;
@@ -14,7 +15,7 @@ class ChatInputBar extends StatelessWidget {
   final VoidCallback onCameraPressed;
   final VoidCallback onSendPressed;
 
-  const ChatInputBar({
+  ChatInputBar({
     super.key,
     required this.controller,
     required this.isTyping,
@@ -26,11 +27,12 @@ class ChatInputBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final chatCtrl = Get.find<ChatController>();
 
     return Container(
       color: Colors.black.withValues(alpha: 0.6),
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: SafeArea(
         top: false,
         child: Row(
@@ -39,13 +41,13 @@ class ChatInputBar extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1E1E1E),
-                  borderRadius: BorderRadius.circular(24),
+                  color: Color(0xFF1E1E1E),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                 ),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.emoji_emotions_outlined,
                         color: Colors.white60,
                       ),
@@ -54,21 +56,21 @@ class ChatInputBar extends StatelessWidget {
                     Expanded(
                       child: TextField(
                         controller: controller,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                         textCapitalization: TextCapitalization.sentences,
                         minLines: 1,
                         maxLines: 5,
                         onChanged: onTypingChanged,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: "Type a message...",
                           hintStyle: TextStyle(color: kMuted, fontSize: 16),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 12),
+                          contentPadding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
                         ),
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.attach_file,
                         color: Colors.white60,
                       ),
@@ -76,7 +78,7 @@ class ChatInputBar extends StatelessWidget {
                     ),
                     if (!isTyping)
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.camera_alt_outlined,
                           color: Colors.white60,
                         ),
@@ -86,7 +88,7 @@ class ChatInputBar extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
 
             // Send/Mic Button
             GestureDetector(
@@ -100,7 +102,7 @@ class ChatInputBar extends StatelessWidget {
               child: Obx(() {
                 final isRec = chatCtrl.isRecording.value;
                 return AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: Duration(milliseconds: 200),
                   height: isRec ? 56 : 48,
                   width: isRec ? 56 : 48,
                   decoration: BoxDecoration(

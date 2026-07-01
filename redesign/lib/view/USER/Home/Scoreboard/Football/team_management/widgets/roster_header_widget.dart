@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RosterHeaderWidget extends StatelessWidget {
-  const RosterHeaderWidget({super.key});
+  RosterHeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Active Roster',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: ResponsiveHelper.sp(18),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -23,7 +25,7 @@ class RosterHeaderWidget extends StatelessWidget {
               _buildIconButton(Icons.filter_list, () {
                 // filter sheet
               }),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _buildIconButton(Icons.search, () {
                 // search logic or show search bar
                 // for simplicity, showing a snackbar here, ideally expands a search field
@@ -38,12 +40,12 @@ class RosterHeaderWidget extends StatelessWidget {
   Widget _buildIconButton(IconData icon, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(ResponsiveHelper.w(8)),
         decoration: BoxDecoration(
           color: Colors.grey.shade900.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
           border: Border.all(color: Colors.grey.shade800),
         ),
         child: Icon(icon, color: Colors.grey, size: 20),

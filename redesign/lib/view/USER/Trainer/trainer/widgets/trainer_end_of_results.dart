@@ -3,15 +3,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TrainerEndOfResults extends StatelessWidget {
-  const TrainerEndOfResults({super.key});
+  TrainerEndOfResults({super.key});
 
   static const _illustrationUrl =
       'https://illustrations.popsy.co/gray/fitness-trainer.svg';
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final width = MediaQuery.of(context).size.width;
 
     /// Responsive sizing
@@ -22,7 +24,7 @@ class TrainerEndOfResults extends StatelessWidget {
         : 140.0;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 36, 20, 56),
+      padding: EdgeInsets.fromLTRB(20, 36, 20, 56),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -40,7 +42,7 @@ class TrainerEndOfResults extends StatelessWidget {
                 width: imageSize,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade800,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                 ),
               ),
             ),
@@ -51,7 +53,7 @@ class TrainerEndOfResults extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           /// TITLE
           Text(
@@ -59,16 +61,16 @@ class TrainerEndOfResults extends StatelessWidget {
             textAlign: TextAlign.center,
             style: GoogleFonts.inter(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: ResponsiveHelper.sp(16),
               fontWeight: FontWeight.w700,
             ),
           ),
 
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           /// SUBTITLE
           ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 340),
+            constraints: BoxConstraints(maxWidth: 340),
             child: Text(
               'No more trainers or academies found.\nTry a different sport or expand your filters.',
               textAlign: TextAlign.center,
@@ -76,23 +78,23 @@ class TrainerEndOfResults extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.inter(
                 color: AppColors.muted,
-                fontSize: 13,
-                height: 1.4,
+                fontSize: ResponsiveHelper.sp(13),
+                height: ResponsiveHelper.h(1.4),
               ),
             ),
           ),
 
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
 
           /// CTA – FUTURE READY
           OutlinedButton(
             onPressed: () {},
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.accent,
-              side: const BorderSide(color: AppColors.accent),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+              side: BorderSide(color: AppColors.accent),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(18), vertical: ResponsiveHelper.h(10)),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
               ),
             ),
             child: Text(

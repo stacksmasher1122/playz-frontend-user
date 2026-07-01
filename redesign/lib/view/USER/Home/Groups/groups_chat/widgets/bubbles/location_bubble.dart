@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
@@ -14,7 +15,7 @@ class LocationBubble extends StatefulWidget {
   final bool isMe;
   final bool isLive;
 
-  const LocationBubble({
+  LocationBubble({
     super.key,
     required this.content,
     required this.isMe,
@@ -57,7 +58,7 @@ class _LocationBubbleState extends State<LocationBubble> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 30), (_) {
+    _timer = Timer.periodic(Duration(seconds: 30), (_) {
       if (mounted) setState(() {});
     });
   }
@@ -70,6 +71,7 @@ class _LocationBubbleState extends State<LocationBubble> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     double lat = 0.0;
     double lng = 0.0;
     String name = 'Location Pin';
@@ -127,16 +129,16 @@ class _LocationBubbleState extends State<LocationBubble> {
     final pinColor = isCurrentlyLive ? _kGreen : Colors.white54;
 
     return Container(
-      width: 260,
+      width: ResponsiveHelper.w(260),
       decoration: BoxDecoration(
-        color: const Color(0xFF2B2B2B),
-        borderRadius: BorderRadius.circular(16).copyWith(
+        color: Color(0xFF2B2B2B),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)).copyWith(
           bottomRight: widget.isMe
-              ? const Radius.circular(4)
-              : const Radius.circular(16),
+              ? Radius.circular(ResponsiveHelper.w(4))
+              : Radius.circular(ResponsiveHelper.w(16)),
           bottomLeft: !widget.isMe
-              ? const Radius.circular(4)
-              : const Radius.circular(16),
+              ? Radius.circular(ResponsiveHelper.w(4))
+              : Radius.circular(ResponsiveHelper.w(16)),
         ),
         border: Border.all(color: Colors.white10),
       ),
@@ -146,19 +148,19 @@ class _LocationBubbleState extends State<LocationBubble> {
         children: [
           // MAP PREVIEW
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(16))),
             child: SizedBox(
-              height: 120,
+              height: ResponsiveHelper.h(120),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   ColorFiltered(
                     colorFilter: isCurrentlyLive
-                        ? const ColorFilter.mode(
+                        ? ColorFilter.mode(
                             Colors.transparent,
                             BlendMode.multiply,
                           )
-                        : const ColorFilter.mode(
+                        : ColorFilter.mode(
                             Colors.black38,
                             BlendMode.darken,
                           ),
@@ -167,23 +169,23 @@ class _LocationBubbleState extends State<LocationBubble> {
                       fit: BoxFit.cover,
                       width: double.infinity,
                       placeholder: (_, __) =>
-                          Container(color: const Color(0xFF1E1E1E)),
+                          Container(color: Color(0xFF1E1E1E)),
                       errorWidget: (_, __, ___) => Container(
-                        color: const Color(0xFF1E1E1E),
-                        child: const Center(
+                        color: Color(0xFF1E1E1E),
+                        child: Center(
                           child: Icon(Icons.map, color: Colors.white24),
                         ),
                       ),
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                     decoration: BoxDecoration(
                       color: pinColor.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: EdgeInsets.all(ResponsiveHelper.w(4)),
                       decoration: BoxDecoration(
                         color: pinColor.withValues(
                           alpha: isCurrentlyLive ? 0.5 : 0.2,
@@ -206,7 +208,7 @@ class _LocationBubbleState extends State<LocationBubble> {
 
           // BOTTOM CARD
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(ResponsiveHelper.w(12)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -214,8 +216,8 @@ class _LocationBubbleState extends State<LocationBubble> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(
+                      padding: EdgeInsets.all(ResponsiveHelper.w(8)),
+                      decoration: BoxDecoration(
                         color: Color(0xFF1E1E1E),
                         shape: BoxShape.circle,
                       ),
@@ -227,7 +229,7 @@ class _LocationBubbleState extends State<LocationBubble> {
                         size: 20,
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,7 +239,7 @@ class _LocationBubbleState extends State<LocationBubble> {
                               liveText,
                               style: TextStyle(
                                 color: pinColor,
-                                fontSize: 12,
+                                fontSize: ResponsiveHelper.sp(12),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -247,19 +249,19 @@ class _LocationBubbleState extends State<LocationBubble> {
                               color: widget.isLive && !isCurrentlyLive
                                   ? Colors.white54
                                   : Colors.white,
-                              fontSize: 14,
+                              fontSize: ResponsiveHelper.sp(14),
                               fontWeight: FontWeight.w600,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           if (address.isNotEmpty) ...[
-                            const SizedBox(height: 2),
+                            SizedBox(height: 2),
                             Text(
                               address,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: _kMuted,
-                                fontSize: 12,
+                                fontSize: ResponsiveHelper.sp(12),
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -270,9 +272,9 @@ class _LocationBubbleState extends State<LocationBubble> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 SizedBox(
-                  height: 40,
+                  height: ResponsiveHelper.h(40),
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
@@ -284,7 +286,7 @@ class _LocationBubbleState extends State<LocationBubble> {
                           : Colors.black,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                       ),
                       padding: EdgeInsets.zero,
                     ),
@@ -299,14 +301,14 @@ class _LocationBubbleState extends State<LocationBubble> {
                         );
                       }
                     },
-                    icon: const Text(
+                    icon: Text(
                       "OPEN IN GOOGLE MAPS",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.sp(12),
                       ),
                     ),
-                    label: const Icon(Icons.open_in_new, size: 16),
+                    label: Icon(Icons.open_in_new, size: 16),
                   ),
                 ),
               ],

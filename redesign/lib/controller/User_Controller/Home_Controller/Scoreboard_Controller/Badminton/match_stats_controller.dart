@@ -27,7 +27,7 @@ class MatchStatsController extends GetxController {
 
   void loadPerformanceMetrics() {
     performanceMetrics.value = [
-      const PerformanceMetricModel(
+      PerformanceMetricModel(
         speed: 0.85,
         power: 0.90,
         netPlay: 0.75,
@@ -47,7 +47,7 @@ class MatchStatsController extends GetxController {
 
   void loadTimeline() {
     timeline.value = [
-      const TimelineModel(
+      TimelineModel(
         gameNumber: 1,
         playerOneScore: 21,
         playerTwoScore: 16,
@@ -56,7 +56,7 @@ class MatchStatsController extends GetxController {
         description: '+4 RUN @18-14',
         winner: 'AXELSEN',
       ),
-      const TimelineModel(
+      TimelineModel(
         gameNumber: 2,
         playerOneScore: 21,
         playerTwoScore: 19,
@@ -107,15 +107,15 @@ class MatchStatsController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00), // Neon Yellow-Green
+      backgroundColor: Color(0xFFC6FF00), // Neon Yellow-Green
       colorText: Colors.black,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 
@@ -123,14 +123,14 @@ class MatchStatsController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 }

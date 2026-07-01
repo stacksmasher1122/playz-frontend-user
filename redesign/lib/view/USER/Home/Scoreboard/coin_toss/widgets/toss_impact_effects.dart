@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TossImpactEffects extends StatelessWidget {
   final double haloRadius;
@@ -7,7 +8,7 @@ class TossImpactEffects extends StatelessWidget {
   final double shakeValue;
   final bool isShakeAnimating;
 
-  const TossImpactEffects({
+  TossImpactEffects({
     super.key,
     required this.haloRadius,
     required this.haloOpacity,
@@ -17,6 +18,7 @@ class TossImpactEffects extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -27,8 +29,8 @@ class TossImpactEffects extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: const Color(0xFFF7E7A1).withValues(alpha: haloOpacity),
-                width: 2.5,
+                color: Color(0xFFF7E7A1).withValues(alpha: haloOpacity),
+                width: ResponsiveHelper.w(2.5),
               ),
             ),
           ),
@@ -44,9 +46,9 @@ class TossImpactEffects extends StatelessWidget {
               child: Opacity(
                 opacity: 1.0 - shakeValue,
                 child: Container(
-                  width: 4.5,
-                  height: 4.5,
-                  decoration: const BoxDecoration(
+                  width: ResponsiveHelper.w(4.5),
+                  height: ResponsiveHelper.h(4.5),
+                  decoration: BoxDecoration(
                     color: Color(0xFFF7E7A1),
                     shape: BoxShape.circle,
                   ),

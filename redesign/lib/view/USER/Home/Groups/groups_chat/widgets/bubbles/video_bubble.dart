@@ -3,6 +3,7 @@ import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_chat_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 
@@ -10,7 +11,7 @@ class VideoBubble extends StatefulWidget {
   final String url;
   final GroupChatController ctrl;
 
-  const VideoBubble({super.key, required this.url, required this.ctrl});
+  VideoBubble({super.key, required this.url, required this.ctrl});
 
   @override
   State<VideoBubble> createState() => _VideoBubbleState();
@@ -85,40 +86,41 @@ class _VideoBubbleState extends State<VideoBubble>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     super.build(context);
 
     if (!_isInit) {
       return GestureDetector(
         onTap: _initVideo,
         child: Container(
-          height: 220,
-          width: 260,
+          height: ResponsiveHelper.h(220),
+          width: ResponsiveHelper.w(260),
           decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           ),
           child: Stack(
             alignment: Alignment.center,
             children: [
               if (_isLoading)
-                const CircularProgressIndicator(color: _kGreen)
+                CircularProgressIndicator(color: _kGreen)
               else
-                const Icon(
+                Icon(
                   Icons.play_circle_fill,
                   color: Colors.white70,
                   size: 64,
                 ),
 
               Positioned(
-                top: 8,
-                right: 8,
+                top: ResponsiveHelper.h(8),
+                right: ResponsiveHelper.w(8),
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.black54,
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.download,
                       color: Colors.white,
                       size: 20,
@@ -134,7 +136,7 @@ class _VideoBubbleState extends State<VideoBubble>
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       child: Stack(
         children: [
           ConstrainedBox(
@@ -148,15 +150,15 @@ class _VideoBubbleState extends State<VideoBubble>
           ),
           // Download button
           Positioned(
-            top: 8,
-            right: 8,
+            top: ResponsiveHelper.h(8),
+            right: ResponsiveHelper.w(8),
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.black54,
                 shape: BoxShape.circle,
               ),
               child: IconButton(
-                icon: const Icon(Icons.download, color: Colors.white, size: 20),
+                icon: Icon(Icons.download, color: Colors.white, size: 20),
                 onPressed: () => widget.ctrl.downloadVideo(widget.url),
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'step_header.dart';
 import 'trainer_form_fields.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
@@ -9,7 +10,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kSurface = Color(0xFF0E0E0E);
 
 class IdentityVerificationSection extends StatefulWidget {
-  const IdentityVerificationSection({super.key});
+  IdentityVerificationSection({super.key});
 
   @override
   State<IdentityVerificationSection> createState() =>
@@ -33,25 +34,26 @@ class _IdentityVerificationSectionState
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// ───────── HEADER ─────────
-        const StepHeader(step: 7, title: 'Identity Verification'),
+        StepHeader(step: 7, title: 'Identity Verification'),
 
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         /// ───────── GOVERNMENT ID TYPE ─────────
-        const Text(
+        Text(
           'Government ID Type',
           style: TextStyle(color: kMuted, fontSize: 13),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         TrainerDropdownField(
           label: 'ID Type',
           value: selectedIdType,
-          items: const [
+          items: [
             'Aadhaar Card',
             'PAN Card',
             'Passport',
@@ -64,7 +66,7 @@ class _IdentityVerificationSectionState
           },
         ),
 
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
 
         /// ───────── ID NUMBER ─────────
         TrainerInputField(
@@ -74,7 +76,7 @@ class _IdentityVerificationSectionState
           controller: idNumberController,
         ),
 
-        const SizedBox(height: 18),
+        SizedBox(height: 18),
 
         /// ───────── FRONT / BACK UPLOAD ─────────
         Row(
@@ -89,7 +91,7 @@ class _IdentityVerificationSectionState
                 },
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: IDUploadCard(
                 label: 'Back Side',
@@ -103,14 +105,14 @@ class _IdentityVerificationSectionState
           ],
         ),
 
-        const SizedBox(height: 18),
+        SizedBox(height: 18),
 
         /// ───────── SELFIE WITH ID ─────────
-        const Text(
+        Text(
           'Selfie with ID',
           style: TextStyle(color: kMuted, fontSize: 13),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
 
         SelfieCard(
           image: selfieImage,
@@ -119,11 +121,11 @@ class _IdentityVerificationSectionState
           },
         ),
 
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
 
         /// ───────── SECURITY NOTE ─────────
         Row(
-          children: const [
+          children: [
             Icon(Icons.lock_outline, size: 14, color: kMuted),
             SizedBox(width: 6),
             Expanded(
@@ -145,7 +147,7 @@ class IDUploadCard extends StatelessWidget {
   final String? image;
   final VoidCallback onTap;
 
-  const IDUploadCard({
+  IDUploadCard({
     super.key,
     required this.label,
     required this.icon,
@@ -155,29 +157,30 @@ class IDUploadCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Material(
       color: kCard,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
         child: Container(
-          height: 96,
-          padding: const EdgeInsets.all(12),
+          height: ResponsiveHelper.h(96),
+          padding: EdgeInsets.all(ResponsiveHelper.w(12)),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
             border: Border.all(color: kMuted.withValues(alpha: 0.15)),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, color: Colors.white70, size: 22),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 12.5,
+                  fontSize: ResponsiveHelper.sp(12.5),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -193,34 +196,35 @@ class SelfieCard extends StatelessWidget {
   final String? image;
   final VoidCallback onTap;
 
-  const SelfieCard({super.key, required this.image, required this.onTap});
+  SelfieCard({super.key, required this.image, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Material(
       color: kCard,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         child: Container(
-          padding: const EdgeInsets.all(14),
+          padding: EdgeInsets.all(ResponsiveHelper.w(14)),
           child: Row(
             children: [
               Container(
-                width: 42,
-                height: 42,
+                width: ResponsiveHelper.w(42),
+                height: ResponsiveHelper.h(42),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: kGreen.withValues(alpha: 0.15),
                 ),
-                child: const Icon(Icons.camera_alt_outlined, color: kGreen),
+                child: Icon(Icons.camera_alt_outlined, color: kGreen),
               ),
-              const SizedBox(width: 14),
+              SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'Take a Selfie',
                       style: TextStyle(
@@ -236,7 +240,7 @@ class SelfieCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, color: Colors.white54),
+              Icon(Icons.chevron_right_rounded, color: Colors.white54),
             ],
           ),
         ),

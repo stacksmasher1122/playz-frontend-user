@@ -4,11 +4,12 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/Book/show_qr/show_qr_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'notched_dashed_divider.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ConfirmationVenueCard extends StatelessWidget {
   final Size size;
 
-  const ConfirmationVenueCard({super.key, required this.size});
+  ConfirmationVenueCard({super.key, required this.size});
 
   static const _kCard = Color(0xFF1A1A1A);
   static const _kGreen = AppColors.accent;
@@ -17,17 +18,18 @@ class ConfirmationVenueCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
         color: _kCard,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // IMAGE
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(16))),
             child: Stack(
               children: [
                 CachedNetworkImage(
@@ -43,18 +45,18 @@ class ConfirmationVenueCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 12,
-                  right: 12,
+                  top: ResponsiveHelper.h(12),
+                  right: ResponsiveHelper.w(12),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.7),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(Icons.sports_soccer, color: _kGreen, size: 16),
                         SizedBox(width: 6),
@@ -68,44 +70,44 @@ class ConfirmationVenueCard extends StatelessWidget {
           ),
 
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: const Text(
+                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                  child: Text(
                     'CrossFit Arena',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: ResponsiveHelper.sp(18),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: const Text(
+                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                  child: Text(
                     'ID: #PZ-883492',
                     style: TextStyle(color: _kMuted, fontFamily: 'monospace'),
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 /// 🔥 NOTCHED DASHED DIVIDER
-                const NotchedDashedDivider(),
+                NotchedDashedDivider(),
 
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 _infoRow('Date', 'Thu, 4 Dec'),
                 _infoRow('Time', '08:00 – 09:00 AM'),
                 _infoRow('Players', '4 (Solo Queue)'),
                 _infoRow('Location', 'Shivajinagar'),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _weatherCard(),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 _qrBlock(context),
               ],
             ),
@@ -117,16 +119,16 @@ class ConfirmationVenueCard extends StatelessWidget {
 
   Widget _infoRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(6), horizontal: ResponsiveHelper.w(16)),
       child: Row(
         children: [
           Expanded(
-            child: Text(label, style: const TextStyle(color: _kMuted)),
+            child: Text(label, style: TextStyle(color: _kMuted)),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),
@@ -139,14 +141,14 @@ class ConfirmationVenueCard extends StatelessWidget {
 
   Widget _weatherCard() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(ResponsiveHelper.w(12)),
         decoration: BoxDecoration(
           color: Colors.black,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         ),
-        child: const Row(
+        child: Row(
           children: [
             Icon(Icons.wb_sunny, color: _kYellow),
             SizedBox(width: 8),
@@ -162,7 +164,7 @@ class ConfirmationVenueCard extends StatelessWidget {
 
   Widget _qrBlock(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
@@ -174,17 +176,17 @@ class ConfirmationVenueCard extends StatelessWidget {
           );
         },
         child: Container(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(ResponsiveHelper.w(12)),
           decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           ),
           child: Row(
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'Scan at Entry',
                       style: TextStyle(
@@ -201,13 +203,13 @@ class ConfirmationVenueCard extends StatelessWidget {
                 ),
               ),
               Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(ResponsiveHelper.w(10))),
                   color: Colors.white,
                 ),
-                width: 56,
-                height: 56,
-                child: const Icon(Icons.qr_code, size: 40, color: Colors.black),
+                width: ResponsiveHelper.w(56),
+                height: ResponsiveHelper.h(56),
+                child: Icon(Icons.qr_code, size: 40, color: Colors.black),
               ),
             ],
           ),

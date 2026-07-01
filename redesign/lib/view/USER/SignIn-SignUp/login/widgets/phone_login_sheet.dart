@@ -8,9 +8,10 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/favorite_sports/favorite_sports_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PhoneLoginSheet extends StatefulWidget {
-  const PhoneLoginSheet({super.key});
+  PhoneLoginSheet({super.key});
 
   @override
   State<PhoneLoginSheet> createState() => _PhoneLoginSheetState();
@@ -81,7 +82,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
         otpControllers[i].text = code![i];
       }
       setState(() {});
-      Future.delayed(const Duration(milliseconds: 200), () {
+      Future.delayed(Duration(milliseconds: 200), () {
         verifyOTP();
       });
     }
@@ -90,7 +91,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
   void _startTimer() {
     secondsLeft = 120;
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (secondsLeft == 0) {
         timer.cancel();
       } else {
@@ -118,12 +119,12 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
           if (exists) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const UserAppNavShell()),
+              MaterialPageRoute(builder: (_) => UserAppNavShell()),
             );
           } else {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
+              MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
             );
           }
         }
@@ -177,19 +178,19 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
       if (exists) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const UserAppNavShell()),
+          MaterialPageRoute(builder: (_) => UserAppNavShell()),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
+          MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text("Invalid OTP")));
+        ).showSnackBar(SnackBar(content: Text("Invalid OTP")));
       }
     }
   }
@@ -232,27 +233,28 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(28))),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(ResponsiveHelper.w(24)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             /// DRAG HANDLE
             Container(
-              width: 40,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 18),
+              width: ResponsiveHelper.w(40),
+              height: ResponsiveHelper.h(4),
+              margin: EdgeInsets.only(bottom: 18),
               decoration: BoxDecoration(
                 color: Colors.white24,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
               ),
             ),
             otpSent ? _buildOTPUI() : _buildPhoneUI(),
@@ -266,16 +268,16 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text(
+        Text(
           "Enter your phone number",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontSize: ResponsiveHelper.sp(20), fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        const SizedBox(height: 6),
-        const Text(
+        SizedBox(height: 6),
+        Text(
           "We'll send you a verification code",
           style: TextStyle(color: kMuted),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         Row(
           children: [
             Expanded(
@@ -283,14 +285,14 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                 controller: phoneController,
                 autofocus: true,
                 keyboardType: TextInputType.phone,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   hintText: "Phone number",
-                  hintStyle: const TextStyle(color: Colors.white38),
+                  hintStyle: TextStyle(color: Colors.white38),
                   filled: true,
                   fillColor: kCard,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -298,10 +300,10 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
             ),
           ],
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         SizedBox(
           width: double.infinity,
-          height: 50,
+          height: ResponsiveHelper.h(50),
           child: ElevatedButton(
             onPressed: () {
               String phone = phoneController.text.trim();
@@ -313,10 +315,10 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
               ),
             ),
-            child: const Text(
+            child: Text(
               "Send OTP",
               style: TextStyle(
                 color: Colors.black,
@@ -333,16 +335,16 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text(
+        Text(
           "Enter the 6-digit code",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontSize: ResponsiveHelper.sp(20), fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(6, (index) {
             return SizedBox(
-              width: 45,
+              width: ResponsiveHelper.w(45),
               child: TextField(
                 controller: otpControllers[index],
                 focusNode: otpFocusNodes[index],
@@ -351,7 +353,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 inputFormatters: [LengthLimitingTextInputFormatter(6)],
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white),
                 onChanged: (value) {
                   if (value.length > 1) {
                     int pasteLength = value.length;
@@ -365,7 +367,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                     }
                     setState(() {});
                     if (otpControllers.every((c) => c.text.isNotEmpty)) {
-                      Future.delayed(const Duration(milliseconds: 200), () {
+                      Future.delayed(Duration(milliseconds: 200), () {
                         verifyOTP();
                       });
                     }
@@ -378,7 +380,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                     otpFocusNodes[index - 1].requestFocus();
                   }
                   if (otpControllers.every((c) => c.text.isNotEmpty)) {
-                    Future.delayed(const Duration(milliseconds: 200), () {
+                    Future.delayed(Duration(milliseconds: 200), () {
                       verifyOTP();
                     });
                   }
@@ -388,7 +390,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                   filled: true,
                   fillColor: kCard,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -396,12 +398,12 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
             );
           }),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         Text(
           "Resend code in ${secondsLeft ~/ 60}:${(secondsLeft % 60).toString().padLeft(2, '0')}",
-          style: const TextStyle(color: kMuted, fontSize: 13),
+          style: TextStyle(color: kMuted, fontSize: 13),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         TextButton(
           onPressed: secondsLeft == 0
               ? () {
@@ -421,19 +423,19 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
             style: TextStyle(color: secondsLeft == 0 ? kSpotifyGreen : kMuted),
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         SizedBox(
           width: double.infinity,
-          height: 50,
+          height: ResponsiveHelper.h(50),
           child: ElevatedButton(
             onPressed: verifyOTP,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
               ),
             ),
-            child: const Text(
+            child: Text(
               "Verify & Continue",
               style: TextStyle(
                 color: Colors.black,
@@ -442,7 +444,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
       ],
     );
   }

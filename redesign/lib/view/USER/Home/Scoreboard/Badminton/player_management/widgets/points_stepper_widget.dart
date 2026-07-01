@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PointsStepperWidget extends StatelessWidget {
   final int points;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
 
-  const PointsStepperWidget({
+  PointsStepperWidget({
     super.key,
     required this.points,
     required this.onIncrement,
@@ -14,49 +15,50 @@ class PointsStepperWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(16)),
       decoration: BoxDecoration(
         color: Colors.grey.shade900.withValues(alpha: 0.8), // dark glass card
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: Colors.grey.shade800, width: 1.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Points to Win (per Game)',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
             ),
           ),
           Row(
             children: [
               _buildStepperButton(Icons.remove, onDecrement),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               SizedBox(
-                width: 32,
+                width: ResponsiveHelper.w(32),
                 child: Center(
                   child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
+                    duration: Duration(milliseconds: 200),
                     transitionBuilder: (Widget child, Animation<double> animation) {
                       return ScaleTransition(scale: animation, child: child);
                     },
                     child: Text(
                       '$points',
                       key: ValueKey<int>(points),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Color(0xFFC6FF00), // Neon Yellow-Green
-                        fontSize: 20,
+                        fontSize: ResponsiveHelper.sp(20),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               _buildStepperButton(Icons.add, onIncrement),
             ],
           ),
@@ -69,11 +71,11 @@ class PointsStepperWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 36,
-        height: 36,
+        width: ResponsiveHelper.w(36),
+        height: ResponsiveHelper.h(36),
         decoration: BoxDecoration(
           color: Colors.grey.shade800,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
         ),
         child: Icon(icon, color: Colors.white, size: 20),
       ),

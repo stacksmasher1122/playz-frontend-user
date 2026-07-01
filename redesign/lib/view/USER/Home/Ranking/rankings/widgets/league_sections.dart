@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kGreen = AppColors.accent;
-const Color kSurface = Color(0xFF0E0E0E);
-const Color kMuted = Color(0xFFA7A7A7);
-const Color kGold = Color(0xFFFFC107);
-const Color kRed = Color(0xFFE53935);
+Color kGreen = AppColors.accent;
+Color kSurface = Color(0xFF0E0E0E);
+Color kMuted = Color(0xFFA7A7A7);
+Color kGold = Color(0xFFFFC107);
+Color kRed = Color(0xFFE53935);
 
 class GoldLeagueSection extends StatelessWidget {
-  const GoldLeagueSection({super.key});
+  GoldLeagueSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return _LeagueSection(
       title: 'GOLD LEAGUE',
       icon: Icons.emoji_events,
       info: 'Top 10 players promote to Platinum League next week.',
-      rows: const [
+      rows: [
         _RankRow(rank: 1, name: 'Rohan K.', pts: 2100, up: true),
         _RankRow(rank: 2, name: 'Priya S.', pts: 1950),
         _RankRow(rank: 3, name: 'Amit V.', pts: 1820, down: true),
@@ -26,14 +28,15 @@ class GoldLeagueSection extends StatelessWidget {
 }
 
 class SilverLeagueSection extends StatelessWidget {
-  const SilverLeagueSection({super.key});
+  SilverLeagueSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return _LeagueSection(
       title: 'SILVER LEAGUE',
       icon: Icons.shield,
-      rows: const [
+      rows: [
         _RankRow(rank: 41, name: 'Vikram S.', pts: 1255),
         _RankRow(
           rank: 42,
@@ -63,8 +66,9 @@ class _LeagueSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 18, 16, 0),
+      padding: EdgeInsets.fromLTRB(16, 18, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -72,43 +76,43 @@ class _LeagueSection extends StatelessWidget {
           Row(
             children: [
               Icon(icon, color: kGold, size: 18),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.6,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               if (info != null)
-                const Text(
+                Text(
                   'View Rules',
                   style: TextStyle(
                     color: kMuted,
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                   ),
                 ),
             ],
           ),
 
           if (info != null) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(ResponsiveHelper.w(12)),
               decoration: BoxDecoration(
                 color: kSurface,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
               ),
               child: Text(
                 info!,
-                style: const TextStyle(color: kMuted, fontSize: 12),
+                style: TextStyle(color: kMuted, fontSize: 12),
               ),
             ),
           ],
 
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           ...rows,
         ],
       ),
@@ -135,34 +139,35 @@ class _RankRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.only(top: 6),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(top: 6),
+      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
       decoration: BoxDecoration(
         color: highlight ? kGreen.withValues(alpha: 0.12) : Colors.transparent,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       ),
       child: Row(
         children: [
           Text('$rank',
-              style: const TextStyle(
+              style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700)),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Text(name,
-                style: const TextStyle(
+                style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.w600)),
           ),
           Text('$pts',
-              style: const TextStyle(
+              style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700)),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           if (up)
-            const Icon(Icons.arrow_upward, size: 16, color: kGreen),
+            Icon(Icons.arrow_upward, size: 16, color: kGreen),
           if (down)
-            const Icon(Icons.arrow_downward, size: 16, color: kRed),
+            Icon(Icons.arrow_downward, size: 16, color: kRed),
         ],
       ),
     );

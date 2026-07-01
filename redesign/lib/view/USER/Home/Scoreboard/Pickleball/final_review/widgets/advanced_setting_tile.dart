@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AdvancedSettingTile extends StatelessWidget {
   final IconData icon;
@@ -8,7 +9,7 @@ class AdvancedSettingTile extends StatelessWidget {
   final String value;
   final bool valueIsHighlighted;
 
-  const AdvancedSettingTile({
+  AdvancedSettingTile({
     super.key,
     required this.icon,
     required this.label,
@@ -18,14 +19,15 @@ class AdvancedSettingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
       child: Row(
         children: [
           Icon(icon, color: AppColors.muted, size: 20),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Text(label, style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-          const Spacer(),
+          Spacer(),
           Text(
             value,
             style: AppTypography.bodyMd.copyWith(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ActionChipWidget extends StatelessWidget {
   final IconData icon;
@@ -6,7 +7,7 @@ class ActionChipWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final bool outlined;
 
-  const ActionChipWidget(
+  ActionChipWidget(
     this.icon,
     this.label, {
     this.onTap,
@@ -16,6 +17,7 @@ class ActionChipWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final borderColor = outlined
         ? Colors.white.withValues(alpha: 0.35)
         : Colors.transparent;
@@ -29,25 +31,25 @@ class ActionChipWidget extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(999)),
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(10)),
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(999)),
             border: Border.all(color: borderColor, width: 1),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 16, color: contentColor),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Text(
                 label,
                 style: TextStyle(
                   color: contentColor,
-                  fontSize: 13,
+                  fontSize: ResponsiveHelper.sp(13),
                   fontWeight: FontWeight.w600,
                 ),
               ),

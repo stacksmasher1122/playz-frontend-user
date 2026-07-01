@@ -3,31 +3,33 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import '../edit_profile_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onSave;
 
-  const EditProfileAppBar({
+  EditProfileAppBar({
     super.key,
     required this.onSave,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<UserProfileController>();
 
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        icon: Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         'Edit Profile',
         style: GoogleFonts.inter(
           color: Colors.white,
-          fontSize: 18,
+          fontSize: ResponsiveHelper.sp(18),
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -36,9 +38,9 @@ class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
         Obx(() => TextButton(
               onPressed: controller.isLoading.value ? null : onSave,
               child: controller.isLoading.value
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
+                  ? SizedBox(
+                      width: ResponsiveHelper.w(20),
+                      height: ResponsiveHelper.h(20),
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         color: kEditProfileGreen,
@@ -48,7 +50,7 @@ class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
                       'Save',
                       style: GoogleFonts.inter(
                         color: kEditProfileGreen,
-                        fontSize: 16,
+                        fontSize: ResponsiveHelper.sp(16),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -58,5 +60,5 @@ class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

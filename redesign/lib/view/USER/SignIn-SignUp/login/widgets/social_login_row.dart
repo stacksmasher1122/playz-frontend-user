@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SocialLoginRow extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onGoogleLogin;
   final VoidCallback onPhoneLogin;
 
-  const SocialLoginRow({
+  SocialLoginRow({
     super.key,
     required this.isLoading,
     required this.onGoogleLogin,
@@ -15,9 +16,10 @@ class SocialLoginRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
-        const SizedBox(height: 28),
+        SizedBox(height: 28),
 
         /// ─── DIVIDER
         Row(
@@ -28,13 +30,13 @@ class SocialLoginRow extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 12,
               ),
               child: Text(
                 'or continue with',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: ResponsiveHelper.sp(12),
                   color: Colors.white.withValues(alpha: 0.5),
                 ),
               ),
@@ -47,7 +49,7 @@ class SocialLoginRow extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 18),
+        SizedBox(height: 18),
 
         /// 🌐 SOCIAL BUTTONS
         Row(
@@ -60,7 +62,7 @@ class SocialLoginRow extends StatelessWidget {
                 isLoading: isLoading,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _SocialButton(
                 icon: Icons.phone,
@@ -81,7 +83,7 @@ class _SocialButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
 
-  const _SocialButton({
+  _SocialButton({
     required this.icon,
     required this.label,
     this.onPressed,
@@ -90,14 +92,15 @@ class _SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return OutlinedButton.icon(
       onPressed: isLoading ? null : onPressed ?? () {},
       icon: Icon(icon, color: AppColors.accent),
-      label: Text(label, style: const TextStyle(color: AppColors.accent)),
+      label: Text(label, style: TextStyle(color: AppColors.accent)),
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
         side: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
       ),
     );
   }

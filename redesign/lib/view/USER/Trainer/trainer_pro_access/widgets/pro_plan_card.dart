@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
@@ -10,7 +11,7 @@ class ProPlan {
   final String title, price, monthly, subtitle;
   final String? badge, savings;
 
-  const ProPlan({
+  ProPlan({
     required this.title,
     required this.price,
     required this.monthly,
@@ -25,7 +26,7 @@ class ProPlanCard extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  const ProPlanCard({
+  ProPlanCard({
     super.key,
     required this.plan,
     required this.selected,
@@ -34,47 +35,48 @@ class ProPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 280),
+      duration: Duration(milliseconds: 280),
       decoration: BoxDecoration(
         color: kCard,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
         border: Border.all(
           color: selected ? kGreen : Colors.transparent,
-          width: 1.4,
+          width: ResponsiveHelper.w(1.4),
         ),
         boxShadow: selected
             ? [BoxShadow(color: kGreen.withValues(alpha: 0.28), blurRadius: 5)]
             : [],
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (plan.badge != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
                     color: plan.badge == 'BEST VALUE' ? kGold : kGreen,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                   ),
                   child: Text(
                     plan.badge!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.black,
-                      fontSize: 10,
+                      fontSize: ResponsiveHelper.sp(10),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
@@ -82,47 +84,47 @@ class ProPlanCard extends StatelessWidget {
                       plan.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: ResponsiveHelper.sp(16),
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     plan.price,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   if (selected)
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(left: 6),
                       child: Icon(Icons.check_circle, color: kGreen, size: 18),
                     ),
                 ],
               ),
-              const SizedBox(height: 6),
-              Text(plan.monthly, style: const TextStyle(color: kMuted)),
+              SizedBox(height: 6),
+              Text(plan.monthly, style: TextStyle(color: kMuted)),
               if (plan.savings != null)
                 Padding(
-                  padding: const EdgeInsets.only(top: 4),
+                  padding: EdgeInsets.only(top: 4),
                   child: Text(
                     plan.savings!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: kGreen,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
               Text(
                 plan.subtitle,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: kMuted),
+                style: TextStyle(color: kMuted),
               ),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 
 class LocationTile extends StatelessWidget {
@@ -10,7 +11,7 @@ class LocationTile extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
-  const LocationTile({
+  LocationTile({
     super.key,
     required this.icon,
     required this.title,
@@ -22,31 +23,32 @@ class LocationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
       decoration: BoxDecoration(
         color: kCard.withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 8,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(ResponsiveHelper.w(10)),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
             ),
             child: Icon(icon, color: Colors.white70, size: 20),
           ),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +58,7 @@ class LocationTile extends StatelessWidget {
                     Flexible(
                       child: Text(
                         title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                         ),
@@ -65,21 +67,21 @@ class LocationTile extends StatelessWidget {
                       ),
                     ),
                     if (tag != null) ...[
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 6,
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
                           color: kSpotifyGreen.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
                         ),
                         child: Text(
                           tag!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: kSpotifyGreen,
-                            fontSize: 8,
+                            fontSize: ResponsiveHelper.sp(8),
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -87,10 +89,10 @@ class LocationTile extends StatelessWidget {
                     ],
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: const TextStyle(color: kMuted, fontSize: 12),
+                  style: TextStyle(color: kMuted, fontSize: 12),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -99,15 +101,15 @@ class LocationTile extends StatelessWidget {
           ),
           if (onEdit != null || onDelete != null)
             PopupMenuButton<String>(
-              icon: const Icon(
+              icon: Icon(
                 Icons.more_vert,
                 color: Colors.white54,
                 size: 20,
               ),
               color: kSurface,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: const BorderSide(color: Colors.white12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                side: BorderSide(color: Colors.white12),
               ),
               onSelected: (val) {
                 if (val == 'edit') {
@@ -118,7 +120,7 @@ class LocationTile extends StatelessWidget {
               },
               itemBuilder: (context) => [
                 if (onEdit != null)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'edit',
                     child: Row(
                       children: [
@@ -136,7 +138,7 @@ class LocationTile extends StatelessWidget {
                     ),
                   ),
                 if (onDelete != null)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'delete',
                     child: Row(
                       children: [

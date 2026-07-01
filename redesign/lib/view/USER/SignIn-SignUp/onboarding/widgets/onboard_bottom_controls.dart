@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class OnboardBottomControls extends StatelessWidget {
   final int currentIndex;
   final int total;
   final VoidCallback onNext;
 
-  const OnboardBottomControls({
+  OnboardBottomControls({
     super.key,
     required this.currentIndex,
     required this.total,
@@ -15,10 +16,11 @@ class OnboardBottomControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final bool isLast = currentIndex == total - 1;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+      padding: EdgeInsets.fromLTRB(24, 12, 24, 24),
       child: Row(
         children: [
           /// Progress dots
@@ -26,20 +28,20 @@ class OnboardBottomControls extends StatelessWidget {
             children: List.generate(
               total,
               (index) => AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.only(right: 6),
-                height: 6,
+                duration: Duration(milliseconds: 300),
+                margin: EdgeInsets.only(right: 6),
+                height: ResponsiveHelper.h(6),
                 width: currentIndex == index ? 24 : 6,
                 decoration: BoxDecoration(
                   color: currentIndex == index
                       ? AppColors.accent
                       : Colors.white24,
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
                 ),
               ),
             ),
           ),
-          const Spacer(),
+          Spacer(),
 
           /// CTA Button
           ElevatedButton(
@@ -47,9 +49,9 @@ class OnboardBottomControls extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
               foregroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(22), vertical: ResponsiveHelper.h(14)),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
               ),
             ),
             child: Text(isLast ? "Let's Play" : 'Next →'),

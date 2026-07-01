@@ -11,6 +11,7 @@ import 'widgets/scoreboard_controls.dart';
 import 'widgets/goal_workflow.dart';
 import 'widgets/card_workflow.dart';
 import 'widgets/sub_workflow.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 🎨 THEME & CONSTANTS (Spotify Dark)
@@ -249,7 +250,7 @@ class MatchEngine extends ChangeNotifier {
     }
 
     isRunning.value = true;
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    _timer = Timer.periodic(Duration(seconds: 1), (_) {
       // Standard Time vs Stoppage Time Logic
       if (phase.value == MatchPhase.firstHalf &&
           seconds.value >= halfDuration * 60) {
@@ -465,7 +466,7 @@ class FootballScoreboardScreen extends StatefulWidget {
   final setup.Team awayTeam;
   final int durationMinutes;
 
-  const FootballScoreboardScreen({
+  FootballScoreboardScreen({
     super.key,
     required this.homeTeam,
     required this.awayTeam,
@@ -500,13 +501,14 @@ class _FootballScoreboardScreenState extends State<FootballScoreboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
         child: Column(
           children: [
             ScoreboardHeader(engine: _engine),
-            Container(height: 1, color: kDivider),
+            Container(height: ResponsiveHelper.h(1), color: kDivider),
             Expanded(
               child: CustomScrollView(
                 controller: _scrollController,

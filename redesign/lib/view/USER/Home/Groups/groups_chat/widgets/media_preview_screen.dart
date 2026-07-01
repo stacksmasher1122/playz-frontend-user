@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
@@ -11,7 +12,7 @@ class MediaPreviewScreen extends StatefulWidget {
   final String filePath;
   final bool isVideo;
 
-  const MediaPreviewScreen({super.key, required this.filePath, required this.isVideo});
+  MediaPreviewScreen({super.key, required this.filePath, required this.isVideo});
 
   @override
   State<MediaPreviewScreen> createState() => _MediaPreviewScreenState();
@@ -49,14 +50,15 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           widget.isVideo ? "Send Video" : "Send Photo",
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: Column(
@@ -71,30 +73,30 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
           // Bottom bar with send button
           Container(
             color: Colors.black.withValues(alpha: 0.8),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
             child: SafeArea(
               top: false,
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 12,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E1E1E),
-                        borderRadius: BorderRadius.circular(24),
+                        color: Color(0xFF1E1E1E),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                       ),
                       child: TextField(
                         controller: _captionController,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: ResponsiveHelper.sp(16),
                         ),
                         textCapitalization: TextCapitalization.sentences,
                         maxLines: null,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: "Add a caption...",
                           hintStyle: TextStyle(color: _kMuted, fontSize: 16),
                           border: InputBorder.none,
@@ -104,18 +106,18 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   GestureDetector(
                     onTap: () =>
                         Navigator.pop(context, _captionController.text),
                     child: Container(
-                      width: 52,
-                      height: 52,
-                      decoration: const BoxDecoration(
+                      width: ResponsiveHelper.w(52),
+                      height: ResponsiveHelper.h(52),
+                      decoration: BoxDecoration(
                         color: _kGreen,
                         shape: BoxShape.circle,
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Icon(Icons.send, color: Colors.black, size: 24),
                       ),
                     ),
@@ -145,7 +147,7 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
     if (_chewieController == null ||
         _videoController == null ||
         !_videoController!.value.isInitialized) {
-      return const CircularProgressIndicator(color: _kGreen);
+      return CircularProgressIndicator(color: _kGreen);
     }
     return AspectRatio(
       aspectRatio: _videoController!.value.aspectRatio,

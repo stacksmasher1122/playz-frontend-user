@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/team_management/player_model.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 
 class PlayerStatisticsWidget extends StatelessWidget {
   final PlayerModel player;
 
-  const PlayerStatisticsWidget({super.key, required this.player});
+  PlayerStatisticsWidget({super.key, required this.player});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     // Determine which stats to show based on position
     final pos = player.position.toUpperCase();
     
@@ -42,7 +44,7 @@ class PlayerStatisticsWidget extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
+      padding: EdgeInsets.only(top: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: statWidgets,
@@ -60,14 +62,14 @@ class PlayerStatisticsWidget extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.grey,
-            fontSize: 9,
+            fontSize: ResponsiveHelper.sp(9),
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         if (isHealth)
           FitnessBadgeWidget(status: value)
         else if (isRecovery)
@@ -77,18 +79,18 @@ class PlayerStatisticsWidget extends StatelessWidget {
         else if (isRating)
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               color: Color(0xFFC6FF00), // Lime Green
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
               fontWeight: FontWeight.bold,
             ),
           )
         else
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -103,11 +105,11 @@ class PlayerStatisticsWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _formDot(true),
-        const SizedBox(width: 2),
+        SizedBox(width: 2),
         _formDot(true),
-        const SizedBox(width: 2),
+        SizedBox(width: 2),
         _formDot(true),
-        const SizedBox(width: 2),
+        SizedBox(width: 2),
         _formDot(false),
       ],
     );
@@ -115,10 +117,10 @@ class PlayerStatisticsWidget extends StatelessWidget {
 
   Widget _formDot(bool good) {
     return Container(
-      width: 6,
-      height: 6,
+      width: ResponsiveHelper.w(6),
+      height: ResponsiveHelper.h(6),
       decoration: BoxDecoration(
-        color: good ? const Color(0xFFC6FF00) : Colors.grey.shade700,
+        color: good ? Color(0xFFC6FF00) : Colors.grey.shade700,
         shape: BoxShape.circle,
       ),
     );
@@ -129,7 +131,7 @@ class PlayerStatisticsWidget extends StatelessWidget {
 class FitnessBadgeWidget extends StatelessWidget {
   final String? status;
   final String? recoveryPercentage;
-  const FitnessBadgeWidget({super.key, this.status, this.recoveryPercentage});
+  FitnessBadgeWidget({super.key, this.status, this.recoveryPercentage});
   @override
-  Widget build(BuildContext context) => const SizedBox();
+  Widget build(BuildContext context) => SizedBox();
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PerformanceProgress extends StatefulWidget {
   final String label;
@@ -9,7 +10,7 @@ class PerformanceProgress extends StatefulWidget {
   final double fillRatio;
   final bool isPercentageBar;
 
-  const PerformanceProgress({
+  PerformanceProgress({
     super.key,
     required this.label,
     required this.valueA,
@@ -29,7 +30,7 @@ class _PerformanceProgressState extends State<PerformanceProgress> with SingleTi
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000));
+    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
     _fillAnimation = Tween<double>(begin: 0.0, end: widget.fillRatio).animate(CurvedAnimation(
       parent: _animController,
       curve: Curves.easeOutCubic,
@@ -61,9 +62,10 @@ class _PerformanceProgressState extends State<PerformanceProgress> with SingleTi
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return RepaintBoundary(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,13 +77,13 @@ class _PerformanceProgressState extends State<PerformanceProgress> with SingleTi
               ],
             ),
             if (widget.isPercentageBar) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Container(
-                height: 4,
+                height: ResponsiveHelper.h(4),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: AppColors.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
                 ),
                 child: AnimatedBuilder(
                   animation: _fillAnimation,
@@ -92,7 +94,7 @@ class _PerformanceProgressState extends State<PerformanceProgress> with SingleTi
                       child: Container(
                         decoration: BoxDecoration(
                           color: AppColors.primaryContainer,
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
                         ),
                       ),
                     );

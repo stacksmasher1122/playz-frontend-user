@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SecondaryActionButton extends StatelessWidget {
   final VoidCallback onTap;
   final String text;
 
-  const SecondaryActionButton({
+  SecondaryActionButton({
     super.key,
     required this.onTap,
     required this.text,
@@ -14,11 +15,12 @@ class SecondaryActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
         child: Center(
           child: Text(
             text,

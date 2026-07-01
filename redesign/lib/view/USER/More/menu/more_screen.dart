@@ -14,9 +14,10 @@ import 'widgets/settings_tile.dart';
 import 'widgets/dark_mode_tile.dart';
 import 'widgets/section_title.dart';
 import 'widgets/logout_dialog.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MoreScreen extends StatefulWidget {
-  const MoreScreen({super.key});
+  MoreScreen({super.key});
 
   @override
   State<MoreScreen> createState() => _MoreScreenState();
@@ -43,12 +44,13 @@ class _MoreScreenState extends State<MoreScreen> {
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.7),
-      builder: (ctx) => const LogoutDialog(),
+      builder: (ctx) => LogoutDialog(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       extendBody: true,
       backgroundColor: AppColors.background,
@@ -56,24 +58,24 @@ class _MoreScreenState extends State<MoreScreen> {
         top: true,
         bottom: false,
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 100),
           children: [
-            const MenuProfileHeader(),
-            const SizedBox(height: 16),
-            const ZCoinsCard(),
-            const SizedBox(height: 28),
-            const SectionTitle('My Tools'),
-            const SizedBox(height: 14),
-            const ToolsGrid(),
-            const SizedBox(height: 28),
-            const SectionTitle('Dive Into Your Sports'),
-            const SizedBox(height: 14),
-            const SportsRow(),
-            const SizedBox(height: 28),
-            const RewardsCard(),
-            const SizedBox(height: 28),
-            const SectionTitle('Help & Preferences'),
-            const SizedBox(height: 12),
+            MenuProfileHeader(),
+            SizedBox(height: 16),
+            ZCoinsCard(),
+            SizedBox(height: 28),
+            SectionTitle('My Tools'),
+            SizedBox(height: 14),
+            ToolsGrid(),
+            SizedBox(height: 28),
+            SectionTitle('Dive Into Your Sports'),
+            SizedBox(height: 14),
+            SportsRow(),
+            SizedBox(height: 28),
+            RewardsCard(),
+            SizedBox(height: 28),
+            SectionTitle('Help & Preferences'),
+            SizedBox(height: 12),
             SettingsTile(
               icon: Icons.help_outline,
               label: 'Support & FAQ',
@@ -94,7 +96,7 @@ class _MoreScreenState extends State<MoreScreen> {
               color: Colors.red,
               onTap: () => _showLogoutDialog(context),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Center(
               child: Text(
                 'Version 2.4.0 (Build 3020)',

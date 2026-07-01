@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RewardsCard extends StatelessWidget {
-  const RewardsCard({super.key});
+  RewardsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
         child: InkWell(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
           onTap: () {
             // TODO: Navigate to Rewards Center
           },
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(ResponsiveHelper.w(16)),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
 
               /// Base surface (separates from black bg)
               color: AppColors.surface,
@@ -30,7 +32,7 @@ class RewardsCard extends StatelessWidget {
                 BoxShadow(
                   color: AppColors.accent.withValues(alpha: 0.25),
                   blurRadius: 10,
-                  offset: const Offset(0, 0),
+                  offset: Offset(0, 0),
                 ),
               ],
 
@@ -48,20 +50,20 @@ class RewardsCard extends StatelessWidget {
               children: [
                 /// ICON CONTAINER (Spotify style)
                 Container(
-                  height: 42,
-                  width: 42,
+                  height: ResponsiveHelper.h(42),
+                  width: ResponsiveHelper.w(42),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.accent.withValues(alpha: 0.15),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.card_giftcard,
                     color: AppColors.accent,
                     size: 22,
                   ),
                 ),
 
-                const SizedBox(width: 14),
+                SizedBox(width: 14),
 
                 /// TEXT
                 Expanded(
@@ -72,18 +74,18 @@ class RewardsCard extends StatelessWidget {
                         'Rewards Center',
                         style: GoogleFonts.inter(
                           color: Colors.white,
-                          fontSize: 15,
+                          fontSize: ResponsiveHelper.sp(15),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         'Redeem coins for merch & discounts',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.inter(
                           color: AppColors.muted,
-                          fontSize: 12,
+                          fontSize: ResponsiveHelper.sp(12),
                         ),
                       ),
                     ],
@@ -92,13 +94,13 @@ class RewardsCard extends StatelessWidget {
 
                 /// CTA
                 Container(
-                  height: 32,
-                  width: 32,
+                  height: ResponsiveHelper.h(32),
+                  width: ResponsiveHelper.w(32),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white.withValues(alpha: 0.08),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.chevron_right,
                     color: Colors.white,
                     size: 20,

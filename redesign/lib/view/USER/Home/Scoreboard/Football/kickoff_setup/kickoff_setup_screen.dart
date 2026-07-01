@@ -6,9 +6,10 @@ import 'widgets/side_selection_card.dart';
 import 'widgets/possession_selector_widget.dart';
 import 'widgets/venue_card_widget.dart';
 import 'widgets/start_match_button_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class KickoffSetupScreen extends StatefulWidget {
-  const KickoffSetupScreen({super.key});
+  KickoffSetupScreen({super.key});
 
   @override
   State<KickoffSetupScreen> createState() => _KickoffSetupScreenState();
@@ -30,14 +31,14 @@ class _KickoffSetupScreenState extends State<KickoffSetupScreen> with TickerProv
 
     _entranceAnimController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
     );
     
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _entranceAnimController, curve: Curves.easeIn),
     );
     
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero).animate(
+    _slideAnimation = Tween<Offset>(begin: Offset(0, 0.05), end: Offset.zero).animate(
       CurvedAnimation(parent: _entranceAnimController, curve: Curves.easeOutCubic),
     );
 
@@ -53,12 +54,13 @@ class _KickoffSetupScreenState extends State<KickoffSetupScreen> with TickerProv
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: const KickoffAppbar(),
+      appBar: KickoffAppbar(),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(
               color: Color(0xFFC6FF00), // Lime Green
             ),
@@ -73,13 +75,13 @@ class _KickoffSetupScreenState extends State<KickoffSetupScreen> with TickerProv
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SideSelectionCard(),
-                  const PossessionSelectorWidget(),
-                  const VenueCardWidget(),
+                  SideSelectionCard(),
+                  PossessionSelectorWidget(),
+                  VenueCardWidget(),
                   StartMatchButtonWidget(
                     onTap: () => controller.startMatch(context),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                 ],
               ),
             ),

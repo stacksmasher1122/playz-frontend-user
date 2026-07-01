@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import '../cricket_setup_screen.dart';
 import 'friends_selection_sheet.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TeamCard extends StatelessWidget {
   final BuildContext context;
@@ -13,7 +14,7 @@ class TeamCard extends StatelessWidget {
   final TextEditingController textController;
   final bool isHome;
 
-  const TeamCard({
+  TeamCard({
     super.key,
     required this.context,
     required this.controller,
@@ -26,13 +27,14 @@ class TeamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border(left: BorderSide(color: accentColor, width: 4)),
       ),
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,15 +48,15 @@ class TeamCard extends StatelessWidget {
                       : titleStream.value.toUpperCase(),
                   style: TextStyle(
                     color: accentColor.withValues(alpha: 1.0),
-                    fontSize: 11,
+                    fontSize: ResponsiveHelper.sp(11),
                     fontWeight: FontWeight.w800,
                     letterSpacing: 1.2,
                   ),
                 ),
               ),
               Container(
-                width: 10,
-                height: 10,
+                width: ResponsiveHelper.w(10),
+                height: ResponsiveHelper.h(10),
                 decoration: BoxDecoration(
                   color: dotColor,
                   shape: BoxShape.circle,
@@ -62,48 +64,48 @@ class TeamCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Team Name Field
           Container(
             decoration: BoxDecoration(
-              color: const Color(0xFF131313),
-              borderRadius: BorderRadius.circular(16),
+              color: Color(0xFF131313),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(4)),
             child: TextField(
               controller: textController,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: ResponsiveHelper.sp(18),
                 fontWeight: FontWeight.bold,
               ),
-              decoration: const InputDecoration(border: InputBorder.none),
+              decoration: InputDecoration(border: InputBorder.none),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Search & Add Players Button
           GestureDetector(
             onTap: () => _showFriendsBottomSheet(context, isHome),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFF1C1C1C),
-                borderRadius: BorderRadius.circular(16),
+                color: Color(0xFF1C1C1C),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
               child: Row(
                 children: [
                   Icon(
                     Icons.person_add,
                     color: kMutedText.withValues(alpha: 0.5),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Text(
                     'Tap to add players from Friendlist',
                     style: TextStyle(
                       color: kMutedText.withValues(alpha: 0.5),
-                      fontSize: 14,
+                      fontSize: ResponsiveHelper.sp(14),
                     ),
                   ),
                 ],
@@ -116,25 +118,25 @@ class TeamCard extends StatelessWidget {
             final roster = isHome
                 ? controller.homeTeamRoster
                 : controller.awayTeamRoster;
-            if (roster.isEmpty) return const SizedBox.shrink();
+            if (roster.isEmpty) return SizedBox.shrink();
             return Padding(
-              padding: const EdgeInsets.only(top: 12.0),
+              padding: EdgeInsets.only(top: 12.0),
               child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: roster.map((friend) {
                   return Chip(
-                    backgroundColor: const Color(0xFF131313),
-                    labelStyle: const TextStyle(
+                    backgroundColor: Color(0xFF131313),
+                    labelStyle: TextStyle(
                       color: Colors.white,
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.sp(12),
                     ),
                     label: Text(
                       friend.fullName.isNotEmpty
                           ? friend.fullName
                           : friend.email,
                     ),
-                    deleteIcon: const Icon(
+                    deleteIcon: Icon(
                       Icons.close,
                       color: kMutedText,
                       size: 16,
@@ -142,7 +144,7 @@ class TeamCard extends StatelessWidget {
                     onDeleted: () =>
                         controller.removeTeamPlayer(isHome, friend),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                       side: BorderSide.none,
                     ),
                   );
@@ -159,8 +161,8 @@ class TeamCard extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: kSurface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
       ),
       isScrollControlled: true,
       builder: (context) {

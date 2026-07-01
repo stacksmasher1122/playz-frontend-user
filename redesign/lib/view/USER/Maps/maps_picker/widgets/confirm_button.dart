@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ConfirmButton extends StatelessWidget {
   final VoidCallback onConfirm;
 
-  const ConfirmButton({
+  ConfirmButton({
     super.key,
     required this.onConfirm,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final mapsCtrl = Get.find<MapsController>();
 
     return Obx(() {
@@ -24,27 +26,27 @@ class ConfirmButton extends StatelessWidget {
       return GestureDetector(
         onTap: canConfirm ? onConfirm : null,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: 55,
+          duration: Duration(milliseconds: 200),
+          height: ResponsiveHelper.h(55),
           width: double.infinity,
           decoration: BoxDecoration(
             color: canConfirm ? kSpotifyGreen : kSpotifyGreen.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
             boxShadow: canConfirm
                 ? [
                     BoxShadow(
                       color: kSpotifyGreen.withValues(alpha: 0.4),
                       blurRadius: 20,
-                      offset: const Offset(0, 8),
+                      offset: Offset(0, 8),
                     ),
                   ]
                 : [],
           ),
           child: Center(
             child: mapsCtrl.isLoading.value
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
+                ? SizedBox(
+                    width: ResponsiveHelper.w(24),
+                    height: ResponsiveHelper.h(24),
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
                       color: Colors.black,
@@ -55,7 +57,7 @@ class ConfirmButton extends StatelessWidget {
                     style: TextStyle(
                       color: canConfirm ? Colors.black : Colors.black38,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.sp(16),
                     ),
                   ),
           ),

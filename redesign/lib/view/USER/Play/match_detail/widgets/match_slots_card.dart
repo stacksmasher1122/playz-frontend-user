@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import '../match_detail_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchSlotsCard extends StatelessWidget {
-  const MatchSlotsCard({super.key});
+  MatchSlotsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(22),
+      padding: EdgeInsets.all(ResponsiveHelper.w(22)),
       decoration: BoxDecoration(
         color: MatchDetailColors.surfaceSoft,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
       ),
       child: Column(
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Slots Filling Fast",
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.sp(12),
                         color: MatchDetailColors.textSecondary,
                       ),
                     ),
@@ -34,7 +36,7 @@ class MatchSlotsCard extends StatelessWidget {
                         Text(
                           "8",
                           style: TextStyle(
-                            fontSize: 36,
+                            fontSize: ResponsiveHelper.sp(36),
                             fontWeight: FontWeight.bold,
                             color: MatchDetailColors.urgent,
                           ),
@@ -43,7 +45,7 @@ class MatchSlotsCard extends StatelessWidget {
                         Text(
                           "/ 10",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: ResponsiveHelper.sp(18),
                             color: MatchDetailColors.textSecondary,
                           ),
                         ),
@@ -52,13 +54,13 @@ class MatchSlotsCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     "Match Quality",
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.sp(12),
                       color: MatchDetailColors.textSecondary,
                     ),
                   ),
@@ -74,22 +76,22 @@ class MatchSlotsCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
           ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
             child: Container(
-              height: 10,
-              decoration: const BoxDecoration(
+              height: ResponsiveHelper.h(10),
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFFF59E0B), Color(0xFFFFB020)],
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 18),
-          const Divider(color: Colors.white12),
-          const SizedBox(height: 14),
-          const Row(
+          SizedBox(height: 18),
+          Divider(color: Colors.white12),
+          SizedBox(height: 14),
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _StatColumn("Average Rating", "4.2 ⭐"),
@@ -106,24 +108,25 @@ class _StatColumn extends StatelessWidget {
   final String title;
   final String value;
 
-  const _StatColumn(this.title, this.value);
+  _StatColumn(this.title, this.value);
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title.toUpperCase(),
-          style: const TextStyle(
-            fontSize: 11,
+          style: TextStyle(
+            fontSize: ResponsiveHelper.sp(11),
             color: MatchDetailColors.textSecondary,
           ),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Text(
           value,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: ResponsiveHelper.sp(16), fontWeight: FontWeight.w600),
         ),
       ],
     );

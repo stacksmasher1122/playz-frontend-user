@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'setup_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class StepperControl extends StatelessWidget {
   final String label;
@@ -9,7 +10,7 @@ class StepperControl extends StatelessWidget {
   final int min;
   final int max;
 
-  const StepperControl({
+  StepperControl({
     super.key,
     required this.label,
     required this.value,
@@ -21,44 +22,45 @@ class StepperControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: const TextStyle(color: kTextSecondary, fontSize: 15),
+          style: TextStyle(color: kTextSecondary, fontSize: 15),
         ),
         Container(
           decoration: BoxDecoration(
             color: kSurface,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           ),
           child: Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.remove, color: kTextMuted, size: 18),
+                icon: Icon(Icons.remove, color: kTextMuted, size: 18),
                 onPressed: value > min ? () => onChanged(value - step) : null,
               ),
               AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
+                duration: Duration(milliseconds: 200),
                 transitionBuilder: (child, anim) =>
                     ScaleTransition(scale: anim, child: child),
                 child: Container(
-                  constraints: const BoxConstraints(minWidth: 24),
+                  constraints: BoxConstraints(minWidth: 24),
                   alignment: Alignment.center,
                   child: Text(
                     "$value",
                     key: ValueKey(value),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: kTextPrimary,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.sp(16),
                     ),
                   ),
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.add, color: kTextMuted, size: 18),
+                icon: Icon(Icons.add, color: kTextMuted, size: 18),
                 onPressed: value < max ? () => onChanged(value + step) : null,
               ),
             ],
@@ -74,7 +76,7 @@ class SetupSwitch extends StatelessWidget {
   final bool value;
   final Function(bool) onChanged;
 
-  const SetupSwitch({
+  SetupSwitch({
     super.key,
     required this.label,
     required this.value,
@@ -83,10 +85,11 @@ class SetupSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SwitchListTile(
       title: Text(
         label,
-        style: const TextStyle(color: kTextSecondary, fontSize: 14),
+        style: TextStyle(color: kTextSecondary, fontSize: 14),
       ),
       value: value,
       activeThumbColor: kAccent,
@@ -101,7 +104,7 @@ class SetupTextField extends StatelessWidget {
   final String label;
   final String initialValue;
 
-  const SetupTextField({
+  SetupTextField({
     super.key,
     required this.label,
     required this.initialValue,
@@ -109,19 +112,20 @@ class SetupTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return TextFormField(
       initialValue: initialValue,
-      style: const TextStyle(color: kTextPrimary),
+      style: TextStyle(color: kTextPrimary),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: kTextMuted),
+        labelStyle: TextStyle(color: kTextMuted),
         filled: true,
         fillColor: kSurface,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           borderSide: BorderSide.none,
         ),
-        contentPadding: const EdgeInsets.symmetric(
+        contentPadding: EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 12,
         ),
@@ -135,7 +139,7 @@ class SegmentedControl extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onSelect;
 
-  const SegmentedControl({
+  SegmentedControl({
     super.key,
     required this.options,
     required this.selectedIndex,
@@ -144,11 +148,12 @@ class SegmentedControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      height: 40,
+      height: ResponsiveHelper.h(40),
       decoration: BoxDecoration(
         color: kSurface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       ),
       child: Row(
         children: List.generate(options.length, (index) {
@@ -157,11 +162,11 @@ class SegmentedControl extends StatelessWidget {
             child: GestureDetector(
               onTap: () => onSelect(index),
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                margin: const EdgeInsets.all(4),
+                duration: Duration(milliseconds: 200),
+                margin: EdgeInsets.all(ResponsiveHelper.w(4)),
                 decoration: BoxDecoration(
                   color: isSelected ? kSurfaceHighlight : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                   border: isSelected
                       ? Border.all(color: kAccent.withValues(alpha: 0.5))
                       : null,
@@ -174,7 +179,7 @@ class SegmentedControl extends StatelessWidget {
                     fontWeight: isSelected
                         ? FontWeight.bold
                         : FontWeight.normal,
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                   ),
                 ),
               ),

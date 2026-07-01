@@ -3,17 +3,19 @@ import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_starting_lineup_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LineupStatusWidget extends StatelessWidget {
   final VolleyballStartingLineupController controller;
 
-  const LineupStatusWidget({super.key, required this.controller});
+  LineupStatusWidget({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: const BoxDecoration(
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+      decoration: BoxDecoration(
         border: Border(top: BorderSide(color: AppColors.surfaceContainerHighest)),
       ),
       child: Obx(() {
@@ -23,14 +25,14 @@ class LineupStatusWidget extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  width: 8,
-                  height: 8,
+                  width: ResponsiveHelper.w(8),
+                  height: ResponsiveHelper.h(8),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: controller.currentState.lineupReady.value ? AppColors.primaryContainer : AppColors.muted,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Starting Six Ready',
                   style: AppTypography.labelCaps10.copyWith(color: AppColors.muted),
@@ -40,7 +42,7 @@ class LineupStatusWidget extends StatelessWidget {
             Row(
               children: [
                 _buildRoleStatus('CAPTAIN', controller.currentState.captain.value?.name, controller.currentState.captain.value?.jerseyNumber),
-                const SizedBox(width: 24),
+                SizedBox(width: 24),
                 _buildRoleStatus('LIBERO', controller.currentState.libero.value?.name, controller.currentState.libero.value?.jerseyNumber),
               ],
             ),
@@ -55,7 +57,7 @@ class LineupStatusWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontSize: 8)),
-        const SizedBox(height: 2),
+        SizedBox(height: 2),
         if (name != null)
           Text(
             '#$number ${name.split(' ').last}',

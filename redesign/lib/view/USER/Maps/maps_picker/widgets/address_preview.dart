@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AddressPreview extends StatelessWidget {
-  const AddressPreview({super.key});
+  AddressPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final mapsCtrl = Get.find<MapsController>();
 
     return Obx(() {
@@ -38,25 +40,25 @@ class AddressPreview extends StatelessWidget {
       }
 
       return AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         child: Column(
           key: ValueKey('$title-${subtitle.hashCode}'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: ResponsiveHelper.sp(18),
                 fontWeight: FontWeight.w600,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(color: kMuted, fontSize: 12),
+              style: TextStyle(color: kMuted, fontSize: 12),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

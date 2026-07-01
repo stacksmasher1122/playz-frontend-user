@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import '../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Badminton/player_model.dart';
 import 'player_avatar_widget.dart';
 import 'versus_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchSummaryCard extends StatefulWidget {
   final PlayerModel? playerOne;
   final PlayerModel? playerTwo;
   final int totalGames;
 
-  const MatchSummaryCard({
+  MatchSummaryCard({
     super.key,
     required this.playerOne,
     required this.playerTwo,
@@ -27,11 +28,11 @@ class _MatchSummaryCardState extends State<MatchSummaryCard> with SingleTickerPr
     super.initState();
     _entranceController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: Duration(milliseconds: 400),
     );
     
     // Animate on load
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(Duration(milliseconds: 100), () {
       if (mounted) _entranceController.forward();
     });
   }
@@ -44,6 +45,7 @@ class _MatchSummaryCardState extends State<MatchSummaryCard> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return RepaintBoundary(
       child: FadeTransition(
         opacity: CurvedAnimation(
@@ -58,11 +60,11 @@ class _MatchSummaryCardState extends State<MatchSummaryCard> with SingleTickerPr
             ),
           ),
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+            margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(16)),
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(32), horizontal: ResponsiveHelper.w(16)),
             decoration: BoxDecoration(
               color: Colors.grey.shade900.withValues(alpha: 0.8), // dark glass card
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
               border: Border.all(color: Colors.grey.shade800, width: 1.0),
               boxShadow: [
                 BoxShadow(
@@ -81,7 +83,7 @@ class _MatchSummaryCardState extends State<MatchSummaryCard> with SingleTickerPr
                   isHighlighted: true, // player one gets green border
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: EdgeInsets.only(top: 8.0),
                   child: VersusWidget(
                     gamesLabel: 'BEST OF ${widget.totalGames}',
                   ),

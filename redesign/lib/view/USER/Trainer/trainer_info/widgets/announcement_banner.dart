@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kYellow = Color(0xFFFFC107);
+Color kYellow = Color(0xFFFFC107);
 
 class AnnouncementBanner extends StatelessWidget {
-  const AnnouncementBanner({super.key});
+  AnnouncementBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: kYellow.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
       ),
       child: Row(
-        children: const [
+        children: [
           Icon(Icons.campaign, color: kYellow),
           SizedBox(width: 12),
           Expanded(

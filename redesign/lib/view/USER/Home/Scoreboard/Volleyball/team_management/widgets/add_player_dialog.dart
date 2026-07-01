@@ -4,12 +4,13 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_player_model.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_team_management_controller.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AddPlayerDialog extends StatefulWidget {
   final bool isTeamA;
   final VolleyballTeamManagementController controller;
 
-  const AddPlayerDialog({super.key, required this.isTeamA, required this.controller});
+  AddPlayerDialog({super.key, required this.isTeamA, required this.controller});
 
   @override
   State<AddPlayerDialog> createState() => _AddPlayerDialogState();
@@ -33,17 +34,18 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Dialog(
       backgroundColor: AppColors.surfaceContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(20))),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: EdgeInsets.all(ResponsiveHelper.w(24.0)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Add Player', style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             TextField(
               controller: nameController,
               style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
@@ -52,10 +54,10 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                 labelStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
                 filled: true,
                 fillColor: AppColors.surfaceContainerLowest,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             TextField(
               controller: numberController,
               keyboardType: TextInputType.number,
@@ -65,10 +67,10 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                 labelStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
                 filled: true,
                 fillColor: AppColors.surfaceContainerLowest,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: selectedPosition,
               decoration: InputDecoration(
@@ -76,7 +78,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                 labelStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
                 filled: true,
                 fillColor: AppColors.surfaceContainerLowest,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
               dropdownColor: AppColors.surfaceContainerHigh,
               items: positions.map((pos) => DropdownMenuItem(
@@ -91,7 +93,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                 });
               },
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Row(
               children: [
                 Checkbox(
@@ -102,7 +104,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                 Text('Team Captain', style: AppTypography.bodyMd.copyWith(color: AppColors.primary)),
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -110,12 +112,12 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                   onPressed: () => Navigator.pop(context),
                   child: Text('Cancel', style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryContainer,
                     foregroundColor: AppColors.onPrimaryContainer,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
                   ),
                   onPressed: () {
                     if (nameController.text.isNotEmpty && numberController.text.isNotEmpty) {
@@ -131,7 +133,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                       Navigator.pop(context);
                     }
                   },
-                  child: const Text('Add Player'),
+                  child: Text('Add Player'),
                 ),
               ],
             ),

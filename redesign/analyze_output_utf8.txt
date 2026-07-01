@@ -1,0 +1,707 @@
+﻿Analyzing Scoreboard...
+
+  error - Badminton\badminton_create_match.dart:41:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_create_match.dart:51:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:595:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:602:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:617:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:773:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:823:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:992:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:1104:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:1181:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:1259:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:1489:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\badminton_setup.dart:1661:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\dominance_card.dart:59:62 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\dominance_card.dart:60:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\dominance_card.dart:80:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\game_timeline_card.dart:19:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\game_timeline_card.dart:32:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\game_timeline_card.dart:46:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\game_timeline_card.dart:56:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\game_timeline_card.dart:70:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\game_timeline_card.dart:79:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\game_timeline_section.dart:16:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\game_timeline_section.dart:24:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\performance_bar_widget.dart:22:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\performance_bar_widget.dart:33:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\performance_metrics_card.dart:42:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\performance_metrics_card.dart:43:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\performance_metrics_card.dart:63:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\performance_metrics_card.dart:134:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\performance_radar_chart.dart:135:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\point_distribution_card.dart:41:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\point_distribution_card.dart:42:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\point_distribution_card.dart:55:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\point_distribution_card.dart:65:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\point_distribution_card.dart:80:76 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\quick_stat_card.dart:24:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\quick_stat_card.dart:51:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\quick_stat_card.dart:76:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\quick_stats_grid.dart:17:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\service_points_card.dart:56:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\service_points_card.dart:73:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_stats\widgets\service_points_card.dart:83:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\achievement_card.dart:62:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\achievement_card.dart:71:47 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\achievement_card.dart:91:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\achievement_card.dart:101:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\achievement_section.dart:16:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\achievement_section.dart:32:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\action_button_grid.dart:18:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\ai_summary_button.dart:24:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\ai_summary_button.dart:32:26 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\ai_summary_button.dart:52:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\export_pdf_button.dart:24:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\export_pdf_button.dart:33:26 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\export_pdf_button.dart:53:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\key_metrics_card.dart:16:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\key_metrics_card.dart:17:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\key_metrics_card.dart:37:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\key_metrics_card.dart:76:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\match_timeline_appbar.dart:21:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\match_timeline_appbar.dart:30:48 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\match_timeline_appbar.dart:31:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\match_timeline_appbar.dart:50:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\metric_progress_widget.dart:20:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\metric_progress_widget.dart:31:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\metric_progress_widget.dart:38:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\player_of_match_card.dart:53:56 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\player_of_match_card.dart:70:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\player_of_match_card.dart:87:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\player_of_match_card.dart:96:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\player_of_match_card.dart:107:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\player_of_match_card.dart:118:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\player_of_match_card.dart:146:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\player_of_match_card.dart:171:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\qr_share_button.dart:22:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\qr_share_button.dart:42:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\score_summary_widget.dart:30:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\winner_summary_card.dart:51:58 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\winner_summary_card.dart:52:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\winner_summary_card.dart:76:73 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\winner_summary_card.dart:90:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\winner_summary_card.dart:103:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\winner_summary_card.dart:128:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\match_timeline\widgets\winner_summary_card.dart:138:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\action_toolbar_widget.dart:24:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\bottom_navigation_widget.dart:16:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\bottom_navigation_widget.dart:77:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\court_visualization_widget.dart:17:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\court_visualization_widget.dart:60:67 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\court_visualization_widget.dart:70:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\court_visualization_widget.dart:104:48 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\court_visualization_widget.dart:105:50 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\court_visualization_widget.dart:116:42 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\game_status_widget.dart:25:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\game_status_widget.dart:40:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\live_match_appbar.dart:25:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\live_match_appbar.dart:33:48 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\live_match_appbar.dart:34:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\live_match_appbar.dart:53:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\player_score_widget.dart:32:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\point_history_card.dart:19:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\point_history_card.dart:33:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\point_history_card.dart:42:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\point_history_card.dart:52:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\quick_score_panel.dart:16:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\recent_points_widget.dart:16:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\recent_points_widget.dart:26:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\recent_points_widget.dart:39:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\score_button_widget.dart:39:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\score_button_widget.dart:49:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\live_match\widgets\scoreboard_widget.dart:18:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\player_management_screen.dart:49:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\player_management_screen.dart:74:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\games_slider_widget.dart:18:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\games_slider_widget.dart:19:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\games_slider_widget.dart:35:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\games_slider_widget.dart:42:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\games_slider_widget.dart:53:64 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\games_slider_widget.dart:76:64 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\match_rules_header.dart:11:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\match_rules_header.dart:27:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\match_summary_card.dart:63:60 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\match_summary_card.dart:64:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\player_avatar_widget.dart:19:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\player_avatar_widget.dart:61:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\player_management_appbar.dart:25:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\points_stepper_widget.dart:20:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\points_stepper_widget.dart:21:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\points_stepper_widget.dart:34:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\points_stepper_widget.dart:54:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\rule_info_card.dart:20:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\rule_info_card.dart:33:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\rule_info_card.dart:43:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\rule_info_card.dart:52:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\start_match_button_widget.dart:47:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\versus_widget.dart:44:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\versus_widget.dart:54:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\versus_widget.dart:63:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\warmup_slider_widget.dart:18:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\warmup_slider_widget.dart:19:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\warmup_slider_widget.dart:35:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\warmup_slider_widget.dart:42:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\warmup_slider_widget.dart:53:64 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\player_management\widgets\warmup_slider_widget.dart:76:64 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\badminton_create_match_app_bar.dart:12:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\badminton_create_match_app_bar.dart:27:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\badminton_create_match_app_bar.dart:40:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\custom_settings_section.dart:37:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\custom_settings_section.dart:44:52 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\custom_settings_section.dart:67:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\match_category_section.dart:58:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\match_category_section.dart:73:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\match_form_section.dart:58:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\match_form_section.dart:65:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\match_form_section.dart:82:74 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\next_button.dart:14:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\next_button.dart:37:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\premium_banner.dart:35:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\premium_banner.dart:44:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\series_format_section.dart:19:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\series_format_section.dart:31:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\series_format_section.dart:90:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\setup_checklist.dart:12:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\setup_checklist.dart:37:19 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\step_badge.dart:12:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\step_badge.dart:16:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Badminton\widgets\create_match\step_badge.dart:26:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\cricket_scoreboard_screen.dart:218:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\cricket_scoreboard_screen.dart:264:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\cricket_scoreboard_screen.dart:282:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\cricket_scoreboard_screen.dart:299:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\cricket_scoreboard_screen.dart:397:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\cricket_scoreboard_screen.dart:400:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\cricket_scoreboard_screen.dart:409:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\advanced_actions_grid.dart:28:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\advanced_actions_grid.dart:79:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\advanced_actions_grid.dart:96:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\ball_timeline.dart:18:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\ball_timeline.dart:29:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\bowler_select_sheet.dart:22:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\bowler_select_sheet.dart:31:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\extras_modal.dart:22:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\extras_modal.dart:31:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\extras_modal.dart:105:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\match_context_card.dart:23:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\match_context_card.dart:24:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\match_context_card.dart:65:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\over_progress_row.dart:18:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:39:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:67:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:70:76 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:87:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:95:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:119:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:132:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:196:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:204:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:218:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:253:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:285:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:301:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:302:58 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\player_stats_tabs.dart:341:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:61:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:62:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:81:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:105:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:133:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:182:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:200:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:215:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:250:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:264:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoreboard_header.dart:273:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoring_console.dart:23:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoring_console.dart:26:72 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\scoring_console.dart:90:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\setup_wizard_card.dart:32:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\setup_wizard_card.dart:33:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\setup_wizard_card.dart:45:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\setup_wizard_card.dart:100:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\setup_wizard_card.dart:132:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\wicket_wizard_sheet.dart:65:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\wicket_wizard_sheet.dart:223:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_scoreboard\widgets\wicket_wizard_sheet.dart:299:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\cricket_setup_screen.dart:52:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\cricket_setup_screen.dart:60:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\cricket_setup_screen.dart:68:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\cricket_setup_screen.dart:115:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\friends_selection_sheet.dart:26:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\friends_selection_sheet.dart:38:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\large_stepper_card.dart:25:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\large_stepper_card.dart:32:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\large_stepper_card.dart:42:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\large_stepper_card.dart:68:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\rules_switch_card.dart:24:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\rules_switch_card.dart:28:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\rules_switch_card.dart:48:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\rules_switch_card.dart:57:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\start_match_button.dart:20:44 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\start_match_button.dart:48:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\start_match_button.dart:56:26 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\start_match_button.dart:69:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\stepper_card.dart:33:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\stepper_card.dart:55:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\stepper_card.dart:65:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\stepper_card.dart:84:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\switch_card.dart:30:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\switch_card.dart:34:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\switch_card.dart:54:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\switch_card.dart:63:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\team_card.dart:37:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\team_card.dart:75:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\team_card.dart:80:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\team_card.dart:96:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\team_card.dart:132:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\cricket_setup\widgets\team_card.dart:165:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\live_matches.dart:55:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\live_matches.dart:78:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\live_matches.dart:98:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\live_matches.dart:110:80 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\live_matches.dart:116:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\live_matches.dart:123:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\live_matches.dart:139:67 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\live_matches.dart:203:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\previous_matches.dart:59:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\previous_matches.dart:83:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\previous_matches.dart:101:67 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\previous_matches.dart:111:71 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\previous_matches.dart:116:71 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Cricket\previous_matches.dart:173:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\football_create_match_screen.dart:98:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\football_create_match_screen.dart:106:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\bottom_action_widget.dart:18:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\bottom_action_widget.dart:39:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\bottom_action_widget.dart:54:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\bottom_action_widget.dart:79:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\bottom_action_widget.dart:85:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\duration_slider_widget.dart:27:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\duration_slider_widget.dart:35:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\football_create_match_appbar.dart:21:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\general_information_card.dart:15:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\general_information_card.dart:16:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\general_information_card.dart:37:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\general_information_card.dart:49:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\general_information_card.dart:74:70 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\general_information_card.dart:82:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\general_information_card.dart:112:72 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\halves_selector_widget.dart:29:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\halves_selector_widget.dart:51:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\halves_selector_widget.dart:67:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\logistics_card.dart:15:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\logistics_card.dart:16:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\logistics_card.dart:37:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\logistics_card.dart:49:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\logistics_card.dart:57:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\logistics_card.dart:96:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\logistics_card.dart:104:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\logistics_card.dart:134:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\logistics_card.dart:160:70 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\match_format_card.dart:16:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\match_format_card.dart:32:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\rules_configuration_card.dart:18:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\rules_configuration_card.dart:19:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\rules_configuration_card.dart:40:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\team_card_widget.dart:65:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\team_card_widget.dart:122:70 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\team_card_widget.dart:146:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\team_selection_card.dart:16:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\team_selection_card.dart:32:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\create_match\widgets\toggle_option_widget.dart:20:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\card_workflow.dart:70:46 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\card_workflow.dart:93:46 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\event_feed.dart:33:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\event_feed.dart:53:51 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\event_feed.dart:77:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\goal_workflow.dart:24:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\goal_workflow.dart:41:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\goal_workflow.dart:119:40 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\goal_workflow.dart:135:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\scoreboard_controls.dart:23:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\scoreboard_header.dart:17:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\scoreboard_header.dart:68:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\scoreboard_header.dart:110:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\scoreboard_header.dart:136:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_scoreboard\widgets\scoreboard_header.dart:148:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\football_setup_screen.dart:656:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\football_setup_screen.dart:674:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\football_setup_screen.dart:676:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\football_setup_screen.dart:718:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\football_setup_screen.dart:720:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\engine_preview.dart:83:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\engine_preview.dart:93:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\setup_controls.dart:57:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\setup_controls.dart:166:46 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\setup_header.dart:15:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\setup_header.dart:27:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\setup_quality_indicator.dart:14:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\setup_quality_indicator.dart:25:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\setup_section_card.dart:38:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\setup_section_card.dart:50:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\smart_presets_card.dart:14:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\smart_presets_card.dart:16:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\smart_presets_card.dart:25:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\sticky_cta_button.dart:22:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\sticky_cta_button.dart:49:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\team_row.dart:22:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\tournament_type_selector.dart:21:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\football_setup\widgets\tournament_type_selector.dart:40:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\football_pitch_widget.dart:159:78 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\football_pitch_widget.dart:166:79 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\info_card_widget.dart:18:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\info_card_widget.dart:31:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\info_card_widget.dart:41:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\kickoff_appbar.dart:26:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\kickoff_appbar.dart:35:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\kickoff_appbar.dart:46:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\possession_button_widget.dart:25:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\possession_button_widget.dart:34:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\possession_selector_widget.dart:16:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\possession_selector_widget.dart:24:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\possession_selector_widget.dart:31:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\side_selection_card.dart:17:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\side_selection_card.dart:18:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\side_selection_card.dart:37:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\stadium_banner_widget.dart:39:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\stadium_banner_widget.dart:46:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\stadium_banner_widget.dart:55:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\stadium_banner_widget.dart:66:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\start_match_button_widget.dart:13:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\start_match_button_widget.dart:34:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\start_match_button_widget.dart:56:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\swap_side_button.dart:15:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\team_side_widget.dart:44:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\team_side_widget.dart:58:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\venue_card_widget.dart:21:56 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\venue_card_widget.dart:35:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\venue_card_widget.dart:70:75 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\venue_card_widget.dart:75:80 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\kickoff_setup\widgets\venue_card_widget.dart:94:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\bottom_navigation_widget.dart:18:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\bottom_navigation_widget.dart:22:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\bottom_navigation_widget.dart:74:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\live_dashboard_appbar.dart:31:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\live_dashboard_appbar.dart:40:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\live_dashboard_appbar.dart:61:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\live_score_card.dart:18:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\live_score_card.dart:19:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\match_timer_widget.dart:24:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\match_timer_widget.dart:38:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\quick_event_grid_widget.dart:16:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\quick_event_grid_widget.dart:28:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\score_board_widget.dart:23:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\score_board_widget.dart:63:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\statistics_progress_card.dart:26:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\statistics_progress_card.dart:27:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\statistics_progress_card.dart:43:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\statistics_progress_card.dart:54:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\statistics_progress_card.dart:63:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\stats_summary_grid.dart:16:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\stats_tile_widget.dart:20:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\stats_tile_widget.dart:48:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\live_dashboard\widgets\team_score_widget.dart:43:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\confirm_squad_button.dart:13:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\confirm_squad_button.dart:39:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\confirm_squad_button.dart:54:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\empty_position_widget.dart:93:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\football_pitch_widget.dart:19:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\formation_chip_widget.dart:24:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\formation_selector_widget.dart:19:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\goalkeeper_widget.dart:38:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\goalkeeper_widget.dart:47:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\goalkeeper_widget.dart:85:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\goalkeeper_widget.dart:94:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\player_card_widget.dart:17:54 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\player_card_widget.dart:18:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\player_card_widget.dart:50:69 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\player_card_widget.dart:59:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\player_position_widget.dart:51:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\player_position_widget.dart:60:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\squad_header_widget.dart:18:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\squad_header_widget.dart:26:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\squad_header_widget.dart:46:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\squad_list_widget.dart:18:35 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\starting_lineup_appbar.dart:22:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\starting_lineup_appbar.dart:30:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\tactic_header_widget.dart:15:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\tactic_header_widget.dart:23:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\tactic_header_widget.dart:28:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\starting_lineup\widgets\tactic_header_widget.dart:38:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\bottom_navigation_widget.dart:11:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\bottom_navigation_widget.dart:15:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\bottom_navigation_widget.dart:52:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\bulk_import_button.dart:16:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\bulk_import_button.dart:31:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\player_card_widget.dart:39:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\player_card_widget.dart:66:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\player_card_widget.dart:75:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\player_card_widget.dart:93:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\player_card_widget.dart:102:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\player_card_widget.dart:128:64 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\player_statistics_widget.dart:67:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\player_statistics_widget.dart:84:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\player_statistics_widget.dart:93:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\roster_header_widget.dart:11:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\roster_header_widget.dart:19:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\roster_header_widget.dart:45:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\team_badge_widget.dart:27:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\team_management_appbar.dart:25:25 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\team_management_appbar.dart:32:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Football\team_management\widgets\team_management_appbar.dart:53:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\final_review\pickleball_final_review_screen.dart:57:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\final_review\widgets\advanced_setting_tile.dart:24:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\final_review\widgets\advanced_settings_card.dart:20:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\final_review\widgets\start_match_button.dart:40:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\final_review\widgets\start_match_button.dart:72:32 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\final_review\widgets\stat_card_widget.dart:26:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\final_review\widgets\teams_vs_card.dart:22:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\live_match\live_pickleball_match_screen.dart:60:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\live_match\widgets\bottom_end_match_button.dart:19:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\live_match\widgets\live_match_appbar.dart:58:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\live_match\widgets\live_scoreboard_card.dart:28:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\live_match\widgets\live_scoreboard_card.dart:53:28 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\live_match\widgets\match_controls_widget.dart:96:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\live_match\widgets\performance_card.dart:21:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\live_match\widgets\performance_progress.dart:68:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\live_match\widgets\score_button_widget.dart:52:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\match_result_screen.dart:59:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\achievement_card_widget.dart:35:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\achievement_card_widget.dart:65:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\achievement_card_widget.dart:69:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\action_buttons_widget.dart:81:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\analytics_card_widget.dart:19:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\analytics_card_widget.dart:65:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\game_breakdown_widget.dart:16:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\match_info_card_widget.dart:16:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\match_info_card_widget.dart:47:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\mvp_card_widget.dart:20:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\performance_progress_widget.dart:50:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\series_score_widget.dart:34:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\series_score_widget.dart:47:27 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\series_score_widget.dart:62:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\summary_card_widget.dart:24:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\top_players_widget.dart:16:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\match_result\widgets\winner_card.dart:40:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\pickleball_initialize_match_screen.dart:96:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\advanced_options_card.dart:41:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\category_chip_group.dart:61:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\custom_rules_card.dart:21:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\match_core_card.dart:28:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\match_core_card.dart:46:89 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\match_dropdown.dart:31:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\match_text_field.dart:42:68 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\pickleball_appbar.dart:16:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\pickleball_appbar.dart:28:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\primary_action_button.dart:57:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\primary_action_button.dart:72:28 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\primary_action_button.dart:84:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\secondary_action_button.dart:23:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\success_dialog.dart:42:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\success_dialog.dart:72:67 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\scored\widgets\toggle_rule_tile.dart:24:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\pickleball_stats_screen.dart:53:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\advanced_analytics_card.dart:13:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\advanced_analytics_card.dart:52:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\coach_insight_widget.dart:15:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\coach_insight_widget.dart:40:96 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\comparison_progress_widget.dart:52:85 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\comparison_progress_widget.dart:72:86 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\error_breakdown_card.dart:15:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\error_breakdown_card.dart:67:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\game_breakdown_card.dart:19:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\heatmap_widget.dart:14:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\match_statistics_card.dart:21:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\momentum_chart_widget.dart:57:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\mvp_analysis_card.dart:43:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\mvp_analysis_card.dart:66:29 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\player_comparison_widget.dart:13:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\player_comparison_widget.dart:51:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\score_summary_card.dart:16:53 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\score_summary_card.dart:49:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\score_summary_card.dart:66:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\statistics\widgets\score_summary_card.dart:83:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\team_management\pickleball_team_management_screen.dart:50:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\team_management\pickleball_team_management_screen.dart:55:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\team_management\pickleball_team_management_screen.dart:84:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\team_management\widgets\bottom_next_button.dart:19:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\team_management\widgets\player_actions.dart:115:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\team_management\widgets\player_card.dart:23:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Pickleball\team_management\widgets\player_card.dart:57:73 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\live_scoring_screen.dart:48:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_appbar_widget.dart:82:72 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_appbar_widget.dart:96:69 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_bottom_nav_widget.dart:25:50 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_bottom_nav_widget.dart:84:49 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_match_duration_widget.dart:37:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_match_duration_widget.dart:53:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_point_actions_widget.dart:18:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_point_actions_widget.dart:25:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_point_actions_widget.dart:52:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_quick_action_grid_widget.dart:41:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_scoreboard_card_widget.dart:73:70 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_scoreboard_card_widget.dart:74:73 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\live_scoring\widgets\ls_scoreboard_card_widget.dart:80:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\match_stats_screen.dart:53:67 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_appbar_widget.dart:50:72 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_bottom_nav_widget.dart:25:50 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_bottom_nav_widget.dart:84:49 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_hero_header_widget.dart:21:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_hero_header_widget.dart:56:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_hero_header_widget.dart:64:78 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_hero_header_widget.dart:67:67 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_hero_header_widget.dart:75:78 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_hero_header_widget.dart:81:69 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_hero_header_widget.dart:128:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_match_stats_bars_widget.dart:21:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_match_stats_bars_widget.dart:123:84 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_match_stats_bars_widget.dart:135:85 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_momentum_graph_widget.dart:14:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_set_breakdown_widget.dart:22:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_set_breakdown_widget.dart:50:37 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\match_stats\widgets\ms_set_breakdown_widget.dart:86:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\player_management_screen.dart:48:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\confirm_participants_button.dart:41:59 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\confirm_participants_button.dart:47:26 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\player_a_card_widget.dart:100:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\player_b_empty_card_widget.dart:102:67 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\player_b_filled_card_widget.dart:76:51 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_bottom_nav_widget.dart:23:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_bottom_nav_widget.dart:37:36 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_confirm_button_widget.dart:42:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_header_widget.dart:32:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_a_card_widget.dart:44:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_a_card_widget.dart:76:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_a_card_widget.dart:106:71 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_a_card_widget.dart:123:71 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_a_card_widget.dart:144:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_a_card_widget.dart:171:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_a_card_widget.dart:189:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_b_card_widget.dart:49:45 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_b_card_widget.dart:76:57 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_b_card_widget.dart:96:73 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_b_card_widget.dart:110:73 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_b_card_widget.dart:128:69 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_b_card_widget.dart:149:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_b_card_widget.dart:190:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_player_b_card_widget.dart:222:65 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\pm_section_header_widget.dart:46:63 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\qr_checkin_modal_widget.dart:74:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\qr_checkin_modal_widget.dart:181:46 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\qr_checkin_modal_widget.dart:206:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\player_management\widgets\qr_checkin_modal_widget.dart:231:55 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_appbar_widget.dart:58:33 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_basic_info_card_widget.dart:24:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_bottom_nav_widget.dart:34:21 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_bottom_nav_widget.dart:116:20 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_category_selector_widget.dart:22:48 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_match_settings_card_widget.dart:23:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_match_settings_card_widget.dart:65:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_set_format_card_widget.dart:24:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_set_format_card_widget.dart:46:47 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - Tennis\setup_match\widgets\sm_set_format_card_widget.dart:56:75 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:355:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:361:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:396:73 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:404:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:420:73 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:428:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:457:66 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:463:43 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:525:73 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:533:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:571:73 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - coin_toss\coin_toss_screen.dart:579:39 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - select_sports\widgets\select_sport_category_section.dart:50:31 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - select_sports\widgets\select_sport_category_section.dart:67:61 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - select_sports\widgets\select_sport_tile.dart:40:41 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+  error - select_sports\widgets\sport_match_setup_screen.dart:27:23 - Methods can't be invoked in constant expressions. - const_eval_method_invocation
+warning - Pickleball\live_match\widgets\live_scoreboard_card.dart:3:8 - Unused import: 'package:redesign/theme/app_typography.dart'. Try removing the import directive. - unused_import
+warning - Volleyball\rotation_subs\widgets\action_buttons_row.dart:2:8 - Unused import: 'package:get/get.dart'. Try removing the import directive. - unused_import
+warning - Volleyball\rotation_subs\widgets\rotation_header.dart:2:8 - Unused import: 'package:get/get.dart'. Try removing the import directive. - unused_import
+warning - Volleyball\rotation_subs\widgets\substitution_bottom_sheet.dart:6:8 - Unused import: 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_player_model.dart'. Try removing the import directive. - unused_import
+warning - Volleyball\starting_lineup\widgets\court_position_widget.dart:5:8 - Unused import: 'package:get/get.dart'. Try removing the import directive. - unused_import
+warning - Volleyball\team_management\widgets\add_player_dialog.dart:2:8 - Unused import: 'package:get/get.dart'. Try removing the import directive. - unused_import
+   info - Badminton\badminton_setup.dart:1560:13 - 'onReorder' is deprecated and shouldn't be used. Use the onReorderItem callback instead. The onReorderItem callback adjusts the newIndex parameter for a removed item at the oldIndex. This feature was deprecated after v3.41.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\final_review\widgets\start_match_button.dart:61:53 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\live_match\widgets\live_scoreboard_card.dart:96:61 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\live_match\widgets\score_button_widget.dart:64:57 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\match_result\match_result_screen.dart:159:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\match_result\widgets\mvp_card_widget.dart:33:56 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\scored\widgets\match_core_card.dart:107:19 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - Pickleball\scored\widgets\primary_action_button.dart:63:51 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\scored\widgets\toggle_rule_tile.dart:41:13 - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\scored\widgets\toggle_rule_tile.dart:45:24 - 'MaterialStateProperty' is deprecated and shouldn't be used. Use WidgetStateProperty instead. Moved to the Widgets layer to make code available outside of Material. This feature was deprecated after v3.19.0-0.3.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\scored\widgets\toggle_rule_tile.dart:46:20 - 'MaterialState' is deprecated and shouldn't be used. Use WidgetState instead. Moved to the Widgets layer to make code available outside of Material. This feature was deprecated after v3.19.0-0.3.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\scored\widgets\toggle_rule_tile.dart:47:37 - 'MaterialState' is deprecated and shouldn't be used. Use WidgetState instead. Moved to the Widgets layer to make code available outside of Material. This feature was deprecated after v3.19.0-0.3.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\statistics\widgets\heatmap_widget.dart:38:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\statistics\widgets\heatmap_widget.dart:91:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\statistics\widgets\momentum_chart_widget.dart:54:39 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\statistics\widgets\momentum_chart_widget.dart:62:121 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\statistics\widgets\momentum_chart_widget.dart:66:110 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\statistics\widgets\momentum_chart_widget.dart:130:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\team_management\widgets\bottom_next_button.dart:32:51 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\team_management\widgets\empty_player_slot.dart:55:35 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\team_management\widgets\empty_player_slot.dart:58:66 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\team_management\widgets\player_card.dart:59:61 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Pickleball\team_management\widgets\player_card.dart:61:80 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Tennis\setup_match\widgets\sm_appbar_widget.dart:67:19 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - Tennis\setup_match\widgets\sm_bottom_nav_widget.dart:82:21 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - Volleyball\final_review\widgets\action_buttons.dart:47:57 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\final_review\widgets\match_summary_card.dart:104:63 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\final_review\widgets\status_chip.dart:23:46 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\final_review\widgets\status_chip.dart:29:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\final_review\widgets\status_chip.dart:35:35 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\final_review\widgets\status_chip.dart:41:46 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\live_scoring\volleyball_live_scoring_screen.dart:66:49 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\live_scoring\widgets\floating_set_timer.dart:24:38 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\live_scoring\widgets\floating_set_timer.dart:26:73 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\live_scoring\widgets\floating_set_timer.dart:29:37 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\live_scoring\widgets\latest_action_card.dart:47:55 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\live_scoring\widgets\point_button.dart:57:64 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\rotation_subs\volleyball_rotation_subs_screen.dart:57:49 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\rotation_subs\widgets\court_player_card.dart:34:77 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\rotation_subs\widgets\rotation_court_widget.dart:48:53 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\rotation_subs\widgets\rotation_court_widget.dart:90:63 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\rotation_subs\widgets\substitution_bottom_sheet.dart:62:72 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\starting_lineup\widgets\confirm_lineup_button.dart:27:53 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\starting_lineup\widgets\court_position_widget.dart:38:48 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\starting_lineup\widgets\court_position_widget.dart:44:68 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\starting_lineup\widgets\court_position_widget.dart:49:53 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\starting_lineup\widgets\court_position_widget.dart:71:67 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\starting_lineup\widgets\player_card.dart:46:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\stats\volleyball_stats_screen.dart:59:38 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\stats\widgets\match_insight_card.dart:26:53 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\stats\widgets\match_insight_card.dart:28:72 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\stats\widgets\match_score_header.dart:66:74 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\stats\widgets\team_statistics_card.dart:25:31 - Unnecessary use of string interpolation. Try replacing the string literal with the variable name. - unnecessary_string_interpolations
+   info - Volleyball\stats\widgets\team_statistics_card.dart:25:76 - Unnecessary use of string interpolation. Try replacing the string literal with the variable name. - unnecessary_string_interpolations
+   info - Volleyball\team_management\widgets\add_player_dialog.dart:75:15 - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\team_management\widgets\add_player_dialog.dart:91:47 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - Volleyball\team_management\widgets\add_player_dialog.dart:92:24 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - Volleyball\team_management\widgets\next_button.dart:27:53 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\team_management\widgets\player_roster_card.dart:30:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\team_management\widgets\team_header_card.dart:25:38 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\team_management\widgets\team_header_card.dart:30:42 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\team_management\widgets\team_validation_card.dart:19:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\initialize_match_button.dart:27:53 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\match_category_selector.dart:24:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\match_format_selector.dart:23:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\match_format_selector.dart:71:66 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\match_information_card.dart:20:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\match_information_card.dart:25:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\match_summary_card.dart:19:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\rule_configuration_card.dart:20:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\toggle_rule_tile.dart:37:13 - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\toggle_rule_tile.dart:38:58 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - Volleyball\widgets\validation_checklist_card.dart:19:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - coin_toss\widgets\coin_3d.dart:59:13 - 'translate' is deprecated and shouldn't be used. Use translateByVector3, translateByVector4, or translateByDouble instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - coin_toss\widgets\coin_3d.dart:67:13 - 'scale' is deprecated and shouldn't be used. Use scaleByVector3, scaleByVector4, or scaleByDouble instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - coin_toss\widgets\coin_3d.dart:75:21 - 'translate' is deprecated and shouldn't be used. Use translateByVector3, translateByVector4, or translateByDouble instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - coin_toss\widgets\coin_3d.dart:133:21 - 'translate' is deprecated and shouldn't be used. Use translateByVector3, translateByVector4, or translateByDouble instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - coin_toss\widgets\coin_3d.dart:162:21 - 'translate' is deprecated and shouldn't be used. Use translateByVector3, translateByVector4, or translateByDouble instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+
+703 issues found.

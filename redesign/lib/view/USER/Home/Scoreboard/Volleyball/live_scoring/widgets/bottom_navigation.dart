@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/stats/volleyball_stats_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BottomNavigation extends StatelessWidget {
   final int selectedIndex;
 
-  const BottomNavigation({super.key, this.selectedIndex = 0});
+  BottomNavigation({super.key, this.selectedIndex = 0});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
         border: Border(top: BorderSide(color: AppColors.surfaceContainerHighest)),
       ),
-      padding: const EdgeInsets.only(top: 8, bottom: 24), // For iOS safe area
+      padding: EdgeInsets.only(top: ResponsiveHelper.h(8), bottom: 24), // For iOS safe area
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -33,20 +35,20 @@ class BottomNavigation extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (index == 2 && selectedIndex != 2) {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const VolleyballStatsScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballStatsScreen()));
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primaryContainer : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, color: isSelected ? AppColors.onPrimaryContainer : AppColors.muted),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               label,
               style: AppTypography.labelCaps10.copyWith(

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MomentumChartWidget extends StatefulWidget {
   final List<double> momentumData;
   final String selectedGame;
 
-  const MomentumChartWidget({
+  MomentumChartWidget({
     super.key,
     required this.momentumData,
     required this.selectedGame,
@@ -23,7 +24,7 @@ class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTi
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     _animation = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
   }
@@ -45,14 +46,15 @@ class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTi
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return RepaintBoundary(
       child: Container(
-        height: 160,
+        height: ResponsiveHelper.h(160),
         decoration: BoxDecoration(
           color: AppColors.background.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(16)),
         child: Stack(
           children: [
             Align(
@@ -65,13 +67,13 @@ class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTi
             ),
             Center(
               child: Container(
-                height: 1,
+                height: ResponsiveHelper.h(1),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
                       color: AppColors.surfaceContainerHighest,
-                      width: 1,
+                      width: ResponsiveHelper.w(1),
                       style: BorderStyle.solid,
                     ),
                   ),
@@ -92,10 +94,10 @@ class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTi
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (isPositive) _buildBar(height, AppColors.primaryContainer),
-                        if (!isPositive) const SizedBox(height: 0),
-                        const SizedBox(height: 2), // spacing from center line
+                        if (!isPositive) SizedBox(height: 0),
+                        SizedBox(height: 2), // spacing from center line
                         if (!isPositive) _buildBar(height, Colors.redAccent),
-                        if (isPositive) const SizedBox(height: 0),
+                        if (isPositive) SizedBox(height: 0),
                       ],
                     );
                   }).toList(),
@@ -110,11 +112,11 @@ class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTi
 
   Widget _buildBar(double height, Color color) {
     return Container(
-      width: 6,
+      width: ResponsiveHelper.w(6),
       height: height,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(3),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
       ),
     );
   }

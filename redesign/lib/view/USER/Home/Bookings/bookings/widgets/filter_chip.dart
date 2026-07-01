@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import '../bookings_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingFilterChip extends StatelessWidget {
   final String label;
   final IconData? icon;
 
-  const BookingFilterChip(this.label, {super.key, this.icon});
+  BookingFilterChip(this.label, {super.key, this.icon});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.only(right: 8),
+      padding: EdgeInsets.only(right: 8),
       child: Chip(
         backgroundColor: MyBookingsConstants.surface,
         label: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) Icon(icon, size: 14, color: MyBookingsConstants.green),
-            if (icon != null) const SizedBox(width: 6),
+            if (icon != null) SizedBox(width: 6),
             Text(
               label,
-              style: const TextStyle(color: Colors.white, fontSize: 12),
+              style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           ],
         ),

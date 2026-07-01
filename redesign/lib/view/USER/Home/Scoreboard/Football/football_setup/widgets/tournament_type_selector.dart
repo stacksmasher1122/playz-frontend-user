@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'setup_constants.dart';
 import 'setup_models.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TournamentTypeSelector extends StatelessWidget {
   final TournamentType selectedType;
   final Function(TournamentType) onTypeChanged;
 
-  const TournamentTypeSelector({
+  TournamentTypeSelector({
     super.key,
     required this.selectedType,
     required this.onTypeChanged,
@@ -15,8 +16,9 @@ class TournamentTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: TournamentType.values
@@ -34,11 +36,11 @@ class TournamentTypeSelector extends StatelessWidget {
         onTypeChanged(type);
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
         decoration: BoxDecoration(
           color: isSelected ? kAccentDim : kSurfaceHighlight,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           border: Border.all(color: isSelected ? kAccent : Colors.transparent),
         ),
         child: Column(
@@ -51,13 +53,13 @@ class TournamentTypeSelector extends StatelessWidget {
                   : Icons.schema,
               color: isSelected ? kAccent : kTextMuted,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               type.name.toUpperCase(),
               style: TextStyle(
                 color: isSelected ? kAccent : kTextMuted,
                 fontWeight: FontWeight.bold,
-                fontSize: 10,
+                fontSize: ResponsiveHelper.sp(10),
               ),
             ),
           ],

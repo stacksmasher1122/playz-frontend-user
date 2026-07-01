@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TeamScoreWidget extends StatelessWidget {
   final String teamName;
@@ -8,7 +9,7 @@ class TeamScoreWidget extends StatelessWidget {
   final bool isHighlighted;
   final bool isLeftAligned;
 
-  const TeamScoreWidget({
+  TeamScoreWidget({
     super.key,
     required this.teamName,
     required this.setsWon,
@@ -18,6 +19,7 @@ class TeamScoreWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: isLeftAligned ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       children: [
@@ -28,13 +30,13 @@ class TeamScoreWidget extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Container(
-          width: 32,
-          height: 32,
+          width: ResponsiveHelper.w(32),
+          height: ResponsiveHelper.h(32),
           decoration: BoxDecoration(
             color: isHighlighted ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
           ),
           child: Center(
             child: Text(

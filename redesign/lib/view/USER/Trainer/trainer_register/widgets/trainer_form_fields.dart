@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
@@ -17,7 +18,7 @@ class TrainerInputField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
 
-  const TrainerInputField({
+  TrainerInputField({
     super.key,
     required this.label,
     this.hint,
@@ -32,6 +33,7 @@ class TrainerInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return TextFormField(
       controller: controller,
       initialValue: controller == null ? initial : null,
@@ -40,34 +42,34 @@ class TrainerInputField extends StatelessWidget {
       maxLines: maxLines,
       onChanged: onChanged,
       validator: validator,
-      style: const TextStyle(
+      style: TextStyle(
         color: Colors.white,
-        fontSize: 14.5,
+        fontSize: ResponsiveHelper.sp(14.5),
         fontWeight: FontWeight.w500,
       ),
       cursorColor: kGreen,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        labelStyle: const TextStyle(color: kMuted),
+        labelStyle: TextStyle(color: kMuted),
         hintStyle: TextStyle(color: kMuted.withValues(alpha: 0.6)),
         filled: true,
         fillColor: kCard,
-        contentPadding: const EdgeInsets.symmetric(
+        contentPadding: EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: kGreen, width: 1.4),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+          borderSide: BorderSide(color: kGreen, width: 1.4),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Colors.redAccent),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+          borderSide: BorderSide(color: Colors.redAccent),
         ),
       ),
     );
@@ -78,18 +80,19 @@ class TrainerVerifiedField extends StatelessWidget {
   final String label;
   final String value;
 
-  const TrainerVerifiedField({super.key, required this.label, required this.value});
+  TrainerVerifiedField({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return TextFormField(
       initialValue: value,
       enabled: false,
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: kMuted),
-        suffixIcon: const Row(
+        labelStyle: TextStyle(color: kMuted),
+        suffixIcon: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.check_circle, color: kGreen, size: 18),
@@ -101,7 +104,7 @@ class TrainerVerifiedField extends StatelessWidget {
         filled: true,
         fillColor: kCard,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
           borderSide: BorderSide.none,
         ),
       ),
@@ -115,7 +118,7 @@ class TrainerDropdownField extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
 
-  const TrainerDropdownField({
+  TrainerDropdownField({
     super.key,
     required this.label,
     required this.value,
@@ -125,36 +128,37 @@ class TrainerDropdownField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final safeValue = items.contains(value) ? value : null;
 
     return DropdownButtonFormField<String>(
       initialValue: safeValue,
       onChanged: onChanged,
       isExpanded: true,
-      icon: const Icon(Icons.expand_more_rounded, color: kMuted),
+      icon: Icon(Icons.expand_more_rounded, color: kMuted),
       dropdownColor: kSurface,
       menuMaxHeight: 280,
-      borderRadius: BorderRadius.circular(18),
-      style: const TextStyle(
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+      style: TextStyle(
         color: Colors.white,
-        fontSize: 14,
+        fontSize: ResponsiveHelper.sp(14),
         fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
         labelText: label,
         filled: true,
         fillColor: kCard,
-        contentPadding: const EdgeInsets.symmetric(
+        contentPadding: EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
           borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: kGreen, width: 1.2),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+          borderSide: BorderSide(color: kGreen, width: 1.2),
         ),
       ),
       items: items.map((e) {
@@ -175,7 +179,7 @@ class TrainerDropdownField extends StatelessWidget {
 }
 
 class TrainerBioField extends StatefulWidget {
-  const TrainerBioField({super.key});
+  TrainerBioField({super.key});
 
   @override
   State<TrainerBioField> createState() => _TrainerBioFieldState();
@@ -187,6 +191,7 @@ class _TrainerBioFieldState extends State<TrainerBioField> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -194,30 +199,30 @@ class _TrainerBioFieldState extends State<TrainerBioField> {
           controller: controller,
           maxLines: 4,
           maxLength: maxLength,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             labelText: 'Short Bio',
             hintText: 'Briefly describe your coaching style...',
-            hintStyle: const TextStyle(color: kMuted),
-            labelStyle: const TextStyle(color: kMuted),
+            hintStyle: TextStyle(color: kMuted),
+            labelStyle: TextStyle(color: kMuted),
             filled: true,
             fillColor: kCard,
             counterText: '',
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
               borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: kGreen),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+              borderSide: BorderSide(color: kGreen),
             ),
           ),
           onChanged: (_) => setState(() {}),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           '${controller.text.length}/$maxLength',
-          style: const TextStyle(color: kMuted, fontSize: 11),
+          style: TextStyle(color: kMuted, fontSize: 11),
         ),
       ],
     );

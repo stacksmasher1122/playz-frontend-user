@@ -8,9 +8,10 @@ import 'widgets/info_app_bar.dart';
 import 'widgets/info_profile_image.dart';
 import 'widgets/info_stat_card.dart';
 import 'widgets/account_details_card.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color _kGreen = AppColors.accent;
-const Color _kBg = AppColors.surface;
+Color _kGreen = AppColors.accent;
+Color _kBg = AppColors.surface;
 
 class FriendsInfoScreen extends StatefulWidget {
   final String friendEmail;
@@ -18,7 +19,7 @@ class FriendsInfoScreen extends StatefulWidget {
   final String friendPic;
   final bool isOnline;
 
-  const FriendsInfoScreen({
+  FriendsInfoScreen({
     super.key,
     required this.friendEmail,
     required this.friendName,
@@ -47,12 +48,13 @@ class _FriendsInfoScreenState extends State<FriendsInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: _kBg,
-      appBar: const InfoAppBar(),
+      appBar: InfoAppBar(),
       body: Obx(() {
         if (_ctrl.isLoading.value || _ctrl.playerInfo.value == null) {
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(color: _kGreen),
           );
         }
@@ -60,68 +62,68 @@ class _FriendsInfoScreenState extends State<FriendsInfoScreen> {
         final info = _ctrl.playerInfo.value!;
 
         return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(10)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               // Profile Image
               InfoProfileImage(info: info),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Name
               Text(
                 info.fullName.isNotEmpty ? info.fullName : "Player",
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 32,
+                  fontSize: ResponsiveHelper.sp(32),
                   fontWeight: FontWeight.bold,
                   letterSpacing: -0.5,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Online Status
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 8,
-                    height: 8,
+                    width: ResponsiveHelper.w(8),
+                    height: ResponsiveHelper.h(8),
                     decoration: BoxDecoration(
                       color: info.isOnline ? _kGreen : Colors.grey,
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     info.isOnline ? "ONLINE NOW" : "OFFLINE",
                     style: TextStyle(
                       color: info.isOnline ? _kGreen : Colors.grey,
-                      fontSize: 11,
+                      fontSize: ResponsiveHelper.sp(11),
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // Bio
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
                 child: Text(
                   info.bio,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white70,
-                    fontSize: 14,
-                    height: 1.5,
+                    fontSize: ResponsiveHelper.sp(14),
+                    height: ResponsiveHelper.h(1.5),
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
 
               // Stats Row
               Row(
@@ -133,7 +135,7 @@ class _FriendsInfoScreenState extends State<FriendsInfoScreen> {
                       label: "MATCHES PLAYED",
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(
                     child: InfoStatCard(
                       icon: Icons.bolt,
@@ -143,11 +145,11 @@ class _FriendsInfoScreenState extends State<FriendsInfoScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 36),
+              SizedBox(height: 36),
 
               // Account Details Card (Header + List)
               AccountDetailsCard(info: info),
-              const SizedBox(height: 40),
+              SizedBox(height: 40),
             ],
           ),
         );

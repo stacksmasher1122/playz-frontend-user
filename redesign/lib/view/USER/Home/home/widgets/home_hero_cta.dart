@@ -4,12 +4,13 @@ import 'package:get/get.dart';
 import 'package:redesign/controller/event_fest_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'home_shimmer.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    HERO CTA CARD (AUTO SLIDING PAGE VIEW)
    ============================================================ */
 class HomeHeroCTA extends StatefulWidget {
-  const HomeHeroCTA({super.key});
+  HomeHeroCTA({super.key});
 
   @override
   State<HomeHeroCTA> createState() => _HomeHeroCTAState();
@@ -26,7 +27,7 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
     _pageController = PageController();
 
     Future.doWhile(() async {
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(Duration(seconds: 5));
       if (!mounted) return false;
 
       final slides = _eventFestController.activeSlides;
@@ -34,7 +35,7 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
         _currentIndex = (_currentIndex + 1) % slides.length;
         _pageController.animateToPage(
           _currentIndex,
-          duration: const Duration(milliseconds: 600),
+          duration: Duration(milliseconds: 600),
           curve: Curves.easeInOut,
         );
       }
@@ -50,8 +51,9 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final w = constraints.maxWidth;
@@ -67,7 +69,7 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
               child: Obx(() {
                 final slides = _eventFestController.activeSlides;
                 if (slides.isEmpty) {
-                  return const HomeShimmer();
+                  return HomeShimmer();
                 }
                 return PageView.builder(
                   controller: _pageController,
@@ -83,8 +85,8 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
                           imageUrl: slide['image']!,
                           cacheKey: slide['image'],
                           fit: BoxFit.cover,
-                          placeholder: (_, __) => const HomeShimmer(),
-                          errorWidget: (_, __, ___) => const Center(
+                          placeholder: (_, __) => HomeShimmer(),
+                          errorWidget: (_, __, ___) => Center(
                             child: Icon(
                               Icons.broken_image,
                               color: Colors.white54,
@@ -121,7 +123,7 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: AppColors.muted.withValues(alpha: 0.5),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                                 ),
                                 child: Text(
                                   slide['badge']!,
@@ -136,7 +138,7 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
                                 ),
                               ),
 
-                              const Spacer(),
+                              Spacer(),
 
                               /// TITLE
                               Text(
@@ -146,12 +148,12 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
                                 style: TextStyle(
                                   fontSize: (w * 0.065).clamp(18.0, 26.0),
                                   fontWeight: FontWeight.w700,
-                                  height: 1.15,
+                                  height: ResponsiveHelper.h(1.15),
                                   color: Colors.white,
                                 ),
                               ),
 
-                              const Spacer(),
+                              Spacer(),
 
                               /// CTA
                               SizedBox(
@@ -165,7 +167,7 @@ class _HomeHeroCTAState extends State<HomeHeroCTA> {
                                       horizontal: (w * 0.06).clamp(16.0, 24.0),
                                     ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18),
+                                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
                                     ),
                                   ),
                                   child: FittedBox(

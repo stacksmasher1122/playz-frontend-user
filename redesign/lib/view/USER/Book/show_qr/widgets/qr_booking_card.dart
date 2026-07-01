@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QrBookingCard extends StatelessWidget {
   final Size size;
 
-  const QrBookingCard({
+  QrBookingCard({
     super.key,
     required this.size,
   });
@@ -16,27 +17,28 @@ class QrBookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: _kCard,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(color: Colors.white10),
       ),
       child: Column(
         children: [
           _verifiedBadge(),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           /// QR PLACEHOLDER
           Container(
             width: size.width * 0.55,
-            constraints: const BoxConstraints(maxWidth: 240),
-            padding: const EdgeInsets.all(16),
+            constraints: BoxConstraints(maxWidth: 240),
+            padding: EdgeInsets.all(ResponsiveHelper.w(16)),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
               boxShadow: [
                 BoxShadow(
                   color: _kGreen.withValues(alpha: 0.15),
@@ -48,7 +50,7 @@ class QrBookingCard extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                 child: QrImageView(
                   data: 'PZ-883492-QR|CrossFit Arena|08:00-09:00', // dynamic later
                   version: QrVersions.auto,
@@ -61,31 +63,31 @@ class QrBookingCard extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
-          const Text(
+          Text(
             'CrossFit Arena',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: ResponsiveHelper.sp(18),
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
 
-          const Text(
+          Text(
             'Thu, 4 Dec · 08:00 AM – 09:00 AM',
             style: TextStyle(color: _kMuted),
           ),
 
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
 
-          const Text(
+          Text(
             'Football · Solo Queue · 4 Players',
             style: TextStyle(color: _kMuted, fontSize: 13),
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           _bookingId(),
         ],
@@ -95,12 +97,12 @@ class QrBookingCard extends StatelessWidget {
 
   Widget _verifiedBadge() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
       decoration: BoxDecoration(
         color: _kGreen.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.verified, color: _kGreen, size: 16),
@@ -116,15 +118,15 @@ class QrBookingCard extends StatelessWidget {
 
   Widget _bookingId() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(
           color: Colors.white24,
           style: BorderStyle.solid,
         ),
       ),
-      child: const Text(
+      child: Text(
         'Booking ID: PZ-883492-QR',
         style: TextStyle(color: _kMuted, fontSize: 12),
       ),

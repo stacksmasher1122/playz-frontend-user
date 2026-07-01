@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kGreen = AppColors.accent;
-const Color kSurface = Color(0xFF0E0E0E);
+Color kGreen = AppColors.accent;
+Color kSurface = Color(0xFF0E0E0E);
 
 class SportFilterRow extends StatelessWidget {
   final int selected;
   final ValueChanged<int> onChanged;
 
-  const SportFilterRow({
+  SportFilterRow({
     super.key,
     required this.selected,
     required this.onChanged,
@@ -16,15 +17,16 @@ class SportFilterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final sports = ['All Sports', 'Cricket', 'Football', 'Badminton', 'Tennis'];
 
     return SizedBox(
-      height: 48,
+      height: ResponsiveHelper.h(48),
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
         scrollDirection: Axis.horizontal,
         itemCount: sports.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        separatorBuilder: (_, __) => SizedBox(width: 8),
         itemBuilder: (_, i) {
           final active = selected == i;
           return ChoiceChip(

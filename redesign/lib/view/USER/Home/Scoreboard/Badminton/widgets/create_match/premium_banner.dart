@@ -1,45 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PremiumBanner extends StatelessWidget {
-  const PremiumBanner({super.key});
+  PremiumBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       width: double.infinity,
-      height: 140,
+      height: ResponsiveHelper.h(140),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         gradient: LinearGradient(
-          colors: [const Color(0xFF1E1E1E), const Color(0xFF1E1E1E).withValues(alpha: 0.5)],
+          colors: [Color(0xFF1E1E1E), Color(0xFF1E1E1E).withValues(alpha: 0.5)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        border: Border.all(color: const Color(0xFF1E1E1E), width: 1),
+        border: Border.all(color: Color(0xFF1E1E1E), width: 1),
       ),
       child: Stack(
         children: [
           Positioned.fill(
             child: Opacity(
               opacity: 0.2,
-              child: const Icon(Icons.sports_tennis, size: 100, color: AppColors.accent),
+              child: Icon(Icons.sports_tennis, size: 100, color: AppColors.accent),
             ),
           ),
           Positioned(
-            bottom: 12,
-            left: 12,
+            bottom: ResponsiveHelper.h(12),
+            left: ResponsiveHelper.w(12),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
               decoration: BoxDecoration(
                 color: AppColors.accent,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
               ),
-              child: const Text(
+              child: Text(
                 "PREMIUM TRACKING",
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 10,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.2,
                 ),

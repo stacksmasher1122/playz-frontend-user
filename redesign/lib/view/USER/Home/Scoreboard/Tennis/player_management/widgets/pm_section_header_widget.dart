@@ -4,16 +4,18 @@ import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboa
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../theme/app_dimensions.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PmSectionHeaderWidget extends StatelessWidget {
-  const PmSectionHeaderWidget({super.key});
+  PmSectionHeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<PlayerManagementController>();
     
     return Padding(
-      padding: const EdgeInsets.all(AppDimensions.paddingXl),
+      padding: EdgeInsets.all(AppDimensions.paddingXl),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -26,7 +28,7 @@ class PmSectionHeaderWidget extends StatelessWidget {
                 'TOURNAMENT SETUP',
                 style: AppTypography.labelCaps.copyWith(color: AppColors.primaryContainer),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 'Player Management',
                 style: AppTypography.headlineSora.copyWith(
@@ -41,7 +43,7 @@ class PmSectionHeaderWidget extends StatelessWidget {
           GestureDetector(
             onTap: controller.showQrModal,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
               decoration: BoxDecoration(
                 color: AppColors.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(AppDimensions.borderRadiusXl),
@@ -49,8 +51,8 @@ class PmSectionHeaderWidget extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.qr_code_scanner, color: AppColors.primaryContainer, size: 20),
-                  const SizedBox(width: 8),
+                  Icon(Icons.qr_code_scanner, color: AppColors.primaryContainer, size: 20),
+                  SizedBox(width: 8),
                   Text(
                     'QR CHECK-IN',
                     style: AppTypography.labelCaps.copyWith(color: AppColors.onSurface),

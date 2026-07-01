@@ -8,18 +8,19 @@ import 'widgets/upcoming_bookings.dart';
 import 'widgets/past_bookings.dart';
 import 'widgets/cancelled_bookings.dart';
 import 'widgets/empty_state.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MyBookingsConstants {
-  static const Color bg = AppColors.background;
-  static const Color surface = Color(0xFF0E0E0E);
-  static const Color green = AppColors.accent;
-  static const Color muted = Colors.white70;
-  static const Color red = Color(0xFFE53935);
-  static const Color amber = Color(0xFFFFB300);
+  static Color bg = AppColors.background;
+  static Color surface = Color(0xFF0E0E0E);
+  static Color green = AppColors.accent;
+  static Color muted = Colors.white70;
+  static Color red = Color(0xFFE53935);
+  static Color amber = Color(0xFFFFB300);
 }
 
 class MyBookingsScreen extends StatefulWidget {
-  const MyBookingsScreen({super.key});
+  MyBookingsScreen({super.key});
 
   @override
   State<MyBookingsScreen> createState() => _MyBookingsScreenState();
@@ -37,18 +38,19 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: MyBookingsConstants.bg,
       body: SafeArea(
         child: Column(
           children: [
-            const BookingsHeader(),
-            const BookingsSearchAndFilters(),
+            BookingsHeader(),
+            BookingsSearchAndFilters(),
             BookingsTabs(controller: _tabController),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: const [
+                children: [
                   UpcomingBookingsWidget(),
                   PastBookingsWidget(),
                   CancelledBookingsWidget(),

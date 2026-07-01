@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchControlsWidget extends StatelessWidget {
   final VoidCallback onUndo;
@@ -8,7 +9,7 @@ class MatchControlsWidget extends StatelessWidget {
   final VoidCallback onPause;
   final bool isPaused;
 
-  const MatchControlsWidget({
+  MatchControlsWidget({
     super.key,
     required this.onUndo,
     required this.onTimeout,
@@ -18,6 +19,7 @@ class MatchControlsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       children: [
         Expanded(
@@ -27,7 +29,7 @@ class MatchControlsWidget extends StatelessWidget {
             onTap: onUndo,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: _ControlCard(
             icon: Icons.timer_outlined,
@@ -35,7 +37,7 @@ class MatchControlsWidget extends StatelessWidget {
             onTap: onTimeout,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: _ControlCard(
             icon: isPaused ? Icons.play_arrow : Icons.pause,
@@ -53,7 +55,7 @@ class _ControlCard extends StatefulWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _ControlCard({
+  _ControlCard({
     required this.icon,
     required this.label,
     required this.onTap,
@@ -69,7 +71,7 @@ class _ControlCardState extends State<_ControlCard> with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(vsync: this, duration: const Duration(milliseconds: 100));
+    _scaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
   }
 
   @override
@@ -80,6 +82,7 @@ class _ControlCardState extends State<_ControlCard> with SingleTickerProviderSta
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return GestureDetector(
       onTapDown: (_) => _scaleController.forward(),
       onTapUp: (_) {
@@ -90,16 +93,16 @@ class _ControlCardState extends State<_ControlCard> with SingleTickerProviderSta
       child: ScaleTransition(
         scale: Tween<double>(begin: 1.0, end: 0.95).animate(_scaleController),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(20)),
           decoration: BoxDecoration(
             color: AppColors.card,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
           ),
           child: Column(
             children: [
               Icon(widget.icon, color: AppColors.muted, size: 24),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 widget.label,
                 style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),

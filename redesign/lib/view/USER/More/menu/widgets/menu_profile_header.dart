@@ -7,12 +7,14 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/view/USER/More/edit_profile/edit_profile_screen.dart';
 import 'elite_badge.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MenuProfileHeader extends StatelessWidget {
-  const MenuProfileHeader({super.key});
+  MenuProfileHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<UserProfileController>();
     return Obx(() {
       final user = controller.rxUser.value;
@@ -21,34 +23,34 @@ class MenuProfileHeader extends StatelessWidget {
       final email = user?.primaryEmail ?? '';
 
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
         child: Row(
           children: [
             ClipOval(
               child: imageUrl.isNotEmpty
                   ? CachedNetworkImage(
                       imageUrl: imageUrl,
-                      width: 52,
-                      height: 52,
+                      width: ResponsiveHelper.w(52),
+                      height: ResponsiveHelper.h(52),
                       fit: BoxFit.cover,
                       placeholder: (_, __) => Shimmer.fromColors(
                         baseColor: Colors.grey.shade800,
                         highlightColor: Colors.grey.shade700,
-                        child: const CircleAvatar(radius: 26),
+                        child: CircleAvatar(radius: 26),
                       ),
-                      errorWidget: (_, __, ___) => const CircleAvatar(
+                      errorWidget: (_, __, ___) => CircleAvatar(
                         radius: 26,
                         backgroundColor: Color(0xFF1A1A1A),
                         child: Icon(Icons.person, color: Colors.white38),
                       ),
                     )
-                  : const CircleAvatar(
+                  : CircleAvatar(
                       radius: 26,
                       backgroundColor: Color(0xFF1A1A1A),
                       child: Icon(Icons.person, color: Colors.white38),
                     ),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,22 +65,22 @@ class MenuProfileHeader extends StatelessWidget {
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
-                            fontSize: 16,
+                            fontSize: ResponsiveHelper.sp(16),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 6),
-                      const EliteBadge('ELITE'),
+                      SizedBox(width: 6),
+                      EliteBadge('ELITE'),
                     ],
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     email,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.inter(
                       color: AppColors.muted,
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.sp(12),
                     ),
                   ),
                 ],
@@ -88,25 +90,25 @@ class MenuProfileHeader extends StatelessWidget {
               onPressed: () async {
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+                  MaterialPageRoute(builder: (_) => EditProfileScreen()),
                 );
               },
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 8,
                 ),
                 backgroundColor: AppColors.surface,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                   side: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
                 ),
               ),
               child: Text(
                 'Edit',
                 style: GoogleFonts.inter(
-                  fontSize: 13,
+                  fontSize: ResponsiveHelper.sp(13),
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.2,
                 ),

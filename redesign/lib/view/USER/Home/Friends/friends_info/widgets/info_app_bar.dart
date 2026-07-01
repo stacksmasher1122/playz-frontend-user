@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color _kGreen = AppColors.accent;
+Color _kGreen = AppColors.accent;
 
 class InfoAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const InfoAppBar({super.key});
+  InfoAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new, color: _kGreen),
+        icon: Icon(Icons.arrow_back_ios_new, color: _kGreen),
         onPressed: () => Navigator.of(context).pop(),
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.more_vert, color: Colors.white),
+          icon: Icon(Icons.more_vert, color: Colors.white),
           onPressed: () {},
         ),
       ],
@@ -25,5 +27,5 @@ class InfoAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

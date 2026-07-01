@@ -9,16 +9,17 @@ import 'widgets/register_background.dart';
 import 'widgets/register_header.dart';
 import 'widgets/register_form.dart';
 import 'widgets/register_signin_prompt.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  static const Color cardColor = Color(0xFF181818);
+  static Color cardColor = Color(0xFF181818);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -57,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (success) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
+        MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -68,12 +69,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
-          const RegisterBackground(),
+          RegisterBackground(),
           Align(
             alignment: Alignment.topCenter,
             child: SingleChildScrollView(
@@ -82,19 +84,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               child: Column(
                 children: [
-                  const SizedBox(height: 280),
+                  SizedBox(height: 280),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(24)),
                     child: Container(
-                      padding: const EdgeInsets.all(24),
+                      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
                       decoration: BoxDecoration(
                         color: cardColor,
-                        borderRadius: BorderRadius.circular(28),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
                         border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
                       ),
                       child: Column(
                         children: [
-                          const RegisterHeader(),
+                          RegisterHeader(),
                           RegisterForm(
                             formKey: _formKey,
                             nameController: _nameController,
@@ -112,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onSigninTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                        MaterialPageRoute(builder: (_) => LoginScreen()),
                       );
                     },
                   ),

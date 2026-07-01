@@ -11,9 +11,10 @@ import 'widgets/bottom_navigation_widget.dart';
 import 'match_stats/match_stats_screen.dart';
 import 'match_timeline/match_timeline_screen.dart';
 import 'match_timeline/widgets/match_timeline_appbar.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveMatchScreen extends StatefulWidget {
-  const LiveMatchScreen({super.key});
+  LiveMatchScreen({super.key});
 
   @override
   State<LiveMatchScreen> createState() => _LiveMatchScreenState();
@@ -42,15 +43,15 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.grey.shade900,
-        title: const Text('End Match?', style: TextStyle(color: Colors.white)),
-        content: const Text(
+        title: Text('End Match?', style: TextStyle(color: Colors.white)),
+        content: Text(
           'Are you sure you want to end this match prematurely?',
           style: TextStyle(color: Colors.grey),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+            child: Text('Cancel', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
             onPressed: () {
@@ -66,21 +67,22 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Obx(() {
       return Scaffold(
         backgroundColor: Colors.black, // Dark background fallback
         appBar: controller.selectedTabIndex.value == 2
-            ? const MatchTimelineAppbar()
-            : const LiveMatchAppbar(),
+            ? MatchTimelineAppbar()
+            : LiveMatchAppbar(),
         body: _buildBody(),
-        bottomNavigationBar: const BottomNavigationWidget(),
+        bottomNavigationBar: BottomNavigationWidget(),
       );
     });
   }
 
   Widget _buildBody() {
     if (controller.isLoading.value) {
-      return const Center(
+      return Center(
         child: CircularProgressIndicator(
           color: Color(0xFFC6FF00), // Neon Yellow-Green
         ),
@@ -97,9 +99,9 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const ScoreboardWidget(),
-                    const CourtVisualizationWidget(),
-                    const RecentPointsWidget(),
+                    ScoreboardWidget(),
+                    CourtVisualizationWidget(),
+                    RecentPointsWidget(),
                     ActionToolbarWidget(
                       onUndo: controller.undoPoint,
                       onPause: () {
@@ -112,8 +114,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                       onEndMatch: _showEndMatchDialog,
                       isPaused: controller.isPaused.value,
                     ),
-                    const QuickScorePanel(),
-                    const SizedBox(height: 24), // Bottom padding
+                    QuickScorePanel(),
+                    SizedBox(height: 24), // Bottom padding
                   ],
                 ),
               ),
@@ -121,11 +123,11 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
           ],
         ),
         // Tab 1: Stats
-        const MatchStatsScreen(),
+        MatchStatsScreen(),
         // Tab 2: Timeline
-        const MatchTimelineScreen(),
+        MatchTimelineScreen(),
         // Tab 3: More (Placeholder)
-        const Center(
+        Center(
           child: Text(
             'Placeholder for More Tab',
             style: TextStyle(color: Colors.grey),

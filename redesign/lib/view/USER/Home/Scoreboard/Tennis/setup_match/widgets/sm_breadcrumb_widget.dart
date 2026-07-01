@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';
 import '../../../../../../../theme/app_dimensions.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SmBreadcrumbWidget extends StatelessWidget {
-  const SmBreadcrumbWidget({super.key});
+  SmBreadcrumbWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.only(bottom: AppDimensions.lg),
+      margin: EdgeInsets.only(bottom: AppDimensions.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -19,7 +21,7 @@ class SmBreadcrumbWidget extends StatelessWidget {
               color: AppColors.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: AppDimensions.xs),
+          SizedBox(height: AppDimensions.xs),
           LayoutBuilder(
             builder: (context, constraints) {
               final isMobile = constraints.maxWidth < 768;

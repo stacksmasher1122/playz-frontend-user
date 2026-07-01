@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../qr_in_bookings_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class QrPrimaryAction extends StatelessWidget {
   final String label;
   final IconData icon;
   final VoidCallback? onTap;
 
-  const QrPrimaryAction(
+  QrPrimaryAction(
     this.label,
     this.icon, {super.key, 
     this.onTap,
@@ -14,23 +15,24 @@ class QrPrimaryAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Material(
       color: QrBookingConstants.green,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
         onTap: onTap,
         child: Padding(
           padding:
-              const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(18), vertical: ResponsiveHelper.h(14)),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 18, color: Colors.black),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w700,
                 ),

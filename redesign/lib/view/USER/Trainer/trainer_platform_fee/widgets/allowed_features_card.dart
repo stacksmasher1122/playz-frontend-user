@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'fee_card_wrapper.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 
 class AllowedFeaturesCard extends StatelessWidget {
-  const AllowedFeaturesCard({super.key});
+  AllowedFeaturesCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const FeeCardWrapper(
+    ResponsiveHelper.init(context);
+    return FeeCardWrapper(
       title: 'WHAT YOU CAN DO',
       children: [
         CheckRow('Complete your trainer profile'),
@@ -23,20 +25,21 @@ class AllowedFeaturesCard extends StatelessWidget {
 
 class CheckRow extends StatelessWidget {
   final String text;
-  const CheckRow(this.text, {super.key});
+  CheckRow(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          const Icon(Icons.check_circle,
+          Icon(Icons.check_circle,
               color: kGreen, size: 18),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Expanded(
             child: Text(text,
-                style: const TextStyle(
+                style: TextStyle(
                     color: Colors.white)),
           ),
         ],

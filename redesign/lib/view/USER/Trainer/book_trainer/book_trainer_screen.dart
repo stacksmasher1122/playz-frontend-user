@@ -5,12 +5,13 @@ import 'package:redesign/view/USER/Trainer/book_trainer/widgets/package_app_bar.
 import 'package:redesign/view/USER/Trainer/book_trainer/widgets/academy_summary_card.dart';
 import 'package:redesign/view/USER/Trainer/book_trainer/widgets/package_option_card.dart';
 import 'package:redesign/view/USER/Trainer/book_trainer/widgets/package_selection_bottom_cta.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = AppColors.background;
 const kYellow = Color(0xFFF5C542);
 
 class ChoosePackageScreen extends StatefulWidget {
-  const ChoosePackageScreen({super.key});
+  ChoosePackageScreen({super.key});
 
   @override
   State<ChoosePackageScreen> createState() => _ChoosePackageScreenState();
@@ -73,24 +74,25 @@ class _ChoosePackageScreenState extends State<ChoosePackageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: Column(
         children: [
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 120),
               children: [
-                const PackageAppBar(),
-                const AcademySummaryCard(),
-                const SizedBox(height: 16),
+                PackageAppBar(),
+                AcademySummaryCard(),
+                SizedBox(height: 16),
                 ValueListenableBuilder(
                   valueListenable: _selectedIndex,
                   builder: (_, value, __) {
                     return Column(
                       children: List.generate(packages.length, (i) {
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
+                          padding: EdgeInsets.only(bottom: 12),
                           child: PackageOptionCard(
                             data: packages[i],
                             selected: value == i,

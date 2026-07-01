@@ -4,14 +4,16 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_live_scoring_controller.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/rotation_subs/volleyball_rotation_subs_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class BottomActionBar extends StatelessWidget {
   final VolleyballLiveScoringController controller;
 
-  const BottomActionBar({super.key, required this.controller});
+  BottomActionBar({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Row(
       children: [
         Expanded(
@@ -19,11 +21,11 @@ class BottomActionBar extends StatelessWidget {
             icon: Icons.sync,
             label: 'ROTATION & SUBS',
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const VolleyballRotationSubsScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballRotationSubsScreen()));
             },
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: _buildActionButton(
             icon: Icons.undo,
@@ -31,7 +33,7 @@ class BottomActionBar extends StatelessWidget {
             onTap: controller.undoLastPoint,
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Obx(() => _buildActionButton(
             icon: controller.isPaused.value ? Icons.play_arrow : Icons.pause,
@@ -46,19 +48,19 @@ class BottomActionBar extends StatelessWidget {
   Widget _buildActionButton({required IconData icon, required String label, required VoidCallback onTap}) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 24),
+        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
         decoration: BoxDecoration(
           color: AppColors.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           border: Border.all(color: AppColors.surfaceContainerHighest),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, color: AppColors.primaryContainer, size: 32),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           ],
         ),

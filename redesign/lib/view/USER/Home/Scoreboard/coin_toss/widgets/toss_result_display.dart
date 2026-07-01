@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class TossResultDisplay extends StatelessWidget {
   final Animation<Offset> slideAnimation;
   final Animation<double> opacityAnimation;
   final bool isHeads;
 
-  const TossResultDisplay({
+  TossResultDisplay({
     super.key,
     required this.slideAnimation,
     required this.opacityAnimation,
@@ -15,8 +16,9 @@ class TossResultDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Transform.translate(
-      offset: const Offset(0, 220),
+      offset: Offset(0, 220),
       child: SlideTransition(
         position: slideAnimation,
         child: FadeTransition(
@@ -24,12 +26,12 @@ class TossResultDisplay extends StatelessWidget {
           child: Text(
             isHeads ? "HEADS" : "TAILS",
             style: GoogleFonts.outfit(
-              color: const Color(0xFFF7E7A1),
-              fontSize: 34,
+              color: Color(0xFFF7E7A1),
+              fontSize: ResponsiveHelper.sp(34),
               fontWeight: FontWeight.bold,
               letterSpacing: 10,
               shadows: [
-                const Shadow(
+                Shadow(
                   color: Colors.black,
                   blurRadius: 15,
                   offset: Offset(3, 3),

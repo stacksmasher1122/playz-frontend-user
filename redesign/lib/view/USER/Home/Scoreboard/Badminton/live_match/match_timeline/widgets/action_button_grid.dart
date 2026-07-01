@@ -4,16 +4,18 @@ import '../../../../../../../../controller/User_Controller/Home_Controller/Score
 import 'ai_summary_button.dart';
 import 'qr_share_button.dart';
 import 'export_pdf_button.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ActionButtonGrid extends StatelessWidget {
-  const ActionButtonGrid({super.key});
+  ActionButtonGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<MatchTimelineController>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
       child: Obx(() {
         return Column(
           children: [
@@ -21,11 +23,11 @@ class ActionButtonGrid extends StatelessWidget {
               onTap: controller.generateAISummary,
               isLoading: controller.isGeneratingSummary.value,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             QrShareButton(
               onTap: controller.shareQRCode,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ExportPdfButton(
               onTap: controller.exportPDF,
               isLoading: controller.isExporting.value,

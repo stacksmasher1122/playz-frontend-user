@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kBg = Colors.black;
-const Color kGreen = AppColors.accent;
+Color kBg = Colors.black;
+Color kGreen = AppColors.accent;
 
 class HeroSection extends StatefulWidget {
-  const HeroSection({super.key});
+  HeroSection({super.key});
 
   @override
   State<HeroSection> createState() => _HeroSectionState();
@@ -31,6 +32,7 @@ class _HeroSectionState extends State<HeroSection> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final double topInset = MediaQuery.of(context).padding.top;
 
     return SliverAppBar(
@@ -40,7 +42,7 @@ class _HeroSectionState extends State<HeroSection> {
       automaticallyImplyLeading: false,
       stretch: true,
       flexibleSpace: ClipRRect(
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(ResponsiveHelper.w(24))),
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -49,7 +51,7 @@ class _HeroSectionState extends State<HeroSection> {
             /// -------------------------------
             PageView.builder(
               controller: _pageController,
-              physics: const PageScrollPhysics(),
+              physics: PageScrollPhysics(),
               itemCount: images.length,
               onPageChanged: (index) {
                 setState(() => _currentIndex = index);
@@ -64,7 +66,7 @@ class _HeroSectionState extends State<HeroSection> {
                     child: Container(color: Colors.black),
                   ),
                   errorWidget: (_, __, ___) =>
-                      const ColoredBox(color: Colors.black),
+                      ColoredBox(color: Colors.black),
                 );
               },
             ),
@@ -74,7 +76,7 @@ class _HeroSectionState extends State<HeroSection> {
             /// -------------------------------
             IgnorePointer(
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -89,17 +91,17 @@ class _HeroSectionState extends State<HeroSection> {
             /// -------------------------------
             Positioned(
               top: topInset + 12,
-              left: 16,
+              left: ResponsiveHelper.w(16),
               child: _iconBtn(Icons.arrow_back, onTap: () => Navigator.pop(context)),
             ),
             Positioned(
               top: topInset + 12,
-              right: 72,
+              right: ResponsiveHelper.w(72),
               child: _iconBtn(Icons.bookmark_border),
             ),
             Positioned(
               top: topInset + 12,
-              right: 16,
+              right: ResponsiveHelper.w(16),
               child: _iconBtn(Icons.share),
             ),
 
@@ -107,22 +109,22 @@ class _HeroSectionState extends State<HeroSection> {
             /// ACADEMY BADGE
             /// -------------------------------
             Positioned(
-              bottom: 34,
-              left: 16,
+              bottom: ResponsiveHelper.h(34),
+              left: ResponsiveHelper.w(16),
               child: Container(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: 14,
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
                   color: kGreen,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                 ),
-                child: const Text(
+                child: Text(
                   'ACADEMY',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.sp(12),
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.6,
                   ),
@@ -134,22 +136,22 @@ class _HeroSectionState extends State<HeroSection> {
             /// PAGE INDICATORS
             /// -------------------------------
             Positioned(
-              bottom: 36,
-              left: 0,
-              right: 0,
+              bottom: ResponsiveHelper.h(36),
+              left: ResponsiveHelper.w(0),
+              right: ResponsiveHelper.w(0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(images.length, (index) {
                   final bool active = index == _currentIndex;
                   return AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
+                    duration: Duration(milliseconds: 250),
                     curve: Curves.easeOut,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4)),
                     width: active ? 18 : 6,
-                    height: 6,
+                    height: ResponsiveHelper.h(6),
                     decoration: BoxDecoration(
                       color: active ? Colors.white : Colors.white54,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                     ),
                   );
                 }),
@@ -167,13 +169,13 @@ class _HeroSectionState extends State<HeroSection> {
   Widget _iconBtn(IconData icon, {VoidCallback? onTap}) {
     return Material(
       color: Colors.black.withValues(alpha: 0.55),
-      shape: const CircleBorder(),
+      shape: CircleBorder(),
       child: InkWell(
-        customBorder: const CircleBorder(),
+        customBorder: CircleBorder(),
         onTap: onTap,
         child: SizedBox(
-          width: 40,
-          height: 40,
+          width: ResponsiveHelper.w(40),
+          height: ResponsiveHelper.h(40),
           child: Icon(
             icon,
             color: Colors.white,

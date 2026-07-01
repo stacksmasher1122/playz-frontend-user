@@ -15,7 +15,7 @@ class KickoffSetupController extends GetxController {
 
   final Rx<VenueModel?> venue = Rx<VenueModel?>(null);
 
-  final Rx<SideSelectionModel> teamA = const SideSelectionModel(
+  final Rx<SideSelectionModel> teamA = SideSelectionModel(
     teamId: 'team_a',
     teamName: 'North Eagles',
     teamColor: '0xFF4285F4', // Blue tint
@@ -23,7 +23,7 @@ class KickoffSetupController extends GetxController {
     side: 'left',
   ).obs;
 
-  final Rx<SideSelectionModel> teamB = const SideSelectionModel(
+  final Rx<SideSelectionModel> teamB = SideSelectionModel(
     teamId: 'team_b',
     teamName: 'Valley Titans',
     teamColor: '0xFF333333', // Dark grey
@@ -33,7 +33,7 @@ class KickoffSetupController extends GetxController {
 
   void initialize() {
     Future.microtask(() => isLoading.value = true);
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       loadMatch();
       loadVenue();
       validateKickoff();
@@ -47,7 +47,7 @@ class KickoffSetupController extends GetxController {
   }
 
   void loadVenue() {
-    venue.value = const VenueModel(
+    venue.value = VenueModel(
       venueName: 'Stade de France',
       status: 'LIVE READY',
       duration: 90,
@@ -105,7 +105,7 @@ class KickoffSetupController extends GetxController {
     validateKickoff();
     // UI Phase bypass: Always allow navigation regardless of validation
     // if (isValid.value) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => const LiveFootballDashboardScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => LiveFootballDashboardScreen()));
     // } else {
     //   showError("Please complete kickoff setup before starting.");
     // }
@@ -115,15 +115,15 @@ class KickoffSetupController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: const Color(0xFFC6FF00), // Lime Green
+      backgroundColor: Color(0xFFC6FF00), // Lime Green
       colorText: Colors.black,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 
@@ -131,14 +131,14 @@ class KickoffSetupController extends GetxController {
     Get.snackbar(
       '',
       message,
-      titleText: const SizedBox.shrink(),
+      titleText: SizedBox.shrink(),
       messageText: Text(
         message,
-        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.red.shade900,
       snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(16),
     );
   }
 }

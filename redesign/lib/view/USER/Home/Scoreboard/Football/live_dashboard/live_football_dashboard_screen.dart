@@ -8,9 +8,10 @@ import 'widgets/statistics_progress_card.dart';
 import 'widgets/quick_event_grid_widget.dart';
 import 'widgets/stats_summary_grid.dart';
 import 'widgets/bottom_navigation_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveFootballDashboardScreen extends StatefulWidget {
-  const LiveFootballDashboardScreen({super.key});
+  LiveFootballDashboardScreen({super.key});
 
   @override
   State<LiveFootballDashboardScreen> createState() => _LiveFootballDashboardScreenState();
@@ -31,14 +32,14 @@ class _LiveFootballDashboardScreenState extends State<LiveFootballDashboardScree
 
     _entranceAnimController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: Duration(milliseconds: 600),
     );
     
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _entranceAnimController, curve: Curves.easeIn),
     );
     
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero).animate(
+    _slideAnimation = Tween<Offset>(begin: Offset(0, 0.05), end: Offset.zero).animate(
       CurvedAnimation(parent: _entranceAnimController, curve: Curves.easeOutCubic),
     );
 
@@ -54,12 +55,13 @@ class _LiveFootballDashboardScreenState extends State<LiveFootballDashboardScree
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: const LiveDashboardAppbar(),
+      appBar: LiveDashboardAppbar(),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(
               color: Color(0xFFC6FF00), // Lime Green
             ),
@@ -74,8 +76,8 @@ class _LiveFootballDashboardScreenState extends State<LiveFootballDashboardScree
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const LiveScoreCard(),
-                  const PossessionCardWidget(),
+                  LiveScoreCard(),
+                  PossessionCardWidget(),
                   Obx(() {
                     return StatisticsProgressCard(
                       title: 'Shots on Target',
@@ -83,16 +85,16 @@ class _LiveFootballDashboardScreenState extends State<LiveFootballDashboardScree
                       valueB: controller.shotsOnTargetB.value,
                     );
                   }),
-                  const QuickEventGridWidget(),
-                  const StatsSummaryGrid(),
-                  const SizedBox(height: 24),
+                  QuickEventGridWidget(),
+                  StatsSummaryGrid(),
+                  SizedBox(height: 24),
                 ],
               ),
             ),
           ),
         );
       }),
-      bottomNavigationBar: const BottomNavigationWidget(),
+      bottomNavigationBar: BottomNavigationWidget(),
     );
   }
 }

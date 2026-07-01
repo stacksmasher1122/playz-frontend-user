@@ -9,12 +9,13 @@ import 'widgets/available_players_list.dart';
 import 'widgets/role_assignment_buttons.dart';
 import 'widgets/lineup_status_widget.dart';
 import 'widgets/confirm_lineup_button.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VolleyballStartingLineupScreen extends StatefulWidget {
   final VolleyballTeamModel teamA;
   final VolleyballTeamModel teamB;
 
-  const VolleyballStartingLineupScreen({super.key, required this.teamA, required this.teamB});
+  VolleyballStartingLineupScreen({super.key, required this.teamA, required this.teamB});
 
   @override
   State<VolleyballStartingLineupScreen> createState() => _VolleyballStartingLineupScreenState();
@@ -38,30 +39,31 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: Color(0xFF111111),
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
           children: [
-            const Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
-            const SizedBox(width: 8),
+            Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
+            SizedBox(width: 8),
             Text('MATCH CENTER', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle, color: AppColors.muted),
+            icon: Icon(Icons.account_circle, color: AppColors.muted),
             onPressed: () {},
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
+          preferredSize: Size.fromHeight(1.0),
           child: Container(color: AppColors.surfaceContainerHighest, height: 1.0),
         ),
       ),
@@ -71,7 +73,7 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
             // Team Toggle
             Container(
               color: AppColors.surfaceContainerLowest,
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8), horizontal: ResponsiveHelper.w(16)),
               child: Obx(() {
                 return Row(
                   children: [
@@ -79,10 +81,10 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
                       child: GestureDetector(
                         onTap: () => controller.toggleTeam(true),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
                           decoration: BoxDecoration(
                             color: controller.isTeamAActive.value ? AppColors.primaryContainer : Colors.transparent,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                           ),
                           child: Center(
                             child: Text(
@@ -96,15 +98,15 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: GestureDetector(
                         onTap: () => controller.toggleTeam(false),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
                           decoration: BoxDecoration(
                             color: !controller.isTeamAActive.value ? AppColors.primaryContainer : Colors.transparent,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                           ),
                           child: Center(
                             child: Text(
@@ -124,17 +126,17 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
             ),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(16.0)),
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 800),
+                    constraints: BoxConstraints(maxWidth: 800),
                     child: Obx(() {
                       final currentTeam = controller.currentTeam;
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Starting Lineup - ${currentTeam.teamName}', style: AppTypography.headlineLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             'MATCH ID: #FIVB-2024-0812 | ${currentTeam.coachName}',
                             style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold),
@@ -143,7 +145,7 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
                           CourtWidget(controller: controller),
                           
                           AvailablePlayersList(controller: controller),
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24),
                           
                           RoleAssignmentButtons(
                             onAssignCaptain: () {
@@ -155,7 +157,7 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
                                 backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
                             },
                           ),
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24),
                           
                           LineupStatusWidget(controller: controller),
                           

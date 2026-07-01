@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AnimatedCenterPin extends StatelessWidget {
-  const AnimatedCenterPin({super.key});
+  AnimatedCenterPin({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final ctrl = Get.find<MapsController>();
     return Obx(() {
       final dragging = ctrl.isDragging.value;
@@ -16,39 +18,39 @@ class AnimatedCenterPin extends StatelessWidget {
         children: [
           // Label
           AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
             opacity: dragging ? 0.0 : 1.0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(6)),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 8,
-                    offset: const Offset(0, 2),
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
-              child: const Text(
+              child: Text(
                 "MOVE MAP TO ADJUST LOCATION",
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: ResponsiveHelper.sp(11),
                   fontWeight: FontWeight.w600,
                   color: kBg,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           // Animated pin
           AnimatedScale(
             scale: dragging ? 1.2 : 1.0,
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
             curve: Curves.easeOut,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+              duration: Duration(milliseconds: 200),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 boxShadow: [
@@ -59,7 +61,7 @@ class AnimatedCenterPin extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.location_on,
                 color: kSpotifyGreen,
                 size: 50,
@@ -69,13 +71,13 @@ class AnimatedCenterPin extends StatelessWidget {
           // Shadow dot (below pin)
           AnimatedScale(
             scale: dragging ? 0.5 : 1.0,
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
             child: Container(
-              width: 12,
-              height: 4,
+              width: ResponsiveHelper.w(12),
+              height: ResponsiveHelper.h(4),
               decoration: BoxDecoration(
                 color: Colors.black.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
               ),
             ),
           ),

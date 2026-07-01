@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'performance_progress_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AnalyticsCardWidget extends StatelessWidget {
   final Map<String, dynamic> analytics;
 
-  const AnalyticsCardWidget({
+  AnalyticsCardWidget({
     super.key,
     required this.analytics,
   });
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
       ),
       child: Column(
@@ -27,7 +29,7 @@ class AnalyticsCardWidget extends StatelessWidget {
             'MATCH ANALYTICS',
             style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           PerformanceProgressWidget(
             label: 'SERVE ACCURACY',
             ratioA: analytics['serveAccuracy'] ?? 0.0,
@@ -46,7 +48,7 @@ class AnalyticsCardWidget extends StatelessWidget {
             labelA: '${((analytics['winPercent'] ?? 0.0) * 100).toInt()}%',
             labelB: '${(100 - ((analytics['winPercent'] ?? 0.0) * 100).toInt())}%',
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildStatRow('FORCED ERRORS', '${analytics['forcedErrors']} - 3'),
           _buildStatRow('UNFORCED ERRORS', '${analytics['unforcedErrors']} - 7'),
           _buildStatRow('NET WINNERS', '${analytics['netWinners']} - 2'),
@@ -60,7 +62,7 @@ class AnalyticsCardWidget extends StatelessWidget {
 
   Widget _buildStatRow(String label, String values) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

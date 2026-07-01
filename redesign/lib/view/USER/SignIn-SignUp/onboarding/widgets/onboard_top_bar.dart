@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class OnboardTopBar extends StatelessWidget {
   final VoidCallback onSkip;
 
-  const OnboardTopBar({super.key, required this.onSkip});
+  OnboardTopBar({super.key, required this.onSkip});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(12)),
       child: Row(
         children: [
           Row(
             children: [
               Image.asset(
                 'assets/logo.png',
-                height: 24,
-                width: 24,
+                height: ResponsiveHelper.h(24),
+                width: ResponsiveHelper.w(24),
                 fit: BoxFit.contain,
               ),
-              const SizedBox(width: 8),
-              const Text(
+              SizedBox(width: 8),
+              Text(
                 'PlayZ',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.white),
+                style: TextStyle(fontSize: ResponsiveHelper.sp(20), fontWeight: FontWeight.w800, color: Colors.white),
               ),
             ],
           ),
-          const Spacer(),
+          Spacer(),
           TextButton(
             onPressed: onSkip,
-            child: const Text('Skip', style: TextStyle(color: Colors.white70)),
+            child: Text('Skip', style: TextStyle(color: Colors.white70)),
           ),
         ],
       ),

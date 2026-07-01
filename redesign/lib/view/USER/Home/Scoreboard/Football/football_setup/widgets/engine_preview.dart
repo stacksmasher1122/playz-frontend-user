@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'setup_constants.dart';
 import 'setup_models.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class EnginePreview extends StatelessWidget {
   final TournamentType tournamentType;
@@ -8,7 +9,7 @@ class EnginePreview extends StatelessWidget {
   final List<MatchFixture> leagueFixtures;
   final Map<String, List<Team>> hybridGroups;
 
-  const EnginePreview({
+  EnginePreview({
     super.key,
     required this.tournamentType,
     required this.knockoutBracket,
@@ -18,9 +19,10 @@ class EnginePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     if (tournamentType == TournamentType.knockout) {
       if (knockoutBracket.isEmpty) {
-        return const Text(
+        return Text(
           "No matches generated",
           style: TextStyle(color: kTextMuted),
         );
@@ -33,15 +35,15 @@ class EnginePreview extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: Text(
                   "${m.home?.name} vs ${m.away?.name}",
-                  style: const TextStyle(color: kTextPrimary, fontSize: 13),
+                  style: TextStyle(color: kTextPrimary, fontSize: 13),
                 ),
                 subtitle: Text(
                   m.roundName ?? "",
-                  style: const TextStyle(color: kAccent, fontSize: 10),
+                  style: TextStyle(color: kAccent, fontSize: 10),
                 ),
                 trailing: Text(
                   "${m.date.day}/${m.date.month}",
-                  style: const TextStyle(color: kTextMuted, fontSize: 12),
+                  style: TextStyle(color: kTextMuted, fontSize: 12),
                 ),
               ),
             )
@@ -57,13 +59,13 @@ class EnginePreview extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: Text(
                   "${m.home?.name} vs ${m.away?.name}",
-                  style: const TextStyle(color: kTextPrimary),
+                  style: TextStyle(color: kTextPrimary),
                 ),
                 subtitle: Text(
                   m.roundName ?? "",
-                  style: const TextStyle(color: kTextMuted, fontSize: 10),
+                  style: TextStyle(color: kTextMuted, fontSize: 10),
                 ),
-                leading: const Icon(Icons.circle, size: 6, color: kAccent),
+                leading: Icon(Icons.circle, size: 6, color: kAccent),
               ),
             )
             .toList(),
@@ -75,10 +77,10 @@ class EnginePreview extends StatelessWidget {
             (e) => ExpansionTile(
               title: Text(
                 e.key,
-                style: const TextStyle(
+                style: TextStyle(
                   color: kTextPrimary,
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: ResponsiveHelper.sp(14),
                 ),
               ),
               children: e.value
@@ -86,9 +88,9 @@ class EnginePreview extends StatelessWidget {
                     (t) => ListTile(
                       title: Text(
                         t.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: kTextSecondary,
-                          fontSize: 13,
+                          fontSize: ResponsiveHelper.sp(13),
                         ),
                       ),
                       dense: true,

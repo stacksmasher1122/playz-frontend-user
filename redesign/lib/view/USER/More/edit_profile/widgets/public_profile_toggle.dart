@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import '../edit_profile_constants.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PublicProfileToggle extends StatelessWidget {
-  const PublicProfileToggle({super.key});
+  PublicProfileToggle({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<UserProfileController>();
 
     return Row(
@@ -16,20 +18,20 @@ class PublicProfileToggle extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Public Profile',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: ResponsiveHelper.sp(16),
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               'Allow anyone to see your stats',
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.5),
-                fontSize: 12,
+                fontSize: ResponsiveHelper.sp(12),
               ),
             ),
           ],

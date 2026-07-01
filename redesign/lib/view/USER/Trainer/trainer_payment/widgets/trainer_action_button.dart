@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kBg = AppColors.background;
@@ -9,7 +10,7 @@ class TrainerActionButton extends StatelessWidget {
   final VoidCallback onTap;
   final IconData? icon;
 
-  const TrainerActionButton({
+  TrainerActionButton({
     super.key,
     required this.text,
     required this.onTap,
@@ -18,19 +19,20 @@ class TrainerActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(32)),
         splashColor: kGreen.withValues(alpha: 0.15),
         highlightColor: kGreen.withValues(alpha: 0.08),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
           decoration: BoxDecoration(
             color: kGreen,
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(32)),
             border: Border.all(color: kGreen, width: 1.5),
             boxShadow: [
               BoxShadow(
@@ -45,13 +47,13 @@ class TrainerActionButton extends StatelessWidget {
             children: [
               if (icon != null) ...[
                 Icon(icon, color: kBg, size: 20),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
               ],
               Text(
                 text,
-                style: const TextStyle(
+                style: TextStyle(
                   color: kBg,
-                  fontSize: 16,
+                  fontSize: ResponsiveHelper.sp(16),
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.2,
                 ),

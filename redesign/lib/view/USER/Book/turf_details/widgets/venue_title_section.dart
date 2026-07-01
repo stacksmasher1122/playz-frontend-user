@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueTitleSection extends StatelessWidget {
-  const VenueTitleSection({super.key});
+  VenueTitleSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// VENUE INFO
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
-              const Text(
+              SizedBox(height: 10),
+              Text(
                 'CrossFit Arena',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 26,
+                  fontSize: ResponsiveHelper.sp(26),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
               Row(
                 children: [
-                  const Icon(Icons.location_on, color: Colors.grey, size: 16),
-                  const SizedBox(width: 4),
-                  const Expanded(
+                  Icon(Icons.location_on, color: Colors.grey, size: 16),
+                  SizedBox(width: 4),
+                  Expanded(
                     child: Text(
                       'Narhe, Pune • 7.9 km away',
                       style: TextStyle(color: Color(0xFFA7A7A7)),
@@ -38,20 +40,20 @@ class VenueTitleSection extends StatelessWidget {
                   TextButton(
                     onPressed: () {},
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 6,
                       ),
                       backgroundColor: AppColors.accent.withValues(alpha: 0.15),
                       foregroundColor: AppColors.accent,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                       ),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Open Now',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
@@ -60,11 +62,11 @@ class VenueTitleSection extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 0),
+        SizedBox(height: 0),
 
         /// RATING ROW
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
           child: Row(
             children: [
               Row(
@@ -77,13 +79,13 @@ class VenueTitleSection extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              const Text(
+              SizedBox(width: 8),
+              Text(
                 '5.0',
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(width: 6),
-              const Text(
+              SizedBox(width: 6),
+              Text(
                 '(128 Reviews)',
                 style: TextStyle(color: Color(0xFFA7A7A7)),
               ),

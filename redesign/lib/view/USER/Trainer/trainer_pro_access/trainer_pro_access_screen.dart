@@ -14,11 +14,12 @@ import 'widgets/trainer_success_stories.dart';
 import 'widgets/money_back_guarantee_banner.dart';
 import 'widgets/pro_faq_section.dart';
 import 'widgets/pro_bottom_cta.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kBg = AppColors.background;
 
 class TrainerProAccessScreen extends StatefulWidget {
-  const TrainerProAccessScreen({super.key});
+  TrainerProAccessScreen({super.key});
 
   @override
   State<TrainerProAccessScreen> createState() => _TrainerProAccessScreenState();
@@ -27,10 +28,10 @@ class TrainerProAccessScreen extends StatefulWidget {
 class _TrainerProAccessScreenState extends State<TrainerProAccessScreen> {
   final ValueNotifier<int> selectedIndex = ValueNotifier(1);
 
-  Duration offerTime = const Duration(hours: 4, minutes: 23, seconds: 12);
+  Duration offerTime = Duration(hours: 4, minutes: 23, seconds: 12);
   Timer? timer;
 
-  final plans = const [
+  final plans = [
     ProPlan(
       title: '6 Months',
       price: '₹2,999',
@@ -58,9 +59,9 @@ class _TrainerProAccessScreenState extends State<TrainerProAccessScreen> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    timer = Timer.periodic(Duration(seconds: 1), (_) {
       if (offerTime.inSeconds > 0) {
-        setState(() => offerTime -= const Duration(seconds: 1));
+        setState(() => offerTime -= Duration(seconds: 1));
       }
     });
   }
@@ -79,6 +80,7 @@ class _TrainerProAccessScreenState extends State<TrainerProAccessScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: kBg,
       body: SafeArea(
@@ -88,32 +90,32 @@ class _TrainerProAccessScreenState extends State<TrainerProAccessScreen> {
             final bottomInset = MediaQuery.of(context).padding.bottom;
 
             return CustomScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               slivers: [
                 OfferTimerBanner(text: _format(offerTime)),
                 SliverPadding(
                   padding: EdgeInsets.fromLTRB(16, 12, 16, 120 + bottomInset),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
-                      const ProBlurredHeader(),
-                      const SizedBox(height: 16),
-                      const ProVideoCard(),
-                      const SizedBox(height: 16),
-                      const ProValueCard(),
-                      const SizedBox(height: 14),
-                      const ProTrustTags(),
-                      const SizedBox(height: 24),
-                      const ProMembershipHeader(),
-                      const SizedBox(height: 12),
+                      ProBlurredHeader(),
+                      SizedBox(height: 16),
+                      ProVideoCard(),
+                      SizedBox(height: 16),
+                      ProValueCard(),
+                      SizedBox(height: 14),
+                      ProTrustTags(),
+                      SizedBox(height: 24),
+                      ProMembershipHeader(),
+                      SizedBox(height: 12),
                       ValueListenableBuilder<int>(
                         valueListenable: selectedIndex,
                         builder: (_, value, __) {
                           if (isTablet) {
                             return GridView.builder(
                               shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                              physics: NeverScrollableScrollPhysics(),
                               gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                  SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
@@ -132,7 +134,7 @@ class _TrainerProAccessScreenState extends State<TrainerProAccessScreen> {
                             children: List.generate(
                               plans.length,
                               (i) => Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
+                                padding: EdgeInsets.only(bottom: 12),
                                 child: ProPlanCard(
                                   plan: plans[i],
                                   selected: value == i,
@@ -143,16 +145,16 @@ class _TrainerProAccessScreenState extends State<TrainerProAccessScreen> {
                           );
                         },
                       ),
-                      const ProComparisonTable(),
-                      const SizedBox(height: 20),
-                      const WhyGoProSection(),
-                      const SizedBox(height: 20),
-                      const TrainerSuccessStories(),
-                      const SizedBox(height: 24),
-                      const MoneyBackGuaranteeBanner(),
-                      const SizedBox(height: 32),
-                      const ProFaqSection(),
-                      const SizedBox(height: 36),
+                      ProComparisonTable(),
+                      SizedBox(height: 20),
+                      WhyGoProSection(),
+                      SizedBox(height: 20),
+                      TrainerSuccessStories(),
+                      SizedBox(height: 24),
+                      MoneyBackGuaranteeBanner(),
+                      SizedBox(height: 32),
+                      ProFaqSection(),
+                      SizedBox(height: 36),
                     ]),
                   ),
                 ),

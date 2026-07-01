@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SeriesScoreWidget extends StatelessWidget {
   final int winnerGames;
   final int runnerGames;
   final String matchStatus;
 
-  const SeriesScoreWidget({
+  SeriesScoreWidget({
     super.key,
     required this.winnerGames,
     required this.runnerGames,
@@ -16,6 +17,7 @@ class SeriesScoreWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       children: [
         Row(
@@ -23,51 +25,51 @@ class SeriesScoreWidget extends StatelessWidget {
           children: [
             TweenAnimationBuilder<int>(
               tween: IntTween(begin: 0, end: winnerGames),
-              duration: const Duration(milliseconds: 800),
+              duration: Duration(milliseconds: 800),
               builder: (context, value, child) {
                 return Text(
                   '$value',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 72,
+                    fontSize: ResponsiveHelper.sp(72),
                     fontWeight: FontWeight.w900,
                     color: AppColors.primaryContainer,
-                    height: 1.0,
+                    height: ResponsiveHelper.h(1.0),
                   ),
                 );
               },
             ),
-            const SizedBox(width: 16),
-            const Text(
+            SizedBox(width: 16),
+            Text(
               '—',
               style: TextStyle(
                 fontFamily: 'Inter',
-                fontSize: 48,
+                fontSize: ResponsiveHelper.sp(48),
                 fontWeight: FontWeight.w100,
                 color: AppColors.muted,
-                height: 1.0,
+                height: ResponsiveHelper.h(1.0),
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             TweenAnimationBuilder<int>(
               tween: IntTween(begin: 0, end: runnerGames),
-              duration: const Duration(milliseconds: 800),
+              duration: Duration(milliseconds: 800),
               builder: (context, value, child) {
                 return Text(
                   '$value',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 72,
+                    fontSize: ResponsiveHelper.sp(72),
                     fontWeight: FontWeight.w900,
                     color: AppColors.primary,
-                    height: 1.0,
+                    height: ResponsiveHelper.h(1.0),
                   ),
                 );
               },
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           matchStatus,
           style: AppTypography.labelCaps.copyWith(color: AppColors.muted, letterSpacing: 2.0),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class DominanceCard extends StatefulWidget {
-  const DominanceCard({super.key});
+  DominanceCard({super.key});
 
   @override
   State<DominanceCard> createState() => _DominanceCardState();
@@ -17,20 +18,20 @@ class _DominanceCardState extends State<DominanceCard> with SingleTickerProvider
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: Duration(milliseconds: 1000),
     );
     
     _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.5, 1.0, curve: Curves.easeIn),
+        curve: Interval(0.5, 1.0, curve: Curves.easeIn),
       ),
     );
 
-    _slide = Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero).animate(
+    _slide = Tween<Offset>(begin: Offset(0, 0.2), end: Offset.zero).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.5, 1.0, curve: Curves.easeOutCubic),
+        curve: Interval(0.5, 1.0, curve: Curves.easeOutCubic),
       ),
     );
 
@@ -45,6 +46,7 @@ class _DominanceCardState extends State<DominanceCard> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -54,31 +56,31 @@ class _DominanceCardState extends State<DominanceCard> with SingleTickerProvider
             position: _slide,
             child: Container(
               width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-              padding: const EdgeInsets.all(24),
+              margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
+              padding: EdgeInsets.all(ResponsiveHelper.w(24)),
               decoration: BoxDecoration(
                 color: Colors.black,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                 border: Border.all(color: Colors.grey.shade800),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFC6FF00).withValues(alpha: 0.05), // Subtle neon glow
+                    color: Color(0xFFC6FF00).withValues(alpha: 0.05), // Subtle neon glow
                     blurRadius: 30,
                     spreadRadius: 5,
                   ),
                 ],
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'DOMINANCE\nINDEX',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 32,
+                      fontSize: ResponsiveHelper.sp(32),
                       fontWeight: FontWeight.w900,
                       fontStyle: FontStyle.italic,
-                      height: 1.1,
+                      height: ResponsiveHelper.h(1.1),
                       letterSpacing: -1.0,
                     ),
                   ),
@@ -87,7 +89,7 @@ class _DominanceCardState extends State<DominanceCard> with SingleTickerProvider
                     'Viktor leads tactical control by 14%',
                     style: TextStyle(
                       color: Colors.grey,
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.sp(12),
                     ),
                   ),
                 ],

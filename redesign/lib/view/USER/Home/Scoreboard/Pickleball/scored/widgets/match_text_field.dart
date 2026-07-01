@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchTextField extends StatelessWidget {
   final String label;
@@ -10,7 +11,7 @@ class MatchTextField extends StatelessWidget {
   final bool readOnly;
   final VoidCallback? onTap;
 
-  const MatchTextField({
+  MatchTextField({
     super.key,
     required this.label,
     required this.hint,
@@ -22,11 +23,12 @@ class MatchTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         TextFormField(
           controller: controller,
           readOnly: readOnly,
@@ -37,9 +39,9 @@ class MatchTextField extends StatelessWidget {
             hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.surfaceContainerHighest),
             filled: true,
             fillColor: AppColors.surfaceContainerHigh,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
               borderSide: BorderSide.none,
             ),
             suffixIcon: suffixIcon,

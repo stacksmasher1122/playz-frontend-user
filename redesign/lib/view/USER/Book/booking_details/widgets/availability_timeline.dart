@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AvailabilityTimeline extends StatelessWidget {
   final ScrollController controller;
 
-  const AvailabilityTimeline({
+  AvailabilityTimeline({
     super.key,
     required this.controller,
   });
@@ -14,6 +15,7 @@ class AvailabilityTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final List<TimeSlot> slots = List.generate(_totalHours, (index) {
       final int start = _startHour + index;
       final int end = start + 1;
@@ -28,25 +30,25 @@ class AvailabilityTimeline extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
           child: Text(
             'Availability',
             style: TextStyle(
               color: _kMuted,
-              fontSize: 14,
+              fontSize: ResponsiveHelper.sp(14),
               fontWeight: FontWeight.w500,
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// SINGLE SCROLLABLE TIMELINE
         SingleChildScrollView(
           controller: controller,
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -58,7 +60,7 @@ class AvailabilityTimeline extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
 
               /// BLOCKS
               Row(
@@ -76,8 +78,8 @@ class AvailabilityTimeline extends StatelessWidget {
                       ),
                       if (!isLast)
                         Container(
-                          width: 2,
-                          height: 44,
+                          width: ResponsiveHelper.w(2),
+                          height: ResponsiveHelper.h(44),
                           color: Colors.grey.shade800,
                         ),
                     ],
@@ -88,11 +90,11 @@ class AvailabilityTimeline extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         /// LEGEND
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
           child: Row(
             children: [
               _LegendDot(color: Color(0xFFD60101)),
@@ -119,13 +121,14 @@ class AvailabilityTimeline extends StatelessWidget {
 
 class _LegendDot extends StatelessWidget {
   final Color color;
-  const _LegendDot({required this.color});
+  _LegendDot({required this.color});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      width: 10,
-      height: 10,
+      width: ResponsiveHelper.w(10),
+      height: ResponsiveHelper.h(10),
       decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
@@ -133,14 +136,15 @@ class _LegendDot extends StatelessWidget {
 
 class _TimeLabel extends StatelessWidget {
   final String time;
-  const _TimeLabel(this.time);
+  _TimeLabel(this.time);
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      width: 90,
+      width: ResponsiveHelper.w(90),
       alignment: Alignment.centerLeft,
-      child: Text(time, style: const TextStyle(color: Color(0xFFA7A7A7), fontSize: 12)),
+      child: Text(time, style: TextStyle(color: Color(0xFFA7A7A7), fontSize: 12)),
     );
   }
 }
@@ -150,7 +154,7 @@ class _TimelineBlock extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
 
-  const _TimelineBlock({
+  _TimelineBlock({
     required this.slot,
     required this.isFirst,
     required this.isLast,
@@ -158,24 +162,25 @@ class _TimelineBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      width: 90,
-      height: 44,
+      width: ResponsiveHelper.w(90),
+      height: ResponsiveHelper.h(44),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: slot.isFree
-            ? const Color.fromARGB(255, 0, 180, 93)
-            : const Color.fromARGB(255, 214, 1, 1),
+            ? Color.fromARGB(255, 0, 180, 93)
+            : Color.fromARGB(255, 214, 1, 1),
         borderRadius: BorderRadius.horizontal(
-          left: isFirst ? const Radius.circular(12) : Radius.zero,
-          right: isLast ? const Radius.circular(12) : Radius.zero,
+          left: isFirst ? Radius.circular(ResponsiveHelper.w(12)) : Radius.zero,
+          right: isLast ? Radius.circular(ResponsiveHelper.w(12)) : Radius.zero,
         ),
       ),
       child: Text(
         slot.isFree ? 'FREE' : 'BOOKED',
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
-          fontSize: 12,
+          fontSize: ResponsiveHelper.sp(12),
           fontWeight: FontWeight.w600,
           letterSpacing: 0.8,
         ),

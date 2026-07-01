@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/Home/Friends/friends_info/friends_info_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
 const kSurface = Color(0xFF222222);
@@ -13,7 +14,7 @@ class ChatAppBar extends StatelessWidget {
   final String pic;
   final bool isOnline;
 
-  const ChatAppBar({
+  ChatAppBar({
     super.key,
     required this.email,
     required this.name,
@@ -23,14 +24,15 @@ class ChatAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
       color: Colors.black.withValues(alpha: 0.8),
-      padding: const EdgeInsets.fromLTRB(8, 12, 16, 12),
+      padding: EdgeInsets.fromLTRB(8, 12, 16, 12),
       child: Row(
         children: [
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios_new,
               color: Colors.white,
               size: 20,
@@ -62,16 +64,16 @@ class ChatAppBar extends StatelessWidget {
                             ? CachedNetworkImageProvider(pic) as ImageProvider
                             : null,
                         child: pic.isEmpty
-                            ? const Icon(Icons.person, color: kMuted)
+                            ? Icon(Icons.person, color: kMuted)
                             : null,
                       ),
                       if (isOnline)
                         Positioned(
-                          right: 0,
-                          bottom: 0,
+                          right: ResponsiveHelper.w(0),
+                          bottom: ResponsiveHelper.h(0),
                           child: Container(
-                            width: 12,
-                            height: 12,
+                            width: ResponsiveHelper.w(12),
+                            height: ResponsiveHelper.h(12),
                             decoration: BoxDecoration(
                               color: kGreen,
                               shape: BoxShape.circle,
@@ -81,16 +83,16 @@ class ChatAppBar extends StatelessWidget {
                         ),
                     ],
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: ResponsiveHelper.sp(16),
                           fontWeight: FontWeight.bold,
                         ),
                         maxLines: 1,
@@ -100,7 +102,7 @@ class ChatAppBar extends StatelessWidget {
                         isOnline ? "ONLINE" : "OFFLINE",
                         style: TextStyle(
                           color: isOnline ? kGreen : kMuted,
-                          fontSize: 11,
+                          fontSize: ResponsiveHelper.sp(11),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -110,10 +112,10 @@ class ChatAppBar extends StatelessWidget {
               ),
             ),
           ),
-          const Spacer(),
+          Spacer(),
           IconButton(
             onPressed: () {},
-            icon: const Icon(
+            icon: Icon(
               Icons.videocam_outlined,
               color: Colors.white,
               size: 26,
@@ -121,7 +123,7 @@ class ChatAppBar extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {},
-            icon: const Icon(
+            icon: Icon(
               Icons.call_outlined,
               color: Colors.white,
               size: 22,

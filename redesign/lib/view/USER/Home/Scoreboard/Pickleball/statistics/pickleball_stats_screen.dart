@@ -13,9 +13,10 @@ import 'widgets/heatmap_widget.dart';
 import 'widgets/player_comparison_widget.dart';
 import 'widgets/advanced_analytics_card.dart';
 import 'widgets/coach_insight_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PickleballStatsScreen extends StatefulWidget {
-  const PickleballStatsScreen({super.key});
+  PickleballStatsScreen({super.key});
 
   @override
   State<PickleballStatsScreen> createState() => _PickleballStatsScreenState();
@@ -30,7 +31,7 @@ class _PickleballStatsScreenState extends State<PickleballStatsScreen> with Tick
     super.initState();
     controller = Get.put(PickleballStatsController());
     
-    _barAnimController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    _barAnimController = AnimationController(vsync: this, duration: Duration(milliseconds: 1200));
     _barAnimController.forward();
   }
 
@@ -43,39 +44,40 @@ class _PickleballStatsScreenState extends State<PickleballStatsScreen> with Tick
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const LiveMatchAppbar(), // Reusing shared app bar
+      appBar: LiveMatchAppbar(), // Reusing shared app bar
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
           child: Obx(() {
-            if (controller.statsModel.value.matchId.isEmpty) return const SizedBox.shrink();
+            if (controller.statsModel.value.matchId.isEmpty) return SizedBox.shrink();
             final model = controller.statsModel.value;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ScoreSummaryCard(controller: controller),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 MatchStatisticsCard(
                   statistics: model.statistics,
                   barAnimController: _barAnimController,
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 ErrorBreakdownCard(errors: model.errors),
-                const SizedBox(height: 24),
-                const MvpAnalysisCard(),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
+                MvpAnalysisCard(),
+                SizedBox(height: 24),
                 GameBreakdownCard(controller: controller),
-                const SizedBox(height: 24),
-                const HeatmapWidget(),
-                const SizedBox(height: 24),
-                const PlayerComparisonWidget(),
-                const SizedBox(height: 24),
-                const AdvancedAnalyticsCard(),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
+                HeatmapWidget(),
+                SizedBox(height: 24),
+                PlayerComparisonWidget(),
+                SizedBox(height: 24),
+                AdvancedAnalyticsCard(),
+                SizedBox(height: 24),
                 CoachInsightWidget(insights: model.coachInsights),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
               ],
             );
           }),

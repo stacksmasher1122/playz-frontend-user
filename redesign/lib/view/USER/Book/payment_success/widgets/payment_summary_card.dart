@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
-  const PaymentSummaryCard({super.key});
+  PaymentSummaryCard({super.key});
 
   static const _kCard = Color(0xFF1A1A1A);
   static const _kMuted = Color(0xFFA7A7A7);
@@ -9,43 +10,44 @@ class PaymentSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: _kCard,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       ),
       child: Column(
         children: [
           _priceRow('Slot Price (1 hr)', '₹400.00'),
           _priceRow('Convenience Fee', '₹50.00'),
           _priceRow('Equipment (Ball)', 'Included'),
-          const Divider(color: Colors.grey),
+          Divider(color: Colors.grey),
           Row(
             children: [
-              const Text(
+              Text(
                 'Total Paid',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Spacer(),
-              const Text(
+              Spacer(),
+              Text(
                 '₹450.00',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
                 decoration: BoxDecoration(
                   color: _kYellow.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                 ),
-                child: const Text('+10 ZC', style: TextStyle(color: _kYellow)),
+                child: Text('+10 ZC', style: TextStyle(color: _kYellow)),
               ),
             ],
           ),
@@ -56,12 +58,12 @@ class PaymentSummaryCard extends StatelessWidget {
 
   Widget _priceRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(6)),
       child: Row(
         children: [
-          Text(label, style: const TextStyle(color: _kMuted)),
-          const Spacer(),
-          Text(value, style: const TextStyle(color: Colors.white)),
+          Text(label, style: TextStyle(color: _kMuted)),
+          Spacer(),
+          Text(value, style: TextStyle(color: Colors.white)),
         ],
       ),
     );

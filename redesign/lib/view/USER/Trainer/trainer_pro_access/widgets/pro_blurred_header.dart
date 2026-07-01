@@ -1,13 +1,15 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kMuted = Color(0xFFA7A7A7);
 
 class ProBlurredHeader extends StatelessWidget {
-  const ProBlurredHeader({super.key});
+  ProBlurredHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final topInset = MediaQuery.of(context).padding.top;
 
     return ClipRect(
@@ -19,7 +21,7 @@ class ProBlurredHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Icon(Icons.arrow_back, color: Colors.white),
               SizedBox(height: 10),
               Text(
@@ -28,7 +30,7 @@ class ProBlurredHeader extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: ResponsiveHelper.sp(20),
                   fontWeight: FontWeight.w800,
                 ),
               ),

@@ -1,13 +1,15 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 const kMuted = Color(0xFFA7A7A7);
 
 class LimitedAccessHeader extends StatelessWidget {
-  const LimitedAccessHeader({super.key});
+  LimitedAccessHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return SliverToBoxAdapter(
       child: ClipRect(
         child: BackdropFilter(
@@ -17,10 +19,10 @@ class LimitedAccessHeader extends StatelessWidget {
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Icon(
                       Icons.arrow_back,
                       color: Colors.white,
@@ -32,7 +34,7 @@ class LimitedAccessHeader extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: ResponsiveHelper.sp(20),
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -43,7 +45,7 @@ class LimitedAccessHeader extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: kMuted,
-                        fontSize: 13,
+                        fontSize: ResponsiveHelper.sp(13),
                       ),
                     ),
                   ],

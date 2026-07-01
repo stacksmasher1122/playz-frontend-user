@@ -3,22 +3,25 @@ import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/live_football_dashboard_controller.dart';
 
 import '../../match_statistics/football_match_statistics_screen.dart';
+import 'package:redesign/theme/responsive_helper.dart';
+import '../../team_management/football_team_management_screen.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
   final String currentScreen;
-  const BottomNavigationWidget({super.key, this.currentScreen = 'dashboard'});
+  BottomNavigationWidget({super.key, this.currentScreen = 'dashboard'});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<LiveFootballDashboardController>();
 
     return Container(
-      padding: const EdgeInsets.only(top: 8, bottom: 16),
+      padding: EdgeInsets.only(top: ResponsiveHelper.h(8), bottom: 16),
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.95),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(ResponsiveHelper.w(24)),
+          topRight: Radius.circular(ResponsiveHelper.w(24)),
         ),
         border: Border(
           top: BorderSide(color: Colors.grey.shade900),
@@ -48,15 +51,15 @@ class BottomNavigationWidget extends StatelessWidget {
 
         if (index == 1) { // Teams
           if (currentScreen == 'stats') {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const FootballTeamManagementScreen()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FootballTeamManagementScreen()));
           } else if (currentScreen == 'dashboard') {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const FootballTeamManagementScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (_) => FootballTeamManagementScreen()));
           }
         } else if (index == 3) { // Stats
           if (currentScreen == 'teams') {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const FootballMatchStatisticsScreen()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FootballMatchStatisticsScreen()));
           } else if (currentScreen == 'dashboard') {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const FootballMatchStatisticsScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (_) => FootballMatchStatisticsScreen()));
           }
         } else { // Dashboard tabs
           if (currentScreen != 'dashboard') {
@@ -68,22 +71,22 @@ class BottomNavigationWidget extends StatelessWidget {
       child: Obx(() {
         final isSelected = controller.selectedBottomIndex.value == index;
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          duration: Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 icon,
-                color: isSelected ? const Color(0xFFC6FF00) : Colors.grey,
+                color: isSelected ? Color(0xFFC6FF00) : Colors.grey,
                 size: 24,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? const Color(0xFFC6FF00) : Colors.grey,
-                  fontSize: 10,
+                  color: isSelected ? Color(0xFFC6FF00) : Colors.grey,
+                  fontSize: ResponsiveHelper.sp(10),
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
@@ -93,11 +96,4 @@ class BottomNavigationWidget extends StatelessWidget {
       }),
     );
   }
-}
-
-
-class FootballTeamManagementScreen extends StatelessWidget {
-  const FootballTeamManagementScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const SizedBox();
 }

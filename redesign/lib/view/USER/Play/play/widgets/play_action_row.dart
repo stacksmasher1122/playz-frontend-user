@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayActionRow extends StatelessWidget {
-  const PlayActionRow({super.key});
+  PlayActionRow({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(10)),
       child: Row(
         children: [
           Text(
@@ -18,11 +20,11 @@ class PlayActionRow extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const Spacer(),
+          Spacer(),
           Row(
             children: [
-              const Icon(Icons.swap_vert, color: Colors.white, size: 16),
-              const SizedBox(width: 4),
+              Icon(Icons.swap_vert, color: Colors.white, size: 16),
+              SizedBox(width: 4),
               Text('Sort', style: GoogleFonts.inter(color: Colors.white)),
             ],
           ),

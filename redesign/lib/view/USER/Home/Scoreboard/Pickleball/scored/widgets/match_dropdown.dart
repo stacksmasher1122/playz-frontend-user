@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchDropdown extends StatelessWidget {
   final String label;
@@ -9,7 +10,7 @@ class MatchDropdown extends StatelessWidget {
   final List<String> options;
   final ValueChanged<String?> onChanged;
 
-  const MatchDropdown({
+  MatchDropdown({
     super.key,
     required this.label,
     required this.hint,
@@ -20,23 +21,24 @@ class MatchDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
           decoration: BoxDecoration(
             color: AppColors.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               isExpanded: true,
               value: value.isEmpty ? null : value,
               hint: Text(hint, style: AppTypography.bodyMd.copyWith(color: AppColors.surfaceContainerHighest)),
-              icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.muted),
+              icon: Icon(Icons.keyboard_arrow_down, color: AppColors.muted),
               dropdownColor: AppColors.surfaceContainerHigh,
               style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
               items: options.map((String opt) {

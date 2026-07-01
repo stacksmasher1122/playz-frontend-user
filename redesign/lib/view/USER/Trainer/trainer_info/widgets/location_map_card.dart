@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-const Color kCard = Color(0xFF1A1A1A);
+Color kCard = Color(0xFF1A1A1A);
 
 class LocationMapCard extends StatelessWidget {
-  const LocationMapCard({super.key});
+  LocationMapCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Location',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: ResponsiveHelper.sp(18),
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Container(
-          height: 160,
+          height: ResponsiveHelper.h(160),
           decoration: BoxDecoration(
             color: kCard,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           ),
           child: Stack(
             alignment: Alignment.center,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                 child: Opacity(
                   opacity: 0.5,
                   child: Image.network(
@@ -41,15 +43,15 @@ class LocationMapCard extends StatelessWidget {
               ),
               ElevatedButton.icon(
                 onPressed: () {},
-                icon: const Icon(Icons.near_me, size: 18),
-                label: const Text('Get Directions'),
+                icon: Icon(Icons.near_me, size: 18),
+                label: Text('Get Directions'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
                   ),
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 12,
                   ),

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'comparison_progress_widget.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchStatisticsCard extends StatelessWidget {
   final Map<String, dynamic> statistics;
   final AnimationController barAnimController;
 
-  const MatchStatisticsCard({
+  MatchStatisticsCard({
     super.key,
     required this.statistics,
     required this.barAnimController,
@@ -15,11 +16,12 @@ class MatchStatisticsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
       ),
       child: Column(
@@ -32,10 +34,10 @@ class MatchStatisticsCard extends StatelessWidget {
                 'Match Stats',
                 style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
               ),
-              const Icon(Icons.trending_up, color: AppColors.muted, size: 24),
+              Icon(Icons.trending_up, color: AppColors.muted, size: 24),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           ...statistics.entries.map((entry) {
             String label = entry.key;
             Map<String, dynamic> data = entry.value;
@@ -50,7 +52,7 @@ class MatchStatisticsCard extends StatelessWidget {
               : '${data['Avg']} Avg';
 
             return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
+              padding: EdgeInsets.only(bottom: 16.0),
               child: ComparisonProgressWidget(
                 label: label,
                 summary: summaryLabel,
