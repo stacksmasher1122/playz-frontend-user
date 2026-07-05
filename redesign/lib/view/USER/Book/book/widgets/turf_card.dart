@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_dimensions.dart';
 import 'package:redesign/view/USER/Book/turf_details/turf_details_screen.dart';
 import '../book_screen.dart';
 import 'image_shimmer.dart';
@@ -18,6 +19,28 @@ class TurfCard extends StatefulWidget {
 class _TurfCardState extends State<TurfCard>
     with AutomaticKeepAliveClientMixin {
   int _pageIndex = 0;
+  bool _isFavorite = false;
+
+  IconData _getAmenityIcon(String amenity) {
+    switch (amenity.toLowerCase()) {
+      case 'basketball':
+        return Icons.sports_basketball;
+      case 'parking':
+        return Icons.local_parking;
+      case 'shower':
+        return Icons.shower;
+      case 'ac':
+      case 'air conditioning':
+        return Icons.ac_unit;
+      case 'football':
+      case 'soccer':
+        return Icons.sports_soccer;
+      case 'cricket':
+        return Icons.sports_cricket;
+      default:
+        return Icons.sports;
+    }
+  }
 
   @override
   bool get wantKeepAlive => true;
@@ -91,6 +114,32 @@ class _TurfCardState extends State<TurfCard>
                       ),
                     ),
                   ),
+
+                /// FAVORITE BUTTON
+                Positioned(
+                  top: ResponsiveHelper.h(12),
+                  right: ResponsiveHelper.w(12),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isFavorite = !_isFavorite;
+                      });
+                    },
+                    child: Container(
+                      width: ResponsiveHelper.w(34),
+                      height: ResponsiveHelper.w(34),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.55),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: _isFavorite ? AppColors.accent : Colors.white,
+                        size: ResponsiveHelper.w(18),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -107,13 +156,12 @@ class _TurfCardState extends State<TurfCard>
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        // builder: (_) => UserHomePage(),
                         builder: (_) => TurfDetailScreen(),
                       ),
                     );
                   },
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: 12),
+                    padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -170,36 +218,115 @@ class _TurfCardState extends State<TurfCard>
                             ),
                           ],
                         ),
+
+                        /// AMENITY TAGS ROW
+                        if (data.amenities.isNotEmpty) ...[
+                          SizedBox(height: ResponsiveHelper.h(10)),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: data.amenities.map((amenity) {
+                                return Container(
+                                  margin: EdgeInsets.only(right: ResponsiveHelper.w(8)),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ResponsiveHelper.w(10),
+                                    vertical: ResponsiveHelper.h(6),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.card,
+                                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(AppDimensions.radiusMd)),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        _getAmenityIcon(amenity),
+                                        size: ResponsiveHelper.sp(13),
+                                        color: Colors.white70,
+                                      ),
+                                      SizedBox(width: ResponsiveHelper.w(4)),
+                                      Text(
+                                        amenity,
+                                        style: GoogleFonts.inter(
+                                          color: Colors.white.withOpacity(0.9),
+                                          fontSize: ResponsiveHelper.sp(11),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
                 ),
 
+                /// HORIZONTAL DIVIDER LINE
+                Divider(
+                  color: Colors.white.withOpacity(0.08),
+                  thickness: 1,
+                  height: 1,
+                ),
+                SizedBox(height: ResponsiveHelper.h(12)),
+
                 /// 🔥 PRICE + BOOK (NOT NAVIGABLE)
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: RichText(
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        text: TextSpan(
-                          style: GoogleFonts.inter(
-                            fontSize: ResponsiveHelper.sp(13),
-                            color: AppColors.muted,
-                          ),
-                          children: [
-                            TextSpan(text: 'Starts from '),
-                            TextSpan(
-                              text: '₹${data.price}',
-                              style: TextStyle(
-                                color: AppColors.accent,
-                                fontWeight: FontWeight.w700,
-                                fontSize: ResponsiveHelper.sp(18),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              style: GoogleFonts.inter(
+                                fontSize: ResponsiveHelper.sp(13),
+                                color: AppColors.muted,
                               ),
+                              children: [
+                                TextSpan(text: 'Starts from '),
+                                TextSpan(
+                                  text: '₹${data.price}',
+                                  style: TextStyle(
+                                    color: AppColors.accent,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: ResponsiveHelper.sp(18),
+                                  ),
+                                ),
+                                TextSpan(text: '/hr'),
+                              ],
                             ),
-                            TextSpan(text: '/hr'),
+                          ),
+                          if (data.discount != null) ...[
+                            SizedBox(height: ResponsiveHelper.h(4)),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.local_offer,
+                                  size: ResponsiveHelper.sp(12),
+                                  color: AppColors.accent,
+                                ),
+                                SizedBox(width: ResponsiveHelper.w(4)),
+                                Text(
+                                  data.discount!,
+                                  style: GoogleFonts.inter(
+                                    color: AppColors.accent,
+                                    fontSize: ResponsiveHelper.sp(11),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
-                        ),
+                        ],
                       ),
                     ),
                     SizedBox(width: 12),

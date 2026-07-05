@@ -101,11 +101,14 @@ class TeamCard extends StatelessWidget {
                     color: kMutedText.withValues(alpha: 0.5),
                   ),
                   SizedBox(width: 12),
-                  Text(
-                    'Tap to add players from Friendlist',
-                    style: TextStyle(
-                      color: kMutedText.withValues(alpha: 0.5),
-                      fontSize: ResponsiveHelper.sp(14),
+                  Expanded(
+                    child: Text(
+                      'Tap to add players from Friendlist',
+                      style: TextStyle(
+                        color: kMutedText.withValues(alpha: 0.5),
+                        fontSize: ResponsiveHelper.sp(14),
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

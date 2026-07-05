@@ -15,6 +15,8 @@ class AvailableTurfsList extends StatelessWidget {
         'https://images.unsplash.com/photo-1529900948632-6aed3065b756',
         'https://images.unsplash.com/photo-1546519638-68e109498ffc',
       ],
+      amenities: ['Basketball', 'Parking', 'Shower', 'AC'],
+      discount: '10% OFF on first booking',
     ),
     TurfData(
       name: 'Greenfield Turf',
@@ -24,6 +26,8 @@ class AvailableTurfsList extends StatelessWidget {
         'https://images.unsplash.com/photo-1521412644187-c49fa049e84d',
         'https://images.unsplash.com/photo-1546519638-68e109498ffc',
       ],
+      amenities: ['Football', 'Parking', 'Shower'],
+      discount: '15% OFF on weekdays',
     ),
     TurfData(
       name: 'Urban Sports Hub',
@@ -33,6 +37,8 @@ class AvailableTurfsList extends StatelessWidget {
         'https://images.unsplash.com/photo-1546519638-68e109498ffc',
         'https://images.unsplash.com/photo-1529900948632-6aed3065b756',
       ],
+      amenities: ['Cricket', 'AC', 'Parking'],
+      discount: null,
     ),
   ];
 

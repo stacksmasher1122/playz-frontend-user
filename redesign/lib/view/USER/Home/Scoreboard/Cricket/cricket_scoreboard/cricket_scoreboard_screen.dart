@@ -3,6 +3,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_state_models.dart';
+import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 
 // Internal Imports
 import 'widgets/scoreboard_header.dart';
@@ -450,98 +451,173 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
     );
   }
 
+  Future<bool> _showExitConfirmationDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        ),
+        title: Text(
+          'Exit Match?',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: ResponsiveHelper.sp(18),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to exit? Your match state is saved, but you will leave the live scoreboard.',
+          style: TextStyle(
+            color: AppColors.muted,
+            fontSize: ResponsiveHelper.sp(14),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              'CANCEL',
+              style: TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.error,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(16),
+                vertical: ResponsiveHelper.h(8),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+              ),
+            ),
+            child: Text(
+              'EXIT',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Obx(() {
-        if (!controller.isEngineReady.value ||
-            controller.liveState.value == null) {
-          return Center(child: CircularProgressIndicator(color: AppColors.accent));
-        }
-
-        if (matchStatus == 'INITIALIZING' ||
-            (matchStatus == 'LIVE_INNINGS_2' && striker == null)) {
-          return Center(
-            child: SetupWizardCard(
-              controller: controller,
-              battingTeam: battingTeam,
-              bowlingTeam: bowlingTeam,
-            ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _showExitConfirmationDialog();
+        if (shouldPop && mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => UserAppNavShell()),
+            (route) => false,
           );
         }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: Obx(() {
+          if (!controller.isEngineReady.value ||
+              controller.liveState.value == null) {
+            return Center(child: CircularProgressIndicator(color: AppColors.accent));
+          }
 
-        return SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: ScoreboardHeader(
-                  controller: controller,
-                  totalRuns: totalRuns,
-                  wickets: wickets,
-                  inningsNumber: inningsNumber,
-                  oversDisplay: oversDisplay,
-                  currentPhase: currentPhase,
-                  currentRunRate: currentRunRate,
-                  projectedScore: projectedScore,
-                  targetScore: targetScore,
-                  matchResult: matchResult,
-                  matchStatus: matchStatus,
-                  isFreeHit: s.isFreeHit,
-                  overs: overs,
-                  balls: balls,
+          if (matchStatus == 'INITIALIZING' ||
+              (matchStatus == 'LIVE_INNINGS_2' && striker == null)) {
+            return Center(
+              child: SetupWizardCard(
+                controller: controller,
+                battingTeam: battingTeam,
+                bowlingTeam: bowlingTeam,
+              ),
+            );
+          }
+
+          return SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: ScoreboardHeader(
+                    controller: controller,
+                    totalRuns: totalRuns,
+                    wickets: wickets,
+                    inningsNumber: inningsNumber,
+                    oversDisplay: oversDisplay,
+                    currentPhase: currentPhase,
+                    currentRunRate: currentRunRate,
+                    projectedScore: projectedScore,
+                    targetScore: targetScore,
+                    matchResult: matchResult,
+                    matchStatus: matchStatus,
+                    isFreeHit: s.isFreeHit,
+                    overs: overs,
+                    balls: balls,
+                  ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: OverProgressRow(currentOverBalls: currentOverBalls),
-              ),
-              SliverToBoxAdapter(
-                child: MatchContextCard(
-                  winProbability: winProbability,
-                  partnershipRuns: partnershipRuns,
-                  partnershipBalls: partnershipBalls,
-                  requiredRunRate: requiredRunRate,
+                SliverToBoxAdapter(
+                  child: OverProgressRow(currentOverBalls: currentOverBalls),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: PlayerStatsTabs(
-                  striker: striker,
-                  nonStriker: nonStriker,
-                  currentBowler: currentBowler,
-                  currentOverBalls: currentOverBalls,
-                  currentRunRate: currentRunRate,
-                  partnershipRuns: partnershipRuns,
-                  partnershipBalls: partnershipBalls,
-                  ballHistory: ballHistory,
+                SliverToBoxAdapter(
+                  child: MatchContextCard(
+                    winProbability: winProbability,
+                    partnershipRuns: partnershipRuns,
+                    partnershipBalls: partnershipBalls,
+                    requiredRunRate: requiredRunRate,
+                  ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: BallTimeline(ballHistory: ballHistory),
-              ),
-              SliverToBoxAdapter(
-                child: ScoringConsole(
-                  onUndo: _undo,
-                  onWicket: _showWicketWizard,
-                  onExtras: _showExtrasModal,
-                  onNormalRun: (runs) => _addRuns(runs),
+                SliverToBoxAdapter(
+                  child: PlayerStatsTabs(
+                    striker: striker,
+                    nonStriker: nonStriker,
+                    currentBowler: currentBowler,
+                    currentOverBalls: currentOverBalls,
+                    currentRunRate: currentRunRate,
+                    partnershipRuns: partnershipRuns,
+                    partnershipBalls: partnershipBalls,
+                    ballHistory: ballHistory,
+                  ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: AdvancedActionsGrid(
-                  striker: striker,
-                  nonStriker: nonStriker,
-                  onChangeBowler: _showBowlerChangeDialog,
-                  onVideoRefer: _showReferralDialog,
-                  onRetireBatter: _showRetireBatterDialog,
-                  onMatchBreak: _showBreakDialog,
+                SliverToBoxAdapter(
+                  child: BallTimeline(ballHistory: ballHistory),
                 ),
-              ),
-              SliverToBoxAdapter(child: SizedBox(height: 32)),
-            ],
-          ),
-        );
-      }),
+                SliverToBoxAdapter(
+                  child: ScoringConsole(
+                    onUndo: _undo,
+                    onWicket: _showWicketWizard,
+                    onExtras: _showExtrasModal,
+                    onNormalRun: (runs) => _addRuns(runs),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: AdvancedActionsGrid(
+                    striker: striker,
+                    nonStriker: nonStriker,
+                    onChangeBowler: _showBowlerChangeDialog,
+                    onVideoRefer: _showReferralDialog,
+                    onRetireBatter: _showRetireBatterDialog,
+                    onMatchBreak: _showBreakDialog,
+                  ),
+                ),
+                SliverToBoxAdapter(child: SizedBox(height: 32)),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 }

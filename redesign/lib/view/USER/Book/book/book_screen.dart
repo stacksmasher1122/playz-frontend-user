@@ -84,12 +84,16 @@ class TurfData {
   final String location;
   final int price;
   final List<String> images;
+  final List<String> amenities;
+  final String? discount;
 
   TurfData({
     required this.name,
     required this.location,
     required this.price,
     required this.images,
+    this.amenities = const [],
+    this.discount,
   });
 }
 

@@ -13,8 +13,8 @@ class OtherTrainersSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return Column(
-      children: [
+    return SliverMainAxisGroup(
+      slivers: [
         SliverToBoxAdapter(child: SizedBox(height: 12)),
         SliverToBoxAdapter(child: _FilterChips()),
         SliverToBoxAdapter(child: SizedBox(height: 16)),
@@ -181,24 +181,23 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// IMAGE
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(ResponsiveHelper.w(16)),
-              ),
-              child: Stack(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 1.08,
-                    child: PageView.builder(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// IMAGE — flex-based so it doesn't push info section out
+              Expanded(
+                flex: 6,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    PageView.builder(
                       itemCount: item.images.length,
                       onPageChanged: (i) => setState(() => index = i),
                       itemBuilder: (_, i) => CachedNetworkImage(
@@ -213,81 +212,85 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
                             Icon(Icons.broken_image),
                       ),
                     ),
-                  ),
 
-                  /// TYPE BADGE
-                  Positioned(
-                    top: ResponsiveHelper.h(8),
-                    left: ResponsiveHelper.w(8),
-                    child: _Pill(
-                      item.type == EntityType.trainer ? 'TRAINER' : 'ACADEMY',
+                    /// TYPE BADGE
+                    Positioned(
+                      top: ResponsiveHelper.h(8),
+                      left: ResponsiveHelper.w(8),
+                      child: _Pill(
+                        item.type == EntityType.trainer ? 'TRAINER' : 'ACADEMY',
+                      ),
                     ),
-                  ),
 
-                  /// SPORTS ICONS
-                  Positioned(
-                    top: ResponsiveHelper.h(8),
-                    right: ResponsiveHelper.w(8),
-                    child: Row(
-                      children: item.sports.take(2).map((icon) {
-                        return Container(
-                          margin: EdgeInsets.only(left: 6),
-                          padding: EdgeInsets.all(ResponsiveHelper.w(6)),
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(icon, size: 14, color: Colors.white),
-                        );
-                      }).toList(),
+                    /// SPORTS ICONS
+                    Positioned(
+                      top: ResponsiveHelper.h(8),
+                      right: ResponsiveHelper.w(8),
+                      child: Row(
+                        children: item.sports.take(2).map((icon) {
+                          return Container(
+                            margin: EdgeInsets.only(left: 6),
+                            padding: EdgeInsets.all(ResponsiveHelper.w(6)),
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(icon, size: 14, color: Colors.white),
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            /// INFO
-            Padding(
-              padding: EdgeInsets.all(ResponsiveHelper.w(10)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+              /// INFO — flex-based so it always fits within card height
+              Expanded(
+                flex: 4,
+                child: Padding(
+                  padding: EdgeInsets.all(ResponsiveHelper.w(10)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(
-                        child: Text(
-                          item.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
                           ),
+                          _Rating(item.rating),
+                        ],
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        item.subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.inter(
+                          color: AppColors.muted,
+                          fontSize: ResponsiveHelper.sp(12),
                         ),
                       ),
-                      _Rating(item.rating),
+                      SizedBox(height: 6),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: item.tags.map(_TagChip.new).toList(),
+                      ),
                     ],
                   ),
-                  SizedBox(height: 2),
-                  Text(
-                    item.subtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
-                      color: AppColors.muted,
-                      fontSize: ResponsiveHelper.sp(12),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: item.tags.map(_TagChip.new).toList(),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
