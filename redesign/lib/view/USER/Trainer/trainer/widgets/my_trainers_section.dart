@@ -3,12 +3,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class MyTrainersSection extends StatelessWidget {
-  MyTrainersSection({super.key});
+class MyTrainersSection extends StatefulWidget {
+  const MyTrainersSection({super.key});
+
+  @override
+  State<MyTrainersSection> createState() => _MyTrainersSectionState();
+}
+
+class _MyTrainersSectionState extends State<MyTrainersSection> {
+  String selectedFilter = 'Active packages';
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
+    final filteredTrainers = _allMyTrainers
+        .where((t) => t.categories.contains(selectedFilter))
+        .toList();
+
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       sliver: SliverList(
@@ -36,27 +48,85 @@ class MyTrainersSection extends StatelessWidget {
 
           SizedBox(height: 12),
 
-          /// FILTER CHIPS
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _FilterButton(
-                label: 'Active packages',
-                icon: Icons.local_fire_department,
-                active: true,
-                onTap: () {},
-              ),
-              _FilterButton(label: 'Cricket', active: false, onTap: () {}),
-              _FilterButton(label: 'Football', active: false, onTap: () {}),
-              _FilterButton(label: 'Online', active: false, onTap: () {}),
-            ],
+          /// FILTER CHIPS (Horizontal Scrollable Row)
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            child: Row(
+              children: [
+                _FilterButton(
+                  label: 'Active packages',
+                  icon: Icons.local_fire_department,
+                  active: selectedFilter == 'Active packages',
+                  onTap: () {
+                    setState(() {
+                      selectedFilter = 'Active packages';
+                    });
+                  },
+                ),
+                SizedBox(width: 8),
+                _FilterButton(
+                  label: 'Cricket',
+                  active: selectedFilter == 'Cricket',
+                  onTap: () {
+                    setState(() {
+                      selectedFilter = 'Cricket';
+                    });
+                  },
+                ),
+                SizedBox(width: 8),
+                _FilterButton(
+                  label: 'Football',
+                  active: selectedFilter == 'Football',
+                  onTap: () {
+                    setState(() {
+                      selectedFilter = 'Football';
+                    });
+                  },
+                ),
+                SizedBox(width: 8),
+                _FilterButton(
+                  label: 'Online',
+                  active: selectedFilter == 'Online',
+                  onTap: () {
+                    setState(() {
+                      selectedFilter = 'Online';
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
 
           SizedBox(height: 14),
 
-          /// TRAINER CARD
-          _MyTrainerCard(),
+          /// TRAINER CARDS
+          if (filteredTrainers.isEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Center(
+                child: Text(
+                  'No trainers found',
+                  style: GoogleFonts.inter(color: AppColors.muted),
+                ),
+              ),
+            )
+          else
+            ...filteredTrainers.expand((trainer) => [
+                  _MyTrainerCard(
+                    name: trainer.name,
+                    specialty: trainer.specialty,
+                    rating: trainer.rating,
+                    status: trainer.status,
+                    completionText: trainer.completionText,
+                    progress: trainer.progress,
+                    tags: trainer.tags,
+                  ),
+                  SizedBox(height: 12),
+                ]),
+
+          // Generous bottom spacer to guarantee screen scrollability
+          SizedBox(height: 120),
         ]),
       ),
     );
@@ -64,7 +134,24 @@ class MyTrainersSection extends StatelessWidget {
 }
 
 class _MyTrainerCard extends StatelessWidget {
-  _MyTrainerCard();
+  final String name;
+  final String specialty;
+  final String rating;
+  final String status;
+  final String completionText;
+  final double progress;
+  final List<String> tags;
+
+  const _MyTrainerCard({
+    super.key,
+    required this.name,
+    required this.specialty,
+    required this.rating,
+    required this.status,
+    required this.completionText,
+    required this.progress,
+    required this.tags,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,19 +188,19 @@ class _MyTrainerCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Rahul Sharma',
+                          name,
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                         SizedBox(width: 6),
-                        _statusPill('Active Package'),
+                        _statusPill(status),
                       ],
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Strength & Conditioning  •  8+ yrs',
+                      specialty,
                       style: GoogleFonts.inter(
                         color: AppColors.muted,
                         fontSize: ResponsiveHelper.sp(12),
@@ -124,7 +211,7 @@ class _MyTrainerCard extends StatelessWidget {
                       children: [
                         Icon(Icons.star, size: 14, color: AppColors.accent),
                         SizedBox(width: 4),
-                        Text('4.8', style: TextStyle(color: Colors.white)),
+                        Text(rating, style: TextStyle(color: Colors.white)),
                       ],
                     ),
                   ],
@@ -138,12 +225,8 @@ class _MyTrainerCard extends StatelessWidget {
           /// TAGS
           Wrap(
             spacing: 6,
-            children: [
-              _Tag('Baner • Pune'),
-              _Tag('Adults'),
-              _Tag('Pro Athletes'),
-              _Tag('Certified'),
-            ],
+            runSpacing: 6,
+            children: tags.map((t) => _Tag(t)).toList(),
           ),
 
           SizedBox(height: 12),
@@ -153,14 +236,14 @@ class _MyTrainerCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               LinearProgressIndicator(
-                value: 4 / 8,
+                value: progress,
                 backgroundColor: AppColors.surface,
                 valueColor: AlwaysStoppedAnimation(AppColors.accent),
                 minHeight: 4,
               ),
               SizedBox(height: 4),
               Text(
-                '4 / 8 sessions completed',
+                completionText,
                 style: GoogleFonts.inter(color: AppColors.muted, fontSize: 11),
               ),
             ],
@@ -330,3 +413,68 @@ class _FilterButton extends StatelessWidget {
     );
   }
 }
+
+class _TrainerData {
+  final String name;
+  final String specialty;
+  final String rating;
+  final String status;
+  final String completionText;
+  final double progress;
+  final List<String> tags;
+  final List<String> categories;
+
+  _TrainerData({
+    required this.name,
+    required this.specialty,
+    required this.rating,
+    required this.status,
+    required this.completionText,
+    required this.progress,
+    required this.tags,
+    required this.categories,
+  });
+}
+
+final List<_TrainerData> _allMyTrainers = [
+  _TrainerData(
+    name: 'Rahul Sharma',
+    specialty: 'Strength & Conditioning  •  8+ yrs',
+    rating: '4.8',
+    status: 'Active Package',
+    completionText: '4 / 8 sessions completed',
+    progress: 4 / 8,
+    tags: ['Baner • Pune', 'Adults', 'Pro Athletes', 'Certified'],
+    categories: ['Active packages', 'Online'],
+  ),
+  _TrainerData(
+    name: 'Vikram Singh',
+    specialty: 'Cricket Coaching  •  10+ yrs',
+    rating: '4.9',
+    status: 'Active Package',
+    completionText: '6 / 12 sessions completed',
+    progress: 6 / 12,
+    tags: ['Kothrud • Pune', 'Kids', 'Intermediate', 'Certified'],
+    categories: ['Active packages', 'Cricket'],
+  ),
+  _TrainerData(
+    name: 'Amit Patel',
+    specialty: 'Football Coaching  •  6+ yrs',
+    rating: '4.7',
+    status: 'Recent',
+    completionText: '10 / 10 sessions completed',
+    progress: 1.0,
+    tags: ['Aundh • Pune', 'All Ages', 'Rehab', 'Certified'],
+    categories: ['Football'],
+  ),
+  _TrainerData(
+    name: 'Priya Mehta',
+    specialty: 'Yoga & Pilates  •  5+ yrs',
+    rating: '4.9',
+    status: 'Active Package',
+    completionText: '2 / 8 sessions completed',
+    progress: 2 / 8,
+    tags: ['Koregaon Park • Pune', 'Women Only', 'Flexible', 'Certified'],
+    categories: ['Active packages', 'Online'],
+  ),
+];
