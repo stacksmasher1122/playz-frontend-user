@@ -8,6 +8,8 @@ import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_
 import 'widgets/scoreboard_app_bar.dart';
 import 'widgets/quick_actions_row.dart';
 import 'widgets/create_scoreboard_hero.dart';
+import 'widgets/create_tournament_card.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/select_sports/select_sports_screen.dart';
 import 'widgets/live_matches_empty_state.dart';
 import 'widgets/live_match_preview_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -36,6 +38,20 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
 
             /// QUICK ACTIONS
             QuickActionsRow(),
+
+            /// CREATE TOURNAMENT CARD
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 18),
+                child: CreateTournamentCard(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => SelectSportScreen()),
+                    );
+                  },
+                ),
+              ),
+            ),
 
             /// CREATE SCOREBOARD
             SliverToBoxAdapter(child: CreateScoreboardHero()),
