@@ -42,7 +42,7 @@ class AdvancedOptionsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,12 +65,12 @@ class AdvancedOptionsCard extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: controller.decrementTimeouts,
-                    icon: Icon(Icons.remove_circle_outline, color: AppColors.primary),
+                    icon: Icon(Icons.remove_circle_outline, color: AppColors.accent),
                   ),
                   Obx(() => Text('${controller.timeouts.value}', style: AppTypography.headlineMd)),
                   IconButton(
                     onPressed: controller.incrementTimeouts,
-                    icon: Icon(Icons.add_circle_outline, color: AppColors.primary),
+                    icon: Icon(Icons.add_circle_outline, color: AppColors.accent),
                   ),
                 ],
               )
@@ -85,7 +85,7 @@ class AdvancedOptionsCard extends StatelessWidget {
             value: controller.goldenPoint.value,
             onChanged: (v) => controller.toggleGoldenPoint(),
           )),
-          Divider(color: AppColors.surfaceContainerHighest, height: 1),
+          Divider(color: AppColors.outlineVariant, height: 1),
           Obx(() => ToggleRuleTile(
             title: "Medical Timeout",
             subtitle: "Default ON",

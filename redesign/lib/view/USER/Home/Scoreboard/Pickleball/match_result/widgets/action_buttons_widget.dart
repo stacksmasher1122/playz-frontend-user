@@ -80,15 +80,15 @@ class _ActionButtonState extends State<_ActionButton> with SingleTickerProviderS
           width: double.infinity,
           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
           decoration: BoxDecoration(
-            color: widget.isPrimary ? AppColors.primaryContainer : AppColors.background,
+            color: widget.isPrimary ? AppColors.accent : AppColors.background,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            border: widget.isPrimary ? null : Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+            border: widget.isPrimary ? null : Border.all(color: AppColors.outlineVariant, width: 1),
           ),
           child: Center(
             child: Text(
               widget.label,
               style: AppTypography.headlineMd.copyWith(
-                color: widget.isPrimary ? Colors.black : AppColors.primary,
+                color: widget.isPrimary ? Colors.black : AppColors.accent,
                 fontWeight: FontWeight.bold,
               ),
             ),

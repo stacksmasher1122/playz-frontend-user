@@ -16,9 +16,9 @@ class TeamValidationCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer.withOpacity(0.8),
+        color: AppColors.card.withOpacity(0.8),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +44,7 @@ class TeamValidationCard extends StatelessWidget {
       children: [
         Icon(
           isValid ? Icons.check_circle : Icons.circle_outlined,
-          color: isValid ? AppColors.primaryContainer : AppColors.muted,
+          color: isValid ? AppColors.accent : AppColors.muted,
           size: 20,
         ),
         SizedBox(width: 12),
@@ -52,7 +52,7 @@ class TeamValidationCard extends StatelessWidget {
           child: Text(
             label,
             style: AppTypography.bodyMd.copyWith(
-              color: isValid ? AppColors.primary : AppColors.muted,
+              color: isValid ? AppColors.accent : AppColors.muted,
               decoration: isValid ? TextDecoration.none : TextDecoration.lineThrough,
             ),
           ),

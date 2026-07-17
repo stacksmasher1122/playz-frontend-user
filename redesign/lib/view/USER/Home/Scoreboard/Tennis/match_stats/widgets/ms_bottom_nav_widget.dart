@@ -12,7 +12,7 @@ class MsBottomNavWidget extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer.withValues(alpha: 0.9),
+        color: AppColors.card.withValues(alpha: 0.9),
         border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 8, offset: Offset(0, -2)),
@@ -68,7 +68,7 @@ class MsBottomNavWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-      hoverColor: AppColors.surfaceBright.withValues(alpha: 0.1),
+      hoverColor: AppColors.card.withValues(alpha: 0.1),
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
@@ -78,7 +78,7 @@ class MsBottomNavWidget extends StatelessWidget {
               top: ResponsiveHelper.h(0),
               left: -10,
               right: -10,
-              child: Container(height: ResponsiveHelper.h(2), color: AppColors.primaryContainer),
+              child: Container(height: ResponsiveHelper.h(2), color: AppColors.accent),
             ),
           Padding(
             padding: EdgeInsets.only(top: ResponsiveHelper.h(8), left: ResponsiveHelper.w(16), right: ResponsiveHelper.w(16), bottom: 8),
@@ -89,13 +89,13 @@ class MsBottomNavWidget extends StatelessWidget {
                 Icon(
                   icon,
                   size: 24,
-                  color: isActive ? AppColors.primaryContainer : AppColors.onSurfaceVariant,
+                  color: isActive ? AppColors.accent : AppColors.muted,
                 ),
                 SizedBox(height: 4),
                 Text(
                   label,
                   style: AppTypography.labelCaps.copyWith(
-                    color: isActive ? AppColors.primaryContainer : AppColors.onSurfaceVariant,
+                    color: isActive ? AppColors.accent : AppColors.muted,
                   ),
                 ),
               ],

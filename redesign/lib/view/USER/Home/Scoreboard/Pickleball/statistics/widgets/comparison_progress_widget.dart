@@ -30,8 +30,8 @@ class ComparisonProgressWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
-            Text(summary, style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold)),
+            Text(label, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
+            Text(summary, style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
           ],
         ),
         SizedBox(height: 8),
@@ -48,7 +48,7 @@ class ComparisonProgressWidget extends StatelessWidget {
                     child: Container(
                       height: ResponsiveHelper.h(8),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryContainer,
+                        color: AppColors.accent,
                         borderRadius: BorderRadius.horizontal(left: Radius.circular(ResponsiveHelper.w(4))),
                       ),
                     ),
@@ -68,7 +68,7 @@ class ComparisonProgressWidget extends StatelessWidget {
                     child: Container(
                       height: ResponsiveHelper.h(8),
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceContainerHighest,
+                        color: AppColors.outlineVariant,
                         borderRadius: BorderRadius.horizontal(right: Radius.circular(ResponsiveHelper.w(4))),
                       ),
                     ),
@@ -82,7 +82,7 @@ class ComparisonProgressWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(valueA, style: AppTypography.bodySm.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold)),
+            Text(valueA, style: AppTypography.bodySm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             Text(valueB, style: AppTypography.bodySm.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold)),
           ],
         ),

@@ -21,7 +21,7 @@ class MvpCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Stack(
         children: [
@@ -30,7 +30,7 @@ class MvpCardWidget extends StatelessWidget {
             bottom: -10,
             child: Icon(
               Icons.military_tech,
-              color: AppColors.surfaceContainerHighest.withOpacity(0.3),
+              color: AppColors.outlineVariant.withOpacity(0.3),
               size: 100,
             ),
           ),
@@ -39,7 +39,7 @@ class MvpCardWidget extends StatelessWidget {
             children: [
               Text(
                 'TEAM OF THE MATCH (MVP)',
-                style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold),
+                style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16),
               Row(
@@ -64,7 +64,7 @@ class MvpCardWidget extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(teamName, style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                      Text(teamName, style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                       Text(winRate, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
                     ],
                   ),

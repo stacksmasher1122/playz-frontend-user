@@ -126,12 +126,12 @@ class VolleyballFinalReviewController extends GetxController {
         "Validation Failed", 
         "Please resolve all pending warnings before starting the match.", 
         backgroundColor: AppColors.error, 
-        colorText: AppColors.primary
+        colorText: AppColors.accent
       );
       return;
     }
 
-    Get.snackbar("Match Started", "Clock initiated. Good luck!", backgroundColor: AppColors.primaryContainer, colorText: Colors.black);
+    Get.snackbar("Match Started", "Clock initiated. Good luck!", backgroundColor: AppColors.accent, colorText: Colors.black);
     Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballLiveScoringScreen(reviewData: reviewData)));
   }
 

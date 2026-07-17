@@ -52,16 +52,16 @@ class BottomActionBar extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: AppColors.background,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-          border: Border.all(color: AppColors.surfaceContainerHighest),
+          border: Border.all(color: AppColors.outlineVariant),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: AppColors.primaryContainer, size: 32),
+            Icon(icon, color: AppColors.accent, size: 32),
             SizedBox(height: 12),
-            Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+            Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           ],
         ),
       ),

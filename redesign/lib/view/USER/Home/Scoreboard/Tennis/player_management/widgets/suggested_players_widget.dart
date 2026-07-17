@@ -22,7 +22,7 @@ class _SuggestedPlayersWidgetState extends State<SuggestedPlayersWidget> {
     return Container(
       padding: EdgeInsets.all(AppDimensions.paddingLg),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLow,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusXl),
         border: Border.all(color: Colors.white10),
       ),
@@ -32,7 +32,7 @@ class _SuggestedPlayersWidgetState extends State<SuggestedPlayersWidget> {
           Text(
             'SUGGESTED FROM RECENT MATCHES',
             style: AppTypography.labelCaps10.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: AppColors.muted,
             ),
           ),
           SizedBox(height: 12),
@@ -159,12 +159,12 @@ class _MoreButtonState extends State<_MoreButton> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: isHovered
-              ? AppColors.surfaceContainerHigh
-              : AppColors.surfaceContainerHighest,
+              ? AppColors.card
+              : AppColors.outlineVariant,
           border: Border.all(color: Colors.white10),
         ),
         child: Center(
-          child: Icon(Icons.more_horiz, color: AppColors.onSurfaceVariant),
+          child: Icon(Icons.more_horiz, color: AppColors.muted),
         ),
       ),
     );

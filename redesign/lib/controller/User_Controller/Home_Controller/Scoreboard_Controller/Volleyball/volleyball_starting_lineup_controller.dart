@@ -63,12 +63,12 @@ class VolleyballStartingLineupController extends GetxController {
 
   void selectCaptain(String playerId) {
     _updatePlayerRole(playerId, isCaptain: true);
-    Get.snackbar("Success", "Captain assigned.", backgroundColor: AppColors.primaryContainer, colorText: Colors.black);
+    Get.snackbar("Success", "Captain assigned.", backgroundColor: AppColors.accent, colorText: Colors.black);
   }
 
   void selectLibero(String playerId) {
     _updatePlayerRole(playerId, isLibero: true);
-    Get.snackbar("Success", "Libero assigned.", backgroundColor: AppColors.primaryContainer, colorText: Colors.black);
+    Get.snackbar("Success", "Libero assigned.", backgroundColor: AppColors.accent, colorText: Colors.black);
   }
 
   void _updatePlayerRole(String playerId, {bool? isCaptain, bool? isLibero}) {
@@ -117,7 +117,7 @@ class VolleyballStartingLineupController extends GetxController {
 
   void confirmLineup(BuildContext context) {
     // BYPASSED VALIDATION AS REQUESTED FOR TESTING
-    Get.snackbar("Success", "Lineup confirmed! Proceeding to final review...", backgroundColor: AppColors.primaryContainer, colorText: Colors.black);
+    Get.snackbar("Success", "Lineup confirmed! Proceeding to final review...", backgroundColor: AppColors.accent, colorText: Colors.black);
     Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballFinalReviewScreen(teamA: teamA, teamB: teamB)));
   }
 }

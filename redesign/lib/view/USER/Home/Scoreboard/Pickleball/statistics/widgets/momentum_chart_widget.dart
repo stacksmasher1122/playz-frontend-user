@@ -59,7 +59,7 @@ class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTi
           children: [
             Align(
               alignment: Alignment.topCenter,
-              child: Text('ALPHA MOMENTUM', style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer.withOpacity(0.5))),
+              child: Text('ALPHA MOMENTUM', style: AppTypography.labelCaps10.copyWith(color: AppColors.accent.withOpacity(0.5))),
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -72,7 +72,7 @@ class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTi
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: AppColors.surfaceContainerHighest,
+                      color: AppColors.outlineVariant,
                       width: ResponsiveHelper.w(1),
                       style: BorderStyle.solid,
                     ),
@@ -93,7 +93,7 @@ class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTi
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (isPositive) _buildBar(height, AppColors.primaryContainer),
+                        if (isPositive) _buildBar(height, AppColors.accent),
                         if (!isPositive) SizedBox(height: 0),
                         SizedBox(height: 2), // spacing from center line
                         if (!isPositive) _buildBar(height, Colors.redAccent),

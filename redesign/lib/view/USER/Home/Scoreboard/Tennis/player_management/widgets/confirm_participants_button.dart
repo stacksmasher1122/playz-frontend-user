@@ -40,10 +40,10 @@ class _ConfirmParticipantsButtonState extends State<ConfirmParticipantsButton> {
             margin: EdgeInsets.only(top: 40),
             padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(24)),
             decoration: BoxDecoration(
-              color: _isHovered ? AppColors.primaryContainer : AppColors.surfaceContainerHighest,
+              color: _isHovered ? AppColors.accent : AppColors.outlineVariant,
               border: Border(
                 top: BorderSide(
-                  color: AppColors.primaryContainer,
+                  color: AppColors.accent,
                   width: ResponsiveHelper.w(2),
                 ),
               ),
@@ -54,7 +54,7 @@ class _ConfirmParticipantsButtonState extends State<ConfirmParticipantsButton> {
                 Text(
                   'CONFIRM MATCH PARTICIPANTS',
                   style: AppTypography.headlineMdSora.copyWith(
-                    color: _isHovered ? AppColors.onPrimary : AppColors.primaryContainer,
+                    color: _isHovered ? AppColors.onPrimary : AppColors.accent,
                   ),
                 ),
                 AnimatedSlide(
@@ -62,7 +62,7 @@ class _ConfirmParticipantsButtonState extends State<ConfirmParticipantsButton> {
                   duration: Duration(milliseconds: 200),
                   child: Icon(
                     Icons.arrow_forward,
-                    color: _isHovered ? AppColors.onPrimary : AppColors.primaryContainer,
+                    color: _isHovered ? AppColors.onPrimary : AppColors.accent,
                     size: 28,
                   ),
                 ),

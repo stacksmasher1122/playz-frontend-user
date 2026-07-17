@@ -92,9 +92,9 @@ class VolleyballRotationSubsController extends GetxController {
       captain.value = previous.captain;
       rotationNumber.value = previous.rotationCount;
       
-      Get.snackbar("Undo", "Restored previous rotation state.", backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
+      Get.snackbar("Undo", "Restored previous rotation state.", backgroundColor: AppColors.card, colorText: AppColors.accent);
     } else {
-      Get.snackbar("Undo", "No previous actions to undo.", backgroundColor: AppColors.error, colorText: AppColors.primary);
+      Get.snackbar("Undo", "No previous actions to undo.", backgroundColor: AppColors.error, colorText: AppColors.accent);
     }
   }
 
@@ -119,12 +119,12 @@ class VolleyballRotationSubsController extends GetxController {
     servingPlayer.value = p2;
     rotationNumber.value++;
     
-    Get.snackbar("Side-Out", "Rotated successfully. Player ${p2.jerseyNumber} is now serving.", backgroundColor: AppColors.primaryContainer, colorText: Colors.black);
+    Get.snackbar("Side-Out", "Rotated successfully. Player ${p2.jerseyNumber} is now serving.", backgroundColor: AppColors.accent, colorText: Colors.black);
   }
 
   void requestTimeout() {
     if (timeoutsUsed.value >= 2) {
-      Get.snackbar("Timeout Limit", "Maximum timeouts (2) already used.", backgroundColor: AppColors.error, colorText: AppColors.primary);
+      Get.snackbar("Timeout Limit", "Maximum timeouts (2) already used.", backgroundColor: AppColors.error, colorText: AppColors.accent);
       return;
     }
     timeoutsUsed.value++;
@@ -133,7 +133,7 @@ class VolleyballRotationSubsController extends GetxController {
 
   void substitutePlayer(int position, VolleyballPlayerModel playerIn) {
     if (substitutionsUsed.value >= 6) {
-      Get.snackbar("Substitutions Limit", "Maximum substitutions (6) already used.", backgroundColor: AppColors.error, colorText: AppColors.primary);
+      Get.snackbar("Substitutions Limit", "Maximum substitutions (6) already used.", backgroundColor: AppColors.error, colorText: AppColors.accent);
       return;
     }
 
@@ -160,7 +160,7 @@ class VolleyballRotationSubsController extends GetxController {
     Get.snackbar(
       "Substitution", 
       "${playerIn.name} IN, ${playerOut.name} OUT.", 
-      backgroundColor: AppColors.primaryContainer, 
+      backgroundColor: AppColors.accent, 
       colorText: Colors.black
     );
   }

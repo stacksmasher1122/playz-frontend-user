@@ -31,12 +31,12 @@ class MsHeroHeaderWidget extends StatelessWidget {
               children: [
                 Text(
                   'PLAYER 1',
-                  style: AppTypography.labelCaps.copyWith(color: AppColors.primaryContainer),
+                  style: AppTypography.labelCaps.copyWith(color: AppColors.accent),
                 ),
                 SizedBox(height: 4),
                 Text(
                   stats.player1Name,
-                  style: AppTypography.headlineLg.copyWith(color: AppColors.primary),
+                  style: AppTypography.headlineLg.copyWith(color: AppColors.accent),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 8),
@@ -61,18 +61,18 @@ class MsHeroHeaderWidget extends StatelessWidget {
                     children: [
                       Text(
                         stats.player1SetsWon.toString(),
-                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(64), fontWeight: FontWeight.w800, color: AppColors.primaryContainer, height: 1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(64), fontWeight: FontWeight.w800, color: AppColors.accent, height: 1),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
                         child: Text(
                           ':',
-                          style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(64), fontWeight: FontWeight.w800, color: AppColors.surfaceContainerHighest, height: 1),
+                          style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(64), fontWeight: FontWeight.w800, color: AppColors.outlineVariant, height: 1),
                         ),
                       ),
                       Text(
                         stats.player2SetsWon.toString(),
-                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(64), fontWeight: FontWeight.w800, color: AppColors.onSurface, height: 1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(64), fontWeight: FontWeight.w800, color: AppColors.onPrimary, height: 1),
                       ),
                     ],
                   ),
@@ -80,13 +80,13 @@ class MsHeroHeaderWidget extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryContainer.withValues(alpha: 0.1),
+                      color: AppColors.accent.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
-                      border: Border.all(color: AppColors.primaryContainer.withValues(alpha: 0.2)),
+                      border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
                     ),
                     child: Text(
                       'MATCH COMPLETED',
-                      style: AppTypography.labelCaps.copyWith(color: AppColors.primaryContainer, fontSize: 10),
+                      style: AppTypography.labelCaps.copyWith(color: AppColors.accent, fontSize: 10),
                     ),
                   ),
                 ],
@@ -98,12 +98,12 @@ class MsHeroHeaderWidget extends StatelessWidget {
               children: [
                 Text(
                   'PLAYER 2',
-                  style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+                  style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
                 ),
                 SizedBox(height: 4),
                 Text(
                   stats.player2Name,
-                  style: AppTypography.headlineLg.copyWith(color: AppColors.onSurfaceVariant),
+                  style: AppTypography.headlineLg.copyWith(color: AppColors.muted),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 8),
@@ -127,12 +127,12 @@ class MsHeroHeaderWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHighest,
+        color: AppColors.outlineVariant,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
       ),
       child: Text(
         text,
-        style: AppTypography.labelCaps.copyWith(color: AppColors.primary, fontSize: 10),
+        style: AppTypography.labelCaps.copyWith(color: AppColors.accent, fontSize: 10),
       ),
     );
   }

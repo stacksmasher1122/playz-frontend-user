@@ -11,7 +11,7 @@ class VolleyballTeamManagementController extends GetxController {
     teamName: 'VIPER ELITE',
     coachName: 'Sarah Jenkins',
     players: [],
-    primaryColor: AppColors.primaryContainer,
+    primaryColor: AppColors.accent,
   ).obs;
 
   Rx<VolleyballTeamModel> teamB = VolleyballTeamModel(
@@ -116,11 +116,11 @@ class VolleyballTeamManagementController extends GetxController {
   }
 
   void bulkImportPlayers(bool isTeamA) {
-    Get.snackbar("Action", "Bulk import coming soon", backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
+    Get.snackbar("Action", "Bulk import coming soon", backgroundColor: AppColors.card, colorText: AppColors.accent);
   }
 
   void importPreviousTeam() {
-    Get.snackbar("Action", "Import previous team coming soon", backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
+    Get.snackbar("Action", "Import previous team coming soon", backgroundColor: AppColors.card, colorText: AppColors.accent);
   }
 
   void _updateState() {

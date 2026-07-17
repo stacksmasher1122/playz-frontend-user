@@ -43,11 +43,11 @@ class _SmCreateButtonWidgetState extends State<SmCreateButtonWidget> {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: AppDimensions.md),
             decoration: BoxDecoration(
-              color: AppColors.primaryContainer,
+              color: AppColors.accent,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primaryContainer.withValues(alpha: 0.4),
+                  color: AppColors.accent.withValues(alpha: 0.4),
                   blurRadius: 15,
                   offset: Offset(-2, -2),
                 )
@@ -58,7 +58,7 @@ class _SmCreateButtonWidgetState extends State<SmCreateButtonWidget> {
               'CREATE MATCH SESSION',
               style: AppTypography.headlineMd.copyWith(
                 fontWeight: FontWeight.w700,
-                color: AppColors.onPrimaryContainer,
+                color: AppColors.background,
                 letterSpacing: 2.0,
               ),
             ),

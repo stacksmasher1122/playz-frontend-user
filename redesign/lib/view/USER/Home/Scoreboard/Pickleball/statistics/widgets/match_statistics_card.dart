@@ -22,7 +22,7 @@ class MatchStatisticsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +32,7 @@ class MatchStatisticsCard extends StatelessWidget {
             children: [
               Text(
                 'Match Stats',
-                style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
               ),
               Icon(Icons.trending_up, color: AppColors.muted, size: 24),
             ],

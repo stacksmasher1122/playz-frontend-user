@@ -23,9 +23,9 @@ class ToggleRuleTile extends StatelessWidget {
       height: ResponsiveHelper.h(48),
       padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,10 +34,10 @@ class ToggleRuleTile extends StatelessWidget {
           Obx(() => Switch(
             value: value.value,
             onChanged: onChanged,
-            activeColor: AppColors.primaryContainer,
-            activeTrackColor: AppColors.primaryContainer.withOpacity(0.5),
+            activeColor: AppColors.accent,
+            activeTrackColor: AppColors.accent.withOpacity(0.5),
             inactiveThumbColor: AppColors.muted,
-            inactiveTrackColor: AppColors.surfaceContainerHigh,
+            inactiveTrackColor: AppColors.card,
           )),
         ],
       ),

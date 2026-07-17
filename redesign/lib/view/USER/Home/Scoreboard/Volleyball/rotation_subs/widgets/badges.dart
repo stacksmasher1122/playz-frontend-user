@@ -12,7 +12,7 @@ class ServerBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4), vertical: ResponsiveHelper.h(2)),
       decoration: BoxDecoration(
-        color: AppColors.primaryContainer,
+        color: AppColors.accent,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
       ),
       child: Text('SVR', style: AppTypography.labelCaps10.copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 8)),
@@ -46,7 +46,7 @@ class CaptainBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(2)),
       decoration: BoxDecoration(
-        color: AppColors.primaryContainer,
+        color: AppColors.accent,
         shape: BoxShape.circle,
       ),
       child: Text('C', style: AppTypography.labelCaps10.copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 8)),

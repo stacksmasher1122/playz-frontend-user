@@ -16,7 +16,7 @@ class VersusDividerWidget extends StatelessWidget {
         shape: BoxShape.circle,
         color: AppColors.background,
         border: Border.all(
-          color: AppColors.surfaceContainerHighest,
+          color: AppColors.outlineVariant,
           width: ResponsiveHelper.w(4),
         ),
       ),
@@ -24,7 +24,7 @@ class VersusDividerWidget extends StatelessWidget {
         child: Text(
           'VS',
           style: AppTypography.displayScoreSora.copyWith(
-            color: AppColors.primaryContainer,
+            color: AppColors.accent,
           ),
         ),
       ),

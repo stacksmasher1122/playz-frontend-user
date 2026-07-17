@@ -60,13 +60,13 @@ class MatchCustomChip extends StatelessWidget {
         duration: Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(10)),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
+          color: isSelected ? AppColors.accent : AppColors.card,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
         ),
         child: Text(
           label,
           style: AppTypography.bodyMd.copyWith(
-            color: isSelected ? Colors.black : AppColors.primary,
+            color: isSelected ? Colors.black : AppColors.accent,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),

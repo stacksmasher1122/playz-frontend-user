@@ -15,9 +15,9 @@ class RegulationSummaryCard extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Row(
         children: [
@@ -25,7 +25,7 @@ class RegulationSummaryCard extends StatelessWidget {
             width: ResponsiveHelper.w(4),
             height: ResponsiveHelper.h(180),
             decoration: BoxDecoration(
-              color: AppColors.primaryContainer,
+              color: AppColors.accent,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(ResponsiveHelper.w(16)), bottomLeft: Radius.circular(ResponsiveHelper.w(16))),
             ),
           ),
@@ -37,7 +37,7 @@ class RegulationSummaryCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.gavel, color: AppColors.primaryContainer, size: 16),
+                      Icon(Icons.gavel, color: AppColors.accent, size: 16),
                       SizedBox(width: 8),
                       Text('REGULATION SETTINGS', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.5)),
                     ],

@@ -19,8 +19,8 @@ class LiveBottomNavigation extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHigh,
-        border: Border(top: BorderSide(color: AppColors.surfaceContainerHighest, width: 1)),
+        color: AppColors.card,
+        border: Border(top: BorderSide(color: AppColors.outlineVariant, width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -110,21 +110,21 @@ class _NavBarItemState extends State<_NavBarItem> with SingleTickerProviderState
                 height: ResponsiveHelper.h(3),
                 width: widget.isSelected ? 24 : 0,
                 decoration: BoxDecoration(
-                  color: AppColors.primaryContainer,
+                  color: AppColors.accent,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(1.5)),
                 ),
               ),
               SizedBox(height: 8),
               Icon(
                 widget.icon,
-                color: widget.isSelected ? AppColors.primary : AppColors.muted,
+                color: widget.isSelected ? AppColors.accent : AppColors.muted,
                 size: 24,
               ),
               SizedBox(height: 4),
               Text(
                 widget.label,
                 style: AppTypography.labelCaps10.copyWith(
-                  color: widget.isSelected ? AppColors.primaryContainer : AppColors.muted,
+                  color: widget.isSelected ? AppColors.accent : AppColors.muted,
                   fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),

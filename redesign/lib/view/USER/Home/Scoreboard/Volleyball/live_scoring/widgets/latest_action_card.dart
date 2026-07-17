@@ -24,9 +24,9 @@ class LatestActionCard extends StatelessWidget {
       return Container(
         padding: EdgeInsets.all(ResponsiveHelper.w(20)),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: AppColors.background,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-          border: Border.all(color: AppColors.surfaceContainerHighest),
+          border: Border.all(color: AppColors.outlineVariant),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +35,7 @@ class LatestActionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('LATEST ACTION', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.5)),
-                Text(time, style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+                Text(time, style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
               ],
             ),
             SizedBox(height: 16),
@@ -44,10 +44,10 @@ class LatestActionCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryContainer.withOpacity(0.1),
+                    color: AppColors.accent.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.sports_volleyball, color: AppColors.primaryContainer, size: 24),
+                  child: Icon(Icons.sports_volleyball, color: AppColors.accent, size: 24),
                 ),
                 SizedBox(width: 16),
                 Expanded(
@@ -56,7 +56,7 @@ class LatestActionCard extends StatelessWidget {
                     children: [
                       Text(
                         action,
-                        style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                        style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

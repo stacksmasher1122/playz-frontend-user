@@ -29,14 +29,14 @@ class NumberStepperWidget extends StatelessWidget {
         Container(
           height: ResponsiveHelper.h(48),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerLowest,
+            color: AppColors.background,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            border: Border.all(color: AppColors.surfaceContainerHighest),
+            border: Border.all(color: AppColors.outlineVariant),
           ),
           child: Row(
             children: [
               IconButton(
-                icon: Icon(Icons.remove, color: AppColors.primary),
+                icon: Icon(Icons.remove, color: AppColors.accent),
                 onPressed: onDecrement,
                 splashRadius: 20,
               ),
@@ -44,11 +44,11 @@ class NumberStepperWidget extends StatelessWidget {
                 child: Obx(() => Text(
                   '${value.value}',
                   textAlign: TextAlign.center,
-                  style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                  style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                 )),
               ),
               IconButton(
-                icon: Icon(Icons.add, color: AppColors.primary),
+                icon: Icon(Icons.add, color: AppColors.accent),
                 onPressed: onIncrement,
                 splashRadius: 20,
               ),

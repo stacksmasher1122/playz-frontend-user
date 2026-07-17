@@ -16,7 +16,7 @@ class LineupStatusWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: AppColors.surfaceContainerHighest)),
+        border: Border(top: BorderSide(color: AppColors.outlineVariant)),
       ),
       child: Obx(() {
         return Row(
@@ -29,7 +29,7 @@ class LineupStatusWidget extends StatelessWidget {
                   height: ResponsiveHelper.h(8),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: controller.currentState.lineupReady.value ? AppColors.primaryContainer : AppColors.muted,
+                    color: controller.currentState.lineupReady.value ? AppColors.accent : AppColors.muted,
                   ),
                 ),
                 SizedBox(width: 8),
@@ -61,7 +61,7 @@ class LineupStatusWidget extends StatelessWidget {
         if (name != null)
           Text(
             '#$number ${name.split(' ').last}',
-            style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+            style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
           )
         else
           Text(

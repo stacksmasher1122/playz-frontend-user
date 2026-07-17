@@ -17,7 +17,7 @@ class GameBreakdownWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +34,7 @@ class GameBreakdownWidget extends StatelessWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: games.length,
-            separatorBuilder: (_, __) => Divider(color: AppColors.surfaceContainerHighest, height: 32),
+            separatorBuilder: (_, __) => Divider(color: AppColors.outlineVariant, height: 32),
             itemBuilder: (context, index) {
               final game = games[index];
               return _buildGameRow(game);
@@ -56,7 +56,7 @@ class GameBreakdownWidget extends StatelessWidget {
             Text(
               game.scoreA.toString().padLeft(2, '0'),
               style: AppTypography.headlineLg.copyWith(
-                color: teamAWon ? AppColors.primaryContainer : AppColors.muted,
+                color: teamAWon ? AppColors.accent : AppColors.muted,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -64,7 +64,7 @@ class GameBreakdownWidget extends StatelessWidget {
             Text(
               game.scoreB.toString().padLeft(2, '0'),
               style: AppTypography.headlineLg.copyWith(
-                color: !teamAWon ? AppColors.primaryContainer : AppColors.muted,
+                color: !teamAWon ? AppColors.accent : AppColors.muted,
                 fontWeight: FontWeight.bold,
               ),
             ),

@@ -17,7 +17,7 @@ class ScoreSummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         children: [
@@ -29,7 +29,7 @@ class ScoreSummaryCard extends StatelessWidget {
           Text(
             'MATCH COMPLETE',
             style: AppTypography.headlineLg.copyWith(
-              color: AppColors.primaryContainer,
+              color: AppColors.accent,
               fontWeight: FontWeight.w900,
               fontStyle: FontStyle.italic,
             ),
@@ -48,7 +48,7 @@ class ScoreSummaryCard extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontSize: ResponsiveHelper.sp(64),
                       fontWeight: FontWeight.w900,
-                      color: AppColors.primaryContainer,
+                      color: AppColors.accent,
                       height: ResponsiveHelper.h(1.0),
                     ),
                   ),
@@ -82,7 +82,7 @@ class ScoreSummaryCard extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontSize: ResponsiveHelper.sp(64),
                       fontWeight: FontWeight.w900,
-                      color: AppColors.primary,
+                      color: AppColors.accent,
                       height: ResponsiveHelper.h(1.0),
                     ),
                   ),

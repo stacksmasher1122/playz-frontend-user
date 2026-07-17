@@ -43,8 +43,8 @@ class _VolleyballInitializeMatchScreenState extends State<VolleyballInitializeMa
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         elevation: 0,
-        leading: Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
-        title: Text('PlayZ', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+        leading: Icon(Icons.sports_volleyball, color: AppColors.accent),
+        title: Text('PlayZ', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             icon: Icon(Icons.search, color: AppColors.muted),
@@ -57,7 +57,7 @@ class _VolleyballInitializeMatchScreenState extends State<VolleyballInitializeMa
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
-          child: Container(color: AppColors.surfaceContainerHighest, height: 1.0),
+          child: Container(color: AppColors.outlineVariant, height: 1.0),
         ),
       ),
       body: Stack(
@@ -71,7 +71,7 @@ class _VolleyballInitializeMatchScreenState extends State<VolleyballInitializeMa
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Create Match', style: AppTypography.headlineLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                      Text('Create Match', style: AppTypography.headlineLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                       SizedBox(height: 8),
                       Text(
                         'Configure match parameters and officiating rules for the upcoming session.',

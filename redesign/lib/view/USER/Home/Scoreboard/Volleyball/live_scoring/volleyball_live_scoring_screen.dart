@@ -46,7 +46,7 @@ class _VolleyballLiveScoringScreenState extends State<VolleyballLiveScoringScree
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back, color: AppColors.accent),
           onPressed: () {
             controller.pauseMatch();
             Navigator.pop(context);
@@ -54,16 +54,16 @@ class _VolleyballLiveScoringScreenState extends State<VolleyballLiveScoringScree
         ),
         title: Row(
           children: [
-            Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
+            Icon(Icons.sports_volleyball, color: AppColors.accent),
             SizedBox(width: 8),
-            Text('PLAYZ SCOREBOARD', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('PLAYZ SCOREBOARD', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
           ],
         ),
         actions: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
             decoration: BoxDecoration(
-              color: AppColors.primaryContainer.withOpacity(0.2),
+              color: AppColors.accent.withOpacity(0.2),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             child: Row(
@@ -71,10 +71,10 @@ class _VolleyballLiveScoringScreenState extends State<VolleyballLiveScoringScree
                 Container(
                   width: ResponsiveHelper.w(8),
                   height: ResponsiveHelper.h(8),
-                  decoration: BoxDecoration(color: AppColors.primaryContainer, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: AppColors.accent, shape: BoxShape.circle),
                 ),
                 SizedBox(width: 8),
-                Text('LIVE', style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold)),
+                Text('LIVE', style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
               ],
             ),
           ),

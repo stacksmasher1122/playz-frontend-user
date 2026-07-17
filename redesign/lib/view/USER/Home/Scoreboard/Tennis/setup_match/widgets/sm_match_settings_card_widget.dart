@@ -32,7 +32,7 @@ class SmMatchSettingsCardWidget extends StatelessWidget {
             children: [
               Text(
                 'MATCH SETTINGS',
-                style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+                style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
               ),
               SizedBox(height: AppDimensions.md),
               Obx(() => _buildToggleRow('No-Ad Scoring', controller.matchSetup.value.noAdScoring, controller.toggleNoAdScoring)),
@@ -54,7 +54,7 @@ class SmMatchSettingsCardWidget extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTypography.bodyMd.copyWith(color: AppColors.onSurface),
+          style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary),
         ),
         GestureDetector(
           onTap: onTap,
@@ -64,12 +64,12 @@ class SmMatchSettingsCardWidget extends StatelessWidget {
             height: ResponsiveHelper.h(24),
             padding: EdgeInsets.all(ResponsiveHelper.w(4)),
             decoration: BoxDecoration(
-              color: value ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
+              color: value ? AppColors.accent : AppColors.card,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
               boxShadow: value
                   ? [
                       BoxShadow(
-                        color: AppColors.primaryContainer.withValues(alpha: 0.3),
+                        color: AppColors.accent.withValues(alpha: 0.3),
                         blurRadius: 10,
                       )
                     ]
@@ -83,7 +83,7 @@ class SmMatchSettingsCardWidget extends StatelessWidget {
                 height: ResponsiveHelper.h(16),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: value ? AppColors.onPrimaryContainer : AppColors.onSurfaceVariant,
+                  color: value ? AppColors.background : AppColors.muted,
                 ),
               ),
             ),

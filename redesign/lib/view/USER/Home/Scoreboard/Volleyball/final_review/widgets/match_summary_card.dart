@@ -15,9 +15,9 @@ class MatchSummaryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,12 +27,12 @@ class MatchSummaryCard extends StatelessWidget {
             children: [
               Text(
                 reviewData.config.matchName.toUpperCase(),
-                style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+                style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold, letterSpacing: 1.5),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerHighest,
+                  color: AppColors.outlineVariant,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
                 ),
                 child: Text('LIVE RECOGNITION', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
@@ -42,7 +42,7 @@ class MatchSummaryCard extends StatelessWidget {
           SizedBox(height: 12),
           Text(
             '${reviewData.teamA.teamName} vs.\n${reviewData.teamB.teamName}',
-            style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.w900, height: 1.2),
+            style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.w900, height: 1.2),
           ),
           SizedBox(height: 24),
           Row(
@@ -80,7 +80,7 @@ class MatchSummaryCard extends StatelessWidget {
             children: [
               Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.2)),
               SizedBox(height: 4),
-              Text(value, style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+              Text(value, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
@@ -92,9 +92,9 @@ class MatchSummaryCard extends StatelessWidget {
     return Container(
       height: ResponsiveHelper.h(80),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHigh,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Stack(
         children: [
@@ -109,7 +109,7 @@ class MatchSummaryCard extends StatelessWidget {
               padding: EdgeInsets.all(ResponsiveHelper.w(8.0)),
               child: Text(
                 name.toUpperCase(),
-                style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+                style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold, letterSpacing: 1.5),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

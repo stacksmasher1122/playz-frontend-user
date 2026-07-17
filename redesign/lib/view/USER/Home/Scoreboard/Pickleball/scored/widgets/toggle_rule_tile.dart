@@ -29,7 +29,7 @@ class ToggleRuleTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                Text(title, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                 SizedBox(height: 4),
                 Text(subtitle, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
               ],
@@ -39,13 +39,13 @@ class ToggleRuleTile extends StatelessWidget {
             value: value,
             onChanged: onChanged,
             activeColor: Colors.white,
-            activeTrackColor: AppColors.primaryContainer,
-            inactiveThumbColor: AppColors.onSurfaceVariant,
-            inactiveTrackColor: AppColors.surfaceContainerHighest,
+            activeTrackColor: AppColors.accent,
+            inactiveThumbColor: AppColors.muted,
+            inactiveTrackColor: AppColors.outlineVariant,
             thumbIcon: MaterialStateProperty.resolveWith<Icon?>(
               (Set<MaterialState> states) {
                 if (states.contains(MaterialState.selected)) {
-                  return Icon(Icons.check, color: AppColors.primaryContainer);
+                  return Icon(Icons.check, color: AppColors.accent);
                 }
                 return null;
               },

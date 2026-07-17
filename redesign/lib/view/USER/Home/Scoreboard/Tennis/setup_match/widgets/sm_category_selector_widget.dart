@@ -22,7 +22,7 @@ class SmCategorySelectorWidget extends StatelessWidget {
           padding: EdgeInsets.only(left: ResponsiveHelper.w(4.0), bottom: AppDimensions.md),
           child: Text(
             'CATEGORY',
-            style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+            style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
           ),
         ),
         SingleChildScrollView(
@@ -43,18 +43,18 @@ class SmCategorySelectorWidget extends StatelessWidget {
                       margin: EdgeInsets.only(right: AppDimensions.sm),
                       padding: EdgeInsets.symmetric(horizontal: AppDimensions.lg, vertical: AppDimensions.sm),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainer,
+                        color: isSelected ? AppColors.accent : AppColors.card,
                         borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
                         border: Border.all(
                           color: isSelected 
-                              ? AppColors.primaryContainer 
+                              ? AppColors.accent 
                               : Colors.white.withValues(alpha: 0.05),
                           width: ResponsiveHelper.w(1),
                         ),
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: AppColors.primaryContainer.withValues(alpha: 0.4),
+                                  color: AppColors.accent.withValues(alpha: 0.4),
                                   blurRadius: 15,
                                   offset: Offset(-2, -2),
                                 )
@@ -64,7 +64,7 @@ class SmCategorySelectorWidget extends StatelessWidget {
                       child: Text(
                         category,
                         style: AppTypography.labelCaps.copyWith(
-                          color: isSelected ? AppColors.onPrimaryContainer : AppColors.onSurfaceVariant,
+                          color: isSelected ? AppColors.background : AppColors.muted,
                         ),
                       ),
                     ),

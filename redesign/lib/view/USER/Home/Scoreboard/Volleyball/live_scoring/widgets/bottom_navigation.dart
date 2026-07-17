@@ -14,8 +14,8 @@ class BottomNavigation extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        border: Border(top: BorderSide(color: AppColors.surfaceContainerHighest)),
+        color: AppColors.background,
+        border: Border(top: BorderSide(color: AppColors.outlineVariant)),
       ),
       padding: EdgeInsets.only(top: ResponsiveHelper.h(8), bottom: 24), // For iOS safe area
       child: Row(
@@ -41,18 +41,18 @@ class BottomNavigation extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryContainer : Colors.transparent,
+          color: isSelected ? AppColors.accent : Colors.transparent,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: isSelected ? AppColors.onPrimaryContainer : AppColors.muted),
+            Icon(icon, color: isSelected ? AppColors.background : AppColors.muted),
             SizedBox(height: 4),
             Text(
               label,
               style: AppTypography.labelCaps10.copyWith(
-                color: isSelected ? AppColors.onPrimaryContainer : AppColors.muted,
+                color: isSelected ? AppColors.background : AppColors.muted,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),

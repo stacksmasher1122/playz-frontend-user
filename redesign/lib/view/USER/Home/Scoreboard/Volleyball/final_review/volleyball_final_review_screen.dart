@@ -48,12 +48,12 @@ class _VolleyballFinalReviewScreenState extends State<VolleyballFinalReviewScree
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
           children: [
-            Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
+            Icon(Icons.sports_volleyball, color: AppColors.accent),
             SizedBox(width: 8),
             Text('MATCH REVIEW', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           ],
@@ -66,12 +66,12 @@ class _VolleyballFinalReviewScreenState extends State<VolleyballFinalReviewScree
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
-          child: Container(color: AppColors.surfaceContainerHighest, height: 1.0),
+          child: Container(color: AppColors.outlineVariant, height: 1.0),
         ),
       ),
       body: Obx(() {
         if (controller.loading.value) {
-          return Center(child: CircularProgressIndicator(color: AppColors.primaryContainer));
+          return Center(child: CircularProgressIndicator(color: AppColors.accent));
         }
 
         return SafeArea(
@@ -86,7 +86,7 @@ class _VolleyballFinalReviewScreenState extends State<VolleyballFinalReviewScree
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Final Review', style: AppTypography.headlineLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                          Text('Final Review', style: AppTypography.headlineLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                           SizedBox(height: 8),
                           Text(
                             'Verify all match configurations before initiating the official clock.',

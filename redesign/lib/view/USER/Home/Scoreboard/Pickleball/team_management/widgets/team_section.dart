@@ -34,7 +34,7 @@ class TeamSection extends StatelessWidget {
             Text(
               isTeamA ? 'TEAM A' : 'TEAM B',
               style: AppTypography.headlineMd.copyWith(
-                color: isTeamA ? AppColors.primaryContainer : AppColors.primary,
+                color: isTeamA ? AppColors.accent : AppColors.accent,
                 fontWeight: FontWeight.w900,
               ),
             ),

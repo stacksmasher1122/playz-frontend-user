@@ -16,13 +16,13 @@ class PmHeaderWidget extends StatelessWidget {
         Text(
           'TOURNAMENT SETUP',
           style: AppTypography.labelCaps.copyWith(
-            color: AppColors.primaryContainer,
+            color: AppColors.accent,
           ),
         ),
         SizedBox(height: AppDimensions.xs),
         Text(
           'Player Management',
-          style: AppTypography.headlineLg.copyWith(color: AppColors.primary),
+          style: AppTypography.headlineLg.copyWith(color: AppColors.accent),
         ),
         SizedBox(height: AppDimensions.lg),
         
@@ -31,18 +31,18 @@ class PmHeaderWidget extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16), horizontal: ResponsiveHelper.w(20)),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerHigh,
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
             border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
           ),
           child: Row(
             children: [
-              Icon(Icons.qr_code_scanner, color: AppColors.primaryContainer, size: 20),
+              Icon(Icons.qr_code_scanner, color: AppColors.accent, size: 20),
               SizedBox(width: 12),
               Text(
                 'QR CHECK-IN',
                 style: AppTypography.labelCaps.copyWith(
-                  color: AppColors.onSurface,
+                  color: AppColors.onPrimary,
                   letterSpacing: 2.0,
                 ),
               ),

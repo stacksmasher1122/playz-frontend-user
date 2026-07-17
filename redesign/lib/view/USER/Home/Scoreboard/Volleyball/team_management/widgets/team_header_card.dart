@@ -44,7 +44,7 @@ class TeamHeaderCard extends StatelessWidget {
             children: [
               Text(
                 team.teamName,
-                style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.w900, letterSpacing: 1.2),
+                style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.w900, letterSpacing: 1.2),
               ),
               SizedBox(height: 4),
               Text(
@@ -61,7 +61,7 @@ class TeamHeaderCard extends StatelessWidget {
             SizedBox(height: 4),
             Text(
               team.coachName,
-              style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+              style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
             ),
           ],
         ),

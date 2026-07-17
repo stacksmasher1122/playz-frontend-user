@@ -24,7 +24,7 @@ class SecondaryActionButton extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+            style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
           ),
         ),
       ),

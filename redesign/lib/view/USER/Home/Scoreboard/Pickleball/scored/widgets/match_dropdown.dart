@@ -30,17 +30,17 @@ class MatchDropdown extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerHigh,
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               isExpanded: true,
               value: value.isEmpty ? null : value,
-              hint: Text(hint, style: AppTypography.bodyMd.copyWith(color: AppColors.surfaceContainerHighest)),
+              hint: Text(hint, style: AppTypography.bodyMd.copyWith(color: AppColors.outlineVariant)),
               icon: Icon(Icons.keyboard_arrow_down, color: AppColors.muted),
-              dropdownColor: AppColors.surfaceContainerHigh,
-              style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+              dropdownColor: AppColors.card,
+              style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
               items: options.map((String opt) {
                 return DropdownMenuItem<String>(
                   value: opt,

@@ -51,9 +51,9 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> with SingleTicker
           height: ResponsiveHelper.h(140),
           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
           decoration: BoxDecoration(
-            color: widget.isActive ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
+            color: widget.isActive ? AppColors.accent : AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: widget.isActive ? AppColors.primaryContainer : AppColors.surfaceContainerHighest, width: 1),
+            border: Border.all(color: widget.isActive ? AppColors.accent : AppColors.outlineVariant, width: 1),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +69,7 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> with SingleTicker
               Text(
                 '+1',
                 style: AppTypography.displayMd.copyWith(
-                  color: widget.isActive ? Colors.black : AppColors.primary,
+                  color: widget.isActive ? Colors.black : AppColors.accent,
                   fontWeight: FontWeight.w900,
                   height: ResponsiveHelper.h(1.0),
                 ),

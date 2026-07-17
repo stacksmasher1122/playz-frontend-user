@@ -69,7 +69,7 @@ class PickleballTeamManagementController extends GetxController {
 
   void createPlayer() {
     Get.back();
-    Get.snackbar("Info", "Create Player Coming Soon", backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
+    Get.snackbar("Info", "Create Player Coming Soon", backgroundColor: AppColors.card, colorText: AppColors.accent);
   }
 
   void selectExistingPlayer(int team, int slot) {
@@ -81,7 +81,7 @@ class PickleballTeamManagementController extends GetxController {
 
   void importTournamentPlayer() {
     Get.back();
-    Get.snackbar("Info", "Import Coming Soon", backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
+    Get.snackbar("Info", "Import Coming Soon", backgroundColor: AppColors.card, colorText: AppColors.accent);
   }
 
   bool validateTeams() {

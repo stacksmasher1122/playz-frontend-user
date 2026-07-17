@@ -20,7 +20,7 @@ class ModeSelector extends StatelessWidget {
       width: ResponsiveHelper.w(240),
       height: ResponsiveHelper.h(48),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHighest,
+        color: AppColors.outlineVariant,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
       ),
       child: Row(
@@ -31,14 +31,14 @@ class ModeSelector extends StatelessWidget {
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 200),
                 decoration: BoxDecoration(
-                  color: isSingles ? AppColors.primaryContainer : Colors.transparent,
+                  color: isSingles ? AppColors.accent : Colors.transparent,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                 ),
                 child: Center(
                   child: Text(
                     'SINGLES',
                     style: AppTypography.labelCaps.copyWith(
-                      color: isSingles ? Colors.black : AppColors.primary,
+                      color: isSingles ? Colors.black : AppColors.accent,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,
                     ),
@@ -53,14 +53,14 @@ class ModeSelector extends StatelessWidget {
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 200),
                 decoration: BoxDecoration(
-                  color: !isSingles ? AppColors.primaryContainer : Colors.transparent,
+                  color: !isSingles ? AppColors.accent : Colors.transparent,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                 ),
                 child: Center(
                   child: Text(
                     'DOUBLES',
                     style: AppTypography.labelCaps.copyWith(
-                      color: !isSingles ? Colors.black : AppColors.primary,
+                      color: !isSingles ? Colors.black : AppColors.accent,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,
                     ),

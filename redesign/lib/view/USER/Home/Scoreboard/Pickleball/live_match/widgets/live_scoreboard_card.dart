@@ -29,7 +29,7 @@ class LiveScoreboardCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.card,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+          border: Border.all(color: AppColors.outlineVariant, width: 1),
         ),
         child: Column(
           children: [
@@ -48,7 +48,7 @@ class LiveScoreboardCard extends StatelessWidget {
                     ),
                   ),
                   VerticalDivider(
-                    color: AppColors.surfaceContainerHighest,
+                    color: AppColors.outlineVariant,
                     thickness: 1,
                     width: ResponsiveHelper.w(1),
                   ),
@@ -88,12 +88,12 @@ class LiveScoreboardCard extends StatelessWidget {
                 fontFamily: 'Inter', // Assuming standard body font
                 fontSize: ResponsiveHelper.sp(100), // Massive font size
                 fontWeight: FontWeight.w900,
-                color: isServing ? AppColors.primaryContainer : AppColors.muted,
+                color: isServing ? AppColors.accent : AppColors.muted,
                 height: ResponsiveHelper.h(1.0),
                 shadows: isServing
                     ? [
                         BoxShadow(
-                          color: AppColors.primaryContainer.withOpacity(0.5),
+                          color: AppColors.accent.withOpacity(0.5),
                           blurRadius: blur,
                           offset: Offset.zero,
                         ),

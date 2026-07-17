@@ -18,9 +18,9 @@ class PlayerTile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: IntrinsicHeight(
         child: Row(
@@ -28,7 +28,7 @@ class PlayerTile extends StatelessWidget {
             Container(
               width: ResponsiveHelper.w(4),
               decoration: BoxDecoration(
-                color: AppColors.primaryContainer,
+                color: AppColors.accent,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(ResponsiveHelper.w(12)), bottomLeft: Radius.circular(ResponsiveHelper.w(12))),
               ),
             ),
@@ -48,14 +48,14 @@ class PlayerTile extends StatelessWidget {
                       children: [
                         Text(
                           player.name,
-                          style: AppTypography.bodyLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                          style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                         ),
                         if (player.isCaptain) ...[
                           SizedBox(width: 8),
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
-                            decoration: BoxDecoration(color: AppColors.primaryContainer, borderRadius: BorderRadius.circular(ResponsiveHelper.w(4))),
-                            child: Text('C', style: AppTypography.labelCaps10.copyWith(color: AppColors.onPrimaryContainer, fontWeight: FontWeight.bold)),
+                            decoration: BoxDecoration(color: AppColors.accent, borderRadius: BorderRadius.circular(ResponsiveHelper.w(4))),
+                            child: Text('C', style: AppTypography.labelCaps10.copyWith(color: AppColors.background, fontWeight: FontWeight.bold)),
                           )
                         ]
                       ],
@@ -71,7 +71,7 @@ class PlayerTile extends StatelessWidget {
             ),
             PopupMenuButton<String>(
               icon: Icon(Icons.more_vert, color: AppColors.muted),
-              color: AppColors.surfaceContainerHigh,
+              color: AppColors.card,
               onSelected: (value) {
                 if (value == 'captain') {
                   controller.assignCaptain(isTeamA, player.id);
@@ -84,11 +84,11 @@ class PlayerTile extends StatelessWidget {
               itemBuilder: (context) => [
                 PopupMenuItem(
                   value: 'captain',
-                  child: Text('Assign Captain', style: AppTypography.bodyMd.copyWith(color: AppColors.primary)),
+                  child: Text('Assign Captain', style: AppTypography.bodyMd.copyWith(color: AppColors.accent)),
                 ),
                 PopupMenuItem(
                   value: 'libero',
-                  child: Text('Assign Libero', style: AppTypography.bodyMd.copyWith(color: AppColors.primary)),
+                  child: Text('Assign Libero', style: AppTypography.bodyMd.copyWith(color: AppColors.accent)),
                 ),
                 PopupMenuItem(
                   value: 'delete',

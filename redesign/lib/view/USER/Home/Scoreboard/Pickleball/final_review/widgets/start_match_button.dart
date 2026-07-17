@@ -54,11 +54,11 @@ class _StartMatchButtonState extends State<StartMatchButton> with SingleTickerPr
             width: double.infinity,
             height: ResponsiveHelper.h(56),
             decoration: BoxDecoration(
-              color: AppColors.primaryContainer,
+              color: AppColors.accent,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
               boxShadow: widget.isStarting ? [] : [
                 BoxShadow(
-                  color: AppColors.primaryContainer.withOpacity(0.4),
+                  color: AppColors.accent.withOpacity(0.4),
                   blurRadius: 16,
                   offset: Offset(0, 4),
                 ),

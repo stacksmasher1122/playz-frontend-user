@@ -20,7 +20,7 @@ class GameBreakdownCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +30,7 @@ class GameBreakdownCard extends StatelessWidget {
             children: [
               Text(
                 'Game Breakdown',
-                style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
               ),
               Obx(() => Row(
                 children: controller.statsModel.value.games.map((game) {
@@ -64,7 +64,7 @@ class GameBreakdownCard extends StatelessWidget {
         margin: EdgeInsets.only(left: 8),
         padding: EdgeInsets.symmetric(horizontal: isSelected ? 12 : 8, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
+          color: isSelected ? AppColors.accent : AppColors.card,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)), // Pill vs circle badge
           shape: isSelected ? BoxShape.rectangle : BoxShape.rectangle, // Approximating circle via radius if short
         ),

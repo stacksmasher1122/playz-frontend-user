@@ -12,7 +12,7 @@ class LoadingWidget extends StatelessWidget {
       color: Colors.black54,
       child: Center(
         child: CircularProgressIndicator(
-          color: AppColors.primaryContainer,
+          color: AppColors.accent,
         ),
       ),
     );

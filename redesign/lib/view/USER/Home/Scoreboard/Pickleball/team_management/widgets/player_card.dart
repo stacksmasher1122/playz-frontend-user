@@ -25,7 +25,7 @@ class PlayerCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.card,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-          border: Border.all(color: AppColors.primaryContainer, width: 1),
+          border: Border.all(color: AppColors.accent, width: 1),
         ),
         child: Row(
           children: [
@@ -34,7 +34,7 @@ class PlayerCard extends StatelessWidget {
               height: ResponsiveHelper.h(60),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                border: Border.all(color: AppColors.primaryContainer, width: 1),
+                border: Border.all(color: AppColors.accent, width: 1),
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(player.image),
                   fit: BoxFit.cover,
@@ -48,7 +48,7 @@ class PlayerCard extends StatelessWidget {
                 children: [
                   Text(
                     player.name,
-                    style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                    style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 6),
                   Row(
@@ -56,13 +56,13 @@ class PlayerCard extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryContainer.withOpacity(0.15),
+                          color: AppColors.accent.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
-                          border: Border.all(color: AppColors.primaryContainer.withOpacity(0.3)),
+                          border: Border.all(color: AppColors.accent.withOpacity(0.3)),
                         ),
                         child: Text(
                           player.rating,
-                          style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer),
+                          style: AppTypography.labelCaps10.copyWith(color: AppColors.accent),
                         ),
                       ),
                       SizedBox(width: 8),

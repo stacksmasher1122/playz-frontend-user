@@ -26,22 +26,22 @@ class MatchStatsGrid extends StatelessWidget {
         childAspectRatio: 1.2,
         children: [
           StatCardWidget(
-            icon: Icon(Icons.swap_horiz, color: AppColors.primaryContainer, size: 28),
+            icon: Icon(Icons.swap_horiz, color: AppColors.accent, size: 28),
             label: 'GAMES',
             value: reviewData.gamesFormat,
           ),
           StatCardWidget(
-            icon: Icon(Icons.scoreboard_outlined, color: AppColors.primaryContainer, size: 28),
+            icon: Icon(Icons.scoreboard_outlined, color: AppColors.accent, size: 28),
             label: 'TARGET',
             value: '${reviewData.targetPoints} Points',
           ),
           StatCardWidget(
-            icon: Text('+2', style: AppTypography.headlineMd.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold)),
+            icon: Text('+2', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             label: 'WIN BY 2',
             value: reviewData.winByTwo ? 'Active' : 'Inactive',
           ),
           StatCardWidget(
-            icon: Icon(Icons.bolt, color: AppColors.primaryContainer, size: 28),
+            icon: Icon(Icons.bolt, color: AppColors.accent, size: 28),
             label: 'MODE',
             value: reviewData.scoringMode,
           ),

@@ -21,8 +21,8 @@ class CourtPlayerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     bool isServing = courtPlayer.isServing;
-    Color borderColor = isServing ? AppColors.primaryContainer : AppColors.surfaceContainerHighest;
-    Color bgColor = isLibero ? AppColors.surfaceContainerHighest : AppColors.surfaceContainerLowest;
+    Color borderColor = isServing ? AppColors.accent : AppColors.outlineVariant;
+    Color bgColor = isLibero ? AppColors.outlineVariant : AppColors.background;
 
     return Container(
       width: ResponsiveHelper.w(80),
@@ -31,7 +31,7 @@ class CourtPlayerCard extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: borderColor, width: isServing ? 2 : 1),
-        boxShadow: isServing ? [BoxShadow(color: AppColors.primaryContainer.withOpacity(0.3), blurRadius: 10)] : [],
+        boxShadow: isServing ? [BoxShadow(color: AppColors.accent.withOpacity(0.3), blurRadius: 10)] : [],
       ),
       child: Stack(
         children: [
@@ -41,7 +41,7 @@ class CourtPlayerCard extends StatelessWidget {
               children: [
                 Text(
                   courtPlayer.player.jerseyNumber,
-                  style: AppTypography.headlineLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                  style: AppTypography.headlineLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 Text(

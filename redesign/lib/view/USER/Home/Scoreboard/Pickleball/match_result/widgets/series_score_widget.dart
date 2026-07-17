@@ -33,7 +33,7 @@ class SeriesScoreWidget extends StatelessWidget {
                     fontFamily: 'Inter',
                     fontSize: ResponsiveHelper.sp(72),
                     fontWeight: FontWeight.w900,
-                    color: AppColors.primaryContainer,
+                    color: AppColors.accent,
                     height: ResponsiveHelper.h(1.0),
                   ),
                 );
@@ -61,7 +61,7 @@ class SeriesScoreWidget extends StatelessWidget {
                     fontFamily: 'Inter',
                     fontSize: ResponsiveHelper.sp(72),
                     fontWeight: FontWeight.w900,
-                    color: AppColors.primary,
+                    color: AppColors.accent,
                     height: ResponsiveHelper.h(1.0),
                   ),
                 );

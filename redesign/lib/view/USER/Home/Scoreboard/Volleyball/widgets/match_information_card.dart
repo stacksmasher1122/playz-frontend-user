@@ -17,9 +17,9 @@ class MatchInformationCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer.withOpacity(0.8),
+        color: AppColors.card.withOpacity(0.8),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -56,23 +56,23 @@ class MatchInformationCard extends StatelessWidget {
         Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
         SizedBox(height: 8),
         TextFormField(
-          style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+          style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
             filled: true,
-            fillColor: AppColors.surfaceContainerLowest,
+            fillColor: AppColors.background,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
+              borderSide: BorderSide(color: AppColors.outlineVariant),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
+              borderSide: BorderSide(color: AppColors.outlineVariant),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.primaryContainer),
+              borderSide: BorderSide(color: AppColors.accent),
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(16)),
           ),
@@ -97,16 +97,16 @@ class MatchInformationCard extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(16)),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
+              color: AppColors.background,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              border: Border.all(color: AppColors.surfaceContainerHighest),
+              border: Border.all(color: AppColors.outlineVariant),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Obx(() => Text(
                   controller.date.value.isEmpty ? 'dd-mm-yyyy --:--' : '${controller.date.value} ${controller.time.value}',
-                  style: AppTypography.bodyMd.copyWith(color: controller.date.value.isEmpty ? AppColors.muted : AppColors.primary),
+                  style: AppTypography.bodyMd.copyWith(color: controller.date.value.isEmpty ? AppColors.muted : AppColors.accent),
                 )),
                 Icon(Icons.calendar_today, color: AppColors.muted, size: 20),
               ],
@@ -124,24 +124,24 @@ class MatchInformationCard extends StatelessWidget {
         Text('VENUE / COURT', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
         SizedBox(height: 8),
         TextFormField(
-          style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+          style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
           decoration: InputDecoration(
             hintText: 'Court 04 - Stadium Center',
             hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
             prefixIcon: Icon(Icons.location_on_outlined, color: AppColors.muted),
             filled: true,
-            fillColor: AppColors.surfaceContainerLowest,
+            fillColor: AppColors.background,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
+              borderSide: BorderSide(color: AppColors.outlineVariant),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
+              borderSide: BorderSide(color: AppColors.outlineVariant),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.primaryContainer),
+              borderSide: BorderSide(color: AppColors.accent),
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(16)),
           ),

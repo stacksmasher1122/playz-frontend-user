@@ -21,7 +21,7 @@ class MsPlayerOfMatchWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.02),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.primaryContainer, width: 2),
+          border: Border.all(color: AppColors.accent, width: 2),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,20 +53,20 @@ class MsPlayerOfMatchWidget extends StatelessWidget {
                         children: [
                           Text(
                             'PLAYER OF THE MATCH',
-                            style: AppTypography.labelCaps.copyWith(color: AppColors.primaryContainer, fontSize: 10),
+                            style: AppTypography.labelCaps.copyWith(color: AppColors.accent, fontSize: 10),
                           ),
                           SizedBox(height: ResponsiveHelper.h(4)),
                           Text(
                             stats.player1Name,
-                            style: AppTypography.headlineMd.copyWith(color: AppColors.primary),
+                            style: AppTypography.headlineMd.copyWith(color: AppColors.accent),
                           ),
                         ],
                       ),
                       Row(
                         children: [
-                          Icon(Icons.emoji_events, color: AppColors.primaryContainer, size: 24),
+                          Icon(Icons.emoji_events, color: AppColors.accent, size: 24),
                           SizedBox(width: ResponsiveHelper.w(8)),
-                          Icon(Icons.star, color: AppColors.primaryContainer, size: 24),
+                          Icon(Icons.star, color: AppColors.accent, size: 24),
                         ],
                       ),
                     ],
@@ -77,7 +77,7 @@ class MsPlayerOfMatchWidget extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerHigh.withValues(alpha: 0.5),
+                      color: AppColors.card.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
                     ),
@@ -86,15 +86,15 @@ class MsPlayerOfMatchWidget extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.smart_toy, color: AppColors.primaryContainer, size: 16),
+                            Icon(Icons.smart_toy, color: AppColors.accent, size: 16),
                             SizedBox(width: ResponsiveHelper.w(8)),
-                            Text('AI INSIGHT SUMMARY', style: AppTypography.labelCaps.copyWith(color: AppColors.primaryContainer, fontSize: 9)),
+                            Text('AI INSIGHT SUMMARY', style: AppTypography.labelCaps.copyWith(color: AppColors.accent, fontSize: 9)),
                           ],
                         ),
                         SizedBox(height: ResponsiveHelper.h(8)),
                         Text(
                           stats.mvpInsight,
-                          style: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant, fontSize: 12),
+                          style: AppTypography.bodyMd.copyWith(color: AppColors.muted, fontSize: 12),
                         ),
                       ],
                     ),
@@ -122,15 +122,15 @@ class MsPlayerOfMatchWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHigh,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.primary, size: 12),
+          Icon(icon, color: AppColors.accent, size: 12),
           SizedBox(width: ResponsiveHelper.w(4)),
-          Text(label, style: AppTypography.labelCaps.copyWith(color: AppColors.primary, fontSize: 9)),
+          Text(label, style: AppTypography.labelCaps.copyWith(color: AppColors.accent, fontSize: 9)),
         ],
       ),
     );

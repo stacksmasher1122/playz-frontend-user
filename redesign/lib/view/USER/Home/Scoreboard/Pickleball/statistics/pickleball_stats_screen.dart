@@ -89,7 +89,7 @@ class _PickleballStatsScreenState extends State<PickleballStatsScreen> with Tick
           if (index == 0) {
             Navigator.pop(context); // Go back to scoring if they came from there
           } else {
-            Get.snackbar("Navigation", "Navigating to tab $index", backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
+            Get.snackbar("Navigation", "Navigating to tab $index", backgroundColor: AppColors.card, colorText: AppColors.accent);
           }
         },
       ),

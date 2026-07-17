@@ -38,13 +38,13 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
       backgroundColor: AppColors.background,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: AppColors.primary),
+        icon: Icon(Icons.arrow_back, color: AppColors.accent),
         onPressed: () => Navigator.pop(context),
       ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.sports_tennis, color: AppColors.primaryContainer, size: 24),
+          Icon(Icons.sports_tennis, color: AppColors.accent, size: 24),
           SizedBox(width: 8),
           Text('MATCH CENTER', style: AppTypography.headlineMd),
         ],
@@ -57,7 +57,7 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
             margin: EdgeInsets.only(right: 12),
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.surfaceContainerHighest),
+              border: Border.all(color: AppColors.outlineVariant),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             ),
             child: Row(
@@ -68,7 +68,7 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
                     width: ResponsiveHelper.w(8),
                     height: ResponsiveHelper.h(8),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryContainer,
+                      color: AppColors.accent,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -76,7 +76,7 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
                 SizedBox(width: 6),
                 Text(
                   'LIVE',
-                  style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold),
+                  style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -87,7 +87,7 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primaryContainer, width: 1.5),
+              border: Border.all(color: AppColors.accent, width: 1.5),
             ),
             child: CircleAvatar(
               radius: 16,

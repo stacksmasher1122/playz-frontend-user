@@ -18,7 +18,7 @@ class TimelineCard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('MATCH TIMELINE', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('MATCH TIMELINE', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             Row(
               children: [
                 Text('ALL EVENTS', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.2)),
@@ -43,13 +43,13 @@ class TimelineCard extends StatelessWidget {
     IconData icon = Icons.circle;
 
     if (event.type == TimelineEventType.point) {
-      iconColor = event.isTeamA ? AppColors.primaryContainer : AppColors.surfaceContainerHighest;
+      iconColor = event.isTeamA ? AppColors.accent : AppColors.outlineVariant;
       icon = Icons.circle;
     } else if (event.type == TimelineEventType.ace) {
-      iconColor = AppColors.primaryContainer;
+      iconColor = AppColors.accent;
       icon = Icons.star;
     } else if (event.type == TimelineEventType.block) {
-      iconColor = AppColors.primary;
+      iconColor = AppColors.accent;
       icon = Icons.shield;
     } else if (event.type == TimelineEventType.substitution) {
       iconColor = Colors.blueAccent;
@@ -68,7 +68,7 @@ class TimelineCard extends StatelessWidget {
             children: [
               Icon(icon, color: iconColor, size: 16),
               SizedBox(height: 8),
-              Container(width: 2, height: 40, color: AppColors.surfaceContainerHighest),
+              Container(width: 2, height: 40, color: AppColors.outlineVariant),
             ],
           ),
           SizedBox(width: 16),
@@ -76,7 +76,7 @@ class TimelineCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(event.title, style: AppTypography.bodyLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600)),
+                Text(event.title, style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.w600)),
                 SizedBox(height: 4),
                 Text(event.description, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.2)),
               ],

@@ -18,11 +18,11 @@ class EmptyRosterWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: AppColors.background,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         ),
         child: CustomPaint(
-          painter: DashedBorderPainter(color: AppColors.surfaceContainerHighest, borderRadius: 12),
+          painter: DashedBorderPainter(color: AppColors.outlineVariant, borderRadius: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

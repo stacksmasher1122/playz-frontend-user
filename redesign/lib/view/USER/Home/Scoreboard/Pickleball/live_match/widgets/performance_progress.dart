@@ -82,7 +82,7 @@ class _PerformanceProgressState extends State<PerformanceProgress> with SingleTi
                 height: ResponsiveHelper.h(4),
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerHighest,
+                  color: AppColors.outlineVariant,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
                 ),
                 child: AnimatedBuilder(
@@ -93,7 +93,7 @@ class _PerformanceProgressState extends State<PerformanceProgress> with SingleTi
                       widthFactor: _fillAnimation.value,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: AppColors.primaryContainer,
+                          color: AppColors.accent,
                           borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
                         ),
                       ),

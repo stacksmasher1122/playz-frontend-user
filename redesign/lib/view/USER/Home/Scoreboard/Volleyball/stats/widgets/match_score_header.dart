@@ -13,9 +13,9 @@ class MatchScoreHeader extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(
         children: [
@@ -28,10 +28,10 @@ class MatchScoreHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (controller.isTeamAServing) 
-                      Text('SERVING', style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, letterSpacing: 2)),
+                      Text('SERVING', style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, letterSpacing: 2)),
                     Text(
                       controller.teamAName.toUpperCase(),
-                      style: AppTypography.headlineLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                      style: AppTypography.headlineLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -53,7 +53,7 @@ class MatchScoreHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(controller.teamAScore.toString(), style: TextStyle(fontSize: 80, fontWeight: FontWeight.w900, color: AppColors.primaryContainer, height: 1)),
+              Text(controller.teamAScore.toString(), style: TextStyle(fontSize: 80, fontWeight: FontWeight.w900, color: AppColors.accent, height: 1)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
@@ -103,7 +103,7 @@ class MatchScoreHeader extends StatelessWidget {
       width: 24,
       height: 12,
       decoration: BoxDecoration(
-        color: won ? AppColors.primaryContainer : AppColors.surfaceContainerHighest,
+        color: won ? AppColors.accent : AppColors.outlineVariant,
         borderRadius: BorderRadius.circular(2),
       ),
     );

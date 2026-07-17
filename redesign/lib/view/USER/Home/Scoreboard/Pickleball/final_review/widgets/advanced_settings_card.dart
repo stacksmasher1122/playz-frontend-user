@@ -21,7 +21,7 @@ class AdvancedSettingsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,13 +36,13 @@ class AdvancedSettingsCard extends StatelessWidget {
             label: 'Time Limit',
             value: reviewData.timeLimit,
           ),
-          Divider(color: AppColors.surfaceContainerHighest, height: 1),
+          Divider(color: AppColors.outlineVariant, height: 1),
           AdvancedSettingTile(
             icon: Icons.swap_horiz,
             label: 'Switch Sides',
             value: reviewData.switchSides,
           ),
-          Divider(color: AppColors.surfaceContainerHighest, height: 1),
+          Divider(color: AppColors.outlineVariant, height: 1),
           AdvancedSettingTile(
             icon: Icons.replay,
             label: 'Record Replays',

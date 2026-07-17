@@ -13,13 +13,13 @@ class FinalReviewAppbar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColors.background,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: AppColors.primary),
+        icon: Icon(Icons.arrow_back, color: AppColors.accent),
         onPressed: () => Navigator.pop(context),
       ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.sports_tennis, color: AppColors.primaryContainer, size: 24),
+          Icon(Icons.sports_tennis, color: AppColors.accent, size: 24),
           SizedBox(width: 8),
           Text('MATCH CENTER', style: AppTypography.headlineMd),
         ],

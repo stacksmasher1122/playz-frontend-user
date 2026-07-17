@@ -17,8 +17,8 @@ class BulkActionButtons extends StatelessWidget {
           child: OutlinedButton(
             onPressed: () {},
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.primary,
-              side: BorderSide(color: AppColors.surfaceContainerHighest),
+              foregroundColor: AppColors.accent,
+              side: BorderSide(color: AppColors.outlineVariant),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
             ),
             child: Row(
@@ -40,8 +40,8 @@ class BulkActionButtons extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primary,
-                    side: BorderSide(color: AppColors.surfaceContainerHighest),
+                    foregroundColor: AppColors.accent,
+                    side: BorderSide(color: AppColors.outlineVariant),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
                   ),
                   child: Text('Clone Team', style: AppTypography.bodyMd.copyWith(fontWeight: FontWeight.bold)),
@@ -55,8 +55,8 @@ class BulkActionButtons extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primary,
-                    side: BorderSide(color: AppColors.surfaceContainerHighest),
+                    foregroundColor: AppColors.accent,
+                    side: BorderSide(color: AppColors.outlineVariant),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
                   ),
                   child: Text('Randomize #', style: AppTypography.bodyMd.copyWith(fontWeight: FontWeight.bold)),

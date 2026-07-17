@@ -70,10 +70,10 @@ class VolleyballInitializeMatchController extends GetxController {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
-              primary: AppColors.primaryContainer,
-              onPrimary: AppColors.primary,
-              surface: AppColors.surfaceContainerHighest,
-              onSurface: AppColors.primary,
+              primary: AppColors.accent,
+              onPrimary: AppColors.accent,
+              surface: AppColors.outlineVariant,
+              onSurface: AppColors.accent,
             ),
           ),
           child: child!,
@@ -93,10 +93,10 @@ class VolleyballInitializeMatchController extends GetxController {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
-              primary: AppColors.primaryContainer,
-              onPrimary: AppColors.primary,
-              surface: AppColors.surfaceContainerHighest,
-              onSurface: AppColors.primary,
+              primary: AppColors.accent,
+              onPrimary: AppColors.accent,
+              surface: AppColors.outlineVariant,
+              onSurface: AppColors.accent,
             ),
           ),
           child: child!,
@@ -126,7 +126,7 @@ class VolleyballInitializeMatchController extends GetxController {
         "Validation Error", 
         "Please complete all required fields (Match Name, Venue, Date, Time, Referee).",
         backgroundColor: AppColors.error,
-        colorText: AppColors.primary,
+        colorText: AppColors.accent,
       );
       return false;
     }
@@ -138,7 +138,7 @@ class VolleyballInitializeMatchController extends GetxController {
       loading.value = true;
       Future.delayed(Duration(seconds: 1), () {
         loading.value = false;
-        Get.snackbar("Success", "Match Initialized!", backgroundColor: AppColors.primaryContainer, colorText: Colors.black);
+        Get.snackbar("Success", "Match Initialized!", backgroundColor: AppColors.accent, colorText: Colors.black);
         
         Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballTeamManagementScreen()));
       });

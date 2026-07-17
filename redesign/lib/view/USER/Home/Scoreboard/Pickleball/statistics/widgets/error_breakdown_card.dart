@@ -16,14 +16,14 @@ class ErrorBreakdownCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Error Breakdown',
-            style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+            style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 16),
           ...errors.entries.map((entry) {
@@ -32,7 +32,7 @@ class ErrorBreakdownCard extends StatelessWidget {
               children: [
                 _buildErrorRow(entry.key, entry.value['A'], entry.value['B'], isPositive),
                 if (entry.key != errors.keys.last)
-                  Divider(color: AppColors.surfaceContainerHighest, height: 24),
+                  Divider(color: AppColors.outlineVariant, height: 24),
               ],
             );
           }),
@@ -46,11 +46,11 @@ class ErrorBreakdownCard extends StatelessWidget {
     Color colorB;
 
     if (isPositive) {
-      colorA = valA >= valB ? AppColors.primaryContainer : AppColors.muted;
-      colorB = valB > valA ? AppColors.primaryContainer : AppColors.muted;
+      colorA = valA >= valB ? AppColors.accent : AppColors.muted;
+      colorB = valB > valA ? AppColors.accent : AppColors.muted;
     } else {
-      colorA = valA < valB ? AppColors.primaryContainer : Colors.redAccent;
-      colorB = valB <= valA ? AppColors.primaryContainer : Colors.redAccent;
+      colorA = valA < valB ? AppColors.accent : Colors.redAccent;
+      colorB = valB <= valA ? AppColors.accent : Colors.redAccent;
     }
 
     return Row(
@@ -65,7 +65,7 @@ class ErrorBreakdownCard extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8.0)),
-              child: Text('|', style: TextStyle(color: AppColors.surfaceContainerHighest, fontSize: 20)),
+              child: Text('|', style: TextStyle(color: AppColors.outlineVariant, fontSize: 20)),
             ),
             Text(
               valB.toString().padLeft(2, '0'),

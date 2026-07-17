@@ -30,12 +30,12 @@ class _ServingIndicatorState extends State<ServingIndicator> {
         children: [
           FadeTransition(
             opacity: Tween<double>(begin: 0.3, end: 1.0).animate(widget.pulseController),
-            child: Icon(Icons.radio_button_checked, color: AppColors.primaryContainer, size: 16),
+            child: Icon(Icons.radio_button_checked, color: AppColors.accent, size: 16),
           ),
           SizedBox(width: 8),
           Text(
             'SERVING',
-            style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold),
+            style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
           ),
         ],
       ),

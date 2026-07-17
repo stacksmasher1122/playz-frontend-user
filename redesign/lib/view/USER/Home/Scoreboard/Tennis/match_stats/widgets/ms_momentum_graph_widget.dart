@@ -25,23 +25,23 @@ class MsMomentumGraphWidget extends StatelessWidget {
             children: [
               Text(
                 'MATCH MOMENTUM',
-                style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, letterSpacing: 2.0),
+                style: AppTypography.labelCaps.copyWith(color: AppColors.muted, letterSpacing: 2.0),
               ),
               Row(
                 children: [
                   Row(
                     children: [
-                      Container(width: ResponsiveHelper.w(8), height: ResponsiveHelper.h(8), decoration: BoxDecoration(color: AppColors.primaryContainer, shape: BoxShape.circle)),
+                      Container(width: ResponsiveHelper.w(8), height: ResponsiveHelper.h(8), decoration: BoxDecoration(color: AppColors.accent, shape: BoxShape.circle)),
                       SizedBox(width: 4),
-                      Text('ALCARAZ', style: AppTypography.labelCaps.copyWith(color: AppColors.primary, fontSize: 10)),
+                      Text('ALCARAZ', style: AppTypography.labelCaps.copyWith(color: AppColors.accent, fontSize: 10)),
                     ],
                   ),
                   SizedBox(width: 12),
                   Row(
                     children: [
-                      Container(width: ResponsiveHelper.w(8), height: ResponsiveHelper.h(8), decoration: BoxDecoration(color: AppColors.onSurfaceVariant, shape: BoxShape.circle)),
+                      Container(width: ResponsiveHelper.w(8), height: ResponsiveHelper.h(8), decoration: BoxDecoration(color: AppColors.muted, shape: BoxShape.circle)),
                       SizedBox(width: 4),
-                      Text('SINNER', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, fontSize: 10)),
+                      Text('SINNER', style: AppTypography.labelCaps.copyWith(color: AppColors.muted, fontSize: 10)),
                     ],
                   ),
                 ],
@@ -62,11 +62,11 @@ class MsMomentumGraphWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('START', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 10)),
-              Text('SET 1', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 10)),
-              Text('SET 2', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 10)),
-              Text('SET 3', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 10)),
-              Text('FINISH', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant.withValues(alpha: 0.5), fontSize: 10)),
+              Text('START', style: AppTypography.labelCaps.copyWith(color: AppColors.muted.withValues(alpha: 0.5), fontSize: 10)),
+              Text('SET 1', style: AppTypography.labelCaps.copyWith(color: AppColors.muted.withValues(alpha: 0.5), fontSize: 10)),
+              Text('SET 2', style: AppTypography.labelCaps.copyWith(color: AppColors.muted.withValues(alpha: 0.5), fontSize: 10)),
+              Text('SET 3', style: AppTypography.labelCaps.copyWith(color: AppColors.muted.withValues(alpha: 0.5), fontSize: 10)),
+              Text('FINISH', style: AppTypography.labelCaps.copyWith(color: AppColors.muted.withValues(alpha: 0.5), fontSize: 10)),
             ],
           ),
         ],
@@ -119,8 +119,8 @@ class _MomentumPainter extends CustomPainter {
       Offset(0, 0),
       Offset(0, size.height),
       [
-        AppColors.primaryContainer.withValues(alpha: 0.3),
-        AppColors.primaryContainer.withValues(alpha: 0.0),
+        AppColors.accent.withValues(alpha: 0.3),
+        AppColors.accent.withValues(alpha: 0.0),
       ],
     );
 
@@ -135,7 +135,7 @@ class _MomentumPainter extends CustomPainter {
     canvas.drawPath(
       path,
       Paint()
-        ..color = AppColors.primaryContainer
+        ..color = AppColors.accent
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3
         ..strokeJoin = StrokeJoin.round,

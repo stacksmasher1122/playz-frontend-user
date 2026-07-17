@@ -21,9 +21,9 @@ class BenchPlayerCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 8),
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Row(
         children: [
@@ -31,11 +31,11 @@ class BenchPlayerCard extends StatelessWidget {
             width: ResponsiveHelper.w(40),
             height: ResponsiveHelper.h(40),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerHighest,
+              color: AppColors.outlineVariant,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
             ),
             child: Center(
-              child: Text(player.jerseyNumber, style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+              child: Text(player.jerseyNumber, style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             ),
           ),
           SizedBox(width: 16),
@@ -43,14 +43,14 @@ class BenchPlayerCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(player.name, style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                Text(player.name, style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                 SizedBox(height: 4),
                 Text(player.position, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
               ],
             ),
           ),
           IconButton(
-            icon: Icon(Icons.swap_horiz, color: AppColors.primaryContainer),
+            icon: Icon(Icons.swap_horiz, color: AppColors.accent),
             onPressed: onSwap,
           ),
         ],

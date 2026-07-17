@@ -17,14 +17,14 @@ class TopScorerCard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('TOP SCORERS', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('TOP SCORERS', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.surfaceContainerHighest),
+                border: Border.all(color: AppColors.outlineVariant),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Text(controller.teamAName.toUpperCase(), style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer)),
+              child: Text(controller.teamAName.toUpperCase(), style: AppTypography.labelCaps10.copyWith(color: AppColors.accent)),
             ),
           ],
         ),
@@ -36,9 +36,9 @@ class TopScorerCard extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: 12),
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLowest,
+                  color: AppColors.background,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.surfaceContainerHighest),
+                  border: Border.all(color: AppColors.outlineVariant),
                 ),
                 child: Row(
                   children: [
@@ -46,7 +46,7 @@ class TopScorerCard extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceContainerHighest,
+                        color: AppColors.outlineVariant,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(Icons.person, color: AppColors.muted),
@@ -56,7 +56,7 @@ class TopScorerCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(scorer.player.name.toUpperCase(), style: AppTypography.bodyLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                          Text(scorer.player.name.toUpperCase(), style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                           SizedBox(height: 4),
                           Text('${scorer.player.position.toUpperCase()} • #${scorer.player.jerseyNumber}', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.2)),
                         ],
@@ -65,7 +65,7 @@ class TopScorerCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(scorer.totalPoints.toString(), style: AppTypography.headlineLg.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold)),
+                        Text(scorer.totalPoints.toString(), style: AppTypography.headlineLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                         Text('PTS', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.5)),
                       ],
                     ),

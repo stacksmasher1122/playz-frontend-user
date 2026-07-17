@@ -18,7 +18,7 @@ class SmBreadcrumbWidget extends StatelessWidget {
           Text(
             'NEW FIXTURE',
             style: AppTypography.labelCaps.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: AppColors.muted,
             ),
           ),
           SizedBox(height: AppDimensions.xs),
@@ -28,8 +28,8 @@ class SmBreadcrumbWidget extends StatelessWidget {
               return Text(
                 'Setup Match',
                 style: isMobile 
-                  ? AppTypography.headlineLgMobile.copyWith(color: AppColors.primary)
-                  : AppTypography.headlineLg.copyWith(color: AppColors.primary),
+                  ? AppTypography.headlineLgMobile.copyWith(color: AppColors.accent)
+                  : AppTypography.headlineLg.copyWith(color: AppColors.accent),
               );
             },
           ),

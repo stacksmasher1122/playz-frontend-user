@@ -103,6 +103,6 @@ class PickleballStatsController extends GetxController {
   }
 
   void showError(String msg) {
-    Get.snackbar("Error", msg, backgroundColor: AppColors.error, colorText: AppColors.primary);
+    Get.snackbar("Error", msg, backgroundColor: AppColors.error, colorText: AppColors.accent);
   }
 }

@@ -41,14 +41,14 @@ class _VolleyballTeamManagementScreenState extends State<VolleyballTeamManagemen
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
           children: [
-            Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
+            Icon(Icons.sports_volleyball, color: AppColors.accent),
             SizedBox(width: 8),
-            Text('MATCH CENTER', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('MATCH CENTER', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
           ],
         ),
         actions: [
@@ -59,7 +59,7 @@ class _VolleyballTeamManagementScreenState extends State<VolleyballTeamManagemen
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
-          child: Container(color: AppColors.surfaceContainerHighest, height: 1.0),
+          child: Container(color: AppColors.outlineVariant, height: 1.0),
         ),
       ),
       body: Stack(
@@ -73,7 +73,7 @@ class _VolleyballTeamManagementScreenState extends State<VolleyballTeamManagemen
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('ROSTER MANAGEMENT', style: AppTypography.headlineLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                      Text('ROSTER MANAGEMENT', style: AppTypography.headlineLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                       SizedBox(height: 8),
                       Text(
                         'Configure competing teams, manage player rotations, and assign primary coaches before the match begins.',

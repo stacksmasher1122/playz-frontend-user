@@ -36,7 +36,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Dialog(
-      backgroundColor: AppColors.surfaceContainer,
+      backgroundColor: AppColors.card,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(20))),
       child: Padding(
         padding: EdgeInsets.all(ResponsiveHelper.w(24.0)),
@@ -44,16 +44,16 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Add Player', style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('Add Player', style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             SizedBox(height: 24),
             TextField(
               controller: nameController,
-              style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+              style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
               decoration: InputDecoration(
                 labelText: 'Player Name',
                 labelStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
                 filled: true,
-                fillColor: AppColors.surfaceContainerLowest,
+                fillColor: AppColors.background,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
             ),
@@ -61,12 +61,12 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
             TextField(
               controller: numberController,
               keyboardType: TextInputType.number,
-              style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+              style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
               decoration: InputDecoration(
                 labelText: 'Jersey Number',
                 labelStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
                 filled: true,
-                fillColor: AppColors.surfaceContainerLowest,
+                fillColor: AppColors.background,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
             ),
@@ -77,13 +77,13 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                 labelText: 'Position',
                 labelStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
                 filled: true,
-                fillColor: AppColors.surfaceContainerLowest,
+                fillColor: AppColors.background,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
-              dropdownColor: AppColors.surfaceContainerHigh,
+              dropdownColor: AppColors.card,
               items: positions.map((pos) => DropdownMenuItem(
                 value: pos,
-                child: Text(pos, style: AppTypography.bodyMd.copyWith(color: AppColors.primary)),
+                child: Text(pos, style: AppTypography.bodyMd.copyWith(color: AppColors.accent)),
               )).toList(),
               onChanged: (val) {
                 setState(() {
@@ -99,9 +99,9 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                 Checkbox(
                   value: isCaptain,
                   onChanged: (val) => setState(() => isCaptain = val ?? false),
-                  activeColor: AppColors.primaryContainer,
+                  activeColor: AppColors.accent,
                 ),
-                Text('Team Captain', style: AppTypography.bodyMd.copyWith(color: AppColors.primary)),
+                Text('Team Captain', style: AppTypography.bodyMd.copyWith(color: AppColors.accent)),
               ],
             ),
             SizedBox(height: 24),
@@ -115,8 +115,8 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                 SizedBox(width: 16),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryContainer,
-                    foregroundColor: AppColors.onPrimaryContainer,
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: AppColors.background,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
                   ),
                   onPressed: () {

@@ -17,7 +17,7 @@ class TopPlayersWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +31,7 @@ class TopPlayersWidget extends StatelessWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: players.length,
-            separatorBuilder: (_, __) => Divider(color: AppColors.surfaceContainerHighest, height: 24),
+            separatorBuilder: (_, __) => Divider(color: AppColors.outlineVariant, height: 24),
             itemBuilder: (context, index) {
               final player = players[index];
               return Row(
@@ -41,7 +41,7 @@ class TopPlayersWidget extends StatelessWidget {
                     height: ResponsiveHelper.h(48),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+                      border: Border.all(color: AppColors.outlineVariant, width: 1),
                     ),
                     child: CircleAvatar(
                       radius: 23,
@@ -53,7 +53,7 @@ class TopPlayersWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(player.name, style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                        Text(player.name, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                         SizedBox(height: 4),
                         Text(
                           '${player.pointsWon} Pts • ${player.aces} Aces • ${player.servePercent}% Serve • ${player.errors} Errors • ${player.winners} Winners',

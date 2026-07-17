@@ -46,7 +46,7 @@ class _MatchStatsScreenState extends State<MatchStatsScreen> {
             Expanded(
               child: Obx(() {
                 if (controller.stats.value == null) {
-                  return Center(child: CircularProgressIndicator(color: AppColors.primaryContainer));
+                  return Center(child: CircularProgressIndicator(color: AppColors.accent));
                 }
                 
                 return SingleChildScrollView(

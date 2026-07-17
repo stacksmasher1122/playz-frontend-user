@@ -38,12 +38,12 @@ class PlayerCard extends StatelessWidget {
       width: ResponsiveHelper.w(100),
       margin: EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: isOnCourt ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
+        border: Border.all(color: isOnCourt ? AppColors.accent : AppColors.outlineVariant),
         boxShadow: isDragging ? [
           BoxShadow(
-            color: AppColors.primaryContainer.withOpacity(0.4),
+            color: AppColors.accent.withOpacity(0.4),
             blurRadius: 15,
             spreadRadius: 2,
           )
@@ -60,21 +60,21 @@ class PlayerCard extends StatelessWidget {
                   width: ResponsiveHelper.w(50),
                   height: ResponsiveHelper.h(50),
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerHigh,
+                    color: AppColors.card,
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-                    border: Border.all(color: AppColors.surfaceContainerHighest),
+                    border: Border.all(color: AppColors.outlineVariant),
                   ),
                   child: Center(
                     child: Text(
                       player.jerseyNumber,
-                      style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                      style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
                 SizedBox(height: 12),
                 Text(
                   player.name.toUpperCase(),
-                  style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                  style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold, letterSpacing: 1.2),
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -96,10 +96,10 @@ class PlayerCard extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(ResponsiveHelper.w(4)),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryContainer,
+                  color: AppColors.accent,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.check, color: AppColors.onPrimaryContainer, size: 12),
+                child: Icon(Icons.check, color: AppColors.background, size: 12),
               ),
             ),
         ],

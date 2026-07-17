@@ -42,7 +42,7 @@ class _MvpAnalysisCardState extends State<MvpAnalysisCard> with SingleTickerProv
         child: Container(
           padding: EdgeInsets.all(ResponsiveHelper.w(24)),
           decoration: BoxDecoration(
-            color: AppColors.primaryContainer,
+            color: AppColors.accent,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           ),
           child: Column(

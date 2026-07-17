@@ -20,7 +20,7 @@ class AnalyticsCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +67,7 @@ class AnalyticsCardWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-          Text(values, style: AppTypography.bodySm.copyWith(color: AppColors.primary)),
+          Text(values, style: AppTypography.bodySm.copyWith(color: AppColors.accent)),
         ],
       ),
     );

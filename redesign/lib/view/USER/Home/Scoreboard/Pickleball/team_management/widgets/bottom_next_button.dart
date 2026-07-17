@@ -25,11 +25,11 @@ class BottomNextButton extends StatelessWidget {
           width: double.infinity,
           height: ResponsiveHelper.h(56),
           decoration: BoxDecoration(
-            color: AppColors.primaryContainer,
+            color: AppColors.accent,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primaryContainer.withOpacity(0.3),
+                color: AppColors.accent.withOpacity(0.3),
                 blurRadius: 12,
                 offset: Offset(0, 4),
               ),

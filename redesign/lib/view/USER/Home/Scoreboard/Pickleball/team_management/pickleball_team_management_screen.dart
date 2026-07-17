@@ -45,7 +45,7 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
     controller.selectPlayer(team, slot);
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surfaceContainerHigh,
+      backgroundColor: AppColors.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(16))),
       ),

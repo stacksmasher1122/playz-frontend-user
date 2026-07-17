@@ -21,7 +21,7 @@ class AvailablePlayersList extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Available Players', style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('Available Players', style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             Obx(() => Text(
               '${controller.currentState.availablePlayers.length}/12 ROSTERED',
               style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.2),

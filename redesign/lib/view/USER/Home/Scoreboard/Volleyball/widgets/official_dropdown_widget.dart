@@ -26,22 +26,22 @@ class OfficialDropdownWidget extends StatelessWidget {
         DropdownButtonFormField<String>(
           decoration: InputDecoration(
             filled: true,
-            fillColor: AppColors.surfaceContainerLowest,
+            fillColor: AppColors.background,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
+              borderSide: BorderSide(color: AppColors.outlineVariant),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.surfaceContainerHighest),
+              borderSide: BorderSide(color: AppColors.outlineVariant),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.primaryContainer),
+              borderSide: BorderSide(color: AppColors.accent),
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(16)),
           ),
-          dropdownColor: AppColors.surfaceContainerHigh,
+          dropdownColor: AppColors.card,
           icon: Icon(Icons.keyboard_arrow_down, color: AppColors.muted),
           hint: Text(hint, style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
           items: [
@@ -50,7 +50,7 @@ class OfficialDropdownWidget extends StatelessWidget {
             DropdownMenuItem(value: 'David Chen (National A)', child: Text('David Chen (National A)')),
           ],
           onChanged: onChanged,
-          style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+          style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
         ),
       ],
     );

@@ -92,22 +92,22 @@ class SmBasicInfoCardWidget extends StatelessWidget {
       children: [
         Text(
           'MATCH NAME',
-          style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+          style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
         ),
         SizedBox(height: AppDimensions.sm),
         TextField(
           controller: controller.matchNameController,
-          style: AppTypography.headlineMd.copyWith(color: AppColors.primary),
+          style: AppTypography.headlineMd.copyWith(color: AppColors.accent),
           decoration: InputDecoration(
             border: InputBorder.none,
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
+              borderSide: BorderSide(color: AppColors.accent, width: 2),
             ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.10), width: 1),
             ),
             hintText: "e.g., Club Championship Final",
-            hintStyle: AppTypography.headlineMd.copyWith(color: AppColors.onSurfaceVariant),
+            hintStyle: AppTypography.headlineMd.copyWith(color: AppColors.muted),
             contentPadding: EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: 0),
             fillColor: Colors.transparent,
             filled: true,
@@ -124,19 +124,19 @@ class SmBasicInfoCardWidget extends StatelessWidget {
       children: [
         Text(
           'TOURNAMENT',
-          style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+          style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
         ),
         SizedBox(height: AppDimensions.sm),
         Obx(() {
           return DropdownButtonFormField<String>(
             initialValue: controller.matchSetup.value.tournament,
-            dropdownColor: AppColors.surfaceContainerHigh,
-            icon: Icon(Icons.arrow_drop_down, color: AppColors.onSurfaceVariant),
-            style: AppTypography.bodyMd.copyWith(color: AppColors.onSurface),
+            dropdownColor: AppColors.card,
+            icon: Icon(Icons.arrow_drop_down, color: AppColors.muted),
+            style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary),
             decoration: InputDecoration(
               border: InputBorder.none,
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
+                borderSide: BorderSide(color: AppColors.accent, width: 2),
               ),
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.10), width: 1),
@@ -162,7 +162,7 @@ class SmBasicInfoCardWidget extends StatelessWidget {
       children: [
         Text(
           'DATE & TIME',
-          style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+          style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
         ),
         SizedBox(height: AppDimensions.sm),
         Obx(() {
@@ -173,18 +173,18 @@ class SmBasicInfoCardWidget extends StatelessWidget {
             readOnly: true,
             showCursor: false,
             controller: TextEditingController(text: dtString),
-            style: AppTypography.bodyMd.copyWith(color: AppColors.onSurface),
+            style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary),
             decoration: InputDecoration(
               border: InputBorder.none,
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
+                borderSide: BorderSide(color: AppColors.accent, width: 2),
               ),
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.10), width: 1),
               ),
               fillColor: Colors.transparent,
               filled: true,
-              suffixIcon: Icon(Icons.calendar_today, color: AppColors.onSurfaceVariant, size: 18),
+              suffixIcon: Icon(Icons.calendar_today, color: AppColors.muted, size: 18),
             ),
             onTap: () async {
               final date = await showDatePicker(
@@ -215,22 +215,22 @@ class SmBasicInfoCardWidget extends StatelessWidget {
       children: [
         Text(
           'COURT NUMBER',
-          style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+          style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
         ),
         SizedBox(height: AppDimensions.sm),
         TextField(
           controller: controller.courtNumberController,
-          style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+          style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
           decoration: InputDecoration(
             border: InputBorder.none,
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
+              borderSide: BorderSide(color: AppColors.accent, width: 2),
             ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.10), width: 1),
             ),
             hintText: "Court 1 (Center)",
-            hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant),
+            hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
             contentPadding: EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: 0),
             fillColor: Colors.transparent,
             filled: true,
@@ -247,22 +247,22 @@ class SmBasicInfoCardWidget extends StatelessWidget {
       children: [
         Text(
           'CHAIR UMPIRE',
-          style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+          style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
         ),
         SizedBox(height: AppDimensions.sm),
         TextField(
           controller: controller.umpireNameController,
-          style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+          style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
           decoration: InputDecoration(
             border: InputBorder.none,
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primaryContainer, width: 2),
+              borderSide: BorderSide(color: AppColors.accent, width: 2),
             ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.10), width: 1),
             ),
             hintText: "Enter Name",
-            hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant),
+            hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
             contentPadding: EdgeInsets.symmetric(vertical: AppDimensions.sm, horizontal: 0),
             fillColor: Colors.transparent,
             filled: true,

@@ -23,7 +23,7 @@ class TeamsVsCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.card,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+          border: Border.all(color: AppColors.outlineVariant, width: 1),
         ),
         child: Column(
           children: [
@@ -51,7 +51,7 @@ class TeamsVsCard extends StatelessWidget {
                   width: ResponsiveHelper.w(32),
                   height: ResponsiveHelper.h(32),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryContainer,
+                    color: AppColors.accent,
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -64,7 +64,7 @@ class TeamsVsCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 24),
-            Divider(color: AppColors.surfaceContainerHighest, height: 1),
+            Divider(color: AppColors.outlineVariant, height: 1),
             SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +97,7 @@ class TeamsVsCard extends StatelessWidget {
             width: ResponsiveHelper.w(56),
             height: ResponsiveHelper.h(56),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerHighest,
+              color: AppColors.outlineVariant,
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: AppColors.muted, size: 28),
@@ -105,7 +105,7 @@ class TeamsVsCard extends StatelessWidget {
           SizedBox(height: 12),
           Text(teamLabel, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
           SizedBox(height: 4),
-          Text(teamName, style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+          Text(teamName, style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
         ],
       ),
     );

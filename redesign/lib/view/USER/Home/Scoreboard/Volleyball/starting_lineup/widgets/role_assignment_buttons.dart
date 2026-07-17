@@ -18,15 +18,15 @@ class RoleAssignmentButtons extends StatelessWidget {
           child: OutlinedButton(
             onPressed: onAssignCaptain,
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.primary,
-              side: BorderSide(color: AppColors.surfaceContainerHighest),
+              foregroundColor: AppColors.accent,
+              side: BorderSide(color: AppColors.outlineVariant),
               padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.stars, color: AppColors.primaryContainer, size: 20),
+                Icon(Icons.stars, color: AppColors.accent, size: 20),
                 SizedBox(width: 8),
                 Text('Assign Captain', style: AppTypography.bodyMd.copyWith(fontWeight: FontWeight.bold)),
               ],
@@ -38,8 +38,8 @@ class RoleAssignmentButtons extends StatelessWidget {
           child: OutlinedButton(
             onPressed: onAssignLibero,
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.primary,
-              side: BorderSide(color: AppColors.surfaceContainerHighest),
+              foregroundColor: AppColors.accent,
+              side: BorderSide(color: AppColors.outlineVariant),
               padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
             ),

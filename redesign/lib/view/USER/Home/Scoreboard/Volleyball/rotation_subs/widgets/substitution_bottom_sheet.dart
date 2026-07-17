@@ -24,7 +24,7 @@ class _SubstitutionBottomSheetState extends State<SubstitutionBottomSheet> {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
       ),
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
@@ -34,7 +34,7 @@ class _SubstitutionBottomSheetState extends State<SubstitutionBottomSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('SUBSTITUTION', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+              Text('SUBSTITUTION', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
               IconButton(icon: Icon(Icons.close, color: AppColors.muted), onPressed: () => Navigator.pop(context)),
             ],
           ),
@@ -59,14 +59,14 @@ class _SubstitutionBottomSheetState extends State<SubstitutionBottomSheet> {
                       width: ResponsiveHelper.w(80),
                       margin: EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primaryContainer.withOpacity(0.2) : AppColors.surfaceContainerHigh,
+                        color: isSelected ? AppColors.accent.withOpacity(0.2) : AppColors.card,
                         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-                        border: Border.all(color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
+                        border: Border.all(color: isSelected ? AppColors.accent : AppColors.outlineVariant),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(cp.player.jerseyNumber, style: AppTypography.headlineLg.copyWith(color: isSelected ? AppColors.primaryContainer : AppColors.primary)),
+                          Text(cp.player.jerseyNumber, style: AppTypography.headlineLg.copyWith(color: isSelected ? AppColors.accent : AppColors.accent)),
                           SizedBox(height: 4),
                           Text('P$pos', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
                         ],
@@ -93,7 +93,7 @@ class _SubstitutionBottomSheetState extends State<SubstitutionBottomSheet> {
                     player: bp,
                     onSwap: () {
                       if (selectedCourtPosition == null) {
-                        Get.snackbar("Error", "Please select a court player first.", backgroundColor: AppColors.error, colorText: AppColors.primary);
+                        Get.snackbar("Error", "Please select a court player first.", backgroundColor: AppColors.error, colorText: AppColors.accent);
                         return;
                       }
                       widget.controller.substitutePlayer(selectedCourtPosition!, bp);

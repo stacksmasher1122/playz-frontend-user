@@ -56,11 +56,11 @@ class _PrimaryActionButtonState extends State<PrimaryActionButton> with SingleTi
           width: double.infinity,
           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
           decoration: BoxDecoration(
-            color: AppColors.primaryContainer,
+            color: AppColors.accent,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primaryContainer.withOpacity(0.3),
+                color: AppColors.accent.withOpacity(0.3),
                 blurRadius: 12,
                 offset: Offset(0, 4),
               ),

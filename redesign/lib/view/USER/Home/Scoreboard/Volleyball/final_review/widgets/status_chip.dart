@@ -20,8 +20,8 @@ class StatusChip extends StatelessWidget {
 
     switch (status) {
       case SystemStatus.connected:
-        bgColor = AppColors.primaryContainer.withOpacity(0.1);
-        textColor = AppColors.primaryContainer;
+        bgColor = AppColors.accent.withOpacity(0.1);
+        textColor = AppColors.accent;
         text = 'Active Connection';
         icon = Icons.wifi;
         break;
@@ -38,8 +38,8 @@ class StatusChip extends StatelessWidget {
         icon = Icons.wifi_off;
         break;
       case SystemStatus.ready:
-        bgColor = AppColors.primaryContainer.withOpacity(0.1);
-        textColor = AppColors.primaryContainer;
+        bgColor = AppColors.accent.withOpacity(0.1);
+        textColor = AppColors.accent;
         text = 'Ready';
         icon = Icons.check_circle_outline;
         break;

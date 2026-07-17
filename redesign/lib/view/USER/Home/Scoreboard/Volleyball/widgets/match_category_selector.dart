@@ -21,9 +21,9 @@ class MatchCategorySelector extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer.withOpacity(0.8),
+        color: AppColors.card.withOpacity(0.8),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,14 +52,14 @@ class MatchCategorySelector extends StatelessWidget {
         duration: Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(10)),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryContainer : Colors.transparent,
+          color: isSelected ? AppColors.accent : Colors.transparent,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
-          border: Border.all(color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
+          border: Border.all(color: isSelected ? AppColors.accent : AppColors.outlineVariant),
         ),
         child: Text(
           label,
           style: AppTypography.labelCaps10.copyWith(
-            color: isSelected ? AppColors.onPrimaryContainer : AppColors.muted,
+            color: isSelected ? AppColors.background : AppColors.muted,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
           ),

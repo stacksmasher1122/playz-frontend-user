@@ -22,14 +22,14 @@ class CustomRulesCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.settings, color: AppColors.primaryContainer, size: 20),
+              Icon(Icons.settings, color: AppColors.accent, size: 20),
               SizedBox(width: 8),
               Text('Custom Rules', style: AppTypography.headlineMd),
             ],
@@ -41,14 +41,14 @@ class CustomRulesCard extends StatelessWidget {
             value: controller.winByTwo.value,
             onChanged: (v) => controller.toggleWinByTwo(),
           )),
-          Divider(color: AppColors.surfaceContainerHighest, height: 1),
+          Divider(color: AppColors.outlineVariant, height: 1),
           Obx(() => ToggleRuleTile(
             title: "Rally Scoring",
             subtitle: "Point on every serve",
             value: controller.rallyScoring.value,
             onChanged: (v) => controller.toggleRallyScoring(),
           )),
-          Divider(color: AppColors.surfaceContainerHighest, height: 1),
+          Divider(color: AppColors.outlineVariant, height: 1),
           Obx(() => ToggleRuleTile(
             title: "Traditional",
             subtitle: "Server scores only",

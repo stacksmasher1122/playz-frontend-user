@@ -16,12 +16,12 @@ class MomentumChart extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('LIVE\nMOMENTUM', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('LIVE\nMOMENTUM', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             Row(
               children: [
-                _buildLegend(AppColors.primaryContainer, 'GIANTS'),
+                _buildLegend(AppColors.accent, 'GIANTS'),
                 SizedBox(width: 16),
-                _buildLegend(AppColors.surfaceContainerHighest, 'WOLVES'),
+                _buildLegend(AppColors.outlineVariant, 'WOLVES'),
               ],
             ),
           ],
@@ -36,7 +36,7 @@ class MomentumChart extends StatelessWidget {
               double valB = controller.momentumTeamB[index];
               bool aDominates = valA > valB;
               double height = (aDominates ? valA : valB) * 150;
-              Color color = aDominates ? AppColors.primaryContainer : AppColors.surfaceContainerHighest;
+              Color color = aDominates ? AppColors.accent : AppColors.outlineVariant;
 
               return Expanded(
                 child: Padding(
@@ -72,7 +72,7 @@ class MomentumChart extends StatelessWidget {
       children: [
         Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         SizedBox(width: 6),
-        Text(text, style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+        Text(text, style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
       ],
     );
   }

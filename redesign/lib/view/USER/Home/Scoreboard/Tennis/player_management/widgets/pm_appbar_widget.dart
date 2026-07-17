@@ -54,7 +54,7 @@ class _PmAppbarWidgetState extends State<PmAppbarWidget> {
                 Text(
                   'PlayZ Match Center',
                   style: AppTypography.headlineSora.copyWith(
-                    color: AppColors.primaryContainer,
+                    color: AppColors.accent,
                   ),
                 ),
 
@@ -105,8 +105,8 @@ class _IconButtonItemState extends State<_IconButtonItem> {
         child: Icon(
           widget.icon,
           color: isHovered
-              ? AppColors.primaryContainer
-              : AppColors.onSurfaceVariant,
+              ? AppColors.accent
+              : AppColors.muted,
           size: 24,
         ),
       ),

@@ -19,25 +19,25 @@ class CourtWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(
         children: [
           Row(
             children: [
-              Expanded(child: Divider(color: AppColors.surfaceContainerHighest, thickness: 2)),
+              Expanded(child: Divider(color: AppColors.outlineVariant, thickness: 2)),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(4)),
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.surfaceContainerHighest),
+                  border: Border.all(color: AppColors.outlineVariant),
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                  color: AppColors.surfaceContainerLowest,
+                  color: AppColors.background,
                 ),
                 child: Text('NET AREA', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
               ),
-              Expanded(child: Divider(color: AppColors.surfaceContainerHighest, thickness: 2)),
+              Expanded(child: Divider(color: AppColors.outlineVariant, thickness: 2)),
             ],
           ),
           SizedBox(height: 16),

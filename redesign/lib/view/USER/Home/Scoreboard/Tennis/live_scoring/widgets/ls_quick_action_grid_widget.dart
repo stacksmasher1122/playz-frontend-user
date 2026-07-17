@@ -17,9 +17,9 @@ class LsQuickActionGridWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: _buildActionBtn('ACE', Icons.bolt, AppColors.primaryContainer, controller.recordAce)),
+            Expanded(child: _buildActionBtn('ACE', Icons.bolt, AppColors.accent, controller.recordAce)),
             SizedBox(width: 16),
-            Expanded(child: _buildActionBtn('WINNER', Icons.star_border, AppColors.primaryContainer, controller.recordWinner)),
+            Expanded(child: _buildActionBtn('WINNER', Icons.star_border, AppColors.accent, controller.recordWinner)),
           ],
         ),
         SizedBox(height: 16),
@@ -40,7 +40,7 @@ class LsQuickActionGridWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: AppColors.background,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
@@ -49,7 +49,7 @@ class LsQuickActionGridWidget extends StatelessWidget {
           children: [
             Icon(icon, color: color, size: 28),
             SizedBox(height: 12),
-            Text(label, style: AppTypography.labelCaps.copyWith(color: AppColors.primary, letterSpacing: 2.0)),
+            Text(label, style: AppTypography.labelCaps.copyWith(color: AppColors.accent, letterSpacing: 2.0)),
           ],
         ),
       ),

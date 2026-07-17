@@ -50,11 +50,11 @@ class _PointButtonState extends State<PointButton> with SingleTickerProviderStat
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: widget.isPrimary ? AppColors.primaryContainer : AppColors.surfaceContainerLowest,
+            color: widget.isPrimary ? AppColors.accent : AppColors.background,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: widget.isPrimary ? Colors.transparent : AppColors.surfaceContainerHighest),
+            border: Border.all(color: widget.isPrimary ? Colors.transparent : AppColors.outlineVariant),
             boxShadow: widget.isPrimary
-                ? [BoxShadow(color: AppColors.primaryContainer.withOpacity(0.3), blurRadius: 20, spreadRadius: 2)]
+                ? [BoxShadow(color: AppColors.accent.withOpacity(0.3), blurRadius: 20, spreadRadius: 2)]
                 : [],
           ),
           child: Column(
@@ -63,7 +63,7 @@ class _PointButtonState extends State<PointButton> with SingleTickerProviderStat
               Text(
                 'ADD POINT',
                 style: AppTypography.labelCaps10.copyWith(
-                  color: widget.isPrimary ? Colors.black54 : AppColors.primaryContainer,
+                  color: widget.isPrimary ? Colors.black54 : AppColors.accent,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2,
                 ),
@@ -74,7 +74,7 @@ class _PointButtonState extends State<PointButton> with SingleTickerProviderStat
                 style: TextStyle(
                   fontSize: ResponsiveHelper.sp(80),
                   fontWeight: FontWeight.w900,
-                  color: widget.isPrimary ? Colors.black : AppColors.primaryContainer,
+                  color: widget.isPrimary ? Colors.black : AppColors.accent,
                   height: ResponsiveHelper.h(1),
                 ),
               ),
@@ -84,14 +84,14 @@ class _PointButtonState extends State<PointButton> with SingleTickerProviderStat
                 children: [
                   Icon(
                     Icons.bolt,
-                    color: widget.isPrimary ? Colors.black54 : AppColors.surfaceContainerHighest,
+                    color: widget.isPrimary ? Colors.black54 : AppColors.outlineVariant,
                     size: 16,
                   ),
                   SizedBox(width: 4),
                   Text(
                     'TAP TO SCORE',
                     style: AppTypography.labelCaps10.copyWith(
-                      color: widget.isPrimary ? Colors.black54 : AppColors.surfaceContainerHighest,
+                      color: widget.isPrimary ? Colors.black54 : AppColors.outlineVariant,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,
                     ),

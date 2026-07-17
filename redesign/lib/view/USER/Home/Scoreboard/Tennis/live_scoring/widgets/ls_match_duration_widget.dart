@@ -22,12 +22,12 @@ class LsMatchDurationWidget extends StatelessWidget {
           children: [
             Text(
               'MATCH DURATION',
-              style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+              style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
             ),
             SizedBox(height: 4),
             Obx(() => Text(
               controller.matchStats.value.duration,
-              style: AppTypography.headlineLg.copyWith(color: AppColors.primary),
+              style: AppTypography.headlineLg.copyWith(color: AppColors.accent),
             )),
           ],
         ),
@@ -36,15 +36,15 @@ class LsMatchDurationWidget extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerHigh,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.pause, color: AppColors.onSurfaceVariant, size: 16),
+                  Icon(Icons.pause, color: AppColors.muted, size: 16),
                   SizedBox(width: 8),
-                  Text('PAUSE', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant)),
+                  Text('PAUSE', style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
                 ],
               ),
             ),
@@ -52,15 +52,15 @@ class LsMatchDurationWidget extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerHigh,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.undo, color: AppColors.onSurfaceVariant, size: 16),
+                  Icon(Icons.undo, color: AppColors.muted, size: 16),
                   SizedBox(width: 8),
-                  Text('UNDO', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant)),
+                  Text('UNDO', style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
                 ],
               ),
             ),

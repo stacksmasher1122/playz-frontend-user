@@ -23,7 +23,7 @@ class FloatingSetTimer extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.surface.withOpacity(0.7),
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: AppColors.surfaceContainerHighest.withOpacity(0.5)),
+            border: Border.all(color: AppColors.outlineVariant.withOpacity(0.5)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.5),
@@ -37,7 +37,7 @@ class FloatingSetTimer extends StatelessWidget {
             children: [
               Obx(() => Text(
                 'SET ${controller.currentSet.value}',
-                style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold, letterSpacing: 2),
+                style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold, letterSpacing: 2),
               )),
               SizedBox(height: 4),
               Obx(() {
@@ -55,7 +55,7 @@ class FloatingSetTimer extends StatelessWidget {
 
                 return Text(
                   timeStr,
-                  style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.w900),
+                  style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.w900),
                 );
               }),
             ],

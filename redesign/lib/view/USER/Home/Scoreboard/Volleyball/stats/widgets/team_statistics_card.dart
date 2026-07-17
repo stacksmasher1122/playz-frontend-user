@@ -18,7 +18,7 @@ class TeamStatisticsCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('TEAM STATS', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+        Text('TEAM STATS', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
         SizedBox(height: 24),
         _buildStatRow('ATTACK SUCCESS', '${statsA.attackSuccessPercent}%', '${statsB.attackSuccessPercent}%', statsA.attackSuccessPercent, statsB.attackSuccessPercent),
         _buildStatRow('BLOCKS', '${statsA.blocks}', '${statsB.blocks}', statsA.blocks, statsB.blocks),
@@ -41,7 +41,7 @@ class TeamStatisticsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(valA, style: AppTypography.bodyLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+              Text(valA, style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
               Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 1.5)),
               Text(valB, style: AppTypography.bodyLg.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold)),
             ],
@@ -51,12 +51,12 @@ class TeamStatisticsCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: (ratioA * 100).toInt(),
-                child: Container(height: 4, color: AppColors.primaryContainer),
+                child: Container(height: 4, color: AppColors.accent),
               ),
               SizedBox(width: 4),
               Expanded(
                 flex: (ratioB * 100).toInt(),
-                child: Container(height: 4, color: AppColors.surfaceContainerHighest),
+                child: Container(height: 4, color: AppColors.outlineVariant),
               ),
             ],
           ),

@@ -65,7 +65,7 @@ class _LsAppbarWidgetState extends State<LsAppbarWidget> with SingleTickerProvid
                     height: ResponsiveHelper.h(40),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.primaryContainer, width: 1),
+                      border: Border.all(color: AppColors.accent, width: 1),
                       image: DecorationImage(
                         image: NetworkImage('https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&q=80&w=40'),
                         fit: BoxFit.cover,
@@ -79,11 +79,11 @@ class _LsAppbarWidgetState extends State<LsAppbarWidget> with SingleTickerProvid
                     children: [
                       Text(
                         'PlayZ Match',
-                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.primaryContainer, height: 1.1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.accent, height: 1.1),
                       ),
                       Text(
                         'Center',
-                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.primaryContainer, height: 1.1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.accent, height: 1.1),
                       ),
                     ],
                   ),
@@ -95,7 +95,7 @@ class _LsAppbarWidgetState extends State<LsAppbarWidget> with SingleTickerProvid
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerHigh,
+                      color: AppColors.card,
                       borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                       border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                     ),
@@ -106,19 +106,19 @@ class _LsAppbarWidgetState extends State<LsAppbarWidget> with SingleTickerProvid
                           child: Container(
                             width: ResponsiveHelper.w(8),
                             height: ResponsiveHelper.h(8),
-                            decoration: BoxDecoration(color: AppColors.primaryContainer, shape: BoxShape.circle),
+                            decoration: BoxDecoration(color: AppColors.accent, shape: BoxShape.circle),
                           ),
                         ),
                         SizedBox(width: 8),
                         Obx(() => Text(
                           'LIVE: ${controller.matchStats.value.courtName}',
-                          style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+                          style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
                         )),
                       ],
                     ),
                   ),
                   SizedBox(width: 12),
-                  Icon(Icons.settings, color: AppColors.onSurfaceVariant, size: 24),
+                  Icon(Icons.settings, color: AppColors.muted, size: 24),
                 ],
               ),
             ],

@@ -36,7 +36,7 @@ class _AchievementCardWidgetState extends State<AchievementCardWidget> with Sing
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +68,7 @@ class _AchievementCardWidgetState extends State<AchievementCardWidget> with Sing
                       Container(
                         padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                         decoration: BoxDecoration(
-                          color: AppColors.surfaceContainerHigh,
+                          color: AppColors.card,
                           borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                         ),
                         child: Text(
@@ -80,7 +80,7 @@ class _AchievementCardWidgetState extends State<AchievementCardWidget> with Sing
                       Expanded(
                         child: Text(
                           widget.achievements[index].substring(3), // Assuming "emoji space text"
-                          style: AppTypography.bodySm.copyWith(color: AppColors.primary),
+                          style: AppTypography.bodySm.copyWith(color: AppColors.accent),
                         ),
                       ),
                     ],

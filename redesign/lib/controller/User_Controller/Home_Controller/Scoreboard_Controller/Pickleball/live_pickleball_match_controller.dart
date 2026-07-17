@@ -97,13 +97,13 @@ class LivePickleballMatchController extends GetxController {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surfaceContainerHigh,
-        title: Text("End Match?", style: TextStyle(color: AppColors.primary)),
+        backgroundColor: AppColors.card,
+        title: Text("End Match?", style: TextStyle(color: AppColors.accent)),
         content: Text("Are you sure you want to finish this match?", style: TextStyle(color: AppColors.muted)),
         actions: [
           OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("Cancel", style: TextStyle(color: AppColors.primary)),
+            child: Text("Cancel", style: TextStyle(color: AppColors.accent)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
@@ -168,6 +168,6 @@ class LivePickleballMatchController extends GetxController {
   }
 
   void showError(String msg) {
-    Get.snackbar("Error", msg, backgroundColor: AppColors.error, colorText: AppColors.primary);
+    Get.snackbar("Error", msg, backgroundColor: AppColors.error, colorText: AppColors.accent);
   }
 }

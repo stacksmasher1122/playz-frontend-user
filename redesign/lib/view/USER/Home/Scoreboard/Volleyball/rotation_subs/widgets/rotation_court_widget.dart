@@ -20,14 +20,14 @@ class RotationCourtWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Rotation Map', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('Rotation Map', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             Obx(() => Container(
               padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.surfaceContainerHighest),
+                border: Border.all(color: AppColors.outlineVariant),
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
               ),
-              child: Text('ROTATION ${controller.rotationNumber.value}', style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer)),
+              child: Text('ROTATION ${controller.rotationNumber.value}', style: AppTypography.labelCaps10.copyWith(color: AppColors.accent)),
             )),
           ],
         ),
@@ -37,7 +37,7 @@ class RotationCourtWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Color(0xFF161616),
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: AppColors.surfaceContainerHighest),
+            border: Border.all(color: AppColors.outlineVariant),
           ),
           child: Stack(
             children: [
@@ -45,7 +45,7 @@ class RotationCourtWidget extends StatelessWidget {
               Center(
                 child: Container(
                   width: ResponsiveHelper.w(2),
-                  color: AppColors.primaryContainer.withOpacity(0.2), // Attack line
+                  color: AppColors.accent.withOpacity(0.2), // Attack line
                 ),
               ),
               // Players
@@ -87,7 +87,7 @@ class RotationCourtWidget extends StatelessWidget {
                       ],
                     ),
                     // Attack Line visual divider
-                    Divider(color: AppColors.primaryContainer.withOpacity(0.2), thickness: 2, indent: 32, endIndent: 32),
+                    Divider(color: AppColors.accent.withOpacity(0.2), thickness: 2, indent: 32, endIndent: 32),
                     // Back Row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

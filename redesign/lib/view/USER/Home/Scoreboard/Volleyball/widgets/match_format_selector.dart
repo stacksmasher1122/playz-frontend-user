@@ -20,9 +20,9 @@ class MatchFormatSelector extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer.withOpacity(0.8),
+        color: AppColors.card.withOpacity(0.8),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,16 +51,16 @@ class MatchFormatSelector extends StatelessWidget {
         duration: Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(20)),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryContainer : Colors.transparent,
+          color: isSelected ? AppColors.accent : Colors.transparent,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          border: Border.all(color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
+          border: Border.all(color: isSelected ? AppColors.accent : AppColors.outlineVariant),
         ),
         child: Column(
           children: [
             Text(
               id,
               style: AppTypography.headlineMd.copyWith(
-                color: isSelected ? AppColors.onPrimaryContainer : AppColors.primary,
+                color: isSelected ? AppColors.background : AppColors.accent,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -68,7 +68,7 @@ class MatchFormatSelector extends StatelessWidget {
             Text(
               label,
               style: AppTypography.labelCaps10.copyWith(
-                color: isSelected ? AppColors.onPrimaryContainer.withOpacity(0.7) : AppColors.muted,
+                color: isSelected ? AppColors.background.withOpacity(0.7) : AppColors.muted,
                 fontWeight: FontWeight.bold,
                 fontSize: ResponsiveHelper.sp(10),
               ),

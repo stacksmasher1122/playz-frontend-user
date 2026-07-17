@@ -13,16 +13,16 @@ class LiveEfficiencyCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('LIVE EFFICIENCY', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, letterSpacing: 2)),
           SizedBox(height: 24),
-          _buildStatRow('ATTACK SUCCESS', '54%', 0.54, AppColors.primaryContainer),
+          _buildStatRow('ATTACK SUCCESS', '54%', 0.54, AppColors.accent),
           SizedBox(height: 16),
           _buildStatRow('RECEPTION QUALITY', '2.41', 0.8, Colors.blueAccent),
           SizedBox(height: 16),
@@ -46,7 +46,7 @@ class LiveEfficiencyCard extends StatelessWidget {
         SizedBox(height: 8),
         LinearProgressIndicator(
           value: percent,
-          backgroundColor: AppColors.surfaceContainerHighest,
+          backgroundColor: AppColors.outlineVariant,
           valueColor: AlwaysStoppedAnimation<Color>(color),
           minHeight: 4,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),

@@ -33,7 +33,7 @@ class StatCardWidget extends StatelessWidget {
           SizedBox(height: 4),
           Text(
             value,
-            style: AppTypography.headlineMd.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.w900),
+            style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.w900),
             textAlign: TextAlign.center,
           ),
         ],

@@ -33,7 +33,7 @@ class MsAppbarWidget extends StatelessWidget {
                     height: ResponsiveHelper.h(40),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.primaryContainer, width: 1),
+                      border: Border.all(color: AppColors.accent, width: 1),
                       image: DecorationImage(
                         image: NetworkImage('https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&q=80&w=40'),
                         fit: BoxFit.cover,
@@ -47,17 +47,17 @@ class MsAppbarWidget extends StatelessWidget {
                     children: [
                       Text(
                         'PlayZ Match',
-                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.primaryContainer, height: 1.1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.accent, height: 1.1),
                       ),
                       Text(
                         'Center',
-                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.primaryContainer, height: 1.1),
+                        style: TextStyle(fontFamily: 'Sora', fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700, color: AppColors.accent, height: 1.1),
                       ),
                     ],
                   ),
                 ],
               ),
-              Icon(Icons.settings, color: AppColors.onSurfaceVariant, size: 24),
+              Icon(Icons.settings, color: AppColors.muted, size: 24),
             ],
           ),
         ),

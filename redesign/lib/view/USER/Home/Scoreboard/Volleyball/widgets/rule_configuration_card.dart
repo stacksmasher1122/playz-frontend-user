@@ -17,9 +17,9 @@ class RuleConfigurationCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer.withOpacity(0.8),
+        color: AppColors.card.withOpacity(0.8),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,14 +27,14 @@ class RuleConfigurationCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Rule\nConfiguration', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold, height: 1.2)),
+              Text('Rule\nConfiguration', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold, height: 1.2)),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryContainer,
+                  color: AppColors.accent,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
                 ),
-                child: Text('PRO STANDARDS', style: AppTypography.labelCaps10.copyWith(color: AppColors.onPrimaryContainer, fontWeight: FontWeight.bold)),
+                child: Text('PRO STANDARDS', style: AppTypography.labelCaps10.copyWith(color: AppColors.background, fontWeight: FontWeight.bold)),
               ),
             ],
           ),

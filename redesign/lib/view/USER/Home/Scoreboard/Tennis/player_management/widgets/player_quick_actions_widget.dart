@@ -21,7 +21,7 @@ class _PlayerQuickActionsWidgetState extends State<PlayerQuickActionsWidget> {
         Expanded(
           child: _buildActionButton(
             icon: Icons.group_add,
-            iconColor: AppColors.onSurfaceVariant,
+            iconColor: AppColors.muted,
             label: 'EXISTING',
             onTap: () => debugPrint("Existing clicked"),
           ),
@@ -30,7 +30,7 @@ class _PlayerQuickActionsWidgetState extends State<PlayerQuickActionsWidget> {
         Expanded(
           child: _buildActionButton(
             icon: Icons.person_add,
-            iconColor: AppColors.primaryContainer,
+            iconColor: AppColors.accent,
             label: 'CREATE NEW',
             onTap: () => debugPrint("Create New clicked"),
           ),
@@ -86,11 +86,11 @@ class _ActionButtonItemState extends State<_ActionButtonItem> {
           duration: Duration(milliseconds: 200),
           height: ResponsiveHelper.h(48),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainer,
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(AppDimensions.borderRadiusXl),
             border: Border.all(
               color: isHovered
-                  ? AppColors.primaryContainer.withValues(alpha: 0.3)
+                  ? AppColors.accent.withValues(alpha: 0.3)
                   : Colors.white10,
             ),
           ),
@@ -102,7 +102,7 @@ class _ActionButtonItemState extends State<_ActionButtonItem> {
               Text(
                 widget.label,
                 style: AppTypography.labelCaps10.copyWith(
-                  color: AppColors.onSurface,
+                  color: AppColors.onPrimary,
                 ),
               ),
             ],

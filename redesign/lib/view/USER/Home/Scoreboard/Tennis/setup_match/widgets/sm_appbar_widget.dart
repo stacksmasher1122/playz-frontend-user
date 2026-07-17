@@ -38,7 +38,7 @@ class SmAppbarWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppColors.primaryContainer,
+                        color: AppColors.accent,
                         width: ResponsiveHelper.w(1),
                       ),
                     ),
@@ -57,7 +57,7 @@ class SmAppbarWidget extends StatelessWidget {
                       fontFamily: 'Sora',
                       fontSize: ResponsiveHelper.sp(24),
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primaryContainer,
+                      color: AppColors.accent,
                     ),
                   ),
                 ],
@@ -67,14 +67,14 @@ class SmAppbarWidget extends StatelessWidget {
                   print('Settings tapped');
                 },
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-                hoverColor: AppColors.primaryContainer.withValues(alpha: 0.1),
+                hoverColor: AppColors.accent.withValues(alpha: 0.1),
                 child: Container(
                   width: ResponsiveHelper.w(40),
                   height: ResponsiveHelper.h(40),
                   alignment: Alignment.center,
                   child: Icon(
                     Icons.settings, // Fallback for material_symbols_outlined settings
-                    color: AppColors.onSurfaceVariant,
+                    color: AppColors.muted,
                     size: 24,
                   ),
                 ),

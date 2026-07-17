@@ -55,16 +55,16 @@ class _EmptyPlayerSlotState extends State<EmptyPlayerSlot> with SingleTickerProv
             color: AppColors.card.withOpacity(0.5),
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             // Fallback for dashed border without package
-            border: Border.all(color: AppColors.primaryContainer.withOpacity(0.5), width: ResponsiveHelper.w(1.5), style: BorderStyle.solid),
+            border: Border.all(color: AppColors.accent.withOpacity(0.5), width: ResponsiveHelper.w(1.5), style: BorderStyle.solid),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.add_circle_outline, color: AppColors.primaryContainer, size: 28),
+              Icon(Icons.add_circle_outline, color: AppColors.accent, size: 28),
               SizedBox(height: 8),
               Text(
                 'SELECT PLAYER ${widget.slotNumber}',
-                style: AppTypography.labelCaps.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold),
+                style: AppTypography.labelCaps.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
               ),
             ],
           ),

@@ -43,7 +43,7 @@ class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProvider
           decoration: BoxDecoration(
             color: AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+            border: Border.all(color: AppColors.outlineVariant, width: 1),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -52,7 +52,7 @@ class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProvider
                 width: ResponsiveHelper.w(64),
                 height: ResponsiveHelper.h(64),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryContainer,
+                  color: AppColors.accent,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.check, color: Colors.black, size: 32),
@@ -68,7 +68,7 @@ class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProvider
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.surfaceContainerHigh,
+                    backgroundColor: AppColors.card,
                     padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
@@ -77,7 +77,7 @@ class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProvider
                   onPressed: () {
                     Navigator.pop(context); // Close dialog
                   },
-                  child: Text('Done', style: TextStyle(color: AppColors.primary)),
+                  child: Text('Done', style: TextStyle(color: AppColors.accent)),
                 ),
               ),
             ],

@@ -86,15 +86,15 @@ class VolleyballLiveScoringController extends GetxController {
 
   void _showWarning() {
     if (matchFinished.value) {
-      Get.snackbar("Match Over", "The match has already concluded.", backgroundColor: AppColors.error, colorText: AppColors.primary);
+      Get.snackbar("Match Over", "The match has already concluded.", backgroundColor: AppColors.error, colorText: AppColors.accent);
     } else if (isPaused.value) {
-      Get.snackbar("Match Paused", "Please resume the timer before scoring.", backgroundColor: AppColors.error, colorText: AppColors.primary);
+      Get.snackbar("Match Paused", "Please resume the timer before scoring.", backgroundColor: AppColors.error, colorText: AppColors.accent);
     }
   }
 
   void undoLastPoint() {
     if (undoStack.isEmpty) {
-      Get.snackbar("Undo", "No previous actions to undo.", backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
+      Get.snackbar("Undo", "No previous actions to undo.", backgroundColor: AppColors.card, colorText: AppColors.accent);
       return;
     }
 
@@ -144,7 +144,7 @@ class VolleyballLiveScoringController extends GetxController {
     isTeamAServing.value = !teamAWon;
     
     pauseMatch(); // Automatically pause between sets
-    Get.snackbar("Set Completed", "Proceeding to Set ${currentSet.value}", backgroundColor: AppColors.primaryContainer, colorText: Colors.black);
+    Get.snackbar("Set Completed", "Proceeding to Set ${currentSet.value}", backgroundColor: AppColors.accent, colorText: Colors.black);
   }
 
   bool _checkMatchWinner() {
@@ -162,7 +162,7 @@ class VolleyballLiveScoringController extends GetxController {
   void _endMatch(String winner) {
     matchFinished.value = true;
     pauseMatch();
-    Get.snackbar("Match Complete", "$winner has won the match!", backgroundColor: AppColors.primaryContainer, colorText: Colors.black, duration: Duration(seconds: 5));
+    Get.snackbar("Match Complete", "$winner has won the match!", backgroundColor: AppColors.accent, colorText: Colors.black, duration: Duration(seconds: 5));
     // Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballMatchSummaryScreen()));
   }
 

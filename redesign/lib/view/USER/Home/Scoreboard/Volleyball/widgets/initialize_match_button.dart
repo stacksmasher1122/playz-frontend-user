@@ -18,13 +18,13 @@ class InitializeMatchButton extends StatelessWidget {
         height: ResponsiveHelper.h(60),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryContainer,
-            foregroundColor: AppColors.onPrimaryContainer,
+            backgroundColor: AppColors.accent,
+            foregroundColor: AppColors.background,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             elevation: 8,
-            shadowColor: AppColors.primaryContainer.withOpacity(0.5),
+            shadowColor: AppColors.accent.withOpacity(0.5),
           ),
           onPressed: onPressed,
           child: Row(

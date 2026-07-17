@@ -40,21 +40,21 @@ class _VolleyballRotationSubsScreenState extends State<VolleyballRotationSubsScr
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
           children: [
-            Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
+            Icon(Icons.sports_volleyball, color: AppColors.accent),
             SizedBox(width: 8),
-            Text('PLAYZ SCOREBOARD', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('PLAYZ SCOREBOARD', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
           ],
         ),
         actions: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
             decoration: BoxDecoration(
-              color: AppColors.primaryContainer.withOpacity(0.2),
+              color: AppColors.accent.withOpacity(0.2),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             child: Row(
@@ -62,10 +62,10 @@ class _VolleyballRotationSubsScreenState extends State<VolleyballRotationSubsScr
                 Container(
                   width: ResponsiveHelper.w(8),
                   height: ResponsiveHelper.h(8),
-                  decoration: BoxDecoration(color: AppColors.primaryContainer, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: AppColors.accent, shape: BoxShape.circle),
                 ),
                 SizedBox(width: 8),
-                Text('LIVE', style: AppTypography.labelCaps10.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold)),
+                Text('LIVE', style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -116,11 +116,11 @@ class _VolleyballRotationSubsScreenState extends State<VolleyballRotationSubsScr
                               width: ResponsiveHelper.w(32),
                               height: ResponsiveHelper.h(32),
                               decoration: BoxDecoration(
-                                color: AppColors.surfaceContainerHighest,
+                                color: AppColors.outlineVariant,
                                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
                               ),
                               child: Center(
-                                child: Text(controller.benchPlayers[index].jerseyNumber, style: AppTypography.bodySm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                                child: Text(controller.benchPlayers[index].jerseyNumber, style: AppTypography.bodySm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                               ),
                             ),
                             SizedBox(width: 12),
@@ -128,7 +128,7 @@ class _VolleyballRotationSubsScreenState extends State<VolleyballRotationSubsScr
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(controller.benchPlayers[index].name, style: AppTypography.bodyMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                                  Text(controller.benchPlayers[index].name, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                                   Text(controller.benchPlayers[index].position, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontSize: 8)),
                                 ],
                               ),

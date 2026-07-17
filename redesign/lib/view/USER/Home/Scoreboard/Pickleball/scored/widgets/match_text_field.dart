@@ -33,12 +33,12 @@ class MatchTextField extends StatelessWidget {
           controller: controller,
           readOnly: readOnly,
           onTap: onTap,
-          style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+          style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.surfaceContainerHighest),
+            hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.outlineVariant),
             filled: true,
-            fillColor: AppColors.surfaceContainerHigh,
+            fillColor: AppColors.card,
             contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),

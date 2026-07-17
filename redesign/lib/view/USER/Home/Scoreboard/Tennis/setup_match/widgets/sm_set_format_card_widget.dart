@@ -34,12 +34,12 @@ class SmSetFormatCardWidget extends StatelessWidget {
             children: [
               Text(
                 'SET FORMAT',
-                style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant),
+                style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
               ),
               SizedBox(height: AppDimensions.md),
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLowest,
+                  color: AppColors.background,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                   border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
                 ),
@@ -55,7 +55,7 @@ class SmSetFormatCardWidget extends StatelessWidget {
                             duration: Duration(milliseconds: 200),
                             padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8)),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.primaryContainer : Colors.transparent,
+                              color: isSelected ? AppColors.accent : Colors.transparent,
                               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                               boxShadow: isSelected
                                   ? [
@@ -71,7 +71,7 @@ class SmSetFormatCardWidget extends StatelessWidget {
                             child: Text(
                               format,
                               style: AppTypography.labelCaps.copyWith(
-                                color: isSelected ? AppColors.onPrimaryContainer : AppColors.onSurfaceVariant,
+                                color: isSelected ? AppColors.background : AppColors.muted,
                               ),
                             ),
                           ),

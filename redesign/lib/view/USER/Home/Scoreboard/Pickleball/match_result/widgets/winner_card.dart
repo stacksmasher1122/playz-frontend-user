@@ -39,7 +39,7 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
           Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(4)),
             decoration: BoxDecoration(
-              color: AppColors.primaryContainer,
+              color: AppColors.accent,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             child: Text(
@@ -76,7 +76,7 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
             children: [
               Text(
                 widget.controller.winnerName.value,
-                style: AppTypography.headlineMd.copyWith(color: AppColors.primaryContainer, fontWeight: FontWeight.bold),
+                style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
               ),
               SizedBox(width: 16),
               Text('vs', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
@@ -105,7 +105,7 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
           width: ResponsiveHelper.w(80),
           height: ResponsiveHelper.h(80),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerHighest,
+            color: AppColors.outlineVariant,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
           ),
           child: Center(
@@ -120,7 +120,7 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
               width: ResponsiveHelper.w(24),
               height: ResponsiveHelper.h(24),
               decoration: BoxDecoration(
-                color: AppColors.primaryContainer,
+                color: AppColors.accent,
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.check, color: Colors.black, size: 16),

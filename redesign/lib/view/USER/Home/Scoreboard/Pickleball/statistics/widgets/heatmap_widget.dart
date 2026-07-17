@@ -15,7 +15,7 @@ class HeatmapWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.card,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+          border: Border.all(color: AppColors.outlineVariant, width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,9 +25,9 @@ class HeatmapWidget extends StatelessWidget {
               children: [
                 Text(
                   'Heat Map: Shot Placement',
-                  style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                  style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                 ),
-                Icon(Icons.grid_view, color: AppColors.primaryContainer, size: 24),
+                Icon(Icons.grid_view, color: AppColors.accent, size: 24),
               ],
             ),
             SizedBox(height: 16),
@@ -67,7 +67,7 @@ class CourtGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.surfaceContainerHighest
+      ..color = AppColors.outlineVariant
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
@@ -88,7 +88,7 @@ class CourtGridPainter extends CustomPainter {
     // Mock heat gradient overlay
     final rect = Rect.fromCenter(center: Offset(size.width * 0.75, size.height * 0.75), width: ResponsiveHelper.w(100), height: 100);
     final gradient = RadialGradient(
-      colors: [AppColors.primaryContainer.withOpacity(0.4), Colors.transparent],
+      colors: [AppColors.accent.withOpacity(0.4), Colors.transparent],
     ).createShader(rect);
     canvas.drawRect(rect, Paint()..shader = gradient);
   }

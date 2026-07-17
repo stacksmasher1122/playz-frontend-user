@@ -22,9 +22,9 @@ class TeamScoreCard extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Stack(
         children: [
@@ -36,10 +36,10 @@ class TeamScoreCard extends StatelessWidget {
               child: Container(
                 width: ResponsiveHelper.w(4),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryContainer,
+                  color: AppColors.accent,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(ResponsiveHelper.w(16)), bottomLeft: Radius.circular(ResponsiveHelper.w(16))),
                   boxShadow: [
-                    BoxShadow(color: AppColors.primaryContainer, blurRadius: 8, spreadRadius: 2),
+                    BoxShadow(color: AppColors.accent, blurRadius: 8, spreadRadius: 2),
                   ],
                 ),
               ),
@@ -55,7 +55,7 @@ class TeamScoreCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         teamName.toUpperCase(),
-                        style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                        style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -63,12 +63,12 @@ class TeamScoreCard extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceContainerHighest,
+                        color: AppColors.outlineVariant,
                         shape: BoxShape.circle,
                       ),
                       child: Text(
                         setsWon.toString(),
-                        style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                        style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -78,7 +78,7 @@ class TeamScoreCard extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: Text(
                     score.toString(),
-                    style: TextStyle(fontSize: ResponsiveHelper.sp(120), fontWeight: FontWeight.w900, color: AppColors.primary, height: 1),
+                    style: TextStyle(fontSize: ResponsiveHelper.sp(120), fontWeight: FontWeight.w900, color: AppColors.accent, height: 1),
                   ),
                 ),
                 SizedBox(height: 24),
@@ -106,7 +106,7 @@ class TeamScoreCard extends StatelessWidget {
       width: ResponsiveHelper.w(32),
       height: ResponsiveHelper.h(4),
       decoration: BoxDecoration(
-        color: won ? AppColors.primaryContainer : AppColors.surfaceContainerHighest,
+        color: won ? AppColors.accent : AppColors.outlineVariant,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
       ),
     );

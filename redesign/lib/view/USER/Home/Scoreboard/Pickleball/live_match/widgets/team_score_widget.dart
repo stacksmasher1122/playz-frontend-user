@@ -26,7 +26,7 @@ class TeamScoreWidget extends StatelessWidget {
         Text(
           teamName,
           style: AppTypography.headlineMd.copyWith(
-            color: isHighlighted ? AppColors.primaryContainer : AppColors.primary,
+            color: isHighlighted ? AppColors.accent : AppColors.accent,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -35,14 +35,14 @@ class TeamScoreWidget extends StatelessWidget {
           width: ResponsiveHelper.w(32),
           height: ResponsiveHelper.h(32),
           decoration: BoxDecoration(
-            color: isHighlighted ? AppColors.primaryContainer : AppColors.surfaceContainerHigh,
+            color: isHighlighted ? AppColors.accent : AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
           ),
           child: Center(
             child: Text(
               '$setsWon',
               style: AppTypography.headlineMd.copyWith(
-                color: isHighlighted ? Colors.black : AppColors.primary,
+                color: isHighlighted ? Colors.black : AppColors.accent,
                 fontWeight: FontWeight.bold,
               ),
             ),

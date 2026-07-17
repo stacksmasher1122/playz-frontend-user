@@ -30,7 +30,7 @@ class _PlayerBEmptyCardWidgetState extends State<PlayerBEmptyCardWidget> {
             Text(
               'PLAYER B (RECEIVER)',
               style: AppTypography.labelCaps.copyWith(
-                color: AppColors.onSurfaceVariant,
+                color: AppColors.muted,
               ),
             ),
             Container(
@@ -60,7 +60,7 @@ class _PlayerBEmptyCardWidgetState extends State<PlayerBEmptyCardWidget> {
               // Simulating dashed border with a simple solid border in Flutter for now (as standard flutter doesn't have dashed out of the box)
               border: Border.all(
                 color: _isHovered
-                    ? AppColors.primaryContainer.withValues(alpha: 0.4)
+                    ? AppColors.accent.withValues(alpha: 0.4)
                     : Colors.white10,
                 width: ResponsiveHelper.w(2),
               ),
@@ -77,14 +77,14 @@ class _PlayerBEmptyCardWidgetState extends State<PlayerBEmptyCardWidget> {
                     height: ResponsiveHelper.h(96),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppColors.surfaceContainerHighest,
+                      color: AppColors.outlineVariant,
                     ),
                     child: Icon(
                       Icons.person_search,
                       size: 48,
                       color: _isHovered
-                          ? AppColors.primaryContainer
-                          : AppColors.onSurfaceVariant,
+                          ? AppColors.accent
+                          : AppColors.muted,
                     ),
                   ),
                 ),
@@ -93,7 +93,7 @@ class _PlayerBEmptyCardWidgetState extends State<PlayerBEmptyCardWidget> {
                 Text(
                   'Select Opponent',
                   style: AppTypography.headlineMdSora.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                    color: AppColors.muted,
                   ),
                 ),
                 SizedBox(height: 12),
@@ -104,7 +104,7 @@ class _PlayerBEmptyCardWidgetState extends State<PlayerBEmptyCardWidget> {
                     'Search the tournament database or register a new participant.',
                     textAlign: TextAlign.center,
                     style: AppTypography.bodyInter.copyWith(
-                      color: AppColors.onSurfaceVariant.withValues(alpha: 0.6),
+                      color: AppColors.muted.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
@@ -128,13 +128,13 @@ class _PlayerBEmptyCardWidgetState extends State<PlayerBEmptyCardWidget> {
                             child: Container(
                               height: ResponsiveHelper.h(48),
                               decoration: BoxDecoration(
-                                color: AppColors.primaryContainer,
+                                color: AppColors.accent,
                                 borderRadius: BorderRadius.circular(
                                   AppDimensions.borderRadiusXl,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.primaryContainer
+                                    color: AppColors.accent
                                         .withValues(alpha: 0.3),
                                     blurRadius: 15,
                                     offset: Offset(0, 5),
@@ -188,7 +188,7 @@ class _PlayerBEmptyCardWidgetState extends State<PlayerBEmptyCardWidget> {
                                 child: Text(
                                   'SCAN ACCREDITATION',
                                   style: AppTypography.labelCaps.copyWith(
-                                    color: AppColors.primary,
+                                    color: AppColors.accent,
                                   ),
                                 ),
                               ),

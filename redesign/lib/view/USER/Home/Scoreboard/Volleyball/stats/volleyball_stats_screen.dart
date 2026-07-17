@@ -42,14 +42,14 @@ class _VolleyballStatsScreenState extends State<VolleyballStatsScreen> {
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
           children: [
-            Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
+            Icon(Icons.sports_volleyball, color: AppColors.accent),
             SizedBox(width: 8),
-            Text('PLAYZ SCOREBOARD', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('PLAYZ SCOREBOARD', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
           ],
         ),
         actions: [
@@ -78,7 +78,7 @@ class _VolleyballStatsScreenState extends State<VolleyballStatsScreen> {
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator(color: AppColors.primaryContainer));
+          return Center(child: CircularProgressIndicator(color: AppColors.accent));
         }
 
         return Column(

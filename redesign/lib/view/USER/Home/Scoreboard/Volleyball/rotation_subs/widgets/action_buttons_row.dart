@@ -18,15 +18,15 @@ class ActionButtonsRow extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: _buildButton(context, Icons.sync, 'SIDE-OUT', AppColors.primaryContainer, Colors.black, controller.performSideOut)),
+            Expanded(child: _buildButton(context, Icons.sync, 'SIDE-OUT', AppColors.accent, Colors.black, controller.performSideOut)),
             SizedBox(width: 16),
-            Expanded(child: _buildButton(context, Icons.person_add_alt, 'SUBSTITUTE', AppColors.surfaceContainerHigh, AppColors.primary, () => _openSubsSheet(context))),
+            Expanded(child: _buildButton(context, Icons.person_add_alt, 'SUBSTITUTE', AppColors.card, AppColors.accent, () => _openSubsSheet(context))),
           ],
         ),
         SizedBox(height: 16),
         Row(
           children: [
-            Expanded(child: _buildButton(context, Icons.timer_outlined, 'TIMEOUT', AppColors.surfaceContainerHigh, AppColors.primary, controller.requestTimeout)),
+            Expanded(child: _buildButton(context, Icons.timer_outlined, 'TIMEOUT', AppColors.card, AppColors.accent, controller.requestTimeout)),
             SizedBox(width: 16),
             Expanded(child: _buildButton(context, Icons.undo, 'UNDO', AppColors.error, Colors.white, controller.undoLastAction)),
           ],
@@ -44,7 +44,7 @@ class ActionButtonsRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-          border: Border.all(color: bgColor == AppColors.primaryContainer ? Colors.transparent : AppColors.surfaceContainerHighest),
+          border: Border.all(color: bgColor == AppColors.accent ? Colors.transparent : AppColors.outlineVariant),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

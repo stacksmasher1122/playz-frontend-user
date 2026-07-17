@@ -97,7 +97,7 @@ class _ControlCardState extends State<_ControlCard> with SingleTickerProviderSta
           decoration: BoxDecoration(
             color: AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+            border: Border.all(color: AppColors.outlineVariant, width: 1),
           ),
           child: Column(
             children: [
@@ -105,7 +105,7 @@ class _ControlCardState extends State<_ControlCard> with SingleTickerProviderSta
               SizedBox(height: 8),
               Text(
                 widget.label,
-                style: AppTypography.labelCaps10.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
               ),
             ],
           ),

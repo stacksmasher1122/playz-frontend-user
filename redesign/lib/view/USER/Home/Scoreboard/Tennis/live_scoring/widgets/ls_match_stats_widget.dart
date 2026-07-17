@@ -18,7 +18,7 @@ class LsMatchStatsWidget extends StatelessWidget {
       children: [
         Text(
           'LIVE MATCH STATS',
-          style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, letterSpacing: 2.0),
+          style: AppTypography.labelCaps.copyWith(color: AppColors.muted, letterSpacing: 2.0),
         ),
         SizedBox(height: 24),
         
@@ -68,9 +68,9 @@ class LsMatchStatsWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(valA, style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontSize: 16)),
-            Text(label, style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant)),
-            Text(valB, style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontSize: 16)),
+            Text(valA, style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontSize: 16)),
+            Text(label, style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
+            Text(valB, style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontSize: 16)),
           ],
         ),
         SizedBox(height: 8),
@@ -84,7 +84,7 @@ class LsMatchStatsWidget extends StatelessWidget {
                   child: Container(
                     height: ResponsiveHelper.h(6),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryContainer,
+                      color: AppColors.accent,
                       borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                     ),
                   ),
@@ -100,7 +100,7 @@ class LsMatchStatsWidget extends StatelessWidget {
                   child: Container(
                     height: ResponsiveHelper.h(6),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryContainer,
+                      color: AppColors.accent,
                       borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                     ),
                   ),

@@ -89,13 +89,13 @@ class _QrCheckinModalWidgetState extends State<QrCheckinModalWidget>
                           Icon(
                             Icons.qr_code_scanner,
                             size: 48,
-                            color: AppColors.primaryContainer,
+                            color: AppColors.accent,
                           ),
                           SizedBox(height: 16),
                           Text(
                             'Player Check-In',
                             style: AppTypography.headlineMdSora.copyWith(
-                              color: AppColors.primary,
+                              color: AppColors.accent,
                             ),
                           ),
                           SizedBox(height: 8),
@@ -103,7 +103,7 @@ class _QrCheckinModalWidgetState extends State<QrCheckinModalWidget>
                             'Scan player accreditation QR code or enter PIN manually.',
                             textAlign: TextAlign.center,
                             style: AppTypography.bodyInter.copyWith(
-                              color: AppColors.onSurfaceVariant,
+                              color: AppColors.muted,
                             ),
                           ),
                           SizedBox(height: 24),
@@ -133,8 +133,8 @@ class _QrCheckinModalWidgetState extends State<QrCheckinModalWidget>
                             child: Icon(
                               Icons.close,
                               color: _isCloseHovered
-                                  ? AppColors.primary
-                                  : AppColors.onSurfaceVariant,
+                                  ? AppColors.accent
+                                  : AppColors.muted,
                             ),
                           ),
                         ),
@@ -155,10 +155,10 @@ class _QrCheckinModalWidgetState extends State<QrCheckinModalWidget>
       constraints: BoxConstraints(maxWidth: 280),
 
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusXl),
         border: Border.all(
-          color: AppColors.primaryContainer.withValues(alpha: 0.2),
+          color: AppColors.accent.withValues(alpha: 0.2),
           width: ResponsiveHelper.w(2),
         ),
       ),
@@ -181,7 +181,7 @@ class _QrCheckinModalWidgetState extends State<QrCheckinModalWidget>
                 margin: EdgeInsets.all(ResponsiveHelper.w(32)),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: AppColors.primaryContainer.withValues(
+                    color: AppColors.accent.withValues(
                       alpha: _pulseAnimation.value,
                     ),
                     width: ResponsiveHelper.w(2),
@@ -205,10 +205,10 @@ class _QrCheckinModalWidgetState extends State<QrCheckinModalWidget>
                   width: double.infinity,
                   margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryContainer,
+                    color: AppColors.accent,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primaryContainer.withValues(
+                        color: AppColors.accent.withValues(
                           alpha: 0.5,
                         ),
                         blurRadius: 10,
@@ -230,21 +230,21 @@ class _QrCheckinModalWidgetState extends State<QrCheckinModalWidget>
       height: ResponsiveHelper.h(40),
       padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLg),
         border: Border.all(color: Colors.white10),
       ),
       child: Row(
         children: [
-          Icon(Icons.link, size: 18, color: AppColors.onSurfaceVariant),
+          Icon(Icons.link, size: 18, color: AppColors.muted),
           SizedBox(width: 8),
           Expanded(
             child: TextField(
-              style: AppTypography.bodyInter.copyWith(color: AppColors.primary),
+              style: AppTypography.bodyInter.copyWith(color: AppColors.accent),
               decoration: InputDecoration(
                 hintText: 'Enter PIN manually...',
                 hintStyle: AppTypography.bodyInter.copyWith(
-                  color: AppColors.onSurfaceVariant.withValues(alpha: 0.4),
+                  color: AppColors.muted.withValues(alpha: 0.4),
                 ),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,

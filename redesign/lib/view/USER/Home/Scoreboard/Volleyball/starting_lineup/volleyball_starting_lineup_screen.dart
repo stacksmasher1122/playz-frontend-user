@@ -46,14 +46,14 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: Icon(Icons.arrow_back, color: AppColors.accent),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
           children: [
-            Icon(Icons.sports_volleyball, color: AppColors.primaryContainer),
+            Icon(Icons.sports_volleyball, color: AppColors.accent),
             SizedBox(width: 8),
-            Text('MATCH CENTER', style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('MATCH CENTER', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
           ],
         ),
         actions: [
@@ -64,7 +64,7 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
-          child: Container(color: AppColors.surfaceContainerHighest, height: 1.0),
+          child: Container(color: AppColors.outlineVariant, height: 1.0),
         ),
       ),
       body: SafeArea(
@@ -72,7 +72,7 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
           children: [
             // Team Toggle
             Container(
-              color: AppColors.surfaceContainerLowest,
+              color: AppColors.background,
               padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8), horizontal: ResponsiveHelper.w(16)),
               child: Obx(() {
                 return Row(
@@ -83,14 +83,14 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
                           decoration: BoxDecoration(
-                            color: controller.isTeamAActive.value ? AppColors.primaryContainer : Colors.transparent,
+                            color: controller.isTeamAActive.value ? AppColors.accent : Colors.transparent,
                             borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                           ),
                           child: Center(
                             child: Text(
                               widget.teamA.teamName,
                               style: AppTypography.bodyMd.copyWith(
-                                color: controller.isTeamAActive.value ? AppColors.onPrimaryContainer : AppColors.muted,
+                                color: controller.isTeamAActive.value ? AppColors.background : AppColors.muted,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -105,14 +105,14 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
                           decoration: BoxDecoration(
-                            color: !controller.isTeamAActive.value ? AppColors.primaryContainer : Colors.transparent,
+                            color: !controller.isTeamAActive.value ? AppColors.accent : Colors.transparent,
                             borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                           ),
                           child: Center(
                             child: Text(
                               widget.teamB.teamName,
                               style: AppTypography.bodyMd.copyWith(
-                                color: !controller.isTeamAActive.value ? AppColors.onPrimaryContainer : AppColors.muted,
+                                color: !controller.isTeamAActive.value ? AppColors.background : AppColors.muted,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -135,7 +135,7 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Starting Lineup - ${currentTeam.teamName}', style: AppTypography.headlineLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                          Text('Starting Lineup - ${currentTeam.teamName}', style: AppTypography.headlineLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                           SizedBox(height: 4),
                           Text(
                             'MATCH ID: #FIVB-2024-0812 | ${currentTeam.coachName}',
@@ -150,11 +150,11 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
                           RoleAssignmentButtons(
                             onAssignCaptain: () {
                               Get.snackbar("Assign Captain", "Tap a player below to assign them as Captain.", 
-                                backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
+                                backgroundColor: AppColors.card, colorText: AppColors.accent);
                             },
                             onAssignLibero: () {
                               Get.snackbar("Assign Libero", "Tap a player below to assign them as Libero.", 
-                                backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.primary);
+                                backgroundColor: AppColors.card, colorText: AppColors.accent);
                             },
                           ),
                           SizedBox(height: 24),

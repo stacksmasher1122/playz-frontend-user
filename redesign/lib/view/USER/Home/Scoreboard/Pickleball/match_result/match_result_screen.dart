@@ -138,7 +138,7 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
       bottomNavigationBar: LiveBottomNavigation(
         selectedIndex: 0,
         onTabSelected: (index) {
-          Get.snackbar("Match Ended", "This match is over.", backgroundColor: AppColors.surfaceContainerHigh, colorText: AppColors.muted);
+          Get.snackbar("Match Ended", "This match is over.", backgroundColor: AppColors.card, colorText: AppColors.muted);
         },
       ),
     );
@@ -156,7 +156,7 @@ class _CertifiedBadge extends StatelessWidget {
         Icon(
           Icons.sports_tennis,
           size: 80,
-          color: AppColors.primaryContainer.withOpacity(0.2),
+          color: AppColors.accent.withOpacity(0.2),
         ),
         SizedBox(height: 8),
         Text(

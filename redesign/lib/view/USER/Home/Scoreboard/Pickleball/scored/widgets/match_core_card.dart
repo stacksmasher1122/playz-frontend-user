@@ -91,10 +91,10 @@ class MatchCoreCard extends StatelessWidget {
                   return Theme(
                     data: Theme.of(context).copyWith(
                       colorScheme: ColorScheme.dark(
-                        primary: AppColors.primaryContainer,
-                        onPrimary: AppColors.onPrimaryContainer,
-                        surface: AppColors.surfaceContainer,
-                        onSurface: AppColors.primary,
+                        primary: AppColors.accent,
+                        onPrimary: AppColors.background,
+                        surface: AppColors.card,
+                        onSurface: AppColors.accent,
                       ),
                     ),
                     child: child!,
@@ -110,10 +110,10 @@ class MatchCoreCard extends StatelessWidget {
                     return Theme(
                       data: Theme.of(context).copyWith(
                         colorScheme: ColorScheme.dark(
-                          primary: AppColors.primaryContainer,
-                          onPrimary: AppColors.onPrimaryContainer,
-                          surface: AppColors.surfaceContainer,
-                          onSurface: AppColors.primary,
+                          primary: AppColors.accent,
+                          onPrimary: AppColors.background,
+                          surface: AppColors.card,
+                          onSurface: AppColors.accent,
                         ),
                       ),
                       child: child!,

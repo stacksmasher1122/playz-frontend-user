@@ -29,7 +29,7 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
           children: [
             Text(
               'MATCH STATS',
-              style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, letterSpacing: 2.0),
+              style: AppTypography.labelCaps.copyWith(color: AppColors.muted, letterSpacing: 2.0),
             ),
             SizedBox(height: 32),
             
@@ -37,15 +37,15 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
               label: 'ACES',
               val1: stats.p1Aces,
               val2: stats.p2Aces,
-              color1: AppColors.primaryContainer,
-              color2: AppColors.onSurfaceVariant,
+              color1: AppColors.accent,
+              color2: AppColors.muted,
             ),
             SizedBox(height: 24),
             _buildStatBar(
               label: 'D.FAULTS',
               val1: stats.p1DoubleFaults,
               val2: stats.p2DoubleFaults,
-              color1: AppColors.onSurfaceVariant,
+              color1: AppColors.muted,
               color2: AppColors.error,
               reverse: true, // p2 had more, so they get the error color
             ),
@@ -54,15 +54,15 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
               label: 'WINNERS',
               val1: stats.p1Winners,
               val2: stats.p2Winners,
-              color1: AppColors.primaryContainer,
-              color2: AppColors.onSurfaceVariant,
+              color1: AppColors.accent,
+              color2: AppColors.muted,
             ),
             SizedBox(height: 24),
             _buildStatBar(
               label: 'U.ERRORS',
               val1: stats.p1UnforcedErrors,
               val2: stats.p2UnforcedErrors,
-              color1: AppColors.onSurfaceVariant,
+              color1: AppColors.muted,
               color2: AppColors.error,
               reverse: true,
             ),
@@ -71,8 +71,8 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
               label: 'SERVE %',
               val1: stats.p1FirstServePercent,
               val2: stats.p2FirstServePercent,
-              color1: AppColors.primaryContainer,
-              color2: AppColors.onSurfaceVariant,
+              color1: AppColors.accent,
+              color2: AppColors.muted,
               isPercentage: true,
             ),
           ],
@@ -110,7 +110,7 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
         Container(
           height: ResponsiveHelper.h(8),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerHigh,
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
           ),
           child: Row(
@@ -121,8 +121,8 @@ class MsMatchStatsBarsWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: color1,
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(ResponsiveHelper.w(4)), bottomLeft: Radius.circular(ResponsiveHelper.w(4))),
-                    boxShadow: color1 == AppColors.primaryContainer 
-                        ? [BoxShadow(color: AppColors.primaryContainer.withValues(alpha: 0.5), blurRadius: 8)] 
+                    boxShadow: color1 == AppColors.accent 
+                        ? [BoxShadow(color: AppColors.accent.withValues(alpha: 0.5), blurRadius: 8)] 
                         : null,
                   ),
                 ),

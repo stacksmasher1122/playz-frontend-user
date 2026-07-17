@@ -22,8 +22,8 @@ class PmConfirmButtonWidget extends StatelessWidget {
             Get.snackbar(
               'Match Confirmed',
               'Players have been successfully verified.',
-              backgroundColor: AppColors.primaryContainer,
-              colorText: AppColors.onPrimaryContainer,
+              backgroundColor: AppColors.accent,
+              colorText: AppColors.background,
               snackPosition: SnackPosition.BOTTOM,
             );
           } else {
@@ -41,10 +41,10 @@ class PmConfirmButtonWidget extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(24)),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerHigh,
+            color: AppColors.card,
             border: Border(
               top: BorderSide(
-                color: canConfirm ? AppColors.primaryContainer : Colors.transparent,
+                color: canConfirm ? AppColors.accent : Colors.transparent,
                 width: ResponsiveHelper.w(2),
               ),
             ),
@@ -56,14 +56,14 @@ class PmConfirmButtonWidget extends StatelessWidget {
                 child: Text(
                   'CONFIRM MATCH\nPARTICIPANTS',
                   style: AppTypography.headlineMd.copyWith(
-                    color: canConfirm ? AppColors.primaryContainer : AppColors.onSurfaceVariant,
+                    color: canConfirm ? AppColors.accent : AppColors.muted,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
               Icon(
                 Icons.arrow_forward,
-                color: canConfirm ? AppColors.primaryContainer : AppColors.onSurfaceVariant,
+                color: canConfirm ? AppColors.accent : AppColors.muted,
                 size: 24,
               ),
             ],

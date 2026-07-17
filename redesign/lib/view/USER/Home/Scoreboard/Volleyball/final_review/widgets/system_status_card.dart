@@ -20,16 +20,16 @@ class SystemStatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     Color iconBgColor = Colors.blueAccent;
-    if (status == SystemStatus.ready) iconBgColor = AppColors.primaryContainer;
+    if (status == SystemStatus.ready) iconBgColor = AppColors.accent;
     if (status == SystemStatus.offline) iconBgColor = AppColors.error;
 
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       margin: EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Row(
         children: [
@@ -46,7 +46,7 @@ class SystemStatusCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                Text(title, style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                 SizedBox(height: 4),
                 StatusChip(status: status),
               ],

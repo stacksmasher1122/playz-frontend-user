@@ -10,6 +10,7 @@ import 'widgets/quick_actions_row.dart';
 import 'widgets/create_scoreboard_hero.dart';
 import 'widgets/create_tournament_card.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/select_sports/select_sports_screen.dart';
+import 'package:redesign/view/USER/Tournament/create_tournament/create_tournament_screen.dart';
 import 'widgets/live_matches_empty_state.dart';
 import 'widgets/live_match_preview_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -46,7 +47,7 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
                 child: CreateTournamentCard(
                   onTap: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => SelectSportScreen()),
+                      MaterialPageRoute(builder: (_) => const CreateTournamentScreen()),
                     );
                   },
                 ),

@@ -14,7 +14,7 @@ class SmBottomNavWidget extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer.withValues(alpha: 0.9),
+        color: AppColors.card.withValues(alpha: 0.9),
         border: Border(
           top: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
         ),
@@ -99,7 +99,7 @@ class SmBottomNavWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-      hoverColor: AppColors.surfaceBright.withValues(alpha: 0.1),
+      hoverColor: AppColors.card.withValues(alpha: 0.1),
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
@@ -109,7 +109,7 @@ class SmBottomNavWidget extends StatelessWidget {
               top: ResponsiveHelper.h(0),
               left: -10,
               right: -10,
-              child: Container(height: ResponsiveHelper.h(2), color: AppColors.primaryContainer),
+              child: Container(height: ResponsiveHelper.h(2), color: AppColors.accent),
             ),
           Padding(
             padding: EdgeInsets.only(
@@ -126,16 +126,16 @@ class SmBottomNavWidget extends StatelessWidget {
                   icon,
                   size: 24,
                   color: isActive
-                      ? AppColors.primaryContainer
-                      : AppColors.onSurfaceVariant,
+                      ? AppColors.accent
+                      : AppColors.muted,
                 ),
                 SizedBox(height: 4),
                 Text(
                   label,
                   style: AppTypography.labelCaps.copyWith(
                     color: isActive
-                        ? AppColors.primaryContainer
-                        : AppColors.onSurfaceVariant,
+                        ? AppColors.accent
+                        : AppColors.muted,
                   ),
                 ),
               ],

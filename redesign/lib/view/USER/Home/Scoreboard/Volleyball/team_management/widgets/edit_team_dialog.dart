@@ -31,7 +31,7 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Dialog(
-      backgroundColor: AppColors.surfaceContainer,
+      backgroundColor: AppColors.card,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(20))),
       child: Padding(
         padding: EdgeInsets.all(ResponsiveHelper.w(24.0)),
@@ -39,28 +39,28 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Edit Team Details', style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            Text('Edit Team Details', style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
             SizedBox(height: 24),
             TextField(
               controller: nameController,
-              style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+              style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
               decoration: InputDecoration(
                 labelText: 'Team Name',
                 labelStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
                 filled: true,
-                fillColor: AppColors.surfaceContainerLowest,
+                fillColor: AppColors.background,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
             ),
             SizedBox(height: 16),
             TextField(
               controller: coachController,
-              style: AppTypography.bodyMd.copyWith(color: AppColors.primary),
+              style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
               decoration: InputDecoration(
                 labelText: 'Coach Name',
                 labelStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
                 filled: true,
-                fillColor: AppColors.surfaceContainerLowest,
+                fillColor: AppColors.background,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
             ),
@@ -75,8 +75,8 @@ class _EditTeamDialogState extends State<EditTeamDialog> {
                 SizedBox(width: 16),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryContainer,
-                    foregroundColor: AppColors.onPrimaryContainer,
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: AppColors.background,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
                   ),
                   onPressed: () {

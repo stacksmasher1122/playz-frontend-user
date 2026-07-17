@@ -18,7 +18,7 @@ class _PmBottomNavWidgetState extends State<PmBottomNavWidget> {
     return Container(
       height: ResponsiveHelper.h(80),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer.withValues(alpha: 0.9),
+        color: AppColors.card.withValues(alpha: 0.9),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(ResponsiveHelper.w(24)),
           topRight: Radius.circular(ResponsiveHelper.w(24)),
@@ -101,7 +101,7 @@ class _TabItemState extends State<_TabItem> {
             border: Border(
               top: BorderSide(
                 color: widget.isActive
-                    ? AppColors.primaryContainer
+                    ? AppColors.accent
                     : Colors.transparent,
                 width: ResponsiveHelper.w(2),
               ),
@@ -114,16 +114,16 @@ class _TabItemState extends State<_TabItem> {
                 widget.icon,
                 size: 24,
                 color: widget.isActive
-                    ? AppColors.primaryContainer
-                    : AppColors.onSurfaceVariant,
+                    ? AppColors.accent
+                    : AppColors.muted,
               ),
               SizedBox(height: 4),
               Text(
                 widget.label,
                 style: AppTypography.labelCaps10.copyWith(
                   color: widget.isActive
-                      ? AppColors.primaryContainer
-                      : AppColors.onSurfaceVariant,
+                      ? AppColors.accent
+                      : AppColors.muted,
                 ),
               ),
             ],

@@ -57,14 +57,14 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
               children: [
                 SizedBox(
                   width: ResponsiveHelper.w(40),
-                  child: Text(widget.labelA, style: AppTypography.bodySm.copyWith(color: AppColors.primaryContainer)),
+                  child: Text(widget.labelA, style: AppTypography.bodySm.copyWith(color: AppColors.accent)),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   child: Container(
                     height: ResponsiveHelper.h(6),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerHighest,
+                      color: AppColors.outlineVariant,
                       borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                     ),
                     child: AnimatedBuilder(
@@ -75,7 +75,7 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
                           widthFactor: _fillAnimation.value,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: AppColors.primaryContainer,
+                              color: AppColors.accent,
                               borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                             ),
                           ),

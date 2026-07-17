@@ -30,7 +30,7 @@ class MsSetBreakdownWidget extends StatelessWidget {
           children: [
             Text(
               'SET BREAKDOWN',
-              style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, letterSpacing: 2.0),
+              style: AppTypography.labelCaps.copyWith(color: AppColors.muted, letterSpacing: 2.0),
             ),
             SizedBox(height: 24),
             ...stats.setBreakdowns.map((set) => _buildSetRow(set)),
@@ -42,8 +42,8 @@ class MsSetBreakdownWidget extends StatelessWidget {
 
   Widget _buildSetRow(SetBreakdownModel setModel) {
     final bool isS3 = setModel.setNumber == 3;
-    final bgColor = AppColors.surfaceContainerHigh.withValues(alpha: 0.5);
-    final borderColor = isS3 ? AppColors.primaryContainer.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.05);
+    final bgColor = AppColors.card.withValues(alpha: 0.5);
+    final borderColor = isS3 ? AppColors.accent.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.05);
 
     return Container(
       margin: EdgeInsets.only(bottom: 12),
@@ -52,7 +52,7 @@ class MsSetBreakdownWidget extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
         border: Border.all(color: borderColor),
-        boxShadow: isS3 ? [BoxShadow(color: AppColors.primaryContainer.withValues(alpha: 0.1), blurRadius: 10)] : null,
+        boxShadow: isS3 ? [BoxShadow(color: AppColors.accent.withValues(alpha: 0.1), blurRadius: 10)] : null,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -62,7 +62,7 @@ class MsSetBreakdownWidget extends StatelessWidget {
               Text(
                 'S${setModel.setNumber}',
                 style: AppTypography.headlineMd.copyWith(
-                  color: setModel.isP1Winner ? AppColors.primaryContainer : AppColors.onSurfaceVariant,
+                  color: setModel.isP1Winner ? AppColors.accent : AppColors.muted,
                 ),
               ),
               SizedBox(width: 24),
@@ -71,12 +71,12 @@ class MsSetBreakdownWidget extends StatelessWidget {
                 children: [
                   Text(
                     '${setModel.p1Score} — ${setModel.p2Score}',
-                    style: AppTypography.headlineMd.copyWith(color: AppColors.primary, fontSize: 18),
+                    style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontSize: 18),
                   ),
                   SizedBox(height: 4),
                   Text(
                     'DURATION: ${setModel.duration}',
-                    style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant, fontSize: 10),
+                    style: AppTypography.labelCaps.copyWith(color: AppColors.muted, fontSize: 10),
                   ),
                 ],
               ),
@@ -85,14 +85,14 @@ class MsSetBreakdownWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
             decoration: BoxDecoration(
-              color: setModel.isMatchPoint ? AppColors.primaryContainer : Colors.transparent,
+              color: setModel.isMatchPoint ? AppColors.accent : Colors.transparent,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
-              border: Border.all(color: setModel.isMatchPoint ? Colors.transparent : (setModel.isP1Winner ? AppColors.primaryContainer.withValues(alpha: 0.5) : AppColors.onSurfaceVariant.withValues(alpha: 0.5))),
+              border: Border.all(color: setModel.isMatchPoint ? Colors.transparent : (setModel.isP1Winner ? AppColors.accent.withValues(alpha: 0.5) : AppColors.muted.withValues(alpha: 0.5))),
             ),
             child: Text(
               setModel.keyInsight,
               style: AppTypography.labelCaps.copyWith(
-                color: setModel.isMatchPoint ? AppColors.onPrimaryContainer : (setModel.isP1Winner ? AppColors.primaryContainer : AppColors.onSurfaceVariant),
+                color: setModel.isMatchPoint ? AppColors.background : (setModel.isP1Winner ? AppColors.accent : AppColors.muted),
                 fontSize: ResponsiveHelper.sp(9),
               ),
             ),

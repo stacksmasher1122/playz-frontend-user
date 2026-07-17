@@ -50,12 +50,12 @@ class _PlayerACardWidgetState extends State<PlayerACardWidget> with SingleTicker
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('PLAYER A (SERVER)', style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant)),
+            Text('PLAYER A (SERVER)', style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
             Container(
               width: ResponsiveHelper.w(48),
               height: ResponsiveHelper.h(4),
               decoration: BoxDecoration(
-                color: AppColors.primaryContainer,
+                color: AppColors.accent,
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
               ),
             ),
@@ -78,7 +78,7 @@ class _PlayerACardWidgetState extends State<PlayerACardWidget> with SingleTicker
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  _isHovered ? AppColors.primaryContainer.withValues(alpha: 0.05) : Colors.transparent,
+                  _isHovered ? AppColors.accent.withValues(alpha: 0.05) : Colors.transparent,
                   Colors.transparent,
                 ],
               ),
@@ -100,10 +100,10 @@ class _PlayerACardWidgetState extends State<PlayerACardWidget> with SingleTicker
                         padding: EdgeInsets.all(ResponsiveHelper.w(4)),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.primaryContainer, width: 2),
+                          border: Border.all(color: AppColors.accent, width: 2),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primaryContainer.withValues(alpha: 0.4),
+                              color: AppColors.accent.withValues(alpha: 0.4),
                               blurRadius: 15,
                               spreadRadius: _pulseAnimation.value,
                             ),
@@ -114,7 +114,7 @@ class _PlayerACardWidgetState extends State<PlayerACardWidget> with SingleTicker
                             Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: AppColors.surfaceContainerLowest,
+                                color: AppColors.background,
                                 image: DecorationImage(
                                   image: NetworkImage(player.imagePath),
                                   fit: BoxFit.cover,
@@ -129,7 +129,7 @@ class _PlayerACardWidgetState extends State<PlayerACardWidget> with SingleTicker
                                 height: ResponsiveHelper.h(32),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: AppColors.primaryContainer,
+                                  color: AppColors.accent,
                                 ),
                                 child: Icon(
                                   Icons.check_circle,
@@ -146,9 +146,9 @@ class _PlayerACardWidgetState extends State<PlayerACardWidget> with SingleTicker
                   SizedBox(height: 24),
                   
                   // Name and Club
-                  Text(player.name, style: AppTypography.headlineMdSora.copyWith(color: AppColors.primary)),
+                  Text(player.name, style: AppTypography.headlineMdSora.copyWith(color: AppColors.accent)),
                   SizedBox(height: 4),
-                  Text(player.club, style: AppTypography.labelCaps.copyWith(color: AppColors.onSurfaceVariant)),
+                  Text(player.club, style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
                   SizedBox(height: 24),
                   
                   // Stat Grid
@@ -172,7 +172,7 @@ class _PlayerACardWidgetState extends State<PlayerACardWidget> with SingleTicker
                         side: BorderSide(color: AppColors.outlineVariant),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.borderRadiusXl)),
                       ),
-                      child: Text('CHANGE PLAYER', style: AppTypography.labelCaps.copyWith(color: AppColors.primary)),
+                      child: Text('CHANGE PLAYER', style: AppTypography.labelCaps.copyWith(color: AppColors.accent)),
                     ),
                   ),
                 ],
@@ -191,19 +191,19 @@ class _PlayerACardWidgetState extends State<PlayerACardWidget> with SingleTicker
     return Container(
       padding: EdgeInsets.all(AppDimensions.paddingMd),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainer,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLg),
         border: Border.all(color: Colors.white10),
       ),
       child: Column(
         children: [
-          Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.onSurfaceVariant)),
+          Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
           SizedBox(height: 4),
           Text(
             value,
             style: isPrimaryValue 
-                ? AppTypography.headlineMdSora.copyWith(color: AppColors.primary)
-                : AppTypography.headlineMdSora.copyWith(color: AppColors.primaryContainer),
+                ? AppTypography.headlineMdSora.copyWith(color: AppColors.accent)
+                : AppTypography.headlineMdSora.copyWith(color: AppColors.accent),
           ),
         ],
       ),

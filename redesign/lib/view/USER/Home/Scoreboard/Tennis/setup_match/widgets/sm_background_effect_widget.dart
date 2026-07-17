@@ -27,7 +27,7 @@ class SmBackgroundEffectWidget extends StatelessWidget {
                   filter: ImageFilter.blur(sigmaX: 120, sigmaY: 120),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppColors.primaryContainer.withValues(alpha: 0.05),
+                      color: AppColors.accent.withValues(alpha: 0.05),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -42,7 +42,7 @@ class SmBackgroundEffectWidget extends StatelessWidget {
                   filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppColors.primaryContainer.withValues(alpha: 0.10),
+                      color: AppColors.accent.withValues(alpha: 0.10),
                       shape: BoxShape.circle,
                     ),
                   ),

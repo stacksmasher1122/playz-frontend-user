@@ -17,7 +17,7 @@ class MatchInfoCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest, width: 1),
+        border: Border.all(color: AppColors.outlineVariant, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +49,7 @@ class MatchInfoCardWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
-          Text(value, style: AppTypography.bodySm.copyWith(color: AppColors.primary)),
+          Text(value, style: AppTypography.bodySm.copyWith(color: AppColors.accent)),
         ],
       ),
     );

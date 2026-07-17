@@ -16,7 +16,7 @@ class ResultHeaderWidget extends StatelessWidget implements PreferredSizeWidget 
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.sports_tennis, color: AppColors.primaryContainer, size: 24),
+          Icon(Icons.sports_tennis, color: AppColors.accent, size: 24),
           SizedBox(width: 8),
           Text('MATCH CENTER', style: AppTypography.headlineMd),
         ],
@@ -29,7 +29,7 @@ class ResultHeaderWidget extends StatelessWidget implements PreferredSizeWidget 
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primaryContainer, width: 1.5),
+              border: Border.all(color: AppColors.accent, width: 1.5),
             ),
             child: CircleAvatar(
               radius: 16,

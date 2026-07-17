@@ -24,8 +24,8 @@ class ActionButtons extends StatelessWidget {
             child: OutlinedButton(
               onPressed: onEdit,
               style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.primary,
-                side: BorderSide(color: AppColors.surfaceContainerHighest),
+                foregroundColor: AppColors.accent,
+                side: BorderSide(color: AppColors.outlineVariant),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
               child: Text(
@@ -41,10 +41,10 @@ class ActionButtons extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onStart,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryContainer,
-                foregroundColor: AppColors.onPrimaryContainer,
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.background,
                 elevation: 10,
-                shadowColor: AppColors.primaryContainer.withOpacity(0.5),
+                shadowColor: AppColors.accent.withOpacity(0.5),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
               child: Row(

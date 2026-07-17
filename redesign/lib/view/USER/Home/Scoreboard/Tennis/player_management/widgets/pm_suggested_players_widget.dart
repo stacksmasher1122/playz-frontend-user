@@ -20,7 +20,7 @@ class PmSuggestedPlayersWidget extends StatelessWidget {
         Text(
           'SUGGESTED FROM RECENT MATCHES',
           style: AppTypography.labelCaps.copyWith(
-            color: AppColors.onSurfaceVariant,
+            color: AppColors.muted,
             fontSize: ResponsiveHelper.sp(10),
             letterSpacing: 1.5,
           ),
@@ -55,11 +55,11 @@ class PmSuggestedPlayersWidget extends StatelessWidget {
                 width: ResponsiveHelper.w(56),
                 height: ResponsiveHelper.h(56),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerHigh,
+                  color: AppColors.card,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                   border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
                 ),
-                child: Icon(Icons.more_horiz, color: AppColors.onSurfaceVariant),
+                child: Icon(Icons.more_horiz, color: AppColors.muted),
               ),
             ],
           ),

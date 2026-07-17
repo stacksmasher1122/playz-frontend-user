@@ -18,7 +18,7 @@ class SelectPlayerBottomSheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHigh,
+        color: AppColors.card,
         borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
       ),
       child: Column(
@@ -28,7 +28,7 @@ class SelectPlayerBottomSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Assign Player to P$position', style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+              Text('Assign Player to P$position', style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
               IconButton(icon: Icon(Icons.close, color: AppColors.muted), onPressed: () => Navigator.pop(context)),
             ],
           ),
@@ -52,16 +52,16 @@ class SelectPlayerBottomSheet extends StatelessWidget {
                       width: ResponsiveHelper.w(40),
                       height: ResponsiveHelper.h(40),
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceContainerLowest,
+                        color: AppColors.background,
                         borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                       ),
                       child: Center(
-                        child: Text(player.jerseyNumber, style: AppTypography.headlineSm.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                        child: Text(player.jerseyNumber, style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                       ),
                     ),
-                    title: Text(player.name, style: AppTypography.bodyLg.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                    title: Text(player.name, style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
                     subtitle: Text(player.position, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-                    trailing: Icon(Icons.add_circle_outline, color: AppColors.primaryContainer),
+                    trailing: Icon(Icons.add_circle_outline, color: AppColors.accent),
                     onTap: () {
                       controller.assignPlayer(position, player);
                       Navigator.pop(context);

@@ -16,9 +16,9 @@ class ValidationCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.surfaceContainerHighest),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,14 +50,14 @@ class ValidationCard extends StatelessWidget {
       children: [
         Icon(
           isValid ? Icons.check_circle_outline : Icons.error_outline,
-          color: isValid ? AppColors.primaryContainer : AppColors.error,
+          color: isValid ? AppColors.accent : AppColors.error,
           size: 20,
         ),
         SizedBox(width: 12),
         Text(
           label,
           style: AppTypography.bodyMd.copyWith(
-            color: isValid ? AppColors.primary : AppColors.error,
+            color: isValid ? AppColors.accent : AppColors.error,
             fontWeight: FontWeight.bold,
           ),
         ),
