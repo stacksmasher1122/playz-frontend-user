@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-import '../../../../controller/User_Controller/Tournament_Controller/format_setup_controller.dart';
+// Corrected: was '../../../../controller/...' but widgets/ is one level deeper, so 5 levels up are needed
+import '../../../../../controller/User_Controller/Tournament_Controller/format_setup_controller.dart';
 
 class DynamicMatchRulesWidget extends StatelessWidget {
   final FormatSetupController controller;

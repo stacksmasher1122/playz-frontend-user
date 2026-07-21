@@ -87,11 +87,15 @@ class _VenueSelectionPageState extends State<VenueSelectionPage> {
                     SizedBox(height: ResponsiveHelper.h(24)),
                     
                     Obx(() {
-                      final lat = controller.selectedVenueLatitude;
-                      final lng = controller.selectedVenueLongitude;
+                      // Read the .value out of the Rx<double?> wrapper before null-checking.
+                      // Without .value, we're comparing the Rx object itself (always non-null),
+                      // which is why the analyzer warned about unnecessary null comparison.
+                      final lat = controller.selectedVenueLatitude.value;
+                      final lng = controller.selectedVenueLongitude.value;
                       if (lat != null && lng != null) {
                         return Padding(
                           padding: EdgeInsets.only(bottom: ResponsiveHelper.h(24)),
+                          // Pass the unwrapped double values — MapPreview expects non-nullable double.
                           child: MapPreview(latitude: lat, longitude: lng),
                         );
                       }

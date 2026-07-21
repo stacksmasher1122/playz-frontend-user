@@ -8,6 +8,9 @@ class CommonTextField extends StatelessWidget {
   final String hintText;
   final Widget? prefixIcon;
   final TextInputType keyboardType;
+  // onChanged was missing — added to fix the undefined_named_parameter error
+  // in player_search_step.dart which passes a callback for real-time search.
+  final ValueChanged<String>? onChanged;
 
   const CommonTextField({
     super.key,
@@ -15,6 +18,7 @@ class CommonTextField extends StatelessWidget {
     required this.hintText,
     this.prefixIcon,
     this.keyboardType = TextInputType.text,
+    this.onChanged,
   });
 
   @override
@@ -22,6 +26,9 @@ class CommonTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      // Wire the onChanged callback so callers (e.g. player_search_step.dart)
+      // receive real-time change notifications for search/filter logic.
+      onChanged: onChanged,
       style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary),
       decoration: InputDecoration(
         hintText: hintText,
