@@ -39,15 +39,8 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
     }
 
     return StreamBuilder<QuerySnapshot>(
-      // Filter: access == 'public' OR organizerId == currentUserId
-      // Note: Firestore doesn't support logical OR. We use Filter.or
       stream: FirebaseFirestore.instance
           .collection('tournaments')
-          .where(Filter.or(
-            Filter('access', isEqualTo: 'public'),
-            Filter('organizerId', isEqualTo: currentUserId),
-          ))
-          .orderBy('startDate')
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -55,12 +48,33 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
         }
 
         if (snapshot.hasError) {
+          debugPrint("Error loading tournaments: ${snapshot.error}");
           return Center(
             child: Text("Error loading tournaments", style: AppTypography.bodyLg.copyWith(color: AppColors.error)),
           );
         }
 
-        final docs = snapshot.data?.docs ?? [];
+        var docs = snapshot.data?.docs ?? [];
+
+        // Client-side filtering
+        docs = docs.where((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          final access = data['access'] as String?;
+          final organizerId = data['organizerId'] as String?;
+          return access == 'public' || organizerId == currentUserId;
+        }).toList();
+
+        // Client-side sorting by startDate
+        docs.sort((a, b) {
+          final dataA = a.data() as Map<String, dynamic>;
+          final dataB = b.data() as Map<String, dynamic>;
+          final dateA = dataA['startDate'] as Timestamp?;
+          final dateB = dataB['startDate'] as Timestamp?;
+          if (dateA == null && dateB == null) return 0;
+          if (dateA == null) return 1;
+          if (dateB == null) return -1;
+          return dateA.compareTo(dateB);
+        });
 
         if (docs.isEmpty) {
           return Center(
