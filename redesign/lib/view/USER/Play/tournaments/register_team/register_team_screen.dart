@@ -93,9 +93,9 @@ class _RegisterTeamScreenState extends State<RegisterTeamScreen> {
                 child: Obx(() {
                   switch (controller.currentStep.value) {
                     case 1:
-                      return TeamBasicsStep(controller: controller);
-                    case 2:
                       return PlayerSearchStep(controller: controller);
+                    case 2:
+                      return TeamBasicsStep(controller: controller);
                     case 3:
                       return PaymentStep(controller: controller);
                     default:

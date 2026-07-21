@@ -53,8 +53,19 @@ class RegisterTeamController extends GetxController {
     _initTournamentData();
     _initRazorpay();
 
-    // Automatically add current user as captain
-    _addCurrentUser();
+    if (teamSize == 1) {
+      // For singles, we add the current user and go straight to payment step.
+      _addCurrentUser().then((_) {
+        // Set a default team name since UI for it is skipped
+        final player = selectedPlayers.first;
+        teamNameController.text = player.name;
+        currentStep.value = 3;
+      });
+    }
+  }
+
+  Future<void> addCurrentUserAction() async {
+    await _addCurrentUser();
   }
 
   @override
@@ -83,8 +94,12 @@ class RegisterTeamController extends GetxController {
       availableRoles = {'Goalkeeper': 'Goalkeeper', 'Defender': 'Defender', 'Midfielder': 'Midfielder', 'Forward': 'Forward', 'Captain': 'Captain'};
     } else if (sport == 'Volleyball') {
       availableRoles = {'Setter': 'Setter', 'Libero': 'Libero', 'Attacker': 'Attacker', 'Blocker': 'Blocker', 'Captain': 'Captain'};
+    } else if (sport == 'Basketball') {
+      availableRoles = {'Point Guard': 'Point Guard', 'Shooting Guard': 'Shooting Guard', 'Small Forward': 'Small Forward', 'Power Forward': 'Power Forward', 'Center': 'Center', 'Captain': 'Captain'};
+    } else if (sport == 'Badminton' || sport == 'Tennis' || sport == 'Table Tennis') {
+      availableRoles = {'Player': 'Player', 'Captain': 'Captain'};
     } else {
-      // Singles/Doubles fallback
+      // Fallback
       availableRoles = {'Player': 'Player', 'Captain': 'Captain'};
     }
   }
@@ -226,15 +241,16 @@ class RegisterTeamController extends GetxController {
 
   void nextStep() {
     if (currentStep.value == 1) {
-      if (teamNameController.text.trim().isEmpty) {
-        Get.snackbar("Validation Error", "Please enter a team name.", snackPosition: SnackPosition.BOTTOM);
+      // Step 1 is now Players & Roles
+      if (selectedPlayers.isEmpty) {
+        Get.snackbar("Validation Error", "Please add at least one player.", snackPosition: SnackPosition.BOTTOM);
         return;
       }
       currentStep.value = 2;
     } else if (currentStep.value == 2) {
-      // Allow proceeding even if not full, depending on sport. For simplicity, just require at least 1.
-      if (selectedPlayers.isEmpty) {
-        Get.snackbar("Validation Error", "Please add at least one player.", snackPosition: SnackPosition.BOTTOM);
+      // Step 2 is now Team Basics
+      if (teamNameController.text.trim().isEmpty) {
+        Get.snackbar("Validation Error", "Please enter a team name.", snackPosition: SnackPosition.BOTTOM);
         return;
       }
       currentStep.value = 3;
@@ -243,7 +259,12 @@ class RegisterTeamController extends GetxController {
 
   void previousStep() {
     if (currentStep.value > 1) {
-      currentStep.value--;
+      if (teamSize == 1 && currentStep.value == 3) {
+        // For singles, going back from payment means exiting completely
+        Get.back();
+      } else {
+        currentStep.value--;
+      }
     }
   }
 
