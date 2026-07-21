@@ -42,7 +42,7 @@ class TeamsSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Registered Teams", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
-              if (isOpen && !userHasRegisteredTeam && !isOrganizer)
+              if (isOpen && !userHasRegisteredTeam)
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accent,

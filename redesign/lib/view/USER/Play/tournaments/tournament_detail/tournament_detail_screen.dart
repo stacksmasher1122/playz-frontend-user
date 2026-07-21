@@ -30,7 +30,13 @@ class TournamentDetailScreen extends StatefulWidget {
 class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
 
   bool get isOrganizer => widget.data['organizerId'] == widget.currentUserId;
-  bool get isOpen => widget.data['status'] == 'registration_open';
+  // Sometimes status may not be strictly 'registration_open' or missing in dummy data,
+  // Let's assume it's open if it's not explicitly 'completed' or 'cancelled'.
+  bool get isOpen {
+    final status = widget.data['status'];
+    if (status == null) return true; // Default to open if missing
+    return status == 'registration_open' || status == 'open' || status == 'published' || status == 'upcoming';
+  }
 
   // Future checks:
   bool userHasRegisteredTeam = false;
