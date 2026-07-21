@@ -80,9 +80,9 @@ class _CreateTournamentReviewPublishPageState extends State<CreateTournamentRevi
 
                       // Progress Indicator
                       const ProgressHeader(
-                        currentStep: 6,
-                        totalSteps: 6,
-                        title: "Review & Publish",
+                        currentStep: 5,
+                        totalSteps: 5,
+                        title: "Step 5 of 5: Review & Publish",
                       ),
                       SizedBox(height: ResponsiveHelper.h(32)),
 
@@ -133,57 +133,6 @@ class _CreateTournamentReviewPublishPageState extends State<CreateTournamentRevi
                         title: "Prize Pool",
                         total: controller.prizeTotal,
                         distribution: controller.prizeDistribution,
-                      ),
-                      SizedBox(height: ResponsiveHelper.h(32)),
-
-                      // Registered Teams
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Registered Teams",
-                                style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
-                              ),
-                              SizedBox(width: ResponsiveHelper.w(8)),
-                              Text(
-                                "(${controller.currentTeams}/${controller.maxTeams})",
-                                style: AppTypography.bodySm.copyWith(color: AppColors.muted),
-                              ),
-                            ],
-                          ),
-                          TextButton(
-                            onPressed: () => controller.manageTeams(context),
-                            child: Text(
-                              "MANAGE",
-                              style: AppTypography.labelCaps.copyWith(color: AppColors.accent),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: ResponsiveHelper.h(16)),
-
-                      // Horizontal Scroll
-                      SizedBox(
-                        height: ResponsiveHelper.h(140),
-                        child: Obx(() {
-                          final teams = controller.registeredTeams;
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: teams.length + 1, // +1 for the empty slot
-                            itemBuilder: (context, index) {
-                              if (index == teams.length) {
-                                return RegisteredTeamCard(
-                                  isEmptySlot: true,
-                                  openSlots: controller.maxTeams - controller.currentTeams,
-                                );
-                              }
-                              return RegisteredTeamCard(team: teams[index]);
-                            },
-                          );
-                        }),
                       ),
                       SizedBox(height: ResponsiveHelper.h(32)),
 

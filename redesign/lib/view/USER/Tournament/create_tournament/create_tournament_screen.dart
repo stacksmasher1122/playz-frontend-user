@@ -160,7 +160,13 @@ class _CreateTournamentContentState extends State<_CreateTournamentContent> {
         BottomActionBarWidget(
           onBack: () => widget.controller.goBack(context),
           onSaveDraft: widget.controller.saveDraft,
-          onNext: () => widget.controller.goNext(context),
+          onNext: () {
+            if (widget.formKey.currentState!.validate()) {
+              widget.controller.tournamentName.value = widget.nameController.text;
+              widget.controller.description.value = widget.descriptionController.text;
+              widget.controller.goNext(context);
+            }
+          },
         ),
       ],
     );

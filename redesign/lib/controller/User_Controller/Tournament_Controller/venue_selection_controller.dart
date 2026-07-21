@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../model/User_Models/Tournament_Model/venue_model.dart';
 import '../../../view/USER/Tournament/format_setup/format_setup_page.dart';
+import '../../../view/USER/Maps/maps_picker/maps_picker_screen.dart';
+import '../../../model/maps_model.dart';
+import '../../../controller/maps_controller.dart';
 
 class VenueSelectionController extends GetxController {
   final RxList<VenueModel> venues = <VenueModel>[].obs;
@@ -76,21 +79,6 @@ class VenueSelectionController extends GetxController {
     filteredVenues.assignAll(venues);
   }
 
-  void selectVenue(String id) {
-    for (int i = 0; i < venues.length; i++) {
-      if (venues[i].id == id) {
-        venues[i].isSelected = true;
-      } else {
-        venues[i].isSelected = false;
-      }
-    }
-    venues.refresh();
-    _applyFilters();
-  }
-
-  void searchVenue(String query) {
-    _applyFilters();
-  }
 
   void changeTab(String tab) {
     selectedTab.value = tab;
@@ -134,13 +122,51 @@ class VenueSelectionController extends GetxController {
     filteredVenues.assignAll(result);
   }
 
-  void onLocationTap() {
-    Get.snackbar(
-      "Location", 
-      "Fetching current location...",
-      backgroundColor: Colors.black87,
-      colorText: Colors.white,
+  final Rx<double?> selectedVenueLatitude = Rx<double?>(null);
+  final Rx<double?> selectedVenueLongitude = Rx<double?>(null);
+  final Rx<String?> selectedVenueAddress = Rx<String?>(null);
+  final Rx<String?> selectedVenueName = Rx<String?>(null);
+
+  Future<void> onLocationTap(BuildContext context) async {
+    final result = await Navigator.push<LocationData>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MapPickerScreen(isSelectOnly: true),
+      ),
     );
+
+    if (result != null) {
+      selectedVenueLatitude.value = result.lat;
+      selectedVenueLongitude.value = result.lng;
+      selectedVenueAddress.value = result.fullAddress;
+      selectedVenueName.value = result.landmark.isNotEmpty ? result.landmark : (result.subLocality.isNotEmpty ? result.subLocality : result.city);
+
+      // We found a location from MapPicker, make sure it reflects in "Other Venue" model
+      // Usually "Other Venue" doesn't have a static list to select from,
+      // but we should store it in the controller for the final model
+      searchController.text = result.fullAddress;
+      selectedTab.value = "Other Venue";
+    }
+  }
+
+  void selectVenue(String id) {
+    for (int i = 0; i < venues.length; i++) {
+      if (venues[i].id == id) {
+        venues[i].isSelected = true;
+        selectedVenueLatitude.value = venues[i].latitude;
+        selectedVenueLongitude.value = venues[i].longitude;
+        selectedVenueAddress.value = venues[i].fullAddress;
+        selectedVenueName.value = venues[i].name;
+      } else {
+        venues[i].isSelected = false;
+      }
+    }
+    venues.refresh();
+    _applyFilters();
+  }
+
+  void searchVenue(String query) {
+    _applyFilters();
   }
 
   void goNext(BuildContext context) {

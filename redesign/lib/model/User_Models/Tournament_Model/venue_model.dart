@@ -8,6 +8,9 @@ class VenueModel {
   final bool isIndoor;
   final String category;
   final String location;
+  final double? latitude;
+  final double? longitude;
+  final String? fullAddress;
   bool isSelected;
 
   VenueModel({
@@ -20,6 +23,9 @@ class VenueModel {
     required this.isIndoor,
     required this.category,
     required this.location,
+    this.latitude,
+    this.longitude,
+    this.fullAddress,
     this.isSelected = false,
   });
 }

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../model/User_Models/Tournament_Model/prize_tier_model.dart';
-import '../../../view/USER/Tournament/create_tournament_team_builder/create_tournament_team_builder_page.dart';
+import '../../../view/USER/Tournament/create_tournament_review_publish/create_tournament_review_publish_page.dart';
 
 class PrizePoolController extends GetxController {
   final _uuid = const Uuid();
@@ -37,20 +37,25 @@ class PrizePoolController extends GetxController {
     prizeTiers.addAll([
       PrizeTierModel(
         id: _uuid.v4(),
-        title: "Winner",
+        type: 'rank',
+        rankPosition: 1,
+        title: "1st Place", // just for display
         amountController: TextEditingController(),
         icon: Icons.emoji_events,
         isDefault: true,
       ),
       PrizeTierModel(
         id: _uuid.v4(),
-        title: "Runner-up",
+        type: 'rank',
+        rankPosition: 2,
+        title: "2nd Place",
         amountController: TextEditingController(),
         icon: Icons.military_tech,
         isDefault: true,
       ),
       PrizeTierModel(
         id: _uuid.v4(),
+        type: 'custom',
         title: "MVP / Best Player",
         amountController: TextEditingController(),
         icon: Icons.star,
@@ -79,6 +84,7 @@ class PrizePoolController extends GetxController {
     prizeTiers.add(
       PrizeTierModel(
         id: _uuid.v4(),
+        type: 'custom',
         title: "Custom Tier",
         amountController: TextEditingController(),
         icon: Icons.card_giftcard,
@@ -135,7 +141,7 @@ class PrizePoolController extends GetxController {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const CreateTournamentTeamBuilderPage()),
+      MaterialPageRoute(builder: (_) => const CreateTournamentReviewPublishPage()),
     );
   }
 }

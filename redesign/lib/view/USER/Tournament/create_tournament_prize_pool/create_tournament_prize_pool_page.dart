@@ -80,8 +80,8 @@ class _CreateTournamentPrizePoolPageState extends State<CreateTournamentPrizePoo
                       SizedBox(height: ResponsiveHelper.h(16)),
                       const ProgressHeader(
                         currentStep: 4,
-                        totalSteps: 6,
-                        title: "Step 4 of 6: Prize Pool & Entry Fee",
+                        totalSteps: 5,
+                        title: "Step 4 of 5: Prize Pool & Entry Fee",
                       ),
                       SizedBox(height: ResponsiveHelper.h(32)),
 
