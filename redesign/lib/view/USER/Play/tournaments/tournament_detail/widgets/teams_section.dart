@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../register_team/register_team_screen.dart';
 
 class TeamsSection extends StatelessWidget {
   final String tournamentId;
   final int maxTeams;
+  final Map<String, dynamic> data;
+  final String currentUserId;
+  final bool isOrganizer;
+  final bool isOpen;
+  final bool userHasRegisteredTeam;
 
   const TeamsSection({
     super.key,
     required this.tournamentId,
     required this.maxTeams,
+    required this.data,
+    required this.currentUserId,
+    required this.isOrganizer,
+    required this.isOpen,
+    required this.userHasRegisteredTeam,
   });
 
   @override
@@ -26,7 +38,31 @@ class TeamsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Registered Teams", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Registered Teams", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
+              if (isOpen && !userHasRegisteredTeam && !isOrganizer)
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
+                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
+                  ),
+                  onPressed: () {
+                    Get.to(() => RegisterTeamScreen(
+                      tournamentId: tournamentId,
+                      tournamentData: data,
+                      currentUserId: currentUserId,
+                    ));
+                  },
+                  child: Text(
+                    "Register Team",
+                    style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold),
+                  ),
+                ),
+            ],
+          ),
           SizedBox(height: ResponsiveHelper.h(16)),
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance

@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
-import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../register_team/register_team_screen.dart';
 import 'widgets/tournament_header.dart';
 import 'widgets/format_summary.dart';
 import 'widgets/prize_pool_section.dart';
 import 'widgets/teams_section.dart';
 import 'widgets/brackets_section.dart';
+import 'widgets/leaderboard_section.dart';
 
 class TournamentDetailScreen extends StatefulWidget {
   final String tournamentId;
@@ -79,51 +76,25 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                   SizedBox(height: ResponsiveHelper.h(24)),
                   PrizePoolSection(data: widget.data),
                   SizedBox(height: ResponsiveHelper.h(24)),
-                  TeamsSection(tournamentId: widget.tournamentId, maxTeams: widget.data['format']['teamSize'] ?? 0), // Will list teams
+                  TeamsSection(
+                    tournamentId: widget.tournamentId,
+                    maxTeams: widget.data['format']['teamSize'] ?? 0,
+                    data: widget.data,
+                    currentUserId: widget.currentUserId,
+                    isOrganizer: isOrganizer,
+                    isOpen: isOpen,
+                    userHasRegisteredTeam: userHasRegisteredTeam,
+                  ),
                   SizedBox(height: ResponsiveHelper.h(24)),
                   BracketsSection(tournamentId: widget.tournamentId, isOrganizer: isOrganizer),
-                  SizedBox(height: ResponsiveHelper.h(100)), // padding
+                  SizedBox(height: ResponsiveHelper.h(24)),
+                  LeaderboardSection(tournamentId: widget.tournamentId),
+                  SizedBox(height: ResponsiveHelper.h(40)), // padding
                 ],
               ),
             ),
           ),
         ],
-      ),
-      bottomSheet: (isOpen && !userHasRegisteredTeam && !isOrganizer)
-        ? _buildRegisterCTA()
-        : null,
-    );
-  }
-
-  Widget _buildRegisterCTA() {
-    return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.card)),
-      ),
-      child: SafeArea(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.accent,
-            minimumSize: Size(double.infinity, ResponsiveHelper.h(56)),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
-          ),
-          onPressed: () {
-            Get.to(() => RegisterTeamScreen(
-              tournamentId: widget.tournamentId,
-              tournamentData: widget.data,
-              currentUserId: widget.currentUserId,
-            ));
-          },
-          child: Text(
-            "REGISTER TEAM",
-            style: AppTypography.headlineSm.copyWith(
-              color: AppColors.background,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
       ),
     );
   }

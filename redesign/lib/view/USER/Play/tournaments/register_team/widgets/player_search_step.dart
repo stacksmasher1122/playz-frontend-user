@@ -114,9 +114,24 @@ class PlayerSearchStep extends StatelessWidget {
         )),
 
         SizedBox(height: ResponsiveHelper.h(24)),
-        Text(
-          "Add Players",
-          style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Add Players",
+              style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
+            ),
+            Obx(() {
+              if (controller.selectedPlayers.any((p) => p.userId == controller.currentUserId)) {
+                return const SizedBox.shrink();
+              }
+              return TextButton.icon(
+                onPressed: controller.addCurrentUserAction,
+                icon: Icon(Icons.person_add, color: AppColors.accent, size: ResponsiveHelper.w(18)),
+                label: Text("Add Myself", style: AppTypography.labelCaps.copyWith(color: AppColors.accent)),
+              );
+            }),
+          ],
         ),
         SizedBox(height: ResponsiveHelper.h(12)),
 
