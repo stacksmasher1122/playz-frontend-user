@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
-class MapPreview extends StatefulWidget {
-  const MapPreview({super.key});
+class MapPreview extends StatelessWidget {
+  final double latitude;
+  final double longitude;
 
-  @override
-  State<MapPreview> createState() => _MapPreviewState();
-}
+  const MapPreview({
+    super.key,
+    required this.latitude,
+    required this.longitude,
+  });
 
-class _MapPreviewState extends State<MapPreview> {
   @override
   Widget build(BuildContext context) {
+    // Basic dark style for preview
+    final String darkMapStyle = '''
+    [
+      {"elementType":"geometry","stylers":[{"color":"#212121"}]},
+      {"elementType":"labels.icon","stylers":[{"visibility":"off"}]},
+      {"elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},
+      {"elementType":"labels.text.stroke","stylers":[{"color":"#212121"}]},
+      {"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"}]}
+    ]
+    ''';
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       width: double.infinity,
@@ -24,14 +37,24 @@ class _MapPreviewState extends State<MapPreview> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        child: CachedNetworkImage(
-          imageUrl: "https://via.placeholder.com/600x260/1a1a1a/4ade80?text=Map+Preview",
-          fit: BoxFit.cover,
-          placeholder: (context, url) => const Center(
-            child: CircularProgressIndicator(color: AppColors.accent),
-          ),
-          errorWidget: (context, url, error) => Center(
-            child: Icon(Icons.map_outlined, color: AppColors.muted, size: ResponsiveHelper.w(40)),
+        child: AbsorbPointer(
+          child: GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: LatLng(latitude, longitude),
+              zoom: 14,
+            ),
+            markers: {
+              Marker(
+                markerId: const MarkerId('preview_location'),
+                position: LatLng(latitude, longitude),
+              ),
+            },
+            myLocationEnabled: false,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            compassEnabled: false,
+            mapToolbarEnabled: false,
+            style: darkMapStyle,
           ),
         ),
       ),

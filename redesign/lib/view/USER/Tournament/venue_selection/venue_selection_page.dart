@@ -75,8 +75,8 @@ class _VenueSelectionPageState extends State<VenueSelectionPage> {
                     SizedBox(height: ResponsiveHelper.h(8)),
                     const ProgressHeader(
                       currentStep: 2,
-                      totalSteps: 6,
-                      title: "Step 2 of 6: Venue Selection",
+                      totalSteps: 5,
+                      title: "Step 2 of 5: Venue Selection",
                     ),
                     SizedBox(height: ResponsiveHelper.h(24)),
                     
@@ -86,12 +86,21 @@ class _VenueSelectionPageState extends State<VenueSelectionPage> {
                     )),
                     SizedBox(height: ResponsiveHelper.h(24)),
                     
-                    const MapPreview(),
-                    SizedBox(height: ResponsiveHelper.h(24)),
+                    Obx(() {
+                      final lat = controller.selectedVenueLatitude;
+                      final lng = controller.selectedVenueLongitude;
+                      if (lat != null && lng != null) {
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: ResponsiveHelper.h(24)),
+                          child: MapPreview(latitude: lat, longitude: lng),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
                     
                     VenueSearchBar(
                       controller: controller.searchController,
-                      onLocationTap: controller.onLocationTap,
+                      onLocationTap: () => controller.onLocationTap(context),
                     ),
                     SizedBox(height: ResponsiveHelper.h(24)),
                     

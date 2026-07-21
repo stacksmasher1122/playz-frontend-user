@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 import '../../../view/USER/Tournament/venue_selection/venue_selection_page.dart';
+import '../../../model/User_Models/Tournament_Model/create_tournament_model.dart';
 
 class CreateTournamentController extends GetxController {
   final RxBool isLoading = true.obs;
@@ -14,6 +15,10 @@ class CreateTournamentController extends GetxController {
   final RxInt currentStep = 1.obs;
   final RxString coverImagePath = "".obs;
   
+  // Storing form fields to construct model later
+  final RxString tournamentName = "".obs;
+  final RxString description = "".obs;
+
   final RxList<String> sports = <String>[].obs;
   final RxList<String> timingOptions = <String>[].obs;
 

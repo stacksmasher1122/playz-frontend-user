@@ -34,8 +34,8 @@ class _PrizeTierWidgetState extends State<PrizeTierWidget> {
   @override
   void didUpdateWidget(PrizeTierWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.tier.title != widget.tier.title && _titleController.text != widget.tier.title) {
-      _titleController.text = widget.tier.title;
+    if (oldWidget.tier.title != widget.tier.title && widget.tier.title != null && _titleController.text != widget.tier.title) {
+      _titleController.text = widget.tier.title!;
     }
   }
 
@@ -74,9 +74,9 @@ class _PrizeTierWidgetState extends State<PrizeTierWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.tier.isDefault)
+                if (widget.tier.isDefault && widget.tier.title != null)
                   Text(
-                    widget.tier.title,
+                    widget.tier.title!,
                     style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary),
                   )
                 else
