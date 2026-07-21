@@ -6,6 +6,7 @@ class AppColors {
 
   AppColors._(); // Private constructor to prevent instantiation
 
+  static const Color primary = Color(0xFF1DB954);
   static const Color background = Color(0xFF000000);
   static const Color surface = Color(0xFF121212);
   static const Color accent = Color(0xFF1DB954);

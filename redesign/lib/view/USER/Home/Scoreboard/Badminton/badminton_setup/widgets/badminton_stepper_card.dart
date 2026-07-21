@@ -62,8 +62,9 @@ class BadmintonStepperCard extends StatelessWidget {
                 children: [
                   CircleButton(
                     icon: Icons.remove,
+                    color: AppColors.card,
+                    iconColor: Colors.white,
                     onTap: onDecrement,
-                    isDark: true,
                   ),
                   SizedBox(width: 16),
                   Container(
@@ -83,8 +84,9 @@ class BadmintonStepperCard extends StatelessWidget {
                   SizedBox(width: 16),
                   CircleButton(
                     icon: Icons.add,
+                    color: AppColors.accent,
+                    iconColor: Colors.black,
                     onTap: onIncrement,
-                    isDark: false,
                   ),
                 ],
               ),

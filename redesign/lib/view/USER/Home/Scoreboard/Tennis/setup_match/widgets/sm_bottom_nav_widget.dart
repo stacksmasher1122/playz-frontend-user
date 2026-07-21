@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/match_stats/match_stats_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Tennis/match_stats/match_stats_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Tennis/live_scoring/live_scoring_screen.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../../theme/app_typography.dart';

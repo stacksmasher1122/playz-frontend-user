@@ -54,15 +54,13 @@ class BadmintonController extends GetxController {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        final profile = await UserPreferences.getUserProfile();
-        if (profile != null) {
-          currentUserFriendModel.value = FriendModel(
-            email: user.email ?? profile['email'] ?? '',
-            fullName: profile['fullName'] ?? '',
-            username: profile['username'] ?? '',
-            profileImageUrl: profile['profileImageUrl'] ?? '',
-          );
-        }
+        final name = await UserPreferences.getUserName();
+        final pic = await UserPreferences.getProfileImageUrl();
+        currentUserFriendModel.value = FriendModel(
+          email: user.email ?? '',
+          fullName: name ?? '',
+          profileImageUrl: pic ?? '',
+        );
       }
     } catch (e) {
       debugPrint("Error loading profile: $e");

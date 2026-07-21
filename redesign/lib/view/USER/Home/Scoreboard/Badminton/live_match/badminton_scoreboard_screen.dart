@@ -6,7 +6,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/badminton_state_models.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/widgets/scoring_console.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/widgets/badminton_scoreboard_header.dart';
-import 'package:redesign/view/USER/navShell/userAppNavShell.dart';
+import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 
 class BadmintonScoreboardScreen extends StatefulWidget {
   BadmintonScoreboardScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Badminton/badminton_create_match.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Badminton/badminton_setup/badminton_setup_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_setup/cricket_setup_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Football/create_match/football_create_match_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Tennis/setup_match/setup_match_screen.dart';
@@ -103,7 +103,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           Icons.sports,
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => BadmintonCreateMatchScreen(),
+              builder: (_) => BadmintonSetupScreen(),
             ),
           ),
         ),
