@@ -48,8 +48,9 @@ class BadmintonMatchEngine {
   void dispatch(BadmintonEvent event) {
     _saveSnapshot();
     if (event is PointEvent) {
-      if (event.pointType == 'let') {
-        // Let does not change score, just logs (which controller will handle)
+      if (event.pointType == 'let' || event.pointType == 'service_fault') {
+        // A8 Fix: service_fault must not award a point (similar to let)
+        // Let and service_fault do not change score, just logs (which controller will handle)
       } else {
         _handlePoint(event.side);
       }

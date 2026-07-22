@@ -48,7 +48,7 @@ class LeaderboardSection extends StatelessWidget {
             stream: FirebaseFirestore.instance
                 .collection('tournaments')
                 .doc(tournamentId)
-                .collection('teams')
+                .collection('leaderboard')
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -100,7 +100,12 @@ class LeaderboardSection extends StatelessWidget {
 
                     int gDiffA = (a['gamesWon'] ?? 0) - (a['gamesLost'] ?? 0);
                     int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
-                    return gDiffB.compareTo(gDiffA);
+                    if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
+
+                    // A13 Fix: Leaderboard tiebreaker should account for matches played
+                    int matchesPlayedA = a['matchesPlayed'] ?? 0;
+                    int matchesPlayedB = b['matchesPlayed'] ?? 0;
+                    return matchesPlayedB.compareTo(matchesPlayedA);
                   });
 
                   // Just show top 5 in preview

@@ -132,7 +132,7 @@ class ScoringConsole extends StatelessWidget {
                 },
                 onConduct: () => _showConductSheet(context),
                 onTimeout: () {
-                  Get.snackbar("Timeout", "Medical timeout started (3 min)", backgroundColor: AppColors.surface, colorText: Colors.white);
+                  controller?.startMedicalTimeout();
                 },
               ),
             Row(

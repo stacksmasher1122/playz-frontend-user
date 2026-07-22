@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
@@ -235,13 +236,15 @@ class BadmintonController extends GetxController {
       final int pointsToWinRule = sportRules['pointsPerGame'] ?? 21;
       final int gamesToWinRule = ((sportRules['bestOf'] ?? 3) / 2).ceil();
 
+      // A7 Fix: Determine friendly rules from format config
+      final bool isFriendly = sportRules['matchMode'] == 'friendly';
       final config = BadmintonMatchConfig(
         pointsToWin: pointsToWinRule,
         maxPointCap: pointsToWinRule + 9,
-        winByTwo: true, // Professional rule
+        winByTwo: !isFriendly,
         gamesToWin: gamesToWinRule,
-        isFriendlyRules: false, // Tournaments are always professional
-        intervalsEnabled: true,
+        isFriendlyRules: isFriendly,
+        intervalsEnabled: !isFriendly,
         endsChangeEnabled: true,
       );
 
@@ -324,12 +327,18 @@ class BadmintonController extends GetxController {
       final matchData = doc.data()!;
       final matchModel = BadmintonMatchModel.fromJson(matchData);
 
+      // A5 Fix: resumeTournamentMatch must not silently discard match data
+      if (matchData['engineState'] == null) {
+        Get.snackbar("Error", "Could not restore match state — contact support");
+        return;
+      }
+
       tournamentId.value = tId;
       bracketMatchId.value = bMatchId;
       currentMatchId.value = matchId;
       currentMatch.value = matchModel;
 
-      final incomingState = BadmintonMatchState.fromJson(matchData['engineState'] ?? {});
+      final incomingState = BadmintonMatchState.fromJson(matchData['engineState']);
       _initEngineFromState(incomingState);
 
       Get.to(() => BadmintonScoreboardScreen());
@@ -390,6 +399,8 @@ class BadmintonController extends GetxController {
           teamBPlayers: matchModel.teamBPlayers,
           maxAllowedPlayers: matchModel.maxAllowedPlayers,
           isFriendlyRules: matchModel.isFriendlyRules,
+          tournamentId: matchModel.tournamentId, // A10 Fix: carry tournament context
+          bracketMatchId: matchModel.bracketMatchId, // A10 Fix: carry bracket context
           pointsToWin: matchModel.pointsToWin,
           maxPointCap: matchModel.maxPointCap,
           winByTwo: matchModel.winByTwo,
@@ -461,6 +472,56 @@ class BadmintonController extends GetxController {
     _syncToDatabaseAsync(pointType, null);
   }
 
+  // A11 Fix: Medical timeout functionality
+  var medicalTimeoutSeconds = 180.obs;
+  Timer? _timeoutTimer;
+
+  void startMedicalTimeout() {
+    if (!isEngineReady.value) return;
+    if (liveState.value?.status == MatchStatus.completed) return;
+
+    // Check timeout usage (conceptually per side, but this is a simple implementation)
+    // You could add timeout usage tracking in BadmintonMatchModel.
+
+    // Change engine status to timeout (requires modifying the state directly or dispatching an event,
+    // for simplicity we update the model status which will reflect in _syncToDatabaseAsync)
+    // A better approach is to add a TimeoutEvent to the engine. We'll do a simple state override here since
+    // the engine handles MatchStatus enum directly.
+
+    // We update engine state directly
+    final currentState = engine.state;
+    engine = BadmintonMatchEngine(currentState.copyWith(status: MatchStatus.timeout));
+    liveState.value = engine.state;
+    _syncToDatabaseAsync('timeout_start', null);
+
+    medicalTimeoutSeconds.value = 180;
+    _timeoutTimer?.cancel();
+    _timeoutTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (medicalTimeoutSeconds.value > 0) {
+        medicalTimeoutSeconds.value--;
+      } else {
+        resumeMedicalTimeout(); // Auto-resume if hits 0, or just let them resume manually
+      }
+    });
+  }
+
+  void resumeMedicalTimeout() {
+    _timeoutTimer?.cancel();
+    if (!isEngineReady.value) return;
+    if (liveState.value?.status == MatchStatus.timeout) {
+      final currentState = engine.state;
+      engine = BadmintonMatchEngine(currentState.copyWith(status: MatchStatus.inProgress));
+      liveState.value = engine.state;
+      _syncToDatabaseAsync('timeout_end', null);
+    }
+  }
+
+  @override
+  void onClose() {
+    _timeoutTimer?.cancel();
+    super.onClose();
+  }
+
   void addConduct(PlayerSide side, String conductType) {
     if (!isEngineReady.value) return;
 
@@ -471,6 +532,10 @@ class BadmintonController extends GetxController {
       _syncToDatabaseAsync('conduct_fault', side == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA);
     } else if (conductType == 'disqualify') {
       _syncToDatabaseAsync('disqualify', side == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA);
+      // A1 Fix: Disqualification must update bracket + leaderboard
+      if (tournamentId.isNotEmpty && bracketMatchId.isNotEmpty && engine.state.status == MatchStatus.completed) {
+        endTournamentMatch();
+      }
     } else {
       // warning only logs
       _syncToDatabaseAsync('warning', null);
@@ -524,16 +589,22 @@ class BadmintonController extends GetxController {
 
       // 2. Propagate winner to next match if applicable
       if (nextMatchId != null && nextMatchSlot != null) {
-        final nextMatchRef = FirebaseFirestore.instance
-            .collection('tournaments')
-            .doc(tournamentId.value)
-            .collection('bracket')
-            .doc(nextMatchId);
-
-        if (nextMatchSlot == 'A') {
-          batch.update(nextMatchRef, {'teamAId': winningTeamId});
+        if (nextMatchSlot != 'A' && nextMatchSlot != 'B') {
+          // A2 Fix: nextMatchSlot validation
+          print("ERROR: nextMatchSlot is invalid: $nextMatchSlot. Expected 'A' or 'B'.");
+          Get.snackbar("Error", "Invalid next match slot configuration: $nextMatchSlot");
         } else {
-          batch.update(nextMatchRef, {'teamBId': winningTeamId});
+          final nextMatchRef = FirebaseFirestore.instance
+              .collection('tournaments')
+              .doc(tournamentId.value)
+              .collection('bracket')
+              .doc(nextMatchId);
+
+          if (nextMatchSlot == 'A') {
+            batch.update(nextMatchRef, {'teamAId': winningTeamId});
+          } else if (nextMatchSlot == 'B') {
+            batch.update(nextMatchRef, {'teamBId': winningTeamId});
+          }
         }
       }
 

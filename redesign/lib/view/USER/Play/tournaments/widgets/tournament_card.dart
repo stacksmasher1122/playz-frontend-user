@@ -32,6 +32,7 @@ class TournamentCard extends StatelessWidget {
     final bool isFree = entryFee?['isFree'] ?? true;
     final num? amount = entryFee?['amount'];
     final int teamCount = data['teamCount'] ?? 0;
+    final int maxTeams = data['format']?['teamSize'] ?? 0;
 
     String dateStr = "TBD";
     if (start != null && end != null) {
@@ -128,7 +129,8 @@ class TournamentCard extends StatelessWidget {
                       Icon(Icons.groups, color: AppColors.accent, size: ResponsiveHelper.w(16)),
                       SizedBox(width: ResponsiveHelper.w(6)),
                       Text(
-                        "$teamCount Teams Registered",
+                        // C1 Fix: Show ratio
+                        maxTeams > 0 ? "$teamCount/$maxTeams registered" : "$teamCount Teams Registered",
                         style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
                       ),
                     ],
