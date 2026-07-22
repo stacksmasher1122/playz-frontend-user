@@ -4,12 +4,16 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ParticipantCounterWidget extends StatefulWidget {
+  final String title;
+  final String subtitle;
   final int count;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
 
   const ParticipantCounterWidget({
     super.key,
+    this.title = "Total Participants",
+    this.subtitle = "Must be an even number for optimal brackets",
     required this.count,
     required this.onIncrement,
     required this.onDecrement,
@@ -36,14 +40,14 @@ class _ParticipantCounterWidgetState extends State<ParticipantCounterWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Total Participants",
+                  widget.title,
                   style: AppTypography.bodyLg.copyWith(
                     color: AppColors.onPrimary,
                   ),
                 ),
                 SizedBox(height: ResponsiveHelper.h(4)),
                 Text(
-                  "Must be an even number for optimal brackets",
+                  widget.subtitle,
                   style: AppTypography.bodySm.copyWith(
                     color: AppColors.muted,
                   ),

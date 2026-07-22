@@ -162,16 +162,35 @@ class _FormatSetupPageState extends State<FormatSetupPage> {
 
                       // Section 3: Number of Participants/Teams
                       Text(
-                        "Total Participating Teams/Players",
+                        "Expected Number of Participants/Teams",
                         style: AppTypography.headlineSm.copyWith(
                           color: AppColors.onPrimary,
                         ),
                       ),
                       SizedBox(height: ResponsiveHelper.h(12)),
                       Obx(() => ParticipantCounterWidget(
+                        title: "Expected Participants",
+                        subtitle: "Will be used to estimate schedule",
                         count: controller.participantCount.value,
                         onIncrement: controller.incrementParticipants,
                         onDecrement: controller.decrementParticipants,
+                      )),
+                      SizedBox(height: ResponsiveHelper.h(24)),
+                      Text(
+                        "Registration Cap (Max Teams)",
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.onPrimary,
+                        ),
+                      ),
+                      SizedBox(height: ResponsiveHelper.h(12)),
+                      Obx(() => ParticipantCounterWidget(
+                        title: "Max Teams Allowed",
+                        subtitle: controller.matchType.value == 'knockout'
+                            ? "Hint: Powers of 2 (4, 8, 16) make clean knockout brackets."
+                            : "Registration will lock automatically when this is reached.",
+                        count: controller.maxTeams.value,
+                        onIncrement: controller.incrementMaxTeams,
+                        onDecrement: controller.decrementMaxTeams,
                       )),
                       SizedBox(height: ResponsiveHelper.h(32)),
 

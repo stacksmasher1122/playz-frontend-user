@@ -38,6 +38,8 @@ class BadmintonController extends GetxController {
   // ════════════════════ LIVE MATCH STATE ════════════════════
   var currentMatchId = ''.obs;
   var currentMatch = Rxn<BadmintonMatchModel>();
+  var tournamentId = ''.obs;
+  var bracketMatchId = ''.obs;
 
   // Real-time engine
   late BadmintonMatchEngine engine;
@@ -209,6 +211,135 @@ class BadmintonController extends GetxController {
     }
   }
 
+  Future<void> createAndStartTournamentMatch({
+    required String tId,
+    required String bMatchId,
+    required List<FriendModel> teamA,
+    required List<FriendModel> teamB,
+    required Map<String, dynamic> sportRules,
+  }) async {
+    try {
+      isLoading.value = true;
+      final user = FirebaseAuth.instance.currentUser;
+      final matchId = const Uuid().v4();
+
+      tournamentId.value = tId;
+      bracketMatchId.value = bMatchId;
+
+      teamARoster.assignAll(teamA);
+      teamBRoster.assignAll(teamB);
+      teamAPlayers.assignAll(teamA.map((p) => p.email).toList());
+      teamBPlayers.assignAll(teamB.map((p) => p.email).toList());
+
+      // Map tournament rules to engine config
+      final int pointsToWinRule = sportRules['pointsPerGame'] ?? 21;
+      final int gamesToWinRule = ((sportRules['bestOf'] ?? 3) / 2).ceil();
+
+      final config = BadmintonMatchConfig(
+        pointsToWin: pointsToWinRule,
+        maxPointCap: pointsToWinRule + 9,
+        winByTwo: true, // Professional rule
+        gamesToWin: gamesToWinRule,
+        isFriendlyRules: false, // Tournaments are always professional
+        intervalsEnabled: true,
+        endsChangeEnabled: true,
+      );
+
+      final initialState = BadmintonMatchState(
+        config: config,
+        teamA: teamA.map((f) => BadmintonPlayer(name: f.fullName.isNotEmpty ? f.fullName : f.email)).toList(),
+        teamB: teamB.map((f) => BadmintonPlayer(name: f.fullName.isNotEmpty ? f.fullName : f.email)).toList(),
+      );
+
+      final newMatch = BadmintonMatchModel(
+        matchId: matchId,
+        createdBy: user?.uid ?? 'unknown',
+        sport: 'badminton',
+        allPlayers: [...teamAPlayers, ...teamBPlayers],
+        teamAPlayers: teamAPlayers.toList(),
+        teamBPlayers: teamBPlayers.toList(),
+        maxAllowedPlayers: teamA.length,
+        isFriendlyRules: false,
+        pointsToWin: pointsToWinRule,
+        maxPointCap: pointsToWinRule + 9,
+        winByTwo: true,
+        gamesToWin: gamesToWinRule,
+        intervalsEnabled: true,
+        endsChangeEnabled: true,
+        status: 'In Progress',
+        createdAt: DateTime.now(),
+        engineState: initialState.toJson(),
+        lastUpdatedAt: DateTime.now(),
+        tournamentId: tId,
+        bracketMatchId: bMatchId,
+      );
+
+      // Save Local
+      await BadmintonSqflite.instance.createMatch(newMatch);
+
+      // Save Remote
+      await FirebaseFirestore.instance
+          .collection('matches')
+          .doc(matchId)
+          .set(newMatch.toJson());
+
+      // Update Bracket status
+      await FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tId)
+          .collection('bracket')
+          .doc(bMatchId)
+          .update({
+        'status': 'in_progress',
+        'liveMatchId': matchId,
+      });
+
+      // Start locally
+      currentMatchId.value = matchId;
+      currentMatch.value = newMatch;
+      _initEngineFromState(initialState);
+
+      Get.to(() => BadmintonScoreboardScreen());
+
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to start tournament match: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> resumeTournamentMatch({
+    required String tId,
+    required String bMatchId,
+    required String matchId,
+  }) async {
+    try {
+      isLoading.value = true;
+      final doc = await FirebaseFirestore.instance.collection('matches').doc(matchId).get();
+      if (!doc.exists || doc.data() == null) {
+        Get.snackbar("Error", "Match data not found.");
+        return;
+      }
+
+      final matchData = doc.data()!;
+      final matchModel = BadmintonMatchModel.fromJson(matchData);
+
+      tournamentId.value = tId;
+      bracketMatchId.value = bMatchId;
+      currentMatchId.value = matchId;
+      currentMatch.value = matchModel;
+
+      final incomingState = BadmintonMatchState.fromJson(matchData['engineState'] ?? {});
+      _initEngineFromState(incomingState);
+
+      Get.to(() => BadmintonScoreboardScreen());
+    } catch (e) {
+      Get.snackbar("Error", "Failed to resume match: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   // ════════════════════ ENGINE SYNC ════════════════════
 
   void _initEngineFromState(BadmintonMatchState state) {
@@ -312,6 +443,40 @@ class BadmintonController extends GetxController {
     _syncToDatabaseAsync(null, side);
   }
 
+  void addPointWithType(PlayerSide side, String pointType) {
+    if (!isEngineReady.value) return;
+
+    engine.dispatch(PointEvent(side: side, pointType: pointType));
+    liveState.value = engine.state;
+    _syncToDatabaseAsync(pointType, pointType == 'let' ? null : side);
+  }
+
+  void tagLastPoint(String pointType) {
+    if (currentMatchId.isEmpty) return;
+
+    // In a full implementation, we'd fetch the most recent log document
+    // and update its 'pointType' field.
+    // For simplicity in this demo structure, we just write a standalone
+    // meta-event log using _syncToDatabaseAsync.
+    _syncToDatabaseAsync(pointType, null);
+  }
+
+  void addConduct(PlayerSide side, String conductType) {
+    if (!isEngineReady.value) return;
+
+    engine.dispatch(ConductEvent(side: side, conductType: conductType));
+    liveState.value = engine.state;
+
+    if (conductType == 'fault') {
+      _syncToDatabaseAsync('conduct_fault', side == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA);
+    } else if (conductType == 'disqualify') {
+      _syncToDatabaseAsync('disqualify', side == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA);
+    } else {
+      // warning only logs
+      _syncToDatabaseAsync('warning', null);
+    }
+  }
+
   void undoLastEvent() {
     if (!isEngineReady.value || !engine.canUndo) return;
 
@@ -320,5 +485,129 @@ class BadmintonController extends GetxController {
     // We pass null for side/type so it just syncs the reverted engineState.
     // In a full implementation, we'd delete the last pointLog document as well.
     _syncToDatabaseAsync(null, null);
+  }
+
+  Future<void> endTournamentMatch() async {
+    if (tournamentId.isEmpty || bracketMatchId.isEmpty || !isEngineReady.value) return;
+
+    final state = engine.state;
+    if (state.status != MatchStatus.completed) return;
+
+    isLoading.value = true;
+    try {
+      final batch = FirebaseFirestore.instance.batch();
+
+      // Get bracket doc to find next match
+      final bracketRef = FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId.value)
+          .collection('bracket')
+          .doc(bracketMatchId.value);
+
+      final bracketDoc = await bracketRef.get();
+      if (!bracketDoc.exists) return;
+
+      final bracketData = bracketDoc.data()!;
+      final teamAId = bracketData['teamAId'];
+      final teamBId = bracketData['teamBId'];
+
+      final winningTeamId = state.matchWinner == PlayerSide.sideA ? teamAId : teamBId;
+      final losingTeamId = state.matchWinner == PlayerSide.sideA ? teamBId : teamAId;
+      final nextMatchId = bracketData['nextMatchId'];
+      final nextMatchSlot = bracketData['nextMatchSlot'];
+
+      // 1. Update Current Bracket Match
+      batch.update(bracketRef, {
+        'status': 'completed',
+        'winnerId': winningTeamId,
+      });
+
+      // 2. Propagate winner to next match if applicable
+      if (nextMatchId != null && nextMatchSlot != null) {
+        final nextMatchRef = FirebaseFirestore.instance
+            .collection('tournaments')
+            .doc(tournamentId.value)
+            .collection('bracket')
+            .doc(nextMatchId);
+
+        if (nextMatchSlot == 'A') {
+          batch.update(nextMatchRef, {'teamAId': winningTeamId});
+        } else {
+          batch.update(nextMatchRef, {'teamBId': winningTeamId});
+        }
+      }
+
+      // 3. Update Leaderboard (Points, W/L, Games)
+      // Leaderboard is at tournaments/{tournamentId}/leaderboard/{teamId}
+
+      // Calculate games won/lost for tiebreakers
+      int gamesWonA = state.games.where((g) => g.isCompleted && g.winner == PlayerSide.sideA).length;
+      int gamesWonB = state.games.where((g) => g.isCompleted && g.winner == PlayerSide.sideB).length;
+
+      final leaderboardRefA = FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId.value)
+          .collection('leaderboard')
+          .doc(teamAId);
+
+      final leaderboardRefB = FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId.value)
+          .collection('leaderboard')
+          .doc(teamBId);
+
+      // Points Logic (assuming 2 for win, 0 for loss)
+      // Note: We use set with merge:true in case they don't exist yet
+      batch.set(leaderboardRefA, {
+        'matchesPlayed': FieldValue.increment(1),
+        'wins': FieldValue.increment(state.matchWinner == PlayerSide.sideA ? 1 : 0),
+        'losses': FieldValue.increment(state.matchWinner == PlayerSide.sideA ? 0 : 1),
+        'points': FieldValue.increment(state.matchWinner == PlayerSide.sideA ? 2 : 0),
+        'gamesWon': FieldValue.increment(gamesWonA),
+        'gamesLost': FieldValue.increment(gamesWonB),
+      }, SetOptions(merge: true));
+
+      batch.set(leaderboardRefB, {
+        'matchesPlayed': FieldValue.increment(1),
+        'wins': FieldValue.increment(state.matchWinner == PlayerSide.sideB ? 1 : 0),
+        'losses': FieldValue.increment(state.matchWinner == PlayerSide.sideB ? 0 : 1),
+        'points': FieldValue.increment(state.matchWinner == PlayerSide.sideB ? 2 : 0),
+        'gamesWon': FieldValue.increment(gamesWonB),
+        'gamesLost': FieldValue.increment(gamesWonA),
+      }, SetOptions(merge: true));
+
+      // 4. Check if tournament is complete
+      // Check if any other bracket matches are still incomplete/in progress
+      final allBracketDocs = await FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId.value)
+          .collection('bracket')
+          .get();
+
+      bool allCompleted = true;
+      for (var doc in allBracketDocs.docs) {
+        if (doc.id == bracketMatchId.value) continue; // skip the one we just completed
+        final status = doc.data()['status'];
+        if (status != 'completed' && doc.data()['teamAId'] != null && doc.data()['teamBId'] != null) {
+          allCompleted = false;
+          break;
+        }
+      }
+
+      if (allCompleted) {
+        final tRef = FirebaseFirestore.instance.collection('tournaments').doc(tournamentId.value);
+        batch.update(tRef, {'status': 'completed'});
+      }
+
+      await batch.commit();
+
+      // Go back to Matchmaking Screen
+      Get.back();
+
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to save tournament result: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

@@ -4,13 +4,19 @@ abstract class BadmintonEvent {}
 
 class PointEvent extends BadmintonEvent {
   final PlayerSide side;
-  final String? pointType; // Optional point type like SMASH, NET, ERROR
+  final String? pointType; // Optional point type like SMASH, NET, ERROR, let, service_fault
   PointEvent({required this.side, this.pointType});
 }
 
 class IntervalEvent extends BadmintonEvent {}
 
 class SwapEndsEvent extends BadmintonEvent {}
+
+class ConductEvent extends BadmintonEvent {
+  final PlayerSide side;
+  final String conductType; // warning, fault, disqualify
+  ConductEvent({required this.side, required this.conductType});
+}
 
 class BadmintonMatchEngine {
   BadmintonMatchState _state;
@@ -42,12 +48,32 @@ class BadmintonMatchEngine {
   void dispatch(BadmintonEvent event) {
     _saveSnapshot();
     if (event is PointEvent) {
-      _handlePoint(event.side);
+      if (event.pointType == 'let') {
+        // Let does not change score, just logs (which controller will handle)
+      } else {
+        _handlePoint(event.side);
+      }
     } else if (event is IntervalEvent) {
       _handleInterval();
     } else if (event is SwapEndsEvent) {
       _handleSwapEnds();
+    } else if (event is ConductEvent) {
+      _handleConduct(event);
     }
+  }
+
+  void _handleConduct(ConductEvent event) {
+    if (event.conductType == 'fault') {
+      // Award point to opponent
+      _handlePoint(event.side == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA);
+    } else if (event.conductType == 'disqualify') {
+      // Disqualify team
+      _state = _state.copyWith(
+        status: MatchStatus.completed,
+        matchWinner: event.side == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA,
+      );
+    }
+    // Warning just logs, handled by controller
   }
 
   void _handlePoint(PlayerSide winningSide) {

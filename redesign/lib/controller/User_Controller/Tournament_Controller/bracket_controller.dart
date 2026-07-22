@@ -56,7 +56,7 @@ class BracketController extends GetxController {
             );
           }).toList();
 
-          _generateBracketDraft();
+          generateBracketDraft();
         });
 
         // Listen to bracket matches
@@ -87,9 +87,9 @@ class BracketController extends GetxController {
     canShuffle.value = !hasStarted && teams.length > 1;
   }
 
-  Future<void> _generateBracketDraft({bool forceShuffle = false}) async {
+  Future<void> generateBracketDraft({bool forceShuffle = false, bool forceGenerate = false}) async {
     // Only auto-generate if we haven't started yet
-    if (matches.any((m) => m.status == 'completed' || m.status == 'scheduled') && !forceShuffle) {
+    if (matches.any((m) => m.status == 'completed' || m.status == 'scheduled') && !forceShuffle && !forceGenerate) {
       return;
     }
 
@@ -144,38 +144,94 @@ class BracketController extends GetxController {
 
   List<BracketMatchModel> _generateKnockout(List<TournamentTeamModel> teamList) {
     int totalTeams = teamList.length;
+    if (totalTeams < 2) return [];
+
     int nextPowerOf2 = pow(2, (log(totalTeams) / log(2)).ceil()).toInt();
     int byes = nextPowerOf2 - totalTeams;
 
-    List<BracketMatchModel> round1 = [];
+    List<BracketMatchModel> allMatches = [];
     final uuid = const Uuid();
 
+    // Map: Round -> List of Matches
+    Map<int, List<BracketMatchModel>> bracketRounds = {};
+
+    // First, generate the structure for all rounds
+    int currentRoundTeams = nextPowerOf2;
+    int currentRound = 1;
+
+    while (currentRoundTeams > 1) {
+      int matchesInRound = currentRoundTeams ~/ 2;
+      bracketRounds[currentRound] = [];
+      for (int i = 0; i < matchesInRound; i++) {
+        bracketRounds[currentRound]!.add(BracketMatchModel(
+          id: uuid.v4(),
+          round: currentRound,
+          status: 'unscheduled',
+        ));
+      }
+      currentRoundTeams = matchesInRound;
+      currentRound++;
+    }
+
+    // Link matches to their next matches
+    for (int r = 1; r < bracketRounds.length; r++) {
+      List<BracketMatchModel> currentRoundMatches = bracketRounds[r]!;
+      List<BracketMatchModel> nextRoundMatches = bracketRounds[r + 1]!;
+
+      for (int i = 0; i < currentRoundMatches.length; i++) {
+        int nextMatchIndex = i ~/ 2;
+        String nextSlot = (i % 2 == 0) ? 'A' : 'B';
+
+        // Recreate the match with nextMatchId and nextMatchSlot
+        currentRoundMatches[i] = BracketMatchModel(
+          id: currentRoundMatches[i].id,
+          round: currentRoundMatches[i].round,
+          teamAId: currentRoundMatches[i].teamAId,
+          teamBId: currentRoundMatches[i].teamBId,
+          status: currentRoundMatches[i].status,
+          nextMatchId: nextRoundMatches[nextMatchIndex].id,
+          nextMatchSlot: nextSlot,
+        );
+      }
+    }
+
+    // Fill round 1 teams
+    List<BracketMatchModel> round1 = bracketRounds[1]!;
     int teamIdx = 0;
 
-    // First pair teams that don't get a bye
+    // Fill standard matches
     int standardMatches = (totalTeams - byes) ~/ 2;
     for (int i = 0; i < standardMatches; i++) {
-      round1.add(BracketMatchModel(
-        id: uuid.v4(),
-        round: 1,
+      round1[i] = BracketMatchModel(
+        id: round1[i].id,
+        round: round1[i].round,
         teamAId: teamList[teamIdx++].id,
         teamBId: teamList[teamIdx++].id,
-        status: 'unscheduled',
-      ));
+        status: round1[i].status,
+        nextMatchId: round1[i].nextMatchId,
+        nextMatchSlot: round1[i].nextMatchSlot,
+      );
     }
 
-    // Then add byes
-    for (int i = 0; i < byes; i++) {
-      round1.add(BracketMatchModel(
-        id: uuid.v4(),
-        round: 1,
+    // Fill byes
+    for (int i = standardMatches; i < standardMatches + byes; i++) {
+      round1[i] = BracketMatchModel(
+        id: round1[i].id,
+        round: round1[i].round,
         teamAId: teamList[teamIdx++].id,
-        teamBId: null, // represents a Bye
-        status: 'unscheduled',
-      ));
+        teamBId: null, // Bye
+        status: round1[i].status,
+        nextMatchId: round1[i].nextMatchId,
+        nextMatchSlot: round1[i].nextMatchSlot,
+      );
     }
 
-    return round1;
+    // Flatten all matches
+    for (var matchesInRound in bracketRounds.values) {
+      allMatches.addAll(matchesInRound);
+    }
+
+    return allMatches;
   }
 
   List<BracketMatchModel> _generateRoundRobin(List<TournamentTeamModel> teamList, int times) {
@@ -272,7 +328,7 @@ class BracketController extends GetxController {
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             onPressed: () {
               Get.back();
-              _generateBracketDraft(forceShuffle: true);
+              generateBracketDraft(forceShuffle: true);
             },
             child: const Text("Shuffle"),
           ),

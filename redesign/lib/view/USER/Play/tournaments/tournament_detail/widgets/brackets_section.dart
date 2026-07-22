@@ -7,6 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 import '../../../../../../controller/User_Controller/Tournament_Controller/bracket_controller.dart';
 import '../../../../../../model/User_Models/Tournament_Model/bracket_model.dart';
+import '../../bracket_matchmaking/bracket_matchmaking_screen.dart';
 
 class BracketsSection extends StatefulWidget {
   final String tournamentId;
@@ -92,111 +93,28 @@ class _BracketsSectionState extends State<BracketsSection> {
                 ),
               )
             else
-              _buildMatchesList(),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
+                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
+                  ),
+                  onPressed: () {
+                    Get.to(() => BracketMatchmakingScreen(
+                      tournamentId: widget.tournamentId,
+                      isOrganizer: widget.isOrganizer,
+                    ));
+                  },
+                  child: Text(
+                    "View Full Bracket",
+                    style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
           ],
         );
       }),
-    );
-  }
-
-  Widget _buildMatchesList() {
-    // Group matches by round or group Name
-    Map<String, List<BracketMatchModel>> grouped = {};
-    for (var m in controller.matches) {
-      String key = m.groupName ?? "Round ${m.round}";
-      grouped.putIfAbsent(key, () => []).add(m);
-    }
-
-    final sortedKeys = grouped.keys.toList()..sort((a, b) {
-      if (a.startsWith('Round') && b.startsWith('Round')) {
-        int rA = int.parse(a.split(' ')[1]);
-        int rB = int.parse(b.split(' ')[1]);
-        return rA.compareTo(rB);
-      }
-      return a.compareTo(b);
-    });
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: sortedKeys.map((key) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
-              child: Text(
-                key,
-                style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ...grouped[key]!.map((match) => _buildMatchCard(match)),
-          ],
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildMatchCard(BracketMatchModel match) {
-    String teamA = _getTeamName(match.teamAId);
-    String teamB = _getTeamName(match.teamBId);
-
-    String timeStr = "Unscheduled";
-    if (match.scheduledDate != null) {
-      final formatter = DateFormat('MMM d, h:mm a');
-      timeStr = formatter.format(match.scheduledDate!);
-    }
-
-    bool isBye = match.teamAId == null || match.teamBId == null;
-
-    return GestureDetector(
-      onTap: () {
-        if (widget.isOrganizer && !isBye) {
-          controller.scheduleMatch(match, context);
-        }
-      },
-      child: Container(
-        margin: EdgeInsets.only(bottom: ResponsiveHelper.h(8)),
-        padding: EdgeInsets.all(ResponsiveHelper.w(12)),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-          border: Border.all(color: match.status == 'completed' ? AppColors.accent : Colors.transparent),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(teamA, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary)),
-                  SizedBox(height: ResponsiveHelper.h(4)),
-                  Text("vs", style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
-                  SizedBox(height: ResponsiveHelper.h(4)),
-                  Text(teamB, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary)),
-                ],
-              ),
-            ),
-            SizedBox(width: ResponsiveHelper.w(12)),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
-              decoration: BoxDecoration(
-                color: isBye ? AppColors.card : AppColors.background,
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
-              ),
-              child: Column(
-                children: [
-                  Icon(isBye ? Icons.fast_forward : Icons.access_time, color: AppColors.muted, size: 14),
-                  SizedBox(height: 4),
-                  Text(
-                    isBye ? "Auto-Advance" : timeStr,
-                    style: AppTypography.bodySm.copyWith(color: AppColors.muted, fontSize: 10),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

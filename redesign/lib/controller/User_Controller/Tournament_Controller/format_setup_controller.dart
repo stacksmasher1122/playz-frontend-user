@@ -17,6 +17,9 @@ class FormatSetupController extends GetxController {
   // General Participant Count (teams)
   final RxInt participantCount = 8.obs;
   
+  // Max Teams allowed
+  final RxInt maxTeams = 8.obs;
+
   // Sport-specific rules
   final RxMap<String, dynamic> sportRules = <String, dynamic>{}.obs;
 
@@ -90,6 +93,16 @@ class FormatSetupController extends GetxController {
   void decrementParticipants() {
     if (participantCount.value > 2) {
       participantCount.value -= 1;
+    }
+  }
+
+  void incrementMaxTeams() {
+    maxTeams.value += 1;
+  }
+
+  void decrementMaxTeams() {
+    if (maxTeams.value > 2) {
+      maxTeams.value -= 1;
     }
   }
 
