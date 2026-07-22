@@ -6,9 +6,12 @@ class BracketMatchModel {
   final String? teamAId; // nullable for byes
   final String? teamBId;
   final DateTime? scheduledDate;
-  final String status; // 'unscheduled', 'scheduled', 'completed'
+  final String status; // 'unscheduled', 'scheduled', 'in_progress', 'completed'
   final String? winnerId;
   final String? groupName; // Used for group stage matches
+  final String? nextMatchId;
+  final String? nextMatchSlot; // 'A' or 'B'
+  final String? liveMatchId;
 
   BracketMatchModel({
     required this.id,
@@ -19,6 +22,9 @@ class BracketMatchModel {
     required this.status,
     this.winnerId,
     this.groupName,
+    this.nextMatchId,
+    this.nextMatchSlot,
+    this.liveMatchId,
   });
 
   Map<String, dynamic> toMap() {
@@ -30,6 +36,9 @@ class BracketMatchModel {
       'status': status,
       'winnerId': winnerId,
       'groupName': groupName,
+      'nextMatchId': nextMatchId,
+      'nextMatchSlot': nextMatchSlot,
+      'liveMatchId': liveMatchId,
     };
   }
 
@@ -43,6 +52,9 @@ class BracketMatchModel {
       status: map['status'] ?? 'unscheduled',
       winnerId: map['winnerId'],
       groupName: map['groupName'],
+      nextMatchId: map['nextMatchId'],
+      nextMatchSlot: map['nextMatchSlot'],
+      liveMatchId: map['liveMatchId'],
     );
   }
 }

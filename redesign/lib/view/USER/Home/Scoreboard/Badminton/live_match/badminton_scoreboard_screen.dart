@@ -174,6 +174,22 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
+                                if (controller.tournamentId.isNotEmpty)
+                                  Padding(
+                                    padding: EdgeInsets.only(top: ResponsiveHelper.h(16)),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.background,
+                                        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
+                                      ),
+                                      onPressed: () => controller.endTournamentMatch(),
+                                      child: Text(
+                                        "SAVE & END MATCH",
+                                        style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
                           )
@@ -186,6 +202,7 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
                     onUndo: controller.undoLastEvent,
                     onPointSideA: () => controller.addPoint(PlayerSide.sideA),
                     onPointSideB: () => controller.addPoint(PlayerSide.sideB),
+                    controller: controller,
                   ),
               ],
             ),
