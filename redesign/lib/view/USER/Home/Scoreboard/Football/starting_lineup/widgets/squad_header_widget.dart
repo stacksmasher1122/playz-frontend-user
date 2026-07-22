@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -45,7 +46,7 @@ class SquadHeaderWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(ResponsiveHelper.w(8)),
         decoration: BoxDecoration(
-          color: Colors.grey.shade900,
+          color: Color(0xFF121212),
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
         ),
         child: Icon(icon, color: Colors.white, size: 20),

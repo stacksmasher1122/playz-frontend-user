@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -18,7 +19,7 @@ class _PitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color(0xFFC6FF00).withValues(alpha: 0.3)
+      ..color = AppColors.accent.withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 

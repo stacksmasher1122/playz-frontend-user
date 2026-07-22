@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/player_model.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -30,11 +31,11 @@ class PlayerPositionWidget extends StatelessWidget {
             height: ResponsiveHelper.h(50),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.black,
-              border: Border.all(color: Color(0xFFC6FF00), width: 2), // Lime border
+              color: AppColors.background,
+              border: Border.all(color: AppColors.accent, width: 2), // Lime border
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xFFC6FF00).withValues(alpha: 0.4),
+                  color: AppColors.accent.withValues(alpha: 0.4),
                   blurRadius: 8,
                   spreadRadius: 1,
                 ),
@@ -43,14 +44,14 @@ class PlayerPositionWidget extends StatelessWidget {
             child: ClipOval(
               child: player.avatarImage != null
                   ? Image.network(player.avatarImage!, fit: BoxFit.cover)
-                  : Icon(Icons.person, color: Colors.grey.shade600, size: 30),
+                  : Icon(Icons.person, color: Colors.grey, size: 30),
             ),
           ),
           SizedBox(height: 4),
           Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.6),
+              color: AppColors.background.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
             ),
             child: Text(

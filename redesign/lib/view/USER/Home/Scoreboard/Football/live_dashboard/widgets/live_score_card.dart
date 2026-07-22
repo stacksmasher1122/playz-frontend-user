@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/live_football_dashboard_controller.dart';
@@ -18,9 +19,9 @@ class LiveScoreCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
-        color: Colors.grey.shade900.withValues(alpha: 0.5),
+        color: Color(0xFF121212).withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: Colors.grey.shade800),
+        border: Border.all(color: Color(0xFF1E1E1E)),
       ),
       child: Obx(() {
         final match = controller.match.value;

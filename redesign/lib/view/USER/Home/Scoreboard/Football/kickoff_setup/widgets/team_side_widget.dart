@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/side_selection_model.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -17,7 +18,7 @@ class TeamSideWidget extends StatelessWidget {
     ResponsiveHelper.init(context);
     Color cardColor = team.teamColor == '0xFF4285F4' 
         ? Color(0xFF4285F4).withValues(alpha: 0.8) 
-        : Colors.grey.shade800;
+        : Color(0xFF1E1E1E);
 
     Widget cardContent = Column(
       mainAxisSize: MainAxisSize.min,
@@ -30,7 +31,7 @@ class TeamSideWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.5),
+                color: Color(0xFF121212),
                 blurRadius: 10,
                 offset: Offset(0, 4),
               ),

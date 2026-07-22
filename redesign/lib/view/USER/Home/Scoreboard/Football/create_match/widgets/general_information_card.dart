@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_create_match_controller.dart';
@@ -15,9 +16,9 @@ class GeneralInformationCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
-        color: Colors.grey.shade900.withValues(alpha: 0.5),
+        color: Color(0xFF121212).withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: Colors.grey.shade800),
+        border: Border.all(color: Color(0xFF1E1E1E)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,13 +28,13 @@ class GeneralInformationCard extends StatelessWidget {
               Container(
                 width: ResponsiveHelper.w(4),
                 height: ResponsiveHelper.h(16),
-                color: Color(0xFFC6FF00), // Lime Green
+                color: AppColors.accent, // Lime Green
               ),
               SizedBox(width: 8),
               Text(
                 'GENERAL INFORMATION',
                 style: TextStyle(
-                  color: Color(0xFFC6FF00),
+                  color: AppColors.accent,
                   fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.w900,
                   letterSpacing: 0.5,
@@ -56,20 +57,20 @@ class GeneralInformationCard extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontSize: 14),
             decoration: InputDecoration(
               hintText: 'e.g. PlayZ Champions Cup',
-              hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+              hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
               filled: true,
-              fillColor: Colors.black.withValues(alpha: 0.3),
+              fillColor: Color(0xFF121212),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                borderSide: BorderSide(color: Colors.grey.shade800),
+                borderSide: BorderSide(color: Color(0xFF1E1E1E)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                borderSide: BorderSide(color: Colors.grey.shade800),
+                borderSide: BorderSide(color: Color(0xFF1E1E1E)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                borderSide: BorderSide(color: Color(0xFFC6FF00)),
+                borderSide: BorderSide(color: AppColors.accent),
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
             ),
@@ -89,25 +90,25 @@ class GeneralInformationCard extends StatelessWidget {
               initialValue: controller.tournament.value.isEmpty ? null : controller.tournament.value,
               hint: Text(
                 'Select Tournament',
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                style: TextStyle(color: Colors.grey, fontSize: 14),
               ),
-              dropdownColor: Colors.grey.shade900,
+              dropdownColor: Color(0xFF121212),
               icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
               style: TextStyle(color: Colors.white, fontSize: 14),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.black.withValues(alpha: 0.3),
+                fillColor: Color(0xFF121212),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                  borderSide: BorderSide(color: Colors.grey.shade800),
+                  borderSide: BorderSide(color: Color(0xFF1E1E1E)),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                  borderSide: BorderSide(color: Colors.grey.shade800),
+                  borderSide: BorderSide(color: Color(0xFF1E1E1E)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                  borderSide: BorderSide(color: Color(0xFFC6FF00)),
+                  borderSide: BorderSide(color: AppColors.accent),
                 ),
                 contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
               ),

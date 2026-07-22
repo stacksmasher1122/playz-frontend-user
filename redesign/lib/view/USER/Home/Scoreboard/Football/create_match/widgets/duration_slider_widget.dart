@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -31,7 +32,7 @@ class DurationSliderWidget extends StatelessWidget {
             Text(
               '${duration.toInt()} MINS',
               style: TextStyle(
-                color: Color(0xFFC6FF00), // Lime Green
+                color: AppColors.accent, // Lime Green
                 fontSize: ResponsiveHelper.sp(14),
                 fontWeight: FontWeight.w900,
               ),
@@ -42,12 +43,12 @@ class DurationSliderWidget extends StatelessWidget {
         RepaintBoundary(
           child: SliderTheme(
             data: SliderThemeData(
-              activeTrackColor: Color(0xFFC6FF00),
-              inactiveTrackColor: Colors.grey.shade800,
-              thumbColor: Color(0xFFC6FF00),
+              activeTrackColor: AppColors.accent,
+              inactiveTrackColor: Color(0xFF1E1E1E),
+              thumbColor: AppColors.accent,
               trackHeight: 2.0,
               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
-              overlayColor: Color(0xFFC6FF00).withValues(alpha: 0.2),
+              overlayColor: AppColors.accent.withValues(alpha: 0.2),
             ),
             child: Slider(
               value: duration,

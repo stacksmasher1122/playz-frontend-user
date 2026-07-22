@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -12,11 +13,11 @@ class KickoffBallWidget extends StatelessWidget {
       height: ResponsiveHelper.h(24),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Color(0xFFC6FF00), // Lime Green
-        border: Border.all(color: Colors.black, width: 2),
+        color: AppColors.accent, // Lime Green
+        border: Border.all(color: AppColors.background, width: 2),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFFC6FF00).withValues(alpha: 0.6),
+            color: AppColors.accent.withValues(alpha: 0.6),
             blurRadius: 10,
             spreadRadius: 2,
           ),

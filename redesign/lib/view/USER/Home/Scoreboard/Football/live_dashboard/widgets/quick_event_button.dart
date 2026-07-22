@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -42,9 +43,9 @@ class _QuickEventButtonState extends State<QuickEventButton> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final bgColor = widget.isPrimary ? Color(0xFFC6FF00) : Colors.grey.shade900.withValues(alpha: 0.5);
-    final iconColor = widget.isPrimary ? Colors.black : Color(0xFFFFC107); // Using amber for cards/icons if not primary
-    final textColor = widget.isPrimary ? Colors.black : Colors.white;
+    final bgColor = widget.isPrimary ? AppColors.accent : Color(0xFF121212).withValues(alpha: 0.5);
+    final iconColor = widget.isPrimary ? AppColors.background : Color(0xFFFFC107); // Using amber for cards/icons if not primary
+    final textColor = widget.isPrimary ? AppColors.background : Colors.white;
 
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
@@ -63,11 +64,11 @@ class _QuickEventButtonState extends State<QuickEventButton> with SingleTickerPr
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            border: widget.isPrimary ? null : Border.all(color: Colors.grey.shade800),
+            border: widget.isPrimary ? null : Border.all(color: Color(0xFF1E1E1E)),
             boxShadow: widget.isPrimary
                 ? [
                     BoxShadow(
-                      color: Color(0xFFC6FF00).withValues(alpha: 0.4),
+                      color: AppColors.accent.withValues(alpha: 0.4),
                       blurRadius: 10,
                       spreadRadius: 1,
                     )

@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/kickoff_setup_controller.dart';
@@ -56,13 +57,13 @@ class _KickoffSetupScreenState extends State<KickoffSetupScreen> with TickerProv
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: KickoffAppbar(),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(
             child: CircularProgressIndicator(
-              color: Color(0xFFC6FF00), // Lime Green
+              color: AppColors.accent, // Lime Green
             ),
           );
         }

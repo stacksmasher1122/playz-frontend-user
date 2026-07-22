@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -34,7 +35,7 @@ class HalvesSelectorWidget extends StatelessWidget {
             Text(
               'Standard is 2',
               style: TextStyle(
-                color: Colors.grey.shade600,
+                color: Colors.grey,
                 fontSize: ResponsiveHelper.sp(10),
               ),
             ),
@@ -67,8 +68,8 @@ class HalvesSelectorWidget extends StatelessWidget {
         padding: EdgeInsets.all(ResponsiveHelper.w(4)),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.black.withValues(alpha: 0.5),
-          border: Border.all(color: Color(0xFFC6FF00)), // Lime Green
+          color: Color(0xFF121212),
+          border: Border.all(color: AppColors.accent), // Lime Green
         ),
         child: Icon(
           icon,

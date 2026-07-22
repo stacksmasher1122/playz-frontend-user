@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_create_match_controller.dart';
@@ -50,13 +51,13 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: Colors.black, // Dark background
+      backgroundColor: AppColors.background, // Dark background
       appBar: FootballCreateMatchAppbar(),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(
             child: CircularProgressIndicator(
-              color: Color(0xFFC6FF00), // Lime Green
+              color: AppColors.accent, // Lime Green
             ),
           );
         }
@@ -102,7 +103,7 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
           Text(
             'Create Match',
             style: TextStyle(
-              color: Color(0xFFC6FF00), // Lime Green
+              color: AppColors.accent, // Lime Green
               fontSize: ResponsiveHelper.sp(28),
               fontWeight: FontWeight.w900,
             ),
@@ -111,7 +112,7 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
           Text(
             'Configure a new professional match session for real-time scouting and analytics.',
             style: TextStyle(
-              color: Colors.grey.shade500,
+              color: Colors.grey,
               fontSize: ResponsiveHelper.sp(14),
               height: ResponsiveHelper.h(1.4),
             ),

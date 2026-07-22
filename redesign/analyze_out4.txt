@@ -1,0 +1,190 @@
+Resolving dependencies...
+Downloading packages...
+  _flutterfire_internals 1.3.73 (1.3.75 available)
+  audioplayers 6.7.1 (6.8.1 available)
+  audioplayers_android 5.2.1 (5.3.0 available)
+  audioplayers_darwin 6.4.0 (6.5.0 available)
+  audioplayers_linux 4.2.1 (4.3.0 available)
+  audioplayers_platform_interface 7.1.1 (7.2.0 available)
+  audioplayers_web 5.2.1 (5.3.0 available)
+  audioplayers_windows 4.3.1 (4.4.1 available)
+  camera 0.12.0+1 (0.12.0+2 available)
+  camera_android_camerax 0.7.2 (0.7.4+2 available)
+  camera_avfoundation 0.10.1 (0.10.2 available)
+  camera_platform_interface 2.13.0 (2.13.1 available)
+  cli_util 0.4.2 (0.5.2 available)
+  cloud_firestore 6.6.0 (6.7.1 available)
+  cloud_firestore_platform_interface 8.0.3 (8.0.5 available)
+  cloud_firestore_web 5.6.0 (5.7.1 available)
+  cross_file 0.3.5+2 (0.3.5+4 available)
+  dotlottie_flutter 0.0.7 (0.1.5 available)
+  firebase_auth 6.5.4 (6.5.6 available)
+  firebase_auth_platform_interface 9.0.3 (9.0.5 available)
+  firebase_auth_web 6.2.3 (6.2.5 available)
+  firebase_core 4.11.0 (4.12.1 available)
+  firebase_core_platform_interface 7.1.0 (8.0.0 available)
+  firebase_core_web 3.9.0 (3.9.1 available)
+  firebase_storage 13.4.3 (13.4.5 available)
+  firebase_storage_platform_interface 6.0.3 (6.0.5 available)
+  firebase_storage_web 3.11.9 (3.11.11 available)
+  flutter_cache_manager 3.4.1 (3.4.2 available)
+  flutter_launcher_icons 0.13.1 (0.14.4 available)
+  flutter_lints 5.0.0 (6.0.0 available)
+  geocoding 4.0.0 (5.0.0 available)
+  geocoding_android 4.0.1 (5.1.0 available)
+  geocoding_platform_interface 3.2.0 (5.0.0 available)
+  google_fonts 6.3.3 (8.2.0 available)
+  google_maps_flutter_android 2.19.10 (2.19.12 available)
+  google_maps_flutter_platform_interface 2.15.0 (2.16.0 available)
+  google_maps_flutter_web 0.6.2+3 (0.6.3 available)
+  google_sign_in_android 7.2.11 (7.2.15 available)
+  hooks 2.0.2 (2.1.0 available)
+  image 4.8.0 (4.9.1 available)
+  image_picker 1.2.2 (1.2.3 available)
+  image_picker_android 0.8.13+17 (0.8.13+19 available)
+  lints 5.1.1 (6.1.0 available)
+  lottie 3.3.3 (3.5.1 available)
+  matcher 0.12.18 (0.12.20 available)
+  meta 1.17.0 (1.19.0 available)
+  package_config 2.2.0 (3.0.0 available)
+  package_info_plus 10.2.0 (10.2.1 available)
+  qr 3.0.2 (4.0.0 available)
+  record 6.2.1 (7.1.1 available)
+  record_android 1.5.2 (2.1.2 available)
+  record_ios 1.2.1 (2.1.1 available)
+  record_linux 1.3.1 (2.1.1 available)
+  record_macos 1.2.2 (2.1.1 available)
+  record_platform_interface 1.6.0 (2.1.0 available)
+  record_use 0.6.0 (1.0.0 available)
+  record_web 1.3.0 (2.1.1 available)
+  record_windows 1.0.7 (2.2.2 available)
+  sanitize_html 2.1.0 (2.2.0 available)
+  shared_preferences_android 2.4.23 (2.4.27 available)
+  sqflite 2.4.2+1 (2.4.3 available)
+  sqflite_android 2.4.2+3 (2.4.3 available)
+  sqflite_common 2.5.8 (2.5.11 available)
+  sqflite_darwin 2.4.2 (2.4.3+1 available)
+  sqflite_platform_interface 2.4.0 (2.4.1 available)
+  synchronized 3.4.0+1 (3.4.1+1 available)
+  test_api 0.7.9 (0.7.13 available)
+  url_launcher_android 6.3.30 (6.3.32 available)
+  vector_math 2.2.0 (2.4.1 available)
+  video_player 2.11.1 (2.13.0 available)
+  video_player_android 2.9.5 (2.12.0 available)
+  video_player_avfoundation 2.10.0 (2.11.0 available)
+  video_player_platform_interface 6.8.0 (6.9.0 available)
+  wakelock_plus 1.6.1 (1.7.0 available)
+  wakelock_plus_platform_interface 1.5.1 (1.6.0 available)
+  xml 6.6.1 (7.0.1 available)
+Got dependencies!
+76 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing Football...
+
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/football_create_match_screen.dart:16:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/bottom_action_widget.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/duration_slider_widget.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/football_create_match_appbar.dart:6:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/format_option_widget.dart:11:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/general_information_card.dart:8:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/halves_selector_widget.dart:10:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/logistics_card.dart:8:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/match_format_card.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/rules_configuration_card.dart:11:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/team_card_widget.dart:53:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/team_selection_card.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/create_match/widgets/toggle_option_widget.dart:10:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/football_scoreboard_screen.dart:469:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/card_workflow.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/card_workflow.dart:8:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/event_feed.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/event_feed.dart:9:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/goal_workflow.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/goal_workflow.dart:8:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/scoreboard_controls.dart:12:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/scoreboard_header.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/scoreboard_header.dart:9:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/sub_workflow.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_scoreboard/widgets/sub_workflow.dart:8:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/football_setup_screen.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/football_setup_screen.dart:34:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/engine_preview.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/engine_preview.dart:13:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_controls.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_controls.dart:14:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_controls.dart:80:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_controls.dart:108:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_controls.dart:143:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_header.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_header.dart:10:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_logic.dart:1:8 • unused_import
+warning • Unused import: 'package:flutter/material.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_logic.dart:2:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_mode_toggle.dart:12:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_models.dart:1:8 • unused_import
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_quality_indicator.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_quality_indicator.dart:9:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_section_card.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/setup_section_card.dart:12:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/smart_presets_card.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/smart_presets_card.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/sticky_cta_button.dart:12:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/team_row.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/team_row.dart:11:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/tournament_type_selector.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/football_setup/widgets/tournament_type_selector.dart:12:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/kickoff_setup_screen.dart:13:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/football_pitch_widget.dart:10:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/football_pitch_widget.dart:101:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/info_card_widget.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/info_card_widget.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/kickoff_appbar.dart:8:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/kickoff_ball_widget.dart:6:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/possession_button_widget.dart:11:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/possession_selector_widget.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/possession_selector_widget.dart:9:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/side_selection_card.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/side_selection_card.dart:10:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/stadium_banner_widget.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/start_match_button_widget.dart:8:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/swap_side_button.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/swap_side_button.dart:8:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/team_side_widget.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/team_side_widget.dart:10:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/kickoff_setup/widgets/venue_card_widget.dart:10:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/live_football_dashboard_screen.dart:15:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/live_dashboard_appbar.dart:8:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/live_score_card.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/live_score_card.dart:11:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/match_timer_widget.dart:9:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/possession_card_widget.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/possession_card_widget.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/quick_event_button.dart:11:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/quick_event_grid_widget.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/quick_event_grid_widget.dart:9:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/score_board_widget.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/score_board_widget.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/score_board_widget.dart:43:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/statistics_progress_card.dart:11:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/stats_summary_grid.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/stats_summary_grid.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/stats_tile_widget.dart:10:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/live_dashboard/widgets/team_score_widget.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/starting_lineup_screen.dart:15:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/confirm_squad_button.dart:8:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/empty_position_widget.dart:51:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/football_pitch_widget.dart:12:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/formation_chip_widget.dart:10:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/formation_selector_widget.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/formation_selector_widget.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/goalkeeper_widget.dart:10:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/pitch_lines_widget.dart:6:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/player_card_widget.dart:10:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/player_position_widget.dart:12:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/player_status_chip.dart:8:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/squad_header_widget.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/squad_header_widget.dart:9:3 • prefer_const_constructors_in_immutables
+warning • Unused import: 'package:redesign/theme/app_colors.dart' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/squad_list_widget.dart:1:8 • unused_import
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/squad_list_widget.dart:9:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/starting_lineup_appbar.dart:6:3 • prefer_const_constructors_in_immutables
+   info • Constructors in '@immutable' classes should be declared as 'const' • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/tactic_header_widget.dart:8:3 • prefer_const_constructors_in_immutables
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/view/USER/Home/Scoreboard/Football/starting_lineup/widgets/tactic_header_widget.dart:38:39 • deprecated_member_use

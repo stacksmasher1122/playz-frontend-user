@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -8,7 +9,7 @@ class StartingLineupAppbar extends StatelessWidget implements PreferredSizeWidge
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return AppBar(
-      backgroundColor: Colors.black.withValues(alpha: 0.85),
+      backgroundColor: AppColors.background.withValues(alpha: 0.85),
       elevation: 0,
       centerTitle: true,
       leading: IconButton(
@@ -18,7 +19,7 @@ class StartingLineupAppbar extends StatelessWidget implements PreferredSizeWidge
       title: Text(
         'PRO SCOUT LIVE',
         style: TextStyle(
-          color: Color(0xFFC6FF00), // Lime Green
+          color: AppColors.accent, // Lime Green
           fontSize: ResponsiveHelper.sp(20),
           fontWeight: FontWeight.w900,
           letterSpacing: 1.0,
@@ -30,7 +31,7 @@ class StartingLineupAppbar extends StatelessWidget implements PreferredSizeWidge
             padding: EdgeInsets.all(ResponsiveHelper.w(4)),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade600),
+              border: Border.all(color: Colors.grey),
             ),
             child: Icon(Icons.person_outline, color: Colors.white, size: 20),
           ),

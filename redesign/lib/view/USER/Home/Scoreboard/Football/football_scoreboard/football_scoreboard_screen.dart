@@ -18,7 +18,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 
 const kBg = AppColors.background;
-const kSurface = AppColors.surface;
+const kSurface = Color(0xFF121212);
 const kSurfaceHighlight = Color(0xFF2A2A2A);
 const kAccent = AppColors.accent;
 const kGoal = Color(0xFF22C55E);

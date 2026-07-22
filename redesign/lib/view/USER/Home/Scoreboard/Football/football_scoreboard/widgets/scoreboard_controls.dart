@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../football_scoreboard_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -123,14 +124,14 @@ class ScoreboardControls extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: isActive ? Colors.black : kTextSecondary,
+                color: isActive ? AppColors.background : kTextSecondary,
                 size: 18,
               ),
               SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(
-                  color: isActive ? Colors.black : kTextSecondary,
+                  color: isActive ? AppColors.background : kTextSecondary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

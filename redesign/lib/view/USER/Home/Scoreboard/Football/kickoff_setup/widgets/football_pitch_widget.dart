@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/kickoff_setup_controller.dart';
@@ -17,9 +18,9 @@ class FootballKickoffPitchWidget extends StatelessWidget {
       aspectRatio: 2.0, // Wider aspect ratio for kickoff side selection
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black, // Dark background
+          color: AppColors.background, // Dark background
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          border: Border.all(color: Colors.grey.shade800),
+          border: Border.all(color: Color(0xFF1E1E1E)),
         ),
         child: Stack(
           children: [
@@ -113,13 +114,13 @@ class _KickoffPitchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey.shade800
+      ..color = Color(0xFF1E1E1E)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
     // Grid pattern faint lines
     final gridPaint = Paint()
-      ..color = Colors.grey.shade900
+      ..color = Color(0xFF121212)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -147,7 +148,7 @@ class _KickoffPitchPainter extends CustomPainter {
     // Dashed drop zone outlines (optional, simplified to solid for now or we could use path_drawing if available)
     // Left drop zone
     final dropZonePaint = Paint()
-      ..color = Colors.grey.shade800
+      ..color = Color(0xFF1E1E1E)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
       

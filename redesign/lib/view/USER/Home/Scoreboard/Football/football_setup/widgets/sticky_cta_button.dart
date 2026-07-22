@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'setup_constants.dart';
 import 'setup_models.dart';
@@ -34,7 +35,7 @@ class StickyCtaButton extends StatelessWidget {
         onPressed: isActive ? onTap : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: kAccent,
-          foregroundColor: Colors.black,
+          foregroundColor: AppColors.background,
           minimumSize: Size(double.infinity, 56),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),

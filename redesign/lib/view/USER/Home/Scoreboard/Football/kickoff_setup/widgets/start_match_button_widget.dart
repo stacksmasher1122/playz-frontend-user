@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -18,7 +19,7 @@ class StartMatchButtonWidget extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xFFC6FF00).withValues(alpha: 0.4),
+                  color: AppColors.accent.withValues(alpha: 0.4),
                   blurRadius: 20,
                   spreadRadius: 2,
                   offset: Offset(0, 4),
@@ -33,7 +34,7 @@ class StartMatchButtonWidget extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
                   decoration: BoxDecoration(
-                    color: Color(0xFFC6FF00),
+                    color: AppColors.accent,
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
                   ),
                   alignment: Alignment.center,
@@ -42,7 +43,7 @@ class StartMatchButtonWidget extends StatelessWidget {
                       Text(
                         'INITIALIZE DATA STREAM',
                         style: TextStyle(
-                          color: Colors.black.withValues(alpha: 0.6),
+                          color: AppColors.background.withValues(alpha: 0.6),
                           fontSize: ResponsiveHelper.sp(8),
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.5,
@@ -52,7 +53,7 @@ class StartMatchButtonWidget extends StatelessWidget {
                       Text(
                         'START MATCH',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.background,
                           fontSize: ResponsiveHelper.sp(22),
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.0,
@@ -69,7 +70,7 @@ class StartMatchButtonWidget extends StatelessWidget {
             'By starting, you confirm all player\nregistrations and venue synchronization protocols.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.grey.shade600,
+              color: Colors.grey,
               fontSize: ResponsiveHelper.sp(10),
               height: ResponsiveHelper.h(1.5),
             ),

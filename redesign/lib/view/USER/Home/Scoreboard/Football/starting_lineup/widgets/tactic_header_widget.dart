@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/starting_lineup_controller.dart';
@@ -19,7 +20,7 @@ class TacticHeaderWidget extends StatelessWidget {
           Text(
             'Tactic: Pitch',
             style: TextStyle(
-              color: Color(0xFFC6FF00), // Lime Green
+              color: AppColors.accent, // Lime Green
               fontSize: ResponsiveHelper.sp(24),
               fontWeight: FontWeight.w900,
             ),
@@ -27,14 +28,14 @@ class TacticHeaderWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
             decoration: BoxDecoration(
-              color: Colors.grey.shade900,
+              color: Color(0xFF121212),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             ),
             child: Obx(() {
               return Text(
                 'Match Week ${controller.matchWeek.value}',
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: Colors.white.withOpacity(0.7),
                   fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.bold,
                 ),

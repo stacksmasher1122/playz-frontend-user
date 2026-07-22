@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -14,7 +15,7 @@ class SwapSideButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(ResponsiveHelper.w(10)),
         decoration: BoxDecoration(
-          color: Colors.grey.shade900,
+          color: Color(0xFF121212),
           shape: BoxShape.circle,
         ),
         child: Icon(

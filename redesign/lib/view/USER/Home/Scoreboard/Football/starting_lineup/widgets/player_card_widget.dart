@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/player_model.dart';
 import 'player_status_chip.dart';
@@ -17,9 +18,9 @@ class PlayerCardWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(6)),
       padding: EdgeInsets.all(ResponsiveHelper.w(12)),
       decoration: BoxDecoration(
-        color: Colors.grey.shade900.withValues(alpha: isAvailable ? 1.0 : 0.5),
+        color: Color(0xFF121212).withValues(alpha: isAvailable ? 1.0 : 0.5),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: Colors.grey.shade800),
+        border: Border.all(color: Color(0xFF1E1E1E)),
       ),
       child: Row(
         children: [
@@ -36,12 +37,12 @@ class PlayerCardWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                    color: Colors.black,
+                    color: AppColors.background,
                   ),
                   clipBehavior: Clip.hardEdge,
                   child: player.avatarImage != null
                       ? Image.network(player.avatarImage!, fit: BoxFit.cover, color: isAvailable ? null : Colors.grey, colorBlendMode: isAvailable ? null : BlendMode.saturation)
-                      : Icon(Icons.person, color: Colors.grey.shade600, size: 30),
+                      : Icon(Icons.person, color: Colors.grey, size: 30),
                 ),
                 Positioned(
                   bottom: -4,
@@ -49,13 +50,13 @@ class PlayerCardWidget extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
                     decoration: BoxDecoration(
-                      color: isAvailable ? Color(0xFFC6FF00) : Colors.grey.shade600,
+                      color: isAvailable ? AppColors.accent : Colors.grey,
                       borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
                     ),
                     child: Text(
                       player.jerseyNumber,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.background,
                         fontSize: ResponsiveHelper.sp(10),
                         fontWeight: FontWeight.w900,
                       ),
@@ -74,7 +75,7 @@ class PlayerCardWidget extends StatelessWidget {
                 Text(
                   player.name,
                   style: TextStyle(
-                    color: isAvailable ? Colors.white : Colors.grey.shade500,
+                    color: isAvailable ? Colors.white : Colors.grey,
                     fontSize: ResponsiveHelper.sp(16),
                     fontWeight: FontWeight.bold,
                   ),
@@ -83,7 +84,7 @@ class PlayerCardWidget extends StatelessWidget {
                 Text(
                   '${player.position} • ${player.fitness}',
                   style: TextStyle(
-                    color: Colors.grey.shade600,
+                    color: Colors.grey,
                     fontSize: ResponsiveHelper.sp(12),
                   ),
                 ),
@@ -108,7 +109,7 @@ class PlayerCardWidget extends StatelessWidget {
                 Text(
                   'Return: ${player.returnWeeks}',
                   style: TextStyle(
-                    color: Colors.grey.shade600,
+                    color: Colors.grey,
                     fontSize: ResponsiveHelper.sp(10),
                   ),
                 ),
@@ -117,7 +118,7 @@ class PlayerCardWidget extends StatelessWidget {
           SizedBox(width: 12),
           Icon(
             isAvailable ? Icons.drag_indicator : Icons.lock_outline,
-            color: Colors.grey.shade600,
+            color: Colors.grey,
             size: 20,
           ),
         ],

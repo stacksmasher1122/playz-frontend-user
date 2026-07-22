@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -19,9 +20,9 @@ class StatsTileWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
-        color: Colors.grey.shade900.withValues(alpha: 0.5),
+        color: Color(0xFF121212).withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: Colors.grey.shade800),
+        border: Border.all(color: Color(0xFF1E1E1E)),
       ),
       child: Row(
         children: [
@@ -31,7 +32,7 @@ class StatsTileWidget extends StatelessWidget {
               width: ResponsiveHelper.w(4),
               height: ResponsiveHelper.h(40),
               decoration: BoxDecoration(
-                color: Color(0xFFC6FF00),
+                color: AppColors.accent,
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
               ),
               margin: EdgeInsets.only(right: 12),
@@ -53,7 +54,7 @@ class StatsTileWidget extends StatelessWidget {
                 Text(
                   value,
                   style: TextStyle(
-                    color: isPrimary ? Color(0xFFC6FF00) : Colors.white,
+                    color: isPrimary ? AppColors.accent : Colors.white,
                     fontSize: ResponsiveHelper.sp(28),
                     fontWeight: FontWeight.w300,
                   ),

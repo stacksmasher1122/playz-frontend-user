@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'setup_constants.dart';
@@ -73,7 +74,7 @@ class SetupModeToggle extends StatelessWidget {
           child: AnimatedDefaultTextStyle(
             duration: Duration(milliseconds: 200),
             style: TextStyle(
-              color: isSelected ? Colors.black : kTextSecondary,
+              color: isSelected ? AppColors.background : kTextSecondary,
               fontWeight: FontWeight.bold,
               fontSize: ResponsiveHelper.sp(14),
             ),

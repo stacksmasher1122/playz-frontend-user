@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -17,7 +18,7 @@ class FootballCreateMatchAppbar extends StatelessWidget implements PreferredSize
       title: Text(
         'PRO SCOUT LIVE',
         style: TextStyle(
-          color: Color(0xFFC6FF00), // Lime Green
+          color: AppColors.accent, // Lime Green
           fontSize: ResponsiveHelper.sp(14),
           fontWeight: FontWeight.w900,
           letterSpacing: 1.5,
@@ -29,7 +30,7 @@ class FootballCreateMatchAppbar extends StatelessWidget implements PreferredSize
           padding: EdgeInsets.only(right: 16.0),
           child: CircleAvatar(
             radius: 16,
-            backgroundColor: Colors.grey.shade800,
+            backgroundColor: Color(0xFF1E1E1E),
             child: Icon(
               Icons.person,
               color: Colors.white,
@@ -40,7 +41,7 @@ class FootballCreateMatchAppbar extends StatelessWidget implements PreferredSize
       ],
       flexibleSpace: Container(
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.5),
+          color: Color(0xFF121212),
         ),
       ),
     );

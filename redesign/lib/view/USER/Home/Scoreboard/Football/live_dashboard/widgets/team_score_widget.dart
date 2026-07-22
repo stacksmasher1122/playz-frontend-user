@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -21,9 +22,9 @@ class TeamScoreWidget extends StatelessWidget {
           width: ResponsiveHelper.w(50),
           height: ResponsiveHelper.h(50),
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: AppColors.background,
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey.shade800),
+            border: Border.all(color: Color(0xFF1E1E1E)),
             image: logoUrl != null
                 ? DecorationImage(
                     image: NetworkImage(logoUrl!),

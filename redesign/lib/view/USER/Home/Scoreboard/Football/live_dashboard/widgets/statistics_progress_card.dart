@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -26,9 +27,9 @@ class StatisticsProgressCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(6.0)),
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
-        color: Colors.grey.shade900.withValues(alpha: 0.5),
+        color: Color(0xFF121212).withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: Colors.grey.shade800),
+        border: Border.all(color: Color(0xFF1E1E1E)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +51,7 @@ class StatisticsProgressCard extends StatelessWidget {
                   Text(
                     '$valueA${isPercentage ? '%' : ''}',
                     style: TextStyle(
-                      color: Color(0xFFC6FF00), // Lime Green
+                      color: AppColors.accent, // Lime Green
                       fontSize: ResponsiveHelper.sp(14),
                       fontWeight: FontWeight.bold,
                     ),
@@ -77,14 +78,14 @@ class StatisticsProgressCard extends StatelessWidget {
                   flex: flexA,
                   child: Container(
                     height: ResponsiveHelper.h(8),
-                    color: Color(0xFFC6FF00),
+                    color: AppColors.accent,
                   ),
                 ),
                 Expanded(
                   flex: flexB,
                   child: Container(
                     height: ResponsiveHelper.h(8),
-                    color: Colors.grey.shade800,
+                    color: Color(0xFF1E1E1E),
                   ),
                 ),
               ],
