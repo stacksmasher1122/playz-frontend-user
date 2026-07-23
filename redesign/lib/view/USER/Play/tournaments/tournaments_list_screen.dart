@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
@@ -41,6 +40,7 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('tournaments')
+          .where('access', isEqualTo: 'public')
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -56,7 +56,7 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
 
         var docs = snapshot.data?.docs ?? [];
 
-        // Client-side filtering
+        // Client-side filtering check for safety (includes public or own tournaments)
         docs = docs.where((doc) {
           final data = doc.data() as Map<String, dynamic>;
           final access = data['access'] as String?;

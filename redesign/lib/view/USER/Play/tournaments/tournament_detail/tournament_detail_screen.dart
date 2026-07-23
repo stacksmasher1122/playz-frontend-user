@@ -82,7 +82,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // D4 Fix: Allow both organizer and referees to access bracket to manage/drive their matches
-                  if (isOrganizer || isInProgress)
+                  if (isOrganizer || isInProgress || (widget.data['status'] == 'completed'))
                     Container(
                       width: double.infinity,
                       margin: EdgeInsets.only(bottom: ResponsiveHelper.h(24)),
@@ -92,9 +92,14 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
                         ),
-                        icon: Icon(Icons.play_arrow, color: AppColors.background),
+                        icon: Icon(
+                          widget.data['status'] == 'completed' ? Icons.emoji_events : Icons.play_arrow,
+                          color: AppColors.background,
+                        ),
                         label: Text(
-                          isOrganizer ? "Manage Tournament Matches" : "View Bracket",
+                          isOrganizer && widget.data['status'] != 'completed'
+                              ? "Manage Tournament Matches"
+                              : "View Bracket & Results",
                           style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         onPressed: () {
@@ -111,7 +116,10 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                   SizedBox(height: ResponsiveHelper.h(24)),
                   TeamsSection(
                     tournamentId: widget.tournamentId,
-                    maxTeams: widget.data['format']['teamSize'] ?? 0,
+                    maxTeams: (widget.data['format']?['maxTeams'] as num?)?.toInt() ??
+                        (widget.data['format']?['participantCount'] as num?)?.toInt() ??
+                        (widget.data['format']?['totalTeams'] as num?)?.toInt() ??
+                        8,
                     data: widget.data,
                     currentUserId: widget.currentUserId,
                     isOrganizer: isOrganizer,

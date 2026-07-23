@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../../model/User_Models/Tournament_Model/tournament_team_model.dart';
-import '../../../shared_preferences/userPreferences.dart';
+import '../../../services/user_search_service.dart';
 
 class RegisterTeamController extends GetxController {
   final String tournamentId;
@@ -52,16 +52,6 @@ class RegisterTeamController extends GetxController {
     super.onInit();
     _initTournamentData();
     _initRazorpay();
-
-    if (teamSize == 1) {
-      // For singles, we add the current user and go straight to payment step.
-      _addCurrentUser().then((_) {
-        // Set a default team name since UI for it is skipped
-        final player = selectedPlayers.first;
-        teamNameController.text = player.name;
-        currentStep.value = 3;
-      });
-    }
   }
 
   Future<void> addCurrentUserAction() async {
@@ -76,11 +66,24 @@ class RegisterTeamController extends GetxController {
     super.onClose();
   }
 
-  void _initTournamentData() {
-    sport = tournamentData['sport'] ?? 'Football';
-    teamSize = tournamentData['format']?['teamSize'] ?? 11;
+  Future<void> _initTournamentData() async {
+    _parseDataMap(tournamentData);
 
-    final entryFee = tournamentData['entryFee'] ?? {};
+    try {
+      final doc = await FirebaseFirestore.instance.collection('tournaments').doc(tournamentId).get();
+      if (doc.exists && doc.data() != null) {
+        _parseDataMap(doc.data()!);
+      }
+    } catch (e) {
+      print("Error fetching fresh tournament data: $e");
+    }
+  }
+
+  void _parseDataMap(Map<String, dynamic> data) {
+    sport = data['sport'] ?? 'Football';
+    teamSize = data['format']?['teamSize'] ?? 11;
+
+    final entryFee = data['entryFee'] ?? {};
     isFree = entryFee['isFree'] ?? true;
     entryFeeAmount = entryFee['amount'] ?? 0;
 
@@ -106,21 +109,30 @@ class RegisterTeamController extends GetxController {
 
   Future<void> _addCurrentUser() async {
     try {
+      if (selectedPlayers.any((p) => p.userId == currentUserId)) return;
+      if (selectedPlayers.length >= teamSize) {
+        Get.snackbar("Team Full", "You have reached the maximum team size of $teamSize.", snackPosition: SnackPosition.BOTTOM);
+        return;
+      }
+
       final userDoc = await FirebaseFirestore.instance.collection('User').doc(currentUserId).get();
       if (userDoc.exists) {
         final data = userDoc.data()!;
-        // C3 Fix: Add actual name + "(me)" instead of bare 'Me'
-        final name = "${data['name'] ?? data['username'] ?? 'User'} (me)";
-        final photo = data['profile_picture'] ?? '';
+        final rawName = data['fullName'] ?? data['primaryEmail'] ?? 'User';
+        final photo = data['profileImageUrl'] ?? '';
 
         selectedPlayers.add(
           TournamentPlayerModel(
             userId: currentUserId,
-            name: name,
+            name: rawName,
             profileImageUrl: photo,
-            sportRole: 'Captain',
+            sportRole: availableRoles.keys.first,
           )
         );
+
+        if (teamNameController.text.trim().isEmpty) {
+          teamNameController.text = rawName;
+        }
       }
     } catch (e) {
       print("Error fetching current user: $e");
@@ -143,55 +155,20 @@ class RegisterTeamController extends GetxController {
   }
 
   Future<void> searchPlayers(String query) async {
-    if (query.isEmpty) {
+    if (query.trim().isEmpty) {
       searchResults.clear();
       return;
     }
 
     isSearching.value = true;
     try {
-      // Simplified search logic. In reality, you'd probably use a better search index.
-      final queryLower = query.toLowerCase();
+      final results = await UserSearchService.searchUsers(
+        query,
+        currentUserId: currentUserId,
+      );
 
-      final QuerySnapshot usersSnapshot = await FirebaseFirestore.instance
-          .collection('User')
-          .limit(20)
-          .get();
-
-      final List<Map<String, dynamic>> results = [];
-
-      for (var doc in usersSnapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
-        final id = doc.id;
-
-        // Skip already added players
-        if (selectedPlayers.any((p) => p.userId == id)) continue;
-
-        final name = (data['name'] ?? '').toString().toLowerCase();
-        final username = (data['username'] ?? '').toString().toLowerCase();
-
-        if (name.contains(queryLower) || username.contains(queryLower)) {
-          // Check if friend (assuming a friends subcollection or array exists)
-          // For now, mock the friend check if not available.
-          bool isFriend = false;
-          if (data['friends'] != null && data['friends'] is List) {
-             isFriend = (data['friends'] as List).contains(currentUserId);
-          }
-
-          results.add({
-            'userId': id,
-            'name': data['name'] ?? data['username'],
-            'profileImageUrl': data['profile_picture'] ?? '',
-            'isFriend': isFriend,
-            'favoriteSports': data['favorite_sports'] ?? [],
-          });
-        }
-      }
-
-      // Sort friends first
-      results.sort((a, b) => (b['isFriend'] ? 1 : 0).compareTo(a['isFriend'] ? 1 : 0));
-
-      searchResults.assignAll(results);
+      final filtered = results.where((p) => !selectedPlayers.any((sp) => sp.userId == p['userId'])).toList();
+      searchResults.assignAll(filtered);
     } catch (e) {
       print("Search error: $e");
     } finally {
@@ -205,25 +182,26 @@ class RegisterTeamController extends GetxController {
       return;
     }
 
+    final rawName = playerData['rawName'] ?? playerData['name'] ?? 'Player';
+
     selectedPlayers.add(
       TournamentPlayerModel(
         userId: playerData['userId'],
-        name: playerData['name'],
+        name: rawName,
         profileImageUrl: playerData['profileImageUrl'],
-        sportRole: availableRoles.keys.first, // default role
+        sportRole: availableRoles.keys.first,
       )
     );
+
+    if (teamNameController.text.trim().isEmpty) {
+      teamNameController.text = rawName;
+    }
 
     // Remove from search results
     searchResults.removeWhere((p) => p['userId'] == playerData['userId']);
   }
 
   void removePlayer(String userId) {
-    // Don't allow removing oneself if possible, or warn
-    if (userId == currentUserId) {
-      Get.snackbar("Action Denied", "You cannot remove yourself from the team.", snackPosition: SnackPosition.BOTTOM);
-      return;
-    }
     selectedPlayers.removeWhere((p) => p.userId == userId);
   }
 
@@ -242,16 +220,16 @@ class RegisterTeamController extends GetxController {
 
   void nextStep() {
     if (currentStep.value == 1) {
-      // Step 1 is now Players & Roles
+      // Step 1 is Players & Roles
       if (selectedPlayers.isEmpty) {
         Get.snackbar("Validation Error", "Please add at least one player.", snackPosition: SnackPosition.BOTTOM);
         return;
       }
       currentStep.value = 2;
     } else if (currentStep.value == 2) {
-      // Step 2 is now Team Basics
+      // Step 2 is Team Basics
       if (teamNameController.text.trim().isEmpty) {
-        Get.snackbar("Validation Error", "Please enter a team name.", snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar("Validation Error", "Please enter a team/player name.", snackPosition: SnackPosition.BOTTOM);
         return;
       }
       currentStep.value = 3;
@@ -260,12 +238,7 @@ class RegisterTeamController extends GetxController {
 
   void previousStep() {
     if (currentStep.value > 1) {
-      if (teamSize == 1 && currentStep.value == 3) {
-        // For singles, going back from payment means exiting completely
-        Get.back();
-      } else {
-        currentStep.value--;
-      }
+      currentStep.value--;
     }
   }
 

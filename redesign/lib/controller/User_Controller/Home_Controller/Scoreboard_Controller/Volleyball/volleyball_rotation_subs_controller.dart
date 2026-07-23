@@ -4,7 +4,6 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_player_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/court_player_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/rotation_model.dart';
-import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/substitution_model.dart';
 
 class VolleyballRotationSubsController extends GetxController {
   // Reactive Court State (1 -> P1, 2 -> P2, ..., 6 -> P6)

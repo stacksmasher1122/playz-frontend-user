@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
+import 'package:redesign/theme/app_colors.dart';
 
 import '../../../model/User_Models/Tournament_Model/bracket_model.dart';
 import '../../../model/User_Models/Tournament_Model/tournament_team_model.dart';
@@ -21,8 +22,11 @@ class BracketController extends GetxController {
 
   final RxBool isLoading = true.obs;
   final RxBool canShuffle = false.obs;
+  final RxString tournamentStatus = 'upcoming'.obs;
 
   late String matchType; // knockout, roundRobinSingle, roundRobinDouble, groupToKnockout
+
+  bool get isTournamentStarted => tournamentStatus.value == 'in_progress' || tournamentStatus.value == 'completed';
 
   @override
   void onInit() {
@@ -32,10 +36,22 @@ class BracketController extends GetxController {
 
   Future<void> _loadTournamentConfig() async {
     try {
+      // Listen to tournament status live
+      FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId)
+          .snapshots()
+          .listen((snap) {
+        if (snap.exists) {
+          tournamentStatus.value = snap.data()?['status'] ?? 'upcoming';
+        }
+      });
+
       final doc = await FirebaseFirestore.instance.collection('tournaments').doc(tournamentId).get();
       if (doc.exists) {
         final data = doc.data()!;
         matchType = data['format']?['matchType'] ?? 'knockout';
+        tournamentStatus.value = data['status'] ?? 'upcoming';
 
         // Listen to teams
         FirebaseFirestore.instance
@@ -77,6 +93,68 @@ class BracketController extends GetxController {
     }
   }
 
+  Future<void> startTournament(BuildContext context) async {
+    final confirm = await Get.dialog<bool>(
+      AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(Icons.play_circle_fill, color: AppColors.accent, size: 28),
+            const SizedBox(width: 10),
+            Text("Start Tournament?", style: TextStyle(color: AppColors.onPrimary, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Text(
+          "Are you sure you want to start the tournament?\n\nOnce started, assigned referees and organizers will be able to start and score matches in the bracket.",
+          style: TextStyle(color: AppColors.muted, fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text("Cancel", style: TextStyle(color: AppColors.muted)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accent,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () => Get.back(result: true),
+            child: Text("Start Tournament", style: TextStyle(color: AppColors.background, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('tournaments')
+            .doc(tournamentId)
+            .update({
+          'status': 'in_progress',
+          'startedAt': FieldValue.serverTimestamp(),
+        });
+        tournamentStatus.value = 'in_progress';
+        Get.snackbar(
+          "Tournament Started",
+          "Matches can now be started and scored.",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } catch (e) {
+        Get.snackbar(
+          "Error",
+          "Failed to start tournament: $e",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+  }
+
   void _checkCanShuffle() {
     if (!isOrganizer) {
       canShuffle.value = false;
@@ -87,9 +165,16 @@ class BracketController extends GetxController {
     canShuffle.value = !hasStarted && teams.length > 1;
   }
 
-  Future<void> generateBracketDraft({bool forceShuffle = false, bool forceGenerate = false}) async {
-    // Only auto-generate if we haven't started yet
-    if (matches.any((m) => m.status == 'completed' || m.status == 'scheduled') && !forceShuffle && !forceGenerate) {
+  Future<void> generateBracketDraft({bool forceShuffle = false, bool forceGenerate = false, bool setInProgress = false}) async {
+    // Fetch existing matches directly from Firestore
+    final oldMatches = await FirebaseFirestore.instance
+        .collection('tournaments')
+        .doc(tournamentId)
+        .collection('bracket')
+        .get();
+
+    // Only auto-generate if bracket does not exist in Firestore yet
+    if (oldMatches.docs.isNotEmpty && !forceShuffle && !forceGenerate) {
       return;
     }
 
@@ -119,12 +204,6 @@ class BracketController extends GetxController {
     final batch = FirebaseFirestore.instance.batch();
 
     // Clear old draft
-    final oldMatches = await FirebaseFirestore.instance
-        .collection('tournaments')
-        .doc(tournamentId)
-        .collection('bracket')
-        .get();
-
     for (var doc in oldMatches.docs) {
       batch.delete(doc.reference);
     }
@@ -137,6 +216,11 @@ class BracketController extends GetxController {
           .collection('bracket')
           .doc(m.id);
       batch.set(docRef, m.toMap());
+    }
+
+    if (setInProgress) {
+      final tourneyRef = FirebaseFirestore.instance.collection('tournaments').doc(tournamentId);
+      batch.update(tourneyRef, {'status': 'in_progress'});
     }
 
     await batch.commit();
@@ -181,6 +265,7 @@ class BracketController extends GetxController {
       for (int i = 0; i < currentRoundMatches.length; i++) {
         int nextMatchIndex = i ~/ 2;
         String nextSlot = (i % 2 == 0) ? 'A' : 'B';
+        assert(nextSlot == 'A' || nextSlot == 'B', "nextMatchSlot must be 'A' or 'B'");
 
         // Recreate the match with nextMatchId and nextMatchSlot
         currentRoundMatches[i] = BracketMatchModel(

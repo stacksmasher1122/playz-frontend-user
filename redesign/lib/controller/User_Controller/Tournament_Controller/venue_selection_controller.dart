@@ -4,7 +4,6 @@ import '../../../model/User_Models/Tournament_Model/venue_model.dart';
 import '../../../view/USER/Tournament/format_setup/format_setup_page.dart';
 import '../../../view/USER/Maps/maps_picker/maps_picker_screen.dart';
 import '../../../model/maps_model.dart';
-import '../../../controller/maps_controller.dart';
 
 class VenueSelectionController extends GetxController {
   final RxList<VenueModel> venues = <VenueModel>[].obs;

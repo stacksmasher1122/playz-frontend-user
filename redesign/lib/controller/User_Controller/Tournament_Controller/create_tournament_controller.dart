@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:get/get.dart';
 import '../../../view/USER/Tournament/venue_selection/venue_selection_page.dart';
-import '../../../model/User_Models/Tournament_Model/create_tournament_model.dart';
 
 class CreateTournamentController extends GetxController {
   final RxBool isLoading = true.obs;

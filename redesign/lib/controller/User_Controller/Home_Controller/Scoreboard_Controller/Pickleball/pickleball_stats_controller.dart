@@ -27,25 +27,25 @@ class PickleballStatsController extends GetxController {
   }
 
   void loadMatchStatistics() {
-    momentumData.value = [
+    momentumData.assignAll([
       0.5, 0.8, -0.3, -0.6, 0.4, 0.9, 0.2, -0.5, -0.8, -0.2, 
       0.6, 1.0, 0.3, -0.4, -0.7, 0.5, 0.8, 0.1, -0.3, 0.7
-    ];
+    ]);
 
-    timelineData.value = [
+    timelineData.assignAll([
       {"type": "Game Point", "desc": "Alpha scored 5 unanswered points after trailing 3-6", "game": "Game 1 Flashpoint"},
       {"type": "Turning Point", "desc": "Longest rally (24 hits) won by Omega, swinging energy.", "game": "Game 2 Turning Point"},
       {"type": "Closure", "desc": "Dominant service run by Smith closed the match.", "game": "Game 3 Closure"},
-    ];
+    ]);
 
     statsModel = PickleballStatisticsModel(
       matchId: "PB-99021",
       winner: "TEAM ALPHA",
       loser: "TEAM OMEGA",
       games: [
-        {"name": "G1", "scoreA": 11, "scoreB": 8},
-        {"name": "G2", "scoreA": 9, "scoreB": 11},
-        {"name": "G3", "scoreA": 11, "scoreB": 4},
+        {"game": "Game 1", "score": "11-8", "duration": "14 min", "winner": "A"},
+        {"game": "Game 2", "score": "9-11", "duration": "16 min", "winner": "B"},
+        {"game": "Game 3", "score": "11-6", "duration": "12 min", "winner": "A"},
       ],
       statistics: {
         "Total Points": {"A": 82, "B": 70, "Total": 152},
@@ -56,14 +56,14 @@ class PickleballStatsController extends GetxController {
         "Third Shot Drops": {"A": 0.71, "B": 0.58, "Avg": "64%"},
         "Volley %": {"A": 0.64, "B": 0.55, "Avg": "59%"},
       },
-      momentum: momentumData.value,
+      momentum: momentumData.toList(),
       errors: {
         "Unforced Errors": {"A": 14, "B": 19},
         "Forced Errors": {"A": 8, "B": 11},
         "Service Errors": {"A": 2, "B": 5},
         "Winners": {"A": 24, "B": 18},
       },
-      timeline: timelineData.value,
+      timeline: timelineData.toList(),
       heatMapData: [],
       coachInsights: [
         "Improve cross-court returns.",

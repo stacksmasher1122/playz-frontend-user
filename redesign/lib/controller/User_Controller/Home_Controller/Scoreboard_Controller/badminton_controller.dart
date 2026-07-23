@@ -41,6 +41,7 @@ class BadmintonController extends GetxController {
   var currentMatch = Rxn<BadmintonMatchModel>();
   var tournamentId = ''.obs;
   var bracketMatchId = ''.obs;
+  var isReadOnly = false.obs;
 
   // Real-time engine
   late BadmintonMatchEngine engine;
@@ -221,6 +222,7 @@ class BadmintonController extends GetxController {
   }) async {
     try {
       isLoading.value = true;
+      isReadOnly.value = false;
       final user = FirebaseAuth.instance.currentUser;
       final matchId = const Uuid().v4();
 
@@ -280,22 +282,23 @@ class BadmintonController extends GetxController {
       // Save Local
       await BadmintonSqflite.instance.createMatch(newMatch);
 
-      // Save Remote
-      await FirebaseFirestore.instance
-          .collection('matches')
-          .doc(matchId)
-          .set(newMatch.toJson());
+      // Save Remote (atomic WriteBatch)
+      final batch = FirebaseFirestore.instance.batch();
 
-      // Update Bracket status
-      await FirebaseFirestore.instance
+      final matchDocRef = FirebaseFirestore.instance.collection('matches').doc(matchId);
+      batch.set(matchDocRef, newMatch.toJson());
+
+      final bracketDocRef = FirebaseFirestore.instance
           .collection('tournaments')
           .doc(tId)
           .collection('bracket')
-          .doc(bMatchId)
-          .update({
+          .doc(bMatchId);
+      batch.update(bracketDocRef, {
         'status': 'in_progress',
         'liveMatchId': matchId,
       });
+
+      await batch.commit();
 
       // Start locally
       currentMatchId.value = matchId;
@@ -315,9 +318,11 @@ class BadmintonController extends GetxController {
     required String tId,
     required String bMatchId,
     required String matchId,
+    bool readOnly = false,
   }) async {
     try {
       isLoading.value = true;
+      isReadOnly.value = readOnly;
       final doc = await FirebaseFirestore.instance.collection('matches').doc(matchId).get();
       if (!doc.exists || doc.data() == null) {
         Get.snackbar("Error", "Match data not found.");
@@ -347,6 +352,19 @@ class BadmintonController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> viewTournamentMatch({
+    required String tId,
+    required String bMatchId,
+    required String matchId,
+  }) async {
+    await resumeTournamentMatch(
+      tId: tId,
+      bMatchId: bMatchId,
+      matchId: matchId,
+      readOnly: true,
+    );
   }
 
   // ════════════════════ ENGINE SYNC ════════════════════
@@ -577,7 +595,6 @@ class BadmintonController extends GetxController {
       final teamBId = bracketData['teamBId'];
 
       final winningTeamId = state.matchWinner == PlayerSide.sideA ? teamAId : teamBId;
-      final losingTeamId = state.matchWinner == PlayerSide.sideA ? teamBId : teamAId;
       final nextMatchId = bracketData['nextMatchId'];
       final nextMatchSlot = bracketData['nextMatchSlot'];
 
@@ -591,7 +608,7 @@ class BadmintonController extends GetxController {
       if (nextMatchId != null && nextMatchSlot != null) {
         if (nextMatchSlot != 'A' && nextMatchSlot != 'B') {
           // A2 Fix: nextMatchSlot validation
-          print("ERROR: nextMatchSlot is invalid: $nextMatchSlot. Expected 'A' or 'B'.");
+          debugPrint("ERROR: nextMatchSlot is invalid: $nextMatchSlot. Expected 'A' or 'B'.");
           Get.snackbar("Error", "Invalid next match slot configuration: $nextMatchSlot");
         } else {
           final nextMatchRef = FirebaseFirestore.instance
@@ -672,8 +689,14 @@ class BadmintonController extends GetxController {
 
       await batch.commit();
 
-      // Go back to Matchmaking Screen
-      Get.back();
+      // Navigate back to Bracket & Matchmaking screen
+      // Pop all intermediate screens (rules, confirmation, scoreboard)
+      Get.until((route) {
+        final routeName = route.settings.name ?? '';
+        return routeName.contains('BracketMatchmaking') ||
+               routeName.contains('TournamentDetail') ||
+               route.isFirst;
+      });
 
     } catch (e) {
       Get.snackbar('Error', 'Failed to save tournament result: $e');

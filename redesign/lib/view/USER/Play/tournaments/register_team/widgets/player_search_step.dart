@@ -67,8 +67,9 @@ class PlayerSearchStep extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          isMe ? "${player.name} (You)" : player.name,
-                          style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary)
+                          isMe ? "${player.name} (you)" : player.name,
+                          style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: ResponsiveHelper.h(4)),
                         // Role Dropdown
@@ -102,11 +103,10 @@ class PlayerSearchStep extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (!isMe)
-                    IconButton(
-                      icon: Icon(Icons.remove_circle_outline, color: AppColors.error),
-                      onPressed: () => controller.removePlayer(player.userId),
-                    ),
+                  IconButton(
+                    icon: Icon(Icons.remove_circle_outline, color: AppColors.error),
+                    onPressed: () => controller.removePlayer(player.userId),
+                  ),
                 ],
               ),
             );
@@ -177,7 +177,13 @@ class PlayerSearchStep extends StatelessWidget {
                 ),
                 title: Row(
                   children: [
-                    Text(result['name'], style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary)),
+                    Flexible(
+                      child: Text(
+                        result['name'],
+                        style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                     if (result['isFriend'] == true) ...[
                       SizedBox(width: ResponsiveHelper.w(6)),
                       Icon(Icons.handshake, color: AppColors.accent, size: ResponsiveHelper.w(16)),

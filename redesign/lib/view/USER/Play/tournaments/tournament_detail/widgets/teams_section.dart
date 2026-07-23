@@ -50,51 +50,60 @@ class TeamsSection extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: ResponsiveHelper.w(8),
+                runSpacing: ResponsiveHelper.h(8),
                 children: [
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text("Registered Teams", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
                       SizedBox(width: ResponsiveHelper.w(8)),
-                      // C2 Fix: Show ratio
                       if (maxTeams > 0)
                         Text("($teamCount/$maxTeams)", style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
                     ],
                   ),
-                  // B1 Fix: Organizer can register up to the cap
-                  if (isOpen && (!userHasRegisteredTeam || isOrganizer) && !isFull)
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accent,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
-                        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
-                      ),
-                      onPressed: () {
-                        Get.to(() => RegisterTeamScreen(
-                          tournamentId: tournamentId,
-                          tournamentData: data,
-                          currentUserId: currentUserId,
-                        ));
-                      },
-                      child: Text(
-                        "Register Team",
-                        style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  if (isOrganizer && isOpen && teamCount >= 2)
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accent,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
-                        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
-                      ),
-                      onPressed: () => _startTournament(context, teamCount, isFull),
-                      child: Text(
-                        "Start Tournament",
-                        style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isOpen && (!userHasRegisteredTeam || isOrganizer) && !isFull)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.accent,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
+                            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
+                          ),
+                          onPressed: () {
+                            Get.to(() => RegisterTeamScreen(
+                              tournamentId: tournamentId,
+                              tournamentData: data,
+                              currentUserId: currentUserId,
+                            ));
+                          },
+                          child: Text(
+                            "Register Team",
+                            style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      if (isOpen && (!userHasRegisteredTeam || isOrganizer) && !isFull && isOrganizer && teamCount >= 2)
+                        SizedBox(width: ResponsiveHelper.w(8)),
+                      if (isOrganizer && isOpen && teamCount >= 2)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orangeAccent,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
+                            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
+                          ),
+                          onPressed: () => _startTournament(context, teamCount, isFull),
+                          child: Text(
+                            "Start Tournament",
+                            style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                    ],
+                  ),
                 ],
               ),
               if (maxTeams > 0)
@@ -242,17 +251,13 @@ class TeamsSection extends StatelessWidget {
 
   void _triggerStartTournament() async {
     try {
-      // If we start the tournament, we need to finalize the bracket draft if not already saved
       if (Get.isRegistered<BracketController>(tag: tournamentId)) {
         final bracketController = Get.find<BracketController>(tag: tournamentId);
-        // Ensure bracket is built and saved just to be safe
-        await bracketController.generateBracketDraft(forceGenerate: true);
+        await bracketController.generateBracketDraft(forceGenerate: true, setInProgress: true);
+      } else {
+        final tempController = Get.put(BracketController(tournamentId: tournamentId, isOrganizer: true), tag: tournamentId);
+        await tempController.generateBracketDraft(forceGenerate: true, setInProgress: true);
       }
-
-      await FirebaseFirestore.instance
-          .collection('tournaments')
-          .doc(tournamentId)
-          .update({'status': 'in_progress'});
 
       // Navigate to matchmaking screen
       Get.to(() => BracketMatchmakingScreen(tournamentId: tournamentId, isOrganizer: true));

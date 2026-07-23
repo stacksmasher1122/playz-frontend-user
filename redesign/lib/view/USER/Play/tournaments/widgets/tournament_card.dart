@@ -32,7 +32,11 @@ class TournamentCard extends StatelessWidget {
     final bool isFree = entryFee?['isFree'] ?? true;
     final num? amount = entryFee?['amount'];
     final int teamCount = data['teamCount'] ?? 0;
-    final int maxTeams = data['format']?['teamSize'] ?? 0;
+    final int maxTeams = (data['format']?['maxTeams'] as num?)?.toInt() ??
+        (data['format']?['participantCount'] as num?)?.toInt() ??
+        (data['format']?['totalTeams'] as num?)?.toInt() ??
+        0;
+    final String status = (data['status'] ?? '').toString();
 
     String dateStr = "TBD";
     if (start != null && end != null) {
@@ -41,6 +45,9 @@ class TournamentCard extends StatelessWidget {
     }
 
     String feeStr = isFree ? "Free Entry" : "₹$amount";
+
+    final bool isCompleted = status == 'completed';
+    final bool isInProgress = status == 'in_progress';
 
     return GestureDetector(
       onTap: () {
@@ -55,12 +62,17 @@ class TournamentCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.card,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          border: Border.all(color: AppColors.card),
+          border: Border.all(
+            color: isCompleted
+                ? AppColors.accent.withValues(alpha: 0.6)
+                : (isInProgress ? Colors.orange.withValues(alpha: 0.6) : AppColors.card),
+            width: isCompleted || isInProgress ? 1.5 : 1.0,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Header: Sport Icon, Dates, Fee Badge
+            // Top Header: Sport Icon, Dates, Status & Fee Badges
             Padding(
               padding: EdgeInsets.all(ResponsiveHelper.w(16)),
               child: Row(
@@ -82,6 +94,56 @@ class TournamentCard extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if (isCompleted)
+                    Container(
+                      margin: EdgeInsets.only(right: ResponsiveHelper.w(8)),
+                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+                      decoration: BoxDecoration(
+                        color: AppColors.accent.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                        border: Border.all(color: AppColors.accent.withValues(alpha: 0.6)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check_circle, color: AppColors.accent, size: 12),
+                          SizedBox(width: 4),
+                          Text(
+                            "COMPLETED",
+                            style: AppTypography.labelCaps.copyWith(
+                              color: AppColors.accent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else if (isInProgress)
+                    Container(
+                      margin: EdgeInsets.only(right: ResponsiveHelper.w(8)),
+                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                        border: Border.all(color: Colors.orange.withValues(alpha: 0.6)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.play_circle_fill, color: Colors.orange, size: 12),
+                          SizedBox(width: 4),
+                          Text(
+                            "LIVE",
+                            style: AppTypography.labelCaps.copyWith(
+                              color: Colors.orange,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
                     decoration: BoxDecoration(

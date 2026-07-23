@@ -80,6 +80,7 @@ class ReviewPublishController extends GetxController {
   }
 
   Future<void> publishTournament(BuildContext context) async {
+    if (isPublishing.value) return;
     isPublishing.value = true;
     try {
       final docId = await UserPreferences.getDocId();
@@ -128,6 +129,8 @@ class ReviewPublishController extends GetxController {
         'format': {
           'teamMode': _formatCtrl.teamMode.value,
           'teamSize': _formatCtrl.teamSize.value,
+          'maxTeams': _formatCtrl.maxTeams.value,
+          'participantCount': _formatCtrl.participantCount.value,
           'matchType': _formatCtrl.matchType.value,
           'sportRules': _formatCtrl.sportRules,
           if (_formatCtrl.matchType.value == 'groupToKnockout')

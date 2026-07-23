@@ -22,12 +22,10 @@ class WinnersSection extends StatefulWidget {
 }
 
 class _WinnersSectionState extends State<WinnersSection> {
-  // Extract custom tiers
   List<dynamic> get prizeTiers => widget.data['prizePool']?['tiers'] ?? [];
-  List<dynamic> get customTiers => prizeTiers.where((t) => t['type'] == 'custom').toList();
+  List<dynamic> get customTiers => prizeTiers.where((t) => (t['type'] ?? '') == 'custom').toList();
 
   Future<void> _assignCustomTierWinner(String tierTitle) async {
-    // 1. Fetch all teams to get all players
     final teamsSnapshot = await FirebaseFirestore.instance
         .collection('tournaments')
         .doc(widget.tournamentId)
@@ -41,10 +39,10 @@ class _WinnersSectionState extends State<WinnersSection> {
       for (var p in players) {
         allPlayers.add({
           'teamId': doc.id,
-          'teamName': teamData['name'],
-          'userId': p['userId'],
-          'name': p['name'],
-          'profileImageUrl': p['profileImageUrl'],
+          'teamName': teamData['name'] ?? 'Team',
+          'userId': p['userId'] ?? '',
+          'name': p['name'] ?? 'Player',
+          'profileImageUrl': p['profileImageUrl'] ?? '',
         });
       }
     }
@@ -54,11 +52,10 @@ class _WinnersSectionState extends State<WinnersSection> {
       return;
     }
 
-    // 2. Show picker dialog
     Map<String, dynamic>? selectedPlayer = await Get.dialog<Map<String, dynamic>>(
       AlertDialog(
         backgroundColor: AppColors.surface,
-        title: Text("Select $tierTitle", style: TextStyle(color: Colors.white)),
+        title: Text("Select Winner for $tierTitle", style: const TextStyle(color: Colors.white)),
         content: SizedBox(
           width: double.maxFinite,
           height: 300,
@@ -67,7 +64,7 @@ class _WinnersSectionState extends State<WinnersSection> {
             itemBuilder: (context, index) {
               final player = allPlayers[index];
               return ListTile(
-                title: Text(player['name'], style: TextStyle(color: Colors.white)),
+                title: Text(player['name'], style: const TextStyle(color: Colors.white)),
                 subtitle: Text(player['teamName'], style: TextStyle(color: AppColors.muted)),
                 onTap: () => Get.back(result: player),
               );
@@ -78,12 +75,18 @@ class _WinnersSectionState extends State<WinnersSection> {
     );
 
     if (selectedPlayer != null) {
-      // 3. Save to tournament document
-      final List currentWinners = widget.data['customTierWinners'] ?? [];
+      final tourneyDoc = await FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(widget.tournamentId)
+          .get();
+      final List currentWinners = tourneyDoc.data()?['customTierWinners'] ?? [];
+      
+      currentWinners.removeWhere((w) => w is Map && w['tierTitle'] == tierTitle);
       currentWinners.add({
         'tierTitle': tierTitle,
         'playerId': selectedPlayer['userId'],
         'playerName': selectedPlayer['name'],
+        'teamName': selectedPlayer['teamName'],
       });
 
       await FirebaseFirestore.instance
@@ -91,115 +94,57 @@ class _WinnersSectionState extends State<WinnersSection> {
           .doc(widget.tournamentId)
           .update({'customTierWinners': currentWinners});
 
-      // Note: In a real app we'd refresh the state of the parent or listen via stream.
-      // Since this is a simple widget, a stream is best or just a snackbar for now.
-      Get.snackbar("Success", "Winner assigned to $tierTitle");
+      Get.snackbar("Success", "Winner assigned to $tierTitle", backgroundColor: Colors.green, colorText: Colors.white);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isCompleted = widget.data['status'] == 'completed';
-    if (!isCompleted) return SizedBox.shrink();
-
-    // A12 Fix: Wrapper for live stream update
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || !snapshot.data!.exists) return SizedBox.shrink();
+        if (!snapshot.hasData || !snapshot.data!.exists) return const SizedBox.shrink();
 
-        final tournamentData = snapshot.data!.data() as Map<String, dynamic>;
-        List<dynamic> customWinners = tournamentData['customTierWinners'] ?? [];
+        final tournamentData = snapshot.data!.data() as Map<String, dynamic>? ?? {};
+        final status = (tournamentData['status'] ?? widget.data['status'] ?? '').toString();
+
+        // Show section if tournament is in_progress or completed
+        if (status != 'completed' && status != 'in_progress') {
+          return const SizedBox.shrink();
+        }
+
+        final List<dynamic> customWinners = tournamentData['customTierWinners'] as List<dynamic>? ?? [];
+        final isCompleted = status == 'completed';
 
         return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.accent.withValues(alpha: 0.5)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.workspace_premium, color: AppColors.accent),
-              SizedBox(width: 8),
-              Text("Tournament Winners", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
-            ],
+          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+            border: Border.all(color: AppColors.accent.withValues(alpha: 0.5)),
           ),
-          SizedBox(height: ResponsiveHelper.h(16)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.workspace_premium, color: AppColors.accent),
+                  const SizedBox(width: 8),
+                  Text(
+                    isCompleted ? "Tournament Winners" : "Live Standings & Leader",
+                    style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
+                  ),
+                ],
+              ),
+              SizedBox(height: ResponsiveHelper.h(16)),
 
-          if (customTiers.isNotEmpty)
-            ...customTiers.map((tier) {
-              String title = tier['title'];
-              var winnerEntry = customWinners.firstWhere((w) => w['tierTitle'] == title, orElse: () => null);
-
-              return Padding(
-                padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(title, style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
-                    if (winnerEntry != null)
-                      Text(winnerEntry['playerName'], style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold))
-                    else if (widget.isOrganizer)
-                      TextButton(
-                        onPressed: () => _assignCustomTierWinner(title),
-                        child: Text("Assign", style: TextStyle(color: AppColors.accent)),
-                      )
-                    else
-                      Text("TBD", style: AppTypography.bodyMd.copyWith(color: AppColors.muted))
-                  ],
-                ),
-              );
-            }),
-
-          // A12 Fix: Render rank-type tiers
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).collection('leaderboard').snapshots(),
-            builder: (context, lbSnapshot) {
-              if (!lbSnapshot.hasData || lbSnapshot.data!.docs.isEmpty) return SizedBox.shrink();
-
-              var entries = lbSnapshot.data!.docs.map((d) {
-                var data = d.data() as Map<String, dynamic>;
-                data['id'] = d.id;
-                return data;
-              }).toList();
-
-              entries.sort((a, b) {
-                int pointsA = a['points'] ?? 0;
-                int pointsB = b['points'] ?? 0;
-                if (pointsA != pointsB) return pointsB.compareTo(pointsA);
-
-                int gDiffA = (a['gamesWon'] ?? 0) - (a['gamesLost'] ?? 0);
-                int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
-                if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
-
-                int matchesPlayedA = a['matchesPlayed'] ?? 0;
-                int matchesPlayedB = b['matchesPlayed'] ?? 0;
-                return matchesPlayedB.compareTo(matchesPlayedA);
-              });
-
-              final rankTiers = prizeTiers.where((t) => t['type'] == 'rank').toList();
-              if (rankTiers.isEmpty) return SizedBox.shrink();
-
-              return Column(
-                children: rankTiers.map((tier) {
-                  int rank = tier['rank'] ?? 1;
-                  String title = tier['title'];
-
-                  // Rank 3 might be shared for knockout format,
-                  // but for simplicity in leaderboard sort, we take the Nth element.
-                  // Joint 3rd logic for knockout should actually be driven by bracket final match
-                  // but leaderboard is a safe fallback for round robin.
-
-                  String winnerName = "TBD";
-                  if (rank <= entries.length) {
-                    var entry = entries[rank - 1];
-                    winnerName = entry['id'] ?? "TBD"; // Might need actual team name lookup
-                    // For now displaying ID as placeholder, we should ideally fetch team name
-                  }
+              if (customTiers.isNotEmpty)
+                ...customTiers.map((tier) {
+                  final String title = (tier['title'] ?? tier['name'] ?? 'Award').toString();
+                  final winnerEntry = customWinners.firstWhere(
+                    (w) => w is Map && w['tierTitle'] == title,
+                    orElse: () => null,
+                  );
 
                   return Padding(
                     padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
@@ -207,26 +152,121 @@ class _WinnersSectionState extends State<WinnersSection> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(title, style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
-                        FutureBuilder<DocumentSnapshot>(
-                          future: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).collection('teams').doc(winnerName).get(),
-                          builder: (context, teamSnapshot) {
-                            String displayName = winnerName;
-                            if (teamSnapshot.hasData && teamSnapshot.data!.exists) {
-                                displayName = (teamSnapshot.data!.data() as Map<String, dynamic>)['teamName'] ?? winnerName;
-                            }
-                            return Text(displayName, style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold));
-                          }
-                        )
+                        if (winnerEntry != null && winnerEntry['playerName'] != null)
+                          Text(
+                            winnerEntry['playerName'].toString(),
+                            style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                          )
+                        else if (widget.isOrganizer)
+                          TextButton(
+                            onPressed: () => _assignCustomTierWinner(title),
+                            child: Text("Assign Winner", style: TextStyle(color: AppColors.accent)),
+                          )
+                        else
+                          Text("TBD", style: AppTypography.bodyMd.copyWith(color: AppColors.muted))
                       ],
                     ),
                   );
-                }).toList(),
-              );
-            }
+                }),
+
+              // Render Rank Tiers via Live Leaderboard
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).collection('leaderboard').snapshots(),
+                builder: (context, lbSnapshot) {
+                  if (lbSnapshot.hasError || !lbSnapshot.hasData || lbSnapshot.data!.docs.isEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: ResponsiveHelper.h(8)),
+                      child: Text("Matches in progress...", style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
+                    );
+                  }
+
+                  var entries = lbSnapshot.data!.docs.map((d) {
+                    var data = d.data() as Map<String, dynamic>? ?? {};
+                    data['id'] = d.id;
+                    return data;
+                  }).toList();
+
+                  entries.sort((a, b) {
+                    int pointsA = (a['points'] as num?)?.toInt() ?? 0;
+                    int pointsB = (b['points'] as num?)?.toInt() ?? 0;
+                    if (pointsA != pointsB) return pointsB.compareTo(pointsA);
+
+                    int gDiffA = ((a['gamesWon'] as num?)?.toInt() ?? 0) - ((a['gamesLost'] as num?)?.toInt() ?? 0);
+                    int gDiffB = ((b['gamesWon'] as num?)?.toInt() ?? 0) - ((b['gamesLost'] as num?)?.toInt() ?? 0);
+                    if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
+
+                    int matchesPlayedA = (a['matchesPlayed'] as num?)?.toInt() ?? 0;
+                    int matchesPlayedB = (b['matchesPlayed'] as num?)?.toInt() ?? 0;
+                    return matchesPlayedB.compareTo(matchesPlayedA);
+                  });
+
+                  final rankTiers = prizeTiers.where((t) => (t['type'] ?? '') == 'rank').toList();
+                  final displayTiers = rankTiers.isNotEmpty ? rankTiers : [
+                    {'rank': 1, 'title': isCompleted ? '1st Place Winner' : 'Current Leader'},
+                    if (entries.length > 1) {'rank': 2, 'title': '2nd Place'},
+                    if (entries.length > 2) {'rank': 3, 'title': '3rd Place'},
+                  ];
+
+                  return Column(
+                    children: displayTiers.map((tier) {
+                      int rank = 1;
+                      if (tier['rank'] is int) {
+                        rank = tier['rank'];
+                      } else if (tier['rank'] != null) {
+                        rank = int.tryParse(tier['rank'].toString()) ?? 1;
+                      }
+
+                      final String title = (tier['title'] ?? 'Rank $rank').toString();
+
+                      String winnerTeamId = "TBD";
+                      if (rank > 0 && rank <= entries.length) {
+                        var entry = entries[rank - 1];
+                        winnerTeamId = (entry['id'] ?? "TBD").toString();
+                      }
+
+                      if (winnerTeamId == "TBD") {
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(title, style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
+                              Text("TBD", style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
+                            ],
+                          ),
+                        );
+                      }
+
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(title, style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
+                            FutureBuilder<DocumentSnapshot>(
+                              future: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).collection('teams').doc(winnerTeamId).get(),
+                              builder: (context, teamSnapshot) {
+                                String displayName = winnerTeamId;
+                                if (teamSnapshot.hasData && teamSnapshot.data?.data() != null) {
+                                  final tData = teamSnapshot.data!.data() as Map<String, dynamic>;
+                                  displayName = (tData['name'] ?? tData['teamName'] ?? winnerTeamId).toString();
+                                }
+                                return Text(
+                                  displayName,
+                                  style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                                );
+                              }
+                            )
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
       }
     );
   }

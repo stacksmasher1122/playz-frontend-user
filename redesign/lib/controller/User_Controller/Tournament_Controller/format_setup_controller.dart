@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../view/USER/Tournament/create_tournament_prize_pool/create_tournament_prize_pool_page.dart';
 import 'create_tournament_controller.dart';
-import '../../../model/User_Models/Tournament_Model/create_tournament_model.dart';
 
 class FormatSetupController extends GetxController {
   final CreateTournamentController _createCtrl = Get.find<CreateTournamentController>();
@@ -83,8 +82,21 @@ class FormatSetupController extends GetxController {
 
   void setTeamMode(String mode) {
     teamMode.value = mode;
-    if (mode == "singles") teamSize.value = 1;
-    if (mode == "doubles") teamSize.value = 2;
+    if (mode == "singles") {
+      teamSize.value = 1;
+    } else if (mode == "doubles") {
+      teamSize.value = 2;
+    }
+  }
+
+  void updateTeamSize(int size) {
+    if (teamMode.value == "singles") {
+      teamSize.value = 1;
+    } else if (teamMode.value == "doubles") {
+      teamSize.value = 2;
+    } else {
+      teamSize.value = size > 0 ? size : 1;
+    }
   }
 
   void incrementParticipants() {
@@ -116,8 +128,7 @@ class FormatSetupController extends GetxController {
   }
 
   void saveFormatModel() {
-    // Save these rules inside CreateTournamentModel or something accessible globally for later steps
-    // For now, we assume _createCtrl holds the final model eventually, but we just hold state here.
+    // Format configuration state is held reactively by FormatSetupController and read during publication.
   }
 
   void goBack(BuildContext context) {
