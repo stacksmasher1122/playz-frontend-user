@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,7 +45,22 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
   String _getTeamName(String? id) {
     if (id == null) return "BYE";
     final team = controller.teams.firstWhereOrNull((t) => t.id == id);
-    return team?.name ?? "TBD";
+
+    // C3 Fix: Display real name appropriately if "(me)" is needed for the current user
+    // However, BracketMatchmaking displays team names. We should append "(me)" if the current user is part of the team.
+    String name = team?.name ?? "TBD";
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (team != null && currentUser != null) {
+      if (team.registeredBy == currentUser.uid) {
+         return "$name (me)";
+      }
+      for (var player in team.players) {
+        if (player.userId == currentUser.uid) {
+          return "$name (me)";
+        }
+      }
+    }
+    return name;
   }
 
   Future<void> _handleMatchTap(BracketMatchModel match) async {
@@ -82,12 +98,17 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
         matchId: freshMatch.liveMatchId!
       );
     } else if (freshMatch.status == 'unscheduled' || freshMatch.status == 'scheduled') {
-      Get.to(() => MatchTeamConfirmationScreen(
-        tournamentId: widget.tournamentId,
-        matchId: freshMatch.id,
-        teamAId: freshMatch.teamAId!,
-        teamBId: freshMatch.teamBId!,
-      ));
+      final currentUser = FirebaseAuth.instance.currentUser?.uid;
+      final isReferee = freshMatch.referee != null && freshMatch.referee!['userId'] == currentUser && freshMatch.referee!['status'] == 'accepted';
+
+      if (widget.isOrganizer || isReferee) {
+        Get.to(() => MatchTeamConfirmationScreen(
+          tournamentId: widget.tournamentId,
+          matchId: freshMatch.id,
+          teamAId: freshMatch.teamAId!,
+          teamBId: freshMatch.teamBId!,
+        ));
+      }
     } else if (freshMatch.status == 'completed') {
       Get.snackbar("Notice", "Match already completed.");
     }
@@ -153,6 +174,7 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
                   ),
                 ),
                 ...matches.map((match) => MatchSlotCard(
+                  tournamentId: widget.tournamentId,
                   match: match,
                   teamA: _getTeamName(match.teamAId),
                   teamB: _getTeamName(match.teamBId),

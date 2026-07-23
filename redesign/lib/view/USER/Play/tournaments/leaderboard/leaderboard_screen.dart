@@ -82,7 +82,12 @@ class LeaderboardScreen extends StatelessWidget {
                 // Tiebreaker: Game Differential
                 int gDiffA = (a['gamesWon'] ?? 0) - (a['gamesLost'] ?? 0);
                 int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
-                return gDiffB.compareTo(gDiffA);
+                if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
+
+                // A13 Fix: Leaderboard tiebreaker should account for matches played
+                int matchesPlayedA = a['matchesPlayed'] ?? 0;
+                int matchesPlayedB = b['matchesPlayed'] ?? 0;
+                return matchesPlayedB.compareTo(matchesPlayedA);
               });
 
               return ListView(

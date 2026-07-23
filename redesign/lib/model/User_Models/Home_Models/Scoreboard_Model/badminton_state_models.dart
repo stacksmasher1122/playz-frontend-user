@@ -7,6 +7,7 @@ enum MatchStatus {
   inProgress,
   completed,
   abandoned,
+  timeout, // A11 Fix: Added timeout status
 }
 
 enum PlayerSide {

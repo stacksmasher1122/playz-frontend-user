@@ -12,6 +12,7 @@ class BracketMatchModel {
   final String? nextMatchId;
   final String? nextMatchSlot; // 'A' or 'B'
   final String? liveMatchId;
+  final Map<String, dynamic>? referee; // D1 Fix: Referee tracking
 
   BracketMatchModel({
     required this.id,
@@ -25,6 +26,7 @@ class BracketMatchModel {
     this.nextMatchId,
     this.nextMatchSlot,
     this.liveMatchId,
+    this.referee,
   });
 
   Map<String, dynamic> toMap() {
@@ -39,6 +41,7 @@ class BracketMatchModel {
       'nextMatchId': nextMatchId,
       'nextMatchSlot': nextMatchSlot,
       'liveMatchId': liveMatchId,
+      'referee': referee,
     };
   }
 
@@ -55,6 +58,7 @@ class BracketMatchModel {
       nextMatchId: map['nextMatchId'],
       nextMatchSlot: map['nextMatchSlot'],
       liveMatchId: map['liveMatchId'],
+      referee: map['referee'] as Map<String, dynamic>?,
     );
   }
 }

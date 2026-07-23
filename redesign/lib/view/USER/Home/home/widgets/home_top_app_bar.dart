@@ -8,6 +8,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
 import 'home_shimmer.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'notification_screen.dart'; // D3 Fix: Referee Notifications Import
 
 /* ============================================================
    TOP APP BAR
@@ -79,10 +80,19 @@ class HomeTopAppBar extends StatelessWidget {
           SizedBox(width: 8),
 
           /// NOTIFICATIONS BELL
-          Icon(
-            Icons.notifications_none_rounded,
-            color: Colors.white,
-            size: width < 360 ? 20 : 24,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => NotificationsScreen(),
+                ),
+              );
+            },
+            child: Icon(
+              Icons.notifications_none_rounded,
+              color: Colors.white,
+              size: width < 360 ? 20 : 24,
+            ),
           ),
           SizedBox(width: 16),
 

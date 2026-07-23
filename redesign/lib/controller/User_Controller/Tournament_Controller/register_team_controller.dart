@@ -109,7 +109,8 @@ class RegisterTeamController extends GetxController {
       final userDoc = await FirebaseFirestore.instance.collection('User').doc(currentUserId).get();
       if (userDoc.exists) {
         final data = userDoc.data()!;
-        final name = data['name'] ?? data['username'] ?? 'Me';
+        // C3 Fix: Add actual name + "(me)" instead of bare 'Me'
+        final name = "${data['name'] ?? data['username'] ?? 'User'} (me)";
         final photo = data['profile_picture'] ?? '';
 
         selectedPlayers.add(

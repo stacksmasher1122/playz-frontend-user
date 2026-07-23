@@ -102,9 +102,16 @@ class _WinnersSectionState extends State<WinnersSection> {
     bool isCompleted = widget.data['status'] == 'completed';
     if (!isCompleted) return SizedBox.shrink();
 
-    List<dynamic> customWinners = widget.data['customTierWinners'] ?? [];
+    // A12 Fix: Wrapper for live stream update
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || !snapshot.data!.exists) return SizedBox.shrink();
 
-    return Container(
+        final tournamentData = snapshot.data!.data() as Map<String, dynamic>;
+        List<dynamic> customWinners = tournamentData['customTierWinners'] ?? [];
+
+        return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.card,
@@ -147,8 +154,80 @@ class _WinnersSectionState extends State<WinnersSection> {
                 ),
               );
             }),
+
+          // A12 Fix: Render rank-type tiers
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).collection('leaderboard').snapshots(),
+            builder: (context, lbSnapshot) {
+              if (!lbSnapshot.hasData || lbSnapshot.data!.docs.isEmpty) return SizedBox.shrink();
+
+              var entries = lbSnapshot.data!.docs.map((d) {
+                var data = d.data() as Map<String, dynamic>;
+                data['id'] = d.id;
+                return data;
+              }).toList();
+
+              entries.sort((a, b) {
+                int pointsA = a['points'] ?? 0;
+                int pointsB = b['points'] ?? 0;
+                if (pointsA != pointsB) return pointsB.compareTo(pointsA);
+
+                int gDiffA = (a['gamesWon'] ?? 0) - (a['gamesLost'] ?? 0);
+                int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
+                if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
+
+                int matchesPlayedA = a['matchesPlayed'] ?? 0;
+                int matchesPlayedB = b['matchesPlayed'] ?? 0;
+                return matchesPlayedB.compareTo(matchesPlayedA);
+              });
+
+              final rankTiers = prizeTiers.where((t) => t['type'] == 'rank').toList();
+              if (rankTiers.isEmpty) return SizedBox.shrink();
+
+              return Column(
+                children: rankTiers.map((tier) {
+                  int rank = tier['rank'] ?? 1;
+                  String title = tier['title'];
+
+                  // Rank 3 might be shared for knockout format,
+                  // but for simplicity in leaderboard sort, we take the Nth element.
+                  // Joint 3rd logic for knockout should actually be driven by bracket final match
+                  // but leaderboard is a safe fallback for round robin.
+
+                  String winnerName = "TBD";
+                  if (rank <= entries.length) {
+                    var entry = entries[rank - 1];
+                    winnerName = entry['id'] ?? "TBD"; // Might need actual team name lookup
+                    // For now displaying ID as placeholder, we should ideally fetch team name
+                  }
+
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(title, style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
+                        FutureBuilder<DocumentSnapshot>(
+                          future: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).collection('teams').doc(winnerName).get(),
+                          builder: (context, teamSnapshot) {
+                            String displayName = winnerName;
+                            if (teamSnapshot.hasData && teamSnapshot.data!.exists) {
+                                displayName = (teamSnapshot.data!.data() as Map<String, dynamic>)['teamName'] ?? winnerName;
+                            }
+                            return Text(displayName, style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold));
+                          }
+                        )
+                      ],
+                    ),
+                  );
+                }).toList(),
+              );
+            }
+          ),
         ],
       ),
+    );
+      }
     );
   }
 }

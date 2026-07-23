@@ -21,9 +21,17 @@ class BadmintonSqflite {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // A9 Fix: Version bump for schema migration
       onCreate: _createDB,
+      onUpgrade: _upgradeDB,
     );
+  }
+
+  Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE badminton_matches ADD COLUMN tournamentId TEXT');
+      await db.execute('ALTER TABLE badminton_matches ADD COLUMN bracketMatchId TEXT');
+    }
   }
 
   Future _createDB(Database db, int version) async {
@@ -43,6 +51,8 @@ CREATE TABLE badminton_matches (
   teamBPlayers $textType,
   maxAllowedPlayers $intType,
   isFriendlyRules $boolType,
+  tournamentId $textNullable,
+  bracketMatchId $textNullable,
   pointsToWin $intType,
   maxPointCap $intType,
   winByTwo $boolType,
@@ -111,6 +121,8 @@ CREATE TABLE badminton_matches (
       'teamBPlayers': jsonEncode(match.teamBPlayers),
       'maxAllowedPlayers': match.maxAllowedPlayers,
       'isFriendlyRules': match.isFriendlyRules ? 1 : 0,
+      'tournamentId': match.tournamentId, // A9 Fix: Include in map
+      'bracketMatchId': match.bracketMatchId, // A9 Fix: Include in map
       'pointsToWin': match.pointsToWin,
       'maxPointCap': match.maxPointCap,
       'winByTwo': match.winByTwo ? 1 : 0,
@@ -136,6 +148,8 @@ CREATE TABLE badminton_matches (
       teamBPlayers: List<String>.from(jsonDecode(map['teamBPlayers'] as String)),
       maxAllowedPlayers: map['maxAllowedPlayers'] as int,
       isFriendlyRules: (map['isFriendlyRules'] as int) == 1,
+      tournamentId: map['tournamentId'] as String?, // A9 Fix: Include from map
+      bracketMatchId: map['bracketMatchId'] as String?, // A9 Fix: Include from map
       pointsToWin: map['pointsToWin'] as int,
       maxPointCap: map['maxPointCap'] as int,
       winByTwo: (map['winByTwo'] as int) == 1,

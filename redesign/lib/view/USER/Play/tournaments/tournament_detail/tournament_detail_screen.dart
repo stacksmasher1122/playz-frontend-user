@@ -13,6 +13,7 @@ import 'widgets/teams_section.dart';
 import 'widgets/brackets_section.dart';
 import 'widgets/leaderboard_section.dart';
 import 'widgets/winners_section.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TournamentDetailScreen extends StatefulWidget {
   final String tournamentId;
@@ -46,16 +47,20 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
   }
 
   Future<void> _checkUserRegistration() async {
+    // B3 Fix: Get current auth user ID dynamically
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId == null) return;
+
     final query = await FirebaseFirestore.instance
       .collection('tournaments')
       .doc(widget.tournamentId)
       .collection('teams')
-      .where('registeredBy', isEqualTo: widget.currentUserId)
+      .where('registeredBy', isEqualTo: currentUserId)
       .get();
 
-    if (mounted && query.docs.isNotEmpty) {
+    if (mounted) {
       setState(() {
-        userHasRegisteredTeam = true;
+        userHasRegisteredTeam = query.docs.isNotEmpty;
       });
     }
   }
@@ -76,7 +81,8 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (isOrganizer && isInProgress)
+                  // D4 Fix: Allow both organizer and referees to access bracket to manage/drive their matches
+                  if (isOrganizer || isInProgress)
                     Container(
                       width: double.infinity,
                       margin: EdgeInsets.only(bottom: ResponsiveHelper.h(24)),
@@ -88,7 +94,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                         ),
                         icon: Icon(Icons.play_arrow, color: AppColors.background),
                         label: Text(
-                          "Continue Tournament",
+                          isOrganizer ? "Manage Tournament Matches" : "View Bracket",
                           style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         onPressed: () {

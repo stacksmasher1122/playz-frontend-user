@@ -43,7 +43,8 @@ class FormatSetupController extends GetxController {
       teamSize.value = 1;
       sportRules.assignAll({
         "pointsPerGame": 21,
-        "bestOf": 3
+        "bestOf": 3,
+        "matchMode": "professional" // A7 Fix: Friendly/Professional
       });
     } else if (sport == "Cricket") {
       teamMode.value = "team";

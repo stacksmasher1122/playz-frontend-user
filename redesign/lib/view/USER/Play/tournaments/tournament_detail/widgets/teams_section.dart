@@ -53,8 +53,17 @@ class TeamsSection extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Registered Teams", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
-                  if (isOpen && !userHasRegisteredTeam && !isOrganizer && !isFull)
+                  Row(
+                    children: [
+                      Text("Registered Teams", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
+                      SizedBox(width: ResponsiveHelper.w(8)),
+                      // C2 Fix: Show ratio
+                      if (maxTeams > 0)
+                        Text("($teamCount/$maxTeams)", style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
+                    ],
+                  ),
+                  // B1 Fix: Organizer can register up to the cap
+                  if (isOpen && (!userHasRegisteredTeam || isOrganizer) && !isFull)
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.accent,
@@ -135,6 +144,14 @@ class TeamsSection extends StatelessWidget {
                             "${players.length} players",
                             style: AppTypography.bodySm.copyWith(color: AppColors.muted),
                           ),
+                          // B2 Fix: Organizer must be able to remove a registered team
+                          if (isOrganizer && isOpen)
+                            IconButton(
+                              icon: Icon(Icons.remove_circle_outline, color: Colors.redAccent),
+                              onPressed: () {
+                                _showRemoveTeamDialog(context, doc.id, name, data['paymentStatus'] == 'paid');
+                              },
+                            )
                         ],
                       ),
                     );
@@ -145,6 +162,51 @@ class TeamsSection extends StatelessWidget {
         },
       ),
     );
+  }
+
+  // B2 Fix: Handle removing a team
+  void _showRemoveTeamDialog(BuildContext context, String teamId, String teamName, bool hasPaid) {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text("Remove Team", style: TextStyle(color: Colors.white)),
+        content: Text(
+          "Are you sure you want to remove $teamName from the tournament?"
+          "${hasPaid ? '\n\nNote: This team paid an entry fee — removing them does not automatically refund it. You must handle refunds manually.' : ''}",
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text("Cancel", style: TextStyle(color: AppColors.muted)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () {
+              Get.back();
+              _removeTeam(teamId);
+            },
+            child: Text("Remove", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      )
+    );
+  }
+
+  Future<void> _removeTeam(String teamId) async {
+    try {
+      final teamRef = FirebaseFirestore.instance.collection('tournaments').doc(tournamentId).collection('teams').doc(teamId);
+      final tournamentRef = FirebaseFirestore.instance.collection('tournaments').doc(tournamentId);
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        transaction.delete(teamRef);
+        transaction.update(tournamentRef, {'teamCount': FieldValue.increment(-1)});
+      });
+
+      Get.snackbar("Success", "Team removed successfully", backgroundColor: Colors.green, colorText: Colors.white);
+    } catch (e) {
+      Get.snackbar("Error", "Failed to remove team: $e", backgroundColor: Colors.redAccent, colorText: Colors.white);
+    }
   }
 
   void _startTournament(BuildContext context, int teamCount, bool isFull) {
