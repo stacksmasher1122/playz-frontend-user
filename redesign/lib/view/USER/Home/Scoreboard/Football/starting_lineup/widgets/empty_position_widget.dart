@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -69,22 +70,22 @@ class EmptyPositionWidget extends StatelessWidget {
                 ? Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFFC6FF00).withValues(alpha: 0.1),
-                      border: Border.all(color: Color(0xFFC6FF00), width: 2),
+                      color: AppColors.accent.withValues(alpha: 0.1),
+                      border: Border.all(color: AppColors.accent, width: 2),
                     ),
                     child: Center(
-                      child: Icon(Icons.person_add_alt_1, color: Color(0xFFC6FF00), size: 24),
+                      child: Icon(Icons.person_add_alt_1, color: AppColors.accent, size: 24),
                     ),
                   )
                 : CustomPaint(
                     painter: DashedCirclePainter(
-                      color: Colors.grey.shade600,
+                      color: Colors.grey,
                       strokeWidth: 2,
                       dashWidth: 6,
                       dashSpace: 4,
                     ),
                     child: Center(
-                      child: Icon(Icons.add, color: Colors.grey.shade500, size: 24),
+                      child: Icon(Icons.add, color: Colors.grey, size: 24),
                     ),
                   ),
           ),
@@ -92,13 +93,13 @@ class EmptyPositionWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.6),
+              color: AppColors.background.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
             ),
             child: Text(
               label.toUpperCase(),
               style: TextStyle(
-                color: isCenterActive ? Color(0xFFC6FF00) : Colors.grey,
+                color: isCenterActive ? AppColors.accent : Colors.grey,
                 fontSize: ResponsiveHelper.sp(10),
                 fontWeight: FontWeight.bold,
               ),

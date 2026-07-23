@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/kickoff_setup_controller.dart';
@@ -20,9 +21,9 @@ class VenueCardWidget extends StatelessWidget {
       return Container(
         margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
         decoration: BoxDecoration(
-          color: Colors.grey.shade900.withValues(alpha: 0.3),
+          color: Color(0xFF121212).withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          border: Border.all(color: Colors.grey.shade800),
+          border: Border.all(color: Color(0xFF1E1E1E)),
         ),
         clipBehavior: Clip.hardEdge,
         child: Column(
@@ -64,15 +65,15 @@ class VenueCardWidget extends StatelessWidget {
                       ),
                     ],
                   )),
-                  Divider(color: Colors.grey.shade800, height: 24),
+                  Divider(color: Color(0xFF1E1E1E), height: 24),
                   _buildInfoRow('Match Official', Text(
                     venue.referee,
                     style: TextStyle(color: Colors.white, fontSize: ResponsiveHelper.sp(14), fontWeight: FontWeight.bold),
                   )),
-                  Divider(color: Colors.grey.shade800, height: 24),
+                  Divider(color: Color(0xFF1E1E1E), height: 24),
                   _buildInfoRow('Recording System', Text(
                     venue.recordingSystem,
-                    style: TextStyle(color: Color(0xFFC6FF00), fontSize: ResponsiveHelper.sp(14), fontWeight: FontWeight.bold),
+                    style: TextStyle(color: AppColors.accent, fontSize: ResponsiveHelper.sp(14), fontWeight: FontWeight.bold),
                   )),
                 ],
               ),

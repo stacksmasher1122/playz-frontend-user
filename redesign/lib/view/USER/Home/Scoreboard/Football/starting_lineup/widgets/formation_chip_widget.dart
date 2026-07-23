@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -23,12 +24,12 @@ class FormationChipWidget extends StatelessWidget {
         margin: EdgeInsets.only(right: 12),
         padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
         decoration: BoxDecoration(
-          color: isSelected ? Color(0xFFC6FF00) : Colors.grey.shade900,
+          color: isSelected ? AppColors.accent : Color(0xFF121212),
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: Color(0xFFC6FF00).withValues(alpha: 0.3),
+                    color: AppColors.accent.withValues(alpha: 0.3),
                     blurRadius: 12,
                     spreadRadius: 2,
                   )
@@ -38,7 +39,7 @@ class FormationChipWidget extends StatelessWidget {
         child: Text(
           name,
           style: TextStyle(
-            color: isSelected ? Colors.black : Colors.white,
+            color: isSelected ? AppColors.background : Colors.white,
             fontSize: ResponsiveHelper.sp(16),
             fontWeight: FontWeight.w900,
           ),

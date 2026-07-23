@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/kickoff_setup_controller.dart';
@@ -12,7 +13,7 @@ class KickoffAppbar extends StatelessWidget implements PreferredSizeWidget {
     final controller = Get.find<KickoffSetupController>();
 
     return AppBar(
-      backgroundColor: Colors.black.withValues(alpha: 0.85),
+      backgroundColor: AppColors.background.withValues(alpha: 0.85),
       elevation: 0,
       centerTitle: true,
       leading: IconButton(
@@ -22,7 +23,7 @@ class KickoffAppbar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         'KICKOFF SETUP',
         style: TextStyle(
-          color: Color(0xFFC6FF00), // Lime Green
+          color: AppColors.accent, // Lime Green
           fontSize: ResponsiveHelper.sp(16),
           fontWeight: FontWeight.w900,
           letterSpacing: 1.0,
@@ -34,9 +35,9 @@ class KickoffAppbar extends StatelessWidget implements PreferredSizeWidget {
             margin: EdgeInsets.only(right: 16),
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
             decoration: BoxDecoration(
-              color: Colors.grey.shade900,
+              color: Color(0xFF121212),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              border: Border.all(color: Colors.grey.shade800),
+              border: Border.all(color: Color(0xFF1E1E1E)),
             ),
             child: Obx(() {
               return Text(

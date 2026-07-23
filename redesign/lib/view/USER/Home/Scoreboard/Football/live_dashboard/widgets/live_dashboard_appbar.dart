@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/live_football_dashboard_controller.dart';
@@ -12,7 +13,7 @@ class LiveDashboardAppbar extends StatelessWidget implements PreferredSizeWidget
     final controller = Get.find<LiveFootballDashboardController>();
 
     return AppBar(
-      backgroundColor: Colors.black.withValues(alpha: 0.9),
+      backgroundColor: AppColors.background.withValues(alpha: 0.9),
       elevation: 0,
       centerTitle: true,
       leading: IconButton(
@@ -27,7 +28,7 @@ class LiveDashboardAppbar extends StatelessWidget implements PreferredSizeWidget
           Text(
             'PRO SCOUT LIVE',
             style: TextStyle(
-              color: Color(0xFFC6FF00), // Lime Green
+              color: AppColors.accent, // Lime Green
               fontSize: ResponsiveHelper.sp(18),
               fontWeight: FontWeight.w900,
               letterSpacing: 0.5,

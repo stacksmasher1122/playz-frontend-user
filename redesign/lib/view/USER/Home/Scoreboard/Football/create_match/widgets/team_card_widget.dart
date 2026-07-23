@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/team_model.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -64,9 +65,9 @@ class TeamCardWidget extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.3),
+        color: Color(0xFF121212),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: Colors.grey.shade800),
+        border: Border.all(color: Color(0xFF1E1E1E)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -79,7 +80,7 @@ class TeamCardWidget extends StatelessWidget {
               height: ResponsiveHelper.h(70),
               child: CustomPaint(
                 painter: DashedCirclePainter(
-                  color: Colors.grey.shade600,
+                  color: Colors.grey,
                   strokeWidth: 2,
                   dashWidth: 6,
                   dashSpace: 4,
@@ -87,7 +88,7 @@ class TeamCardWidget extends StatelessWidget {
                 child: Center(
                   child: Icon(
                     Icons.camera_alt_outlined,
-                    color: Colors.grey.shade500,
+                    color: Colors.grey,
                     size: 28,
                   ),
                 ),
@@ -99,25 +100,25 @@ class TeamCardWidget extends StatelessWidget {
             initialValue: team?.teamName,
             hint: Text(
               isHome ? 'Select Team A' : 'Select Team B',
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+              style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
-            dropdownColor: Colors.grey.shade900,
+            dropdownColor: Color(0xFF121212),
             icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
             style: TextStyle(color: Colors.white, fontSize: 14),
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.black.withValues(alpha: 0.5),
+              fillColor: Color(0xFF121212),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                borderSide: BorderSide(color: Colors.grey.shade800),
+                borderSide: BorderSide(color: Color(0xFF1E1E1E)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                borderSide: BorderSide(color: Colors.grey.shade800),
+                borderSide: BorderSide(color: Color(0xFF1E1E1E)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                borderSide: BorderSide(color: Color(0xFFC6FF00)),
+                borderSide: BorderSide(color: AppColors.accent),
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
             ),

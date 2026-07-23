@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/starting_lineup_controller.dart';
@@ -49,13 +50,13 @@ class _StartingLineupScreenState extends State<StartingLineupScreen> with Single
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: StartingLineupAppbar(),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(
             child: CircularProgressIndicator(
-              color: Color(0xFFC6FF00), // Lime Green
+              color: AppColors.accent, // Lime Green
             ),
           );
         }

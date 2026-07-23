@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 
 const kBg = AppColors.background;
-const kSurface = AppColors.surface;
+const kSurface = Color(0xFF121212);
 const kSurfaceHighlight = Color(0xFF1E1E1E);
 const kAccent = AppColors.accent;
 const kAccentDim = Color(0x331DB954);

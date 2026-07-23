@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -23,7 +24,7 @@ class BottomActionWidget extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xFFC6FF00).withValues(alpha: 0.3), // Lime Green glow
+                  color: AppColors.accent.withValues(alpha: 0.3), // Lime Green glow
                   blurRadius: 16,
                   spreadRadius: 2,
                   offset: Offset(0, 4),
@@ -38,19 +39,19 @@ class BottomActionWidget extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
                   decoration: BoxDecoration(
-                    color: Color(0xFFC6FF00), // Lime Green
+                    color: AppColors.accent, // Lime Green
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                   ),
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.sports_soccer, color: Colors.black, size: 20),
+                      Icon(Icons.sports_soccer, color: AppColors.background, size: 20),
                       SizedBox(width: 8),
                       Text(
                         'CREATE MATCH',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.background,
                           fontSize: ResponsiveHelper.sp(14),
                           fontWeight: FontWeight.w900,
                           letterSpacing: 0.5,
@@ -66,9 +67,9 @@ class BottomActionWidget extends StatelessWidget {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.5),
+              color: Color(0xFF121212),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
-              border: Border.all(color: Colors.grey.shade600),
+              border: Border.all(color: Colors.grey),
             ),
             child: Material(
               color: Colors.transparent,

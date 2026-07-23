@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -34,7 +35,7 @@ class MatchTimerWidget extends StatelessWidget {
         Text(
           "$currentMinute'",
           style: TextStyle(
-            color: Color(0xFFC6FF00), // Lime Green
+            color: AppColors.accent, // Lime Green
             fontSize: ResponsiveHelper.sp(14),
             fontWeight: FontWeight.bold,
           ),

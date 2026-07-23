@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/player_model.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -26,24 +27,24 @@ class GoalkeeperWidget extends StatelessWidget {
               height: ResponsiveHelper.h(50),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Color(0xFFC6FF00), width: 2),
+                border: Border.all(color: AppColors.accent, width: 2),
                 color: Colors.green.shade900.withValues(alpha: 0.5),
               ),
               child: Center(
-                child: Icon(Icons.add, color: Color(0xFFC6FF00), size: 24),
+                child: Icon(Icons.add, color: AppColors.accent, size: 24),
               ),
             ),
             SizedBox(height: 4),
             Container(
               padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.6),
+                color: AppColors.background.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
               ),
               child: Text(
                 'GK',
                 style: TextStyle(
-                  color: Color(0xFFC6FF00),
+                  color: AppColors.accent,
                   fontSize: ResponsiveHelper.sp(10),
                   fontWeight: FontWeight.bold,
                 ),
@@ -65,10 +66,10 @@ class GoalkeeperWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.green.shade900, // distinctive GK color
-              border: Border.all(color: Color(0xFFC6FF00), width: 2),
+              border: Border.all(color: AppColors.accent, width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xFFC6FF00).withValues(alpha: 0.4),
+                  color: AppColors.accent.withValues(alpha: 0.4),
                   blurRadius: 8,
                   spreadRadius: 1,
                 ),
@@ -84,13 +85,13 @@ class GoalkeeperWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.6),
+              color: AppColors.background.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
             ),
             child: Text(
               goalkeeper!.name.toUpperCase(),
               style: TextStyle(
-                color: Color(0xFFC6FF00),
+                color: AppColors.accent,
                 fontSize: ResponsiveHelper.sp(10),
                 fontWeight: FontWeight.bold,
               ),

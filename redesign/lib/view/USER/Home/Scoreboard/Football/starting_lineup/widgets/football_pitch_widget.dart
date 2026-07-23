@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/starting_lineup_controller.dart';
@@ -23,10 +24,10 @@ class FootballPitchWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.green.shade900.withValues(alpha: 0.2), // dark green tint
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: Color(0xFFC6FF00), width: 1.5), // Lime border
+            border: Border.all(color: AppColors.accent, width: 1.5), // Lime border
             boxShadow: [
               BoxShadow(
-                color: Color(0xFFC6FF00).withValues(alpha: 0.1),
+                color: AppColors.accent.withValues(alpha: 0.1),
                 blurRadius: 16,
                 spreadRadius: 2,
               )

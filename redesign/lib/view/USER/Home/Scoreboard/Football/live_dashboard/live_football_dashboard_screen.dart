@@ -1,3 +1,4 @@
+import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/live_football_dashboard_controller.dart';
@@ -7,7 +8,7 @@ import 'widgets/possession_card_widget.dart';
 import 'widgets/statistics_progress_card.dart';
 import 'widgets/quick_event_grid_widget.dart';
 import 'widgets/stats_summary_grid.dart';
-import 'widgets/bottom_navigation_widget.dart';
+
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveFootballDashboardScreen extends StatefulWidget {
@@ -57,13 +58,13 @@ class _LiveFootballDashboardScreenState extends State<LiveFootballDashboardScree
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: LiveDashboardAppbar(),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(
             child: CircularProgressIndicator(
-              color: Color(0xFFC6FF00), // Lime Green
+              color: AppColors.accent, // Lime Green
             ),
           );
         }
@@ -94,7 +95,7 @@ class _LiveFootballDashboardScreenState extends State<LiveFootballDashboardScree
           ),
         );
       }),
-      bottomNavigationBar: BottomNavigationWidget(),
+
     );
   }
 }
