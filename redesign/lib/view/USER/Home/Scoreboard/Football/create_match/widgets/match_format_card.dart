@@ -14,7 +14,10 @@ class MatchFormatCard extends StatelessWidget {
     final controller = Get.find<FootballCreateMatchController>();
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(8.0),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

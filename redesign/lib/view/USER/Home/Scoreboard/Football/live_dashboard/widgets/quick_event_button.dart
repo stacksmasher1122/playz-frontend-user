@@ -20,7 +20,8 @@ class QuickEventButton extends StatefulWidget {
   State<QuickEventButton> createState() => _QuickEventButtonState();
 }
 
-class _QuickEventButtonState extends State<QuickEventButton> with SingleTickerProviderStateMixin {
+class _QuickEventButtonState extends State<QuickEventButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -43,8 +44,12 @@ class _QuickEventButtonState extends State<QuickEventButton> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final bgColor = widget.isPrimary ? AppColors.accent : Color(0xFF121212).withValues(alpha: 0.5);
-    final iconColor = widget.isPrimary ? AppColors.background : Color(0xFFFFC107); // Using amber for cards/icons if not primary
+    final bgColor = widget.isPrimary
+        ? AppColors.accent
+        : Color(0xFF121212).withValues(alpha: 0.5);
+    final iconColor = widget.isPrimary
+        ? AppColors.background
+        : Color(0xFFFFC107); // Using amber for cards/icons if not primary
     final textColor = widget.isPrimary ? AppColors.background : Colors.white;
 
     return GestureDetector(
@@ -56,22 +61,22 @@ class _QuickEventButtonState extends State<QuickEventButton> with SingleTickerPr
       onTapCancel: () => _controller.reverse(),
       child: AnimatedBuilder(
         animation: _scaleAnimation,
-        builder: (context, child) => Transform.scale(
-          scale: _scaleAnimation.value,
-          child: child,
-        ),
+        builder: (context, child) =>
+            Transform.scale(scale: _scaleAnimation.value, child: child),
         child: Container(
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            border: widget.isPrimary ? null : Border.all(color: Color(0xFF1E1E1E)),
+            border: widget.isPrimary
+                ? null
+                : Border.all(color: Color(0xFF1E1E1E)),
             boxShadow: widget.isPrimary
                 ? [
                     BoxShadow(
                       color: AppColors.accent.withValues(alpha: 0.4),
                       blurRadius: 10,
                       spreadRadius: 1,
-                    )
+                    ),
                   ]
                 : null,
           ),

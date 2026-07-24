@@ -33,7 +33,10 @@ class KickoffAppbar extends StatelessWidget implements PreferredSizeWidget {
         Center(
           child: Container(
             margin: EdgeInsets.only(right: 16),
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(10),
+              vertical: ResponsiveHelper.h(4),
+            ),
             decoration: BoxDecoration(
               color: Color(0xFF121212),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),

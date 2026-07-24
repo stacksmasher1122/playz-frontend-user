@@ -12,7 +12,10 @@ class SmartPresetsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(8)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(24),
+        vertical: ResponsiveHelper.h(8),
+      ),
       child: Container(
         padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(

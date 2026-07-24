@@ -13,7 +13,10 @@ class LogisticsCard extends StatelessWidget {
     final controller = Get.find<FootballCreateMatchController>();
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(8.0),
+      ),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: Color(0xFF121212).withValues(alpha: 0.5),
@@ -55,7 +58,10 @@ class LogisticsCard extends StatelessWidget {
           GestureDetector(
             onTap: () => controller.selectDateTime(context),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(16),
+                vertical: ResponsiveHelper.h(14),
+              ),
               decoration: BoxDecoration(
                 color: Color(0xFF121212),
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
@@ -102,7 +108,10 @@ class LogisticsCard extends StatelessWidget {
           GestureDetector(
             onTap: controller.selectVenue,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(16),
+                vertical: ResponsiveHelper.h(14),
+              ),
               decoration: BoxDecoration(
                 color: Color(0xFF121212),
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
@@ -115,9 +124,13 @@ class LogisticsCard extends StatelessWidget {
                   Expanded(
                     child: Obx(() {
                       return Text(
-                        controller.venue.value.isEmpty ? 'Select Venue' : controller.venue.value,
+                        controller.venue.value.isEmpty
+                            ? 'Select Venue'
+                            : controller.venue.value,
                         style: TextStyle(
-                          color: controller.venue.value.isEmpty ? Colors.grey : Colors.white,
+                          color: controller.venue.value.isEmpty
+                              ? Colors.grey
+                              : Colors.white,
                           fontSize: ResponsiveHelper.sp(14),
                         ),
                       );
@@ -145,7 +158,11 @@ class LogisticsCard extends StatelessWidget {
               hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
               filled: true,
               fillColor: Color(0xFF121212),
-              prefixIcon: Icon(Icons.directions_run, color: Colors.grey, size: 20),
+              prefixIcon: Icon(
+                Icons.directions_run,
+                color: Colors.grey,
+                size: 20,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 borderSide: BorderSide(color: Color(0xFF1E1E1E)),
@@ -158,7 +175,10 @@ class LogisticsCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 borderSide: BorderSide(color: AppColors.accent),
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(16),
+                vertical: ResponsiveHelper.h(14),
+              ),
             ),
           ),
         ],

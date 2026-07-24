@@ -38,7 +38,10 @@ class TournamentTypeSelector extends StatelessWidget {
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveHelper.w(16),
+          vertical: ResponsiveHelper.h(12),
+        ),
         decoration: BoxDecoration(
           color: isSelected ? kAccentDim : kSurfaceHighlight,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),

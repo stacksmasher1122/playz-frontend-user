@@ -27,10 +27,7 @@ class StepperControl extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(color: kTextSecondary, fontSize: 15),
-        ),
+        Text(label, style: TextStyle(color: kTextSecondary, fontSize: 15)),
         Container(
           decoration: BoxDecoration(
             color: kSurface,
@@ -88,10 +85,7 @@ class SetupSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return SwitchListTile(
-      title: Text(
-        label,
-        style: TextStyle(color: kTextSecondary, fontSize: 14),
-      ),
+      title: Text(label, style: TextStyle(color: kTextSecondary, fontSize: 14)),
       value: value,
       activeThumbColor: kAccent,
       contentPadding: EdgeInsets.zero,
@@ -105,11 +99,7 @@ class SetupTextField extends StatelessWidget {
   final String label;
   final String initialValue;
 
-  SetupTextField({
-    super.key,
-    required this.label,
-    required this.initialValue,
-  });
+  SetupTextField({super.key, required this.label, required this.initialValue});
 
   @override
   Widget build(BuildContext context) {
@@ -126,10 +116,7 @@ class SetupTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           borderSide: BorderSide.none,
         ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }

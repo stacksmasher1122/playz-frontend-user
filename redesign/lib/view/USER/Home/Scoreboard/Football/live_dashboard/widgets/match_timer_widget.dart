@@ -27,10 +27,7 @@ class MatchTimerWidget extends StatelessWidget {
           ),
         ),
         SizedBox(width: 8),
-        Text(
-          '•',
-          style: TextStyle(color: Colors.grey, fontSize: 12),
-        ),
+        Text('•', style: TextStyle(color: Colors.grey, fontSize: 12)),
         SizedBox(width: 8),
         Text(
           "$currentMinute'",

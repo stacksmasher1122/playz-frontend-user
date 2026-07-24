@@ -14,7 +14,10 @@ class StatsSummaryGrid extends StatelessWidget {
     final controller = Get.find<LiveFootballDashboardController>();
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(8.0),
+      ),
       child: Obx(() {
         return GridView.count(
           crossAxisCount: 2,

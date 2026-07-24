@@ -32,7 +32,10 @@ class PlayerPositionWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.background,
-              border: Border.all(color: AppColors.accent, width: 2), // Lime border
+              border: Border.all(
+                color: AppColors.accent,
+                width: 2,
+              ), // Lime border
               boxShadow: [
                 BoxShadow(
                   color: AppColors.accent.withValues(alpha: 0.4),
@@ -49,7 +52,10 @@ class PlayerPositionWidget extends StatelessWidget {
           ),
           SizedBox(height: 4),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(6),
+              vertical: ResponsiveHelper.h(2),
+            ),
             decoration: BoxDecoration(
               color: AppColors.background.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),

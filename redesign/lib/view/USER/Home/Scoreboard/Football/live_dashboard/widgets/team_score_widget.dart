@@ -6,11 +6,7 @@ class TeamScoreWidget extends StatelessWidget {
   final String teamName;
   final String? logoUrl;
 
-  TeamScoreWidget({
-    super.key,
-    required this.teamName,
-    this.logoUrl,
-  });
+  TeamScoreWidget({super.key, required this.teamName, this.logoUrl});
 
   @override
   Widget build(BuildContext context) {

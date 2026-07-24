@@ -16,7 +16,10 @@ class RulesConfigurationCard extends StatelessWidget {
     final controller = Get.find<FootballCreateMatchController>();
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(8.0),
+      ),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: Color(0xFF121212).withValues(alpha: 0.5),

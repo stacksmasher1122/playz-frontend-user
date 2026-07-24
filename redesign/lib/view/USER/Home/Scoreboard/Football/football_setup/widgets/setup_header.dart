@@ -13,7 +13,10 @@ class SetupHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16),
+        vertical: ResponsiveHelper.h(12),
+      ),
       color: kBg,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

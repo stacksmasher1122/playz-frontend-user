@@ -24,7 +24,10 @@ class StatisticsProgressCard extends StatelessWidget {
     final flexB = total == 0 ? 1 : valueB;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(6.0)),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(6.0),
+      ),
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: Color(0xFF121212).withValues(alpha: 0.5),

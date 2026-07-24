@@ -25,7 +25,8 @@ class DashedCirclePainter extends CustomPainter {
 
     var circumference = size.width * 3.14159;
     var dashCount = (circumference / (dashWidth + dashSpace)).floor();
-    var adjustedDashSpace = (circumference - (dashCount * dashWidth)) / dashCount;
+    var adjustedDashSpace =
+        (circumference - (dashCount * dashWidth)) / dashCount;
 
     var angle = 0.0;
     for (int i = 0; i < dashCount; i++) {
@@ -63,7 +64,10 @@ class TeamCardWidget extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(
+        vertical: ResponsiveHelper.h(24),
+        horizontal: ResponsiveHelper.w(16),
+      ),
       decoration: BoxDecoration(
         color: Color(0xFF121212),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
@@ -120,22 +124,25 @@ class TeamCardWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 borderSide: BorderSide(color: AppColors.accent),
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(16),
+                vertical: ResponsiveHelper.h(12),
+              ),
             ),
-            items: ['Team Alpha', 'Team Beta', 'FC United', 'Real FC']
-                .map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
+            items: ['Team Alpha', 'Team Beta', 'FC United', 'Real FC'].map((
+              String value,
+            ) {
+              return DropdownMenuItem<String>(value: value, child: Text(value));
             }).toList(),
             onChanged: (val) {
               if (val != null) {
-                onSelect(TeamModel(
-                  teamId: DateTime.now().millisecondsSinceEpoch.toString(),
-                  teamName: val,
-                  isHome: isHome,
-                ));
+                onSelect(
+                  TeamModel(
+                    teamId: DateTime.now().millisecondsSinceEpoch.toString(),
+                    teamName: val,
+                    isHome: isHome,
+                  ),
+                );
               }
             },
           ),

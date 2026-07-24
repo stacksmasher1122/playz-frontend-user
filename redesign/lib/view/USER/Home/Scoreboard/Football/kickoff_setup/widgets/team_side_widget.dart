@@ -7,17 +7,13 @@ class TeamSideWidget extends StatelessWidget {
   final SideSelectionModel team;
   final Function(String teamId, String targetSide) onDrag;
 
-  TeamSideWidget({
-    super.key,
-    required this.team,
-    required this.onDrag,
-  });
+  TeamSideWidget({super.key, required this.team, required this.onDrag});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    Color cardColor = team.teamColor == '0xFF4285F4' 
-        ? Color(0xFF4285F4).withValues(alpha: 0.8) 
+    Color cardColor = team.teamColor == '0xFF4285F4'
+        ? Color(0xFF4285F4).withValues(alpha: 0.8)
         : Color(0xFF1E1E1E);
 
     Widget cardContent = Column(
@@ -70,15 +66,9 @@ class TeamSideWidget extends StatelessWidget {
       data: team.teamId,
       feedback: Material(
         color: Colors.transparent,
-        child: Opacity(
-          opacity: 0.8,
-          child: cardContent,
-        ),
+        child: Opacity(opacity: 0.8, child: cardContent),
       ),
-      childWhenDragging: Opacity(
-        opacity: 0.3,
-        child: cardContent,
-      ),
+      childWhenDragging: Opacity(opacity: 0.3, child: cardContent),
       child: cardContent,
     );
   }

@@ -71,11 +71,7 @@ class HalvesSelectorWidget extends StatelessWidget {
           color: Color(0xFF121212),
           border: Border.all(color: AppColors.accent), // Lime Green
         ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 16,
-        ),
+        child: Icon(icon, color: Colors.white, size: 16),
       ),
     );
   }

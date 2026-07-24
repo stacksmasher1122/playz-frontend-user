@@ -1,92 +1,113 @@
 import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../football_scoreboard_screen.dart';
+import 'package:redesign/score_engine/footballMatchEngine/football_match_engine.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class EventFeed extends StatelessWidget {
   final MatchEngine engine;
 
-  EventFeed({
-    super.key,
-    required this.engine,
-  });
+  EventFeed({super.key, required this.engine});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return ValueListenableBuilder<List<MatchEvent>>(
-      valueListenable: engine.events,
-      builder: (ctx, events, _) {
-        if (events.isEmpty) {
-          return SliverFillRemaining(
-            child: Center(
-              child: Text(
-                "Waiting for Kick Off...",
-                style: TextStyle(color: kTextSecondary),
-              ),
+    final events = engine.state.events;
+
+    if (events.isEmpty) {
+      return SliverFillRemaining(
+        child: Center(
+          child: Text(
+            "No events yet.",
+            style: TextStyle(color: AppColors.muted),
+          ),
+        ),
+      );
+    }
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((ctx, i) {
+        final event = events[i];
+        bool isHome = event.side == TeamSide.home;
+
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveHelper.w(16),
+            vertical: ResponsiveHelper.h(8),
+          ),
+          child: Row(
+            mainAxisAlignment: isHome
+                ? MainAxisAlignment.start
+                : MainAxisAlignment.end,
+            children: [
+              if (!isHome) Expanded(child: SizedBox()),
+              _buildEventBubble(event, isHome),
+              if (isHome) Expanded(child: SizedBox()),
+            ],
+          ),
+        );
+      }, childCount: events.length),
+    );
+  }
+
+  Widget _buildEventBubble(MatchEvent event, bool isHome) {
+    return Container(
+      width: ResponsiveHelper.w(220),
+      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+        border: Border.all(color: AppColors.outlineVariant),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(ResponsiveHelper.w(8)),
+            decoration: BoxDecoration(
+              color: event.color.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
             ),
-          );
-        }
-        return SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            final e = events[index];
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
-              decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: kDivider, width: 0.5)),
-                color: kSurface,
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: ResponsiveHelper.w(50),
-                    alignment: Alignment.center,
-                    child: Text(
-                      e.timeLabel,
+            child: Icon(event.icon, color: event.color, size: 20),
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      event.title,
                       style: TextStyle(
-                        color: kTextSecondary,
+                        color: event.color,
                         fontWeight: FontWeight.bold,
+                        fontSize: ResponsiveHelper.sp(14),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 12),
-                  Container(
-                    padding: EdgeInsets.all(ResponsiveHelper.w(8)),
-                    decoration: BoxDecoration(
-                      color: e.color.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
+                    Text(
+                      "\${event.displayMinute}'\${event.addedMinute > 0 ? '+\${event.addedMinute}' : ''}",
+                      style: TextStyle(
+                        color: AppColors.muted,
+                        fontSize: ResponsiveHelper.sp(12),
+                        fontFamily: 'JetBrains Mono',
+                      ),
                     ),
-                    child: Icon(e.icon, size: 18, color: e.color),
+                  ],
+                ),
+                SizedBox(height: 4),
+                Text(
+                  event.subtitle,
+                  style: TextStyle(
+                    color: AppColors.onPrimary,
+                    fontSize: ResponsiveHelper.sp(12),
                   ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          e.title,
-                          style: TextStyle(
-                            color: kTextPrimary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (e.subtitle.isNotEmpty)
-                          Text(
-                            e.subtitle,
-                            style: TextStyle(
-                              color: kTextMuted,
-                              fontSize: ResponsiveHelper.sp(12),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }, childCount: events.length),
-        );
-      },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

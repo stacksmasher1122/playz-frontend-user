@@ -17,29 +17,35 @@ class FootballPitchWidget extends StatelessWidget {
     final controller = Get.find<StartingLineupController>();
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(16.0)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(16.0),
+      ),
       child: AspectRatio(
         aspectRatio: 0.8, // Rectangular pitch shape
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.green.shade900.withValues(alpha: 0.2), // dark green tint
+            color: Colors.green.shade900.withValues(
+              alpha: 0.2,
+            ), // dark green tint
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: AppColors.accent, width: 1.5), // Lime border
+            border: Border.all(
+              color: AppColors.accent,
+              width: 1.5,
+            ), // Lime border
             boxShadow: [
               BoxShadow(
                 color: AppColors.accent.withValues(alpha: 0.1),
                 blurRadius: 16,
                 spreadRadius: 2,
-              )
+              ),
             ],
           ),
           child: Stack(
             children: [
               // 1. Pitch Lines Marking
-              RepaintBoundary(
-                child: PitchLinesWidget(),
-              ),
-              
+              RepaintBoundary(child: PitchLinesWidget()),
+
               // 2. Dynamic Player Slots based on Formation
               Obx(() {
                 final formation = controller.currentFormation.value;
@@ -52,9 +58,15 @@ class FootballPitchWidget extends StatelessWidget {
 
                     return Stack(
                       children: formation.positions.map((slot) {
-                        final player = controller.getPlayerById(slot.assignedPlayerId);
-                        final xPos = (slot.x * width) - 25; // 25 is half of the widget width to center it
-                        final yPos = (slot.y * height) - 30; // 30 is approx half of the widget height
+                        final player = controller.getPlayerById(
+                          slot.assignedPlayerId,
+                        );
+                        final xPos =
+                            (slot.x * width) -
+                            25; // 25 is half of the widget width to center it
+                        final yPos =
+                            (slot.y * height) -
+                            30; // 30 is approx half of the widget height
 
                         return AnimatedPositioned(
                           duration: Duration(milliseconds: 300),
@@ -63,7 +75,10 @@ class FootballPitchWidget extends StatelessWidget {
                           top: yPos,
                           child: DragTarget<String>(
                             onAcceptWithDetails: (details) {
-                              final p = controller.squadPlayers.firstWhereOrNull((pl) => pl.id == details.data);
+                              final p = controller.squadPlayers
+                                  .firstWhereOrNull(
+                                    (pl) => pl.id == details.data,
+                                  );
                               if (p != null) {
                                 controller.dropPlayer(slot.label, p);
                               }
@@ -86,7 +101,10 @@ class FootballPitchWidget extends StatelessWidget {
                                 );
                               } else {
                                 // "Center EMPTY slot" visually distinct based on prompt, let's say CM or M2
-                                final isCenterActive = (slot.label == 'CM' || slot.label == 'M2') || isHovering;
+                                final isCenterActive =
+                                    (slot.label == 'CM' ||
+                                        slot.label == 'M2') ||
+                                    isHovering;
                                 return EmptyPositionWidget(
                                   label: slot.label,
                                   isCenterActive: isCenterActive,

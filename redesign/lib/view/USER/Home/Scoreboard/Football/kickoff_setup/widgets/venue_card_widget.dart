@@ -19,7 +19,10 @@ class VenueCardWidget extends StatelessWidget {
       if (venue == null) return SizedBox();
 
       return Container(
-        margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
+        margin: EdgeInsets.symmetric(
+          horizontal: ResponsiveHelper.w(16.0),
+          vertical: ResponsiveHelper.h(12.0),
+        ),
         decoration: BoxDecoration(
           color: Color(0xFF121212).withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
@@ -54,27 +57,48 @@ class VenueCardWidget extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 16),
-                  _buildInfoRow('Weather', Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.cloud_outlined, color: Colors.white, size: 16),
-                      SizedBox(width: 6),
-                      Text(
-                        '${venue.weatherTemp} ${venue.weatherCondition}',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                  _buildInfoRow(
+                    'Weather',
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.cloud_outlined,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          '${venue.weatherTemp} ${venue.weatherCondition}',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(color: Color(0xFF1E1E1E), height: 24),
+                  _buildInfoRow(
+                    'Match Official',
+                    Text(
+                      venue.referee,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: ResponsiveHelper.sp(14),
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  )),
+                    ),
+                  ),
                   Divider(color: Color(0xFF1E1E1E), height: 24),
-                  _buildInfoRow('Match Official', Text(
-                    venue.referee,
-                    style: TextStyle(color: Colors.white, fontSize: ResponsiveHelper.sp(14), fontWeight: FontWeight.bold),
-                  )),
-                  Divider(color: Color(0xFF1E1E1E), height: 24),
-                  _buildInfoRow('Recording System', Text(
-                    venue.recordingSystem,
-                    style: TextStyle(color: AppColors.accent, fontSize: ResponsiveHelper.sp(14), fontWeight: FontWeight.bold),
-                  )),
+                  _buildInfoRow(
+                    'Recording System',
+                    Text(
+                      venue.recordingSystem,
+                      style: TextStyle(
+                        color: AppColors.accent,
+                        fontSize: ResponsiveHelper.sp(14),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

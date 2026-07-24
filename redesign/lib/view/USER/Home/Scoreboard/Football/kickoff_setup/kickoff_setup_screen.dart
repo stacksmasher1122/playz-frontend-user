@@ -16,9 +16,10 @@ class KickoffSetupScreen extends StatefulWidget {
   State<KickoffSetupScreen> createState() => _KickoffSetupScreenState();
 }
 
-class _KickoffSetupScreenState extends State<KickoffSetupScreen> with TickerProviderStateMixin {
+class _KickoffSetupScreenState extends State<KickoffSetupScreen>
+    with TickerProviderStateMixin {
   late final KickoffSetupController controller;
-  
+
   // Animation controllers for staggered entry
   late final AnimationController _entranceAnimController;
   late final Animation<double> _fadeAnimation;
@@ -34,14 +35,18 @@ class _KickoffSetupScreenState extends State<KickoffSetupScreen> with TickerProv
       vsync: this,
       duration: Duration(milliseconds: 600),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _entranceAnimController, curve: Curves.easeIn),
     );
-    
-    _slideAnimation = Tween<Offset>(begin: Offset(0, 0.05), end: Offset.zero).animate(
-      CurvedAnimation(parent: _entranceAnimController, curve: Curves.easeOutCubic),
-    );
+
+    _slideAnimation = Tween<Offset>(begin: Offset(0, 0.05), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _entranceAnimController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
 
     _entranceAnimController.forward();
   }

@@ -7,11 +7,7 @@ class GoalkeeperWidget extends StatelessWidget {
   final PlayerModel? goalkeeper;
   final VoidCallback onTap;
 
-  GoalkeeperWidget({
-    super.key,
-    required this.goalkeeper,
-    required this.onTap,
-  });
+  GoalkeeperWidget({super.key, required this.goalkeeper, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +32,10 @@ class GoalkeeperWidget extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(6),
+                vertical: ResponsiveHelper.h(2),
+              ),
               decoration: BoxDecoration(
                 color: AppColors.background.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
@@ -83,7 +82,10 @@ class GoalkeeperWidget extends StatelessWidget {
           ),
           SizedBox(height: 4),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(6),
+              vertical: ResponsiveHelper.h(2),
+            ),
             decoration: BoxDecoration(
               color: AppColors.background.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),

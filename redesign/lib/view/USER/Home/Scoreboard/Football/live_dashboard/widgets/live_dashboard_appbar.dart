@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/live_football_dashboard_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class LiveDashboardAppbar extends StatelessWidget implements PreferredSizeWidget {
+class LiveDashboardAppbar extends StatelessWidget
+    implements PreferredSizeWidget {
   LiveDashboardAppbar({super.key});
 
   @override
@@ -38,7 +39,10 @@ class LiveDashboardAppbar extends StatelessWidget implements PreferredSizeWidget
           Obx(() {
             if (!controller.isLive.value) return SizedBox.shrink();
             return Container(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(8),
+                vertical: ResponsiveHelper.h(4),
+              ),
               decoration: BoxDecoration(
                 color: Colors.red.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),

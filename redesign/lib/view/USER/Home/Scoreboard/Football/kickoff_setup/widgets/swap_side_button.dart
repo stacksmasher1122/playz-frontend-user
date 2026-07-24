@@ -18,11 +18,7 @@ class SwapSideButton extends StatelessWidget {
           color: Color(0xFF121212),
           shape: BoxShape.circle,
         ),
-        child: Icon(
-          Icons.swap_horiz,
-          color: Colors.white,
-          size: 20,
-        ),
+        child: Icon(Icons.swap_horiz, color: Colors.white, size: 20),
       ),
     );
   }

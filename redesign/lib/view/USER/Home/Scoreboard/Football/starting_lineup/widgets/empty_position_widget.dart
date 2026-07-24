@@ -24,7 +24,8 @@ class DashedCirclePainter extends CustomPainter {
 
     var circumference = size.width * 3.14159;
     var dashCount = (circumference / (dashWidth + dashSpace)).floor();
-    var adjustedDashSpace = (circumference - (dashCount * dashWidth)) / dashCount;
+    var adjustedDashSpace =
+        (circumference - (dashCount * dashWidth)) / dashCount;
 
     var angle = 0.0;
     for (int i = 0; i < dashCount; i++) {
@@ -74,7 +75,11 @@ class EmptyPositionWidget extends StatelessWidget {
                       border: Border.all(color: AppColors.accent, width: 2),
                     ),
                     child: Center(
-                      child: Icon(Icons.person_add_alt_1, color: AppColors.accent, size: 24),
+                      child: Icon(
+                        Icons.person_add_alt_1,
+                        color: AppColors.accent,
+                        size: 24,
+                      ),
                     ),
                   )
                 : CustomPaint(
@@ -91,7 +96,10 @@ class EmptyPositionWidget extends StatelessWidget {
           ),
           SizedBox(height: 4),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(6),
+              vertical: ResponsiveHelper.h(2),
+            ),
             decoration: BoxDecoration(
               color: AppColors.background.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),

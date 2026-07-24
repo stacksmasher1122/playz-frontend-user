@@ -22,7 +22,10 @@ class FormationChipWidget extends StatelessWidget {
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
         margin: EdgeInsets.only(right: 12),
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveHelper.w(24),
+          vertical: ResponsiveHelper.h(12),
+        ),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.accent : Color(0xFF121212),
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
@@ -32,7 +35,7 @@ class FormationChipWidget extends StatelessWidget {
                     color: AppColors.accent.withValues(alpha: 0.3),
                     blurRadius: 12,
                     spreadRadius: 2,
-                  )
+                  ),
                 ]
               : null,
         ),

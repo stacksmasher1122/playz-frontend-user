@@ -25,10 +25,8 @@ class FootballKickoffPitchWidget extends StatelessWidget {
         child: Stack(
           children: [
             // Pitch Markings (Custom Painter)
-            RepaintBoundary(
-              child: _PitchMarkingsWidget(),
-            ),
-            
+            RepaintBoundary(child: _PitchMarkingsWidget()),
+
             // Drop Zones & Team Cards
             Row(
               children: [
@@ -78,16 +76,15 @@ class FootballKickoffPitchWidget extends StatelessWidget {
             // Animated Ball
             Obx(() {
               final alignment = Alignment(
-                (controller.ballPosition.value * 2) - 1, // mapping 0..1 to -1..1
+                (controller.ballPosition.value * 2) -
+                    1, // mapping 0..1 to -1..1
                 0.5, // Slightly below center
               );
               return AnimatedAlign(
                 duration: Duration(milliseconds: 400),
                 curve: Curves.easeInOut,
                 alignment: alignment,
-                child: RepaintBoundary(
-                  child: KickoffBallWidget(),
-                ),
+                child: RepaintBoundary(child: KickoffBallWidget()),
               );
             }),
           ],
@@ -103,10 +100,7 @@ class _PitchMarkingsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return CustomPaint(
-      painter: _KickoffPitchPainter(),
-      child: Container(),
-    );
+    return CustomPaint(painter: _KickoffPitchPainter(), child: Container());
   }
 }
 
@@ -144,27 +138,39 @@ class _KickoffPitchPainter extends CustomPainter {
       size.height * 0.3,
       paint,
     );
-    
+
     // Dashed drop zone outlines (optional, simplified to solid for now or we could use path_drawing if available)
     // Left drop zone
     final dropZonePaint = Paint()
       ..color = Color(0xFF1E1E1E)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
-      
+
     final leftRect = Rect.fromCenter(
       center: Offset(size.width * 0.25, size.height * 0.5),
       width: ResponsiveHelper.w(70),
       height: ResponsiveHelper.h(80),
     );
-    canvas.drawRRect(RRect.fromRectAndRadius(leftRect, Radius.circular(ResponsiveHelper.w(16))), dropZonePaint);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        leftRect,
+        Radius.circular(ResponsiveHelper.w(16)),
+      ),
+      dropZonePaint,
+    );
 
     final rightRect = Rect.fromCenter(
       center: Offset(size.width * 0.75, size.height * 0.5),
       width: ResponsiveHelper.w(70),
       height: ResponsiveHelper.h(80),
     );
-    canvas.drawRRect(RRect.fromRectAndRadius(rightRect, Radius.circular(ResponsiveHelper.w(16))), dropZonePaint);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        rightRect,
+        Radius.circular(ResponsiveHelper.w(16)),
+      ),
+      dropZonePaint,
+    );
   }
 
   @override
