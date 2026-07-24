@@ -13,7 +13,84 @@ import '../../../../../view/USER/Home/Scoreboard/Football/football_scoreboard/fo
 class FootballCreateMatchController extends GetxController {
   final RxBool isLoading = false.obs;
 
+  final RxString matchName = ''.obs;
   final RxString tournament = ''.obs;
+  final RxList<String> tournamentOptions = <String>[
+    'Friendly Match',
+    'PlayZ Champions Cup',
+    'Local League',
+    'Weekend Knockout',
+  ].obs;
+  final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
+  final RxString venue = ''.obs;
+  final RxString referee = ''.obs;
+  final RxInt halves = 2.obs;
+  final RxBool varSimulation = false.obs;
+
+  void selectTournament(String? val) {
+    tournament.value = val ?? '';
+  }
+
+  Future<void> selectDateTime(BuildContext context) async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: selectedDate.value ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (date != null && context.mounted) {
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDate.value ?? DateTime.now()),
+      );
+      if (time != null) {
+        selectedDate.value = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      }
+    }
+  }
+
+  void selectVenue() {
+    venue.value = 'Main Turf Arena';
+  }
+
+  void searchReferee(String query) {
+    referee.value = query;
+  }
+
+  void selectMatchFormat(String format) {
+    selectedFormat.value = format;
+    if (format == '11v11') {
+      maxAllowedPlayers.value = 11;
+    } else if (format == '7v7') {
+      maxAllowedPlayers.value = 7;
+    } else if (format == '5v5') {
+      maxAllowedPlayers.value = 5;
+    }
+  }
+
+  void updateDuration(double val) {
+    duration.value = val;
+  }
+
+  void increaseHalves() {
+    if (halves.value < 4) halves.value++;
+  }
+
+  void decreaseHalves() {
+    if (halves.value > 1) halves.value--;
+  }
+
+  void toggleExtraTime() {
+    extraTime.value = !extraTime.value;
+  }
+
+  void togglePenaltyShootout() {
+    penaltyShootout.value = !penaltyShootout.value;
+  }
+
+  void toggleVAR() {
+    varSimulation.value = !varSimulation.value;
+  }
   
   // Format settings
   final RxString selectedFormat = '11v11'.obs;

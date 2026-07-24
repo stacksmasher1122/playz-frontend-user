@@ -81,57 +81,6 @@ class GeneralInformationCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 20),
-          Text(
-            'TOURNAMENT',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: ResponsiveHelper.sp(10),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 8),
-          Obx(() {
-            return DropdownButtonFormField<String>(
-              initialValue: controller.tournament.value.isEmpty
-                  ? null
-                  : controller.tournament.value,
-              hint: Text(
-                'Select Tournament',
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-              ),
-              dropdownColor: Color(0xFF121212),
-              icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-              style: TextStyle(color: Colors.white, fontSize: 14),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xFF121212),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                  borderSide: BorderSide(color: Color(0xFF1E1E1E)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                  borderSide: BorderSide(color: Color(0xFF1E1E1E)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                  borderSide: BorderSide(color: AppColors.accent),
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: ResponsiveHelper.w(16),
-                  vertical: ResponsiveHelper.h(14),
-                ),
-              ),
-              items: controller.tournamentOptions.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: controller.selectTournament,
-            );
-          }),
         ],
       ),
     );

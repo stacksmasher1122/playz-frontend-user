@@ -1,5 +1,5 @@
-import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:redesign/score_engine/footballMatchEngine/football_match_engine.dart';
 
 enum MatchMode { friendly, tournament }
 
@@ -34,6 +34,25 @@ class Team {
        players = players ?? [];
 
   bool get hasMinPlayers => players.length >= 7;
+
+  MatchTeam toMatchTeam() {
+    return MatchTeam(
+      id: id,
+      name: name,
+      color: '0x${color.toARGB32().toRadixString(16).padLeft(8, '0')}',
+      squad: players.asMap().entries.map((entry) {
+        final index = entry.key;
+        final p = entry.value;
+        return MatchPlayer(
+          id: p.id,
+          name: p.name,
+          number: index + 1,
+          isStarter: index < 11,
+          isOnPitch: index < 11,
+        );
+      }).toList(),
+    );
+  }
 }
 
 class MatchFixture {

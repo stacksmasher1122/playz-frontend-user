@@ -38,21 +38,34 @@ class FootballFriendsSelectionSheet extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Obx(
-                () => Text(
-                  '( \${isHome ? controller.homeTeamRoster.length : controller.awayTeamRoster.length} / \${controller.maxAllowedPlayers.value} )',
+              Obx(() {
+                final roster = isHome
+                    ? controller.homeTeamRoster
+                    : controller.awayTeamRoster;
+                roster.isEmpty;
+                final count = roster.length;
+                final maxPlayers = controller.maxAllowedPlayers.value;
+                return Text(
+                  '( $count / $maxPlayers )',
                   style: TextStyle(color: AppColors.muted, fontSize: 14),
-                ),
-              ),
+                );
+              }),
             ],
           ),
           SizedBox(height: 16),
           Expanded(
             child: Obx(() {
               final currentUser = controller.currentUserFriendModel.value;
+              final isFriendsLoading = friendsCtrl.isLoading.value;
+              final friendList = friendsCtrl.friends;
+              friendList.isEmpty;
+              final homePlayers = controller.homeTeamPlayers;
+              homePlayers.isEmpty;
+              final awayPlayers = controller.awayTeamPlayers;
+              awayPlayers.isEmpty;
 
-              if (friendsCtrl.isLoading.value &&
-                  friendsCtrl.friends.isEmpty &&
+              if (isFriendsLoading &&
+                  friendList.isEmpty &&
                   currentUser == null) {
                 return Center(
                   child: CircularProgressIndicator(color: AppColors.accent),
@@ -63,7 +76,7 @@ class FootballFriendsSelectionSheet extends StatelessWidget {
               if (currentUser != null) {
                 allSelectable.add(currentUser);
               }
-              allSelectable.addAll(friendsCtrl.friends);
+              allSelectable.addAll(friendList);
 
               if (allSelectable.isEmpty) {
                 return Center(
@@ -77,10 +90,10 @@ class FootballFriendsSelectionSheet extends StatelessWidget {
                 itemCount: allSelectable.length,
                 itemBuilder: (context, index) {
                   final friend = allSelectable[index];
-                  final bool inHome = controller.homeTeamPlayers.contains(
+                  final bool inHome = homePlayers.contains(
                     friend.email,
                   );
-                  final bool inAway = controller.awayTeamPlayers.contains(
+                  final bool inAway = awayPlayers.contains(
                     friend.email,
                   );
                   final bool isSelected = inHome || inAway;
@@ -90,7 +103,7 @@ class FootballFriendsSelectionSheet extends StatelessWidget {
                       ? friend.fullName
                       : friend.email;
                   final String finalName = isMe
-                      ? "\$displayName (You)"
+                      ? "$displayName (You)"
                       : displayName;
 
                   return ListTile(

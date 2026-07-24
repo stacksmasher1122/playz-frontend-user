@@ -1,18 +1,6 @@
-import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Football/football_scoreboard/football_scoreboard_screen.dart'
-    hide
-        kBg,
-        kSurface,
-        kSurfaceHighlight,
-        kAccent,
-        kTextPrimary,
-        kTextSecondary,
-        kTextMuted,
-        kSuccess,
-        kWarning,
-        kDivider;
+import 'package:redesign/view/USER/Home/Scoreboard/Football/football_scoreboard/football_scoreboard_screen.dart';
 
 // Widgets
 import 'widgets/setup_constants.dart';
@@ -31,7 +19,7 @@ import 'widgets/sticky_cta_button.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchSetupScreen extends StatefulWidget {
-  MatchSetupScreen({super.key});
+  const MatchSetupScreen({super.key});
 
   @override
   State<MatchSetupScreen> createState() => _MatchSetupScreenState();
@@ -243,8 +231,8 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => FootballScoreboardScreen(
-                      homeTeam: _fTeams[0],
-                      awayTeam: _fTeams[1],
+                      homeTeam: _fTeams[0].toMatchTeam(),
+                      awayTeam: _fTeams[1].toMatchTeam(),
                       durationMinutes: _fDuration,
                     ),
                   ),
