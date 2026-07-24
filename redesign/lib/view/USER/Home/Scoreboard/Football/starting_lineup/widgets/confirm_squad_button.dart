@@ -14,9 +14,7 @@ class ConfirmSquadButtonWidget extends StatelessWidget {
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.background, // Dark background behind sticky button
-        border: Border(
-          top: BorderSide(color: Color(0xFF121212)),
-        ),
+        border: Border(top: BorderSide(color: Color(0xFF121212))),
       ),
       child: SafeArea(
         child: Container(
@@ -24,7 +22,9 @@ class ConfirmSquadButtonWidget extends StatelessWidget {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: AppColors.accent.withValues(alpha: 0.3), // Lime Green glow
+                color: AppColors.accent.withValues(
+                  alpha: 0.3,
+                ), // Lime Green glow
                 blurRadius: 16,
                 spreadRadius: 2,
                 offset: Offset(0, 4),
@@ -46,7 +46,11 @@ class ConfirmSquadButtonWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle_outline, color: AppColors.background, size: 20),
+                    Icon(
+                      Icons.check_circle_outline,
+                      color: AppColors.background,
+                      size: 20,
+                    ),
                     SizedBox(width: 8),
                     Text(
                       'CONFIRM SQUAD',

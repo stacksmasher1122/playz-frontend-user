@@ -14,7 +14,10 @@ class QuickEventGridWidget extends StatelessWidget {
     final controller = Get.find<LiveFootballDashboardController>();
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(12.0),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

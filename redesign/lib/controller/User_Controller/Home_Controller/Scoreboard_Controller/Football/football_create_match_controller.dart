@@ -1,199 +1,176 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Football/team_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../../../model/User_Models/Home_Models/Friends_Model/friends_model.dart';
+import '../../../../../../model/football/football_model.dart';
+import '../../../../../../score_engine/footballMatchEngine/football_match_engine.dart';
+import 'package:uuid/uuid.dart';
+import '../../../../../sqflite/User_SQF/Home_SQF/Scoreboard_SQF/footballSqflite.dart';
+import 'football_controller.dart';
+import '../../../../../view/USER/Home/Scoreboard/Football/football_scoreboard/football_scoreboard_screen.dart';
 
 class FootballCreateMatchController extends GetxController {
   final RxBool isLoading = false.obs;
 
-  final RxString matchName = ''.obs;
-  final RxString tournament = ''.obs; // empty = "Select Tournament" placeholder
-  final RxString venue = 'Stade de France'.obs;
-  final RxString referee = ''.obs;
-  final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
+  final RxString tournament = ''.obs;
   
+  // Format settings
   final RxString selectedFormat = '11v11'.obs;
-  final RxDouble duration = 90.0.obs;
-  final RxInt halves = 2.obs;
-  final RxBool extraTime = true.obs;
-  final RxBool penaltyShootout = true.obs;
-  final RxBool varSimulation = false.obs;
+  final RxDouble duration = 45.0.obs; // Half duration
+  final RxInt maxAllowedPlayers = 11.obs;
+  final RxInt maxSubs = 5.obs;
+  final RxBool extraTime = false.obs;
+  final RxBool penaltyShootout = false.obs;
+
+  // Teams & Friends
+  final RxString homeTeamName = ''.obs;
+  final RxString awayTeamName = ''.obs;
+
+  final RxList<String> homeTeamPlayers = <String>[].obs;
+  final RxList<String> awayTeamPlayers = <String>[].obs;
   
-  final Rx<TeamModel?> homeTeam = Rx<TeamModel?>(null);
-  final Rx<TeamModel?> awayTeam = Rx<TeamModel?>(null);
+  final RxList<FriendModel> homeTeamRoster = <FriendModel>[].obs;
+  final RxList<FriendModel> awayTeamRoster = <FriendModel>[].obs;
 
-  final RxList<String> matchFormats = <String>[
-    '11v11',
-    '7v7',
-    '5v5',
-    'Custom',
-  ].obs;
+  final Rx<FriendModel?> currentUserFriendModel = Rx<FriendModel?>(null);
 
-  final RxList<String> tournamentOptions = <String>[
-    'PlayZ Champions Cup',
-    'Regional League',
-    'Friendly Match',
-  ].obs;
+  @override
+  void onInit() {
+    super.onInit();
+    _loadCurrentUserProfile();
+  }
 
   void loadInitialData() {
     isLoading.value = true;
-    // Mock loading delay
     Future.delayed(Duration(milliseconds: 500), () {
       isLoading.value = false;
     });
   }
 
-  void selectTournament(String? value) {
-    if (value != null) tournament.value = value;
-  }
-
-  void selectHomeTeam(TeamModel team) {
-    homeTeam.value = team;
-  }
-
-  void selectAwayTeam(TeamModel team) {
-    awayTeam.value = team;
-  }
-
-  void uploadTeamLogo(bool isHome) {
-    showSuccess("Logo Upload Coming Soon");
-  }
-
-  void selectVenue() {
-    // In a real app, this would open a dialog or search screen
-    venue.value = "Camp Nou";
-  }
-
-  Future<void> selectDateTime(BuildContext context) async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: Color(0xFFC6FF00), // Lime green
-              onPrimary: Colors.black,
-              surface: Color(0xFF1E1E1E),
-              onSurface: Colors.white,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (date != null && context.mounted) {
-      final time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-        builder: (context, child) {
-          return Theme(
-            data: ThemeData.dark().copyWith(
-              colorScheme: ColorScheme.dark(
-                primary: Color(0xFFC6FF00),
-                onPrimary: Colors.black,
-                surface: Color(0xFF1E1E1E),
-                onSurface: Colors.white,
-              ),
-            ),
-            child: child!,
-          );
-        },
-      );
-
-      if (time != null) {
-        selectedDate.value = DateTime(
-          date.year,
-          date.month,
-          date.day,
-          time.hour,
-          time.minute,
-        );
+  Future<void> _loadCurrentUserProfile() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        if (doc.exists) {
+          currentUserFriendModel.value = FriendModel.fromMap(doc.data() as Map<String, dynamic>);
+        }
       }
+    } catch (e) {
+      debugPrint("Error loading profile: \$e");
     }
   }
 
-  void searchReferee(String query) {
-    referee.value = query;
+  void updateFormat(String format, int players) {
+    selectedFormat.value = format;
+    maxAllowedPlayers.value = players;
   }
 
-  void selectMatchFormat(String value) {
-    selectedFormat.value = value;
+  void addTeamPlayer(bool isHome, FriendModel player) {
+    List<String> currentEmails = isHome ? homeTeamPlayers : awayTeamPlayers;
+    List<FriendModel> currentRoster = isHome ? homeTeamRoster : awayTeamRoster;
+
+    if (currentEmails.length >= maxAllowedPlayers.value) {
+      Get.snackbar('Team Full', 'Cannot add more players.');
+      return;
+    }
+
+    if (!currentEmails.contains(player.email)) {
+      if (isHome) {
+        if (awayTeamPlayers.contains(player.email)) {
+          awayTeamPlayers.remove(player.email);
+          awayTeamRoster.removeWhere((p) => p.email == player.email);
+        }
+      } else {
+        if (homeTeamPlayers.contains(player.email)) {
+          homeTeamPlayers.remove(player.email);
+          homeTeamRoster.removeWhere((p) => p.email == player.email);
+        }
+      }
+      currentEmails.add(player.email);
+      currentRoster.add(player);
+    }
   }
 
-  void increaseHalves() {
-    if (halves.value < 4) halves.value++;
-  }
-
-  void decreaseHalves() {
-    if (halves.value > 1) halves.value--;
-  }
-
-  void updateDuration(double value) {
-    duration.value = value;
-  }
-
-  void toggleExtraTime() {
-    extraTime.toggle();
-  }
-
-  void togglePenaltyShootout() {
-    penaltyShootout.toggle();
-  }
-
-  void toggleVAR() {
-    varSimulation.toggle();
-  }
-
-  void saveAsTemplate() {
-    showSuccess("Template Saved Successfully");
-  }
-
-  void createMatch() {
-    if (validateForm()) {
-      showSuccess("Match Created Successfully");
+  void removeTeamPlayer(bool isHome, FriendModel player) {
+    if (isHome) {
+      homeTeamPlayers.remove(player.email);
+      homeTeamRoster.removeWhere((p) => p.email == player.email);
+    } else {
+      awayTeamPlayers.remove(player.email);
+      awayTeamRoster.removeWhere((p) => p.email == player.email);
     }
   }
 
   bool validateForm() {
-    // UI Phase: Bypass validation so the user can freely navigate the flow
-    // if (matchName.value.trim().isEmpty) {
-    //   showError("Match Name is required");
-    //   return false;
-    // }
+    if (homeTeamName.value.trim().isEmpty || awayTeamName.value.trim().isEmpty) {
+      Get.snackbar('Error', 'Please provide names for both teams.');
+      return false;
+    }
     return true;
   }
 
-  void showSuccess(String message) {
-    Get.snackbar(
-      '',
-      message,
-      titleText: SizedBox.shrink(),
-      messageText: Text(
-        message,
-        style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      backgroundColor: Color(0xFFC6FF00),
-      colorText: Colors.black,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.all(16),
-    );
+  void saveAsTemplate() {
+    Get.snackbar('Success', 'Template saved successfully.');
   }
 
-  void showError(String message) {
-    Get.snackbar(
-      '',
-      message,
-      titleText: SizedBox.shrink(),
-      messageText: Text(
-        message,
-        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      backgroundColor: Colors.red.shade900,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.all(16),
-    );
+  Future<void> createMatchAndStart() async {
+    if (!validateForm()) return;
+
+    isLoading.value = true;
+    try {
+      final matchId = const Uuid().v4();
+      final now = DateTime.now();
+
+      final homeSquad = homeTeamRoster.map((p) => MatchPlayer(
+          id: p.email, name: p.fullName.isNotEmpty ? p.fullName : p.email, number: 0, isStarter: true, isOnPitch: true)).toList();
+      final awaySquad = awayTeamRoster.map((p) => MatchPlayer(
+          id: p.email, name: p.fullName.isNotEmpty ? p.fullName : p.email, number: 0, isStarter: true, isOnPitch: true)).toList();
+
+      final engineState = FootballMatchState();
+      engineState.homeTeam = MatchTeam(id: 'home', name: homeTeamName.value, color: '0xFF1DB954', squad: homeSquad);
+      engineState.awayTeam = MatchTeam(id: 'away', name: awayTeamName.value, color: '0xFFE53935', squad: awaySquad);
+
+      final List<String> allEmails = [...homeTeamPlayers, ...awayTeamPlayers];
+
+      final newMatch = FootballMatchModel(
+        id: matchId,
+        createdBy: FirebaseAuth.instance.currentUser?.uid ?? 'unknown',
+        sport: 'football',
+        allPlayers: allEmails,
+        homeTeamPlayers: homeTeamPlayers,
+        awayTeamPlayers: awayTeamPlayers,
+        config: {
+          'halfDurationMinutes': duration.value.toInt(),
+          'extraTimeEnabled': extraTime.value,
+          'penaltiesEnabled': penaltyShootout.value,
+          'maxSubs': maxSubs.value,
+        },
+        status: 'pending',
+        engineState: engineState,
+        lastUpdatedAt: now,
+        createdAt: now,
+      );
+
+      // Save to SQLite
+      await FootballSqflite.instance.createMatch(newMatch);
+
+      // Save to Firestore
+      await FirebaseFirestore.instance.collection('matches').doc(matchId).set(newMatch.toJson());
+
+      // Prepare Controller
+      final mainController = Get.put(FootballController());
+      mainController.currentMatchId.value = matchId;
+      mainController.engine.loadState(engineState);
+
+      // Navigate to Live Scoreboard directly (Bypassing lineup for now to mirror badminton parity)
+      Get.offAll(() => FootballScoreboardScreen());
+
+    } catch(e) {
+      Get.snackbar('Error', 'Failed to create match: \$e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

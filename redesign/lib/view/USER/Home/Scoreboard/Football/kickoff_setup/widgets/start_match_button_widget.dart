@@ -11,7 +11,10 @@ class StartMatchButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(16.0)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(16.0),
+      ),
       child: Column(
         children: [
           Container(
@@ -32,7 +35,9 @@ class StartMatchButtonWidget extends StatelessWidget {
                 onTap: onTap,
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveHelper.h(12),
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.accent,
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),

@@ -15,12 +15,15 @@ class LiveFootballDashboardScreen extends StatefulWidget {
   LiveFootballDashboardScreen({super.key});
 
   @override
-  State<LiveFootballDashboardScreen> createState() => _LiveFootballDashboardScreenState();
+  State<LiveFootballDashboardScreen> createState() =>
+      _LiveFootballDashboardScreenState();
 }
 
-class _LiveFootballDashboardScreenState extends State<LiveFootballDashboardScreen> with TickerProviderStateMixin {
+class _LiveFootballDashboardScreenState
+    extends State<LiveFootballDashboardScreen>
+    with TickerProviderStateMixin {
   late final LiveFootballDashboardController controller;
-  
+
   late final AnimationController _entranceAnimController;
   late final Animation<double> _fadeAnimation;
   late final Animation<Offset> _slideAnimation;
@@ -35,14 +38,18 @@ class _LiveFootballDashboardScreenState extends State<LiveFootballDashboardScree
       vsync: this,
       duration: Duration(milliseconds: 600),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _entranceAnimController, curve: Curves.easeIn),
     );
-    
-    _slideAnimation = Tween<Offset>(begin: Offset(0, 0.05), end: Offset.zero).animate(
-      CurvedAnimation(parent: _entranceAnimController, curve: Curves.easeOutCubic),
-    );
+
+    _slideAnimation = Tween<Offset>(begin: Offset(0, 0.05), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _entranceAnimController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
 
     _entranceAnimController.forward();
   }
@@ -95,7 +102,6 @@ class _LiveFootballDashboardScreenState extends State<LiveFootballDashboardScree
           ),
         );
       }),
-
     );
   }
 }

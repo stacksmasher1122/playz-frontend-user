@@ -18,7 +18,8 @@ class StartingLineupScreen extends StatefulWidget {
   State<StartingLineupScreen> createState() => _StartingLineupScreenState();
 }
 
-class _StartingLineupScreenState extends State<StartingLineupScreen> with SingleTickerProviderStateMixin {
+class _StartingLineupScreenState extends State<StartingLineupScreen>
+    with SingleTickerProviderStateMixin {
   late final StartingLineupController controller;
   late final AnimationController _animController;
   late final Animation<double> _opacity;
@@ -33,9 +34,10 @@ class _StartingLineupScreenState extends State<StartingLineupScreen> with Single
       vsync: this,
       duration: Duration(milliseconds: 600),
     );
-    _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeIn),
-    );
+    _opacity = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeIn));
     _animController.forward();
   }
 

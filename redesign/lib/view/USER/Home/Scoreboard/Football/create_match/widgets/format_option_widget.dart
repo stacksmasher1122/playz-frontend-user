@@ -36,7 +36,7 @@ class FormatOptionWidget extends StatelessWidget {
                     color: AppColors.accent.withValues(alpha: 0.15),
                     blurRadius: 12,
                     spreadRadius: 2,
-                  )
+                  ),
                 ]
               : null,
         ),
@@ -55,7 +55,9 @@ class FormatOptionWidget extends StatelessWidget {
             Text(
               subtitle,
               style: TextStyle(
-                color: isSelected ? AppColors.accent.withValues(alpha: 0.7) : Colors.grey,
+                color: isSelected
+                    ? AppColors.accent.withValues(alpha: 0.7)
+                    : Colors.grey,
                 fontSize: ResponsiveHelper.sp(10),
                 fontWeight: FontWeight.bold,
               ),

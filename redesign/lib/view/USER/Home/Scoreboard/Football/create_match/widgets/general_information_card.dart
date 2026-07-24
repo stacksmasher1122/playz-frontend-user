@@ -13,7 +13,10 @@ class GeneralInformationCard extends StatelessWidget {
     final controller = Get.find<FootballCreateMatchController>();
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(8.0),
+      ),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: Color(0xFF121212).withValues(alpha: 0.5),
@@ -72,7 +75,10 @@ class GeneralInformationCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                 borderSide: BorderSide(color: AppColors.accent),
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(16),
+                vertical: ResponsiveHelper.h(14),
+              ),
             ),
           ),
           SizedBox(height: 20),
@@ -87,7 +93,9 @@ class GeneralInformationCard extends StatelessWidget {
           SizedBox(height: 8),
           Obx(() {
             return DropdownButtonFormField<String>(
-              initialValue: controller.tournament.value.isEmpty ? null : controller.tournament.value,
+              initialValue: controller.tournament.value.isEmpty
+                  ? null
+                  : controller.tournament.value,
               hint: Text(
                 'Select Tournament',
                 style: TextStyle(color: Colors.grey, fontSize: 14),
@@ -110,7 +118,10 @@ class GeneralInformationCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                   borderSide: BorderSide(color: AppColors.accent),
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveHelper.w(16),
+                  vertical: ResponsiveHelper.h(14),
+                ),
               ),
               items: controller.tournamentOptions.map((String value) {
                 return DropdownMenuItem<String>(

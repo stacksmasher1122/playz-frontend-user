@@ -16,7 +16,10 @@ class SquadHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(8.0)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(8.0),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

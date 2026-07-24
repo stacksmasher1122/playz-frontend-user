@@ -15,7 +15,10 @@ class PlayerCardWidget extends StatelessWidget {
     final bool isAvailable = !player.isLocked;
 
     Widget cardContent = Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(6)),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16),
+        vertical: ResponsiveHelper.h(6),
+      ),
       padding: EdgeInsets.all(ResponsiveHelper.w(12)),
       decoration: BoxDecoration(
         color: Color(0xFF121212).withValues(alpha: isAvailable ? 1.0 : 0.5),
@@ -41,17 +44,29 @@ class PlayerCardWidget extends StatelessWidget {
                   ),
                   clipBehavior: Clip.hardEdge,
                   child: player.avatarImage != null
-                      ? Image.network(player.avatarImage!, fit: BoxFit.cover, color: isAvailable ? null : Colors.grey, colorBlendMode: isAvailable ? null : BlendMode.saturation)
+                      ? Image.network(
+                          player.avatarImage!,
+                          fit: BoxFit.cover,
+                          color: isAvailable ? null : Colors.grey,
+                          colorBlendMode: isAvailable
+                              ? null
+                              : BlendMode.saturation,
+                        )
                       : Icon(Icons.person, color: Colors.grey, size: 30),
                 ),
                 Positioned(
                   bottom: -4,
                   left: -4,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ResponsiveHelper.w(6),
+                      vertical: ResponsiveHelper.h(2),
+                    ),
                     decoration: BoxDecoration(
                       color: isAvailable ? AppColors.accent : Colors.grey,
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                      borderRadius: BorderRadius.circular(
+                        ResponsiveHelper.w(4),
+                      ),
                     ),
                     child: Text(
                       player.jerseyNumber,
@@ -138,10 +153,7 @@ class PlayerCardWidget extends StatelessWidget {
             ),
           ),
         ),
-        childWhenDragging: Opacity(
-          opacity: 0.3,
-          child: cardContent,
-        ),
+        childWhenDragging: Opacity(opacity: 0.3, child: cardContent),
         child: cardContent,
       );
     } else {

@@ -22,7 +22,9 @@ class StadiumBannerWidget extends StatelessWidget {
         color: AppColors.background,
         // Since we cannot use actual assets without knowing them, a mock gradient/image setup
         image: DecorationImage(
-          image: NetworkImage('https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=600'), // Mock stadium photo
+          image: NetworkImage(
+            'https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=600',
+          ), // Mock stadium photo
           fit: BoxFit.cover,
         ),
       ),
@@ -44,7 +46,10 @@ class StadiumBannerWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(8),
+                vertical: ResponsiveHelper.h(4),
+              ),
               decoration: BoxDecoration(
                 color: AppColors.accent, // Lime Green
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),

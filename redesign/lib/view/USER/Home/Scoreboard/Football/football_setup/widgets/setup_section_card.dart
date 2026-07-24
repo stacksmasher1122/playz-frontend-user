@@ -31,10 +31,7 @@ class SetupSectionCard extends StatelessWidget {
           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
           child: ExpansionTile(
             initiallyExpanded: isExpanded,
-            tilePadding: EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 8,
-            ),
+            tilePadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             leading: Container(
               padding: EdgeInsets.all(ResponsiveHelper.w(8)),
               decoration: BoxDecoration(

@@ -15,7 +15,10 @@ class SideSelectionCard extends StatelessWidget {
     final controller = Get.find<KickoffSetupController>();
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(12.0),
+      ),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
         color: Color(0xFF121212).withValues(alpha: 0.5),
@@ -49,9 +52,7 @@ class SideSelectionCard extends StatelessWidget {
                   ),
                 ],
               ),
-              SwapSideButton(
-                onTap: controller.swapSides,
-              ),
+              SwapSideButton(onTap: controller.swapSides),
             ],
           ),
           SizedBox(height: 24),

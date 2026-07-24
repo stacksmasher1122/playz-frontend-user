@@ -5,7 +5,8 @@ import 'package:redesign/theme/responsive_helper.dart';
 class StatsTileWidget extends StatelessWidget {
   final String title;
   final String value;
-  final bool isPrimary; // True if it should have lime border/color (e.g. XP Gained)
+  final bool
+  isPrimary; // True if it should have lime border/color (e.g. XP Gained)
 
   StatsTileWidget({
     super.key,

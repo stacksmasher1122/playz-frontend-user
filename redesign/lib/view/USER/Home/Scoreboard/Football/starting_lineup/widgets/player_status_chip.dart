@@ -11,7 +11,7 @@ class PlayerStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     bool isFit = status.toLowerCase() == 'fit';
-    
+
     return Text(
       status.toUpperCase(),
       style: TextStyle(

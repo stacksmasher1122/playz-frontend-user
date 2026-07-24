@@ -13,7 +13,10 @@ class TacticHeaderWidget extends StatelessWidget {
     final controller = Get.find<StartingLineupController>();
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(12.0),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -26,7 +29,10 @@ class TacticHeaderWidget extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(12),
+              vertical: ResponsiveHelper.h(6),
+            ),
             decoration: BoxDecoration(
               color: Color(0xFF121212),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),

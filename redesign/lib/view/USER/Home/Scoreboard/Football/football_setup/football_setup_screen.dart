@@ -401,10 +401,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
               Expanded(
                 child: Text(
                   "Starts in ~${_fTime.hour - TimeOfDay.now().hour} hours",
-                  style: TextStyle(
-                    color: kAccent,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(color: kAccent, fontWeight: FontWeight.bold),
                 ),
               ),
               Text(
@@ -672,7 +669,10 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
 
   Widget _buildSystemCheck() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(24),
+        vertical: ResponsiveHelper.h(12),
+      ),
       child: Container(
         padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
@@ -716,7 +716,10 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   Widget _buildFriendlyPreview() {
     bool valid = ValidationEngine.validateFriendly(_fTeams, _fPlayersPerSide);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(24),
+        vertical: ResponsiveHelper.h(12),
+      ),
       child: Container(
         padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(

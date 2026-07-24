@@ -16,7 +16,10 @@ class BottomActionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(16.0)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(16.0),
+      ),
       child: Column(
         children: [
           Container(
@@ -24,7 +27,9 @@ class BottomActionWidget extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.3), // Lime Green glow
+                  color: AppColors.accent.withValues(
+                    alpha: 0.3,
+                  ), // Lime Green glow
                   blurRadius: 16,
                   spreadRadius: 2,
                   offset: Offset(0, 4),
@@ -37,7 +42,9 @@ class BottomActionWidget extends StatelessWidget {
                 onTap: onCreate,
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveHelper.h(16),
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.accent, // Lime Green
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
@@ -46,7 +53,11 @@ class BottomActionWidget extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.sports_soccer, color: AppColors.background, size: 20),
+                      Icon(
+                        Icons.sports_soccer,
+                        color: AppColors.background,
+                        size: 20,
+                      ),
                       SizedBox(width: 8),
                       Text(
                         'CREATE MATCH',
@@ -77,7 +88,9 @@ class BottomActionWidget extends StatelessWidget {
                 onTap: onSaveTemplate,
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveHelper.h(16),
+                  ),
                   alignment: Alignment.center,
                   child: Text(
                     'SAVE AS TEMPLATE',

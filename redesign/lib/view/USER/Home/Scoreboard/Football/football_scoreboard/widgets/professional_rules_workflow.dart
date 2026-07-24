@@ -5,21 +5,23 @@ import 'package:redesign/theme/responsive_helper.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_controller.dart';
 
-class GoalWorkflow extends StatefulWidget {
+class ProfessionalRulesWorkflow extends StatefulWidget {
   final MatchEngine engine;
 
-  GoalWorkflow({super.key, required this.engine});
+  ProfessionalRulesWorkflow({super.key, required this.engine});
 
   @override
-  State<GoalWorkflow> createState() => _GoalWorkflowState();
+  State<ProfessionalRulesWorkflow> createState() =>
+      _ProfessionalRulesWorkflowState();
 }
 
-class _GoalWorkflowState extends State<GoalWorkflow> {
+class _ProfessionalRulesWorkflowState extends State<ProfessionalRulesWorkflow> {
   TeamSide? selectedSide;
-  MatchPlayer? scorer;
-  MatchPlayer? assist;
+  MatchPlayer? selectedPlayer;
+  EventType? selectedRule;
 
-  int step = 0; // 0: Side, 1: Scorer, 2: Assist/Confirm
+  int step =
+      0; // 0: Rule Type, 1: Side, 2: Player (for offside/freekick/penalty)
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Log Goal",
+            "Pro Rules",
             style: TextStyle(
               color: AppColors.onPrimary,
               fontSize: ResponsiveHelper.sp(18),
@@ -68,9 +70,61 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
   }
 
   Widget _buildBody() {
-    if (step == 0) return _buildSideSelection();
-    if (step == 1) return _buildPlayerSelection("Select Scorer", true);
-    return _buildPlayerSelection("Select Assist (Optional)", false);
+    if (step == 0) return _buildRuleSelection();
+    if (step == 1) return _buildSideSelection();
+    return _buildPlayerSelection();
+  }
+
+  Widget _buildRuleSelection() {
+    return ListView(
+      children: [
+        if (widget.engine.state.phase != MatchPhase.penalties) ...[
+          _buildRuleTile(
+            "Offside",
+            EventType.offside,
+            Icons.flag,
+            Colors.orange,
+          ),
+          _buildRuleTile(
+            "Free Kick",
+            EventType.freeKick,
+            Icons.sports_kabaddi,
+            Colors.blue,
+          ),
+        ],
+        if (widget.engine.state.phase == MatchPhase.penalties ||
+            widget.engine.penaltiesEnabled) ...[
+          _buildRuleTile(
+            "Penalty Goal",
+            EventType.penaltyGoal,
+            Icons.sports_soccer,
+            Colors.green,
+          ),
+          _buildRuleTile(
+            "Penalty Miss",
+            EventType.penaltyMiss,
+            Icons.close,
+            Colors.red,
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildRuleTile(
+    String title,
+    EventType type,
+    IconData icon,
+    Color color,
+  ) {
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(title, style: TextStyle(color: AppColors.onPrimary)),
+      onTap: () => setState(() {
+        selectedRule = type;
+        step = 1;
+      }),
+    );
   }
 
   Widget _buildSideSelection() {
@@ -85,19 +139,17 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
   Widget _buildTeamBtn(MatchTeam team, TeamSide side) {
     return Expanded(
       child: GestureDetector(
-        onTap: () {
-          setState(() {
-            selectedSide = side;
-            step = 1;
-          });
-        },
+        onTap: () => setState(() {
+          selectedSide = side;
+          step = 2;
+        }),
         child: Container(
           color: Colors.transparent,
           child: Center(
             child: Text(
               team.name,
               style: TextStyle(
-                color: AppColors.success, // Assuming it's a goal color
+                color: AppColors.onPrimary,
                 fontSize: ResponsiveHelper.sp(20),
                 fontWeight: FontWeight.bold,
               ),
@@ -108,12 +160,10 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
     );
   }
 
-  Widget _buildPlayerSelection(String title, bool isScorer) {
+  Widget _buildPlayerSelection() {
     MatchTeam team = selectedSide == TeamSide.home
         ? widget.engine.state.homeTeam
         : widget.engine.state.awayTeam;
-
-    // Only show players on pitch
     List<MatchPlayer> pitchPlayers = team.squad
         .where((p) => p.isOnPitch)
         .toList();
@@ -122,16 +172,16 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
       children: [
         Padding(
           padding: EdgeInsets.all(ResponsiveHelper.w(16)),
-          child: Text(title, style: TextStyle(color: AppColors.muted)),
+          child: Text(
+            "Select Player (Optional)",
+            style: TextStyle(color: AppColors.muted),
+          ),
         ),
         Expanded(
           child: ListView.builder(
             itemCount: pitchPlayers.length,
             itemBuilder: (ctx, i) {
               final p = pitchPlayers[i];
-              // Don't show scorer as an option for assist
-              if (!isScorer && p.id == scorer?.id) return SizedBox();
-
               return ListTile(
                 title: Text(
                   p.name,
@@ -141,43 +191,40 @@ class _GoalWorkflowState extends State<GoalWorkflow> {
                   "#\${p.number}",
                   style: TextStyle(color: AppColors.muted),
                 ),
-                onTap: () {
-                  setState(() {
-                    if (isScorer) {
-                      scorer = p;
-                      step = 2;
-                    } else {
-                      assist = p;
-                      _confirm();
-                    }
-                  });
-                },
+                onTap: () => _confirm(p),
               );
             },
           ),
         ),
-        if (!isScorer)
-          Padding(
-            padding: EdgeInsets.all(ResponsiveHelper.w(16)),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.outlineVariant,
-                minimumSize: Size(double.infinity, ResponsiveHelper.h(50)),
-              ),
-              onPressed: _confirm,
-              child: Text(
-                "NO ASSIST",
-                style: TextStyle(color: AppColors.onPrimary),
-              ),
+        Padding(
+          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.outlineVariant,
+              minimumSize: Size(double.infinity, ResponsiveHelper.h(50)),
+            ),
+            onPressed: () => _confirm(null),
+            child: Text(
+              "SKIP PLAYER",
+              style: TextStyle(color: AppColors.onPrimary),
             ),
           ),
+        ),
       ],
     );
   }
 
-  void _confirm() {
+  void _confirm(MatchPlayer? player) {
     final controller = Get.find<FootballController>();
-    controller.processGoal(selectedSide!, scorer, assist);
+    if (selectedRule == EventType.offside) {
+      controller.processOffside(selectedSide!, player);
+    } else if (selectedRule == EventType.freeKick) {
+      controller.processFreeKick(selectedSide!, player);
+    } else if (selectedRule == EventType.penaltyGoal) {
+      controller.processPenalty(selectedSide!, player, true);
+    } else if (selectedRule == EventType.penaltyMiss) {
+      controller.processPenalty(selectedSide!, player, false);
+    }
     Navigator.pop(context);
   }
 }

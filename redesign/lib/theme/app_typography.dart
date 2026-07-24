@@ -80,6 +80,7 @@ class AppTypography {
   // ─── Display ─────────────────────────────────────────────────────────────────
   /// Hero scoreboard numbers.
   static const TextStyle displayLg = TextStyle(
+    fontFamily: 'JetBrains Mono',
     fontSize: 48,
     fontWeight: FontWeight.w800,
     letterSpacing: -1.0,
@@ -87,6 +88,7 @@ class AppTypography {
   );
 
   static const TextStyle displayMd = TextStyle(
+    fontFamily: 'JetBrains Mono',
     fontSize: 36,
     fontWeight: FontWeight.w800,
     letterSpacing: -0.5,
@@ -94,6 +96,7 @@ class AppTypography {
   );
 
   static const TextStyle displaySm = TextStyle(
+    fontFamily: 'JetBrains Mono',
     fontSize: 24,
     fontWeight: FontWeight.w700,
     letterSpacing: -0.25,
@@ -103,6 +106,7 @@ class AppTypography {
   // ─── Mono ─────────────────────────────────────────────────────────────────────
   /// Monospace style for scores and stats.
   static const TextStyle monoLg = TextStyle(
+    fontFamily: 'JetBrains Mono',
     fontSize: 24,
     fontWeight: FontWeight.w700,
     letterSpacing: 2.0,
@@ -110,6 +114,7 @@ class AppTypography {
   );
 
   static const TextStyle monoMd = TextStyle(
+    fontFamily: 'JetBrains Mono',
     fontSize: 16,
     fontWeight: FontWeight.w700,
     letterSpacing: 1.5,

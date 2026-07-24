@@ -2,7 +2,8 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class FootballCreateMatchAppbar extends StatelessWidget implements PreferredSizeWidget {
+class FootballCreateMatchAppbar extends StatelessWidget
+    implements PreferredSizeWidget {
   FootballCreateMatchAppbar({super.key});
 
   @override
@@ -31,18 +32,12 @@ class FootballCreateMatchAppbar extends StatelessWidget implements PreferredSize
           child: CircleAvatar(
             radius: 16,
             backgroundColor: Color(0xFF1E1E1E),
-            child: Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 20,
-            ),
+            child: Icon(Icons.person, color: Colors.white, size: 20),
           ),
         ),
       ],
       flexibleSpace: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFF121212),
-        ),
+        decoration: BoxDecoration(color: Color(0xFF121212)),
       ),
     );
   }

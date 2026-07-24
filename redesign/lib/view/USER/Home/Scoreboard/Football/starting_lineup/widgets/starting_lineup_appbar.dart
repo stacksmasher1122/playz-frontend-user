@@ -2,7 +2,8 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class StartingLineupAppbar extends StatelessWidget implements PreferredSizeWidget {
+class StartingLineupAppbar extends StatelessWidget
+    implements PreferredSizeWidget {
   StartingLineupAppbar({super.key});
 
   @override

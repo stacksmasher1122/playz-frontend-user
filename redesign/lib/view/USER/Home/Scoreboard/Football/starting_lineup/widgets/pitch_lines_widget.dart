@@ -8,10 +8,7 @@ class PitchLinesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return CustomPaint(
-      painter: _PitchPainter(),
-      child: Container(),
-    );
+    return CustomPaint(painter: _PitchPainter(), child: Container());
   }
 }
 
@@ -50,10 +47,15 @@ class _PitchPainter extends CustomPainter {
 
     // Bottom penalty area
     canvas.drawRect(
-      Rect.fromLTWH((size.width - penWidth) / 2, size.height - penHeight, penWidth, penHeight),
+      Rect.fromLTWH(
+        (size.width - penWidth) / 2,
+        size.height - penHeight,
+        penWidth,
+        penHeight,
+      ),
       paint,
     );
-    
+
     // Top goal area
     final goalWidth = size.width * 0.25;
     final goalHeight = size.height * 0.06;
@@ -64,7 +66,12 @@ class _PitchPainter extends CustomPainter {
 
     // Bottom goal area
     canvas.drawRect(
-      Rect.fromLTWH((size.width - goalWidth) / 2, size.height - goalHeight, goalWidth, goalHeight),
+      Rect.fromLTWH(
+        (size.width - goalWidth) / 2,
+        size.height - goalHeight,
+        goalWidth,
+        goalHeight,
+      ),
       paint,
     );
   }

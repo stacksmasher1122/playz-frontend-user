@@ -12,7 +12,10 @@ class SetupQualityIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(16)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(24),
+        vertical: ResponsiveHelper.h(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

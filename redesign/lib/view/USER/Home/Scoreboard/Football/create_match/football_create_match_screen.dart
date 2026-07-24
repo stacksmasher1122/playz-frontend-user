@@ -9,11 +9,10 @@ import 'widgets/logistics_card.dart';
 import 'widgets/match_format_card.dart';
 import 'widgets/rules_configuration_card.dart';
 import 'widgets/bottom_action_widget.dart';
-import '../starting_lineup/starting_lineup_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class FootballCreateMatchScreen extends StatefulWidget {
-  FootballCreateMatchScreen({super.key});
+  const FootballCreateMatchScreen({super.key});
 
   @override
   State<FootballCreateMatchScreen> createState() => _FootballCreateMatchScreenState();
@@ -32,7 +31,7 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
 
     _animController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 600),
     );
     _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeIn),
@@ -55,7 +54,7 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
       appBar: FootballCreateMatchAppbar(),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: AppColors.accent, // Lime Green
             ),
@@ -75,17 +74,10 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
                 MatchFormatCard(),
                 RulesConfigurationCard(),
                 BottomActionWidget(
-                  onCreate: () {
-                    if (controller.validateForm()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => StartingLineupScreen()),
-                      );
-                    }
-                  },
+                  onCreate: () => controller.createMatchAndStart(),
                   onSaveTemplate: controller.saveAsTemplate,
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: ResponsiveHelper.h(24)),
               ],
             ),
           ),
@@ -108,16 +100,16 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
               fontWeight: FontWeight.w900,
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: ResponsiveHelper.h(8)),
           Text(
             'Configure a new professional match session for real-time scouting and analytics.',
             style: TextStyle(
               color: Colors.grey,
               fontSize: ResponsiveHelper.sp(14),
-              height: ResponsiveHelper.h(1.4),
+              height: 1.4,
             ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: ResponsiveHelper.h(12)),
         ],
       ),
     );
