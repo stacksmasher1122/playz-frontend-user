@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -10,6 +11,7 @@ class SlotMatrixBottomSheet extends StatelessWidget {
   final DateTime? selectedDate;
   final List<SlotModel> slots;
   final ValueChanged<TimeOfDay> onSlotSelected;
+  final ValueChanged<DateTime>? onDateChanged;
 
   const SlotMatrixBottomSheet({
     super.key,
@@ -19,6 +21,7 @@ class SlotMatrixBottomSheet extends StatelessWidget {
     this.selectedDate,
     required this.slots,
     required this.onSlotSelected,
+    this.onDateChanged,
   });
 
   // Matte Colors
@@ -178,7 +181,91 @@ class SlotMatrixBottomSheet extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 6),
+
+                // DATE DISPLAY & CHANGE DATE BUTTON
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.calendar_today_rounded, color: AppColors.accent, size: 14),
+                          SizedBox(width: 6),
+                          Text(
+                            selectedDate != null
+                                ? DateFormat('EEE, dd MMM yyyy').format(selectedDate!)
+                                : DateFormat('EEE, dd MMM yyyy').format(DateTime.now()),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: ResponsiveHelper.sp(12),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (onDateChanged != null)
+                      InkWell(
+                        onTap: () async {
+                          final initial = selectedDate ?? DateTime.now();
+                          final picked = await showDatePicker(
+                            context: context,
+                            initialDate: initial,
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime.now().add(const Duration(days: 90)),
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData.dark().copyWith(
+                                  colorScheme: ColorScheme.dark(
+                                    primary: AppColors.accent,
+                                    onPrimary: Colors.black,
+                                    surface: AppColors.card,
+                                    onSurface: Colors.white,
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+                          if (picked != null) {
+                            onDateChanged!(picked);
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColors.accent),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.edit_calendar_rounded, color: AppColors.accent, size: 14),
+                              SizedBox(width: 4),
+                              Text(
+                                'Change Date',
+                                style: TextStyle(
+                                  color: AppColors.accent,
+                                  fontSize: ResponsiveHelper.sp(12),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                SizedBox(height: 10),
 
                 /// LEGEND
                 Row(

@@ -32,28 +32,29 @@ class AvailableTurfsList extends StatelessWidget {
 
         // Empty state
         if (_controller.filteredTurfs.isEmpty) {
+          final query = _controller.searchQuery.value.trim();
           return Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
+              padding: const EdgeInsets.symmetric(vertical: 40),
               child: Column(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.sports_outlined,
                     color: AppColors.muted,
                     size: 48,
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Text(
-                    'No turfs found',
+                    query.isNotEmpty ? 'No turfs matching "$query"' : 'No turfs found',
                     style: TextStyle(
                       color: AppColors.muted,
                       fontSize: ResponsiveHelper.sp(16),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
-                    'Try changing your filters',
+                    'Try changing your search query or filters',
                     style: TextStyle(
                       color: AppColors.muted.withValues(alpha: 0.6),
                       fontSize: ResponsiveHelper.sp(13),

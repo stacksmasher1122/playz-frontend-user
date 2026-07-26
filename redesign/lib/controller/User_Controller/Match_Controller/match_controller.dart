@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redesign/view/USER/Play/play/play_models.dart';
 import 'package:redesign/controller/maps_controller.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/utils/slot_overlap_helper.dart';
 
 enum MatchSortOption {
   timeAsc,
@@ -170,9 +172,303 @@ class MatchController extends GetxController {
       Get.snackbar(
         'Match Creation Failed',
         'Could not create match poll: $e',
-        backgroundColor: Colors.redAccent,
+        backgroundColor: AppColors.card,
         colorText: Colors.white,
       );
+      return false;
+    }
+  }
+
+  /// Join a match poll (Enforces: player can join ONLY ONCE and host is already included)
+  Future<bool> joinMatchPoll({
+    required String matchId,
+    required String userId,
+    required double pricePaid,
+    String? paymentId,
+  }) async {
+    try {
+      final docRef = _firestore.collection('matches').doc(matchId);
+      final docSnap = await docRef.get();
+      if (!docSnap.exists) return false;
+
+      final data = docSnap.data()!;
+      final List<dynamic> playerIds = List<dynamic>.from(data['playerIds'] ?? []);
+
+      // Prevent duplicate joins
+      if (playerIds.contains(userId)) {
+        Get.snackbar(
+          'Already Joined',
+          'You are already included in this match poll.',
+          backgroundColor: AppColors.card,
+          colorText: Colors.white,
+        );
+        return false;
+      }
+
+      final int currentPlayers = (data['currentPlayers'] ?? 1) + 1;
+      final double collectedAmount = ((data['collectedAmount'] ?? 0.0) as num).toDouble() + pricePaid;
+      final int maxPlayers = (data['maxPlayers'] as num?)?.toInt() ?? 10;
+      final double targetAmount = ((data['targetAmount'] ?? 0.0) as num).toDouble();
+      final bool isAlreadySlotBooked = data['isSlotBooked'] == true;
+      final String locationType = (data['locationType'] ?? 'custom').toString();
+
+      playerIds.add(userId);
+
+      await docRef.update({
+        'playerIds': playerIds,
+        'currentPlayers': currentPlayers,
+        'collectedAmount': collectedAmount,
+      });
+
+      // Auto-book check if all players joined & paid for PlayZ Turfs
+      final bool isPollComplete = (currentPlayers >= maxPlayers) || (targetAmount > 0 && collectedAmount >= targetAmount);
+
+      if (locationType == 'playz_turf' && isPollComplete && !isAlreadySlotBooked) {
+        final turfId = (data['turfId'] ?? '').toString();
+        final groundId = (data['groundId'] ?? '').toString();
+        final ownerId = (data['ownerId'] ?? '').toString();
+        final dateStr = (data['date'] ?? '').toString();
+        final timeStr = (data['time'] ?? '').toString();
+        final slotId = (data['slotId'] ?? '').toString();
+
+        final parts = timeStr.split(',');
+        final timeOnly = parts.length > 1 ? parts.last.trim() : timeStr;
+
+        if (turfId.isNotEmpty && groundId.isNotEmpty && dateStr.isNotEmpty) {
+          final isOverlapping = await SlotOverlapHelper.isSlotOverlappingInFirestore(
+            ownerId: ownerId,
+            turfId: turfId,
+            groundId: groundId,
+            dateStr: dateStr,
+            newTimeRangeStr: timeOnly,
+            currentMatchId: matchId,
+          );
+
+          if (!isOverlapping) {
+            // NO CONFLICT: Auto-book slot in Firestore immediately
+            final String finalOwnerId = ownerId.isNotEmpty ? ownerId : 'owner_$turfId';
+            await _firestore
+                .collection('owners')
+                .doc(finalOwnerId)
+                .collection('turfs')
+                .doc(turfId)
+                .collection('bookings')
+                .add({
+              'turfId': turfId,
+              'groundId': groundId,
+              'groundName': 'Main Ground',
+              'date': dateStr,
+              'time': timeOnly,
+              'slotId': slotId,
+              'status': 'confirmed',
+              'createdAt': FieldValue.serverTimestamp(),
+              'bookingType': 'match_poll_auto_booked',
+            });
+
+            await docRef.update({
+              'isSlotBooked': true,
+              'hasConflict': false,
+            });
+
+            Get.snackbar(
+              'Poll Full & Slot Booked! ⚡',
+              'All players joined and the turf slot has been automatically booked!',
+              backgroundColor: AppColors.accent,
+              colorText: Colors.black,
+              snackPosition: SnackPosition.BOTTOM,
+              duration: const Duration(seconds: 4),
+            );
+          } else {
+            // CONFLICT DETECTED: Slot was booked by someone else
+            await docRef.update({
+              'hasConflict': true,
+            });
+
+            Get.snackbar(
+              'Poll Full — Slot Conflict! ⚠️',
+              'All players joined, but the original slot was booked by another user. Host can change the slot.',
+              backgroundColor: Colors.orangeAccent,
+              colorText: Colors.black,
+              snackPosition: SnackPosition.BOTTOM,
+              duration: const Duration(seconds: 5),
+            );
+          }
+        }
+      } else {
+        Get.snackbar(
+          'Successfully Joined! ⚽',
+          'You have joined the match poll!',
+          backgroundColor: AppColors.accent,
+          colorText: Colors.black,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+
+      return true;
+    } catch (e) {
+      debugPrint('🔴 Error joining match poll: $e');
+      return false;
+    }
+  }
+
+  /// Host confirms slot booking once poll target amount is gathered
+  Future<bool> confirmSlotBookingByHost({
+    required String matchId,
+    required String ownerId,
+    required String turfId,
+    required String groundId,
+    required String groundName,
+    required String dateStr,
+    required String timeStr,
+    String slotId = '',
+  }) async {
+    try {
+      // 1. Check for overlapping slot booking in Firestore
+      //    Pass currentMatchId so this poll doesn't self-block
+      final isOverlapping = await SlotOverlapHelper.isSlotOverlappingInFirestore(
+        ownerId: ownerId,
+        turfId: turfId,
+        groundId: groundId,
+        dateStr: dateStr,
+        newTimeRangeStr: timeStr,
+        currentMatchId: matchId,
+      );
+
+      if (isOverlapping) {
+        await _firestore.collection('matches').doc(matchId).update({
+          'hasConflict': true,
+        });
+
+        Get.snackbar(
+          'Slot Unavailable',
+          'The slot ($timeStr) overlaps with an existing booking! Please select another date or time slot.',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 4),
+        );
+        return false;
+      }
+
+      // 2. Add booking record under turf owner
+      await _firestore
+          .collection('owners')
+          .doc(ownerId)
+          .collection('turfs')
+          .doc(turfId)
+          .collection('bookings')
+          .add({
+        'turfId': turfId,
+        'groundId': groundId,
+        'groundName': groundName,
+        'date': dateStr,
+        'time': timeStr,
+        'slotId': slotId,
+        'status': 'confirmed',
+        'createdAt': FieldValue.serverTimestamp(),
+        'bookingType': 'match_poll_gathered_full',
+      });
+
+      // 3. Mark match poll as slot booked & conflict resolved
+      await _firestore.collection('matches').doc(matchId).update({
+        'isSlotBooked': true,
+        'hasConflict': false,
+      });
+
+      Get.snackbar(
+        'Slot Booked! ⚡',
+        'Turf slot has been successfully booked for your match poll!',
+        backgroundColor: AppColors.accent,
+        colorText: Colors.black,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      return true;
+    } catch (e) {
+      debugPrint('🔴 Error confirming turf slot booking: $e');
+      return false;
+    }
+  }
+
+  /// Host selects a new available slot/date if the original slot was already booked
+  Future<bool> changeMatchSlotByHost({
+    required String matchId,
+    required String ownerId,
+    required String turfId,
+    required String groundId,
+    required String groundName,
+    required String newDateStr,
+    required String newTimeStr,
+    String newSlotId = '',
+    double? newTurfCost,
+  }) async {
+    try {
+      // 1. Check for overlapping slot booking in Firestore
+      //    Pass currentMatchId so this poll doesn't self-block
+      final isOverlapping = await SlotOverlapHelper.isSlotOverlappingInFirestore(
+        ownerId: ownerId,
+        turfId: turfId,
+        groundId: groundId,
+        dateStr: newDateStr,
+        newTimeRangeStr: newTimeStr,
+        currentMatchId: matchId,
+      );
+
+      if (isOverlapping) {
+        Get.snackbar(
+          'Slot Unavailable',
+          'The selected slot ($newTimeStr) overlaps with an existing booking! Please choose another slot.',
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 4),
+        );
+        return false;
+      }
+
+      // 2. Add booking record under turf owner with new date/time
+      await _firestore
+          .collection('owners')
+          .doc(ownerId)
+          .collection('turfs')
+          .doc(turfId)
+          .collection('bookings')
+          .add({
+        'turfId': turfId,
+        'groundId': groundId,
+        'groundName': groundName,
+        'date': newDateStr,
+        'time': newTimeStr,
+        'slotId': newSlotId,
+        'status': 'confirmed',
+        'createdAt': FieldValue.serverTimestamp(),
+        'bookingType': 'match_poll_gathered_full',
+      });
+
+      // 3. Update match poll document
+      final updateData = <String, dynamic>{
+        'time': '$newDateStr, $newTimeStr',
+        'date': newDateStr,
+        'slotId': newSlotId,
+        'isSlotBooked': true,
+        'hasConflict': false,
+      };
+
+      if (newTurfCost != null && newTurfCost > 0) {
+        updateData['turfSlotCost'] = newTurfCost;
+      }
+
+      await _firestore.collection('matches').doc(matchId).update(updateData);
+
+      Get.snackbar(
+        'Slot Updated & Booked! ⚽',
+        'New time slot $newDateStr, $newTimeStr has been booked!',
+        backgroundColor: AppColors.accent,
+        colorText: Colors.black,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      return true;
+    } catch (e) {
+      debugPrint('🔴 Error updating match slot: $e');
       return false;
     }
   }

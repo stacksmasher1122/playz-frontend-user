@@ -4,6 +4,15 @@ import 'package:get/get.dart';
 import 'package:redesign/model/User_Models/Booking_Models/turf_model.dart';
 import 'package:redesign/model/User_Models/Booking_Models/ground_model.dart';
 import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
+import 'package:redesign/utils/slot_overlap_helper.dart';
+
+enum TurfSortOption {
+  nearest,
+  topRated,
+  priceAsc,
+  priceDesc,
+  nameAsc,
+}
 
 class BookingController extends GetxController {
   final _firestore = FirebaseFirestore.instance;
@@ -22,11 +31,66 @@ class BookingController extends GetxController {
   final selectedGround = Rxn<GroundModel>();
   final selectedSport = RxnString();
 
+  // Search & Filter State
+  final searchQuery = ''.obs;
+  final sortOption = TurfSortOption.nearest.obs;
+  final distanceRadiusKm = 50.0.obs;
+
   // ── Lifecycle ───────────────────────────────────────────────
   @override
   void onInit() {
     super.onInit();
     fetchAllTurfs();
+
+    everAll([searchQuery, sortOption, distanceRadiusKm, selectedSport], (_) {
+      applyFilters();
+    });
+  }
+
+  // ── Apply Filters & Sorting ──────────────────────────────────
+  void applyFilters() {
+    List<TurfModel> result = List.from(allTurfs);
+
+    // 1. Search Query Filter
+    final query = searchQuery.value.trim().toLowerCase();
+    if (query.isNotEmpty) {
+      result = result.where((turf) {
+        final nameMatch = turf.turfName.toLowerCase().contains(query);
+        final addressMatch = turf.fullAddress.toLowerCase().contains(query) ||
+            turf.city.toLowerCase().contains(query) ||
+            turf.state.toLowerCase().contains(query);
+        final sportMatch = turf.sports.any((s) => s.toLowerCase().contains(query));
+        return nameMatch || addressMatch || sportMatch;
+      }).toList();
+    }
+
+    // 2. Sport Filter
+    final sport = selectedSport.value;
+    if (sport != null && sport.isNotEmpty && sport != 'All Sports') {
+      result = result
+          .where((turf) => turf.sports.any((s) => s.toLowerCase() == sport.toLowerCase()))
+          .toList();
+    }
+
+    // 3. Sort Options
+    switch (sortOption.value) {
+      case TurfSortOption.priceAsc:
+        result.sort((a, b) => (a.lowestPrice ?? 0.0).compareTo(b.lowestPrice ?? 0.0));
+        break;
+      case TurfSortOption.priceDesc:
+        result.sort((a, b) => (b.lowestPrice ?? 0.0).compareTo(a.lowestPrice ?? 0.0));
+        break;
+      case TurfSortOption.topRated:
+        result.sort((a, b) => (b.isVerified ? 1 : 0).compareTo(a.isVerified ? 1 : 0));
+        break;
+      case TurfSortOption.nameAsc:
+        result.sort((a, b) => a.turfName.compareTo(b.turfName));
+        break;
+      case TurfSortOption.nearest:
+        break;
+    }
+
+    filteredTurfs.value = result;
   }
 
   // ── Fetch All Turfs ─────────────────────────────────────────
@@ -46,7 +110,7 @@ class BookingController extends GetxController {
       await Future.wait(turfs.map((turf) => _fetchLowestPrice(turf)));
 
       allTurfs.value = turfs;
-      filteredTurfs.value = turfs;
+      applyFilters();
     } catch (e) {
       debugPrint('🔴 [BookingController] fetchAllTurfs error: $e');
       Get.snackbar(
@@ -163,9 +227,34 @@ class BookingController extends GetxController {
           .map((doc) => SlotModel.fromFirestore(doc))
           .toList();
 
-      // Query existing bookings ONLY for the selected date
+      // Query existing bookings AND active match polls for the selected date
       if (dateStr != null && dateStr.isNotEmpty && ownerId.isNotEmpty && turfId.isNotEmpty) {
         try {
+          final bookedHours = <int>{};
+
+          // Helper to extract hours from a time interval and add to bookedHours
+          void addIntervalHours(TimeInterval? interval) {
+            if (interval == null) return;
+            final startH = (interval.startMinutes / 60).floor();
+            final endH = (interval.endMinutes / 60).ceil();
+            for (int h = startH; h < endH; h++) {
+              bookedHours.add(h % 24);
+            }
+          }
+
+          // Helper to extract time string from booking data (handles all field formats)
+          String? extractTimeStr(Map<String, dynamic> data) {
+            final time = (data['time'] ?? '').toString().trim();
+            if (time.isNotEmpty && (time.contains('-') || time.contains('–') || time.contains('—'))) return time;
+            final timeSlot = (data['timeSlot'] ?? '').toString().trim();
+            if (timeSlot.isNotEmpty) return timeSlot;
+            final startTime = (data['startTime'] ?? '').toString().trim();
+            final endTime = (data['endTime'] ?? '').toString().trim();
+            if (startTime.isNotEmpty && endTime.isNotEmpty) return '$startTime - $endTime';
+            return null;
+          }
+
+          // 1. Process confirmed bookings
           final bookingsSnap = await _firestore
               .collection('owners')
               .doc(ownerId)
@@ -175,26 +264,36 @@ class BookingController extends GetxController {
               .where('date', isEqualTo: dateStr)
               .get();
 
-          final bookedHours = <int>{};
           for (final doc in bookingsSnap.docs) {
             final data = doc.data();
-            final bGroundId = data['groundId'] ?? '';
+            final bGroundId = (data['groundId'] ?? '').toString();
             final status = (data['status'] ?? '').toString().toLowerCase();
+            if (status == 'cancelled') continue;
+            if (bGroundId.isNotEmpty && bGroundId != groundId) continue;
 
-            if ((bGroundId.isEmpty || bGroundId == groundId) &&
-                (status == 'upcoming' || status == 'confirmed' || status == 'booked')) {
-              final startTime = data['startTime'] ?? '';
-              final endTime = data['endTime'] ?? '';
+            final timeStr = extractTimeStr(data);
+            if (timeStr != null) {
+              addIntervalHours(SlotOverlapHelper.parseTimeRange(timeStr));
+            }
+          }
 
-              final startH = _parseHourFromString(startTime);
-              final endH = _parseHourFromString(endTime);
+          // 2. Process ALL active match polls on the same ground & date
+          final matchesSnap = await _firestore
+              .collection('matches')
+              .where('turfId', isEqualTo: turfId)
+              .where('groundId', isEqualTo: groundId)
+              .where('date', isEqualTo: dateStr)
+              .get();
 
-              if (startH != null && endH != null) {
-                final duration = (endH > startH) ? (endH - startH) : (24 - startH + endH);
-                for (int i = 0; i < duration; i++) {
-                  bookedHours.add((startH + i) % 24);
-                }
-              }
+          for (final doc in matchesSnap.docs) {
+            final data = doc.data();
+            final status = (data['status'] ?? '').toString().toLowerCase();
+            if (status == 'cancelled' || status == 'expired') continue;
+            if (data['isSlotBooked'] != true) continue;
+
+            final timeStr = extractTimeStr(data);
+            if (timeStr != null) {
+              addIntervalHours(SlotOverlapHelper.parseTimeRange(timeStr));
             }
           }
 
@@ -236,24 +335,6 @@ class BookingController extends GetxController {
       );
     } finally {
       isLoadingSlots.value = false;
-    }
-  }
-
-  int? _parseHourFromString(String timeStr) {
-    if (timeStr.isEmpty) return null;
-    try {
-      final parts = timeStr.trim().split(' ');
-      final timeParts = parts[0].split(':');
-      int hour = int.parse(timeParts[0]);
-
-      if (parts.length > 1) {
-        final period = parts[1].toUpperCase();
-        if (period == 'PM' && hour < 12) hour += 12;
-        if (period == 'AM' && hour == 12) hour = 0;
-      }
-      return hour;
-    } catch (_) {
-      return null;
     }
   }
 

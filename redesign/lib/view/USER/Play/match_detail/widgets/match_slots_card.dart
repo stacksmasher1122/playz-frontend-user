@@ -6,11 +6,23 @@ import 'package:redesign/theme/responsive_helper.dart';
 class MatchSlotsCard extends StatelessWidget {
   final int currentPlayers;
   final int maxPlayers;
+  final double collectedAmount;
+  final double targetAmount;
+  final bool isSlotBooked;
+  final List<String> bookedSlotsForDate;
+  final bool isHost;
+  final VoidCallback? onChangeSlotPressed;
 
   const MatchSlotsCard({
     super.key,
     this.currentPlayers = 6,
     this.maxPlayers = 10,
+    this.collectedAmount = 0.0,
+    this.targetAmount = 0.0,
+    this.isSlotBooked = false,
+    this.bookedSlotsForDate = const [],
+    this.isHost = false,
+    this.onChangeSlotPressed,
   });
 
   @override
@@ -18,6 +30,10 @@ class MatchSlotsCard extends StatelessWidget {
     ResponsiveHelper.init(context);
     final progress = (currentPlayers / (maxPlayers > 0 ? maxPlayers : 1)).clamp(0.0, 1.0);
     final isFull = currentPlayers >= maxPlayers;
+
+    final double moneyProgress = targetAmount > 0
+        ? (collectedAmount / targetAmount).clamp(0.0, 1.0)
+        : progress;
 
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(18)),
@@ -32,72 +48,65 @@ class MatchSlotsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Slots Filling Status",
-                    style: GoogleFonts.inter(
-                      fontSize: ResponsiveHelper.sp(12),
-                      color: AppColors.muted,
-                      fontWeight: FontWeight.w500,
-                    ),
+              Text(
+                "Slots Filling Status",
+                style: GoogleFonts.inter(
+                  fontSize: ResponsiveHelper.sp(12),
+                  color: AppColors.muted,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              if (isSlotBooked)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF059669).withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFF059669).withValues(alpha: 0.4)),
                   ),
-                  SizedBox(height: 4),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
+                  child: Row(
                     children: [
+                      const Icon(Icons.bolt_rounded, color: Color(0xFF34D399), size: 14),
+                      const SizedBox(width: 4),
                       Text(
-                        "$currentPlayers",
+                        'SLOT BOOKED',
                         style: GoogleFonts.inter(
-                          fontSize: ResponsiveHelper.sp(32),
+                          color: const Color(0xFF34D399),
+                          fontSize: ResponsiveHelper.sp(10),
                           fontWeight: FontWeight.bold,
-                          color: isFull ? Colors.redAccent : AppColors.accent,
-                        ),
-                      ),
-                      Text(
-                        " / $maxPlayers Players",
-                        style: GoogleFonts.inter(
-                          fontSize: ResponsiveHelper.sp(14),
-                          color: Colors.white70,
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
                   ),
-                ],
+                ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                "$currentPlayers",
+                style: GoogleFonts.inter(
+                  fontSize: ResponsiveHelper.sp(32),
+                  fontWeight: FontWeight.bold,
+                  color: isFull ? Colors.redAccent : AppColors.accent,
+                ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ResponsiveHelper.w(12),
-                  vertical: ResponsiveHelper.h(6),
-                ),
-                decoration: BoxDecoration(
-                  color: isFull
-                      ? Colors.redAccent.withValues(alpha: 0.15)
-                      : AppColors.accent.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-                  border: Border.all(
-                    color: isFull
-                        ? Colors.redAccent.withValues(alpha: 0.4)
-                        : AppColors.accent.withValues(alpha: 0.4),
-                  ),
-                ),
-                child: Text(
-                  isFull ? "Match Full 🔴" : "Filling Fast ⚡",
-                  style: GoogleFonts.inter(
-                    fontSize: ResponsiveHelper.sp(12),
-                    fontWeight: FontWeight.bold,
-                    color: isFull ? Colors.redAccent : AppColors.accent,
-                  ),
+              Text(
+                " / $maxPlayers Players Joined",
+                style: GoogleFonts.inter(
+                  fontSize: ResponsiveHelper.sp(14),
+                  color: Colors.white70,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 14),
 
-          /// PROGRESS BAR
+          /// PLAYER PROGRESS BAR
           Stack(
             children: [
               Container(
@@ -125,53 +134,132 @@ class MatchSlotsCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
-          const Divider(color: Colors.white10),
-          SizedBox(height: 12),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Expanded(child: _StatColumn("Average Rating", "4.8 ⭐")),
-              Expanded(child: _StatColumn("Skill Level", "Balanced ⚖️")),
-              Expanded(child: _StatColumn("Cancellation", "100% Free")),
-            ],
-          ),
+          /// GATHERED POLL MONEY SECTION (Shown if target amount exists)
+          if (targetAmount > 0) ...[
+            const SizedBox(height: 16),
+            const Divider(color: Colors.white10, height: 1),
+            const SizedBox(height: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.account_balance_wallet_outlined, color: AppColors.accent, size: 16),
+                    const SizedBox(width: 6),
+                    Text(
+                      "Gathered Poll Funds",
+                      style: GoogleFonts.inter(
+                        fontSize: ResponsiveHelper.sp(12),
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  "₹${collectedAmount.toInt()} / ₹${targetAmount.toInt()}",
+                  style: GoogleFonts.inter(
+                    fontSize: ResponsiveHelper.sp(14),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.accent,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Stack(
+              children: [
+                Container(
+                  height: ResponsiveHelper.h(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: moneyProgress,
+                  child: Container(
+                    height: ResponsiveHelper.h(6),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent,
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+
+          /// BOOKED SLOTS ON TURF FOR THIS DATE (Displayed if any existing bookings exist)
+          if (bookedSlotsForDate.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            const Divider(color: Colors.white10, height: 1),
+            const SizedBox(height: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.error_outline_rounded, color: Colors.redAccent, size: 16),
+                    const SizedBox(width: 6),
+                    Text(
+                      "Booked Slots on Turf",
+                      style: GoogleFonts.inter(
+                        fontSize: ResponsiveHelper.sp(12),
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                if (isHost && onChangeSlotPressed != null)
+                  InkWell(
+                    onTap: onChangeSlotPressed,
+                    child: Text(
+                      "Change Slot / Date >",
+                      style: GoogleFonts.inter(
+                        fontSize: ResponsiveHelper.sp(11),
+                        color: AppColors.accent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: bookedSlotsForDate.map((slotTime) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.4)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.block_rounded, color: Colors.redAccent, size: 12),
+                      const SizedBox(width: 4),
+                      Text(
+                        slotTime,
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontSize: ResponsiveHelper.sp(11),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
         ],
       ),
-    );
-  }
-}
-
-class _StatColumn extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _StatColumn(this.label, this.value);
-
-  @override
-  Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: ResponsiveHelper.sp(11),
-            color: AppColors.muted,
-          ),
-        ),
-        SizedBox(height: 2),
-        Text(
-          value,
-          style: GoogleFonts.inter(
-            fontSize: ResponsiveHelper.sp(12.5),
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-      ],
     );
   }
 }

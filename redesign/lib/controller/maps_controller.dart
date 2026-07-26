@@ -180,9 +180,12 @@ class MapsController extends GetxController {
     }
   }
 
+  // Mode flag for venue selection in picker
+  bool isSelectOnlyMode = false;
+
   // ─── Reverse Geocode (Smart Context) ────────────────────────
   Future<void> reverseGeocode(double lat, double lng,
-      {bool isCurrentLocation = false}) async {
+      {bool isCurrentLocation = false, bool? saveToPrefs}) async {
     try {
       isLocationResolved.value = false;
       final placemarks = await placemarkFromCoordinates(lat, lng);
@@ -218,7 +221,10 @@ class MapsController extends GetxController {
       currentLocation.value = locationData;
       _updateDisplayFields(locationData);
 
-      await MapsPreferences.saveCurrentLocation(locationData);
+      final shouldSave = saveToPrefs ?? !isSelectOnlyMode;
+      if (shouldSave) {
+        await MapsPreferences.saveCurrentLocation(locationData);
+      }
       isLocationResolved.value = true;
     } catch (e) {
       hasError.value = true;
@@ -231,6 +237,10 @@ class MapsController extends GetxController {
     displayLocality.value = data.subLocality;
     displayLandmark.value = data.landmark;
     displayAddress.value = data.fullAddress;
+  }
+
+  void updateDisplayFields(LocationData data) {
+    _updateDisplayFields(data);
   }
 
   // ─── Map Camera Events ─────────────────────────────────────
