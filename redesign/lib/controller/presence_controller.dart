@@ -56,10 +56,10 @@ class PresenceController extends GetxController with WidgetsBindingObserver {
   Future<void> _setOnlineStatus(bool isOnline) async {
     if (_myEmail.isEmpty) return;
     try {
-      await _firestore.collection('User').doc(_myEmail).update({
+      await _firestore.collection('User').doc(_myEmail).set({
         'isOnline': isOnline,
         'lastSeen': FieldValue.serverTimestamp(),
-      });
+      }, SetOptions(merge: true));
       debugPrint('🟢 [PresenceController] Online status updated: $isOnline');
     } catch (e) {
       debugPrint('🔴 [PresenceController] Failed to update online status: $e');

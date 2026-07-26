@@ -1,61 +1,102 @@
 import 'package:flutter/material.dart';
-import '../book_screen.dart';
+import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'turf_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class AvailableTurfsList extends StatelessWidget {
   AvailableTurfsList({super.key});
 
-  static final _turfs = [
-    TurfData(
-      name: 'CrossFit Arena',
-      location: 'Narhe, Pune',
-      price: 1000,
-      images: [
-        'https://images.unsplash.com/photo-1529900948632-6aed3065b756',
-        'https://images.unsplash.com/photo-1546519638-68e109498ffc',
-      ],
-      amenities: ['Basketball', 'Parking', 'Shower', 'AC'],
-      discount: '10% OFF on first booking',
-    ),
-    TurfData(
-      name: 'Greenfield Turf',
-      location: 'Baner, Pune',
-      price: 1200,
-      images: [
-        'https://images.unsplash.com/photo-1521412644187-c49fa049e84d',
-        'https://images.unsplash.com/photo-1546519638-68e109498ffc',
-      ],
-      amenities: ['Football', 'Parking', 'Shower'],
-      discount: '15% OFF on weekdays',
-    ),
-    TurfData(
-      name: 'Urban Sports Hub',
-      location: 'Wakad, Pune',
-      price: 900,
-      images: [
-        'https://images.unsplash.com/photo-1546519638-68e109498ffc',
-        'https://images.unsplash.com/photo-1529900948632-6aed3065b756',
-      ],
-      amenities: ['Cricket', 'AC', 'Parking'],
-      discount: null,
-    ),
-  ];
+  final _controller = Get.find<BookingController>();
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
-      child: Column(
-        children: _turfs
-            .map(
-              (turf) => Padding(
+      child: Obx(() {
+        // Loading state
+        if (_controller.isLoadingTurfs.value) {
+          return Column(
+            children: List.generate(
+              3,
+              (_) => Padding(
                 padding: EdgeInsets.only(bottom: 18),
-                child: TurfCard(data: turf),
+                child: _TurfCardShimmer(),
               ),
-            )
-            .toList(),
+            ),
+          );
+        }
+
+        // Empty state
+        if (_controller.filteredTurfs.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.sports_outlined,
+                    color: AppColors.muted,
+                    size: 48,
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    'No turfs found',
+                    style: TextStyle(
+                      color: AppColors.muted,
+                      fontSize: ResponsiveHelper.sp(16),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Try changing your filters',
+                    style: TextStyle(
+                      color: AppColors.muted.withValues(alpha: 0.6),
+                      fontSize: ResponsiveHelper.sp(13),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Data loaded
+        return Column(
+          children: _controller.filteredTurfs
+              .map(
+                (turf) => Padding(
+                  padding: EdgeInsets.only(bottom: 18),
+                  child: TurfCard(turf: turf),
+                ),
+              )
+              .toList(),
+        );
+      }),
+    );
+  }
+}
+
+/// Shimmer placeholder for a turf card while loading
+class _TurfCardShimmer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+    final width = MediaQuery.of(context).size.width;
+
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade900,
+      highlightColor: Colors.grey.shade800,
+      child: Container(
+        height: width * 0.48 + 120,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+        ),
       ),
     );
   }

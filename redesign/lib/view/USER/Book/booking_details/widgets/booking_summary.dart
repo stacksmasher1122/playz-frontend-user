@@ -4,7 +4,14 @@ import 'venue_policy_box.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingSummary extends StatelessWidget {
-  BookingSummary({super.key});
+  final double slotPrice;
+  final int hours;
+
+  BookingSummary({
+    super.key,
+    required this.slotPrice,
+    this.hours = 1,
+  });
 
   static const _kGreen = AppColors.accent;
   static const _kMuted = Color(0xFFA7A7A7);
@@ -13,6 +20,10 @@ class BookingSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final slotTotal = slotPrice * hours;
+    final displaySlotPrice = slotPrice > 0 ? '₹${slotTotal.toInt()}' : '₹--';
+    final displayTotal = slotPrice > 0 ? '₹${slotTotal.toInt()}' : '₹--';
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
       child: Column(
@@ -25,10 +36,13 @@ class BookingSummary extends StatelessWidget {
           VenuePolicyBox(),
           SizedBox(height: 24),
 
-          _priceRow('Slot Price (1 hr)', '₹1000'),
-          _priceRow('Add-ons', '₹200'),
+          _priceRow(
+            'Slot Price ($hours hr${hours > 1 ? 's' : ''})',
+            displaySlotPrice,
+          ),
+          _priceRow('Add-ons', '₹0'),
           Divider(color: Colors.grey),
-          _priceRow('Total Amount', '₹1200', highlight: true),
+          _priceRow('Total Amount', displayTotal, highlight: true),
         ],
       ),
     );

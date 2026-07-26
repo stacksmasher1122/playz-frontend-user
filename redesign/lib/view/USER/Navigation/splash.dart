@@ -78,8 +78,9 @@ class _SplashScreenState extends State<SplashScreen>
 
     if (loggedIn) {
       bool isProfileComplete = await UserPreferences.isProfileComplete();
+      final sports = await UserPreferences.getFavoriteSports();
       if (!mounted) return;
-      if (isProfileComplete) {
+      if (isProfileComplete && sports.length >= 4) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => UserAppNavShell()),

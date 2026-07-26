@@ -3,11 +3,13 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueAboutSection extends StatelessWidget {
+  final String description;
   final bool isExpanded;
   final VoidCallback onToggleExpand;
 
   VenueAboutSection({
     super.key,
+    required this.description,
     required this.isExpanded,
     required this.onToggleExpand,
   });
@@ -30,18 +32,21 @@ class VenueAboutSection extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            'Experience premium CrossFit training with state-of-the-art equipment, cardio zones, and expert trainers. Perfect for strength and endurance.',
+            description.isNotEmpty
+                ? description
+                : 'No description available for this venue.',
             maxLines: isExpanded ? null : 3,
-            overflow: TextOverflow.ellipsis,
+            overflow: isExpanded ? null : TextOverflow.ellipsis,
             style: TextStyle(color: Color(0xFFA7A7A7)),
           ),
-          GestureDetector(
-            onTap: onToggleExpand,
-            child: Text(
-              isExpanded ? 'Read more' : 'Read less',
-              style: TextStyle(color: AppColors.accent),
+          if (description.length > 100)
+            GestureDetector(
+              onTap: onToggleExpand,
+              child: Text(
+                isExpanded ? 'Read less' : 'Read more',
+                style: TextStyle(color: AppColors.accent),
+              ),
             ),
-          ),
           SizedBox(height: 12),
           ClipRRect(
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),

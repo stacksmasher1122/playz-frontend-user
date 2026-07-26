@@ -67,11 +67,13 @@ class UserProfileModel {
       'favoriteSports': favoriteSports,
       'isPublicProfile': isPublicProfile,
       'isTrainer': isTrainer,
+      'isProfileComplete': true,
       'updatedAt': FieldValue.serverTimestamp(),
     };
   }
 
   UserProfileModel copyWith({
+    String? docId,
     String? fullName,
     String? primaryEmail,
     String? secondaryEmail,
@@ -85,7 +87,7 @@ class UserProfileModel {
     bool? isTrainer,
   }) {
     return UserProfileModel(
-      docId: docId,
+      docId: docId ?? this.docId,
       fullName: fullName ?? this.fullName,
       primaryEmail: primaryEmail ?? this.primaryEmail,
       secondaryEmail: secondaryEmail ?? this.secondaryEmail,

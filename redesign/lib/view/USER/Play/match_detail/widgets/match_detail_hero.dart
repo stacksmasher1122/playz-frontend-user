@@ -1,53 +1,190 @@
 import 'package:flutter/material.dart';
-import '../match_detail_constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class MatchDetailHero extends StatelessWidget {
-  MatchDetailHero({super.key});
+class MatchDetailHero extends StatefulWidget {
+  final List<String>? images;
+  final String sport;
+  final String type;
+  final String time;
+
+  const MatchDetailHero({
+    super.key,
+    this.images,
+    this.sport = 'Football',
+    this.type = 'Casual',
+    this.time = 'Today, 18:00',
+  });
+
+  @override
+  State<MatchDetailHero> createState() => _MatchDetailHeroState();
+}
+
+class _MatchDetailHeroState extends State<MatchDetailHero> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  static const List<String> _fallbackImages = [
+    "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=1200",
+    "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=1200",
+    "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?q=80&w=1200",
+  ];
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final height = MediaQuery.of(context).size.height * 0.42;
+    final height = MediaQuery.of(context).size.height * 0.38;
+    final imageList = (widget.images != null && widget.images!.isNotEmpty)
+        ? widget.images!
+        : _fallbackImages;
 
     return SliverAppBar(
       expandedHeight: height,
       backgroundColor: Colors.black,
-      pinned: false,
-      leading: BackButton(),
+      pinned: true,
+      elevation: 0,
+      leading: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CircleAvatar(
+          backgroundColor: Colors.black45,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+      ),
       actions: [
-        Icon(Icons.share_outlined),
-        SizedBox(width: 12),
-        Icon(Icons.more_vert),
-        SizedBox(width: 12),
+        CircleAvatar(
+          backgroundColor: Colors.black45,
+          child: IconButton(
+            icon: const Icon(Icons.share_outlined, color: Colors.white, size: 20),
+            onPressed: () {},
+          ),
+        ),
+        const SizedBox(width: 12),
       ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=1200",
-              fit: BoxFit.cover,
+            /// MULTIPLE SCROLLABLE TURF IMAGES CAROUSEL
+            PageView.builder(
+              controller: _pageController,
+              itemCount: imageList.length,
+              onPageChanged: (index) {
+                setState(() => _currentPage = index);
+              },
+              itemBuilder: (context, index) {
+                return Image.network(
+                  imageList[index],
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: Colors.grey.shade900,
+                    child: const Icon(Icons.sports_soccer, color: Colors.white38, size: 48),
+                  ),
+                );
+              },
             ),
+
+            /// GRADIENT OVERLAY
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [Colors.black, Colors.transparent],
+                  colors: [
+                    AppColors.background,
+                    AppColors.background.withValues(alpha: 0.5),
+                    Colors.transparent,
+                  ],
+                  stops: const [0.0, 0.4, 1.0],
                 ),
               ),
             ),
+
+            /// PAGE INDICATOR DOTS
+            if (imageList.length > 1)
+              Positioned(
+                top: ResponsiveHelper.h(50),
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    imageList.length,
+                    (idx) => AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      margin: const EdgeInsets.symmetric(horizontal: 3),
+                      width: _currentPage == idx ? 18 : 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: _currentPage == idx ? AppColors.accent : Colors.white38,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+            /// BOTTOM TAGS & TIME INDICATOR
             Positioned(
-              bottom: ResponsiveHelper.h(28),
+              bottom: ResponsiveHelper.h(16),
               left: ResponsiveHelper.w(20),
               right: ResponsiveHelper.w(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _TagRow(),
-                  SizedBox(height: 16),
-                  _StartIndicator(),
+                  Row(
+                    children: [
+                      _HeroTag(
+                        widget.type.toUpperCase(),
+                        bgColor: widget.type.toLowerCase() == 'competitive'
+                            ? const Color(0xFF7C3AED).withValues(alpha: 0.3)
+                            : AppColors.accent.withValues(alpha: 0.2),
+                        textColor: widget.type.toLowerCase() == 'competitive'
+                            ? const Color(0xFFA855F7)
+                            : AppColors.accent,
+                        borderColor: widget.type.toLowerCase() == 'competitive'
+                            ? const Color(0xFF7C3AED)
+                            : AppColors.accent,
+                      ),
+                      const SizedBox(width: 8),
+                      _HeroTag(
+                        widget.sport.toUpperCase(),
+                        bgColor: Colors.white.withValues(alpha: 0.15),
+                        textColor: Colors.white,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: AppColors.accent,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        widget.time,
+                        style: GoogleFonts.inter(
+                          fontSize: ResponsiveHelper.sp(16),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -58,63 +195,37 @@ class MatchDetailHero extends StatelessWidget {
   }
 }
 
-class _TagRow extends StatelessWidget {
-  _TagRow();
-
-  @override
-  Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    return Wrap(
-      spacing: 10,
-      children: [
-        _Tag("COMPETITIVE"),
-        _Tag("DOUBLES"),
-        _Tag("ELITE", color: Colors.purple),
-      ],
-    );
-  }
-}
-
-class _StartIndicator extends StatelessWidget {
-  _StartIndicator();
-
-  @override
-  Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    return Row(
-      children: [
-        Icon(Icons.circle, size: 10, color: MatchDetailColors.primary),
-        SizedBox(width: 8),
-        Text(
-          "Starts in 45m",
-          style: TextStyle(fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.w700),
-        ),
-      ],
-    );
-  }
-}
-
-class _Tag extends StatelessWidget {
+class _HeroTag extends StatelessWidget {
   final String label;
-  final Color color;
+  final Color bgColor;
+  final Color textColor;
+  final Color? borderColor;
 
-  _Tag(this.label, {this.color = Colors.white24});
+  const _HeroTag(
+    this.label, {
+    required this.bgColor,
+    required this.textColor,
+    this.borderColor,
+  });
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(8)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(12),
+        vertical: ResponsiveHelper.h(5),
+      ),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
-        border: Border.all(color: color.withValues(alpha: 0.5)),
+        color: bgColor,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        border: borderColor != null ? Border.all(color: borderColor!) : null,
       ),
       child: Text(
         label,
-        style: TextStyle(
+        style: GoogleFonts.inter(
           fontSize: ResponsiveHelper.sp(11),
-          fontWeight: FontWeight.w800,
+          fontWeight: FontWeight.bold,
+          color: textColor,
           letterSpacing: 0.5,
         ),
       ),

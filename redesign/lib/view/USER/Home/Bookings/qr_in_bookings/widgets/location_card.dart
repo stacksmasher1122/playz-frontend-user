@@ -1,23 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../qr_in_bookings_screen.dart';
 import 'qr_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LocationCard extends StatelessWidget {
-  LocationCard({super.key});
+  final Map<String, dynamic>? bookingData;
+
+  LocationCard({super.key, this.bookingData});
+
+  Future<void> _launchGoogleMaps() async {
+    final turfName = bookingData?['turfName'] ?? '';
+    final address = bookingData?['turfAddress'] ?? bookingData?['address'] ?? '';
+    final query = Uri.encodeComponent('$turfName $address'.trim());
+    final uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$query');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
+    final address = bookingData?['turfAddress'] ?? bookingData?['address'] ?? 'Local Turf Arena';
+    final turfName = bookingData?['turfName'] ?? 'Venue';
+
     return QrCard(
       title: 'Location',
-      trailing: Text('2.5 km away',
-          style: TextStyle(color: QrBookingConstants.green, fontWeight: FontWeight.w600)),
+      trailing: Text(
+        turfName,
+        style: TextStyle(color: QrBookingConstants.green, fontWeight: FontWeight.w600),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Plot No 45, behind FC Road, Shivajinagar, Pune, Maharashtra 411005',
+            address,
             style: TextStyle(color: QrBookingConstants.muted),
           ),
           SizedBox(height: 12),
@@ -29,7 +48,7 @@ class LocationCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
               ),
             ),
-            onPressed: () {},
+            onPressed: _launchGoogleMaps,
             icon: Icon(Icons.near_me_outlined),
             label: Text('Get Directions'),
           )

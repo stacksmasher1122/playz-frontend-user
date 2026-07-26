@@ -1,101 +1,140 @@
 import 'package:flutter/material.dart';
-import '../match_detail_constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchSlotsCard extends StatelessWidget {
-  MatchSlotsCard({super.key});
+  final int currentPlayers;
+  final int maxPlayers;
+
+  const MatchSlotsCard({
+    super.key,
+    this.currentPlayers = 6,
+    this.maxPlayers = 10,
+  });
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final progress = (currentPlayers / (maxPlayers > 0 ? maxPlayers : 1)).clamp(0.0, 1.0);
+    final isFull = currentPlayers >= maxPlayers;
+
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(22)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(18)),
       decoration: BoxDecoration(
-        color: MatchDetailColors.surfaceSoft,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Slots Filling Fast",
-                      style: TextStyle(
-                        fontSize: ResponsiveHelper.sp(12),
-                        color: MatchDetailColors.textSecondary,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "8",
-                          style: TextStyle(
-                            fontSize: ResponsiveHelper.sp(36),
-                            fontWeight: FontWeight.bold,
-                            color: MatchDetailColors.urgent,
-                          ),
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          "/ 10",
-                          style: TextStyle(
-                            fontSize: ResponsiveHelper.sp(18),
-                            color: MatchDetailColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    "Match Quality",
-                    style: TextStyle(
-                      fontSize: ResponsiveHelper.sp(12),
-                      color: MatchDetailColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    "High Priority ⚡",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: MatchDetailColors.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 18),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
-            child: Container(
-              height: ResponsiveHelper.h(10),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFFF59E0B), Color(0xFFFFB020)],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 18),
-          Divider(color: Colors.white12),
-          SizedBox(height: 14),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _StatColumn("Average Rating", "4.2 ⭐"),
-              _StatColumn("Skill Spread", "Balanced ⚖️"),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Slots Filling Status",
+                    style: GoogleFonts.inter(
+                      fontSize: ResponsiveHelper.sp(12),
+                      color: AppColors.muted,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        "$currentPlayers",
+                        style: GoogleFonts.inter(
+                          fontSize: ResponsiveHelper.sp(32),
+                          fontWeight: FontWeight.bold,
+                          color: isFull ? Colors.redAccent : AppColors.accent,
+                        ),
+                      ),
+                      Text(
+                        " / $maxPlayers Players",
+                        style: GoogleFonts.inter(
+                          fontSize: ResponsiveHelper.sp(14),
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveHelper.w(12),
+                  vertical: ResponsiveHelper.h(6),
+                ),
+                decoration: BoxDecoration(
+                  color: isFull
+                      ? Colors.redAccent.withValues(alpha: 0.15)
+                      : AppColors.accent.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                  border: Border.all(
+                    color: isFull
+                        ? Colors.redAccent.withValues(alpha: 0.4)
+                        : AppColors.accent.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Text(
+                  isFull ? "Match Full 🔴" : "Filling Fast ⚡",
+                  style: GoogleFonts.inter(
+                    fontSize: ResponsiveHelper.sp(12),
+                    fontWeight: FontWeight.bold,
+                    color: isFull ? Colors.redAccent : AppColors.accent,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+
+          /// PROGRESS BAR
+          Stack(
+            children: [
+              Container(
+                height: ResponsiveHelper.h(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                ),
+              ),
+              FractionallySizedBox(
+                widthFactor: progress,
+                child: Container(
+                  height: ResponsiveHelper.h(8),
+                  decoration: BoxDecoration(
+                    color: isFull ? Colors.redAccent : AppColors.accent,
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: (isFull ? Colors.redAccent : AppColors.accent).withValues(alpha: 0.4),
+                        blurRadius: 6,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          const Divider(color: Colors.white10),
+          SizedBox(height: 12),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Expanded(child: _StatColumn("Average Rating", "4.8 ⭐")),
+              Expanded(child: _StatColumn("Skill Level", "Balanced ⚖️")),
+              Expanded(child: _StatColumn("Cancellation", "100% Free")),
             ],
           ),
         ],
@@ -105,10 +144,10 @@ class MatchSlotsCard extends StatelessWidget {
 }
 
 class _StatColumn extends StatelessWidget {
-  final String title;
+  final String label;
   final String value;
 
-  _StatColumn(this.title, this.value);
+  const _StatColumn(this.label, this.value);
 
   @override
   Widget build(BuildContext context) {
@@ -117,16 +156,20 @@ class _StatColumn extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title.toUpperCase(),
-          style: TextStyle(
+          label,
+          style: GoogleFonts.inter(
             fontSize: ResponsiveHelper.sp(11),
-            color: MatchDetailColors.textSecondary,
+            color: AppColors.muted,
           ),
         ),
-        SizedBox(height: 6),
+        SizedBox(height: 2),
         Text(
           value,
-          style: TextStyle(fontSize: ResponsiveHelper.sp(16), fontWeight: FontWeight.w600),
+          style: GoogleFonts.inter(
+            fontSize: ResponsiveHelper.sp(12.5),
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ],
     );

@@ -32,16 +32,6 @@ class BookingsHeader extends StatelessWidget {
               ],
             ),
           ),
-          IconButton(
-            icon: Icon(Icons.notifications_none, color: Colors.white),
-            onPressed: () {},
-          ),
-          CircleAvatar(
-            radius: 18,
-            backgroundImage: NetworkImage(
-              'https://randomuser.me/api/portraits/men/32.jpg',
-            ),
-          ),
         ],
       ),
     );

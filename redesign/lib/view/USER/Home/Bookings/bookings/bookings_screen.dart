@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 
 import 'widgets/bookings_header.dart';
-import 'widgets/search_and_filters.dart';
 import 'widgets/bookings_tabs.dart';
 import 'widgets/upcoming_bookings.dart';
 import 'widgets/past_bookings.dart';
 import 'widgets/cancelled_bookings.dart';
-import 'widgets/empty_state.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MyBookingsConstants {
@@ -33,7 +31,13 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,8 +49,8 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
         child: Column(
           children: [
             BookingsHeader(),
-            BookingsSearchAndFilters(),
             BookingsTabs(controller: _tabController),
+            SizedBox(height: 8),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
@@ -54,10 +58,6 @@ class _MyBookingsScreenState extends State<MyBookingsScreen>
                   UpcomingBookingsWidget(),
                   PastBookingsWidget(),
                   CancelledBookingsWidget(),
-                  BookingsEmptyState(
-                    icon: Icons.timer_off,
-                    text: 'No waitlisted bookings',
-                  ),
                 ],
               ),
             ),

@@ -4,16 +4,20 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueBookingBar extends StatelessWidget {
+  final double price;
   final VoidCallback onBookNow;
 
   VenueBookingBar({
     super.key,
+    required this.price,
     required this.onBookNow,
   });
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final displayPrice = price > 0 ? '₹${price.toInt()}/hr' : '₹--/hr';
+
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -33,7 +37,7 @@ class VenueBookingBar extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Starts from ₹1000/hr',
+                  'Starts from $displayPrice',
                   style: TextStyle(
                     color: AppColors.accent,
                     fontSize: ResponsiveHelper.sp(16),

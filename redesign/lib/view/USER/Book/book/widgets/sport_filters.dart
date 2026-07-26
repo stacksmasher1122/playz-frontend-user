@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -12,6 +14,7 @@ class SportFilters extends StatefulWidget {
 
 class _SportFiltersState extends State<SportFilters> {
   int _selectedIndex = 0;
+  final _bookingController = Get.find<BookingController>();
 
   final List<String> sports = [
     'All Sports',
@@ -42,9 +45,8 @@ class _SportFiltersState extends State<SportFilters> {
                 _selectedIndex = i;
               });
 
-              /// 🔮 Future upgrade hook:
-              /// trigger filter logic / API / analytics here
-              // onSportSelected(sports[i]);
+              // Trigger reactive filter in the controller
+              _bookingController.filterTurfsBySport(sports[i]);
             },
             child: AnimatedContainer(
               duration: Duration(milliseconds: 200),

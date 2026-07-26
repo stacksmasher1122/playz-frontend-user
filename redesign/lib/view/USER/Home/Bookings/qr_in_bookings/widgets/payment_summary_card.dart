@@ -1,36 +1,31 @@
 import 'package:flutter/material.dart';
-import '../qr_in_bookings_screen.dart';
 import 'qr_amount_row.dart';
 import 'qr_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
-  PaymentSummaryCard({super.key});
+  final Map<String, dynamic>? bookingData;
+
+  PaymentSummaryCard({super.key, this.bookingData});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
+    final amount = bookingData?['amount'] ?? 0;
+    final paymentId = (bookingData?['paymentId'] ?? '').toString();
+    final paymentType = bookingData?['bookingType'] ?? 'Online App';
+    final refText = paymentId.isNotEmpty ? paymentId : paymentType.toString();
+
     return QrCard(
       title: 'Payment Summary',
       child: Column(
         children: [
-          QrAmountRow('Court Fee', '₹1,200'),
-          QrAmountRow('Conv. Fee', '₹40'),
+          QrAmountRow('Court Fee', '₹$amount'),
           Divider(color: Colors.white12),
-          QrAmountRow('Total Paid', '₹1,240', highlight: true),
+          QrAmountRow('Total Paid', '₹$amount', highlight: true),
           SizedBox(height: 6),
-          QrAmountRow('Payment Method', 'UPI ••••8821'),
-          SizedBox(height: 10),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              '⬇ Download Invoice',
-              style: TextStyle(
-                color: QrBookingConstants.green,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+          QrAmountRow('Payment Method / Ref', refText),
         ],
       ),
     );

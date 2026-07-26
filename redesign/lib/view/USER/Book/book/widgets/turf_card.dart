@@ -1,16 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
+import 'package:redesign/model/User_Models/Booking_Models/turf_model.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_dimensions.dart';
 import 'package:redesign/view/USER/Book/turf_details/turf_details_screen.dart';
-import '../book_screen.dart';
 import 'image_shimmer.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TurfCard extends StatefulWidget {
-  final TurfData data;
-  TurfCard({super.key, required this.data});
+  final TurfModel turf;
+  TurfCard({super.key, required this.turf});
 
   @override
   State<TurfCard> createState() => _TurfCardState();
@@ -28,6 +30,7 @@ class _TurfCardState extends State<TurfCard>
       case 'parking':
         return Icons.local_parking;
       case 'shower':
+      case 'washroom':
         return Icons.shower;
       case 'ac':
       case 'air conditioning':
@@ -37,6 +40,19 @@ class _TurfCardState extends State<TurfCard>
         return Icons.sports_soccer;
       case 'cricket':
         return Icons.sports_cricket;
+      case 'lighting':
+        return Icons.lightbulb;
+      case 'wifi':
+      case 'free wifi':
+        return Icons.wifi;
+      case 'drinking water':
+        return Icons.water_drop;
+      case 'change room':
+        return Icons.meeting_room;
+      case 'equipment':
+        return Icons.fitness_center;
+      case 'trainers':
+        return Icons.people;
       default:
         return Icons.sports;
     }
@@ -50,9 +66,11 @@ class _TurfCardState extends State<TurfCard>
     ResponsiveHelper.init(context);
     super.build(context);
 
-    final data = widget.data;
+    final turf = widget.turf;
+    final images = turf.allImages;
     final width = MediaQuery.of(context).size.width;
     final imageHeight = width * 0.48;
+    final displayPrice = turf.lowestPrice?.toInt() ?? 0;
 
     return Container(
       decoration: BoxDecoration(
@@ -69,29 +87,40 @@ class _TurfCardState extends State<TurfCard>
               children: [
                 SizedBox(
                   height: imageHeight,
-                  child: PageView.builder(
-                    itemCount: data.images.length,
-                    onPageChanged: (i) => setState(() => _pageIndex = i),
-                    itemBuilder: (_, i) => CachedNetworkImage(
-                      imageUrl: data.images[i],
-                      cacheKey: data.images[i],
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      placeholder: (_, __) =>
-                          ImageShimmer(height: imageHeight),
-                      errorWidget: (_, __, ___) => Center(
-                        child: Icon(
-                          Icons.broken_image,
-                          color: Colors.white54,
-                          size: 32,
+                  child: images.isNotEmpty
+                      ? PageView.builder(
+                          itemCount: images.length,
+                          onPageChanged: (i) => setState(() => _pageIndex = i),
+                          itemBuilder: (_, i) => CachedNetworkImage(
+                            imageUrl: images[i],
+                            cacheKey: images[i],
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            placeholder: (_, __) =>
+                                ImageShimmer(height: imageHeight),
+                            errorWidget: (_, __, ___) => Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                color: Colors.white54,
+                                size: 32,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          color: Colors.grey.shade900,
+                          child: Center(
+                            child: Icon(
+                              Icons.image_not_supported,
+                              color: Colors.white38,
+                              size: 40,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
 
                 /// PAGE INDICATOR
-                if (data.images.length > 1)
+                if (images.length > 1)
                   Positioned(
                     bottom: ResponsiveHelper.h(10),
                     left: ResponsiveHelper.w(0),
@@ -99,7 +128,7 @@ class _TurfCardState extends State<TurfCard>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
-                        data.images.length,
+                        images.length,
                         (i) => Container(
                           margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(3)),
                           width: ResponsiveHelper.w(6),
@@ -154,6 +183,10 @@ class _TurfCardState extends State<TurfCard>
                 InkWell(
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                   onTap: () {
+                    // Set selected turf in controller before navigating
+                    final bookingCtrl = Get.find<BookingController>();
+                    bookingCtrl.setSelectedTurf(turf);
+
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => TurfDetailScreen(),
@@ -166,7 +199,7 @@ class _TurfCardState extends State<TurfCard>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          data.name,
+                          turf.turfName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
@@ -177,7 +210,7 @@ class _TurfCardState extends State<TurfCard>
                         ),
                         SizedBox(height: 4),
                         Text(
-                          data.location,
+                          turf.displayLocation,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
@@ -187,45 +220,38 @@ class _TurfCardState extends State<TurfCard>
                         ),
                         SizedBox(height: 8),
 
-                        Row(
-                          children: [
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(text: '⭐ '),
-                                  TextSpan(
-                                    text: '4.6',
-                                    style: GoogleFonts.inter(
-                                      fontSize: ResponsiveHelper.sp(13),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
+                        /// Sports tags
+                        if (turf.sports.isNotEmpty)
+                          Row(
+                            children: [
+                              ...turf.sports.take(3).map((sport) => Padding(
+                                padding: EdgeInsets.only(right: 6),
+                                child: Text(
+                                  sport,
+                                  style: GoogleFonts.inter(
+                                    fontSize: ResponsiveHelper.sp(12),
+                                    color: AppColors.muted,
                                   ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 6),
-                            Expanded(
-                              child: Text(
-                                '(128 reviews) • 2.4 km away',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.inter(
-                                  color: AppColors.muted,
-                                  fontSize: ResponsiveHelper.sp(12),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
+                              )),
+                              if (turf.sports.length > 3)
+                                Text(
+                                  '+${turf.sports.length - 3} more',
+                                  style: GoogleFonts.inter(
+                                    fontSize: ResponsiveHelper.sp(12),
+                                    color: AppColors.accent,
+                                  ),
+                                ),
+                            ],
+                          ),
 
                         /// AMENITY TAGS ROW
-                        if (data.amenities.isNotEmpty) ...[
+                        if (turf.amenities.isNotEmpty) ...[
                           SizedBox(height: ResponsiveHelper.h(10)),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
-                              children: data.amenities.map((amenity) {
+                              children: turf.amenities.map((amenity) {
                                 return Container(
                                   margin: EdgeInsets.only(right: ResponsiveHelper.w(8)),
                                   padding: EdgeInsets.symmetric(
@@ -293,7 +319,9 @@ class _TurfCardState extends State<TurfCard>
                               children: [
                                 TextSpan(text: 'Starts from '),
                                 TextSpan(
-                                  text: '₹${data.price}',
+                                  text: displayPrice > 0
+                                      ? '₹$displayPrice'
+                                      : '₹--',
                                   style: TextStyle(
                                     color: AppColors.accent,
                                     fontWeight: FontWeight.w700,
@@ -304,35 +332,19 @@ class _TurfCardState extends State<TurfCard>
                               ],
                             ),
                           ),
-                          if (data.discount != null) ...[
-                            SizedBox(height: ResponsiveHelper.h(4)),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.local_offer,
-                                  size: ResponsiveHelper.sp(12),
-                                  color: AppColors.accent,
-                                ),
-                                SizedBox(width: ResponsiveHelper.w(4)),
-                                Text(
-                                  data.discount!,
-                                  style: GoogleFonts.inter(
-                                    color: AppColors.accent,
-                                    fontSize: ResponsiveHelper.sp(11),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
                         ],
                       ),
                     ),
                     SizedBox(width: 12),
                     ElevatedButton(
                       onPressed: () {
-                        // 👉 booking flow only
+                        final bookingCtrl = Get.find<BookingController>();
+                        bookingCtrl.setSelectedTurf(turf);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => TurfDetailScreen(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.accent,

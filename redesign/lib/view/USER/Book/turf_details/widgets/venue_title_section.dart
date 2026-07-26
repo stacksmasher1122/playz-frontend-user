@@ -3,7 +3,16 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueTitleSection extends StatelessWidget {
-  VenueTitleSection({super.key});
+  final String turfName;
+  final String location;
+  final bool isOpen;
+
+  VenueTitleSection({
+    super.key,
+    required this.turfName,
+    required this.location,
+    required this.isOpen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +28,7 @@ class VenueTitleSection extends StatelessWidget {
             children: [
               SizedBox(height: 10),
               Text(
-                'CrossFit Arena',
+                turfName,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: ResponsiveHelper.sp(26),
@@ -33,7 +42,7 @@ class VenueTitleSection extends StatelessWidget {
                   SizedBox(width: 4),
                   Expanded(
                     child: Text(
-                      'Narhe, Pune • 7.9 km away',
+                      location,
                       style: TextStyle(color: Color(0xFFA7A7A7)),
                     ),
                   ),
@@ -44,15 +53,17 @@ class VenueTitleSection extends StatelessWidget {
                         horizontal: 12,
                         vertical: 6,
                       ),
-                      backgroundColor: AppColors.accent.withValues(alpha: 0.15),
-                      foregroundColor: AppColors.accent,
+                      backgroundColor: isOpen
+                          ? AppColors.accent.withValues(alpha: 0.15)
+                          : Colors.red.withValues(alpha: 0.15),
+                      foregroundColor: isOpen ? AppColors.accent : Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
                       ),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
-                      'Open Now',
+                      isOpen ? 'Open Now' : 'Closed',
                       style: TextStyle(fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.w600),
                     ),
                   ),

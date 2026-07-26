@@ -42,11 +42,21 @@ android {
         manifestPlaceholders["google_maps_api_key"] = dotenv.getProperty("GOOGLE_MAPS_API_KEY", "") as String
     }
 
+    signingConfigs {
+        create("userDebug") {
+            storeFile = file("user_debug.keystore")
+            storePassword = "android"
+            keyAlias = "userdebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("userDebug")
+        }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("userDebug")
         }
     }
 }

@@ -3,11 +3,13 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SportSelector extends StatelessWidget {
+  final List<String> sports;
   final String? selectedSport;
   final ValueChanged<String> onSportSelected;
 
   SportSelector({
     super.key,
+    required this.sports,
     required this.selectedSport,
     required this.onSportSelected,
   });
@@ -15,7 +17,16 @@ class SportSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final sports = ['Football', 'Cricket', 'Tennis'];
+
+    if (sports.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+        child: Text(
+          'No sports available',
+          style: TextStyle(color: AppColors.muted),
+        ),
+      );
+    }
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),

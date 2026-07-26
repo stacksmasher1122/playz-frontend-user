@@ -6,6 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueImageSlider extends StatelessWidget {
   final List<String> images;
+  final List<String> sports;
   final PageController pageController;
   final int currentPage;
   final ValueChanged<int> onPageChanged;
@@ -13,6 +14,7 @@ class VenueImageSlider extends StatelessWidget {
   VenueImageSlider({
     super.key,
     required this.images,
+    required this.sports,
     required this.pageController,
     required this.currentPage,
     required this.onPageChanged,
@@ -23,26 +25,42 @@ class VenueImageSlider extends StatelessWidget {
     ResponsiveHelper.init(context);
     final size = MediaQuery.of(context).size;
 
+    // Build badge text from sports list
+    final badgeText = sports.isNotEmpty
+        ? sports.take(2).join(' & ').toUpperCase()
+        : '';
+
     return Stack(
       children: [
         SizedBox(
           height: size.height * 0.35,
-          child: PageView.builder(
-            controller: pageController,
-            itemCount: images.length,
-            onPageChanged: onPageChanged,
-            itemBuilder: (_, index) {
-              return CachedNetworkImage(
-                imageUrl: images[index],
-                fit: BoxFit.cover,
-                placeholder: (_, __) => Shimmer.fromColors(
-                  baseColor: Colors.grey.shade800,
-                  highlightColor: Colors.grey.shade700,
-                  child: Container(color: Colors.black),
+          child: images.isNotEmpty
+              ? PageView.builder(
+                  controller: pageController,
+                  itemCount: images.length,
+                  onPageChanged: onPageChanged,
+                  itemBuilder: (_, index) {
+                    return CachedNetworkImage(
+                      imageUrl: images[index],
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => Shimmer.fromColors(
+                        baseColor: Colors.grey.shade800,
+                        highlightColor: Colors.grey.shade700,
+                        child: Container(color: Colors.black),
+                      ),
+                    );
+                  },
+                )
+              : Container(
+                  color: Colors.grey.shade900,
+                  child: Center(
+                    child: Icon(
+                      Icons.image_not_supported,
+                      color: Colors.white38,
+                      size: 48,
+                    ),
+                  ),
                 ),
-              );
-            },
-          ),
         ),
 
         /// TOP ICONS
@@ -58,33 +76,35 @@ class VenueImageSlider extends StatelessWidget {
         ),
 
         /// PAGE INDICATORS
-        Positioned(
-          bottom: ResponsiveHelper.h(25),
-          right: ResponsiveHelper.w(25),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              images.length,
-              (index) => Container(
-                margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4)),
-                width: currentPage == index ? 20 : 6,
-                height: ResponsiveHelper.h(6),
-                decoration: BoxDecoration(
-                  color: currentPage == index
-                      ? AppColors.accent
-                      : Colors.grey[200],
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
+        if (images.length > 1)
+          Positioned(
+            bottom: ResponsiveHelper.h(25),
+            right: ResponsiveHelper.w(25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                images.length,
+                (index) => Container(
+                  margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4)),
+                  width: currentPage == index ? 20 : 6,
+                  height: ResponsiveHelper.h(6),
+                  decoration: BoxDecoration(
+                    color: currentPage == index
+                        ? AppColors.accent
+                        : Colors.grey[200],
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
 
-        Positioned(
-          bottom: ResponsiveHelper.h(10),
-          left: ResponsiveHelper.w(10),
-          child: _greenBadge('CROSSFIT & GYM'),
-        ),
+        if (badgeText.isNotEmpty)
+          Positioned(
+            bottom: ResponsiveHelper.h(10),
+            left: ResponsiveHelper.w(10),
+            child: _greenBadge(badgeText),
+          ),
       ],
     );
   }

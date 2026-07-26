@@ -60,6 +60,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null && mounted) {
       setState(() {
+        if (_nameController.text.trim().isEmpty &&
+            currentUser.displayName != null &&
+            currentUser.displayName!.isNotEmpty) {
+          _nameController.text = currentUser.displayName!;
+        }
         if (currentUser.email != null && currentUser.email!.isNotEmpty) {
           _emailController.text = currentUser.email!;
           _isEmailBound = true;
@@ -112,9 +117,15 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       return;
     }
 
-    final email = _emailController.text.trim();
-    final phone = _phoneController.text.trim();
-    final String docId = email.isNotEmpty ? email : phone;
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final email = _emailController.text.trim().isNotEmpty
+        ? _emailController.text.trim()
+        : (currentUser?.email ?? '');
+    final phone = _phoneController.text.trim().isNotEmpty
+        ? _phoneController.text.trim()
+        : (currentUser?.phoneNumber ?? '');
+
+    final String docId = email.isNotEmpty ? email : (phone.isNotEmpty ? phone : (currentUser?.uid ?? ''));
 
     if (docId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

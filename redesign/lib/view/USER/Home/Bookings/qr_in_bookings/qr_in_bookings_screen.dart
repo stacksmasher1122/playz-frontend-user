@@ -5,7 +5,6 @@ import 'widgets/qr_section.dart';
 import 'widgets/booking_info_card.dart';
 import 'widgets/location_card.dart';
 import 'widgets/payment_summary_card.dart';
-import 'widgets/qr_weather_alert.dart';
 import 'widgets/qr_action_section.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -21,9 +20,17 @@ class QrBookingConstants {
 enum BookingStatus { confirmed, cancelled, expired }
 
 class BookingQrScreen extends StatelessWidget {
-  BookingQrScreen({super.key});
+  final Map<String, dynamic>? bookingData;
 
-  final BookingStatus status = BookingStatus.confirmed;
+  BookingQrScreen({super.key, this.bookingData});
+
+  BookingStatus get status {
+    final s = (bookingData?['status'] ?? 'confirmed').toString().toLowerCase();
+    if (s == 'cancelled' || s == 'rejected' || s == 'refunded') {
+      return BookingStatus.cancelled;
+    }
+    return BookingStatus.confirmed;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,7 @@ class BookingQrScreen extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(16, 8, 16, 24),
           child: Column(
             children: [
-              // Header (moved from AppBar into the scrollable body)
+              // Header
               Padding(
                 padding: EdgeInsets.only(bottom: 8.0),
                 child: Row(
@@ -56,25 +63,18 @@ class BookingQrScreen extends StatelessWidget {
                         textAlign: TextAlign.left,
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.share_outlined, color: Colors.white),
-                      onPressed: () {},
-                    ),
-                    SizedBox(width: 12),
                   ],
                 ),
               ),
-              QrSection(status: status),
+              QrSection(status: status, bookingData: bookingData),
               SizedBox(height: 20),
-              BookingInfoCard(),
+              BookingInfoCard(bookingData: bookingData),
               SizedBox(height: 12),
-              LocationCard(),
+              LocationCard(bookingData: bookingData),
               SizedBox(height: 12),
-              PaymentSummaryCard(),
-              SizedBox(height: 12),
-              QrWeatherAlert(),
+              PaymentSummaryCard(bookingData: bookingData),
               SizedBox(height: 20),
-              QrActionSection(status: status),
+              QrActionSection(status: status, bookingData: bookingData),
               SizedBox(height: 24),
               GestureDetector(
                 onTap: () {},

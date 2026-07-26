@@ -5,8 +5,11 @@ import 'package:redesign/theme/responsive_helper.dart';
 class BookingDropdowns extends StatelessWidget {
   final String? selectedType;
   final String? selectedSize;
+  final String typeLabel;
+  final String sizeLabel;
   final List<String> typeOptions;
   final List<String> sizeOptions;
+  final bool isLoadingTypes;
   final ValueChanged<String> onTypeSelected;
   final ValueChanged<String> onSizeSelected;
 
@@ -14,8 +17,11 @@ class BookingDropdowns extends StatelessWidget {
     super.key,
     required this.selectedType,
     required this.selectedSize,
+    this.typeLabel = 'Ground',
+    this.sizeLabel = 'Size',
     required this.typeOptions,
     required this.sizeOptions,
+    this.isLoadingTypes = false,
     required this.onTypeSelected,
     required this.onSizeSelected,
   });
@@ -36,11 +42,12 @@ class BookingDropdowns extends StatelessWidget {
             children: [
               Expanded(
                 child: _DropdownCard(
-                  label: 'Type',
+                  label: typeLabel,
                   value: selectedType,
+                  isLoading: isLoadingTypes,
                   onTap: () => _openBottomSheet(
                     context,
-                    title: 'Select Type',
+                    title: 'Select $typeLabel',
                     options: typeOptions,
                     selected: selectedType,
                     onSelected: onTypeSelected,
@@ -50,11 +57,11 @@ class BookingDropdowns extends StatelessWidget {
               SizedBox(width: isWide ? 16 : 12),
               Expanded(
                 child: _DropdownCard(
-                  label: 'Size',
+                  label: sizeLabel,
                   value: selectedSize,
                   onTap: () => _openBottomSheet(
                     context,
-                    title: 'Select Size',
+                    title: 'Select $sizeLabel',
                     options: sizeOptions,
                     selected: selectedSize,
                     onSelected: onSizeSelected,
@@ -75,6 +82,43 @@ class BookingDropdowns extends StatelessWidget {
     String? selected,
     required ValueChanged<String> onSelected,
   }) {
+    if (options.isEmpty) {
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: _kBottomSheetColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
+        ),
+        builder: (_) {
+          return SafeArea(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: ResponsiveHelper.sp(18),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  Text(
+                    'No options available',
+                    style: TextStyle(color: AppColors.muted),
+                  ),
+                  SizedBox(height: 16),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       backgroundColor: _kBottomSheetColor,
@@ -136,11 +180,13 @@ class BookingDropdowns extends StatelessWidget {
 class _DropdownCard extends StatelessWidget {
   final String label;
   final String? value;
+  final bool isLoading;
   final VoidCallback onTap;
 
   _DropdownCard({
     required this.label,
     this.value,
+    this.isLoading = false,
     required this.onTap,
   });
 
@@ -177,16 +223,25 @@ class _DropdownCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 4),
-                  Text(
-                    value ?? 'Select',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: value == null ? _kMuted : Colors.white,
-                      fontSize: ResponsiveHelper.sp(14),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  isLoading
+                      ? SizedBox(
+                          height: 14,
+                          width: 14,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.accent,
+                          ),
+                        )
+                      : Text(
+                          value ?? 'Select',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: value == null ? _kMuted : Colors.white,
+                            fontSize: ResponsiveHelper.sp(14),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                 ],
               ),
             ),

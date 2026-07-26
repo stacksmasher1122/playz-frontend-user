@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
+import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/theme/app_colors.dart';
 
@@ -26,6 +27,7 @@ class BookTurfScreen extends StatefulWidget {
 
 class _BookTurfScreenState extends State<BookTurfScreen> {
   final _controller = Get.find<UserProfileController>();
+  final _bookingController = Get.find<BookingController>();
 
   @override
   void initState() {
@@ -49,59 +51,34 @@ class _BookTurfScreenState extends State<BookTurfScreen> {
       body: SafeArea(
         top: true,
         bottom: false,
-        child: ListView(
-          padding: EdgeInsets.only(bottom: 80),
-          children: [
-            TopBar(),
-            SizedBox(height: 14),
-            SearchBarWidget(),
-            SizedBox(height: 16),
-            SportFilters(),
-            SizedBox(height: 28),
-            SectionHeader(title: 'Trending Near You'),
-            SizedBox(height: 14),
-            TrendingList(),
-            SizedBox(height: 16),
-            FilterRow(),
-            SizedBox(height: 28),
-            SectionHeader(title: 'Available Turfs'),
-            SizedBox(height: 14),
-            AvailableTurfsList(),
-            SizedBox(height: 0),
-            EndOfResults(),
-          ],
+        child: RefreshIndicator(
+          color: AppColors.accent,
+          backgroundColor: AppColors.surface,
+          onRefresh: () => _bookingController.fetchAllTurfs(),
+          child: ListView(
+            padding: EdgeInsets.only(bottom: 80),
+            children: [
+              TopBar(),
+              SizedBox(height: 14),
+              SearchBarWidget(),
+              SizedBox(height: 16),
+              SportFilters(),
+              SizedBox(height: 28),
+              SectionHeader(title: 'Trending Near You'),
+              SizedBox(height: 14),
+              TrendingList(),
+              SizedBox(height: 16),
+              FilterRow(),
+              SizedBox(height: 28),
+              SectionHeader(title: 'Available Turfs'),
+              SizedBox(height: 14),
+              AvailableTurfsList(),
+              SizedBox(height: 0),
+              EndOfResults(),
+            ],
+          ),
         ),
       ),
     );
   }
-}
-
-/* ============================================================
-   DATA MODELS
-   ============================================================ */
-class TurfData {
-  final String name;
-  final String location;
-  final int price;
-  final List<String> images;
-  final List<String> amenities;
-  final String? discount;
-
-  TurfData({
-    required this.name,
-    required this.location,
-    required this.price,
-    required this.images,
-    this.amenities = const [],
-    this.discount,
-  });
-}
-
-class TrendingData {
-  final String name;
-  final String rating;
-  final String distance;
-  final String image;
-
-  TrendingData(this.name, this.rating, this.distance, this.image);
 }

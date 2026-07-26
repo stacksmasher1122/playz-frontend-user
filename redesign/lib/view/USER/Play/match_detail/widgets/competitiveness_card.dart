@@ -1,53 +1,71 @@
 import 'package:flutter/material.dart';
-import '../match_detail_constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CompetitivenessCard extends StatelessWidget {
-  CompetitivenessCard({super.key});
+  final int score;
+
+  const CompetitivenessCard({
+    super.key,
+    this.score = 94,
+  });
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(22)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(18)),
       decoration: BoxDecoration(
-        color: MatchDetailColors.surfaceSoft,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: Row(
         children: [
           SizedBox(
-            width: ResponsiveHelper.w(70),
-            height: ResponsiveHelper.h(70),
+            width: ResponsiveHelper.w(64),
+            height: ResponsiveHelper.h(64),
             child: Stack(
               alignment: Alignment.center,
               children: [
                 CircularProgressIndicator(
-                  value: 0.94,
-                  strokeWidth: 6,
+                  value: score / 100.0,
+                  strokeWidth: 5,
                   backgroundColor: Colors.white12,
-                  color: MatchDetailColors.accentBlue,
+                  color: AppColors.accent,
                 ),
                 Text(
-                  "94%",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  "$score%",
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.bold,
+                    fontSize: ResponsiveHelper.sp(15),
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),
           ),
-          SizedBox(width: 20),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Competitiveness",
-                  style: TextStyle(fontSize: ResponsiveHelper.sp(16), fontWeight: FontWeight.bold),
+                  "Match Competitiveness",
+                  style: GoogleFonts.inter(
+                    fontSize: ResponsiveHelper.sp(15),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-                SizedBox(height: 6),
+                SizedBox(height: 4),
                 Text(
-                  "Fair & Balanced Match",
-                  style: TextStyle(color: MatchDetailColors.textSecondary),
+                  "Fairly balanced skill matchmaking based on player XP history",
+                  style: GoogleFonts.inter(
+                    fontSize: ResponsiveHelper.sp(12),
+                    color: AppColors.muted,
+                  ),
                 ),
               ],
             ),

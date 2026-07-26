@@ -11,6 +11,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Cont
 import 'package:redesign/controller/presence_controller.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_chat_controller.dart';
+import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ void main() async {
   Get.put(PresenceController(), permanent: true);
   Get.put(GroupsController(), permanent: true);
   Get.put(GroupChatController(), permanent: true);
+  Get.put(BookingController(), permanent: true);
 
   runApp(const PlayZApp());
 }

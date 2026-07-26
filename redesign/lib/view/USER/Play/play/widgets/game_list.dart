@@ -1,88 +1,141 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/Play/match_detail/match_detail_screen.dart';
-import '../play_models.dart';
+import 'package:redesign/controller/User_Controller/Match_Controller/match_controller.dart';
+import 'package:redesign/view/USER/Play/play/play_models.dart';
+import 'xp_avatar_ring.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import '../host_match/host_match_screen.dart';
 
 class GameList extends StatelessWidget {
-  GameList({super.key});
-
-  static final _games = [
-    GameData(
-      hostName: 'Deepankar Shrikant Rokade Patil',
-      time: 'Thu 4 Dec, 06:30',
-      price: '₹100',
-      currentPlayers: 2,
-      maxPlayers: 22,
-      address: 'Dnyankamal Society, Sr No 20/1, Abhinav Nagar, Pune',
-      distance: '0.8 km',
-      avatarUrl: 'https://i.pravatar.cc/100?img=1',
-      sport: 'Cricket',
-      type: 'Casual',
-      isFull: false,
-    ),
-    GameData(
-      hostName: 'Rahul Mahadev Kulkarni',
-      time: 'Fri 5 Dec, 07:00',
-      price: '₹150',
-      currentPlayers: 18,
-      maxPlayers: 18,
-      address: 'Baner Sports Complex, Near High Street, Pune',
-      distance: '1.4 km',
-      avatarUrl: 'https://i.pravatar.cc/100?img=2',
-      sport: 'Football',
-      type: 'Competitive',
-      isFull: true,
-    ),
-    GameData(
-      hostName: 'Amit Prakash Deshmukh',
-      time: 'Sat 6 Dec, 08:30',
-      price: '₹80',
-      currentPlayers: 8,
-      maxPlayers: 16,
-      address: 'Wakad Indoor Arena, Hinjewadi Road, Pune',
-      distance: '2.1 km',
-      avatarUrl: 'https://i.pravatar.cc/100?img=3',
-      sport: 'Badminton',
-      type: 'Casual',
-      isFull: false,
-    ),
-  ];
+  const GameList({super.key});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: _games.length,
-      itemBuilder: (_, i) => GameCard(data: _games[i]),
-    );
+    final matchCtrl = Get.isRegistered<MatchController>()
+        ? Get.find<MatchController>()
+        : Get.put(MatchController());
+
+    return Obx(() {
+      if (matchCtrl.isLoading.value) {
+        return Padding(
+          padding: EdgeInsets.all(ResponsiveHelper.w(32)),
+          child: const Center(
+            child: CircularProgressIndicator(color: AppColors.accent),
+          ),
+        );
+      }
+
+      final games = matchCtrl.filteredMatches;
+
+      if (games.isEmpty) {
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveHelper.w(20),
+            vertical: ResponsiveHelper.h(32),
+          ),
+          child: Column(
+            children: [
+              Icon(Icons.sports_soccer_outlined, size: 48, color: Colors.white38),
+              SizedBox(height: 12),
+              Text(
+                'No Matches Found',
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: ResponsiveHelper.sp(16),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 6),
+              Text(
+                'Try expanding your radius slider or host your own match!',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  color: Colors.white54,
+                  fontSize: ResponsiveHelper.sp(13),
+                ),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const HostMatchScreen()),
+                  );
+                },
+                icon: const Icon(Icons.add_circle_outline),
+                label: const Text('Host a Match Now', style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        );
+      }
+
+      return ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: games.length,
+        itemBuilder: (_, i) => GameCard(data: games[i]),
+      );
+    });
   }
 }
 
 class GameCard extends StatelessWidget {
   final GameData data;
-  GameCard({super.key, required this.data});
+  const GameCard({super.key, required this.data});
 
-  Color _typeColor(String type) {
+  Color _typeBgColor(String type) {
     switch (type.toLowerCase()) {
       case 'casual':
-        return Color(0xFF1E3A8A); // blue
+        return AppColors.accent.withValues(alpha: 0.15);
       case 'competitive':
-        return Color(0xFF4C1D95); // purple
+        return const Color(0xFF7C3AED).withValues(alpha: 0.2);
       case 'tournament':
-        return Color(0xFF7C2D12); // amber/brown
+        return const Color(0xFFEA580C).withValues(alpha: 0.2);
       default:
-        return Color(0xFF2A2A2A);
+        return Colors.white.withValues(alpha: 0.08);
+    }
+  }
+
+  Color _typeTextColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'casual':
+        return AppColors.accent;
+      case 'competitive':
+        return const Color(0xFFA855F7);
+      case 'tournament':
+        return const Color(0xFFFB923C);
+      default:
+        return Colors.white70;
+    }
+  }
+
+  Color _typeBorderColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'casual':
+        return AppColors.accent.withValues(alpha: 0.3);
+      case 'competitive':
+        return const Color(0xFF7C3AED).withValues(alpha: 0.4);
+      case 'tournament':
+        return const Color(0xFFEA580C).withValues(alpha: 0.4);
+      default:
+        return Colors.transparent;
     }
   }
 
   String _shortName(String name) {
-    final parts = name.split(' ');
+    final parts = name.trim().split(' ');
     if (parts.length < 2) return name;
     return '${parts.first} ${parts.last[0]}.';
   }
@@ -90,7 +143,7 @@ class GameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final progress = data.currentPlayers / data.maxPlayers;
+    final progress = (data.currentPlayers / (data.maxPlayers > 0 ? data.maxPlayers : 1)).clamp(0.0, 1.0);
 
     return GestureDetector(
       onTap: () {
@@ -100,15 +153,19 @@ class GameCard extends StatelessWidget {
         );
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 16),
+        margin: const EdgeInsets.only(bottom: 16),
         padding: EdgeInsets.all(ResponsiveHelper.w(16)),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF141414), Color(0xFF0E0E0E)],
-          ),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+          color: AppColors.surface,
+          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.4),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,10 +173,28 @@ class GameCard extends StatelessWidget {
             /// SECTION 1: TAGS & PRICE
             Row(
               children: [
-                _Tag(data.type.toUpperCase(), color: _typeColor(data.type)),
+                _Tag(
+                  data.type.toUpperCase(),
+                  bgColor: _typeBgColor(data.type),
+                  textColor: _typeTextColor(data.type),
+                  borderColor: _typeBorderColor(data.type),
+                ),
                 SizedBox(width: 8),
-                _Tag(data.sport.toUpperCase(), color: Color(0xFF2A2A2A)),
-                Spacer(),
+                _Tag(
+                  data.sport.toUpperCase(),
+                  bgColor: Colors.white.withValues(alpha: 0.08),
+                  textColor: Colors.white70,
+                ),
+                if (data.locationType == 'playz_turf') ...[
+                  SizedBox(width: 8),
+                  _Tag(
+                    'VERIFIED TURF',
+                    bgColor: const Color(0xFF059669).withValues(alpha: 0.2),
+                    textColor: const Color(0xFF34D399),
+                    borderColor: const Color(0xFF059669).withValues(alpha: 0.4),
+                  ),
+                ],
+                const Spacer(),
                 Text(
                   data.price,
                   style: GoogleFonts.inter(
@@ -132,40 +207,18 @@ class GameCard extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            /// SECTION 2: HOST INFO & PLAYER COUNT
+            /// SECTION 2: HOST INFO (WITH DYNAMIC XP RING) & PLAYER COUNT
             Row(
               children: [
-                // Avatar with Online Status
-                Stack(
-                  children: [
-                    ClipOval(
-                      child: CachedNetworkImage(
-                        imageUrl: data.avatarUrl,
-                        width: ResponsiveHelper.w(52),
-                        height: ResponsiveHelper.h(52),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      right: ResponsiveHelper.w(0),
-                      bottom: ResponsiveHelper.h(0),
-                      child: Container(
-                        width: ResponsiveHelper.w(14),
-                        height: ResponsiveHelper.h(14),
-                        decoration: BoxDecoration(
-                          color: AppColors.accent,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.surface,
-                            width: ResponsiveHelper.w(2),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                /// DYNAMIC XP RING AVATAR
+                XpAvatarRing(
+                  imageUrl: data.avatarUrl,
+                  xp: data.hostXp,
+                  radius: 22,
                 ),
                 SizedBox(width: 12),
-                // Name and Time
+
+                /// Name and Time
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,23 +227,24 @@ class GameCard extends StatelessWidget {
                         _shortName(data.hostName),
                         style: GoogleFonts.inter(
                           color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(16),
+                          fontSize: ResponsiveHelper.sp(15),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      SizedBox(height: 2),
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.access_time,
                             color: Colors.white54,
-                            size: 14,
+                            size: 13,
                           ),
                           SizedBox(width: 4),
                           Text(
                             data.time,
                             style: GoogleFonts.inter(
                               color: Colors.white54,
-                              fontSize: ResponsiveHelper.sp(13),
+                              fontSize: ResponsiveHelper.sp(12.5),
                             ),
                           ),
                         ],
@@ -198,96 +252,104 @@ class GameCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Player Ratio
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${data.currentPlayers}/${data.maxPlayers}',
-                      style: GoogleFonts.inter(
-                        color: data.isFull ? Colors.white54 : AppColors.accent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: ResponsiveHelper.sp(15),
-                      ),
+
+                /// Player Count Badge
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ResponsiveHelper.w(12),
+                    vertical: ResponsiveHelper.h(6),
+                  ),
+                  decoration: BoxDecoration(
+                    color: data.isFull
+                        ? const Color(0xFF450A0A)
+                        : AppColors.accent.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                    border: Border.all(
+                      color: data.isFull
+                          ? Colors.redAccent.withValues(alpha: 0.4)
+                          : AppColors.accent.withValues(alpha: 0.3),
                     ),
-                    Text(
-                      'PLAYERS',
-                      style: TextStyle(
-                        color: Colors.white38,
-                        fontSize: ResponsiveHelper.sp(10),
-                        letterSpacing: 0.5,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.group,
+                        color: data.isFull ? Colors.redAccent : AppColors.accent,
+                        size: 14,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 4),
+                      Text(
+                        '${data.currentPlayers}/${data.maxPlayers}',
+                        style: GoogleFonts.inter(
+                          color: data.isFull ? Colors.redAccent : AppColors.accent,
+                          fontSize: ResponsiveHelper.sp(13),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
             SizedBox(height: 16),
 
             /// SECTION 3: PROGRESS BAR
-            ClipRRect(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
-              child: LinearProgressIndicator(
-                value: progress,
-                backgroundColor: Colors.white10,
-                color: progress >= 0.7
-                    ? Color(0xFFF59E0B)
-                    : AppColors.accent,
-                minHeight: 4,
-              ),
-            ),
-            SizedBox(height: 20),
-            Divider(color: Colors.white.withValues(alpha: 0.06), height: 1),
-            SizedBox(height: 16),
-
-            /// SECTION 4: LOCATION & JOIN BUTTON
-            Row(
+            Stack(
               children: [
-                Icon(Icons.location_on, color: Colors.white24, size: 14),
-                SizedBox(width: 6),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        data.address,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                          color: Colors.white70,
-                          fontSize: ResponsiveHelper.sp(13),
-                        ),
-                      ),
-                      Text(
-                        data.distance,
-                        style: GoogleFonts.inter(
-                          color: Colors.white38,
-                          fontSize: ResponsiveHelper.sp(11),
-                        ),
-                      ),
-                    ],
+                Container(
+                  height: ResponsiveHelper.h(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
                   ),
                 ),
-                SizedBox(width: 12),
-                // Join Button
-                ElevatedButton(
-                  onPressed: data.isFull ? null : () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    foregroundColor: Colors.black,
-                    disabledBackgroundColor: Colors.white10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 10,
+                FractionallySizedBox(
+                  widthFactor: progress,
+                  child: Container(
+                    height: ResponsiveHelper.h(6),
+                    decoration: BoxDecoration(
+                      color: data.isFull ? Colors.redAccent : AppColors.accent,
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: (data.isFull ? Colors.redAccent : AppColors.accent).withValues(alpha: 0.4),
+                          blurRadius: 4,
+                        ),
+                      ],
                     ),
                   ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+
+            /// SECTION 4: LOCATION & DISTANCE
+            Row(
+              children: [
+                Icon(
+                  Icons.location_on_outlined,
+                  color: AppColors.accent.withValues(alpha: 0.8),
+                  size: 15,
+                ),
+                SizedBox(width: 4),
+                Expanded(
                   child: Text(
-                    data.isFull ? 'Full' : 'Join',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    data.address,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.inter(
+                      color: Colors.white70,
+                      fontSize: ResponsiveHelper.sp(12),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Text(
+                  data.distance,
+                  style: GoogleFonts.inter(
+                    color: AppColors.muted,
+                    fontSize: ResponsiveHelper.sp(12),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
@@ -301,24 +363,35 @@ class GameCard extends StatelessWidget {
 
 class _Tag extends StatelessWidget {
   final String text;
-  final Color color;
-  _Tag(this.text, {required this.color});
+  final Color bgColor;
+  final Color textColor;
+  final Color? borderColor;
+
+  const _Tag(
+    this.text, {
+    required this.bgColor,
+    required this.textColor,
+    this.borderColor,
+  });
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(10),
+        vertical: ResponsiveHelper.h(4),
+      ),
       decoration: BoxDecoration(
-        color: color,
+        color: bgColor,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+        border: borderColor != null ? Border.all(color: borderColor!) : null,
       ),
       child: Text(
         text,
         style: GoogleFonts.inter(
-          fontSize: ResponsiveHelper.sp(10),
-          color: Colors.white.withValues(alpha: 0.9),
-          fontWeight: FontWeight.w800,
+          color: textColor,
+          fontSize: ResponsiveHelper.sp(10.5),
+          fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
         ),
       ),

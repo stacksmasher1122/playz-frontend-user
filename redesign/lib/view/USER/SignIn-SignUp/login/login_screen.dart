@@ -173,6 +173,10 @@ class _LoginScreenState extends State<LoginScreen> {
       final docSnapshot = await FirebaseFirestore.instance.collection('User').doc(docId).get();
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
+        final bool isComplete = (data['isProfileComplete'] ?? false) == true;
+        final sports = data['favoriteSports'];
+        final bool hasSports = sports != null && sports is List && sports.length >= 4;
+
         await UserPreferences.saveDocId(docId);
         await UserPreferences.saveUserProfile(
           data['fullName'] ?? '',
@@ -182,18 +186,22 @@ class _LoginScreenState extends State<LoginScreen> {
           data['bio'] ?? '',
           data['profileImageUrl'] ?? '',
         );
-        final sports = data['favoriteSports'];
         if (sports != null && sports is List) {
           await UserPreferences.saveFavoriteSports(sports.map((e) => e.toString()).toList());
         }
         await UserPreferences.setPublicProfile(data['isPublicProfile'] ?? true);
         await UserPreferences.setTrainer(data['isTrainer'] ?? false);
-        await UserPreferences.setProfileComplete(true);
-        return true;
+
+        if (isComplete && hasSports) {
+          await UserPreferences.setProfileComplete(true);
+          return true;
+        }
       }
+      await UserPreferences.setProfileComplete(false);
       return false;
     } catch (e) {
       debugPrint('Error fetching user doc: $e');
+      await UserPreferences.setProfileComplete(false);
       return false;
     }
   }

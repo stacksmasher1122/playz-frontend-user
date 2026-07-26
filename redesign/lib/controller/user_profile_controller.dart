@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:redesign/model/user_profile_model.dart';
@@ -20,17 +21,17 @@ class UserProfileController extends GetxController {
 
   Future<void> fetchUserProfile(String docId) async {
     if (docId.isEmpty) return;
-    
+
     isLoading.value = true;
     try {
       final doc = await _firestore.collection('User').doc(docId).get();
       if (doc.exists && doc.data() != null) {
         rxUser.value = UserProfileModel.fromMap(doc.id, doc.data()!);
-        
+
         // Sync local preferences
         await UserPreferences.saveUserProfile(
           rxUser.value!.fullName,
-          rxUser.value!.secondaryPhone, // Or primary if appropriate
+          rxUser.value!.secondaryPhone,
           rxUser.value!.primaryEmail,
           rxUser.value!.dob,
           rxUser.value!.bio,
@@ -53,18 +54,27 @@ class UserProfileController extends GetxController {
     try {
       String finalImageUrl = updatedUser.profileImageUrl;
 
+      // Determine doc ID using email (if available)
+      final String emailToUse = updatedUser.primaryEmail.trim().isNotEmpty
+          ? updatedUser.primaryEmail.trim()
+          : (FirebaseAuth.instance.currentUser?.email ?? updatedUser.docId);
+      final docIdToUse = emailToUse.isNotEmpty ? emailToUse : updatedUser.docId;
+
       // Handle Image Upload if new file provided
       if (imageFile != null) {
         String fileName = imageFile.path.split(Platform.isWindows ? '\\' : '/').last;
         final storageRef = _storage.ref().child(
-          'User/${updatedUser.docId}/Profile/$fileName',
+          'User/$docIdToUse/Profile/$fileName',
         );
         await storageRef.putFile(imageFile);
         finalImageUrl = await storageRef.getDownloadURL();
       }
 
-      // Prepare final model with updated image URL
-      final userToSave = updatedUser.copyWith(profileImageUrl: finalImageUrl);
+      // Prepare final model with updated image URL and docId
+      final userToSave = updatedUser.copyWith(
+        docId: docIdToUse,
+        profileImageUrl: finalImageUrl,
+      );
 
       // Save to Firestore
       await _firestore

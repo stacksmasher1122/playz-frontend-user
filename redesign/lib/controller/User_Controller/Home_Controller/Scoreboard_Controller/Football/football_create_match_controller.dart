@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import '../../../../../sqflite/User_SQF/Home_SQF/Scoreboard_SQF/footballSqflite.dart';
 import 'football_controller.dart';
 import '../../../../../view/USER/Home/Scoreboard/Football/football_scoreboard/football_scoreboard_screen.dart';
+import '../../../../../shared_preferences/userPreferences.dart';
 
 class FootballCreateMatchController extends GetxController {
   final RxBool isLoading = false.obs;
@@ -129,13 +130,14 @@ class FootballCreateMatchController extends GetxController {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        final docId = await UserPreferences.getDocId() ?? user.email ?? user.uid;
+        final doc = await FirebaseFirestore.instance.collection('User').doc(docId).get();
         if (doc.exists) {
           currentUserFriendModel.value = FriendModel.fromMap(doc.data() as Map<String, dynamic>);
         }
       }
     } catch (e) {
-      debugPrint("Error loading profile: \$e");
+      debugPrint("Error loading profile: $e");
     }
   }
 

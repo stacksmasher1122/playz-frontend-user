@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'xp_avatar_ring.dart';
 
 class PlayTopBar extends StatelessWidget {
   PlayTopBar({super.key});
@@ -82,32 +81,16 @@ class PlayTopBar extends StatelessWidget {
           ),
           SizedBox(width: 16),
 
-          /// AVATAR
+          /// AVATAR WITH DYNAMIC XP LEVEL RING
           Obx(() {
             final profileImageUrl = controller.profileImageUrl;
-            return ClipOval(
-              child: profileImageUrl.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: profileImageUrl,
-                      width: width < 360 ? 32 : 36,
-                      height: width < 360 ? 32 : 36,
-                      fit: BoxFit.cover,
-                      placeholder: (_, __) => Shimmer.fromColors(
-                        baseColor: Colors.grey.shade800,
-                        highlightColor: Colors.grey.shade700,
-                        child: CircleAvatar(radius: width < 360 ? 16 : 18),
-                      ),
-                      errorWidget: (_, __, ___) => CircleAvatar(
-                        radius: width < 360 ? 16 : 18,
-                        backgroundColor: Color(0xFF1A1A1A),
-                        child: Icon(Icons.person, color: Colors.white38),
-                      ),
-                    )
-                  : CircleAvatar(
-                      radius: width < 360 ? 16 : 18,
-                      backgroundColor: Color(0xFF1A1A1A),
-                      child: Icon(Icons.person, color: Colors.white38),
-                    ),
+            final userXp = 250;
+            final radius = width < 360 ? 14.0 : 16.0;
+
+            return XpAvatarRing(
+              imageUrl: profileImageUrl,
+              xp: userXp,
+              radius: radius,
             );
           }),
         ],

@@ -6,7 +6,9 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class QrSection extends StatelessWidget {
   final BookingStatus status;
-  QrSection({super.key, required this.status});
+  final Map<String, dynamic>? bookingData;
+
+  QrSection({super.key, required this.status, this.bookingData});
 
   Color get glowColor {
     switch (status) {
@@ -33,27 +35,33 @@ class QrSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
+    final qrData = bookingData?['qrData'] ?? bookingData?['bookingId'] ?? 'BOOKING_ID_PZ_8821';
+    final bookingId = bookingData?['bookingId'] ?? 'PZ-8821';
+
     return Column(
       children: [
         LayoutBuilder(
           builder: (context, constraints) {
-            final size = constraints.maxWidth * 0.75;
+            final size = constraints.maxWidth * 0.72;
             return Container(
               padding: EdgeInsets.all(ResponsiveHelper.w(16)),
               decoration: BoxDecoration(
                 color: QrBookingConstants.surface,
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 boxShadow: [
                   BoxShadow(
                     color: glowColor.withValues(alpha: 0.35),
-                    blurRadius: 5,
+                    blurRadius: 12,
+                    spreadRadius: 2,
                   )
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadiusGeometry.all(Radius.circular(ResponsiveHelper.w(10))),
+                borderRadius: BorderRadius.all(Radius.circular(ResponsiveHelper.w(10))),
                 child: QrImageView(
-                  data: 'BOOKING_ID_PZ_8821',
+                  data: qrData,
                   size: size,
                   backgroundColor: Colors.white,
                 ),
@@ -61,18 +69,28 @@ class QrSection extends StatelessWidget {
             );
           },
         ),
-        SizedBox(height: 12),
+        SizedBox(height: 16),
         Text(
-          'Show this QR at the venue counter',
-          style: TextStyle(color: QrBookingConstants.muted),
+          'Scan at venue entry counter',
+          style: TextStyle(
+            color: QrBookingConstants.muted,
+            fontSize: ResponsiveHelper.sp(13),
+            fontWeight: FontWeight.w500,
+          ),
         ),
         SizedBox(height: 10),
-        QrStatusBadge(statusText,
-            status == BookingStatus.confirmed ? QrBookingConstants.green : QrBookingConstants.red),
+        QrStatusBadge(
+          statusText,
+          status == BookingStatus.confirmed ? QrBookingConstants.green : QrBookingConstants.red,
+        ),
         SizedBox(height: 6),
         Text(
-          'Booking ID: #PZ-8821',
-          style: TextStyle(color: QrBookingConstants.muted, fontSize: 12),
+          'Booking ID: #$bookingId',
+          style: TextStyle(
+            color: QrBookingConstants.muted,
+            fontSize: ResponsiveHelper.sp(12),
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );

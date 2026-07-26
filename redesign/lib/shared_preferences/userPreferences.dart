@@ -23,6 +23,9 @@ class UserPreferences {
     await prefs.setBool(_keyIsLoggedIn, isLoggedIn);
     await prefs.setString(_keyUserName, name);
     await prefs.setString(_keyUserEmail, email);
+    if (email.isNotEmpty && (prefs.getString(_keyDocId) ?? '').isEmpty) {
+      await prefs.setString(_keyDocId, email);
+    }
   }
 
   static Future<bool> isLoggedIn() async {

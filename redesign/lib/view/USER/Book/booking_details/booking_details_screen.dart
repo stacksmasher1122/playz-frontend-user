@@ -1,6 +1,16 @@
+import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:redesign/common/pay_succ.dart';
-import 'package:redesign/theme/app_colors.dart';
+import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:redesign/view/USER/Book/payment_success/payment_success_screen.dart';
+import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
+import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
+import 'package:redesign/shared_preferences/userPreferences.dart';
 
 import 'widgets/addon_card.dart';
 import 'widgets/availability_timeline.dart';
@@ -11,67 +21,94 @@ import 'widgets/confirmation_bottom_bar.dart';
 import 'widgets/date_selector.dart';
 import 'widgets/solo_queue_options.dart';
 import 'widgets/sport_selector.dart';
+import 'widgets/slot_matrix_bottom_sheet.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 const kBgColor = Colors.black;
 const kMuted = Color(0xFFA7A7A7);
 
 class ConfirmSlotScreen extends StatefulWidget {
-  ConfirmSlotScreen({super.key});
+  const ConfirmSlotScreen({super.key});
 
   @override
   State<ConfirmSlotScreen> createState() => _ConfirmSlotScreenState();
 }
 
 class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
-  bool soloQueue = false;
+  final BookingController _bookingController = Get.find<BookingController>();
+  late Razorpay _razorpay;
+
+  TimeOfDay? _startTime;
+  TimeOfDay? _endTime;
+
+  final Set<String> _selectedAddons = {'Equipment Rental'};
   int players = 4;
   double radius = 10;
   bool bringOwnEquipment = false;
   bool splitAndPay = false;
-  int baseSlotPrice = 1000;
+  final ValueNotifier<bool> _isBottomBarVisible = ValueNotifier(true);
   late final ScrollController _timelineController;
 
-  static const int _startHour = 1; // 6 AM
-  static const int _totalHours = 23; // 6 AM → 6 PM
-  static const double _slotWidth = 90;
-  static const double _separatorWidth = 2;
-
   DateTime? selectedDate;
-  String? selectedType;
+  String? selectedGround;
   String? selectedSize;
-  final Set<String> _selectedAddons = {};
+  bool soloQueue = false;
 
-  final List<String> typeOptions = ['Turf', 'Grass', 'Indoor', 'Synthetic'];
-  final List<String> sizeOptions = [
-    '3-a-side',
-    '5-a-side',
-    '7-a-side',
-    '11-a-side',
-  ];
-
-  TimeOfDay? _startTime;
-  TimeOfDay? _endTime;
   String? selectedSport;
+
+  /// Dynamic options from the controller
+  List<String> get _sportOptions => _bookingController.turfSports;
+  List<String> get _groundOptions => _bookingController.groundNames;
+  List<String> get _dimensionOptions => _bookingController.dimensionOptions;
 
   bool get _isReadyToPay {
     if (selectedDate == null) return false;
     if (selectedSport == null) return false;
-    if (selectedType == null || selectedType!.isEmpty) return false;
-    if (selectedSize == null || selectedSize!.isEmpty) return false;
+    if (selectedGround == null || selectedGround!.isEmpty) return false;
     if (_startTime == null || _endTime == null) return false;
-    return _endTime!.hour > _startTime!.hour;
+    int startMin = _startTime!.hour * 60 + _startTime!.minute;
+    int endMin = _endTime!.hour * 60 + _endTime!.minute;
+    if (endMin <= startMin && _endTime!.hour == 0) {
+      endMin += 1440;
+    }
+    return endMin > startMin;
   }
 
-  int get _totalAmount {
-    int basePrice = 1000;
-    return basePrice;
+  double get _totalAmount {
+    final ground = _bookingController.selectedGround.value;
+    final basePrice = ground?.defaultPrice ?? 1000.0;
+    int hours = 1;
+    if (_startTime != null && _endTime != null) {
+      int startMin = _startTime!.hour * 60 + _startTime!.minute;
+      int endMin = _endTime!.hour * 60 + _endTime!.minute;
+      if (endMin <= startMin && _endTime!.hour == 0) {
+        endMin += 1440;
+      }
+      hours = ((endMin - startMin) / 60).round();
+      if (hours <= 0) hours = 1;
+    }
+    return basePrice * hours;
   }
+
+  Worker? _slotsWorker;
 
   @override
   void initState() {
     super.initState();
     _timelineController = ScrollController();
+
+    // Razorpay Initialization
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+
+    // Auto-scroll when reactive slots finish loading
+    _slotsWorker = ever(_bookingController.slots, (_) {
+      Future.delayed(Duration(milliseconds: 150), () {
+        _autoScrollToNextHour();
+      });
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _waitForTimelineAndScroll();
@@ -80,7 +117,10 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
   @override
   void dispose() {
+    _slotsWorker?.dispose();
     _timelineController.dispose();
+    _isBottomBarVisible.dispose();
+    _razorpay.clear();
     super.dispose();
   }
 
@@ -95,23 +135,37 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
   }
 
   void _autoScrollToNextHour() {
+    if (!_timelineController.hasClients) return;
+
     final now = DateTime.now();
+    final currentHour = now.hour; // Whole number hour (e.g. 17 for 5:19 PM)
 
-    int effectiveHour = now.minute >= 30 ? now.hour + 1 : now.hour;
+    int index = -1;
+    if (_bookingController.slots.isNotEmpty) {
+      final sortedSlots = List<SlotModel>.from(_bookingController.slots)
+        ..sort((a, b) => (a.startHour ?? 0).compareTo(b.startHour ?? 0));
 
-    effectiveHour = effectiveHour.clamp(
-      _startHour,
-      _startHour + _totalHours - 1,
-    );
+      final foundIdx = sortedSlots
+          .indexWhere((s) => (s.startHour ?? 0) >= currentHour);
+      if (foundIdx != -1) {
+        index = foundIdx;
+      } else {
+        index = sortedSlots.length - 1;
+      }
+    }
 
-    final int index = effectiveHour - _startHour;
+    if (index == -1) {
+      index = currentHour.clamp(0, 23);
+    }
 
-    final double itemExtent = _slotWidth + _separatorWidth;
+    final double slotWidth = ResponsiveHelper.w(110);
+    final double separatorWidth = ResponsiveHelper.w(2);
+    final double itemExtent = slotWidth + separatorWidth;
+
     double offset = index * itemExtent;
 
     final viewportWidth = _timelineController.position.viewportDimension;
-
-    offset -= (viewportWidth - _slotWidth) / 2;
+    offset -= (viewportWidth - slotWidth) / 2;
 
     offset = offset.clamp(
       _timelineController.position.minScrollExtent,
@@ -120,9 +174,23 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
     _timelineController.animateTo(
       offset,
-      duration: Duration(milliseconds: 450),
+      duration: Duration(milliseconds: 500),
       curve: Curves.easeOutCubic,
     );
+  }
+
+  void _onGroundSelected(String groundName) {
+    setState(() => selectedGround = groundName);
+
+    final dateStr = selectedDate != null
+        ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+        : DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+    final ground = _bookingController.grounds
+        .firstWhereOrNull((g) => g.name == groundName);
+    if (ground != null) {
+      _bookingController.setSelectedGround(ground, dateStr: dateStr);
+    }
   }
 
   @override
@@ -135,7 +203,14 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
         backgroundColor: Colors.black,
         elevation: 0,
         leading: BackButton(),
-        title: Text('Confirm Slot'),
+        title: Obx(() {
+          final turfName = _bookingController.selectedTurf.value?.turfName ?? 'Confirm Slot';
+          return Text(
+            turfName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          );
+        }),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
@@ -143,91 +218,160 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 110),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DateSelector(
-              selectedDate: selectedDate,
-              onDateSelected: (date) => setState(() => selectedDate = date),
-            ),
-            SizedBox(height: 24),
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification.depth != 0) return false;
 
-            _SectionTitle(text: 'Sport & Ground'),
-            SizedBox(height: 8),
-            SportSelector(
-              selectedSport: selectedSport,
-              onSportSelected: (sport) => setState(() => selectedSport = sport),
-            ),
-            SizedBox(height: 20),
-            BookingDropdowns(
-              selectedType: selectedType,
-              selectedSize: selectedSize,
-              typeOptions: typeOptions,
-              sizeOptions: sizeOptions,
-              onTypeSelected: (v) => setState(() => selectedType = v),
-              onSizeSelected: (v) => setState(() => selectedSize = v),
-            ),
-            SizedBox(height: 24),
+          // ALWAYS show Pay button when near/at the end of the scrollable page
+          if (notification.metrics.extentAfter < 60) {
+            if (!_isBottomBarVisible.value) {
+              _isBottomBarVisible.value = true;
+            }
+            return false;
+          }
 
-            AvailabilityTimeline(controller: _timelineController),
-            SizedBox(height: 24),
+          if (notification is UserScrollNotification) {
+            if (notification.direction == ScrollDirection.reverse) {
+              if (_isBottomBarVisible.value) {
+                _isBottomBarVisible.value = false;
+              }
+            } else if (notification.direction == ScrollDirection.forward) {
+              if (!_isBottomBarVisible.value) {
+                _isBottomBarVisible.value = true;
+              }
+            }
+          }
+          return false;
+        },
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 110),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DateSelector(
+                selectedDate: selectedDate,
+                onDateSelected: (date) {
+                  setState(() => selectedDate = date);
+                  final turf = _bookingController.selectedTurf.value;
+                  final ground = _bookingController.selectedGround.value;
+                  if (turf != null && ground != null) {
+                    final dateStr = DateFormat('yyyy-MM-dd').format(date);
+                    _bookingController.fetchGroundSlots(
+                      turf.ownerId,
+                      turf.id,
+                      ground.id,
+                      dateStr: dateStr,
+                    );
+                  }
+                },
+              ),
+              SizedBox(height: 24),
 
-            BookingTimePickers(
-              startTime: _startTime,
-              endTime: _endTime,
-              onPickStartTime: () => _pickTime(isStart: true),
-              onPickEndTime: () => _pickTime(isStart: false),
-            ),
-            SizedBox(height: 32),
+              _SectionTitle(text: 'Sport & Ground'),
+              SizedBox(height: 8),
+              SportSelector(
+                sports: _sportOptions,
+                selectedSport: selectedSport,
+                onSportSelected: (sport) => setState(() => selectedSport = sport),
+              ),
+              SizedBox(height: 20),
+              Obx(() => BookingDropdowns(
+                selectedType: selectedGround,
+                selectedSize: selectedSize,
+                typeLabel: 'Ground',
+                sizeLabel: 'Size',
+                typeOptions: _groundOptions,
+                sizeOptions: _dimensionOptions,
+                isLoadingTypes: _bookingController.isLoadingGrounds.value,
+                onTypeSelected: _onGroundSelected,
+                onSizeSelected: (v) => setState(() => selectedSize = v),
+              )),
+              SizedBox(height: 24),
 
-            _SectionTitle(text: 'Add-ons & Equipment'),
-            SizedBox(height: 5),
-            AddonCard(
-              title: 'Pro Match Ball',
-              price: '+ ₹200',
-              isSelected: _selectedAddons.contains('Pro Match Ball'),
-              onTap: () => _toggleAddon('Pro Match Ball'),
-            ),
-            AddonCard(
-              title: 'Extra Bibs (Set of 10)',
-              price: '+ ₹150',
-              isSelected: _selectedAddons.contains('Extra Bibs (Set of 10)'),
-              onTap: () => _toggleAddon('Extra Bibs (Set of 10)'),
-            ),
-            AddonCard(
-              title: 'Referee Service',
-              price: '+ ₹300',
-              isSelected: _selectedAddons.contains('Referee Service'),
-              onTap: () => _toggleAddon('Referee Service'),
-            ),
-            SizedBox(height: 28),
+              Obx(() => AvailabilityTimeline(
+                controller: _timelineController,
+                slots: _bookingController.slots,
+                isLoading: _bookingController.isLoadingSlots.value,
+                selectedDate: selectedDate,
+              )),
+              SizedBox(height: 24),
 
-            SoloQueueOptions(
-              soloQueue: soloQueue,
-              players: players,
-              radius: radius,
-              splitAndPay: splitAndPay,
-              bringOwnEquipment: bringOwnEquipment,
-              baseSlotPrice: baseSlotPrice,
-              onSoloQueueChanged: (v) => setState(() => soloQueue = v),
-              onPlayersChanged: (v) => setState(() => players = v),
-              onRadiusChanged: (v) => setState(() => radius = v),
-              onSplitAndPayChanged: (v) => setState(() => splitAndPay = v),
-              onBringOwnEquipmentChanged: (v) =>
-                  setState(() => bringOwnEquipment = v),
-            ),
-            SizedBox(height: 32),
+              BookingTimePickers(
+                startTime: _startTime,
+                endTime: _endTime,
+                onPickStartTime: () => _pickTime(isStart: true),
+                onPickEndTime: () => _pickTime(isStart: false),
+              ),
+              SizedBox(height: 32),
 
-            BookingSummary(),
-          ],
+              _SectionTitle(text: 'Add-ons & Equipment'),
+              SizedBox(height: 5),
+              AddonCard(
+                title: 'Pro Match Ball',
+                price: '+ ₹200',
+                isSelected: _selectedAddons.contains('Pro Match Ball'),
+                onTap: () => _toggleAddon('Pro Match Ball'),
+              ),
+              AddonCard(
+                title: 'Extra Bibs (Set of 10)',
+                price: '+ ₹150',
+                isSelected: _selectedAddons.contains('Extra Bibs (Set of 10)'),
+                onTap: () => _toggleAddon('Extra Bibs (Set of 10)'),
+              ),
+              AddonCard(
+                title: 'Referee Service',
+                price: '+ ₹300',
+                isSelected: _selectedAddons.contains('Referee Service'),
+                onTap: () => _toggleAddon('Referee Service'),
+              ),
+              SizedBox(height: 28),
+
+              SoloQueueOptions(
+                soloQueue: soloQueue,
+                players: players,
+                radius: radius,
+                splitAndPay: splitAndPay,
+                bringOwnEquipment: bringOwnEquipment,
+                baseSlotPrice: _totalAmount > 0 ? _totalAmount.toInt() : 1000,
+                onSoloQueueChanged: (v) => setState(() => soloQueue = v),
+                onPlayersChanged: (v) => setState(() => players = v),
+                onRadiusChanged: (v) => setState(() => radius = v),
+                onSplitAndPayChanged: (v) => setState(() => splitAndPay = v),
+                onBringOwnEquipmentChanged: (v) =>
+                    setState(() => bringOwnEquipment = v),
+              ),
+              SizedBox(height: 32),
+
+              Obx(() => BookingSummary(
+                slotPrice: _bookingController.selectedGround.value?.defaultPrice ?? 0,
+                hours: (_endTime != null && _startTime != null)
+                    ? (() {
+                        int startMin = _startTime!.hour * 60 + _startTime!.minute;
+                        int endMin = _endTime!.hour * 60 + _endTime!.minute;
+                        if (endMin <= startMin && _endTime!.hour == 0) endMin += 1440;
+                        return ((endMin - startMin) / 60).round().clamp(1, 24);
+                      })()
+                    : 1,
+              )),
+            ],
+          ),
         ),
       ),
-      bottomNavigationBar: ConfirmationBottomBar(
-        enabled: _isReadyToPay,
-        totalAmount: _totalAmount,
-        onPayPressed: _onPayPressed,
+      bottomNavigationBar: ValueListenableBuilder<bool>(
+        valueListenable: _isBottomBarVisible,
+        builder: (context, visible, child) {
+          return AnimatedSlide(
+            duration: Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            offset: visible ? Offset.zero : Offset(0, 1.5),
+            child: child,
+          );
+        },
+        child: ConfirmationBottomBar(
+          enabled: _isReadyToPay,
+          totalAmount: _totalAmount.toInt(),
+          onPayPressed: _onPayPressed,
+        ),
       ),
     );
   }
@@ -243,55 +387,271 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
   }
 
   void _onPayPressed() {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => BookingConfirmationScreen()));
+    if (!_isReadyToPay) {
+      Get.snackbar(
+        'Incomplete Details',
+        'Please select Date, Sport, Ground, and Time Slot before proceeding.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    final turf = _bookingController.selectedTurf.value;
+    final ground = _bookingController.selectedGround.value;
+    final user = FirebaseAuth.instance.currentUser;
+
+    var options = {
+      'key': 'rzp_test_THjDLg1t3KW9ib',
+      'amount': (_totalAmount * 100).toInt(),
+      'name': turf?.turfName ?? 'PlayZ Turf Booking',
+      'description': '${selectedSport ?? "Turf"} - ${ground?.name ?? "Ground"}',
+      'prefill': {
+        'contact': user?.phoneNumber ?? '9876543210',
+        'email': user?.email ?? 'user@playz.com',
+      },
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint("Error launching Razorpay: $e");
+      Get.snackbar("Payment Error", "Could not launch Razorpay: $e");
+    }
+  }
+
+  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userDocId = await UserPreferences.getDocId() ?? user?.email ?? user?.uid ?? 'guest_user';
+    final userId = user?.uid ?? 'guest_user';
+    final turf = _bookingController.selectedTurf.value;
+    final ground = _bookingController.selectedGround.value;
+
+    final ownerId = turf?.ownerId ?? 'unknown_owner';
+    final turfId = turf?.id ?? 'unknown_turf';
+    final groundId = ground?.id ?? 'unknown_ground';
+
+    final bookingId = 'PLZ_${DateTime.now().millisecondsSinceEpoch}';
+    final otp = (100000 + Random().nextInt(900000)).toString();
+
+    final userName = user?.displayName ?? 'Player';
+    final userPhone = user?.phoneNumber ?? 'N/A';
+    final currentTimeStr = DateTime.now().toIso8601String();
+
+    final dateStr = selectedDate != null
+        ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+        : DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final dateFormatted = selectedDate != null
+        ? DateFormat('EEE, dd MMM yyyy').format(selectedDate!)
+        : DateFormat('EEE, dd MMM yyyy').format(DateTime.now());
+
+    final startTimeStr = _formatTimeOfDay(_startTime!);
+    final endTimeStr = _formatTimeOfDay(_endTime!);
+
+    // Raw payload containing credentials and booking identifiers
+    final rawPayload = jsonEncode({
+      'bookingId': bookingId,
+      'otp': otp,
+      'userName': userName,
+      'userPhone': userPhone,
+      'userEmail': user?.email ?? '',
+      'turfId': turfId,
+      'groundId': groundId,
+      'date': dateStr,
+      'timeSlot': '$startTimeStr – $endTimeStr',
+      'timestamp': currentTimeStr,
+    });
+
+    // Base64 Obfuscated QR Data Payload to hide secret credentials from raw scanners
+    final encodedQrText = 'PZSEC_${base64Encode(utf8.encode(rawPayload))}';
+
+    final bookingMap = {
+      'id': bookingId,
+      'bookingId': bookingId,
+      'otp': otp,
+      'qrData': encodedQrText,
+      'userId': userId,
+      'userEmail': user?.email ?? '',
+      'userName': userName,
+      'userPhone': userPhone,
+      'ownerId': ownerId,
+      'turfId': turfId,
+      'turfName': turf?.turfName ?? 'PlayZ Arena',
+      'turfAddress': (turf?.fullAddress.isNotEmpty == true) ? turf!.fullAddress : 'Local Turf Arena',
+      'turfImage': (turf?.allImages.isNotEmpty == true) ? turf!.allImages.first : 'https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a',
+      'groundId': groundId,
+      'groundName': ground?.name ?? selectedGround ?? 'Ground 1',
+      'sport': selectedSport ?? '',
+      'date': dateStr,
+      'dateFormatted': dateFormatted,
+      'startTime': startTimeStr,
+      'endTime': endTimeStr,
+      'timeSlot': '$startTimeStr – $endTimeStr',
+      'amount': _totalAmount.toInt(),
+      'paymentId': response.paymentId ?? '',
+      'status': 'upcoming',
+      'bookingType': 'Online App',
+      'createdAt': FieldValue.serverTimestamp(),
+    };
+
+    try {
+      final batch = FirebaseFirestore.instance.batch();
+
+      final userBookingRef = FirebaseFirestore.instance
+          .collection('User')
+          .doc(userDocId)
+          .collection('bookings')
+          .doc(bookingId);
+      batch.set(userBookingRef, bookingMap, SetOptions(merge: true));
+
+      if (ownerId.isNotEmpty && turfId.isNotEmpty) {
+        final ownerTurfBookingRef = FirebaseFirestore.instance
+            .collection('owners')
+            .doc(ownerId)
+            .collection('turfs')
+            .doc(turfId)
+            .collection('bookings')
+            .doc(bookingId);
+        batch.set(ownerTurfBookingRef, bookingMap, SetOptions(merge: true));
+
+        final ownerBookingRef = FirebaseFirestore.instance
+            .collection('owners')
+            .doc(ownerId)
+            .collection('bookings')
+            .doc(bookingId);
+        batch.set(ownerBookingRef, bookingMap, SetOptions(merge: true));
+      }
+
+      await batch.commit();
+
+      Get.snackbar(
+        'Booking Confirmed! 🎉',
+        'Your QR entry ticket is saved in Bookings!',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: Duration(seconds: 4),
+      );
+
+      Get.offAll(() => BookingConfirmationScreen(bookingData: bookingMap));
+
+    } catch (e) {
+      debugPrint("Error saving booking to Firestore: $e");
+      Get.snackbar("Booking Error", "Failed to sync booking data: $e");
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Get.snackbar(
+      'Payment Cancelled / Failed',
+      response.message ?? 'Payment process was interrupted.',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.redAccent,
+      colorText: Colors.white,
+    );
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Get.snackbar('Wallet Selected', response.walletName ?? '');
+  }
+
+  String _formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
+    final period = time.period == DayPeriod.am ? 'AM' : 'PM';
+    final hourStr = hour < 10 ? '0$hour' : '$hour';
+    return '$hourStr:00 $period';
+  }
+
+  void _scrollToSelectedStartHour(int startHour) {
+    if (!_timelineController.hasClients) return;
+
+    int index = -1;
+    if (_bookingController.slots.isNotEmpty) {
+      final sortedSlots = List<SlotModel>.from(_bookingController.slots)
+        ..sort((a, b) => (a.startHour ?? 0).compareTo(b.startHour ?? 0));
+
+      final foundIdx = sortedSlots
+          .indexWhere((s) => (s.startHour ?? 0) >= startHour);
+      if (foundIdx != -1) {
+        index = foundIdx;
+      } else {
+        index = sortedSlots.length - 1;
+      }
+    }
+
+    if (index == -1) {
+      index = startHour.clamp(0, 23);
+    }
+
+    final double slotWidth = ResponsiveHelper.w(110);
+    final double separatorWidth = ResponsiveHelper.w(2);
+    final double itemExtent = slotWidth + separatorWidth;
+
+    double offset = index * itemExtent;
+
+    final viewportWidth = _timelineController.position.viewportDimension;
+    offset -= (viewportWidth - slotWidth) / 2;
+
+    offset = offset.clamp(
+      _timelineController.position.minScrollExtent,
+      _timelineController.position.maxScrollExtent,
+    );
+
+    _timelineController.animateTo(
+      offset,
+      duration: Duration(milliseconds: 450),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   Future<void> _pickTime({required bool isStart}) async {
-    final picked = await showTimePicker(
+    showModalBottomSheet(
       context: context,
-      initialTime: isStart
-          ? (_startTime ?? TimeOfDay(hour: 8, minute: 0))
-          : (_endTime ?? TimeOfDay(hour: 9, minute: 0)),
-      helpText: 'Select Hour',
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: AppColors.accent,
-              surface: Colors.black,
-              onSurface: Colors.white,
-            ),
-          ),
-          child: child!,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) {
+        return SlotMatrixBottomSheet(
+          isStart: isStart,
+          startTime: _startTime,
+          selectedTime: isStart ? _startTime : _endTime,
+          selectedDate: selectedDate,
+          slots: _bookingController.slots,
+          onSlotSelected: (picked) {
+            setState(() {
+              if (isStart) {
+                _startTime = picked;
+                _endTime = TimeOfDay(
+                  hour: (_startTime!.hour + 1) % 24,
+                  minute: 0,
+                );
+                _scrollToSelectedStartHour(picked.hour);
+              } else {
+                _endTime = picked;
+              }
+            });
+
+            // Automatically open End Time Sheet after picking Start Time
+            if (isStart) {
+              Future.delayed(Duration(milliseconds: 250), () {
+                if (mounted) {
+                  _pickTime(isStart: false);
+                }
+              });
+            }
+          },
         );
       },
     );
-
-    if (picked == null) return;
-    final selected = TimeOfDay(hour: picked.hour, minute: 0);
-
-    setState(() {
-      if (isStart) {
-        _startTime = selected;
-        if (_endTime == null || _endTime!.hour <= _startTime!.hour) {
-          _endTime = TimeOfDay(
-            hour: (_startTime!.hour + 1).clamp(0, 23),
-            minute: 0,
-          );
-        }
-      } else {
-        if (_startTime != null && selected.hour <= _startTime!.hour) return;
-        _endTime = selected;
-      }
-    });
   }
 }
 
 class _SectionTitle extends StatelessWidget {
   final String text;
-  _SectionTitle({required this.text});
+  const _SectionTitle({required this.text});
 
   @override
   Widget build(BuildContext context) {

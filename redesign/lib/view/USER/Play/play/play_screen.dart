@@ -14,8 +14,10 @@ import 'widgets/end_of_results.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import '../tournaments/tournaments_list_screen.dart';
 
+import 'widgets/game_diary_section.dart';
+
 class GameDiaryScreen extends StatefulWidget {
-  GameDiaryScreen({super.key});
+  const GameDiaryScreen({super.key});
 
   @override
   State<GameDiaryScreen> createState() => _GameDiaryScreenState();
@@ -28,7 +30,7 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _loadUserData();
   }
 
@@ -66,6 +68,7 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> with SingleTickerProv
               tabs: const [
                 Tab(text: "All Games"),
                 Tab(text: "Tournaments"),
+                Tab(text: "Game Diary"),
               ],
             ),
             Expanded(
@@ -88,6 +91,8 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> with SingleTickerProv
                   ),
                   // Tournaments
                   TournamentsListScreen(),
+                  // Game Diary
+                  const GameDiaryWidget(),
                 ],
               ),
             ),

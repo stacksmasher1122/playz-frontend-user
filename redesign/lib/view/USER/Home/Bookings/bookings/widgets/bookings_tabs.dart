@@ -10,9 +10,9 @@ class BookingsTabs extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return TabBar(
-      isScrollable: true, // 🔑 allows left alignment
-      tabAlignment: TabAlignment.start, // 🔑 Flutter 3.10+
-      padding: EdgeInsets.only(left: 16), // 👈 shifts tabs left
+      isScrollable: true,
+      tabAlignment: TabAlignment.start,
+      padding: EdgeInsets.only(left: 16),
       controller: controller,
       indicatorColor: MyBookingsConstants.green,
       labelColor: MyBookingsConstants.green,
@@ -21,7 +21,6 @@ class BookingsTabs extends StatelessWidget {
         Tab(text: 'Upcoming'),
         Tab(text: 'Past'),
         Tab(text: 'Cancelled'),
-        Tab(text: 'Waitlist'),
       ],
     );
   }

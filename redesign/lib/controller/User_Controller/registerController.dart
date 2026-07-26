@@ -17,10 +17,8 @@ class RegisterController extends ChangeNotifier {
   Future<void> _initGoogleSignIn() async {
     if (!_isGoogleSignInInitialized) {
       await _googleSignIn.initialize(
-        clientId:
-            '712055791856-mmkgav17dori5j8q3q4d20f7qigefu5l.apps.googleusercontent.com',
         serverClientId:
-            '712055791856-mmkgav17dori5j8q3q4d20f7qigefu5l.apps.googleusercontent.com',
+            '417431238048-hr28olg4hk5qgcv6e1tat9bntoqkfa80.apps.googleusercontent.com',
       );
       _isGoogleSignInInitialized = true;
     }
@@ -45,6 +43,7 @@ class RegisterController extends ChangeNotifier {
       await credential.user?.updateDisplayName(user.name);
 
       await UserPreferences.saveUserLogin(true, user.name, user.email);
+      await UserPreferences.saveDocId(user.email);
 
       setLoading(false);
       return true;
@@ -78,11 +77,13 @@ class RegisterController extends ChangeNotifier {
       final user = credential.user;
 
       if (user != null) {
+        final emailToUse = (user.email != null && user.email!.isNotEmpty) ? user.email! : email;
         await UserPreferences.saveUserLogin(
           true,
           user.displayName ?? "User",
-          user.email ?? email,
+          emailToUse,
         );
+        await UserPreferences.saveDocId(emailToUse);
       }
 
       setLoading(false);
@@ -129,11 +130,15 @@ class RegisterController extends ChangeNotifier {
       final User? user = userCredential.user;
 
       if (user != null) {
+        final emailToUse = user.email ?? "";
         await UserPreferences.saveUserLogin(
           true,
           user.displayName ?? "User",
-          user.email ?? "",
+          emailToUse,
         );
+        if (emailToUse.isNotEmpty) {
+          await UserPreferences.saveDocId(emailToUse);
+        }
 
         setLoading(false);
         return true;
