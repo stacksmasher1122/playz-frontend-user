@@ -108,7 +108,7 @@ class GameData {
       groundId: data['groundId']?.toString(),
       slotId: data['slotId']?.toString(),
       isFull: currentP >= maxP,
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
+      createdAt: _parseDate(data['createdAt']),
       playerIds: List<String>.from(data['playerIds'] ?? []),
       instructions: (data['instructions'] ?? '').toString(),
       equipmentOption: (data['equipmentOption'] ?? 'none').toString(),
@@ -120,6 +120,14 @@ class GameData {
       isSplitAndPay: data['isSplitAndPay'] == true,
       hasConflict: data['hasConflict'] == true,
     );
+  }
+
+  static DateTime? _parseDate(dynamic val) {
+    if (val == null) return null;
+    if (val is Timestamp) return val.toDate();
+    if (val is String) return DateTime.tryParse(val);
+    if (val is int) return DateTime.fromMillisecondsSinceEpoch(val);
+    return null;
   }
 
   Map<String, dynamic> toMap() {

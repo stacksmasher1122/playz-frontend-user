@@ -151,7 +151,9 @@ class BadmintonController extends GetxController {
     try {
       isLoading.value = true;
       final user = FirebaseAuth.instance.currentUser;
-      final matchId = const Uuid().v4();
+      final matchId = currentMatchId.value.isNotEmpty
+          ? currentMatchId.value
+          : const Uuid().v4();
 
       final config = BadmintonMatchConfig(
         pointsToWin: pointsToWin.value,
@@ -312,6 +314,36 @@ class BadmintonController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void restoreBadmintonMatchFromSqflite(BadmintonMatchModel match) {
+    currentMatchId.value = match.matchId;
+    currentMatch.value = match;
+    teamAPlayers.assignAll(match.teamAPlayers);
+    teamBPlayers.assignAll(match.teamBPlayers);
+
+    if (match.engineState != null) {
+      final restoredState = BadmintonMatchState.fromJson(match.engineState!);
+      _initEngineFromState(restoredState);
+    } else {
+      final config = BadmintonMatchConfig(
+        pointsToWin: match.pointsToWin,
+        maxPointCap: match.maxPointCap,
+        winByTwo: match.winByTwo,
+        gamesToWin: match.gamesToWin,
+        isFriendlyRules: match.isFriendlyRules,
+        intervalsEnabled: match.intervalsEnabled,
+        endsChangeEnabled: match.endsChangeEnabled,
+      );
+
+      final initialState = BadmintonMatchState(
+        config: config,
+        teamA: match.teamAPlayers.map((n) => BadmintonPlayer(name: n)).toList(),
+        teamB: match.teamBPlayers.map((n) => BadmintonPlayer(name: n)).toList(),
+      );
+      _initEngineFromState(initialState);
+    }
+    isEngineReady.value = true;
   }
 
   Future<void> resumeTournamentMatch({
