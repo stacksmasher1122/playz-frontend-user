@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/More_Controller/reward_center_controller.dart';
 import 'package:redesign/model/User_Models/More_Models/reward_center_model.dart';
+import 'package:redesign/controller/user_profile_controller.dart';
 import 'widgets/reward_center_header.dart';
 import 'widgets/referral_share_card.dart';
 import 'widgets/reward_item_card.dart';
@@ -19,6 +20,7 @@ class RewardCenterScreen extends StatefulWidget {
 
 class _RewardCenterScreenState extends State<RewardCenterScreen> {
   late final RewardCenterController controller;
+  late final UserProfileController userProfileController;
 
   @override
   void initState() {
@@ -26,6 +28,9 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
     controller = Get.isRegistered<RewardCenterController>()
         ? Get.find<RewardCenterController>()
         : Get.put(RewardCenterController());
+    userProfileController = Get.isRegistered<UserProfileController>()
+        ? Get.find<UserProfileController>()
+        : Get.put(UserProfileController());
   }
 
   void _showRedeemDialog(BuildContext context, RewardItemModel item) {
@@ -242,7 +247,7 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
             padding: const EdgeInsets.only(bottom: 40),
             children: [
               Obx(() => RewardCenterHeader(coinsBalance: controller.userCoins.value)),
-              Obx(() => ReferralShareCard(code: controller.referralCode.value)),
+              Obx(() => ReferralShareCard(code: userProfileController.referralCode)),
 
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),

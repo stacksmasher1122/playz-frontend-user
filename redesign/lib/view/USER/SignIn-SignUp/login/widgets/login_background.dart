@@ -1,63 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LoginBackground extends StatelessWidget {
-  LoginBackground({super.key});
+  const LoginBackground({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    final size = MediaQuery.of(context).size;
+    final height = context.heightPct(42);
 
-    return Stack(
-      children: [
-        /// TOP GRADIENT BACKGROUND
-        Container(
-          height: size.height * 0.45,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(ResponsiveHelper.w(48)),
-              bottomRight: Radius.circular(ResponsiveHelper.w(48)),
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(context.minDimensionPct(10)),
+        bottomRight: Radius.circular(context.minDimensionPct(10)),
+      ),
+      child: SizedBox(
+        height: height,
+        width: double.infinity,
+        child: Stack(
+          children: [
+            /// SOCCER FIELD WHITE LINE ON GREEN GRASS IMAGE (NO SHADOWS)
+            Image.network(
+              'https://static.vecteezy.com/system/resources/thumbnails/006/981/368/small/artificial-turf-of-soccer-football-field-photo.jpg',
+              height: height,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Image.network(
+                'https://images.unsplash.com/photo-1459865264687-595d652de67e?w=1200&auto=format&fit=crop&q=80',
+                height: height,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                AppColors.accent, // Spotify green
-                Color(0xFF15883E), // darker green
-                Color(0xFF0B3D20), // deep green-black blend
-              ],
-              stops: [0.0, 0.45, 1.0],
-            ),
-          ),
-        ),
 
-        /// ABSTRACT BACKGROUND SHAPE
-        Positioned(
-          top: -10,
-          left: ResponsiveHelper.w(30),
-          right: -50,
-          child: Opacity(
-            opacity: 0.8,
-            child: Transform.rotate(
-              angle: -0.5,
-              child: Text(
-                'Z',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.luckiestGuy(
-                  fontSize: size.width * 1.1,
-                  color: Colors.white,
-                  height: ResponsiveHelper.h(1),
-                  letterSpacing: -8,
+            /// LIGHT GRADIENT OVERLAY
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.05),
+                    Colors.black.withValues(alpha: 0.3),
+                    Colors.black.withValues(alpha: 0.75),
+                  ],
+                  stops: const [0.0, 0.6, 1.0],
                 ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterForm extends StatelessWidget {
@@ -10,7 +12,7 @@ class RegisterForm extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onRegister;
 
-  RegisterForm({
+  const RegisterForm({
     super.key,
     required this.formKey,
     required this.nameController,
@@ -23,82 +25,91 @@ class RegisterForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    const spotifyGreen = Color(0xFF1DB954);
-    const inputColor = Color(0xFF222222);
-
     return Form(
       key: formKey,
       child: Column(
         children: [
-          SizedBox(height: 24),
+          SizedBox(height: context.heightPct(2)),
+
+          /// 👤 FULL NAME
           _InputField(
             controller: nameController,
             icon: Icons.person_outline,
             hint: 'Full Name',
-            fillColor: inputColor,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Required' : null,
+            fillColor: AppColors.card,
+            validator: (v) => v == null || v.isEmpty ? 'Required' : null,
           ),
-          SizedBox(height: 16),
+          SizedBox(height: context.heightPct(1.5)),
+
+          /// 📧 EMAIL ADDRESS
           _InputField(
             controller: emailController,
             icon: Icons.email_outlined,
             hint: 'Email Address',
-            fillColor: inputColor,
-            validator: (v) =>
-                v == null || v.isEmpty ? 'Required' : null,
+            fillColor: AppColors.card,
+            validator: (v) => v == null || v.isEmpty ? 'Required' : null,
           ),
-          SizedBox(height: 16),
+          SizedBox(height: context.heightPct(1.5)),
+
+          /// 🔒 PASSWORD
           _InputField(
             controller: passwordController,
             icon: Icons.lock_outline,
             hint: 'Password',
             obscure: true,
-            fillColor: inputColor,
-            validator: (v) => v != null && v.length < 6
-                ? 'Min 6 characters'
-                : null,
+            fillColor: AppColors.card,
+            validator: (v) =>
+                v != null && v.length < 6 ? 'Min 6 characters' : null,
           ),
-          SizedBox(height: 16),
+          SizedBox(height: context.heightPct(1.5)),
+
+          /// 🔒 CONFIRM PASSWORD
           _InputField(
             controller: confirmPasswordController,
             icon: Icons.lock_outline,
             hint: 'Confirm Password',
             obscure: true,
-            fillColor: inputColor,
-            validator: (v) => v != passwordController.text
-                ? 'Passwords do not match'
-                : null,
+            fillColor: AppColors.card,
+            validator: (v) =>
+                v != passwordController.text ? 'Passwords do not match' : null,
           ),
-          SizedBox(height: 24),
+          SizedBox(height: context.heightPct(2.2)),
 
           /// CREATE ACCOUNT BUTTON
           SizedBox(
             width: double.infinity,
-            height: ResponsiveHelper.h(54),
+            height: context.responsiveFont(48),
             child: ElevatedButton(
               onPressed: isLoading ? null : onRegister,
               style: ElevatedButton.styleFrom(
-                backgroundColor: spotifyGreen,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                ),
+                backgroundColor: AppColors.spotifyGreen,
+                disabledBackgroundColor: AppColors.spotifyGreen
+                    .withValues(alpha: 0.5),
+                shape: const StadiumBorder(),
                 elevation: 0,
               ),
-              child: isLoading
-                  ? CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.black,
-                    )
-                  : Text(
-                      'Create Account',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: ResponsiveHelper.sp(16),
-                        fontWeight: FontWeight.w600,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: isLoading
+                    ? SizedBox(
+                        key: const ValueKey('loader'),
+                        height: context.responsiveFont(20),
+                        width: context.responsiveFont(20),
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2.2,
+                          color: AppColors.background,
+                        ),
+                      )
+                    : Text(
+                        'Create Account',
+                        key: const ValueKey('text'),
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.background,
+                          fontSize: context.responsiveFont(15.5),
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-                    ),
+              ),
             ),
           ),
         ],
@@ -115,7 +126,7 @@ class _InputField extends StatelessWidget {
   final Color fillColor;
   final String? Function(String?)? validator;
 
-  _InputField({
+  const _InputField({
     required this.controller,
     required this.icon,
     required this.hint,
@@ -126,20 +137,33 @@ class _InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return TextFormField(
       controller: controller,
       obscureText: obscure,
       validator: validator,
-      style: TextStyle(color: Colors.white),
+      style: AppTypography.bodyMd.copyWith(
+        color: AppColors.textPrimary,
+        fontSize: context.responsiveFont(14),
+      ),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.white70),
+        prefixIcon: Icon(
+          icon,
+          color: AppColors.textSecondary,
+          size: context.responsiveFont(20),
+        ),
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.white38),
+        hintStyle: AppTypography.bodyMd.copyWith(
+          color: AppColors.textSecondary.withValues(alpha: 0.6),
+          fontSize: context.responsiveFont(14),
+        ),
         filled: true,
         fillColor: fillColor,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: context.widthPct(4),
+          vertical: context.heightPct(1.5),
+        ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
           borderSide: BorderSide.none,
         ),
       ),

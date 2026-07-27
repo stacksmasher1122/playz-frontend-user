@@ -11,7 +11,6 @@ import 'package:redesign/view/USER/More/support_faq/support_faq_screen.dart';
 import 'widgets/menu_profile_header.dart';
 import 'widgets/z_coins_card.dart';
 import 'widgets/tools_grid.dart';
-import 'widgets/sports_row.dart';
 import 'widgets/rewards_card.dart';
 import 'widgets/settings_tile.dart';
 import 'widgets/dark_mode_tile.dart';
@@ -70,10 +69,6 @@ class _MoreScreenState extends State<MoreScreen> {
             SectionTitle('My Tools'),
             SizedBox(height: 14),
             ToolsGrid(),
-            SizedBox(height: 28),
-            SectionTitle('Dive Into Your Sports'),
-            SizedBox(height: 14),
-            SportsRow(),
             SizedBox(height: 28),
             RewardsCard(),
             SizedBox(height: 28),

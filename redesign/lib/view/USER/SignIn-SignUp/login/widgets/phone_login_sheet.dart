@@ -5,24 +5,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/favorite_sports/favorite_sports_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PhoneLoginSheet extends StatefulWidget {
-  PhoneLoginSheet({super.key});
+  const PhoneLoginSheet({super.key});
 
   @override
   State<PhoneLoginSheet> createState() => _PhoneLoginSheetState();
 }
 
 class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
-  static const kSurface = Color(0xFF0E0E0E);
-  static const kCard = Color(0xFF1A1A1A);
-  static const kMuted = Color(0xFFA7A7A7);
-  static const kSpotifyGreen = Color(0xFF1DB954);
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController phoneController = TextEditingController(
     text: '+91',
@@ -44,7 +40,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
     super.initState();
     listenForCode();
     SmsAutoFill().getAppSignature.then((signature) {
-      print("APP SIGNATURE: $signature");
+      debugPrint("APP SIGNATURE: $signature");
     });
 
     for (int i = 0; i < 6; i++) {
@@ -82,7 +78,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
         otpControllers[i].text = code![i];
       }
       setState(() {});
-      Future.delayed(Duration(milliseconds: 200), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
         verifyOTP();
       });
     }
@@ -91,7 +87,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
   void _startTimer() {
     secondsLeft = 120;
     _timer?.cancel();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (secondsLeft == 0) {
         timer.cancel();
       } else {
@@ -100,22 +96,17 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
     });
   }
 
-  Future<void> sendOTP(String phone) async {
+  void sendOTP(String phoneNumber) async {
+    _startTimer();
     await _auth.verifyPhoneNumber(
-      phoneNumber: phone,
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) async {
         await _auth.signInWithCredential(credential);
-
-        await UserPreferences.saveUserLogin(
-          true,
-          "User",
-          phoneController.text.trim(),
-        );
-
-        if (mounted) {
-          final docId = phoneController.text.trim();
-          final exists = await _checkAndFetchPhoneUserDoc(docId);
-          Navigator.pop(context); // Close sheet
+        final user = _auth.currentUser;
+        if (user != null && user.phoneNumber != null) {
+          final exists = await _checkAndFetchUserDoc(user.phoneNumber!);
+          if (!mounted) return;
           if (exists) {
             Navigator.pushReplacement(
               context,
@@ -130,21 +121,20 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
         }
       },
       verificationFailed: (FirebaseAuthException e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.message ?? "Verification failed")),
-          );
-        }
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message ?? "OTP Verification failed")));
       },
-      codeSent: (String verId, int? resendToken) async {
-        if (mounted) {
-          setState(() {
-            verificationId = verId;
-            otpSent = true;
-          });
-          _startTimer();
-          listenForCode();
-        }
+      codeSent: (String verId, int? resendToken) {
+        if (!mounted) return;
+        setState(() {
+          verificationId = verId;
+          otpSent = true;
+        });
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("OTP Sent Successfully!")));
       },
       codeAutoRetrievalTimeout: (String verId) {
         verificationId = verId;
@@ -152,50 +142,48 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
     );
   }
 
-  Future<void> verifyOTP() async {
-    String otp = otpControllers.map((c) => c.text).join();
-    if (otp.length < 6) return;
+  void verifyOTP() async {
+    String otp = otpControllers.map((e) => e.text).join();
+    if (otp.length != 6) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please enter complete 6-digit OTP")));
+      return;
+    }
+
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: otp,
+    );
 
     try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: otp,
-      );
-
-      await _auth.signInWithCredential(credential);
-
-      await UserPreferences.saveUserLogin(
-        true,
-        "User",
-        phoneController.text.trim(),
-      );
-
+      final authResult = await _auth.signInWithCredential(credential);
+      final user = authResult.user;
       if (!mounted) return;
-      final docId = phoneController.text.trim();
-      final exists = await _checkAndFetchPhoneUserDoc(docId);
-      Navigator.pop(context); // Close sheet
-
-      if (exists) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => UserAppNavShell()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
-        );
+      if (user != null && user.phoneNumber != null) {
+        final exists = await _checkAndFetchUserDoc(user.phoneNumber!);
+        if (!mounted) return;
+        if (exists) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => UserAppNavShell()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+          );
+        }
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Invalid OTP")));
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Invalid OTP: $e")));
     }
   }
 
-  Future<bool> _checkAndFetchPhoneUserDoc(String docId) async {
+  Future<bool> _checkAndFetchUserDoc(String docId) async {
     try {
       final docSnapshot = await FirebaseFirestore.instance
           .collection('User')
@@ -241,28 +229,29 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       decoration: BoxDecoration(
-        color: kSurface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(28))),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(context.minDimensionPct(7)),
+        ),
       ),
       child: Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.w(24)),
+        padding: EdgeInsets.all(context.widthPct(6)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             /// DRAG HANDLE
             Container(
-              width: ResponsiveHelper.w(40),
-              height: ResponsiveHelper.h(4),
-              margin: EdgeInsets.only(bottom: 18),
+              width: context.widthPct(10),
+              height: 4,
+              margin: EdgeInsets.only(bottom: context.heightPct(2)),
               decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                color: AppColors.textSecondary.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
             otpSent ? _buildOTPUI() : _buildPhoneUI(),
@@ -278,14 +267,21 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
       children: [
         Text(
           "Enter your phone number",
-          style: TextStyle(fontSize: ResponsiveHelper.sp(20), fontWeight: FontWeight.bold, color: Colors.white),
+          style: AppTypography.headlineLg.copyWith(
+            fontSize: context.responsiveFont(20),
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+          ),
         ),
-        SizedBox(height: 6),
+        SizedBox(height: context.heightPct(0.8)),
         Text(
           "We'll send you a verification code",
-          style: TextStyle(color: kMuted),
+          style: AppTypography.bodyMd.copyWith(
+            color: AppColors.textSecondary,
+            fontSize: context.responsiveFont(13.5),
+          ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: context.heightPct(2)),
         Row(
           children: [
             Expanded(
@@ -293,14 +289,21 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                 controller: phoneController,
                 autofocus: true,
                 keyboardType: TextInputType.phone,
-                style: TextStyle(color: Colors.white),
+                style: AppTypography.bodyMd.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(15),
+                ),
                 decoration: InputDecoration(
                   hintText: "Phone number",
-                  hintStyle: TextStyle(color: Colors.white38),
+                  hintStyle: AppTypography.bodyMd.copyWith(
+                    color: AppColors.textSecondary.withValues(alpha: 0.5),
+                  ),
                   filled: true,
-                  fillColor: kCard,
+                  fillColor: AppColors.card,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                    borderRadius: BorderRadius.circular(
+                      context.minDimensionPct(3.5),
+                    ),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -308,10 +311,10 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
             ),
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height: context.heightPct(2)),
         SizedBox(
           width: double.infinity,
-          height: ResponsiveHelper.h(50),
+          height: context.responsiveFont(48),
           child: ElevatedButton(
             onPressed: () {
               String phone = phoneController.text.trim();
@@ -321,16 +324,16 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
               sendOTP(phone);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
-              ),
+              backgroundColor: AppColors.spotifyGreen,
+              elevation: 0,
+              shape: const StadiumBorder(),
             ),
             child: Text(
               "Send OTP",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.background,
+                fontWeight: FontWeight.w800,
+                fontSize: context.responsiveFont(15),
               ),
             ),
           ),
@@ -345,14 +348,18 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
       children: [
         Text(
           "Enter the 6-digit code",
-          style: TextStyle(fontSize: ResponsiveHelper.sp(20), fontWeight: FontWeight.bold, color: Colors.white),
+          style: AppTypography.headlineLg.copyWith(
+            fontSize: context.responsiveFont(20),
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+          ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: context.heightPct(2)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(6, (index) {
             return SizedBox(
-              width: ResponsiveHelper.w(45),
+              width: context.widthPct(11.5),
               child: TextField(
                 controller: otpControllers[index],
                 focusNode: otpFocusNodes[index],
@@ -361,7 +368,10 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 inputFormatters: [LengthLimitingTextInputFormatter(6)],
-                style: TextStyle(color: Colors.white),
+                style: AppTypography.monoMd.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(18),
+                ),
                 onChanged: (value) {
                   if (value.length > 1) {
                     int pasteLength = value.length;
@@ -375,7 +385,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                     }
                     setState(() {});
                     if (otpControllers.every((c) => c.text.isNotEmpty)) {
-                      Future.delayed(Duration(milliseconds: 200), () {
+                      Future.delayed(const Duration(milliseconds: 200), () {
                         verifyOTP();
                       });
                     }
@@ -388,7 +398,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                     otpFocusNodes[index - 1].requestFocus();
                   }
                   if (otpControllers.every((c) => c.text.isNotEmpty)) {
-                    Future.delayed(Duration(milliseconds: 200), () {
+                    Future.delayed(const Duration(milliseconds: 200), () {
                       verifyOTP();
                     });
                   }
@@ -396,9 +406,11 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
                 decoration: InputDecoration(
                   counterText: "",
                   filled: true,
-                  fillColor: kCard,
+                  fillColor: AppColors.card,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                    borderRadius: BorderRadius.circular(
+                      context.minDimensionPct(2.5),
+                    ),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -406,12 +418,15 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
             );
           }),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: context.heightPct(2)),
         Text(
           "Resend code in ${secondsLeft ~/ 60}:${(secondsLeft % 60).toString().padLeft(2, '0')}",
-          style: TextStyle(color: kMuted, fontSize: 13),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.textSecondary,
+            fontSize: context.responsiveFont(13),
+          ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: context.heightPct(1)),
         TextButton(
           onPressed: secondsLeft == 0
               ? () {
@@ -428,31 +443,34 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
               : null,
           child: Text(
             "RESEND CODE",
-            style: TextStyle(color: secondsLeft == 0 ? kSpotifyGreen : kMuted),
+            style: AppTypography.labelCaps.copyWith(
+              color: secondsLeft == 0 ? AppColors.spotifyGreen : AppColors.textSecondary,
+              fontSize: context.responsiveFont(12),
+            ),
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: context.heightPct(1)),
         SizedBox(
           width: double.infinity,
-          height: ResponsiveHelper.h(50),
+          height: context.responsiveFont(48),
           child: ElevatedButton(
             onPressed: verifyOTP,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
-              ),
+              backgroundColor: AppColors.spotifyGreen,
+              elevation: 0,
+              shape: const StadiumBorder(),
             ),
             child: Text(
               "Verify & Continue",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.background,
+                fontWeight: FontWeight.w800,
+                fontSize: context.responsiveFont(15),
               ),
             ),
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: context.heightPct(2)),
       ],
     );
   }

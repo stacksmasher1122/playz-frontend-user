@@ -2,74 +2,53 @@
    SPLASH SCREEN
    ============================================================ */
 import 'dart:async';
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/favorite_sports/favorite_sports_screen.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/onboarding/onboarding_screen.dart';
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({super.key});
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _logoController;
-  late AnimationController _rippleController;
-
-  late Animation<double> _logoScale;
-  late Animation<double> _logoOpacity;
-  late Animation<double> _rippleAnim;
-
-  final List<_GlassBubble> _glassBubbles = [];
+class _SplashScreenState extends State<SplashScreen> {
+  double _progress = 0.0;
+  Timer? _loaderTimer;
 
   @override
   void initState() {
     super.initState();
+    _startLinearLoading();
+  }
 
-    /// Logo animation
-    _logoController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 900),
-    );
+  void _startLinearLoading() {
+    const stepDuration = Duration(milliseconds: 25);
+    const totalSteps = 100;
+    int currentStep = 0;
 
-    _logoScale = Tween<double>(begin: 0.6, end: 1).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.easeOutBack),
-    );
+    _loaderTimer = Timer.periodic(stepDuration, (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
 
-    _logoOpacity = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _logoController, curve: Curves.easeIn));
+      currentStep++;
+      setState(() {
+        _progress = (currentStep / totalSteps).clamp(0.0, 1.0);
+      });
 
-    /// Single ripple
-    _rippleController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 1400),
-    );
-
-    _rippleAnim = CurvedAnimation(
-      parent: _rippleController,
-      curve: Curves.easeOut,
-    );
-
-    _logoController.forward();
-    _rippleController.forward();
-
-    /// Glass morph bubbles (3–4 only)
-    for (int i = 0; i < 4; i++) {
-      _glassBubbles.add(_GlassBubble(vsync: this));
-    }
-
-    Timer(Duration(seconds: 3), _goNext);
+      if (currentStep >= totalSteps) {
+        timer.cancel();
+        _goNext();
+      }
+    });
   }
 
   void _goNext() async {
@@ -101,167 +80,131 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _logoController.dispose();
-    _rippleController.dispose();
-    for (final g in _glassBubbles) {
-      g.dispose();
-    }
+    _loaderTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    final size = MediaQuery.of(context).size;
+    final logoSize = context.minDimensionPct(24);
+    final progressWidth = context.widthPct(75);
+    final percentageVal = (_progress * 100).toInt();
 
     return Scaffold(
-      backgroundColor: AppColors.background, // PURE SPOTIFY BLACK
-      body: Stack(
-        children: [
-          /// Subtle glass bubbles (ambient only)
-          ..._glassBubbles.map((b) => b.build(size)),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.widthPct(8),
+            vertical: context.heightPct(4),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox.shrink(),
 
-          /// Logo + ripple
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    AnimatedBuilder(
-                      animation: _rippleAnim,
-                      builder: (_, __) {
-                        final v = _rippleAnim.value;
-                        return Opacity(
-                          opacity: 1 - v,
-                          child: Container(
-                            width: 110 + v * 120,
-                            height: 110 + v * 120,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28 + v * 26),
-                              border: Border.all(
-                                color: AppColors.accent.withValues(alpha: 0.8),
-                                width: ResponsiveHelper.w(2),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+              /// CENTER BRAND SECTION (CLEAN STATIC DESIGN)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  /// STATIC LOGO CONTAINER
+                  Container(
+                    width: logoSize,
+                    height: logoSize,
+                    decoration: BoxDecoration(
+                      color: AppColors.spotifyGreen,
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.spotifyGreen.withValues(alpha: 0.4),
+                          blurRadius: 24,
+                          spreadRadius: 2,
+                        ),
+                      ],
                     ),
-                    FadeTransition(
-                      opacity: _logoOpacity,
-                      child: ScaleTransition(
-                        scale: _logoScale,
-                        child: Container(
-                          width: ResponsiveHelper.w(90),
-                          height: ResponsiveHelper.h(90),
-                          decoration: BoxDecoration(
-                            color: AppColors.accent,
-                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.accent.withValues(alpha: 0.6),
-                                blurRadius: 30,
-                                spreadRadius: 4,
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.flash_on,
-                            color: Colors.black,
-                            size: 40,
-                          ),
+                    child: Icon(
+                      Icons.flash_on_rounded,
+                      color: AppColors.background,
+                      size: logoSize * 0.55,
+                    ),
+                  ),
+                  SizedBox(height: context.heightPct(3)),
+
+                  /// BRAND NAME
+                  Text(
+                    'PlayZ',
+                    style: AppTypography.displayLg.copyWith(
+                      fontSize: context.responsiveFont(42),
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1.0,
+                    ),
+                  ),
+                  SizedBox(height: context.heightPct(2)),
+
+                  /// BIG SLOGAN TEXT
+                  Text(
+                    "LET'S PLAY. LET'S WIN.",
+                    textAlign: TextAlign.center,
+                    style: AppTypography.headlineXl.copyWith(
+                      fontSize: context.responsiveFont(22),
+                      color: AppColors.spotifyGreen,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.8,
+                      height: 1.3,
+                    ),
+                  ),
+                ],
+              ),
+
+              /// BOTTOM LINEAR LOADER & MOVING PERCENTAGE
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  /// PERCENTAGE COUNTER
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'LOADING ',
+                        style: AppTypography.labelCaps.copyWith(
+                          fontSize: context.responsiveFont(11),
+                          color: AppColors.textSecondary,
+                          letterSpacing: 1.5,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 28),
-                Text(
-                  'PlayZ',
-                  style: TextStyle(fontSize: ResponsiveHelper.sp(32), fontWeight: FontWeight.w800),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "LET'S PLAY. LET'S WIN.",
-                  style: TextStyle(
-                    color: AppColors.accent.withValues(alpha: 0.9),
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
+                      Text(
+                        '$percentageVal%',
+                        style: AppTypography.monoMd.copyWith(
+                          fontSize: context.responsiveFont(14),
+                          color: AppColors.spotifyGreen,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
+                  SizedBox(height: context.heightPct(1.2)),
+
+                  /// LINEAR PROGRESS BAR
+                  SizedBox(
+                    width: progressWidth,
+                    height: 6,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(3),
+                      child: LinearProgressIndicator(
+                        value: _progress,
+                        backgroundColor: AppColors.card,
+                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.spotifyGreen),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: context.heightPct(2)),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
-}
-
-/* ============================================================
-   GLASS MORPH BUBBLE (SUBTLE)
-   ============================================================ */
-class _GlassBubble {
-  final AnimationController controller;
-  late Animation<Offset> animation;
-  final double size;
-
-  _GlassBubble({required TickerProvider vsync})
-    : size = 120 + Random().nextDouble() * 80,
-      controller = AnimationController(
-        vsync: vsync,
-        duration: Duration(seconds: 16 + Random().nextInt(8)),
-      ) {
-    animation = Tween<Offset>(
-      begin: Offset(Random().nextDouble(), Random().nextDouble()),
-      end: Offset(Random().nextDouble(), Random().nextDouble()),
-    ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOutSine));
-    controller.repeat(reverse: true);
-  }
-
-  Widget build(Size screen) {
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (_, __) {
-        return Positioned(
-          left: screen.width * animation.value.dx - size / 2,
-          top: screen.height * animation.value.dy - size / 2,
-          child: Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.accent.withValues(alpha: 0.05),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-            ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 90, sigmaY: 90),
-              child: Container(color: Colors.transparent),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void dispose() => controller.dispose();
-}
-
-/* ============================================================
-   NEXT SCREEN PLACEHOLDER
-   ============================================================ */
-class DummyNextScreen extends StatelessWidget {
-  DummyNextScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    return Scaffold(
-      backgroundColor: AppColors.surface,
-      body: Center(
-        child: Text('Next Screen', style: TextStyle(color: Colors.white)),
+        ),
       ),
     );
   }

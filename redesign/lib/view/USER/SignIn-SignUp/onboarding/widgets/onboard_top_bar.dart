@@ -1,37 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class OnboardTopBar extends StatelessWidget {
   final VoidCallback onSkip;
 
-  OnboardTopBar({super.key, required this.onSkip});
+  const OnboardTopBar({super.key, required this.onSkip});
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(12)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(5),
+        vertical: context.heightPct(1.5),
+      ),
       child: Row(
         children: [
-          Row(
-            children: [
-              Image.asset(
-                'assets/logo.png',
-                height: ResponsiveHelper.h(24),
-                width: ResponsiveHelper.w(24),
-                fit: BoxFit.contain,
-              ),
-              SizedBox(width: 8),
-              Text(
-                'PlayZ',
-                style: TextStyle(fontSize: ResponsiveHelper.sp(20), fontWeight: FontWeight.w800, color: Colors.white),
-              ),
-            ],
+          Text(
+            'PlayZ',
+            style: AppTypography.headlineLg.copyWith(
+              fontSize: context.responsiveFont(22),
+              fontWeight: FontWeight.w900,
+              color: AppColors.spotifyGreen,
+              letterSpacing: -0.5,
+            ),
           ),
-          Spacer(),
+          const Spacer(),
           TextButton(
             onPressed: onSkip,
-            child: Text('Skip', style: TextStyle(color: Colors.white70)),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.textSecondary,
+            ),
+            child: Text(
+              'Skip',
+              style: AppTypography.bodyMd.copyWith(
+                fontSize: context.responsiveFont(14),
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),

@@ -84,6 +84,12 @@ class GameData {
     final priceStr = data['price']?.toString() ?? (priceVal > 0 ? '₹$priceVal' : 'Free');
     final isComp = data['isCompetitive'] == true || data['type'] == 'Competitive';
 
+    final rawDateStr = (data['date'] ?? '').toString();
+    final parsedGameDate = parseDate(data['date']) ?? parseDate(data['createdAt']);
+    final normalizedDate = parsedGameDate != null
+        ? '${parsedGameDate.year}-${parsedGameDate.month.toString().padLeft(2, '0')}-${parsedGameDate.day.toString().padLeft(2, '0')}'
+        : rawDateStr;
+
     return GameData(
       id: doc.id,
       hostId: (data['hostId'] ?? '').toString(),
@@ -91,7 +97,7 @@ class GameData {
       avatarUrl: (data['avatarUrl'] ?? data['hostAvatar'] ?? 'https://i.pravatar.cc/100?img=1').toString(),
       hostXp: (data['hostXp'] as num?)?.toInt() ?? 100,
       time: (data['time'] ?? '18:00').toString(),
-      date: (data['date'] ?? '').toString(),
+      date: normalizedDate,
       price: priceStr,
       priceNum: priceVal,
       currentPlayers: currentP,
@@ -108,7 +114,7 @@ class GameData {
       groundId: data['groundId']?.toString(),
       slotId: data['slotId']?.toString(),
       isFull: currentP >= maxP,
-      createdAt: _parseDate(data['createdAt']),
+      createdAt: parseDate(data['createdAt']),
       playerIds: List<String>.from(data['playerIds'] ?? []),
       instructions: (data['instructions'] ?? '').toString(),
       equipmentOption: (data['equipmentOption'] ?? 'none').toString(),
@@ -122,11 +128,37 @@ class GameData {
     );
   }
 
-  static DateTime? _parseDate(dynamic val) {
+  static DateTime? parseDate(dynamic val) {
     if (val == null) return null;
     if (val is Timestamp) return val.toDate();
-    if (val is String) return DateTime.tryParse(val);
     if (val is int) return DateTime.fromMillisecondsSinceEpoch(val);
+    if (val is String) {
+      final str = val.trim();
+      if (str.isEmpty) return null;
+      final dt = DateTime.tryParse(str);
+      if (dt != null) return dt;
+
+      try {
+        final parts = str.split('-');
+        if (parts.length == 3) {
+          return DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+        }
+      } catch (_) {}
+
+      try {
+        final parts = str.split('/');
+        if (parts.length == 3) {
+          final p1 = int.parse(parts[0]);
+          final p2 = int.parse(parts[1]);
+          final p3 = int.parse(parts[2]);
+          if (p1 > 1000) {
+            return DateTime(p1, p2, p3);
+          } else if (p3 > 1000) {
+            return DateTime(p3, p2, p1);
+          }
+        }
+      } catch (_) {}
+    }
     return null;
   }
 

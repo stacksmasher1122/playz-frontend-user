@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/More_Models/goals_missions_model.dart';
+import 'package:redesign/controller/user_profile_controller.dart';
 
 import 'widgets/goals_missions_app_bar.dart';
 import 'widgets/goals_missions_level_card.dart';
@@ -25,16 +27,25 @@ class _GoalsMissionsScreenState extends State<GoalsMissionsScreen> {
     _profile = UserMissionProfileModel.getSampleData();
   }
 
-  void _onClaimMission(DailyMissionModel mission) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: const Color(0xFF1E2B22),
-        content: Text(
-          'Claimed +${mission.zCoinsReward} Z Coins for completing "${mission.title}"!',
-          style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold),
+  void _onClaimMission(DailyMissionModel mission) async {
+    final controller = Get.isRegistered<UserProfileController>()
+        ? Get.find<UserProfileController>()
+        : Get.put(UserProfileController());
+
+    await controller.addZCoins(mission.zCoinsReward);
+    await controller.addXp(50);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color(0xFF1E2B22),
+          content: Text(
+            'Claimed +${mission.zCoinsReward} Z-Coins & +50 XP for "${mission.title}"!',
+            style: const TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   void _onAchievementTap(AchievementModel achievement) {

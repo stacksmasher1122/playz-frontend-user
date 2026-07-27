@@ -34,6 +34,7 @@ class MatchController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    selectedDate.value = DateTime.now();
     startListeningMatches();
   }
 
@@ -91,13 +92,11 @@ class MatchController extends GetxController {
     final todayMidnight = DateTime(now.year, now.month, now.day);
 
     result = result.where((m) {
-      if (m.date.isNotEmpty) {
-        final parsed = DateTime.tryParse(m.date);
-        if (parsed != null) {
-          final matchMidnight = DateTime(parsed.year, parsed.month, parsed.day);
-          if (matchMidnight.isBefore(todayMidnight)) {
-            return false; // Exclude past day matches
-          }
+      final parsed = GameData.parseDate(m.date) ?? m.createdAt;
+      if (parsed != null) {
+        final matchMidnight = DateTime(parsed.year, parsed.month, parsed.day);
+        if (matchMidnight.isBefore(todayMidnight)) {
+          return false; // Exclude past day matches
         }
       }
       return true;
@@ -105,15 +104,15 @@ class MatchController extends GetxController {
 
     if (selectedDate.value != null) {
       final target = selectedDate.value!;
+      final targetMidnight = DateTime(target.year, target.month, target.day);
+
       result = result.where((m) {
-        if (m.date.isEmpty) return true;
-        final parsed = DateTime.tryParse(m.date);
+        final parsed = GameData.parseDate(m.date) ?? m.createdAt;
         if (parsed != null) {
-          return parsed.year == target.year &&
-              parsed.month == target.month &&
-              parsed.day == target.day;
+          final matchMidnight = DateTime(parsed.year, parsed.month, parsed.day);
+          return matchMidnight.isAtSameMomentAs(targetMidnight);
         }
-        return true;
+        return false; // Exclude matches that do not match the target selected date
       }).toList();
     }
 

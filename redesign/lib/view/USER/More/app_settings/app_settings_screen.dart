@@ -130,19 +130,6 @@ class AppSettingsScreen extends StatelessWidget {
               value: s.soundEffectsEnabled,
               onChanged: controller.toggleSoundEffects,
             ),
-            SettingsActionTile(
-              icon: Icons.cleaning_services_rounded,
-              title: 'Clear Cache & Temp Data',
-              valueText: '14.2 MB',
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('App cache cleared successfully!'),
-                    backgroundColor: Color(0xFF1E1E1E),
-                  ),
-                );
-              },
-            ),
 
             const SizedBox(height: 24),
             Center(
