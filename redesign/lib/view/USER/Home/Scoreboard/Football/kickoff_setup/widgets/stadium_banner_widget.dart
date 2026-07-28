@@ -6,7 +6,7 @@ class StadiumBannerWidget extends StatelessWidget {
   final String status;
   final String venueName;
 
-  StadiumBannerWidget({
+  const StadiumBannerWidget({
     super.key,
     required this.status,
     required this.venueName,

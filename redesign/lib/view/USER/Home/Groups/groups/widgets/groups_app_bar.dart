@@ -7,7 +7,7 @@ const kSurface = Color(0xFF0E0E0E);
 const kMuted = Colors.white70;
 
 class GroupsAppBar extends StatelessWidget {
-  GroupsAppBar({super.key});
+  const GroupsAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +90,7 @@ class _HeaderIcon extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  _HeaderIcon({required this.icon, required this.onTap});
+  const _HeaderIcon({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -10,7 +10,7 @@ import 'package:redesign/theme/responsive_helper.dart';
    HERO CTA CARD (AUTO SLIDING PAGE VIEW)
    ============================================================ */
 class HomeHeroCTA extends StatefulWidget {
-  HomeHeroCTA({super.key});
+  const HomeHeroCTA({super.key});
 
   @override
   State<HomeHeroCTA> createState() => _HomeHeroCTAState();

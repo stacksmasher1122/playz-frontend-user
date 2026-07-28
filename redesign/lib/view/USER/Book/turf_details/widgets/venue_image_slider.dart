@@ -11,7 +11,7 @@ class VenueImageSlider extends StatelessWidget {
   final int currentPage;
   final ValueChanged<int> onPageChanged;
 
-  VenueImageSlider({
+  const VenueImageSlider({
     super.key,
     required this.images,
     required this.sports,

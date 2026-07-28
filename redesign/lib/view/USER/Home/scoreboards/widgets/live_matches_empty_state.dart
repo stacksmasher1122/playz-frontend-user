@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kMuted = Color(0xFFA7A7A7);
 
 class LiveMatchesEmptyState extends StatelessWidget {
-  LiveMatchesEmptyState({super.key});
+  const LiveMatchesEmptyState({super.key});
 
   @override
   Widget build(BuildContext context) {

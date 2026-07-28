@@ -15,7 +15,7 @@ class VolleyballStartingLineupScreen extends StatefulWidget {
   final VolleyballTeamModel teamA;
   final VolleyballTeamModel teamB;
 
-  VolleyballStartingLineupScreen({super.key, required this.teamA, required this.teamB});
+  const VolleyballStartingLineupScreen({super.key, required this.teamA, required this.teamB});
 
   @override
   State<VolleyballStartingLineupScreen> createState() => _VolleyballStartingLineupScreenState();
@@ -56,12 +56,7 @@ class _VolleyballStartingLineupScreenState extends State<VolleyballStartingLineu
             Text('MATCH CENTER', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle, color: AppColors.muted),
-            onPressed: () {},
-          ),
-        ],
+        
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
           child: Container(color: AppColors.outlineVariant, height: 1.0),

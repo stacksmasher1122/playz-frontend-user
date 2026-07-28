@@ -4,7 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class FilterRow extends StatefulWidget {
-  FilterRow({super.key});
+  const FilterRow({super.key});
 
   @override
   State<FilterRow> createState() => _FilterRowState();

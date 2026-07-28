@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class OnboardPageContent extends StatelessWidget {
   final OnboardData data;
 
-  OnboardPageContent({super.key, required this.data});
+  const OnboardPageContent({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {

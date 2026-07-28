@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingsTabs extends StatelessWidget {
   final TabController controller;
-  BookingsTabs({super.key, required this.controller});
+  const BookingsTabs({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

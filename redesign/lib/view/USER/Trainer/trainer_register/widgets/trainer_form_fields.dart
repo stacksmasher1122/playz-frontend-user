@@ -18,7 +18,7 @@ class TrainerInputField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
 
-  TrainerInputField({
+  const TrainerInputField({
     super.key,
     required this.label,
     this.hint,
@@ -80,7 +80,7 @@ class TrainerVerifiedField extends StatelessWidget {
   final String label;
   final String value;
 
-  TrainerVerifiedField({super.key, required this.label, required this.value});
+  const TrainerVerifiedField({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +118,7 @@ class TrainerDropdownField extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
 
-  TrainerDropdownField({
+  const TrainerDropdownField({
     super.key,
     required this.label,
     required this.value,
@@ -179,7 +179,7 @@ class TrainerDropdownField extends StatelessWidget {
 }
 
 class TrainerBioField extends StatefulWidget {
-  TrainerBioField({super.key});
+  const TrainerBioField({super.key});
 
   @override
   State<TrainerBioField> createState() => _TrainerBioFieldState();

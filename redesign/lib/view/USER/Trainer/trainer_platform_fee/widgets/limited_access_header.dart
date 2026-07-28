@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kMuted = Color(0xFFA7A7A7);
 
 class LimitedAccessHeader extends StatelessWidget {
-  LimitedAccessHeader({super.key});
+  const LimitedAccessHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

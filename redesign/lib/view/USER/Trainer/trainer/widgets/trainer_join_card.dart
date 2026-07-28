@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class TrainerJoinCard extends StatelessWidget {
   final VoidCallback onTap;
 
-  TrainerJoinCard({super.key, required this.onTap});
+  const TrainerJoinCard({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

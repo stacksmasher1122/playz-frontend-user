@@ -11,7 +11,7 @@ class TeamHeaderCard extends StatelessWidget {
   final VolleyballTeamModel team;
   final VolleyballTeamManagementController controller;
 
-  TeamHeaderCard({super.key, required this.isTeamA, required this.team, required this.controller});
+  const TeamHeaderCard({super.key, required this.isTeamA, required this.team, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +22,12 @@ class TeamHeaderCard extends StatelessWidget {
           width: ResponsiveHelper.w(60),
           height: ResponsiveHelper.h(60),
           decoration: BoxDecoration(
-            color: team.primaryColor.withOpacity(0.1),
+            color: team.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             border: Border.all(color: team.primaryColor, width: 2),
             boxShadow: [
               BoxShadow(
-                color: team.primaryColor.withOpacity(0.3),
+                color: team.primaryColor.withValues(alpha: 0.3),
                 blurRadius: 15,
                 spreadRadius: 1,
               ),

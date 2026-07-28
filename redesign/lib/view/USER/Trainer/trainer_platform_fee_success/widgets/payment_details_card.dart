@@ -7,7 +7,7 @@ const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class PaymentDetailsCard extends StatelessWidget {
-  PaymentDetailsCard({super.key});
+  const PaymentDetailsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class DetailRow extends StatelessWidget {
   final String value;
   final bool mono;
 
-  DetailRow(this.label, this.value, {super.key, this.mono = false});
+  const DetailRow(this.label, this.value, {super.key, this.mono = false});
 
   @override
   Widget build(BuildContext context) {

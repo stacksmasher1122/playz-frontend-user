@@ -6,7 +6,7 @@ import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboa
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PmConfirmButtonWidget extends StatelessWidget {
-  PmConfirmButtonWidget({super.key});
+  const PmConfirmButtonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,7 @@ class LocationBubble extends StatefulWidget {
   final bool isMe;
   final bool isLive;
 
-  LocationBubble({
+  const LocationBubble({
     super.key,
     required this.content,
     required this.isMe,

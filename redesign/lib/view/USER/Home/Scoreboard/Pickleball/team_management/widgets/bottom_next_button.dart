@@ -6,19 +6,16 @@ import 'package:redesign/theme/responsive_helper.dart';
 class BottomNextButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  BottomNextButton({
-    super.key,
-    required this.onTap,
-  });
+  BottomNextButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
       color: AppColors.background, // Match scaffold bg
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)).copyWith(
-        bottom: MediaQuery.of(context).padding.bottom + 16,
-      ),
+      padding: EdgeInsets.all(
+        ResponsiveHelper.w(16),
+      ).copyWith(bottom: MediaQuery.of(context).padding.bottom + 16),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
@@ -40,7 +37,11 @@ class BottomNextButton extends StatelessWidget {
             children: [
               Text(
                 'NEXT',
-                style: AppTypography.headlineMd.copyWith(color: Colors.black, fontWeight: FontWeight.w900, letterSpacing: 1.2),
+                style: AppTypography.headlineMd.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.2,
+                ),
               ),
               SizedBox(width: 8),
               Icon(Icons.arrow_forward, color: Colors.black, size: 20),

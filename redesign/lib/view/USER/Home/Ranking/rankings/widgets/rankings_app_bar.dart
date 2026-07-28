@@ -6,7 +6,7 @@ Color kGreen = AppColors.accent;
 Color kSurface = Color(0xFF0E0E0E);
 
 class RankingsAppBar extends StatelessWidget {
-  RankingsAppBar({super.key});
+  const RankingsAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

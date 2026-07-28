@@ -11,7 +11,7 @@ Color _kSurface = Color(0xFF222222);
 class AccountDetailsCard extends StatelessWidget {
   final PlayerInfoModel info;
 
-  AccountDetailsCard({super.key, required this.info});
+  const AccountDetailsCard({super.key, required this.info});
 
   @override
   Widget build(BuildContext context) {

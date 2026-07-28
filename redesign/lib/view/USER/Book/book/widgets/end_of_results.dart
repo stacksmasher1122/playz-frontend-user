@@ -6,7 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class EndOfResults extends StatelessWidget {
-  EndOfResults({super.key});
+  const EndOfResults({super.key});
 
   static const _illustrationUrl =
       'https://illustrations.popsy.co/gray/sporty-man.svg';

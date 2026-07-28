@@ -7,7 +7,7 @@ class QrAmountRow extends StatelessWidget {
   final String value;
   final bool highlight;
 
-  QrAmountRow(
+  const QrAmountRow(
     this.label,
     this.value, {super.key, 
     this.highlight = false,

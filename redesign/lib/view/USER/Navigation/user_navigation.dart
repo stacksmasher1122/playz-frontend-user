@@ -12,7 +12,7 @@ import 'package:redesign/view/USER/Trainer/trainer/trainer_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class UserAppNavShell extends StatefulWidget {
-  UserAppNavShell({super.key});
+  const UserAppNavShell({super.key});
 
   @override
   State<UserAppNavShell> createState() => _UserAppNavShellState();

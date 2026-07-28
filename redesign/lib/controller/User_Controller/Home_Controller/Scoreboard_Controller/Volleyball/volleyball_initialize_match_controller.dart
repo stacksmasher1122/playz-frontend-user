@@ -1,19 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/team_management/volleyball_team_management_screen.dart';
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_match_model.dart';
+import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/volleyballSqflite.dart';
+import 'package:uuid/uuid.dart';
 
 class VolleyballInitializeMatchController extends GetxController {
-  RxString matchName = "".obs;
+  RxString matchName = "Volleyball Showdown".obs;
   RxString tournament = "".obs;
-  RxString venue = "".obs;
-  RxString court = "".obs;
-  RxString referee = "".obs;
+  RxString venue = "Local Arena".obs;
+  RxString court = "Main Court".obs;
+  RxString referee = "Self-Officiated".obs;
   RxString assistantReferee = "".obs;
   RxString category = "Mixed".obs;
   RxString format = "B3".obs;
-  RxString date = "".obs;
-  RxString time = "".obs;
+  RxString date = "Today".obs;
+  RxString time = "Now".obs;
 
   RxInt pointsPerSet = 25.obs;
   RxInt finalSetPoints = 15.obs;
@@ -26,6 +31,18 @@ class VolleyballInitializeMatchController extends GetxController {
   RxBool challengeEnabled = false.obs;
   RxBool videoReview = false.obs;
   RxBool loading = false.obs;
+
+  RxInt squadLimit = 6.obs;
+  RxBool subsEnabled = true.obs;
+  RxInt maxSubstitutes = 3.obs;
+  RxString homeTeamName = "Team Red".obs;
+  RxString awayTeamName = "Team Blue".obs;
+  final TextEditingController homeTeamController = TextEditingController(
+    text: "Team Red",
+  );
+  final TextEditingController awayTeamController = TextEditingController(
+    text: "Team Blue",
+  );
 
   @override
   void onInit() {
@@ -59,6 +76,19 @@ class VolleyballInitializeMatchController extends GetxController {
   void toggleTechnicalTimeout(bool val) => technicalTimeout.value = val;
   void toggleLibero(bool val) => liberoEnabled.value = val;
   void toggleChallengeSystem(bool val) => challengeEnabled.value = val;
+  void toggleVideoReview(bool val) => videoReview.value = val;
+
+  void incrementSquadLimit() => squadLimit.value++;
+  void decrementSquadLimit() {
+    if (squadLimit.value > 1) squadLimit.value--;
+  }
+
+  void toggleSubs(bool val) => subsEnabled.value = val;
+
+  void incrementSubs() => maxSubstitutes.value++;
+  void decrementSubs() {
+    if (maxSubstitutes.value > 0) maxSubstitutes.value--;
+  }
 
   void pickDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -103,7 +133,7 @@ class VolleyballInitializeMatchController extends GetxController {
         );
       },
     );
-    if (pickedTime != null) {
+    if (pickedTime != null && context.mounted) {
       time.value = pickedTime.format(context);
     }
   }
@@ -121,27 +151,96 @@ class VolleyballInitializeMatchController extends GetxController {
   }
 
   bool validateForm() {
-    if (matchName.value.isEmpty || venue.value.isEmpty || date.value.isEmpty || time.value.isEmpty || referee.value.isEmpty) {
-      Get.snackbar(
-        "Validation Error", 
-        "Please complete all required fields (Match Name, Venue, Date, Time, Referee).",
-        backgroundColor: AppColors.error,
-        colorText: AppColors.accent,
-      );
-      return false;
-    }
+    // Simplified UI layout no longer asks for Name, Venue, Date, Time etc.
+    // So we just return true. Default values are injected above.
     return true;
   }
 
-  void initializeMatch(BuildContext context) {
-    if (validateForm()) {
-      loading.value = true;
-      Future.delayed(Duration(seconds: 1), () {
+  Future<void> initializeMatch(BuildContext context) async {
+    if (!validateForm()) return;
+
+    loading.value = true;
+    try {
+      final matchId = const Uuid().v4();
+      final currentUserId =
+          FirebaseAuth.instance.currentUser?.uid ?? 'local_user';
+
+      final match = VolleyballMatchModel(
+        matchId: matchId,
+        createdBy: currentUserId,
+        matchName: matchName.value.trim(),
+        tournament: tournament.value.trim(),
+        date: date.value.trim(),
+        time: time.value.trim(),
+        venue: venue.value.trim(),
+        court: court.value.trim(),
+        referee: referee.value.trim(),
+        assistantReferee: assistantReferee.value.trim(),
+        category: category.value,
+        format: format.value,
+        pointsPerSet: pointsPerSet.value,
+        finalSetPoints: finalSetPoints.value,
+        timeouts: timeouts.value,
+        substitutions: substitutions.value,
+        technicalTimeout: technicalTimeout.value,
+        liberoEnabled: liberoEnabled.value,
+        challengeEnabled: challengeEnabled.value,
+        videoReview: videoReview.value,
+        winByTwo: winByTwo.value,
+        status: 'setup',
+        homeTeamName: homeTeamController.text.trim(),
+        awayTeamName: awayTeamController.text.trim(),
+      );
+
+      await VolleyballSqflite.instance.insertMatch(match);
+      try {
+        await FirebaseFirestore.instance
+            .collection('volleyball_matches')
+            .doc(matchId)
+            .set(match.toJson());
+      } catch (e) {
+        debugPrint('Firestore save failed for volleyball match: $e');
+      }
+
+      if (!context.mounted) {
         loading.value = false;
-        Get.snackbar("Success", "Match Initialized!", backgroundColor: AppColors.accent, colorText: Colors.black);
-        
-        Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballTeamManagementScreen()));
-      });
+        return;
+      }
+
+      Get.snackbar(
+        'Match Ready',
+        'Volleyball match setup saved successfully.',
+        backgroundColor: AppColors.accent,
+        colorText: Colors.black,
+        duration: Duration(seconds: 1),
+      );
+
+      await Future.delayed(Duration(milliseconds: 800));
+
+      if (!context.mounted) {
+        loading.value = false;
+        return;
+      }
+
+      loading.value = false;
+
+      if (context.mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const VolleyballTeamManagementScreen(),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error in initializeMatch: $e');
+      loading.value = false;
+      Get.snackbar(
+        'Error',
+        'Failed to initialize match: $e',
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+      );
     }
   }
 }

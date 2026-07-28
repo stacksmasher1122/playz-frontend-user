@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrTopBar extends StatelessWidget {
-  QrTopBar({super.key});
+  const QrTopBar({super.key});
 
   static const _kMuted = Color(0xFFA7A7A7);
 

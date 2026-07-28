@@ -7,7 +7,7 @@ import 'kickoff_ball_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class FootballKickoffPitchWidget extends StatelessWidget {
-  FootballKickoffPitchWidget({super.key});
+  const FootballKickoffPitchWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class FootballKickoffPitchWidget extends StatelessWidget {
 }
 
 class _PitchMarkingsWidget extends StatelessWidget {
-  _PitchMarkingsWidget();
+  const _PitchMarkingsWidget();
 
   @override
   Widget build(BuildContext context) {

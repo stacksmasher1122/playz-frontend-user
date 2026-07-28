@@ -7,7 +7,7 @@ Color kBg = AppColors.background;
 class SportMatchSetupScreen extends StatelessWidget {
   final String sport;
 
-  SportMatchSetupScreen({super.key, required this.sport});
+  const SportMatchSetupScreen({super.key, required this.sport});
 
   @override
   Widget build(BuildContext context) {

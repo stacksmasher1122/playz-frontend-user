@@ -143,7 +143,6 @@ class _MyTrainerCard extends StatelessWidget {
   final List<String> tags;
 
   const _MyTrainerCard({
-    super.key,
     required this.name,
     required this.specialty,
     required this.rating,
@@ -311,7 +310,7 @@ class _MyTrainerCard extends StatelessWidget {
 
 class _Tag extends StatelessWidget {
   final String label;
-  _Tag(this.label);
+  const _Tag(this.label);
 
   @override
   Widget build(BuildContext context) {
@@ -340,7 +339,7 @@ class _FilterButton extends StatelessWidget {
   final VoidCallback onTap;
   final IconData? icon;
 
-  _FilterButton({
+  const _FilterButton({
     required this.label,
     required this.active,
     required this.onTap,

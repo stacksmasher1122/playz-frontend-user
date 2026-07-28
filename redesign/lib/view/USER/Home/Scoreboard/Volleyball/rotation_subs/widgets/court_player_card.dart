@@ -10,7 +10,7 @@ class CourtPlayerCard extends StatelessWidget {
   final bool isCaptain;
   final bool isLibero;
 
-  CourtPlayerCard({
+  const CourtPlayerCard({
     super.key,
     required this.courtPlayer,
     this.isCaptain = false,
@@ -31,7 +31,7 @@ class CourtPlayerCard extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(color: borderColor, width: isServing ? 2 : 1),
-        boxShadow: isServing ? [BoxShadow(color: AppColors.accent.withOpacity(0.3), blurRadius: 10)] : [],
+        boxShadow: isServing ? [BoxShadow(color: AppColors.accent.withValues(alpha: 0.3), blurRadius: 10)] : [],
       ),
       child: Stack(
         children: [

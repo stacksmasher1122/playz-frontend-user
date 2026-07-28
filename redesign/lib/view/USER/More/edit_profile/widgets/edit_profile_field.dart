@@ -11,7 +11,7 @@ class EditProfileField extends StatelessWidget {
   final bool readOnly;
   final VoidCallback? onTap;
 
-  EditProfileField({
+  const EditProfileField({
     super.key,
     required this.label,
     required this.hint,

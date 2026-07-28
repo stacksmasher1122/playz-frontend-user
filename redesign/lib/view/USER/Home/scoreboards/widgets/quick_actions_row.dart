@@ -7,7 +7,7 @@ const kSurface = Color(0xFF0E0E0E);
 const kRed = Color(0xFFE53935);
 
 class QuickActionsRow extends StatelessWidget {
-  QuickActionsRow({super.key});
+  const QuickActionsRow({super.key});
 
   @override
   Widget build(BuildContext context) {

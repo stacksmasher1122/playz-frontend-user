@@ -6,7 +6,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class TeamStatisticsCard extends StatelessWidget {
   final VolleyballStatsController controller;
 
-  TeamStatisticsCard({super.key, required this.controller});
+  const TeamStatisticsCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class TeamStatisticsCard extends StatelessWidget {
         SizedBox(height: 24),
         _buildStatRow('ATTACK SUCCESS', '${statsA.attackSuccessPercent}%', '${statsB.attackSuccessPercent}%', statsA.attackSuccessPercent, statsB.attackSuccessPercent),
         _buildStatRow('BLOCKS', '${statsA.blocks}', '${statsB.blocks}', statsA.blocks, statsB.blocks),
-        _buildStatRow('ACES', '${statsA.aces.toString().padLeft(2, '0')}', '${statsB.aces.toString().padLeft(2, '0')}', statsA.aces, statsB.aces),
+        _buildStatRow('ACES', statsA.aces.toString().padLeft(2, '0'), statsB.aces.toString().padLeft(2, '0'), statsA.aces, statsB.aces),
         _buildStatRow('DIGS', '${statsA.digs}', '${statsB.digs}', statsA.digs, statsB.digs),
       ],
     );

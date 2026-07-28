@@ -8,7 +8,7 @@ class StatsTileWidget extends StatelessWidget {
   final bool
   isPrimary; // True if it should have lime border/color (e.g. XP Gained)
 
-  StatsTileWidget({
+  const StatsTileWidget({
     super.key,
     required this.title,
     required this.value,

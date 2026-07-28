@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CameraTopBar extends StatelessWidget {
-  CameraTopBar({super.key});
+  const CameraTopBar({super.key});
 
   @override
   Widget build(BuildContext context) {

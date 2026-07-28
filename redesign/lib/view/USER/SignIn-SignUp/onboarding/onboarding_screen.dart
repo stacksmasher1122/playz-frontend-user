@@ -9,7 +9,7 @@ import 'widgets/onboard_bottom_controls.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  OnboardingScreen({super.key});
+  const OnboardingScreen({super.key});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();

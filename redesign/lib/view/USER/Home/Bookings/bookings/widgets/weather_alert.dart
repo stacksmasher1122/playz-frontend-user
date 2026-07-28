@@ -3,7 +3,7 @@ import '../bookings_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingsWeatherAlert extends StatelessWidget {
-  BookingsWeatherAlert({super.key});
+  const BookingsWeatherAlert({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -13,7 +13,7 @@ class GroupRequestCard extends StatefulWidget {
   final VoidCallback onApprove;
   final VoidCallback onDecline;
 
-  GroupRequestCard({
+  const GroupRequestCard({
     super.key,
     required this.request,
     required this.onApprove,

@@ -6,7 +6,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kAmber = Color(0xFFF5C542);
 
 class CurrentStatusCard extends StatelessWidget {
-  CurrentStatusCard({super.key});
+  const CurrentStatusCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class StatusRow extends StatelessWidget {
   final String value;
   final bool badge;
 
-  StatusRow(
+  const StatusRow(
     this.label,
     this.value, {
     super.key,

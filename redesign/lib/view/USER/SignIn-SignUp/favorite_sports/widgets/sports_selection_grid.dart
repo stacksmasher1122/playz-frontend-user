@@ -8,7 +8,7 @@ class SportsSelectionGrid extends StatelessWidget {
   final Set<String> selectedSports;
   final Function(String) onSportToggle;
 
-  SportsSelectionGrid({
+  const SportsSelectionGrid({
     super.key,
     required this.sports,
     required this.gradients,

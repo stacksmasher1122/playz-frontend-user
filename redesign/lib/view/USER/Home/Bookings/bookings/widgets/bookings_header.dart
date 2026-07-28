@@ -3,7 +3,7 @@ import '../bookings_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingsHeader extends StatelessWidget {
-  BookingsHeader({super.key});
+  const BookingsHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

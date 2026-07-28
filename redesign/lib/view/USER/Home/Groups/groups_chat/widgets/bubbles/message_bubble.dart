@@ -23,7 +23,7 @@ class GroupMessageBubble extends StatelessWidget {
   final String timeStr;
   final GroupChatController ctrl;
 
-  GroupMessageBubble({
+  const GroupMessageBubble({
     super.key,
     required this.msg,
     required this.isMe,

@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kGreen = AppColors.accent;
 
 class AcademyDetailBottomBar extends StatelessWidget {
-  AcademyDetailBottomBar({super.key});
+  const AcademyDetailBottomBar({super.key});
 
   @override
   Widget build(BuildContext context) {

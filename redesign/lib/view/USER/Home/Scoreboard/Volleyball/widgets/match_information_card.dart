@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class MatchInformationCard extends StatelessWidget {
   final VolleyballInitializeMatchController controller;
 
-  MatchInformationCard({super.key, required this.controller});
+  const MatchInformationCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +17,12 @@ class MatchInformationCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.card.withOpacity(0.8),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
             offset: Offset(0, 4),
           )
@@ -99,7 +99,7 @@ class MatchInformationCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.background,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              border: Border.all(color: AppColors.outlineVariant),
+              border: Border.all(color: Colors.transparent),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

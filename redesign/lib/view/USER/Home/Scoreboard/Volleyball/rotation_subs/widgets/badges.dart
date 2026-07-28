@@ -4,7 +4,7 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ServerBadge extends StatelessWidget {
-  ServerBadge({super.key});
+  const ServerBadge({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class ServerBadge extends StatelessWidget {
 }
 
 class LiberoBadge extends StatelessWidget {
-  LiberoBadge({super.key});
+  const LiberoBadge({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class LiberoBadge extends StatelessWidget {
 }
 
 class CaptainBadge extends StatelessWidget {
-  CaptainBadge({super.key});
+  const CaptainBadge({super.key});
 
   @override
   Widget build(BuildContext context) {

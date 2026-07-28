@@ -9,7 +9,7 @@ class AvailabilityTimeline extends StatelessWidget {
   final bool isLoading;
   final DateTime? selectedDate;
 
-  AvailabilityTimeline({
+  const AvailabilityTimeline({
     super.key,
     required this.controller,
     required this.slots,
@@ -176,7 +176,7 @@ class AvailabilityTimeline extends StatelessWidget {
 
 class _LegendDot extends StatelessWidget {
   final Color color;
-  _LegendDot({required this.color});
+  const _LegendDot({required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +196,7 @@ class _TimelineBlock extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
 
-  _TimelineBlock({
+  const _TimelineBlock({
     required this.slot,
     required this.isFirst,
     required this.isLast,

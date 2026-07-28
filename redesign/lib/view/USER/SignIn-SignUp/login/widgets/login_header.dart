@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LoginHeader extends StatelessWidget {
-  LoginHeader({super.key});
+  const LoginHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

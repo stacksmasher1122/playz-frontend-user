@@ -8,7 +8,7 @@ import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboa
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SmSetFormatCardWidget extends StatelessWidget {
-  SmSetFormatCardWidget({super.key});
+  const SmSetFormatCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

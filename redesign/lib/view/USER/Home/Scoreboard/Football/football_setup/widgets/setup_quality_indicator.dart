@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class SetupQualityIndicator extends StatelessWidget {
   final double progress;
 
-  SetupQualityIndicator({super.key, required this.progress});
+  const SetupQualityIndicator({super.key, required this.progress});
 
   @override
   Widget build(BuildContext context) {

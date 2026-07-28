@@ -7,7 +7,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class TopScorerCard extends StatelessWidget {
   final VolleyballStatsController controller;
 
-  TopScorerCard({super.key, required this.controller});
+  const TopScorerCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class TopScorerCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.outlineVariant),
+                border: Border.all(color: Colors.transparent),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(controller.teamAName.toUpperCase(), style: AppTypography.labelCaps10.copyWith(color: AppColors.accent)),
@@ -38,7 +38,7 @@ class TopScorerCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.background,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.outlineVariant),
+                  border: Border.all(color: Colors.transparent),
                 ),
                 child: Row(
                   children: [

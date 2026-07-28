@@ -5,7 +5,7 @@ import 'package:redesign/view/USER/Maps/maps_constants.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class GpsButton extends StatelessWidget {
-  GpsButton({super.key});
+  const GpsButton({super.key});
 
   @override
   Widget build(BuildContext context) {

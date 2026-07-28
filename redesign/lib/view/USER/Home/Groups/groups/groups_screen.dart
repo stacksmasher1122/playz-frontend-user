@@ -11,7 +11,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kBg = AppColors.background;
 
 class GroupsScreen extends StatelessWidget {
-  GroupsScreen({super.key});
+  const GroupsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color _kGreen = AppColors.accent;
 
 class InfoAppBar extends StatelessWidget implements PreferredSizeWidget {
-  InfoAppBar({super.key});
+  const InfoAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

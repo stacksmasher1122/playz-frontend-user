@@ -9,7 +9,7 @@ class GroupsSwipeToReply extends StatefulWidget {
   final bool isMe;
   final VoidCallback onSwiped;
 
-  GroupsSwipeToReply({
+  const GroupsSwipeToReply({
     super.key,
     required this.child,
     required this.isMe,

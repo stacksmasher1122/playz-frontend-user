@@ -11,7 +11,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class TrendingTile extends StatelessWidget {
   final TurfModel turf;
-  TrendingTile({super.key, required this.turf});
+  const TrendingTile({super.key, required this.turf});
 
   @override
   Widget build(BuildContext context) {

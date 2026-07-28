@@ -7,7 +7,7 @@ class GoalkeeperWidget extends StatelessWidget {
   final PlayerModel? goalkeeper;
   final VoidCallback onTap;
 
-  GoalkeeperWidget({super.key, required this.goalkeeper, required this.onTap});
+  const GoalkeeperWidget({super.key, required this.goalkeeper, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

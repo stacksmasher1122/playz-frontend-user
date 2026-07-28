@@ -147,7 +147,7 @@ class TournamentCard extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
                     decoration: BoxDecoration(
-                      color: isFree ? AppColors.accent.withOpacity(0.2) : AppColors.surface,
+                      color: isFree ? AppColors.accent.withValues(alpha: 0.2) : AppColors.surface,
                       borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                       border: Border.all(color: isFree ? AppColors.accent : AppColors.outlineVariant),
                     ),

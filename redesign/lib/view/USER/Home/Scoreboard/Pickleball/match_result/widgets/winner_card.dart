@@ -14,13 +14,17 @@ class WinnerCard extends StatefulWidget {
   State<WinnerCard> createState() => _WinnerCardState();
 }
 
-class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateMixin {
+class _WinnerCardState extends State<WinnerCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animController;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 600));
+    _animController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 600),
+    );
     _animController.forward();
   }
 
@@ -37,14 +41,20 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(4)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(16),
+              vertical: ResponsiveHelper.h(4),
+            ),
             decoration: BoxDecoration(
               color: AppColors.accent,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             child: Text(
               'WINNER',
-              style: AppTypography.labelCaps10.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+              style: AppTypography.labelCaps10.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           SizedBox(height: 24),
@@ -52,20 +62,29 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ScaleTransition(
-                scale: Tween<double>(begin: 0.8, end: 1.0).animate(CurvedAnimation(
-                  parent: _animController,
-                  curve: Curves.easeOutBack,
-                )),
+                scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: _animController,
+                    curve: Curves.easeOutBack,
+                  ),
+                ),
                 child: _buildAvatar(isWinner: true),
               ),
               SizedBox(width: 24),
-              Text('VS', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
+              Text(
+                'VS',
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.muted,
+                ),
+              ),
               SizedBox(width: 24),
               FadeTransition(
-                opacity: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                  parent: _animController,
-                  curve: Interval(0.3, 1.0, curve: Curves.easeIn),
-                )),
+                opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: _animController,
+                    curve: Interval(0.3, 1.0, curve: Curves.easeIn),
+                  ),
+                ),
                 child: _buildAvatar(isWinner: false),
               ),
             ],
@@ -76,14 +95,25 @@ class _WinnerCardState extends State<WinnerCard> with SingleTickerProviderStateM
             children: [
               Text(
                 widget.controller.winnerName.value,
-                style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                style: AppTypography.headlineMd.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(width: 16),
-              Text('vs', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
+              Text(
+                'vs',
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.muted,
+                ),
+              ),
               SizedBox(width: 16),
               Text(
                 widget.controller.runnerUp.value,
-                style: AppTypography.headlineMd.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold),
+                style: AppTypography.headlineMd.copyWith(
+                  color: AppColors.muted,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

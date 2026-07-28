@@ -6,7 +6,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SportFilters extends StatefulWidget {
-  SportFilters({super.key});
+  const SportFilters({super.key});
 
   @override
   State<SportFilters> createState() => _SportFiltersState();

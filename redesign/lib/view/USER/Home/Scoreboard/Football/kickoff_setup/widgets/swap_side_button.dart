@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class SwapSideButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  SwapSideButton({super.key, required this.onTap});
+  const SwapSideButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

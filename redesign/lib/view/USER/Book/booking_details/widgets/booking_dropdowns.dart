@@ -13,7 +13,7 @@ class BookingDropdowns extends StatelessWidget {
   final ValueChanged<String> onTypeSelected;
   final ValueChanged<String> onSizeSelected;
 
-  BookingDropdowns({
+  const BookingDropdowns({
     super.key,
     required this.selectedType,
     required this.selectedSize,
@@ -183,7 +183,7 @@ class _DropdownCard extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onTap;
 
-  _DropdownCard({
+  const _DropdownCard({
     required this.label,
     this.value,
     this.isLoading = false,

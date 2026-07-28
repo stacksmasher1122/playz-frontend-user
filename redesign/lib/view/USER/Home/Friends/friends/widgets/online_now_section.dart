@@ -10,7 +10,7 @@ const kSurface = Color(0xFF0E0E0E);
 const kGreen = AppColors.accent;
 
 class OnlineNowSection extends StatelessWidget {
-  OnlineNowSection({super.key});
+  const OnlineNowSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class OnlineAvatar extends StatelessWidget {
   final String name;
   final String imageUrl;
 
-  OnlineAvatar({super.key, required this.name, required this.imageUrl});
+  const OnlineAvatar({super.key, required this.name, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

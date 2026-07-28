@@ -3,7 +3,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TrendingImageShimmer extends StatelessWidget {
-  TrendingImageShimmer({super.key});
+  const TrendingImageShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -26,7 +26,7 @@ class TeamCompositionWidget extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
                   decoration: BoxDecoration(
-                    color: controller.teamMode.value == "singles" ? AppColors.accent.withOpacity(0.1) : AppColors.card,
+                    color: controller.teamMode.value == "singles" ? AppColors.accent.withValues(alpha: 0.1) : AppColors.card,
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                     border: Border.all(
                       color: controller.teamMode.value == "singles" ? AppColors.accent : AppColors.card,
@@ -51,7 +51,7 @@ class TeamCompositionWidget extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
                   decoration: BoxDecoration(
-                    color: controller.teamMode.value == "doubles" ? AppColors.accent.withOpacity(0.1) : AppColors.card,
+                    color: controller.teamMode.value == "doubles" ? AppColors.accent.withValues(alpha: 0.1) : AppColors.card,
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
                     border: Border.all(
                       color: controller.teamMode.value == "doubles" ? AppColors.accent : AppColors.card,

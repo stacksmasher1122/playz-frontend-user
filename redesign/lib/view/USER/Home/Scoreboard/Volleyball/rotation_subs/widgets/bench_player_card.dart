@@ -8,7 +8,7 @@ class BenchPlayerCard extends StatelessWidget {
   final VolleyballPlayerModel player;
   final VoidCallback onSwap;
 
-  BenchPlayerCard({
+  const BenchPlayerCard({
     super.key,
     required this.player,
     required this.onSwap,
@@ -23,7 +23,7 @@ class BenchPlayerCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Row(
         children: [

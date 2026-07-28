@@ -19,7 +19,7 @@ class FriendsInfoScreen extends StatefulWidget {
   final String friendPic;
   final bool isOnline;
 
-  FriendsInfoScreen({
+  const FriendsInfoScreen({
     super.key,
     required this.friendEmail,
     required this.friendName,

@@ -23,7 +23,8 @@ class MatchResultScreen extends StatefulWidget {
   State<MatchResultScreen> createState() => _MatchResultScreenState();
 }
 
-class _MatchResultScreenState extends State<MatchResultScreen> with SingleTickerProviderStateMixin {
+class _MatchResultScreenState extends State<MatchResultScreen>
+    with SingleTickerProviderStateMixin {
   late final MatchResultController controller;
   late AnimationController _entranceController;
 
@@ -31,8 +32,11 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
   void initState() {
     super.initState();
     controller = Get.put(MatchResultController());
-    
-    _entranceController = AnimationController(vsync: this, duration: Duration(milliseconds: 600));
+
+    _entranceController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 600),
+    );
     _entranceController.forward();
   }
 
@@ -51,14 +55,14 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
       appBar: ResultHeaderWidget(),
       body: SafeArea(
         child: FadeTransition(
-          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: _entranceController,
-            curve: Curves.easeIn,
-          )),
+          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(parent: _entranceController, curve: Curves.easeIn),
+          ),
           child: SingleChildScrollView(
             padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
             child: Obx(() {
-              if (controller.matchResult.value.matchId.isEmpty) return SizedBox.shrink();
+              if (controller.matchResult.value.matchId.isEmpty)
+                return SizedBox.shrink();
               final result = controller.matchResult.value;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -138,7 +142,12 @@ class _MatchResultScreenState extends State<MatchResultScreen> with SingleTicker
       bottomNavigationBar: LiveBottomNavigation(
         selectedIndex: 0,
         onTabSelected: (index) {
-          Get.snackbar("Match Ended", "This match is over.", backgroundColor: AppColors.card, colorText: AppColors.muted);
+          Get.snackbar(
+            "Match Ended",
+            "This match is over.",
+            backgroundColor: AppColors.card,
+            colorText: AppColors.muted,
+          );
         },
       ),
     );

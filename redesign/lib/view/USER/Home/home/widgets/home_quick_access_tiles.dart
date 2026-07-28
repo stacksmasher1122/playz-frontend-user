@@ -12,7 +12,7 @@ import 'package:redesign/theme/responsive_helper.dart';
    QUICK ACCESS TILES
    ============================================================ */
 class HomeQuickAccessTiles extends StatelessWidget {
-  HomeQuickAccessTiles({super.key});
+  const HomeQuickAccessTiles({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,7 @@ class HomeQuickTile extends StatelessWidget {
   final bool highlight;
   final Widget? destination;
 
-  HomeQuickTile(
+  const HomeQuickTile(
     this.icon,
     this.title,
     this.subtitle, {super.key, 

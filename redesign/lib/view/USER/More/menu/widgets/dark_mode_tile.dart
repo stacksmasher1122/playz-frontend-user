@@ -7,7 +7,7 @@ class DarkModeTile extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  DarkModeTile({
+  const DarkModeTile({
     super.key,
     required this.value,
     required this.onChanged,

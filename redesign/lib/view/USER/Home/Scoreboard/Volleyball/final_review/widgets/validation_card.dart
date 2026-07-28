@@ -8,7 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class ValidationCard extends StatelessWidget {
   final VolleyballFinalReviewController controller;
 
-  ValidationCard({super.key, required this.controller});
+  const ValidationCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ValidationCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

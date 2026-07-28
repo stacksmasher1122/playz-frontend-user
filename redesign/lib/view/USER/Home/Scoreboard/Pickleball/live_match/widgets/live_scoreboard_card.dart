@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
-import 'serving_indicator.dart';
+import 'smart_serve_indicator.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/live_pickleball_match_controller.dart';
 
 class LiveScoreboardCard extends StatelessWidget {
-  final int scoreA;
-  final int scoreB;
-  final bool isServingTeamA;
+  final LivePickleballMatchController controller;
   final AnimationController glowController;
   final AnimationController pulseController;
 
   LiveScoreboardCard({
     super.key,
-    required this.scoreA,
-    required this.scoreB,
-    required this.isServingTeamA,
+    required this.controller,
     required this.glowController,
     required this.pulseController,
   });
@@ -29,22 +27,22 @@ class LiveScoreboardCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.card,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          border: Border.all(color: AppColors.outlineVariant, width: 1),
+          border: Border.all(color: Colors.transparent),
         ),
         child: Column(
           children: [
-            ServingIndicator(
-              isServingLeft: isServingTeamA,
+            SmartServeIndicator(
+              controller: controller,
               pulseController: pulseController,
             ),
             SizedBox(height: 16),
             IntrinsicHeight(
-              child: Row(
+              child: Obx(() => Row(
                 children: [
                   Expanded(
                     child: _buildScoreDisplay(
-                      score: scoreA,
-                      isServing: isServingTeamA,
+                      score: controller.teamAScore.value,
+                      isServing: controller.isServingTeamA.value,
                     ),
                   ),
                   VerticalDivider(
@@ -54,12 +52,12 @@ class LiveScoreboardCard extends StatelessWidget {
                   ),
                   Expanded(
                     child: _buildScoreDisplay(
-                      score: scoreB,
-                      isServing: !isServingTeamA,
+                      score: controller.teamBScore.value,
+                      isServing: !controller.isServingTeamA.value,
                     ),
                   ),
                 ],
-              ),
+              )),
             ),
           ],
         ),
@@ -81,7 +79,9 @@ class LiveScoreboardCard extends StatelessWidget {
           key: ValueKey<int>(score),
           animation: glowController,
           builder: (context, child) {
-            double blur = isServing ? Tween<double>(begin: 8.0, end: 24.0).evaluate(glowController) : 0.0;
+            double blur = isServing
+                ? Tween<double>(begin: 8.0, end: 24.0).evaluate(glowController)
+                : 0.0;
             return Text(
               '$score',
               style: TextStyle(

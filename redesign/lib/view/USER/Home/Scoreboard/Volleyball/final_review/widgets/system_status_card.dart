@@ -9,7 +9,7 @@ class SystemStatusCard extends StatelessWidget {
   final String title;
   final SystemStatus status;
 
-  SystemStatusCard({
+  const SystemStatusCard({
     super.key,
     required this.icon,
     required this.title,
@@ -29,7 +29,7 @@ class SystemStatusCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Row(
         children: [

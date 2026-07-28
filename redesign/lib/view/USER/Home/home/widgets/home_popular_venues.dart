@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
    POPULAR VENUES
    ============================================================ */
 class HomePopularVenues extends StatelessWidget {
-  HomePopularVenues({super.key});
+  const HomePopularVenues({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class HomeVenueTile extends StatelessWidget {
   final String rating;
   final String status;
 
-  HomeVenueTile({super.key, 
+  const HomeVenueTile({super.key, 
     required this.title,
     required this.location,
     required this.price,

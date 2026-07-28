@@ -8,11 +8,7 @@ class TeamsVsCard extends StatelessWidget {
   final PickleballReviewModel reviewData;
   final VoidCallback onEditTeams;
 
-  TeamsVsCard({
-    super.key,
-    required this.reviewData,
-    required this.onEditTeams,
-  });
+  TeamsVsCard({super.key, required this.reviewData, required this.onEditTeams});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +17,23 @@ class TeamsVsCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(ResponsiveHelper.w(20)),
         decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          border: Border.all(color: AppColors.outlineVariant, width: 1),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.card.withOpacity(0.8),
+              Colors.black,
+            ],
+          ),
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+          border: Border.all(color: AppColors.accent.withOpacity(0.2)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accent.withOpacity(0.05),
+              blurRadius: 20,
+              spreadRadius: 1,
+            )
+          ],
         ),
         child: Column(
           children: [
@@ -36,13 +46,13 @@ class TeamsVsCard extends StatelessWidget {
                     _buildTeamColumn(
                       teamLabel: 'TEAM A',
                       teamName: reviewData.teamAName,
-                      icon: Icons.groups,
+                      imageUrl: reviewData.teamAImage,
                       onTap: onEditTeams,
                     ),
                     _buildTeamColumn(
                       teamLabel: 'TEAM B',
                       teamName: reviewData.teamBName,
-                      icon: Icons.group_add,
+                      imageUrl: reviewData.teamBImage,
                       onTap: onEditTeams,
                     ),
                   ],
@@ -57,26 +67,16 @@ class TeamsVsCard extends StatelessWidget {
                   child: Center(
                     child: Text(
                       'vs',
-                      style: AppTypography.labelCaps.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                      style: AppTypography.labelCaps.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 24),
-            Divider(color: AppColors.outlineVariant, height: 1),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.location_on_outlined, color: AppColors.muted, size: 16),
-                SizedBox(width: 6),
-                Text(
-                  '${reviewData.courtName} • ${reviewData.matchTime}'.toUpperCase(),
-                  style: AppTypography.labelCaps.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+
           ],
         ),
       ),
@@ -86,7 +86,7 @@ class TeamsVsCard extends StatelessWidget {
   Widget _buildTeamColumn({
     required String teamLabel,
     required String teamName,
-    required IconData icon,
+    required String imageUrl,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -94,18 +94,45 @@ class TeamsVsCard extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: ResponsiveHelper.w(56),
-            height: ResponsiveHelper.h(56),
+            width: ResponsiveHelper.w(80),
+            height: ResponsiveHelper.h(80),
             decoration: BoxDecoration(
-              color: AppColors.outlineVariant,
+              color: AppColors.surface,
               shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.accent.withOpacity(0.5),
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.accent.withOpacity(0.2),
+                  blurRadius: 15,
+                  spreadRadius: 2,
+                )
+              ],
             ),
-            child: Icon(icon, color: AppColors.muted, size: 28),
+            child: ClipOval(
+              child: imageUrl.isNotEmpty
+                  ? Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Icon(Icons.person, color: AppColors.muted, size: 40),
+                    )
+                  : Icon(Icons.person, color: AppColors.muted, size: 40),
+            ),
+          ),SizedBox(height: 12),
+          Text(
+            teamLabel,
+            style: AppTypography.labelCaps10.copyWith(color: AppColors.muted),
           ),
-          SizedBox(height: 12),
-          Text(teamLabel, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
           SizedBox(height: 4),
-          Text(teamName, style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
+          Text(
+            teamName,
+            style: AppTypography.headlineMd.copyWith(
+              color: AppColors.accent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );

@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class PaymentSummaryCard extends StatelessWidget {
   final Map<String, dynamic>? bookingData;
 
-  PaymentSummaryCard({super.key, this.bookingData});
+  const PaymentSummaryCard({super.key, this.bookingData});
 
   static const _kCard = Color(0xFF1A1A1A);
   static const _kMuted = Color(0xFFA7A7A7);

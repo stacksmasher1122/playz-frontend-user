@@ -6,7 +6,7 @@ class CameraBottomControls extends StatelessWidget {
   final VoidCallback onCapture;
   final VoidCallback onSwitchCamera;
 
-  CameraBottomControls({
+  const CameraBottomControls({
     super.key,
     required this.onCapture,
     required this.onSwitchCamera,

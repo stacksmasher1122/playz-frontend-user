@@ -6,7 +6,7 @@ const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class WhyGoProSection extends StatelessWidget {
-  WhyGoProSection({super.key});
+  const WhyGoProSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class WhyGoProItem extends StatelessWidget {
   final String title;
   final String description;
 
-  WhyGoProItem({
+  const WhyGoProItem({
     super.key,
     required this.icon,
     required this.title,

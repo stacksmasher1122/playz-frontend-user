@@ -7,7 +7,7 @@ class ActionButtons extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onStart;
 
-  ActionButtons({super.key, required this.onEdit, required this.onStart});
+  const ActionButtons({super.key, required this.onEdit, required this.onStart});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class ActionButtons extends StatelessWidget {
                 backgroundColor: AppColors.accent,
                 foregroundColor: AppColors.background,
                 elevation: 10,
-                shadowColor: AppColors.accent.withOpacity(0.5),
+                shadowColor: AppColors.accent.withValues(alpha: 0.5),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
               ),
               child: Row(

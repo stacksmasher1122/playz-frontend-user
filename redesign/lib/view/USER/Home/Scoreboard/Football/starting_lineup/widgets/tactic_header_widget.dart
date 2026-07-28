@@ -5,7 +5,7 @@ import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboa
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TacticHeaderWidget extends StatelessWidget {
-  TacticHeaderWidget({super.key});
+  const TacticHeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class TacticHeaderWidget extends StatelessWidget {
               return Text(
                 'Match Week ${controller.matchWeek.value}',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                   fontSize: ResponsiveHelper.sp(12),
                   fontWeight: FontWeight.bold,
                 ),

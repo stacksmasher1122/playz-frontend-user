@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kGreen = AppColors.accent;
 
 class BuildSquadCTA extends StatelessWidget {
-  BuildSquadCTA({super.key});
+  const BuildSquadCTA({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ class TrainersToggle extends StatelessWidget {
   final bool isMyTrainers;
   final ValueChanged<bool> onChanged;
 
-  TrainersToggle({
+  const TrainersToggle({
     super.key,
     required this.isMyTrainers,
     required this.onChanged,

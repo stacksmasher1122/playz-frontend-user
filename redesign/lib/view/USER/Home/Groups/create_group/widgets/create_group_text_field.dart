@@ -10,7 +10,7 @@ class CreateGroupTextField extends StatelessWidget {
   final int maxLines;
   final int? maxLength;
 
-  CreateGroupTextField({
+  const CreateGroupTextField({
     super.key,
     required this.controller,
     required this.hint,

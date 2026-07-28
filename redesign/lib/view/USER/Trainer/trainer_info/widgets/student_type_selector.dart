@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kGreen = AppColors.accent;
 
 class StudentTypeSelector extends StatefulWidget {
-  StudentTypeSelector({super.key});
+  const StudentTypeSelector({super.key});
 
   @override
   State<StudentTypeSelector> createState() => _StudentTypeSelectorState();

@@ -8,7 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
    EXPLORE BY SPORT
    ============================================================ */
 class HomeExploreBySport extends StatelessWidget {
-  HomeExploreBySport({super.key});
+  const HomeExploreBySport({super.key});
 
   @override
   Widget build(BuildContext context) {

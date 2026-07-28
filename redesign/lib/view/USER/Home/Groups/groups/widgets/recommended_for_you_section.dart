@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kGreen = AppColors.accent;
 
 class RecommendedForYouSection extends StatelessWidget {
-  RecommendedForYouSection({super.key});
+  const RecommendedForYouSection({super.key});
 
   @override
   Widget build(BuildContext context) {

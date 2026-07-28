@@ -22,7 +22,7 @@ class GroupsChatInputBar extends StatefulWidget {
   final GroupChatController ctrl;
   final VoidCallback onScrollToBottom;
 
-  GroupsChatInputBar({
+  const GroupsChatInputBar({
     super.key,
     required this.ctrl,
     required this.onScrollToBottom,

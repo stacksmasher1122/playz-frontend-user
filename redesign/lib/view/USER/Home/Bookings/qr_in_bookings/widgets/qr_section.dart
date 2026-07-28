@@ -8,7 +8,7 @@ class QrSection extends StatelessWidget {
   final BookingStatus status;
   final Map<String, dynamic>? bookingData;
 
-  QrSection({super.key, required this.status, this.bookingData});
+  const QrSection({super.key, required this.status, this.bookingData});
 
   Color get glowColor {
     switch (status) {

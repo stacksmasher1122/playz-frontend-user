@@ -12,7 +12,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class TurfCard extends StatefulWidget {
   final TurfModel turf;
-  TurfCard({super.key, required this.turf});
+  const TurfCard({super.key, required this.turf});
 
   @override
   State<TurfCard> createState() => _TurfCardState();
@@ -158,7 +158,7 @@ class _TurfCardState extends State<TurfCard>
                       width: ResponsiveHelper.w(34),
                       height: ResponsiveHelper.w(34),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.55),
+                        color: Colors.black.withValues(alpha: 0.55),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -274,7 +274,7 @@ class _TurfCardState extends State<TurfCard>
                                       Text(
                                         amenity,
                                         style: GoogleFonts.inter(
-                                          color: Colors.white.withOpacity(0.9),
+                                          color: Colors.white.withValues(alpha: 0.9),
                                           fontSize: ResponsiveHelper.sp(11),
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -293,7 +293,7 @@ class _TurfCardState extends State<TurfCard>
 
                 /// HORIZONTAL DIVIDER LINE
                 Divider(
-                  color: Colors.white.withOpacity(0.08),
+                  color: Colors.white.withValues(alpha: 0.08),
                   thickness: 1,
                   height: 1,
                 ),

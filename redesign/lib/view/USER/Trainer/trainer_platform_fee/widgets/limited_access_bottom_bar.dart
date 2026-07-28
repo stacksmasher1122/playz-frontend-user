@@ -6,7 +6,7 @@ const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
 
 class LimitedAccessBottomBar extends StatelessWidget {
-  LimitedAccessBottomBar({super.key});
+  const LimitedAccessBottomBar({super.key});
 
   @override
   Widget build(BuildContext context) {

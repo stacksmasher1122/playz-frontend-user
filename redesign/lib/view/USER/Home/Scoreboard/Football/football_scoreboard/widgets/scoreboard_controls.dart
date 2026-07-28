@@ -12,7 +12,7 @@ class ScoreboardControls extends StatelessWidget {
   final VoidCallback showSubModal;
   final VoidCallback showRulesModal;
 
-  ScoreboardControls({
+  const ScoreboardControls({
     super.key,
     required this.engine,
     required this.showGoalModal,

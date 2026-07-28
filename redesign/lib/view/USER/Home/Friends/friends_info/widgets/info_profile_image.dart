@@ -12,7 +12,7 @@ Color _kMuted = Colors.white60;
 class InfoProfileImage extends StatelessWidget {
   final PlayerInfoModel info;
 
-  InfoProfileImage({super.key, required this.info});
+  const InfoProfileImage({super.key, required this.info});
 
   @override
   Widget build(BuildContext context) {

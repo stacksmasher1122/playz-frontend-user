@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kCard = Color(0xFF1A1A1A);
 
 class SafetyAmenitiesTags extends StatelessWidget {
-  SafetyAmenitiesTags({super.key});
+  const SafetyAmenitiesTags({super.key});
 
   @override
   Widget build(BuildContext context) {

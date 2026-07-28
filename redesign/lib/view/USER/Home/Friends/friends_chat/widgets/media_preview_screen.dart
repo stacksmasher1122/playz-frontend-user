@@ -12,7 +12,7 @@ class MediaPreviewScreen extends StatefulWidget {
   final String filePath;
   final bool isVideo;
 
-  MediaPreviewScreen({
+  const MediaPreviewScreen({
     super.key,
     required this.filePath,
     required this.isVideo,

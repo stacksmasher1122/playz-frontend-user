@@ -10,7 +10,7 @@ class SearchBarWidget extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
 
-  SearchBarWidget({
+  const SearchBarWidget({
     super.key,
     required this.controller,
     required this.focusNode,

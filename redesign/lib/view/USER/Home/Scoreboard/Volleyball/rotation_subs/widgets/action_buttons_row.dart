@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_rotation_subs_controller.dart';
@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class ActionButtonsRow extends StatelessWidget {
   final VolleyballRotationSubsController controller;
 
-  ActionButtonsRow({super.key, required this.controller});
+  const ActionButtonsRow({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

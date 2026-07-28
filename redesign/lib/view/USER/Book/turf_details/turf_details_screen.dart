@@ -15,7 +15,7 @@ import 'widgets/venue_title_section.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TurfDetailScreen extends StatefulWidget {
-  TurfDetailScreen({super.key});
+  const TurfDetailScreen({super.key});
 
   @override
   State<TurfDetailScreen> createState() => _TurfDetailScreenState();

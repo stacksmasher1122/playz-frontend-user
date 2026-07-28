@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class LoginSignupPrompt extends StatelessWidget {
   final VoidCallback onSignupTap;
 
-  LoginSignupPrompt({super.key, required this.onSignupTap});
+  const LoginSignupPrompt({super.key, required this.onSignupTap});
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import 'formation_chip_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class FormationSelectorWidget extends StatelessWidget {
-  FormationSelectorWidget({super.key});
+  const FormationSelectorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

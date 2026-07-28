@@ -4,7 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SportsRow extends StatelessWidget {
-  SportsRow({super.key});
+  const SportsRow({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _SportCard extends StatelessWidget {
   final String name;
   final IconData icon;
 
-  _SportCard({required this.name, required this.icon});
+  const _SportCard({required this.name, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class _SportButton extends StatelessWidget {
   final String label;
   final bool filled;
 
-  _SportButton(this.label, {required this.filled});
+  const _SportButton(this.label, {required this.filled});
 
   @override
   Widget build(BuildContext context) {

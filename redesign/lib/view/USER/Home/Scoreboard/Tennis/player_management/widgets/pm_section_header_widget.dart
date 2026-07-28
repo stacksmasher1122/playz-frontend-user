@@ -7,7 +7,7 @@ import '../../../../../../../theme/app_dimensions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PmSectionHeaderWidget extends StatelessWidget {
-  PmSectionHeaderWidget({super.key});
+  const PmSectionHeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ class QrCard extends StatelessWidget {
   final Widget child;
   final Widget? trailing;
 
-  QrCard({super.key, 
+  const QrCard({super.key, 
     required this.title,
     required this.child,
     this.trailing,

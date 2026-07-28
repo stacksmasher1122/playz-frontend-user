@@ -9,7 +9,7 @@ class SetupSectionCard extends StatelessWidget {
   final Widget child;
   final bool isExpanded;
 
-  SetupSectionCard({
+  const SetupSectionCard({
     super.key,
     required this.title,
     required this.icon,

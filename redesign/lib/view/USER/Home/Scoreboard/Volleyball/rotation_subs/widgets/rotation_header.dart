@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_rotation_subs_controller.dart';
@@ -8,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class RotationHeader extends StatelessWidget {
   final VolleyballRotationSubsController controller;
 
-  RotationHeader({super.key, required this.controller});
+  const RotationHeader({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class RotationHeader extends StatelessWidget {
         SizedBox(height: 4),
         Text(controller.servingTeam.toUpperCase(), style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.w900)),
         SizedBox(height: 16),
-        Row(
+        Obx(() => Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text('${controller.teamScore}', style: TextStyle(fontSize: ResponsiveHelper.sp(56), fontWeight: FontWeight.w900, color: AppColors.accent, height: 1)),
@@ -36,7 +37,7 @@ class RotationHeader extends StatelessWidget {
             ),
             Text('${controller.oppScore}', style: TextStyle(fontSize: ResponsiveHelper.sp(40), fontWeight: FontWeight.w900, color: AppColors.muted, height: 1)),
           ],
-        ),
+        )),
         SizedBox(height: 16),
         Align(
           alignment: Alignment.centerRight,

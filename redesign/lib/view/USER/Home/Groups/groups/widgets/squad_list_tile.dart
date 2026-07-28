@@ -17,7 +17,7 @@ const kMuted = Colors.white70;
 class SquadListTile extends StatelessWidget {
   final GroupModel group;
 
-  SquadListTile({super.key, required this.group});
+  const SquadListTile({super.key, required this.group});
 
   String _sportEmoji(String sport) {
     switch (sport.toLowerCase()) {

@@ -7,7 +7,7 @@ class BookingSummary extends StatelessWidget {
   final double slotPrice;
   final int hours;
 
-  BookingSummary({
+  const BookingSummary({
     super.key,
     required this.slotPrice,
     this.hours = 1,
@@ -86,7 +86,7 @@ class BookingSummary extends StatelessWidget {
 
 class _SectionTitle extends StatelessWidget {
   final String text;
-  _SectionTitle({required this.text});
+  const _SectionTitle({required this.text});
 
   @override
   Widget build(BuildContext context) {

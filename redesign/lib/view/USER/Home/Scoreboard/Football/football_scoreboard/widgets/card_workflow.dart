@@ -8,7 +8,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class CardWorkflow extends StatefulWidget {
   final MatchEngine engine;
 
-  CardWorkflow({super.key, required this.engine});
+  const CardWorkflow({super.key, required this.engine});
 
   @override
   State<CardWorkflow> createState() => _CardWorkflowState();

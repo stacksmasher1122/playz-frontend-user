@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kGreen = AppColors.accent;
 
 class BenefitsUnlockedCard extends StatelessWidget {
-  BenefitsUnlockedCard({super.key});
+  const BenefitsUnlockedCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class BenefitsUnlockedCard extends StatelessWidget {
 
 class BenefitRow extends StatelessWidget {
   final String text;
-  BenefitRow(this.text, {super.key});
+  const BenefitRow(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {

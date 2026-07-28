@@ -11,7 +11,7 @@ const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class PaymentSuccessScreen extends StatefulWidget {
-  PaymentSuccessScreen({super.key});
+  const PaymentSuccessScreen({super.key});
 
   @override
   State<PaymentSuccessScreen> createState() => _PaymentSuccessScreenState();

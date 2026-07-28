@@ -11,7 +11,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kBg = Colors.black;
 
 class ShowQrScreen extends StatelessWidget {
-  ShowQrScreen({super.key});
+  const ShowQrScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

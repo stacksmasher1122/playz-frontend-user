@@ -7,7 +7,7 @@ const kGreen = AppColors.accent;
 class StepHeader extends StatelessWidget {
   final int step;
   final String title;
-  StepHeader({super.key, required this.step, required this.title});
+  const StepHeader({super.key, required this.step, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class StepHeader extends StatelessWidget {
 
 class StepIndicator extends StatelessWidget {
   final int number;
-  StepIndicator({super.key, required this.number});
+  const StepIndicator({super.key, required this.number});
 
   @override
   Widget build(BuildContext context) {

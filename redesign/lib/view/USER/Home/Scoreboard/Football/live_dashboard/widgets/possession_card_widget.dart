@@ -6,7 +6,7 @@ import 'statistics_progress_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PossessionCardWidget extends StatelessWidget {
-  PossessionCardWidget({super.key});
+  const PossessionCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

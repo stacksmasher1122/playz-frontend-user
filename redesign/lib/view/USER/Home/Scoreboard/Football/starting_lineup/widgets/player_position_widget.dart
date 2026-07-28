@@ -9,7 +9,7 @@ class PlayerPositionWidget extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onLongPress;
 
-  PlayerPositionWidget({
+  const PlayerPositionWidget({
     super.key,
     required this.player,
     required this.label,

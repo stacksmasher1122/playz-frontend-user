@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class EventFeed extends StatelessWidget {
   final MatchEngine engine;
 
-  EventFeed({super.key, required this.engine});
+  const EventFeed({super.key, required this.engine});
 
   @override
   Widget build(BuildContext context) {

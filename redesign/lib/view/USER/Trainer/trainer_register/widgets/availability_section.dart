@@ -8,7 +8,7 @@ const kCard = Color(0xFF1A1A1A);
 const kMuted = Color(0xFFA7A7A7);
 
 class AvailabilitySection extends StatefulWidget {
-  AvailabilitySection({super.key});
+  const AvailabilitySection({super.key});
 
   @override
   State<AvailabilitySection> createState() => _AvailabilitySectionState();
@@ -110,7 +110,7 @@ class DayCircle extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  DayCircle({
+  const DayCircle({
     super.key,
     required this.label,
     required this.selected,
@@ -149,7 +149,7 @@ class TimeSlotChip extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  TimeSlotChip({
+  const TimeSlotChip({
     super.key,
     required this.label,
     required this.selected,

@@ -19,7 +19,7 @@ import 'package:redesign/theme/responsive_helper.dart';
    USER HOME PAGE
    ============================================================ */
 class UserHomePage extends StatefulWidget {
-  UserHomePage({super.key});
+  const UserHomePage({super.key});
 
   // Spotify-style palette
   static Color bg = AppColors.background;

@@ -19,13 +19,17 @@ class ScoreButtonWidget extends StatefulWidget {
   State<ScoreButtonWidget> createState() => _ScoreButtonWidgetState();
 }
 
-class _ScoreButtonWidgetState extends State<ScoreButtonWidget> with SingleTickerProviderStateMixin {
+class _ScoreButtonWidgetState extends State<ScoreButtonWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _scaleController;
 
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
   }
 
   @override
@@ -53,7 +57,12 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> with SingleTicker
           decoration: BoxDecoration(
             color: widget.isActive ? AppColors.accent : AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: widget.isActive ? AppColors.accent : AppColors.outlineVariant, width: 1),
+            border: Border.all(
+              color: widget.isActive
+                  ? AppColors.accent
+                  : AppColors.outlineVariant,
+              width: 1,
+            ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +70,9 @@ class _ScoreButtonWidgetState extends State<ScoreButtonWidget> with SingleTicker
               Text(
                 widget.teamName,
                 style: AppTypography.labelCaps10.copyWith(
-                  color: widget.isActive ? Colors.black.withOpacity(0.7) : AppColors.muted,
+                  color: widget.isActive
+                      ? Colors.black.withOpacity(0.7)
+                      : AppColors.muted,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -9,7 +9,7 @@ class MapPickerSearchBar extends StatelessWidget {
   final TextEditingController searchController;
   final FocusNode searchFocus;
 
-  MapPickerSearchBar({
+  const MapPickerSearchBar({
     super.key,
     required this.searchController,
     required this.searchFocus,

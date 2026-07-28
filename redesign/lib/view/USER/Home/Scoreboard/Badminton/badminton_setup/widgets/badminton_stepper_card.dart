@@ -12,7 +12,7 @@ class BadmintonStepperCard extends StatelessWidget {
   final VoidCallback onIncrement;
   final Color? titleColor;
 
-  BadmintonStepperCard({
+  const BadmintonStepperCard({
     super.key,
     required this.title,
     required this.mainText,

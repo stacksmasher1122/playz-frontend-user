@@ -9,7 +9,7 @@ Color kGold = Color(0xFFFFC107);
 Color kRed = Color(0xFFE53935);
 
 class GoldLeagueSection extends StatelessWidget {
-  GoldLeagueSection({super.key});
+  const GoldLeagueSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class GoldLeagueSection extends StatelessWidget {
 }
 
 class SilverLeagueSection extends StatelessWidget {
-  SilverLeagueSection({super.key});
+  const SilverLeagueSection({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import 'suggested_players_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerBEmptyCardWidget extends StatefulWidget {
-  PlayerBEmptyCardWidget({super.key});
+  const PlayerBEmptyCardWidget({super.key});
 
   @override
   State<PlayerBEmptyCardWidget> createState() => _PlayerBEmptyCardWidgetState();

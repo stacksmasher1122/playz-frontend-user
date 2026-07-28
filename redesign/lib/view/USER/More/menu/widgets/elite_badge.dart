@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class EliteBadge extends StatelessWidget {
   final String label;
-  EliteBadge(this.label, {super.key});
+  const EliteBadge(this.label, {super.key});
 
   @override
   Widget build(BuildContext context) {

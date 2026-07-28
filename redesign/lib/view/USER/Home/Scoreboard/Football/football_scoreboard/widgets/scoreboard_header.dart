@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class ScoreboardHeader extends StatelessWidget {
   final MatchEngine engine;
 
-  ScoreboardHeader({super.key, required this.engine});
+  const ScoreboardHeader({super.key, required this.engine});
 
   @override
   Widget build(BuildContext context) {

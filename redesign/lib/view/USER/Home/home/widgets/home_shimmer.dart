@@ -11,7 +11,7 @@ class HomeShimmer extends StatelessWidget {
   final double borderRadius;
   final Widget? child;
 
-  HomeShimmer({super.key, this.width, this.height, this.borderRadius = 0, this.child});
+  const HomeShimmer({super.key, this.width, this.height, this.borderRadius = 0, this.child});
 
   @override
   Widget build(BuildContext context) {

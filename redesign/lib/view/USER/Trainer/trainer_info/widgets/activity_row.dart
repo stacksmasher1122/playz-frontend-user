@@ -5,7 +5,7 @@ Color kCard = Color(0xFF1A1A1A);
 Color kMuted = Color(0xFFA7A7A7);
 
 class ActivityRow extends StatelessWidget {
-  ActivityRow({super.key});
+  const ActivityRow({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class ActivityTab extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  ActivityTab({super.key, required this.icon, required this.label});
+  const ActivityTab({super.key, required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {

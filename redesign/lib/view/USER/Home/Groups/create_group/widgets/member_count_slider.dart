@@ -9,7 +9,7 @@ class MemberCountSlider extends StatelessWidget {
   final double maxMembers;
   final Function(double) onChanged;
 
-  MemberCountSlider({
+  const MemberCountSlider({
     super.key,
     required this.maxMembers,
     required this.onChanged,

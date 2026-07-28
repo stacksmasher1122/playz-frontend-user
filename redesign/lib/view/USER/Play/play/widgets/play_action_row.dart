@@ -6,7 +6,7 @@ import '../host_match/host_match_screen.dart';
 import 'sort_filter_bottom_sheet.dart';
 
 class PlayActionRow extends StatelessWidget {
-  PlayActionRow({super.key});
+  const PlayActionRow({super.key});
 
   @override
   Widget build(BuildContext context) {

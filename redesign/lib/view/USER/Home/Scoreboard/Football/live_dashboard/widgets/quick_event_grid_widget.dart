@@ -6,7 +6,7 @@ import 'quick_event_button.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QuickEventGridWidget extends StatelessWidget {
-  QuickEventGridWidget({super.key});
+  const QuickEventGridWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

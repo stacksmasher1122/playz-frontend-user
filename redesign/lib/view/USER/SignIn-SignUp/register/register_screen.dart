@@ -12,7 +12,7 @@ import 'widgets/register_signin_prompt.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({super.key});
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();

@@ -10,7 +10,7 @@ class DynamicImageBubble extends StatefulWidget {
   final double maxWidth;
   final double maxHeight;
 
-  DynamicImageBubble({
+  const DynamicImageBubble({
     super.key,
     required this.imageUrl,
     required this.maxWidth,
@@ -125,7 +125,7 @@ class _DynamicImageBubbleState extends State<DynamicImageBubble> {
 class FullScreenImage extends StatelessWidget {
   final String url;
 
-  FullScreenImage({super.key, required this.url});
+  const FullScreenImage({super.key, required this.url});
 
   @override
   Widget build(BuildContext context) {

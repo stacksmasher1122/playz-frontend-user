@@ -9,7 +9,7 @@ class SetupModeToggle extends StatelessWidget {
   final MatchMode mode;
   final Function(MatchMode) onModeChanged;
 
-  SetupModeToggle({super.key, required this.mode, required this.onModeChanged});
+  const SetupModeToggle({super.key, required this.mode, required this.onModeChanged});
 
   @override
   Widget build(BuildContext context) {

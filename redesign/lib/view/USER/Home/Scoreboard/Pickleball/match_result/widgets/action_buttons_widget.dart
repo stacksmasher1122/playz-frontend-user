@@ -24,11 +24,7 @@ class ActionButtonsWidget extends StatelessWidget {
           isPrimary: true,
         ),
         SizedBox(height: 12),
-        _ActionButton(
-          label: 'Share Results',
-          onTap: onShare,
-          isPrimary: false,
-        ),
+        _ActionButton(label: 'Share Results', onTap: onShare, isPrimary: false),
       ],
     );
   }
@@ -49,13 +45,17 @@ class _ActionButton extends StatefulWidget {
   State<_ActionButton> createState() => _ActionButtonState();
 }
 
-class _ActionButtonState extends State<_ActionButton> with SingleTickerProviderStateMixin {
+class _ActionButtonState extends State<_ActionButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _scaleController;
 
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
   }
 
   @override
@@ -82,7 +82,9 @@ class _ActionButtonState extends State<_ActionButton> with SingleTickerProviderS
           decoration: BoxDecoration(
             color: widget.isPrimary ? AppColors.accent : AppColors.background,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            border: widget.isPrimary ? null : Border.all(color: AppColors.outlineVariant, width: 1),
+            border: widget.isPrimary
+                ? null
+                : Border.all(color: Colors.transparent),
           ),
           child: Center(
             child: Text(

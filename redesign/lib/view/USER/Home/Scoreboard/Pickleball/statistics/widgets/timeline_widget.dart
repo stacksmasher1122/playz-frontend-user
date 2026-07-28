@@ -21,7 +21,10 @@ class TimelineWidget extends StatelessWidget {
             children: [
               Text(
                 event['game'] as String,
-                style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: 4),
               Text(

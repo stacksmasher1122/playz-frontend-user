@@ -22,7 +22,7 @@ class MatchStatisticsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +32,10 @@ class MatchStatisticsCard extends StatelessWidget {
             children: [
               Text(
                 'Match Stats',
-                style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Icon(Icons.trending_up, color: AppColors.muted, size: 24),
             ],
@@ -41,15 +44,19 @@ class MatchStatisticsCard extends StatelessWidget {
           ...statistics.entries.map((entry) {
             String label = entry.key;
             Map<String, dynamic> data = entry.value;
-            
-            double valA = (data['A'] is double) ? data['A'] : data['A'].toDouble();
-            double valB = (data['B'] is double) ? data['B'] : data['B'].toDouble();
+
+            double valA = (data['A'] is double)
+                ? data['A']
+                : data['A'].toDouble();
+            double valB = (data['B'] is double)
+                ? data['B']
+                : data['B'].toDouble();
             double total = valA + valB;
             double ratioA = total == 0 ? 0.5 : (valA / total);
 
-            String summaryLabel = data.containsKey('Total') 
-              ? '${data['Total']} Total' 
-              : '${data['Avg']} Avg';
+            String summaryLabel = data.containsKey('Total')
+                ? '${data['Total']} Total'
+                : '${data['Avg']} Avg';
 
             return Padding(
               padding: EdgeInsets.only(bottom: 16.0),

@@ -6,7 +6,7 @@ class QrDangerAction extends StatelessWidget {
   final String label;
   final VoidCallback? onTap;
 
-  QrDangerAction(
+  const QrDangerAction(
     this.label, {super.key, 
     this.onTap,
   });

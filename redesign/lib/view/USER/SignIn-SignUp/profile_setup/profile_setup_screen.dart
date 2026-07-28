@@ -15,7 +15,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   final List<String> selectedSports;
-  ProfileSetupScreen({super.key, required this.selectedSports});
+  const ProfileSetupScreen({super.key, required this.selectedSports});
 
   @override
   State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();

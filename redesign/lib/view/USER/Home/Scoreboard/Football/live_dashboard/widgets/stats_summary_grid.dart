@@ -6,7 +6,7 @@ import 'stats_tile_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class StatsSummaryGrid extends StatelessWidget {
-  StatsSummaryGrid({super.key});
+  const StatsSummaryGrid({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -17,7 +17,7 @@ class VolleyballFinalReviewScreen extends StatefulWidget {
   final VolleyballTeamModel teamA;
   final VolleyballTeamModel teamB;
 
-  VolleyballFinalReviewScreen({super.key, required this.teamA, required this.teamB});
+  const VolleyballFinalReviewScreen({super.key, required this.teamA, required this.teamB});
 
   @override
   State<VolleyballFinalReviewScreen> createState() => _VolleyballFinalReviewScreenState();
@@ -58,12 +58,7 @@ class _VolleyballFinalReviewScreenState extends State<VolleyballFinalReviewScree
             Text('MATCH REVIEW', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.account_circle, color: AppColors.muted),
-            onPressed: () {},
-          ),
-        ],
+        
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
           child: Container(color: AppColors.outlineVariant, height: 1.0),

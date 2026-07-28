@@ -10,7 +10,7 @@ class EditTeamDialog extends StatefulWidget {
   final VolleyballTeamModel team;
   final VolleyballTeamManagementController controller;
 
-  EditTeamDialog({super.key, required this.isTeamA, required this.team, required this.controller});
+  const EditTeamDialog({super.key, required this.isTeamA, required this.team, required this.controller});
 
   @override
   State<EditTeamDialog> createState() => _EditTeamDialogState();

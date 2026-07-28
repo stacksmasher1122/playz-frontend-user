@@ -10,7 +10,7 @@ class EnginePreview extends StatelessWidget {
   final List<MatchFixture> leagueFixtures;
   final Map<String, List<Team>> hybridGroups;
 
-  EnginePreview({
+  const EnginePreview({
     super.key,
     required this.tournamentType,
     required this.knockoutBracket,

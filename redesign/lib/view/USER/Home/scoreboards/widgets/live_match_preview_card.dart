@@ -11,7 +11,7 @@ const kMuted = Color(0xFFA7A7A7);
 
 class LiveMatchPreviewCard extends StatelessWidget {
   final CricketMatchModel match;
-  LiveMatchPreviewCard({super.key, required this.match});
+  const LiveMatchPreviewCard({super.key, required this.match});
 
   @override
   Widget build(BuildContext context) {

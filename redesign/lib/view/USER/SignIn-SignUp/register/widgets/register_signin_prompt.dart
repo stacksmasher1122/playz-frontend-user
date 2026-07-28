@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class RegisterSigninPrompt extends StatelessWidget {
   final VoidCallback onSigninTap;
 
-  RegisterSigninPrompt({super.key, required this.onSigninTap});
+  const RegisterSigninPrompt({super.key, required this.onSigninTap});
 
   @override
   Widget build(BuildContext context) {

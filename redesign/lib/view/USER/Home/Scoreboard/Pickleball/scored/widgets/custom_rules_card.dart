@@ -9,10 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class CustomRulesCard extends StatelessWidget {
   final PickleballInitializeMatchController controller;
 
-  CustomRulesCard({
-    super.key,
-    required this.controller,
-  });
+  CustomRulesCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +19,7 @@ class CustomRulesCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,26 +32,32 @@ class CustomRulesCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16),
-          Obx(() => ToggleRuleTile(
-            title: "Win By 2",
-            subtitle: "Standard tournament rule",
-            value: controller.winByTwo.value,
-            onChanged: (v) => controller.toggleWinByTwo(),
-          )),
+          Obx(
+            () => ToggleRuleTile(
+              title: "Win By 2",
+              subtitle: "Standard tournament rule",
+              value: controller.winByTwo.value,
+              onChanged: (v) => controller.toggleWinByTwo(),
+            ),
+          ),
           Divider(color: AppColors.outlineVariant, height: 1),
-          Obx(() => ToggleRuleTile(
-            title: "Rally Scoring",
-            subtitle: "Point on every serve",
-            value: controller.rallyScoring.value,
-            onChanged: (v) => controller.toggleRallyScoring(),
-          )),
+          Obx(
+            () => ToggleRuleTile(
+              title: "Rally Scoring",
+              subtitle: "Point on every serve",
+              value: controller.rallyScoring.value,
+              onChanged: (v) => controller.toggleRallyScoring(),
+            ),
+          ),
           Divider(color: AppColors.outlineVariant, height: 1),
-          Obx(() => ToggleRuleTile(
-            title: "Traditional",
-            subtitle: "Server scores only",
-            value: controller.traditionalScoring.value,
-            onChanged: (v) => controller.toggleTraditional(),
-          )),
+          Obx(
+            () => ToggleRuleTile(
+              title: "Traditional",
+              subtitle: "Server scores only",
+              value: controller.traditionalScoring.value,
+              onChanged: (v) => controller.toggleTraditional(),
+            ),
+          ),
         ],
       ),
     );

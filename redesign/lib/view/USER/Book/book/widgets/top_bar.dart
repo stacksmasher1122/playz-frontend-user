@@ -10,7 +10,7 @@ import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TopBar extends StatelessWidget {
-  TopBar({super.key});
+  const TopBar({super.key});
 
   @override
   Widget build(BuildContext context) {

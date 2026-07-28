@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kGreen = AppColors.accent;
 
 class FriendsRequestsAppBar extends StatelessWidget {
-  FriendsRequestsAppBar({super.key});
+  const FriendsRequestsAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

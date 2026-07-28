@@ -4,7 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ToolsGrid extends StatelessWidget {
-  ToolsGrid({super.key});
+  const ToolsGrid({super.key});
 
   @override
   Widget build(BuildContext context) {

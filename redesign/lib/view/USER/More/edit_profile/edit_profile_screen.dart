@@ -13,7 +13,7 @@ import 'widgets/public_profile_toggle.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  EditProfileScreen({super.key});
+  const EditProfileScreen({super.key});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();

@@ -7,7 +7,7 @@ import '../../../../../../../theme/app_dimensions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SuggestedPlayersWidget extends StatefulWidget {
-  SuggestedPlayersWidget({super.key});
+  const SuggestedPlayersWidget({super.key});
 
   @override
   State<SuggestedPlayersWidget> createState() => _SuggestedPlayersWidgetState();
@@ -65,7 +65,7 @@ class _SuggestedPlayerItem extends StatefulWidget {
   final dynamic player;
   final PlayerManagementController controller;
 
-  _SuggestedPlayerItem({required this.player, required this.controller});
+  const _SuggestedPlayerItem({required this.player, required this.controller});
 
   @override
   State<_SuggestedPlayerItem> createState() => _SuggestedPlayerItemState();
@@ -136,7 +136,7 @@ class _SuggestedPlayerItemState extends State<_SuggestedPlayerItem> {
 }
 
 class _MoreButton extends StatefulWidget {
-  _MoreButton();
+  const _MoreButton();
 
   @override
   State<_MoreButton> createState() => _MoreButtonState();

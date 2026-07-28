@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class SmartPresetsCard extends StatelessWidget {
   final VoidCallback onApply;
 
-  SmartPresetsCard({super.key, required this.onApply});
+  const SmartPresetsCard({super.key, required this.onApply});
 
   @override
   Widget build(BuildContext context) {

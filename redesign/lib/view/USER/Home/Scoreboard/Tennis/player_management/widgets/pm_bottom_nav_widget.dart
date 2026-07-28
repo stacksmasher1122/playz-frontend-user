@@ -5,7 +5,7 @@ import '../../../../../../../theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PmBottomNavWidget extends StatefulWidget {
-  PmBottomNavWidget({super.key});
+  const PmBottomNavWidget({super.key});
 
   @override
   State<PmBottomNavWidget> createState() => _PmBottomNavWidgetState();
@@ -63,7 +63,7 @@ class _TabItem extends StatefulWidget {
   final IconData icon;
   final bool isActive;
 
-  _TabItem({
+  const _TabItem({
     required this.label,
     required this.icon,
     required this.isActive,

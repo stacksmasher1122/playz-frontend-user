@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class OnboardTopBar extends StatelessWidget {
   final VoidCallback onSkip;
 
-  OnboardTopBar({super.key, required this.onSkip});
+  const OnboardTopBar({super.key, required this.onSkip});
 
   @override
   Widget build(BuildContext context) {

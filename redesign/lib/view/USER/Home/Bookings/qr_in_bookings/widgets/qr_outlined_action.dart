@@ -6,7 +6,7 @@ class QrOutlinedAction extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
 
-  QrOutlinedAction(
+  const QrOutlinedAction(
     this.label,
     this.icon, {super.key, 
     this.onTap,

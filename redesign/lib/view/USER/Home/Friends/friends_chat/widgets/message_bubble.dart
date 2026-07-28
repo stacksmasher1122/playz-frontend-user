@@ -26,7 +26,7 @@ class MessageBubble extends StatelessWidget {
   final ChatController ctrl;
   final String friendName;
 
-  MessageBubble({
+  const MessageBubble({
     super.key,
     required this.msg,
     required this.isMe,
@@ -273,7 +273,7 @@ class LocationBubble extends StatefulWidget {
   final bool isMe;
   final bool isLive;
 
-  LocationBubble({
+  const LocationBubble({
     super.key,
     required this.content,
     required this.isMe,
@@ -479,7 +479,7 @@ class _LocationBubbleState extends State<LocationBubble> {
 class AudioBubble extends StatefulWidget {
   final String url;
   final bool isMe;
-  AudioBubble({super.key, required this.url, required this.isMe});
+  const AudioBubble({super.key, required this.url, required this.isMe});
   @override
   State<AudioBubble> createState() => _AudioBubbleState();
 }
@@ -569,7 +569,7 @@ class _AudioBubbleState extends State<AudioBubble> with AutomaticKeepAliveClient
 class AnimatedEqualizer extends StatefulWidget {
   final bool isPlaying;
   final bool isMe;
-  AnimatedEqualizer({super.key, required this.isPlaying, required this.isMe});
+  const AnimatedEqualizer({super.key, required this.isPlaying, required this.isMe});
   @override
   State<AnimatedEqualizer> createState() => _AnimatedEqualizerState();
 }
@@ -623,7 +623,7 @@ class _AnimatedEqualizerState extends State<AnimatedEqualizer> {
 class VideoBubble extends StatefulWidget {
   final String url;
   final ChatController ctrl;
-  VideoBubble({super.key, required this.url, required this.ctrl});
+  const VideoBubble({super.key, required this.url, required this.ctrl});
   @override
   State<VideoBubble> createState() => _VideoBubbleState();
 }
@@ -688,7 +688,7 @@ class DynamicImageBubble extends StatefulWidget {
   final String imageUrl;
   final double maxWidth;
   final double maxHeight;
-  DynamicImageBubble({super.key, required this.imageUrl, required this.maxWidth, required this.maxHeight});
+  const DynamicImageBubble({super.key, required this.imageUrl, required this.maxWidth, required this.maxHeight});
   @override
   State<DynamicImageBubble> createState() => _DynamicImageBubbleState();
 }

@@ -9,25 +9,30 @@ import 'widgets/category_chip_group.dart';
 import 'widgets/format_chip_group.dart';
 import 'widgets/custom_rules_card.dart';
 import 'widgets/advanced_options_card.dart';
+import 'widgets/rule_profile_selector.dart';
 import 'widgets/primary_action_button.dart';
 import 'widgets/secondary_action_button.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/team_management/pickleball_team_management_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/history/pickleball_match_history_screen.dart';
 
 class PickleballInitializeMatchScreen extends StatefulWidget {
   PickleballInitializeMatchScreen({super.key});
 
   @override
-  State<PickleballInitializeMatchScreen> createState() => _PickleballInitializeMatchScreenState();
+  State<PickleballInitializeMatchScreen> createState() =>
+      _PickleballInitializeMatchScreenState();
 }
 
-class _PickleballInitializeMatchScreenState extends State<PickleballInitializeMatchScreen> with SingleTickerProviderStateMixin {
+class _PickleballInitializeMatchScreenState
+    extends State<PickleballInitializeMatchScreen>
+    with SingleTickerProviderStateMixin {
   late final PickleballInitializeMatchController controller;
   late final TextEditingController matchNameController;
   late final TextEditingController courtNumberController;
   late final TextEditingController refereeController;
   final _formKey = GlobalKey<FormState>();
-  
+
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -47,12 +52,14 @@ class _PickleballInitializeMatchScreenState extends State<PickleballInitializeMa
       vsync: this,
       duration: Duration(milliseconds: 600),
     );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
-    );
-    _slideAnimation = Tween<Offset>(begin: Offset(0, 0.05), end: Offset.zero).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(0, 0.05),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeOut));
 
     _fadeController.forward();
   }
@@ -86,7 +93,24 @@ class _PickleballInitializeMatchScreenState extends State<PickleballInitializeMa
     ResponsiveHelper.init(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: PickleballAppbar(),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
+          onPressed: () => Get.back(),
+        ),
+        title: Text(
+          'Pickleball',
+          style: AppTypography.headlineSm.copyWith(color: AppColors.textPrimary),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.history, color: AppColors.accent),
+            onPressed: () => Get.to(() => PickleballMatchHistoryScreen()),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -103,7 +127,9 @@ class _PickleballInitializeMatchScreenState extends State<PickleballInitializeMa
                     SizedBox(height: 8),
                     Text(
                       'Initialize a high-intensity pickleball encounter. Define your tournament context, court allocation, and performance rules.',
-                      style: AppTypography.bodyMd.copyWith(color: AppColors.muted),
+                      style: AppTypography.bodyMd.copyWith(
+                        color: AppColors.muted,
+                      ),
                     ),
                     SizedBox(height: 24),
                     MatchCoreCard(
@@ -113,26 +139,34 @@ class _PickleballInitializeMatchScreenState extends State<PickleballInitializeMa
                       refereeController: refereeController,
                     ),
                     SizedBox(height: 24),
-                    Obx(() => CategoryChipGroup(
-                      options: controller.categoryOptions,
-                      selected: controller.selectedCategory.value,
-                      onSelect: controller.selectCategory,
-                    )),
+                    Obx(
+                      () => CategoryChipGroup(
+                        options: controller.categoryOptions,
+                        selected: controller.selectedCategory.value,
+                        onSelect: controller.selectCategory,
+                      ),
+                    ),
                     SizedBox(height: 24),
-                    Obx(() => FormatChipGroup(
-                      options: controller.formatOptions,
-                      selected: controller.selectedFormat.value,
-                      onSelect: controller.selectFormat,
-                    )),
+                    Obx(
+                      () => FormatChipGroup(
+                        options: controller.formatOptions,
+                        selected: controller.selectedFormat.value,
+                        onSelect: controller.selectFormat,
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    RuleProfileSelector(controller: controller),
                     SizedBox(height: 24),
                     CustomRulesCard(controller: controller),
                     SizedBox(height: 24),
                     AdvancedOptionsCard(controller: controller),
                     SizedBox(height: 32),
-                    Obx(() => PrimaryActionButton(
-                      onTap: _onInitializeTap,
-                      isLoading: controller.isLoading.value,
-                    )),
+                    Obx(
+                      () => PrimaryActionButton(
+                        onTap: _onInitializeTap,
+                        isLoading: controller.isLoading.value,
+                      ),
+                    ),
                     SizedBox(height: 16),
                     SecondaryActionButton(
                       text: "Save as Template",

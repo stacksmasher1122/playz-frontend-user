@@ -7,7 +7,7 @@ class ToggleOptionWidget extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  ToggleOptionWidget({
+  const ToggleOptionWidget({
     super.key,
     required this.label,
     required this.value,

@@ -12,7 +12,7 @@ const kBg = AppColors.background;
 const kMuted = Color(0xFFA7A7A7);
 
 class TrainerPaymentSuccessScreen extends StatefulWidget {
-  TrainerPaymentSuccessScreen({super.key});
+  const TrainerPaymentSuccessScreen({super.key});
 
   @override
   State<TrainerPaymentSuccessScreen> createState() =>

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrInstructionsNote extends StatelessWidget {
-  QrInstructionsNote({super.key});
+  const QrInstructionsNote({super.key});
 
   static const _kMuted = Color(0xFFA7A7A7);
 

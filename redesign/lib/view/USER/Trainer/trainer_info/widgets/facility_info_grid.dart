@@ -7,7 +7,7 @@ Color kMuted = Color(0xFFA7A7A7);
 Color kGreen = AppColors.accent;
 
 class FacilityInfoGrid extends StatelessWidget {
-  FacilityInfoGrid({super.key});
+  const FacilityInfoGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class FacilityInfoGrid extends StatelessWidget {
 class FacilityTile extends StatelessWidget {
   final FacilityData data;
 
-  FacilityTile({super.key, required this.data});
+  const FacilityTile({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {

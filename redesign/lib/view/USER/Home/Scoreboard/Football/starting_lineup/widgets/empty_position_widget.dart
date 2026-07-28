@@ -49,7 +49,7 @@ class EmptyPositionWidget extends StatelessWidget {
   final bool isCenterActive; // To make the visually distinct solid lime circle
   final VoidCallback onTap;
 
-  EmptyPositionWidget({
+  const EmptyPositionWidget({
     super.key,
     required this.label,
     this.isCenterActive = false,

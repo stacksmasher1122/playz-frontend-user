@@ -15,7 +15,7 @@ const kRed = Color(0xFFE53935);
 const kMuted = Color(0xFFA7A7A7);
 
 class LiveMatchesScreen extends StatelessWidget {
-  LiveMatchesScreen({super.key});
+  const LiveMatchesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class LiveMatchesScreen extends StatelessWidget {
 
 class _LiveMatchCard extends StatelessWidget {
   final CricketMatchModel match;
-  _LiveMatchCard({required this.match});
+  const _LiveMatchCard({required this.match});
 
   @override
   Widget build(BuildContext context) {

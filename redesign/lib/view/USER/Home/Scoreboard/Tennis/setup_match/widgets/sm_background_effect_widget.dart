@@ -4,7 +4,7 @@ import '../../../../../../../theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SmBackgroundEffectWidget extends StatelessWidget {
-  SmBackgroundEffectWidget({super.key});
+  const SmBackgroundEffectWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

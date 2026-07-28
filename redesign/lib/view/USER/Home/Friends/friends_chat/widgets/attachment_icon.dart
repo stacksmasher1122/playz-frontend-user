@@ -7,7 +7,7 @@ class AttachmentIcon extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  AttachmentIcon({
+  const AttachmentIcon({
     super.key,
     required this.icon,
     required this.color,

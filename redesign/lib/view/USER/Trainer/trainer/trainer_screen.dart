@@ -12,7 +12,7 @@ import 'widgets/trainer_end_of_results.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TrainerDiscoveryScreen extends StatefulWidget {
-  TrainerDiscoveryScreen({super.key});
+  const TrainerDiscoveryScreen({super.key});
 
   @override
   State<TrainerDiscoveryScreen> createState() => _TrainerDiscoveryScreenState();

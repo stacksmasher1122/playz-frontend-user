@@ -16,7 +16,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kBg = AppColors.background;
 
 class FriendsHubScreen extends StatefulWidget {
-  FriendsHubScreen({super.key});
+  const FriendsHubScreen({super.key});
 
   @override
   State<FriendsHubScreen> createState() => _FriendsHubScreenState();

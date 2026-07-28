@@ -3,7 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SwipeHint extends StatelessWidget {
-  SwipeHint({super.key});
+  const SwipeHint({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterHeader extends StatelessWidget {
-  RegisterHeader({super.key});
+  const RegisterHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

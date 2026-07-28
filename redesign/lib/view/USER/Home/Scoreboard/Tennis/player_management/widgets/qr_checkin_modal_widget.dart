@@ -8,7 +8,7 @@ import '../../../../../../../theme/app_dimensions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrCheckinModalWidget extends StatefulWidget {
-  QrCheckinModalWidget({super.key});
+  const QrCheckinModalWidget({super.key});
 
   @override
   State<QrCheckinModalWidget> createState() => _QrCheckinModalWidgetState();

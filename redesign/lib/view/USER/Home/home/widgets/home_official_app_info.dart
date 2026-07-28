@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
    OFFICIAL APP INFO / FOOTER
    ============================================================ */
 class HomeOfficialAppInfo extends StatelessWidget {
-  HomeOfficialAppInfo({super.key});
+  const HomeOfficialAppInfo({super.key});
 
   @override
   Widget build(BuildContext context) {

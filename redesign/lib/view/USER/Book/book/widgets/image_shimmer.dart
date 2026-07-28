@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class ImageShimmer extends StatelessWidget {
   final double height;
-  ImageShimmer({super.key, required this.height});
+  const ImageShimmer({super.key, required this.height});
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,7 @@ class BowlerSelectSheet extends StatelessWidget {
   final Player? currentBowler;
   final ValueChanged<Player> onSelect;
 
-  BowlerSelectSheet({
+  const BowlerSelectSheet({
     super.key,
     required this.bowlers,
     required this.currentBowler,

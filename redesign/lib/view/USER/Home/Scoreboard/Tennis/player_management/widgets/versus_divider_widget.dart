@@ -4,7 +4,7 @@ import '../../../../../../../theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VersusDividerWidget extends StatelessWidget {
-  VersusDividerWidget({super.key});
+  const VersusDividerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

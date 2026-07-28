@@ -9,7 +9,7 @@ class CircleButton extends StatelessWidget {
   final double size;
   final double iconSize;
 
-  CircleButton({
+  const CircleButton({
     super.key,
     required this.icon,
     required this.color,

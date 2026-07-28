@@ -5,7 +5,7 @@ import '../../../../../../../theme/app_dimensions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerQuickActionsWidget extends StatefulWidget {
-  PlayerQuickActionsWidget({super.key});
+  const PlayerQuickActionsWidget({super.key});
 
   @override
   State<PlayerQuickActionsWidget> createState() =>
@@ -60,7 +60,7 @@ class _ActionButtonItem extends StatefulWidget {
   final String label;
   final VoidCallback onTap;
 
-  _ActionButtonItem({
+  const _ActionButtonItem({
     required this.icon,
     required this.iconColor,
     required this.label,

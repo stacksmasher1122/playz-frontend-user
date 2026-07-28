@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class BallTimeline extends StatelessWidget {
   final List<BallEvent> ballHistory;
 
-  BallTimeline({
+  const BallTimeline({
     super.key,
     required this.ballHistory,
   });

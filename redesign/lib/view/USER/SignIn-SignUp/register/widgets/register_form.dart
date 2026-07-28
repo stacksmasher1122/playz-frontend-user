@@ -10,7 +10,7 @@ class RegisterForm extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onRegister;
 
-  RegisterForm({
+  const RegisterForm({
     super.key,
     required this.formKey,
     required this.nameController,
@@ -115,7 +115,7 @@ class _InputField extends StatelessWidget {
   final Color fillColor;
   final String? Function(String?)? validator;
 
-  _InputField({
+  const _InputField({
     required this.controller,
     required this.icon,
     required this.hint,

@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 import 'xp_avatar_ring.dart';
 
 class PlayTopBar extends StatelessWidget {
-  PlayTopBar({super.key});
+  const PlayTopBar({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -83,13 +83,17 @@ class _AnimatedActionBtn extends StatefulWidget {
   State<_AnimatedActionBtn> createState() => _AnimatedActionBtnState();
 }
 
-class _AnimatedActionBtnState extends State<_AnimatedActionBtn> with SingleTickerProviderStateMixin {
+class _AnimatedActionBtnState extends State<_AnimatedActionBtn>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
   }
 
   @override
@@ -124,7 +128,10 @@ class _AnimatedActionBtnState extends State<_AnimatedActionBtn> with SingleTicke
               SizedBox(width: 8),
               Text(
                 widget.text,
-                style: AppTypography.labelCaps.copyWith(color: widget.textColor, fontWeight: FontWeight.bold),
+                style: AppTypography.labelCaps.copyWith(
+                  color: widget.textColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

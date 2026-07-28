@@ -8,7 +8,7 @@ import '../trainer_models.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class OtherTrainersSection extends StatelessWidget {
-  OtherTrainersSection({super.key});
+  const OtherTrainersSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class OtherTrainersSection extends StatelessWidget {
 }
 
 class _FilterChips extends StatefulWidget {
-  _FilterChips();
+  const _FilterChips();
 
   @override
   State<_FilterChips> createState() => _FilterChipsState();
@@ -157,7 +157,7 @@ class _DiscoveryGrid extends StatelessWidget {
 
 class _DiscoveryCard extends StatefulWidget {
   final DiscoveryItem item;
-  _DiscoveryCard({required this.item});
+  const _DiscoveryCard({required this.item});
 
   @override
   State<_DiscoveryCard> createState() => _DiscoveryCardState();
@@ -299,7 +299,7 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
 
 class _Pill extends StatelessWidget {
   final String text;
-  _Pill(this.text);
+  const _Pill(this.text);
 
   @override
   Widget build(BuildContext context) {
@@ -325,7 +325,7 @@ class _Pill extends StatelessWidget {
 
 class _Rating extends StatelessWidget {
   final double rating;
-  _Rating(this.rating);
+  const _Rating(this.rating);
 
   @override
   Widget build(BuildContext context) {
@@ -356,7 +356,7 @@ class _Rating extends StatelessWidget {
 
 class _TagChip extends StatelessWidget {
   final String text;
-  _TagChip(this.text);
+  const _TagChip(this.text);
 
   @override
   Widget build(BuildContext context) {

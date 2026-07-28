@@ -14,14 +14,17 @@ class AdvancedAnalyticsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Advanced Analytics',
-            style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.accent,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: 16),
           GridView.count(
@@ -58,9 +61,20 @@ class AdvancedAnalyticsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted), maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(
+            label,
+            style: AppTypography.labelCaps10.copyWith(color: AppColors.muted),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           SizedBox(height: 4),
-          Text(value, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: AppTypography.bodyMd.copyWith(
+              color: AppColors.accent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );

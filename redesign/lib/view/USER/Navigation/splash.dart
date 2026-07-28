@@ -14,7 +14,7 @@ import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({super.key});
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -253,7 +253,7 @@ class _GlassBubble {
    NEXT SCREEN PLACEHOLDER
    ============================================================ */
 class DummyNextScreen extends StatelessWidget {
-  DummyNextScreen({super.key});
+  const DummyNextScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -22,7 +22,7 @@ enum BookingStatus { confirmed, cancelled, expired }
 class BookingQrScreen extends StatelessWidget {
   final Map<String, dynamic>? bookingData;
 
-  BookingQrScreen({super.key, this.bookingData});
+  const BookingQrScreen({super.key, this.bookingData});
 
   BookingStatus get status {
     final s = (bookingData?['status'] ?? 'confirmed').toString().toLowerCase();

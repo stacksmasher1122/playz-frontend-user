@@ -8,12 +8,13 @@ class LiveMatchAppbar extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   State<LiveMatchAppbar> createState() => _LiveMatchAppbarState();
-  
+
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
-class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProviderStateMixin {
+class _LiveMatchAppbarState extends State<LiveMatchAppbar>
+    with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
 
   @override
@@ -55,15 +56,21 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
         Center(
           child: Container(
             margin: EdgeInsets.only(right: 12),
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(10),
+              vertical: ResponsiveHelper.h(4),
+            ),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.outlineVariant),
+              border: Border.all(color: Colors.transparent),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
             ),
             child: Row(
               children: [
                 FadeTransition(
-                  opacity: Tween<double>(begin: 0.3, end: 1.0).animate(_pulseController),
+                  opacity: Tween<double>(
+                    begin: 0.3,
+                    end: 1.0,
+                  ).animate(_pulseController),
                   child: Container(
                     width: ResponsiveHelper.w(8),
                     height: ResponsiveHelper.h(8),
@@ -76,25 +83,16 @@ class _LiveMatchAppbarState extends State<LiveMatchAppbar> with SingleTickerProv
                 SizedBox(width: 6),
                 Text(
                   'LIVE',
-                  style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(right: 16.0),
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.accent, width: 1.5),
-            ),
-            child: CircleAvatar(
-              radius: 16,
-              backgroundImage: NetworkImage('https://i.pravatar.cc/100'),
-            ),
-          ),
-        ),
+
       ],
     );
   }

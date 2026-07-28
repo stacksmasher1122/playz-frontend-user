@@ -6,7 +6,7 @@ import 'possession_button_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PossessionSelectorWidget extends StatelessWidget {
-  PossessionSelectorWidget({super.key});
+  const PossessionSelectorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

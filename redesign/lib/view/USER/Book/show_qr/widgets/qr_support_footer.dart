@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrSupportFooter extends StatelessWidget {
-  QrSupportFooter({super.key});
+  const QrSupportFooter({super.key});
 
   static const _kMuted = Color(0xFFA7A7A7);
 

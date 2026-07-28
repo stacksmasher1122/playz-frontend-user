@@ -12,27 +12,20 @@ class PickleballAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: AppColors.background,
       elevation: 0,
-      leading: Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.w(12.0)),
-        child: Icon(Icons.sports_tennis, color: AppColors.accent, size: 24),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: AppColors.accent),
+        onPressed: () => Navigator.maybePop(context),
       ),
-      title: Text('MATCH CENTER', style: AppTypography.headlineMd),
+      title: Row(
+        children: [
+          Icon(Icons.sports_tennis, color: AppColors.accent, size: 24),
+          SizedBox(width: 8),
+          Text('MATCH CENTER', style: AppTypography.headlineMd),
+        ],
+      ),
       centerTitle: false,
       titleSpacing: 0,
-      actions: [
-        IconButton(
-          icon: Icon(Icons.notifications_none, color: AppColors.accent),
-          onPressed: () {},
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: ResponsiveHelper.w(16.0), left: 8.0),
-          child: CircleAvatar(
-            radius: 16,
-            backgroundColor: AppColors.outlineVariant,
-            child: Icon(Icons.person, color: AppColors.onPrimary, size: 20),
-          ),
-        ),
-      ],
+      actions: [],
     );
   }
 

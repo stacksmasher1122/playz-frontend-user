@@ -6,7 +6,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class EndOfResults extends StatelessWidget {
-  EndOfResults({super.key});
+  const EndOfResults({super.key});
 
   static const _illustrationUrl =
       'https://images.unsplash.com/photo-1517836357463-d25dfeac3438';

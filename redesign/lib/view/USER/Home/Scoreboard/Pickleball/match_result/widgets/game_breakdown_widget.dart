@@ -17,7 +17,7 @@ class GameBreakdownWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,7 +26,13 @@ class GameBreakdownWidget extends StatelessWidget {
             children: [
               Icon(Icons.scoreboard_outlined, color: AppColors.muted, size: 20),
               SizedBox(width: 8),
-              Text('GAME BREAKDOWN', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold)),
+              Text(
+                'GAME BREAKDOWN',
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.muted,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           SizedBox(height: 16),
@@ -34,7 +40,8 @@ class GameBreakdownWidget extends StatelessWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: games.length,
-            separatorBuilder: (_, __) => Divider(color: AppColors.outlineVariant, height: 32),
+            separatorBuilder: (_, __) =>
+                Divider(color: AppColors.outlineVariant, height: 32),
             itemBuilder: (context, index) {
               final game = games[index];
               return _buildGameRow(game);
@@ -50,7 +57,10 @@ class GameBreakdownWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(game.game, style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
+        Text(
+          game.game,
+          style: AppTypography.labelCaps.copyWith(color: AppColors.muted),
+        ),
         Row(
           children: [
             Text(

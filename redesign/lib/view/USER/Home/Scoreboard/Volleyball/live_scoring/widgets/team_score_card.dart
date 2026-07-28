@@ -9,7 +9,7 @@ class TeamScoreCard extends StatelessWidget {
   final int score;
   final bool isServing;
 
-  TeamScoreCard({
+  const TeamScoreCard({
     super.key,
     required this.teamName,
     required this.setsWon,
@@ -24,7 +24,7 @@ class TeamScoreCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Stack(
         children: [

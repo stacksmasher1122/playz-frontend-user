@@ -7,7 +7,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kSurface = Color(0xFF0E0E0E);
 
 class MoneyBackGuaranteeBanner extends StatelessWidget {
-  MoneyBackGuaranteeBanner({super.key});
+  const MoneyBackGuaranteeBanner({super.key});
 
   @override
   Widget build(BuildContext context) {

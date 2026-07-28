@@ -7,7 +7,7 @@ import 'empty_state.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class UpcomingBookingsWidget extends StatelessWidget {
-  UpcomingBookingsWidget({super.key});
+  const UpcomingBookingsWidget({super.key});
 
   bool _isUpcoming(Map<String, dynamic> data) {
     final status = (data['status'] ?? '').toString().toLowerCase();

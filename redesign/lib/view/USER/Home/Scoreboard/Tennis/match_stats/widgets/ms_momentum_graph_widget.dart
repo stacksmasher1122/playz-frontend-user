@@ -5,7 +5,7 @@ import '../../../../../../../theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MsMomentumGraphWidget extends StatelessWidget {
-  MsMomentumGraphWidget({super.key});
+  const MsMomentumGraphWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

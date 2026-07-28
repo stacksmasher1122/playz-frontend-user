@@ -7,7 +7,7 @@ class OnboardBottomControls extends StatelessWidget {
   final int total;
   final VoidCallback onNext;
 
-  OnboardBottomControls({
+  const OnboardBottomControls({
     super.key,
     required this.currentIndex,
     required this.total,

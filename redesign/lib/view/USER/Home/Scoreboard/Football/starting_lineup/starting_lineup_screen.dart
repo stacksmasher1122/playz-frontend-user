@@ -12,7 +12,7 @@ import 'widgets/confirm_squad_button.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class StartingLineupScreen extends StatefulWidget {
-  StartingLineupScreen({super.key});
+  const StartingLineupScreen({super.key});
 
   @override
   State<StartingLineupScreen> createState() => _StartingLineupScreenState();

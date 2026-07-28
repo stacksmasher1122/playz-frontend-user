@@ -9,7 +9,7 @@ import 'goalkeeper_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class FootballPitchWidget extends StatelessWidget {
-  FootballPitchWidget({super.key});
+  const FootballPitchWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

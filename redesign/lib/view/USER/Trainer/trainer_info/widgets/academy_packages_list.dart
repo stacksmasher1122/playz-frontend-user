@@ -7,7 +7,7 @@ Color kMuted = Color(0xFFA7A7A7);
 Color kGreen = AppColors.accent;
 
 class AcademyPackagesList extends StatefulWidget {
-  AcademyPackagesList({super.key});
+  const AcademyPackagesList({super.key});
 
   @override
   State<AcademyPackagesList> createState() => _AcademyPackagesListState();
@@ -107,7 +107,7 @@ class PackageCard extends StatelessWidget {
   final PackageModel model;
   final bool active;
 
-  PackageCard({super.key, required this.model, required this.active});
+  const PackageCard({super.key, required this.model, required this.active});
 
   @override
   Widget build(BuildContext context) {

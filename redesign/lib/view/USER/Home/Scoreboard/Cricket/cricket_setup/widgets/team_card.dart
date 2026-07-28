@@ -14,7 +14,7 @@ class TeamCard extends StatelessWidget {
   final TextEditingController textController;
   final bool isHome;
 
-  TeamCard({
+  const TeamCard({
     super.key,
     required this.context,
     required this.controller,

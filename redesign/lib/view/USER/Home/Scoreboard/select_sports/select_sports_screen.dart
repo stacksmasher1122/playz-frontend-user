@@ -17,7 +17,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kBg = AppColors.background;
 
 class SelectSportScreen extends StatefulWidget {
-  SelectSportScreen({super.key});
+  const SelectSportScreen({super.key});
 
   @override
   State<SelectSportScreen> createState() => _SelectSportScreenState();

@@ -13,7 +13,7 @@ class BadmintonTeamCard extends StatelessWidget {
   final Color accentColor;
   final bool isSideA;
 
-  BadmintonTeamCard({
+  const BadmintonTeamCard({
     super.key,
     required this.context,
     required this.controller,

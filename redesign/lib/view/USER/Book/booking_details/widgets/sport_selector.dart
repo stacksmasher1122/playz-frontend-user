@@ -7,7 +7,7 @@ class SportSelector extends StatelessWidget {
   final String? selectedSport;
   final ValueChanged<String> onSportSelected;
 
-  SportSelector({
+  const SportSelector({
     super.key,
     required this.sports,
     required this.selectedSport,
@@ -52,7 +52,7 @@ class _SportPill extends StatelessWidget {
   final bool active;
   final VoidCallback onTap;
 
-  _SportPill({
+  const _SportPill({
     required this.label,
     required this.active,
     required this.onTap,

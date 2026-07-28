@@ -9,7 +9,7 @@ const kGreen = AppColors.accent;
 const kMuted = Colors.white70;
 
 class MySquadsList extends StatelessWidget {
-  MySquadsList({super.key});
+  const MySquadsList({super.key});
 
   @override
   Widget build(BuildContext context) {

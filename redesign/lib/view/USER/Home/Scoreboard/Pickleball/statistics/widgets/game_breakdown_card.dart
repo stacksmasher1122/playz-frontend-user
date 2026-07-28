@@ -20,7 +20,7 @@ class GameBreakdownCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,28 +30,36 @@ class GameBreakdownCard extends StatelessWidget {
             children: [
               Text(
                 'Game Breakdown',
-                style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              Obx(() => Row(
-                children: controller.statsModel.value.games.map((game) {
-                  return _buildGameChip(
-                    game['name'],
-                    '${game['scoreA']}-${game['scoreB']}',
-                    controller.selectedGame.value == game['name'],
-                  );
-                }).toList(),
-              )),
+              Obx(
+                () => Row(
+                  children: controller.statsModel.value.games.map((game) {
+                    return _buildGameChip(
+                      game['name'],
+                      '${game['scoreA']}-${game['scoreB']}',
+                      controller.selectedGame.value == game['name'],
+                    );
+                  }).toList(),
+                ),
+              ),
             ],
           ),
           SizedBox(height: 24),
-          Obx(() => MomentumChartWidget(
-            momentumData: controller.momentumData,
-            selectedGame: controller.selectedGame.value,
-          )),
+          Obx(
+            () => MomentumChartWidget(
+              momentumData: controller.momentumData,
+              selectedGame: controller.selectedGame.value,
+            ),
+          ),
           SizedBox(height: 24),
-          Obx(() => TimelineWidget(
-            timeline: controller.statsModel.value.timeline,
-          )),
+          Obx(
+            () =>
+                TimelineWidget(timeline: controller.statsModel.value.timeline),
+          ),
         ],
       ),
     );
@@ -62,11 +70,18 @@ class GameBreakdownCard extends StatelessWidget {
       onTap: () => controller.selectGame(label),
       child: Container(
         margin: EdgeInsets.only(left: 8),
-        padding: EdgeInsets.symmetric(horizontal: isSelected ? 12 : 8, vertical: 6),
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? 12 : 8,
+          vertical: 6,
+        ),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.accent : AppColors.card,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)), // Pill vs circle badge
-          shape: isSelected ? BoxShape.rectangle : BoxShape.rectangle, // Approximating circle via radius if short
+          borderRadius: BorderRadius.circular(
+            ResponsiveHelper.w(20),
+          ), // Pill vs circle badge
+          shape: isSelected
+              ? BoxShape.rectangle
+              : BoxShape.rectangle, // Approximating circle via radius if short
         ),
         child: Text(
           '$label: $score',

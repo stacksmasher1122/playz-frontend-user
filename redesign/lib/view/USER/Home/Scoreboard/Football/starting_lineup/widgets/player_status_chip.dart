@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class PlayerStatusChip extends StatelessWidget {
   final String status;
 
-  PlayerStatusChip({super.key, required this.status});
+  const PlayerStatusChip({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingReminders extends StatelessWidget {
-  BookingReminders({super.key});
+  const BookingReminders({super.key});
 
   static const _kGreen = AppColors.accent;
   static const _kMuted = Color(0xFFA7A7A7);

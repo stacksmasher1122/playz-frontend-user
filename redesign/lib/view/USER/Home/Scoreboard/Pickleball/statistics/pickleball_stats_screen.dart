@@ -22,7 +22,8 @@ class PickleballStatsScreen extends StatefulWidget {
   State<PickleballStatsScreen> createState() => _PickleballStatsScreenState();
 }
 
-class _PickleballStatsScreenState extends State<PickleballStatsScreen> with TickerProviderStateMixin {
+class _PickleballStatsScreenState extends State<PickleballStatsScreen>
+    with TickerProviderStateMixin {
   late final PickleballStatsController controller;
   late AnimationController _barAnimController;
 
@@ -30,8 +31,11 @@ class _PickleballStatsScreenState extends State<PickleballStatsScreen> with Tick
   void initState() {
     super.initState();
     controller = Get.put(PickleballStatsController());
-    
-    _barAnimController = AnimationController(vsync: this, duration: Duration(milliseconds: 1200));
+
+    _barAnimController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1200),
+    );
     _barAnimController.forward();
   }
 
@@ -52,7 +56,8 @@ class _PickleballStatsScreenState extends State<PickleballStatsScreen> with Tick
         child: SingleChildScrollView(
           padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
           child: Obx(() {
-            if (controller.statsModel.value.matchId.isEmpty) return SizedBox.shrink();
+            if (controller.statsModel.value.matchId.isEmpty)
+              return SizedBox.shrink();
             final model = controller.statsModel.value;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -87,9 +92,16 @@ class _PickleballStatsScreenState extends State<PickleballStatsScreen> with Tick
         selectedIndex: 1, // Stats tab
         onTabSelected: (index) {
           if (index == 0) {
-            Navigator.pop(context); // Go back to scoring if they came from there
+            Navigator.pop(
+              context,
+            ); // Go back to scoring if they came from there
           } else {
-            Get.snackbar("Navigation", "Navigating to tab $index", backgroundColor: AppColors.card, colorText: AppColors.accent);
+            Get.snackbar(
+              "Navigation",
+              "Navigating to tab $index",
+              backgroundColor: AppColors.card,
+              colorText: AppColors.accent,
+            );
           }
         },
       ),

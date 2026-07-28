@@ -8,10 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class AdvancedSettingsCard extends StatelessWidget {
   final PickleballReviewModel reviewData;
 
-  AdvancedSettingsCard({
-    super.key,
-    required this.reviewData,
-  });
+  AdvancedSettingsCard({super.key, required this.reviewData});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +18,7 @@ class AdvancedSettingsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

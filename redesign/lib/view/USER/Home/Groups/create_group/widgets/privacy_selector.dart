@@ -9,7 +9,7 @@ class PrivacySelector extends StatelessWidget {
   final bool isPublic;
   final Function(bool) onPrivacyChanged;
 
-  PrivacySelector({
+  const PrivacySelector({
     super.key,
     required this.isPublic,
     required this.onPrivacyChanged,
@@ -51,7 +51,7 @@ class _PrivacyCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  _PrivacyCard({
+  const _PrivacyCard({
     required this.title,
     required this.icon,
     required this.isPublicCard,

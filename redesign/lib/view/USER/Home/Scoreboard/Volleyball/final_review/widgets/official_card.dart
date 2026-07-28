@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class OfficialCard extends StatelessWidget {
   final VolleyballReviewModel reviewData;
 
-  OfficialCard({super.key, required this.reviewData});
+  const OfficialCard({super.key, required this.reviewData});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class OfficialCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Row(
         children: [

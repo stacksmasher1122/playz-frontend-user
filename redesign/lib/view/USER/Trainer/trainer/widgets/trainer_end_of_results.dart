@@ -6,7 +6,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TrainerEndOfResults extends StatelessWidget {
-  TrainerEndOfResults({super.key});
+  const TrainerEndOfResults({super.key});
 
   static const _illustrationUrl =
       'https://illustrations.popsy.co/gray/fitness-trainer.svg';

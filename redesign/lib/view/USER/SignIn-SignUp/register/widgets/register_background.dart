@@ -4,7 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterBackground extends StatelessWidget {
-  RegisterBackground({super.key});
+  const RegisterBackground({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveDashboardAppbar extends StatelessWidget
     implements PreferredSizeWidget {
-  LiveDashboardAppbar({super.key});
+  const LiveDashboardAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {

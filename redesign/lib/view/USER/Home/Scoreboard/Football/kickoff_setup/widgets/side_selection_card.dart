@@ -7,7 +7,7 @@ import 'swap_side_button.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SideSelectionCard extends StatelessWidget {
-  SideSelectionCard({super.key});
+  const SideSelectionCard({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ class QrStatusBadge extends StatelessWidget {
   final String label;
   final Color color;
 
-  QrStatusBadge(this.label, this.color, {super.key});
+  const QrStatusBadge(this.label, this.color, {super.key});
 
   @override
   Widget build(BuildContext context) {

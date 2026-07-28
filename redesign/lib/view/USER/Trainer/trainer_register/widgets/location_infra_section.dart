@@ -9,7 +9,7 @@ const kCard = Color(0xFF1A1A1A);
 const kMuted = Color(0xFFA7A7A7);
 
 class LocationInfraSection extends StatefulWidget {
-  LocationInfraSection({super.key});
+  const LocationInfraSection({super.key});
 
   @override
   State<LocationInfraSection> createState() => _LocationInfraSectionState();
@@ -144,7 +144,7 @@ class GroundChip extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  GroundChip({
+  const GroundChip({
     super.key,
     required this.label,
     required this.selected,
@@ -181,7 +181,7 @@ class GroundChip extends StatelessWidget {
 
 class AddPhotoTile extends StatelessWidget {
   final VoidCallback onTap;
-  AddPhotoTile({super.key, required this.onTap});
+  const AddPhotoTile({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +203,7 @@ class AddPhotoTile extends StatelessWidget {
 
 class PhotoPreviewTile extends StatelessWidget {
   final String imageUrl;
-  PhotoPreviewTile({super.key, required this.imageUrl});
+  const PhotoPreviewTile({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ class Coin3D extends StatelessWidget {
   final bool isTossing;
   final bool isIdle;
 
-  Coin3D({
+  const Coin3D({
     super.key,
     required this.angle,
     required this.verticalShift,

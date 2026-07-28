@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
-  SectionHeader({super.key, required this.title});
+  const SectionHeader({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

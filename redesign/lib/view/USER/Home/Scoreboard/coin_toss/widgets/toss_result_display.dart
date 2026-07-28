@@ -7,7 +7,7 @@ class TossResultDisplay extends StatelessWidget {
   final Animation<double> opacityAnimation;
   final bool isHeads;
 
-  TossResultDisplay({
+  const TossResultDisplay({
     super.key,
     required this.slideAnimation,
     required this.opacityAnimation,

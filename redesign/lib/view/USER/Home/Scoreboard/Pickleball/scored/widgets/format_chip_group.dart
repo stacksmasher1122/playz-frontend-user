@@ -22,17 +22,24 @@ class FormatChipGroup extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Match Format", style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
+        Text(
+          "Match Format",
+          style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+        ),
         SizedBox(height: 8),
         RepaintBoundary(
           child: Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: options.map((opt) => MatchCustomChip(
-              label: opt,
-              isSelected: opt == selected,
-              onTap: () => onSelect(opt),
-            )).toList(),
+            children: options
+                .map(
+                  (opt) => MatchCustomChip(
+                    label: opt,
+                    isSelected: opt == selected,
+                    onTap: () => onSelect(opt),
+                  ),
+                )
+                .toList(),
           ),
         ),
       ],

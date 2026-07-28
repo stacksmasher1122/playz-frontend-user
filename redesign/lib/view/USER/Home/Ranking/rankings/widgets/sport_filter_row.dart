@@ -9,7 +9,7 @@ class SportFilterRow extends StatelessWidget {
   final int selected;
   final ValueChanged<int> onChanged;
 
-  SportFilterRow({
+  const SportFilterRow({
     super.key,
     required this.selected,
     required this.onChanged,

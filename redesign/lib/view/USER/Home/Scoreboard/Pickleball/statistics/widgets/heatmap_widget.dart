@@ -25,7 +25,10 @@ class HeatmapWidget extends StatelessWidget {
               children: [
                 Text(
                   'Heat Map: Shot Placement',
-                  style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Icon(Icons.grid_view, color: AppColors.accent, size: 24),
               ],
@@ -73,20 +76,44 @@ class CourtGridPainter extends CustomPainter {
 
     // Outline
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
-    
+
     // Net
-    canvas.drawLine(Offset(size.width / 2, 0), Offset(size.width / 2, size.height), paint);
-    
+    canvas.drawLine(
+      Offset(size.width / 2, 0),
+      Offset(size.width / 2, size.height),
+      paint,
+    );
+
     // Kitchen line
-    canvas.drawLine(Offset(size.width / 2 - 40, 0), Offset(size.width / 2 - 40, size.height), paint);
-    canvas.drawLine(Offset(size.width / 2 + 40, 0), Offset(size.width / 2 + 40, size.height), paint);
-    
+    canvas.drawLine(
+      Offset(size.width / 2 - 40, 0),
+      Offset(size.width / 2 - 40, size.height),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(size.width / 2 + 40, 0),
+      Offset(size.width / 2 + 40, size.height),
+      paint,
+    );
+
     // Centerline
-    canvas.drawLine(Offset(0, size.height / 2), Offset(size.width / 2 - 40, size.height / 2), paint);
-    canvas.drawLine(Offset(size.width / 2 + 40, size.height / 2), Offset(size.width, size.height / 2), paint);
+    canvas.drawLine(
+      Offset(0, size.height / 2),
+      Offset(size.width / 2 - 40, size.height / 2),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(size.width / 2 + 40, size.height / 2),
+      Offset(size.width, size.height / 2),
+      paint,
+    );
 
     // Mock heat gradient overlay
-    final rect = Rect.fromCenter(center: Offset(size.width * 0.75, size.height * 0.75), width: ResponsiveHelper.w(100), height: 100);
+    final rect = Rect.fromCenter(
+      center: Offset(size.width * 0.75, size.height * 0.75),
+      width: ResponsiveHelper.w(100),
+      height: 100,
+    );
     final gradient = RadialGradient(
       colors: [AppColors.accent.withOpacity(0.4), Colors.transparent],
     ).createShader(rect);

@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kGreen = Color(0xFF6EDC6A);
 
 class GroupImagePicker extends StatelessWidget {
-  GroupImagePicker({super.key});
+  const GroupImagePicker({super.key});
 
   @override
   Widget build(BuildContext context) {

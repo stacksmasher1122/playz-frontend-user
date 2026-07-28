@@ -5,7 +5,7 @@ import '../edit_profile_constants.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PublicProfileToggle extends StatelessWidget {
-  PublicProfileToggle({super.key});
+  const PublicProfileToggle({super.key});
 
   @override
   Widget build(BuildContext context) {

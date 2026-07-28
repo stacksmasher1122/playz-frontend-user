@@ -8,7 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class LatestActionCard extends StatelessWidget {
   final VolleyballLiveScoringController controller;
 
-  LatestActionCard({super.key, required this.controller});
+  const LatestActionCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class LatestActionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.background,
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-          border: Border.all(color: AppColors.outlineVariant),
+          border: Border.all(color: Colors.transparent),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +44,7 @@ class LatestActionCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                   decoration: BoxDecoration(
-                    color: AppColors.accent.withOpacity(0.1),
+                    color: AppColors.accent.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.sports_volleyball, color: AppColors.accent, size: 24),

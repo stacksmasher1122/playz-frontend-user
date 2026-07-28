@@ -7,7 +7,7 @@ import 'empty_state.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CancelledBookingsWidget extends StatelessWidget {
-  CancelledBookingsWidget({super.key});
+  const CancelledBookingsWidget({super.key});
 
   bool _isCancelled(Map<String, dynamic> data) {
     final status = (data['status'] ?? '').toString().toLowerCase();

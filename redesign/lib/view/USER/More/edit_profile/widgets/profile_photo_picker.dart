@@ -11,7 +11,7 @@ class ProfilePhotoPicker extends StatelessWidget {
   final File? imageFile;
   final VoidCallback onPickImage;
 
-  ProfilePhotoPicker({
+  const ProfilePhotoPicker({
     super.key,
     required this.imageFile,
     required this.onPickImage,

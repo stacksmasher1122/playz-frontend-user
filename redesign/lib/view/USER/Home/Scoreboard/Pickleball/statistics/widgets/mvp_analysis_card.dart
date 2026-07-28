@@ -10,13 +10,17 @@ class MvpAnalysisCard extends StatefulWidget {
   State<MvpAnalysisCard> createState() => _MvpAnalysisCardState();
 }
 
-class _MvpAnalysisCardState extends State<MvpAnalysisCard> with SingleTickerProviderStateMixin {
+class _MvpAnalysisCardState extends State<MvpAnalysisCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animController;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 600));
+    _animController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 600),
+    );
     _animController.forward();
   }
 
@@ -30,15 +34,13 @@ class _MvpAnalysisCardState extends State<MvpAnalysisCard> with SingleTickerProv
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return ScaleTransition(
-      scale: Tween<double>(begin: 0.9, end: 1.0).animate(CurvedAnimation(
-        parent: _animController,
-        curve: Curves.elasticOut,
-      )),
+      scale: Tween<double>(begin: 0.9, end: 1.0).animate(
+        CurvedAnimation(parent: _animController, curve: Curves.elasticOut),
+      ),
       child: FadeTransition(
-        opacity: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-          parent: _animController,
-          curve: Curves.easeIn,
-        )),
+        opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(parent: _animController, curve: Curves.easeIn),
+        ),
         child: Container(
           padding: EdgeInsets.all(ResponsiveHelper.w(24)),
           decoration: BoxDecoration(
@@ -53,7 +55,10 @@ class _MvpAnalysisCardState extends State<MvpAnalysisCard> with SingleTickerProv
                 children: [
                   Text(
                     'MVP ANALYSIS',
-                    style: AppTypography.labelCaps10.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                    style: AppTypography.labelCaps10.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Icon(Icons.emoji_events, color: Colors.black, size: 20),
                 ],
@@ -90,8 +95,17 @@ class _MvpAnalysisCardState extends State<MvpAnalysisCard> with SingleTickerProv
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTypography.labelCaps10.copyWith(color: Colors.black54)),
-        Text(value, style: AppTypography.bodyMd.copyWith(color: Colors.black, fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: AppTypography.labelCaps10.copyWith(color: Colors.black54),
+        ),
+        Text(
+          value,
+          style: AppTypography.bodyMd.copyWith(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }

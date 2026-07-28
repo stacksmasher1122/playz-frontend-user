@@ -9,7 +9,7 @@ const kGreen = AppColors.accent;
 class FullScreenVideo extends StatefulWidget {
   final String url;
 
-  FullScreenVideo({super.key, required this.url});
+  const FullScreenVideo({super.key, required this.url});
 
   @override
   State<FullScreenVideo> createState() => _FullScreenVideoState();

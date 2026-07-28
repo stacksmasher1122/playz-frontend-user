@@ -7,7 +7,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kGreen = AppColors.accent;
 
 class LockedFeaturesCard extends StatelessWidget {
-  LockedFeaturesCard({super.key});
+  const LockedFeaturesCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class LockedFeaturesCard extends StatelessWidget {
 
 class LockRow extends StatelessWidget {
   final String text;
-  LockRow(this.text, {super.key});
+  const LockRow(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ class ActionChipWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final bool outlined;
 
-  ActionChipWidget(
+  const ActionChipWidget(
     this.icon,
     this.label, {
     this.onTap,

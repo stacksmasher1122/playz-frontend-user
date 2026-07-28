@@ -72,7 +72,10 @@ class SeriesScoreWidget extends StatelessWidget {
         SizedBox(height: 8),
         Text(
           matchStatus,
-          style: AppTypography.labelCaps.copyWith(color: AppColors.muted, letterSpacing: 2.0),
+          style: AppTypography.labelCaps.copyWith(
+            color: AppColors.muted,
+            letterSpacing: 2.0,
+          ),
         ),
       ],
     );

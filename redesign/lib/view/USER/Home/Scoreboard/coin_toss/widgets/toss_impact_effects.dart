@@ -8,7 +8,7 @@ class TossImpactEffects extends StatelessWidget {
   final double shakeValue;
   final bool isShakeAnimating;
 
-  TossImpactEffects({
+  const TossImpactEffects({
     super.key,
     required this.haloRadius,
     required this.haloOpacity,

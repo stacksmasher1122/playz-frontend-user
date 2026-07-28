@@ -7,7 +7,7 @@ class SocialLoginRow extends StatelessWidget {
   final VoidCallback onGoogleLogin;
   final VoidCallback onPhoneLogin;
 
-  SocialLoginRow({
+  const SocialLoginRow({
     super.key,
     required this.isLoading,
     required this.onGoogleLogin,
@@ -83,7 +83,7 @@ class _SocialButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
 
-  _SocialButton({
+  const _SocialButton({
     required this.icon,
     required this.label,
     this.onPressed,

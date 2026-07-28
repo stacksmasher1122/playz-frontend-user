@@ -7,7 +7,7 @@ class RoleAssignmentButtons extends StatelessWidget {
   final VoidCallback onAssignCaptain;
   final VoidCallback onAssignLibero;
 
-  RoleAssignmentButtons({super.key, required this.onAssignCaptain, required this.onAssignLibero});
+  const RoleAssignmentButtons({super.key, required this.onAssignCaptain, required this.onAssignLibero});
 
   @override
   Widget build(BuildContext context) {

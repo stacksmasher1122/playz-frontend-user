@@ -17,14 +17,17 @@ class MatchInfoCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'MATCH INFORMATION',
-            style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold),
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.muted,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: 16),
           _buildInfoRow('Tournament', result.tournament),
@@ -48,8 +51,14 @@ class MatchInfoCardWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
-          Text(value, style: AppTypography.bodySm.copyWith(color: AppColors.accent)),
+          Text(
+            label,
+            style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+          ),
+          Text(
+            value,
+            style: AppTypography.bodySm.copyWith(color: AppColors.accent),
+          ),
         ],
       ),
     );

@@ -6,7 +6,7 @@ class ScoreBoardWidget extends StatelessWidget {
   final int scoreA;
   final int scoreB;
 
-  ScoreBoardWidget({super.key, required this.scoreA, required this.scoreB});
+  const ScoreBoardWidget({super.key, required this.scoreA, required this.scoreB});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class ScoreBoardWidget extends StatelessWidget {
 class _AnimatedScore extends StatelessWidget {
   final int score;
 
-  _AnimatedScore({required this.score});
+  const _AnimatedScore({required this.score});
 
   @override
   Widget build(BuildContext context) {

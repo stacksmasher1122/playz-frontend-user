@@ -18,7 +18,7 @@ const _kBg = AppColors.surface;
 class GroupsInfoScreen extends StatefulWidget {
   final String groupId;
 
-  GroupsInfoScreen({super.key, required this.groupId});
+  const GroupsInfoScreen({super.key, required this.groupId});
 
   @override
   State<GroupsInfoScreen> createState() => _GroupsInfoScreenState();

@@ -12,7 +12,7 @@ class GroupMembersSection extends StatelessWidget {
   final GroupModel group;
   final GroupInfoController ctrl;
 
-  GroupMembersSection({
+  const GroupMembersSection({
     super.key,
     required this.group,
     required this.ctrl,

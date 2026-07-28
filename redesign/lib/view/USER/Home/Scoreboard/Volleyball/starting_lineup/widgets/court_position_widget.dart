@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_player_model.dart';
-import 'package:get/get.dart';
+
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CourtPositionWidget extends StatelessWidget {
@@ -11,7 +11,7 @@ class CourtPositionWidget extends StatelessWidget {
   final Function(VolleyballPlayerModel) onAccept;
   final VoidCallback onTap;
 
-  CourtPositionWidget({
+  const CourtPositionWidget({
     super.key,
     required this.position,
     required this.player,
@@ -35,18 +35,18 @@ class CourtPositionWidget extends StatelessWidget {
             duration: Duration(milliseconds: 200),
             decoration: BoxDecoration(
               color: isHovering 
-                  ? AppColors.accent.withOpacity(0.2)
+                  ? AppColors.accent.withValues(alpha: 0.2)
                   : (player != null ? AppColors.card : AppColors.background),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
               border: Border.all(
                 color: isHovering 
                     ? AppColors.accent 
-                    : (player != null ? AppColors.accent.withOpacity(0.5) : AppColors.outlineVariant),
+                    : (player != null ? AppColors.accent.withValues(alpha: 0.5) : AppColors.outlineVariant),
                 width: isHovering ? 2 : 1,
               ),
               boxShadow: isHovering ? [
                 BoxShadow(
-                  color: AppColors.accent.withOpacity(0.3),
+                  color: AppColors.accent.withValues(alpha: 0.3),
                   blurRadius: 10,
                   spreadRadius: 2,
                 )
@@ -68,7 +68,7 @@ class CourtPositionWidget extends StatelessWidget {
                       padding: EdgeInsets.all(ResponsiveHelper.w(8)),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.muted.withOpacity(0.5)),
+                        border: Border.all(color: AppColors.muted.withValues(alpha: 0.5)),
                       ),
                       child: Icon(Icons.add, color: AppColors.muted, size: 24),
                     ),

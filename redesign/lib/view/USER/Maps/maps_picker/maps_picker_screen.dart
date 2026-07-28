@@ -46,7 +46,7 @@ String _darkMapStyle = '''
 class MapPickerScreen extends StatefulWidget {
   final bool isSelectOnly;
 
-  MapPickerScreen({
+  const MapPickerScreen({
     super.key,
     this.isSelectOnly = false,
   });

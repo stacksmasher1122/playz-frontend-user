@@ -12,7 +12,7 @@ import 'widgets/stats_summary_grid.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveFootballDashboardScreen extends StatefulWidget {
-  LiveFootballDashboardScreen({super.key});
+  const LiveFootballDashboardScreen({super.key});
 
   @override
   State<LiveFootballDashboardScreen> createState() =>

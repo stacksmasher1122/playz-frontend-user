@@ -5,7 +5,7 @@ class TapBounceContainer extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
 
-  TapBounceContainer({super.key, required this.child, this.onTap});
+  const TapBounceContainer({super.key, required this.child, this.onTap});
 
   @override
   State<TapBounceContainer> createState() => _TapBounceContainerState();

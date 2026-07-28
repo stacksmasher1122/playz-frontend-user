@@ -5,7 +5,7 @@ import '../../../../../../../theme/app_dimensions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SmAppbarWidget extends StatelessWidget {
-  SmAppbarWidget({super.key});
+  const SmAppbarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

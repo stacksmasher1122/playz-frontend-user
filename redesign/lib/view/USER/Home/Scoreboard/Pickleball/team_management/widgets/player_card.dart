@@ -9,11 +9,7 @@ class PlayerCard extends StatelessWidget {
   final PickleballPlayerModel player;
   final VoidCallback onRemove;
 
-  PlayerCard({
-    super.key,
-    required this.player,
-    required this.onRemove,
-  });
+  PlayerCard({super.key, required this.player, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -48,27 +44,41 @@ class PlayerCard extends StatelessWidget {
                 children: [
                   Text(
                     player.name,
-                    style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                    style: AppTypography.headlineMd.copyWith(
+                      color: AppColors.accent,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 6),
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ResponsiveHelper.w(8),
+                          vertical: ResponsiveHelper.h(4),
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.accent.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
-                          border: Border.all(color: AppColors.accent.withOpacity(0.3)),
+                          borderRadius: BorderRadius.circular(
+                            ResponsiveHelper.w(4),
+                          ),
+                          border: Border.all(
+                            color: AppColors.accent.withOpacity(0.3),
+                          ),
                         ),
                         child: Text(
                           player.rating,
-                          style: AppTypography.labelCaps10.copyWith(color: AppColors.accent),
+                          style: AppTypography.labelCaps10.copyWith(
+                            color: AppColors.accent,
+                          ),
                         ),
                       ),
                       SizedBox(width: 8),
                       Text(
                         player.club,
-                        style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.muted,
+                        ),
                       ),
                     ],
                   ),

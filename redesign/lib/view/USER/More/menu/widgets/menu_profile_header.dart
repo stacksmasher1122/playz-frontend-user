@@ -10,7 +10,7 @@ import 'elite_badge.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MenuProfileHeader extends StatelessWidget {
-  MenuProfileHeader({super.key});
+  const MenuProfileHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

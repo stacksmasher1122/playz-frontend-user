@@ -7,7 +7,7 @@ class VenueTitleSection extends StatelessWidget {
   final String location;
   final bool isOpen;
 
-  VenueTitleSection({
+  const VenueTitleSection({
     super.key,
     required this.turfName,
     required this.location,

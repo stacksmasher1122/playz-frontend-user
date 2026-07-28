@@ -40,7 +40,7 @@ final _stories = [
 ];
 
 class TrainerSuccessStories extends StatelessWidget {
-  TrainerSuccessStories({super.key});
+  const TrainerSuccessStories({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class TrainerSuccessStories extends StatelessWidget {
 
 class StoryCard extends StatelessWidget {
   final Story story;
-  StoryCard({super.key, required this.story});
+  const StoryCard({super.key, required this.story});
 
   @override
   Widget build(BuildContext context) {

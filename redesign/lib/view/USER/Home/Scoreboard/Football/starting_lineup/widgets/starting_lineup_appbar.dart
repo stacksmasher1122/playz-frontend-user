@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class StartingLineupAppbar extends StatelessWidget
     implements PreferredSizeWidget {
-  StartingLineupAppbar({super.key});
+  const StartingLineupAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {

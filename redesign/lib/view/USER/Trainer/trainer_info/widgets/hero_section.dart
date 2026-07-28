@@ -8,7 +8,7 @@ Color kBg = Colors.black;
 Color kGreen = AppColors.accent;
 
 class HeroSection extends StatefulWidget {
-  HeroSection({super.key});
+  const HeroSection({super.key});
 
   @override
   State<HeroSection> createState() => _HeroSectionState();

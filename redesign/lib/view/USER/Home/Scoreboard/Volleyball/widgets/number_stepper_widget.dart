@@ -10,7 +10,7 @@ class NumberStepperWidget extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
 
-  NumberStepperWidget({
+  const NumberStepperWidget({
     super.key,
     required this.label,
     required this.value,
@@ -31,7 +31,7 @@ class NumberStepperWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.background,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            border: Border.all(color: AppColors.outlineVariant),
+            border: Border.all(color: Colors.transparent),
           ),
           child: Row(
             children: [

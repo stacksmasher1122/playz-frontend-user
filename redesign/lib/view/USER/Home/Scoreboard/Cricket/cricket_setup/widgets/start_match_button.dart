@@ -8,7 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class StartMatchButton extends StatelessWidget {
   final CricketController controller;
 
-  StartMatchButton({
+  const StartMatchButton({
     super.key,
     required this.controller,
   });

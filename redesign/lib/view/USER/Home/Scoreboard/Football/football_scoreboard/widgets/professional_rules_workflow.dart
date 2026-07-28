@@ -8,7 +8,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class ProfessionalRulesWorkflow extends StatefulWidget {
   final MatchEngine engine;
 
-  ProfessionalRulesWorkflow({super.key, required this.engine});
+  const ProfessionalRulesWorkflow({super.key, required this.engine});
 
   @override
   State<ProfessionalRulesWorkflow> createState() =>

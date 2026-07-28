@@ -4,7 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SearchBarWidget extends StatelessWidget {
-  SearchBarWidget({super.key});
+  const SearchBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

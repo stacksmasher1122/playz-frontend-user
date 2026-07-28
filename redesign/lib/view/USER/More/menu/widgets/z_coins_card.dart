@@ -4,7 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ZCoinsCard extends StatelessWidget {
-  ZCoinsCard({super.key});
+  const ZCoinsCard({super.key});
 
   @override
   Widget build(BuildContext context) {

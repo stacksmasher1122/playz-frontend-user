@@ -18,7 +18,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kBg = AppColors.background;
 
 class ScoreboardHubScreen extends StatefulWidget {
-  ScoreboardHubScreen({super.key});
+  const ScoreboardHubScreen({super.key});
 
   @override
   State<ScoreboardHubScreen> createState() => _ScoreboardHubScreenState();

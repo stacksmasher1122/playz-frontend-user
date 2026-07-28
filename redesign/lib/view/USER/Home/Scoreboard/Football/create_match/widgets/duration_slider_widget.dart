@@ -6,7 +6,7 @@ class DurationSliderWidget extends StatelessWidget {
   final double duration;
   final ValueChanged<double> onChanged;
 
-  DurationSliderWidget({
+  const DurationSliderWidget({
     super.key,
     required this.duration,
     required this.onChanged,

@@ -20,7 +20,9 @@ class LiveBottomNavigation extends StatelessWidget {
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
       decoration: BoxDecoration(
         color: AppColors.card,
-        border: Border(top: BorderSide(color: AppColors.outlineVariant, width: 1)),
+        border: Border(
+          top: BorderSide(color: AppColors.outlineVariant, width: 1),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -72,13 +74,17 @@ class _NavBarItem extends StatefulWidget {
   State<_NavBarItem> createState() => _NavBarItemState();
 }
 
-class _NavBarItemState extends State<_NavBarItem> with SingleTickerProviderStateMixin {
+class _NavBarItemState extends State<_NavBarItem>
+    with SingleTickerProviderStateMixin {
   late AnimationController _scaleController;
 
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
   }
 
   @override
@@ -125,7 +131,9 @@ class _NavBarItemState extends State<_NavBarItem> with SingleTickerProviderState
                 widget.label,
                 style: AppTypography.labelCaps10.copyWith(
                   color: widget.isSelected ? AppColors.accent : AppColors.muted,
-                  fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: widget.isSelected
+                      ? FontWeight.bold
+                      : FontWeight.normal,
                 ),
               ),
               SizedBox(height: 8),

@@ -8,7 +8,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class SubWorkflow extends StatefulWidget {
   final MatchEngine engine;
 
-  SubWorkflow({super.key, required this.engine});
+  const SubWorkflow({super.key, required this.engine});
 
   @override
   State<SubWorkflow> createState() => _SubWorkflowState();
@@ -69,8 +69,9 @@ class _SubWorkflowState extends State<SubWorkflow> {
 
   Widget _buildBody() {
     if (step == 0) return _buildSideSelection();
-    if (step == 1)
+    if (step == 1) {
       return _buildPlayerSelection("Select Player to SUB OUT", true);
+    }
     return _buildPlayerSelection("Select Player to SUB IN", false);
   }
 

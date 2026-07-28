@@ -19,7 +19,7 @@ import 'package:redesign/theme/responsive_helper.dart';
    BOOK TURF SCREEN
    ============================================================ */
 class BookTurfScreen extends StatefulWidget {
-  BookTurfScreen({super.key});
+  const BookTurfScreen({super.key});
 
   @override
   State<BookTurfScreen> createState() => _BookTurfScreenState();

@@ -7,11 +7,7 @@ class SecondaryActionButton extends StatelessWidget {
   final VoidCallback onTap;
   final String text;
 
-  SecondaryActionButton({
-    super.key,
-    required this.onTap,
-    required this.text,
-  });
+  SecondaryActionButton({super.key, required this.onTap, required this.text});
 
   @override
   Widget build(BuildContext context) {

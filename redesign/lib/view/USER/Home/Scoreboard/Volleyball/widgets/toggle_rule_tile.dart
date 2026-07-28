@@ -9,7 +9,7 @@ class ToggleRuleTile extends StatelessWidget {
   final RxBool value;
   final Function(bool) onChanged;
 
-  ToggleRuleTile({
+  const ToggleRuleTile({
     super.key,
     required this.label,
     required this.value,
@@ -25,7 +25,7 @@ class ToggleRuleTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,8 +34,8 @@ class ToggleRuleTile extends StatelessWidget {
           Obx(() => Switch(
             value: value.value,
             onChanged: onChanged,
-            activeColor: AppColors.accent,
-            activeTrackColor: AppColors.accent.withOpacity(0.5),
+            activeThumbColor: AppColors.accent,
+            activeTrackColor: AppColors.accent.withValues(alpha: 0.5),
             inactiveThumbColor: AppColors.muted,
             inactiveTrackColor: AppColors.card,
           )),

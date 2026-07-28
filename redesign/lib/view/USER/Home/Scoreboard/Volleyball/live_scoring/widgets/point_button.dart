@@ -7,7 +7,7 @@ class PointButton extends StatefulWidget {
   final VoidCallback onPressed;
   final bool isPrimary; // true for Team A (neon), false for Team B (dark)
 
-  PointButton({super.key, required this.onPressed, this.isPrimary = true});
+  const PointButton({super.key, required this.onPressed, this.isPrimary = true});
 
   @override
   State<PointButton> createState() => _PointButtonState();
@@ -54,7 +54,7 @@ class _PointButtonState extends State<PointButton> with SingleTickerProviderStat
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             border: Border.all(color: widget.isPrimary ? Colors.transparent : AppColors.outlineVariant),
             boxShadow: widget.isPrimary
-                ? [BoxShadow(color: AppColors.accent.withOpacity(0.3), blurRadius: 20, spreadRadius: 2)]
+                ? [BoxShadow(color: AppColors.accent.withValues(alpha: 0.3), blurRadius: 20, spreadRadius: 2)]
                 : [],
           ),
           child: Column(

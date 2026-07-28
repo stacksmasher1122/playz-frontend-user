@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class CompletedBookingCard extends StatelessWidget {
   final Map<String, dynamic>? bookingData;
 
-  CompletedBookingCard({super.key, this.bookingData});
+  const CompletedBookingCard({super.key, this.bookingData});
 
   Future<void> _launchGoogleMaps() async {
     final turfName = bookingData?['turfName'] ?? '';

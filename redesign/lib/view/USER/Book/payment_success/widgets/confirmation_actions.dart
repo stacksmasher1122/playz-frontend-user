@@ -6,7 +6,7 @@ class ConfirmationActions extends StatelessWidget {
   final VoidCallback onGoToBookings;
   final VoidCallback onInviteFriends;
 
-  ConfirmationActions({
+  const ConfirmationActions({
     super.key,
     required this.onGoToBookings,
     required this.onInviteFriends,

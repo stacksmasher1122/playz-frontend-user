@@ -16,21 +16,29 @@ class ErrorBreakdownCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Error Breakdown',
-            style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.accent,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: 16),
           ...errors.entries.map((entry) {
             bool isPositive = entry.key == "Winners";
             return Column(
               children: [
-                _buildErrorRow(entry.key, entry.value['A'], entry.value['B'], isPositive),
+                _buildErrorRow(
+                  entry.key,
+                  entry.value['A'],
+                  entry.value['B'],
+                  isPositive,
+                ),
                 if (entry.key != errors.keys.last)
                   Divider(color: AppColors.outlineVariant, height: 24),
               ],
@@ -56,20 +64,34 @@ class ErrorBreakdownCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
+        Text(
+          label,
+          style: AppTypography.bodyMd.copyWith(color: AppColors.muted),
+        ),
         Row(
           children: [
             Text(
               valA.toString().padLeft(2, '0'),
-              style: AppTypography.headlineMd.copyWith(color: colorA, fontWeight: FontWeight.bold),
+              style: AppTypography.headlineMd.copyWith(
+                color: colorA,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8.0)),
-              child: Text('|', style: TextStyle(color: AppColors.outlineVariant, fontSize: 20)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(8.0),
+              ),
+              child: Text(
+                '|',
+                style: TextStyle(color: AppColors.outlineVariant, fontSize: 20),
+              ),
             ),
             Text(
               valB.toString().padLeft(2, '0'),
-              style: AppTypography.headlineMd.copyWith(color: colorB, fontWeight: FontWeight.bold),
+              style: AppTypography.headlineMd.copyWith(
+                color: colorB,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

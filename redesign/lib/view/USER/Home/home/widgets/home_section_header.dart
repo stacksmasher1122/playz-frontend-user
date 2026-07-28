@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
    ============================================================ */
 class HomeSectionHeader extends StatelessWidget {
   final String title;
-  HomeSectionHeader(this.title, {super.key});
+  const HomeSectionHeader(this.title, {super.key});
 
   @override
   Widget build(BuildContext context) {

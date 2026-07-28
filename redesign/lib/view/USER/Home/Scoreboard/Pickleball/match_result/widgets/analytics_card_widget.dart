@@ -7,10 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class AnalyticsCardWidget extends StatelessWidget {
   final Map<String, dynamic> analytics;
 
-  AnalyticsCardWidget({
-    super.key,
-    required this.analytics,
-  });
+  AnalyticsCardWidget({super.key, required this.analytics});
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +17,17 @@ class AnalyticsCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'MATCH ANALYTICS',
-            style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold),
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.muted,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: 16),
           PerformanceProgressWidget(
@@ -46,15 +46,25 @@ class AnalyticsCardWidget extends StatelessWidget {
             label: 'WIN PERCENTAGE',
             ratioA: analytics['winPercent'] ?? 0.0,
             labelA: '${((analytics['winPercent'] ?? 0.0) * 100).toInt()}%',
-            labelB: '${(100 - ((analytics['winPercent'] ?? 0.0) * 100).toInt())}%',
+            labelB:
+                '${(100 - ((analytics['winPercent'] ?? 0.0) * 100).toInt())}%',
           ),
           SizedBox(height: 16),
           _buildStatRow('FORCED ERRORS', '${analytics['forcedErrors']} - 3'),
-          _buildStatRow('UNFORCED ERRORS', '${analytics['unforcedErrors']} - 7'),
+          _buildStatRow(
+            'UNFORCED ERRORS',
+            '${analytics['unforcedErrors']} - 7',
+          ),
           _buildStatRow('NET WINNERS', '${analytics['netWinners']} - 2'),
           _buildStatRow('BREAK POINT CONVERSION', '4/5 - 1/3'),
-          _buildStatRow('AVG RALLY LENGTH', '${analytics['avgRally']} - 6 shots'),
-          _buildStatRow('LONGEST RALLY', '${analytics['longestRally']} - 24 shots'),
+          _buildStatRow(
+            'AVG RALLY LENGTH',
+            '${analytics['avgRally']} - 6 shots',
+          ),
+          _buildStatRow(
+            'LONGEST RALLY',
+            '${analytics['longestRally']} - 24 shots',
+          ),
         ],
       ),
     );
@@ -66,8 +76,14 @@ class AnalyticsCardWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-          Text(values, style: AppTypography.bodySm.copyWith(color: AppColors.accent)),
+          Text(
+            label,
+            style: AppTypography.labelCaps10.copyWith(color: AppColors.muted),
+          ),
+          Text(
+            values,
+            style: AppTypography.bodySm.copyWith(color: AppColors.accent),
+          ),
         ],
       ),
     );

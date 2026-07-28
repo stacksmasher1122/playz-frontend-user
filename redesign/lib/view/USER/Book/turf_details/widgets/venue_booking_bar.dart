@@ -7,7 +7,7 @@ class VenueBookingBar extends StatelessWidget {
   final double price;
   final VoidCallback onBookNow;
 
-  VenueBookingBar({
+  const VenueBookingBar({
     super.key,
     required this.price,
     required this.onBookNow,

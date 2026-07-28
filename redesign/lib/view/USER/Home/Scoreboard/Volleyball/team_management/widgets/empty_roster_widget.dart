@@ -8,7 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class EmptyRosterWidget extends StatelessWidget {
   final VoidCallback onAdd;
 
-  EmptyRosterWidget({super.key, required this.onAdd});
+  const EmptyRosterWidget({super.key, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {

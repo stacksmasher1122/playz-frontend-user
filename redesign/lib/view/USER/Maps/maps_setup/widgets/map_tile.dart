@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 
 class MapTile extends StatelessWidget {
-  MapTile({super.key});
+  const MapTile({super.key});
 
   @override
   Widget build(BuildContext context) {

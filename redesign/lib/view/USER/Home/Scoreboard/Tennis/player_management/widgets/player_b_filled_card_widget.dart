@@ -8,7 +8,7 @@ import 'player_quick_actions_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerBFilledCardWidget extends StatefulWidget {
-  PlayerBFilledCardWidget({super.key});
+  const PlayerBFilledCardWidget({super.key});
 
   @override
   State<PlayerBFilledCardWidget> createState() => _PlayerBFilledCardWidgetState();

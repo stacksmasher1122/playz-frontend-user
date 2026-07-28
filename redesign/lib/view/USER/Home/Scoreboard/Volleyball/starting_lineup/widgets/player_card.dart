@@ -10,7 +10,7 @@ class PlayerCard extends StatelessWidget {
   final VolleyballPlayerModel player;
   final VolleyballStartingLineupController controller;
 
-  PlayerCard({super.key, required this.player, required this.controller});
+  const PlayerCard({super.key, required this.player, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class PlayerCard extends StatelessWidget {
         border: Border.all(color: isOnCourt ? AppColors.accent : AppColors.outlineVariant),
         boxShadow: isDragging ? [
           BoxShadow(
-            color: AppColors.accent.withOpacity(0.4),
+            color: AppColors.accent.withValues(alpha: 0.4),
             blurRadius: 15,
             spreadRadius: 2,
           )
@@ -62,7 +62,7 @@ class PlayerCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.card,
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-                    border: Border.all(color: AppColors.outlineVariant),
+                    border: Border.all(color: Colors.transparent),
                   ),
                   child: Center(
                     child: Text(

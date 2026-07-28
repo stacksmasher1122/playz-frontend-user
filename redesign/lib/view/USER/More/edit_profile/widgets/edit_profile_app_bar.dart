@@ -8,7 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onSave;
 
-  EditProfileAppBar({
+  const EditProfileAppBar({
     super.key,
     required this.onSave,
   });

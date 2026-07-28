@@ -6,7 +6,7 @@ class BottomActionWidget extends StatelessWidget {
   final VoidCallback onCreate;
   final VoidCallback onSaveTemplate;
 
-  BottomActionWidget({
+  const BottomActionWidget({
     super.key,
     required this.onCreate,
     required this.onSaveTemplate,

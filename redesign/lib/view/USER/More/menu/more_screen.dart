@@ -17,7 +17,7 @@ import 'widgets/logout_dialog.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MoreScreen extends StatefulWidget {
-  MoreScreen({super.key});
+  const MoreScreen({super.key});
 
   @override
   State<MoreScreen> createState() => _MoreScreenState();

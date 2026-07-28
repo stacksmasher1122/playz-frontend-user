@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
    FEATURED EVENTS
    ============================================================ */
 class HomeFeaturedEvents extends StatefulWidget {
-  HomeFeaturedEvents({super.key});
+  const HomeFeaturedEvents({super.key});
 
   @override
   State<HomeFeaturedEvents> createState() => _HomeFeaturedEventsState();

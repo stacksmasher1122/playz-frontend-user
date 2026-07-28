@@ -10,7 +10,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kSurface = Color(0xFF0E0E0E);
 
 class PricingPackagesSection extends StatefulWidget {
-  PricingPackagesSection({super.key});
+  const PricingPackagesSection({super.key});
 
   @override
   State<PricingPackagesSection> createState() => _PricingPackagesSectionState();
@@ -85,7 +85,7 @@ class PackagePricingCard extends StatelessWidget {
   final ValueChanged<String> onAddPerk;
   final ValueChanged<String> onRemovePerk;
 
-  PackagePricingCard({
+  const PackagePricingCard({
     super.key,
     required this.title,
     required this.enabled,
@@ -178,7 +178,7 @@ class PackagePricingCard extends StatelessWidget {
 
 class AddPerkField extends StatefulWidget {
   final ValueChanged<String> onAdd;
-  AddPerkField({super.key, required this.onAdd});
+  const AddPerkField({super.key, required this.onAdd});
 
   @override
   State<AddPerkField> createState() => _AddPerkFieldState();
@@ -224,7 +224,7 @@ class _AddPerkFieldState extends State<AddPerkField> {
 }
 
 class PerksSection extends StatefulWidget {
-  PerksSection({super.key});
+  const PerksSection({super.key});
 
   @override
   State<PerksSection> createState() => _PerksSectionState();
@@ -374,7 +374,7 @@ class PerkChip extends StatelessWidget {
   final String text;
   final VoidCallback onRemove;
 
-  PerkChip({super.key, required this.text, required this.onRemove});
+  const PerkChip({super.key, required this.text, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -409,7 +409,7 @@ class SuggestionChip extends StatelessWidget {
   final bool active;
   final VoidCallback onTap;
 
-  SuggestionChip({
+  const SuggestionChip({
     super.key,
     required this.text,
     required this.active,

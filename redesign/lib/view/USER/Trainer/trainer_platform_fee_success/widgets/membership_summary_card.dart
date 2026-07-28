@@ -8,7 +8,7 @@ const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
 
 class MembershipSummaryCard extends StatelessWidget {
-  MembershipSummaryCard({super.key});
+  const MembershipSummaryCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class PriceRow extends StatelessWidget {
   final String value;
   final bool highlight;
 
-  PriceRow({
+  const PriceRow({
     super.key,
     required this.label,
     required this.value,

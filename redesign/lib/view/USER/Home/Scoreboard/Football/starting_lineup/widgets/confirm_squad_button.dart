@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class ConfirmSquadButtonWidget extends StatelessWidget {
   final VoidCallback onTap;
 
-  ConfirmSquadButtonWidget({super.key, required this.onTap});
+  const ConfirmSquadButtonWidget({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

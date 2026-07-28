@@ -8,7 +8,7 @@ class MatchFormatSelector extends StatelessWidget {
   final RxString selectedFormat;
   final Function(String) onSelect;
 
-  MatchFormatSelector({
+  const MatchFormatSelector({
     super.key,
     required this.selectedFormat,
     required this.onSelect,
@@ -20,9 +20,9 @@ class MatchFormatSelector extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.card.withOpacity(0.8),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +68,7 @@ class MatchFormatSelector extends StatelessWidget {
             Text(
               label,
               style: AppTypography.labelCaps10.copyWith(
-                color: isSelected ? AppColors.background.withOpacity(0.7) : AppColors.muted,
+                color: isSelected ? AppColors.background.withValues(alpha: 0.7) : AppColors.muted,
                 fontWeight: FontWeight.bold,
                 fontSize: ResponsiveHelper.sp(10),
               ),

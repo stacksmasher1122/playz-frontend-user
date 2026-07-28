@@ -14,7 +14,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kBg = AppColors.background;
 
 class RankingsScreen extends StatefulWidget {
-  RankingsScreen({super.key});
+  const RankingsScreen({super.key});
 
   @override
   State<RankingsScreen> createState() => _RankingsScreenState();

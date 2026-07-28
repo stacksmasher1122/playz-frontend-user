@@ -7,7 +7,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kCard = Color(0xFF1A1A1A);
 
 class ProFaqSection extends StatelessWidget {
-  ProFaqSection({super.key});
+  const ProFaqSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class FaqTile extends StatelessWidget {
   final String question;
   final String answer;
 
-  FaqTile({super.key, required this.question, required this.answer});
+  const FaqTile({super.key, required this.question, required this.answer});
 
   @override
   Widget build(BuildContext context) {

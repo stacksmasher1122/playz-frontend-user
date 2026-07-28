@@ -6,7 +6,7 @@ class MatchTimerWidget extends StatelessWidget {
   final String currentHalf;
   final int currentMinute;
 
-  MatchTimerWidget({
+  const MatchTimerWidget({
     super.key,
     required this.currentHalf,
     required this.currentMinute,

@@ -8,7 +8,7 @@ import 'package:redesign/view/USER/SignIn-SignUp/login/login_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LogoutDialog extends StatelessWidget {
-  LogoutDialog({super.key});
+  const LogoutDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

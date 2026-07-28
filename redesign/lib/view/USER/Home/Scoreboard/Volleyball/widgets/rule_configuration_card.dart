@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class RuleConfigurationCard extends StatelessWidget {
   final VolleyballInitializeMatchController controller;
 
-  RuleConfigurationCard({super.key, required this.controller});
+  const RuleConfigurationCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +17,9 @@ class RuleConfigurationCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.card.withOpacity(0.8),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,14 +27,30 @@ class RuleConfigurationCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Rule\nConfiguration', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold, height: 1.2)),
+              Text(
+                'Rule\nConfiguration',
+                style: AppTypography.headlineMd.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                  height: 1.2,
+                ),
+              ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveHelper.w(8),
+                  vertical: ResponsiveHelper.h(4),
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.accent,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
                 ),
-                child: Text('PRO STANDARDS', style: AppTypography.labelCaps10.copyWith(color: AppColors.background, fontWeight: FontWeight.bold)),
+                child: Text(
+                  'PRO STANDARDS',
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.background,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
@@ -42,15 +58,19 @@ class RuleConfigurationCard extends StatelessWidget {
           NumberStepperWidget(
             label: 'PTS PER SET',
             value: controller.pointsPerSet,
-            onIncrement: () => controller.incrementPoints(controller.pointsPerSet),
-            onDecrement: () => controller.decrementPoints(controller.pointsPerSet, min: 1),
+            onIncrement: () =>
+                controller.incrementPoints(controller.pointsPerSet),
+            onDecrement: () =>
+                controller.decrementPoints(controller.pointsPerSet, min: 1),
           ),
           SizedBox(height: 16),
           NumberStepperWidget(
             label: 'FINAL SET PTS',
             value: controller.finalSetPoints,
-            onIncrement: () => controller.incrementPoints(controller.finalSetPoints),
-            onDecrement: () => controller.decrementPoints(controller.finalSetPoints, min: 1),
+            onIncrement: () =>
+                controller.incrementPoints(controller.finalSetPoints),
+            onDecrement: () =>
+                controller.decrementPoints(controller.finalSetPoints, min: 1),
           ),
           SizedBox(height: 16),
           ToggleRuleTile(
@@ -63,20 +83,41 @@ class RuleConfigurationCard extends StatelessWidget {
             label: 'T-OUTS / SET',
             value: controller.timeouts,
             onIncrement: () => controller.incrementPoints(controller.timeouts),
-            onDecrement: () => controller.decrementPoints(controller.timeouts, min: 0),
+            onDecrement: () =>
+                controller.decrementPoints(controller.timeouts, min: 0),
           ),
           SizedBox(height: 16),
           NumberStepperWidget(
             label: 'SUB LIMITS / SET',
             value: controller.substitutions,
-            onIncrement: () => controller.incrementPoints(controller.substitutions),
-            onDecrement: () => controller.decrementPoints(controller.substitutions, min: 0),
+            onIncrement: () =>
+                controller.incrementPoints(controller.substitutions),
+            onDecrement: () =>
+                controller.decrementPoints(controller.substitutions, min: 0),
           ),
           SizedBox(height: 16),
           ToggleRuleTile(
             label: 'TECH TIMEOUTS (8/16)',
             value: controller.technicalTimeout,
             onChanged: (val) => controller.toggleTechnicalTimeout(val),
+          ),
+          SizedBox(height: 16),
+          ToggleRuleTile(
+            label: 'LIBERO SYSTEM',
+            value: controller.liberoEnabled,
+            onChanged: (val) => controller.toggleLibero(val),
+          ),
+          SizedBox(height: 16),
+          ToggleRuleTile(
+            label: 'CHALLENGE SYSTEM',
+            value: controller.challengeEnabled,
+            onChanged: (val) => controller.toggleChallengeSystem(val),
+          ),
+          SizedBox(height: 16),
+          ToggleRuleTile(
+            label: 'VIDEO REVIEW',
+            value: controller.videoReview,
+            onChanged: (val) => controller.toggleVideoReview(val),
           ),
         ],
       ),

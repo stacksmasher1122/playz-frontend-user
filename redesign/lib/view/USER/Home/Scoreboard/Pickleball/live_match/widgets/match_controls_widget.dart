@@ -5,16 +5,14 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchControlsWidget extends StatelessWidget {
   final VoidCallback onUndo;
-  final VoidCallback onTimeout;
-  final VoidCallback onPause;
-  final bool isPaused;
+  final VoidCallback onMatchActions;
+  final VoidCallback onMore;
 
   MatchControlsWidget({
     super.key,
     required this.onUndo,
-    required this.onTimeout,
-    required this.onPause,
-    required this.isPaused,
+    required this.onMatchActions,
+    required this.onMore,
   });
 
   @override
@@ -23,26 +21,22 @@ class MatchControlsWidget extends StatelessWidget {
     return Row(
       children: [
         Expanded(
+          child: _ControlCard(icon: Icons.undo, label: 'UNDO', onTap: onUndo),
+        ),
+        SizedBox(width: 12),
+        Expanded(
           child: _ControlCard(
-            icon: Icons.undo,
-            label: 'UNDO',
-            onTap: onUndo,
+            icon: Icons.list_alt,
+            label: 'ACTIONS',
+            onTap: onMatchActions,
           ),
         ),
         SizedBox(width: 12),
         Expanded(
           child: _ControlCard(
-            icon: Icons.timer_outlined,
-            label: 'TIMEOUT',
-            onTap: onTimeout,
-          ),
-        ),
-        SizedBox(width: 12),
-        Expanded(
-          child: _ControlCard(
-            icon: isPaused ? Icons.play_arrow : Icons.pause,
-            label: isPaused ? 'RESUME' : 'PAUSE',
-            onTap: onPause,
+            icon: Icons.more_horiz,
+            label: 'MORE',
+            onTap: onMore,
           ),
         ),
       ],
@@ -55,23 +49,23 @@ class _ControlCard extends StatefulWidget {
   final String label;
   final VoidCallback onTap;
 
-  _ControlCard({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
+  _ControlCard({required this.icon, required this.label, required this.onTap});
 
   @override
   State<_ControlCard> createState() => _ControlCardState();
 }
 
-class _ControlCardState extends State<_ControlCard> with SingleTickerProviderStateMixin {
+class _ControlCardState extends State<_ControlCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _scaleController;
 
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
   }
 
   @override
@@ -97,7 +91,7 @@ class _ControlCardState extends State<_ControlCard> with SingleTickerProviderSta
           decoration: BoxDecoration(
             color: AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            border: Border.all(color: AppColors.outlineVariant, width: 1),
+            border: Border.all(color: Colors.transparent),
           ),
           child: Column(
             children: [
@@ -105,7 +99,10 @@ class _ControlCardState extends State<_ControlCard> with SingleTickerProviderSta
               SizedBox(height: 8),
               Text(
                 widget.label,
-                style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

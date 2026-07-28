@@ -8,7 +8,7 @@ enum SystemStatus { connected, waiting, offline, ready }
 class StatusChip extends StatelessWidget {
   final SystemStatus status;
 
-  StatusChip({super.key, required this.status});
+  const StatusChip({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -20,25 +20,25 @@ class StatusChip extends StatelessWidget {
 
     switch (status) {
       case SystemStatus.connected:
-        bgColor = AppColors.accent.withOpacity(0.1);
+        bgColor = AppColors.accent.withValues(alpha: 0.1);
         textColor = AppColors.accent;
         text = 'Active Connection';
         icon = Icons.wifi;
         break;
       case SystemStatus.waiting:
-        bgColor = Colors.orange.withOpacity(0.1);
+        bgColor = Colors.orange.withValues(alpha: 0.1);
         textColor = Colors.orange;
         text = 'Waiting for signal';
         icon = Icons.hourglass_empty;
         break;
       case SystemStatus.offline:
-        bgColor = AppColors.error.withOpacity(0.1);
+        bgColor = AppColors.error.withValues(alpha: 0.1);
         textColor = AppColors.error;
         text = 'Offline';
         icon = Icons.wifi_off;
         break;
       case SystemStatus.ready:
-        bgColor = AppColors.accent.withOpacity(0.1);
+        bgColor = AppColors.accent.withValues(alpha: 0.1);
         textColor = AppColors.accent;
         text = 'Ready';
         icon = Icons.check_circle_outline;

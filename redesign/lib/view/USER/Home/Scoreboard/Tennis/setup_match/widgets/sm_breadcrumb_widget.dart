@@ -5,7 +5,7 @@ import '../../../../../../../theme/app_dimensions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SmBreadcrumbWidget extends StatelessWidget {
-  SmBreadcrumbWidget({super.key});
+  const SmBreadcrumbWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ class VenueAboutSection extends StatelessWidget {
   final bool isExpanded;
   final VoidCallback onToggleExpand;
 
-  VenueAboutSection({
+  const VenueAboutSection({
     super.key,
     required this.description,
     required this.isExpanded,

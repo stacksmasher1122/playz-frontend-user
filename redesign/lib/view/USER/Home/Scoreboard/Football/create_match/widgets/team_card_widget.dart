@@ -51,7 +51,7 @@ class TeamCardWidget extends StatelessWidget {
   final ValueChanged<TeamModel> onSelect;
   final VoidCallback onUploadLogo;
 
-  TeamCardWidget({
+  const TeamCardWidget({
     super.key,
     required this.isHome,
     required this.team,

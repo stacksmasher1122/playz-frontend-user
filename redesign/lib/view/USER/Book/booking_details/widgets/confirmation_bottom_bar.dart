@@ -8,7 +8,7 @@ class ConfirmationBottomBar extends StatelessWidget {
   final int totalAmount;
   final VoidCallback? onPayPressed;
 
-  ConfirmationBottomBar({
+  const ConfirmationBottomBar({
     super.key,
     required this.enabled,
     required this.totalAmount,
