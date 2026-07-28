@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/badminton_controller.dart';
-
 import 'package:redesign/shared_preferences/userPreferences.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -75,9 +75,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         transaction.update(notifRef, {'status': accept ? 'accepted' : 'declined'});
       });
 
-      Get.snackbar("Success", accept ? "Referee invite accepted" : "Referee invite declined", backgroundColor: Colors.green, colorText: Colors.white);
+      Get.snackbar("Success", accept ? "Referee invite accepted" : "Referee invite declined", backgroundColor: AppColors.success, colorText: AppColors.onPrimary);
     } catch (e) {
-      Get.snackbar("Error", "Failed to update status: $e", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar("Error", "Failed to update status: $e", backgroundColor: AppColors.error, colorText: AppColors.onPrimary);
     }
   }
 
@@ -123,247 +123,384 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text("Notifications", style: TextStyle(color: AppColors.onPrimary)),
+        title: Text(
+          "Notifications",
+          style: AppTypography.headlineMd.copyWith(
+            color: AppColors.onPrimary,
+            fontSize: context.responsiveFont(18),
+          ),
+        ),
         backgroundColor: AppColors.surface,
-        iconTheme: IconThemeData(color: AppColors.onPrimary),
+        iconTheme: const IconThemeData(color: AppColors.onPrimary),
       ),
       body: _userDocIds.isEmpty
-          ? Center(child: CircularProgressIndicator(color: AppColors.accent))
+          ? const Center(child: CircularProgressIndicator(color: AppColors.accent))
           : StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('notifications')
                   .where('userId', whereIn: _userDocIds)
                   .snapshots(),
               builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: AppColors.accent));
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text("No notifications", style: TextStyle(color: AppColors.muted)));
-          }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator(color: AppColors.accent));
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "No notifications",
+                      style: AppTypography.bodyMd.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(14),
+                      ),
+                    ),
+                  );
+                }
 
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, i) {
-              final doc = snapshot.data!.docs[i];
-              final data = doc.data() as Map<String, dynamic>;
+                return ListView.builder(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.widthPct(3),
+                    vertical: context.heightPct(1),
+                  ),
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, i) {
+                    final doc = snapshot.data!.docs[i];
+                    final data = doc.data() as Map<String, dynamic>;
 
-              Widget cardContent;
+                    Widget cardContent;
 
-              if (data['type'] == 'referee_invite') {
-                final scheduledStr = _formatDate(data['scheduledDate']);
-                final createdStr = _formatDate(data['createdAt']);
+                    if (data['type'] == 'referee_invite') {
+                      final scheduledStr = _formatDate(data['scheduledDate']);
+                      final createdStr = _formatDate(data['createdAt']);
 
-                cardContent = Card(
-                  color: AppColors.surface,
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: EdgeInsets.all(14),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Header row
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: AppColors.accent.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(Icons.sports, color: AppColors.accent, size: 20),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Referee Invitation", style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontSize: 15)),
-                                  if (createdStr.isNotEmpty)
-                                    Text(createdStr, style: AppTypography.bodySm.copyWith(color: AppColors.muted, fontSize: 10)),
-                                ],
-                              ),
-                            ),
-                            // Status badge
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: data['status'] == 'accepted'
-                                    ? Colors.green.withValues(alpha: 0.2)
-                                    : data['status'] == 'declined'
-                                        ? Colors.red.withValues(alpha: 0.2)
-                                        : Colors.orange.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                (data['status'] ?? 'pending').toString().capitalizeFirst!,
-                                style: TextStyle(
-                                  color: data['status'] == 'accepted'
-                                      ? Colors.green
-                                      : data['status'] == 'declined'
-                                          ? Colors.redAccent
-                                          : Colors.orange,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
+                      cardContent = Card(
+                        color: AppColors.card,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: context.widthPct(1),
+                          vertical: context.heightPct(0.8),
                         ),
-                        SizedBox(height: 12),
-
-                        // Tournament name
-                        Row(
-                          children: [
-                            Icon(Icons.emoji_events_outlined, size: 16, color: AppColors.muted),
-                            SizedBox(width: 6),
-                            Expanded(
-                              child: Text(
-                                data['tournamentName'] ?? 'Tournament',
-                                style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary, fontWeight: FontWeight.w600),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                         ),
-                        SizedBox(height: 6),
-
-                        // Match label (A vs B)
-                        Row(
-                          children: [
-                            Icon(Icons.sports_tennis, size: 16, color: AppColors.muted),
-                            SizedBox(width: 6),
-                            Expanded(
-                              child: Text(
-                                data['matchLabel'] ?? '',
-                                style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Scheduled date (if available)
-                        if (scheduledStr.isNotEmpty) ...[
-                          SizedBox(height: 6),
-                          Row(
+                        child: Padding(
+                          padding: EdgeInsets.all(context.widthPct(3.5)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.calendar_today, size: 14, color: AppColors.muted),
-                              SizedBox(width: 6),
-                              Text(
-                                scheduledStr,
-                                style: AppTypography.bodySm.copyWith(color: AppColors.muted),
-                              ),
-                            ],
-                          ),
-                        ],
-
-                        SizedBox(height: 12),
-
-                        // Action buttons
-                        if (data['status'] == 'pending')
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.5)),
-                                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                ),
-                                onPressed: () => _handleInviteAction(context, doc.id, data, false),
-                                child: Text("Decline", style: TextStyle(color: Colors.redAccent, fontSize: 13)),
-                              ),
-                              SizedBox(width: 10),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.accent,
-                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                                ),
-                                onPressed: () => _handleInviteAction(context, doc.id, data, true),
-                                child: Text("Accept", style: TextStyle(color: AppColors.background, fontSize: 13, fontWeight: FontWeight.bold)),
-                              )
-                            ],
-                          )
-                        else if (data['status'] == 'accepted')
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                              // Header row
                               Row(
                                 children: [
-                                  Icon(Icons.check_circle, color: Colors.green, size: 16),
-                                  SizedBox(width: 4),
-                                  Text("Accepted", style: TextStyle(color: Colors.green, fontWeight: FontWeight.w600)),
+                                  Container(
+                                    padding: EdgeInsets.all(context.widthPct(2)),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.accent.withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      Icons.sports,
+                                      color: AppColors.accent,
+                                      size: context.minDimensionPct(5).clamp(18.0, 24.0),
+                                    ),
+                                  ),
+                                  SizedBox(width: context.widthPct(2.5)),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Referee Invitation",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: AppTypography.headlineSm.copyWith(
+                                            color: AppColors.accent,
+                                            fontSize: context.responsiveFont(15),
+                                          ),
+                                        ),
+                                        if (createdStr.isNotEmpty)
+                                          Text(
+                                            createdStr,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppTypography.bodySm.copyWith(
+                                              color: AppColors.muted,
+                                              fontSize: context.responsiveFont(10),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(width: context.widthPct(2)),
+                                  // Status badge
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: context.widthPct(2),
+                                      vertical: context.heightPct(0.4),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: data['status'] == 'accepted'
+                                          ? AppColors.success.withValues(alpha: 0.2)
+                                          : data['status'] == 'declined'
+                                              ? AppColors.error.withValues(alpha: 0.2)
+                                              : AppColors.warning.withValues(alpha: 0.2),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      (data['status'] ?? 'pending').toString().capitalizeFirst!,
+                                      style: AppTypography.bodyXs.copyWith(
+                                        color: data['status'] == 'accepted'
+                                            ? AppColors.success
+                                            : data['status'] == 'declined'
+                                                ? AppColors.error
+                                                : AppColors.warning,
+                                        fontSize: context.responsiveFont(10),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                              ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.accent,
-                                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              SizedBox(height: context.heightPct(1.2)),
+
+                              // Tournament name
+                              Row(
+                                children: [
+                                  const Icon(Icons.emoji_events_outlined, size: 16, color: AppColors.muted),
+                                  SizedBox(width: context.widthPct(1.5)),
+                                  Expanded(
+                                    child: Text(
+                                      data['tournamentName'] ?? 'Tournament',
+                                      style: AppTypography.bodyLg.copyWith(
+                                        color: AppColors.onPrimary,
+                                        fontSize: context.responsiveFont(14),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: context.heightPct(0.6)),
+
+                              // Match label (A vs B)
+                              Row(
+                                children: [
+                                  const Icon(Icons.sports_tennis, size: 16, color: AppColors.muted),
+                                  SizedBox(width: context.widthPct(1.5)),
+                                  Expanded(
+                                    child: Text(
+                                      data['matchLabel'] ?? '',
+                                      style: AppTypography.bodyMd.copyWith(
+                                        color: AppColors.onPrimary,
+                                        fontSize: context.responsiveFont(13),
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              // Scheduled date (if available)
+                              if (scheduledStr.isNotEmpty) ...[
+                                SizedBox(height: context.heightPct(0.6)),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.calendar_today, size: 14, color: AppColors.muted),
+                                    SizedBox(width: context.widthPct(1.5)),
+                                    Expanded(
+                                      child: Text(
+                                        scheduledStr,
+                                        style: AppTypography.bodySm.copyWith(
+                                          color: AppColors.muted,
+                                          fontSize: context.responsiveFont(11),
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                icon: Icon(Icons.scoreboard, size: 16, color: AppColors.background),
-                                onPressed: () => _openScoreboard(data),
-                                label: Text("Open Scoreboard", style: TextStyle(color: AppColors.background, fontSize: 12, fontWeight: FontWeight.bold)),
-                              )
-                            ],
-                          )
-                        else if (data['status'] == 'declined')
-                          Row(
-                            children: [
-                              Icon(Icons.cancel, color: Colors.redAccent, size: 16),
-                              SizedBox(width: 4),
-                              Text("Declined", style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
+                              ],
+
+                              SizedBox(height: context.heightPct(1.2)),
+
+                              // Action buttons
+                              if (data['status'] == 'pending')
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        side: BorderSide(color: AppColors.error.withValues(alpha: 0.5)),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: context.widthPct(3.5),
+                                          vertical: context.heightPct(0.8),
+                                        ),
+                                      ),
+                                      onPressed: () => _handleInviteAction(context, doc.id, data, false),
+                                      child: Text(
+                                        "Decline",
+                                        style: AppTypography.bodySm.copyWith(
+                                          color: AppColors.error,
+                                          fontSize: context.responsiveFont(12),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: context.widthPct(2.5)),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.accent,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: context.widthPct(4.5),
+                                          vertical: context.heightPct(0.8),
+                                        ),
+                                      ),
+                                      onPressed: () => _handleInviteAction(context, doc.id, data, true),
+                                      child: Text(
+                                        "Accept",
+                                        style: AppTypography.bodySm.copyWith(
+                                          color: AppColors.background,
+                                          fontSize: context.responsiveFont(12),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              else if (data['status'] == 'accepted')
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.check_circle, color: AppColors.success, size: 16),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          "Accepted",
+                                          style: AppTypography.bodySm.copyWith(
+                                            color: AppColors.success,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: context.responsiveFont(12),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.accent,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: context.widthPct(3),
+                                          vertical: context.heightPct(0.8),
+                                        ),
+                                      ),
+                                      icon: const Icon(Icons.scoreboard, size: 16, color: AppColors.background),
+                                      onPressed: () => _openScoreboard(data),
+                                      label: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          "Open Scoreboard",
+                                          style: AppTypography.bodySm.copyWith(
+                                            color: AppColors.background,
+                                            fontSize: context.responsiveFont(11),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              else if (data['status'] == 'declined')
+                                Row(
+                                  children: [
+                                    const Icon(Icons.cancel, color: AppColors.error, size: 16),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      "Declined",
+                                      style: AppTypography.bodySm.copyWith(
+                                        color: AppColors.error,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: context.responsiveFont(12),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
-                      ],
-                    ),
-                  ),
-                );
-              } else {
-                cardContent = Card(
-                  color: AppColors.surface,
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: ListTile(
-                    title: Text(data['type'] ?? "Notification", style: TextStyle(color: AppColors.onPrimary)),
-                    subtitle: Text(data['message'] ?? '', style: TextStyle(color: AppColors.muted)),
-                  ),
-                );
-              }
+                        ),
+                      );
+                    } else {
+                      cardContent = Card(
+                        color: AppColors.card,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: context.widthPct(1),
+                          vertical: context.heightPct(0.8),
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            data['type'] ?? "Notification",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.headlineSm.copyWith(
+                              color: AppColors.onPrimary,
+                              fontSize: context.responsiveFont(14),
+                            ),
+                          ),
+                          subtitle: Text(
+                            data['message'] ?? '',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.muted,
+                              fontSize: context.responsiveFont(12),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
 
-              // Wrap in Dismissible for swipe-to-delete
-              return Dismissible(
-                key: Key(doc.id),
-                direction: DismissDirection.horizontal,
-                background: Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(left: 24),
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.redAccent.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(Icons.delete_outline, color: Colors.redAccent, size: 28),
-                ),
-                secondaryBackground: Container(
-                  alignment: Alignment.centerRight,
-                  padding: EdgeInsets.only(right: 24),
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.redAccent.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(Icons.delete_outline, color: Colors.redAccent, size: 28),
-                ),
-                onDismissed: (_) => _deleteNotification(doc.id),
-                child: cardContent,
-              );
-            },
-          );
-        },
-      ),
+                    // Wrap in Dismissible for swipe-to-delete
+                    return Dismissible(
+                      key: Key(doc.id),
+                      direction: DismissDirection.horizontal,
+                      background: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(left: context.widthPct(6)),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: context.widthPct(1),
+                          vertical: context.heightPct(0.8),
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.delete_outline, color: AppColors.error, size: 28),
+                      ),
+                      secondaryBackground: Container(
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(right: context.widthPct(6)),
+                        margin: EdgeInsets.symmetric(
+                          horizontal: context.widthPct(1),
+                          vertical: context.heightPct(0.8),
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.delete_outline, color: AppColors.error, size: 28),
+                      ),
+                      onDismissed: (_) => _deleteNotification(doc.id),
+                      child: cardContent,
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 }

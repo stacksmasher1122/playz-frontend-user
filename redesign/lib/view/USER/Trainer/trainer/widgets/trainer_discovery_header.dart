@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
@@ -15,14 +15,17 @@ import 'package:redesign/theme/responsive_helper.dart';
 class TrainerDiscoveryHeader extends StatelessWidget {
   TrainerDiscoveryHeader({super.key});
 
+  final _controller = Get.find<UserProfileController>();
+
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final controller = Get.find<UserProfileController>();
-    final width = MediaQuery.of(context).size.width;
+
+    final avatarSize = context.minDimensionPct(9).clamp(32.0, 40.0);
+    final iconSize = context.minDimensionPct(6).clamp(20.0, 26.0);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
       child: Column(
         children: [
           Row(
@@ -43,9 +46,9 @@ class TrainerDiscoveryHeader extends StatelessWidget {
                       Icon(
                         Icons.location_on,
                         color: AppColors.accent,
-                        size: width < 360 ? 18 : 22,
+                        size: iconSize,
                       ),
-                      SizedBox(width: 6),
+                      SizedBox(width: context.widthPct(1.5)),
                       Flexible(
                         child: Obx(() {
                           final mapsCtrl = Get.find<MapsController>();
@@ -54,94 +57,102 @@ class TrainerDiscoveryHeader extends StatelessWidget {
                           final displayText = locality.isNotEmpty
                               ? locality
                               : city.isNotEmpty
-                              ? city
-                              : 'Select Location';
+                                  ? city
+                                  : 'Select Location';
                           return Text(
                             displayText,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(
-                              color: Colors.white,
-                              fontSize: width < 360 ? 14 : 16,
+                            style: AppTypography.headlineSm.copyWith(
+                              color: AppColors.textPrimary,
+                              fontSize: context.responsiveFont(15),
                               fontWeight: FontWeight.w600,
                             ),
                           );
                         }),
                       ),
+                      SizedBox(width: context.widthPct(1)),
                       Icon(
                         Icons.keyboard_arrow_down_rounded,
-                        color: Colors.white70,
-                        size: width < 360 ? 20 : 24,
+                        color: AppColors.textSecondary,
+                        size: iconSize,
                       ),
                     ],
                   ),
                 ),
               ),
 
-              SizedBox(width: 8),
+              SizedBox(width: context.widthPct(2)),
 
               /// NOTIFICATIONS BELL
               Icon(
                 Icons.notifications_none_rounded,
-                color: Colors.white,
-                size: width < 360 ? 20 : 24,
+                color: AppColors.textPrimary,
+                size: iconSize,
               ),
-              SizedBox(width: 16),
+
+              SizedBox(width: context.widthPct(3)),
 
               /// AVATAR
               Obx(() {
-                final profileImageUrl = controller.profileImageUrl;
+                final profileImageUrl = _controller.profileImageUrl;
                 return ClipOval(
                   child: profileImageUrl.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: profileImageUrl,
-                          width: width < 360 ? 32 : 36,
-                          height: width < 360 ? 32 : 36,
+                          width: avatarSize,
+                          height: avatarSize,
                           fit: BoxFit.cover,
                           placeholder: (_, __) => Shimmer.fromColors(
-                            baseColor: Colors.grey.shade800,
-                            highlightColor: Colors.grey.shade700,
-                            child: CircleAvatar(radius: width < 360 ? 16 : 18),
+                            baseColor: AppColors.surfaceElevated.withValues(alpha: 0.6),
+                            highlightColor: AppColors.borderDark.withValues(alpha: 0.8),
+                            child: CircleAvatar(radius: avatarSize / 2),
                           ),
                           errorWidget: (_, __, ___) => CircleAvatar(
-                            radius: width < 360 ? 16 : 18,
-                            backgroundColor: Color(0xFF1A1A1A),
-                            child: Icon(
+                            radius: avatarSize / 2,
+                            backgroundColor: AppColors.card,
+                            child: const Icon(
                               Icons.person,
-                              color: Colors.white38,
+                              color: AppColors.muted,
                             ),
                           ),
                         )
                       : CircleAvatar(
-                          radius: width < 360 ? 16 : 18,
-                          backgroundColor: Color(0xFF1A1A1A),
-                          child: Icon(
+                          radius: avatarSize / 2,
+                          backgroundColor: AppColors.card,
+                          child: const Icon(
                             Icons.person,
-                            color: Colors.white38,
+                            color: AppColors.muted,
                           ),
                         ),
                 );
               }),
             ],
           ),
-          SizedBox(height: 14),
+          SizedBox(height: context.heightPct(1.8)),
           TextField(
             cursorColor: AppColors.accent,
-            style: GoogleFonts.inter(color: Colors.white),
+            style: AppTypography.bodyMd.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(13),
+            ),
             decoration: InputDecoration(
               hintText: 'Search trainers, sports...',
-              hintStyle: GoogleFonts.inter(color: AppColors.muted),
-              prefixIcon: Icon(Icons.search, color: AppColors.muted),
-              suffixIcon: Icon(Icons.tune, color: AppColors.muted),
+              hintStyle: AppTypography.bodyMd.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+              ),
+              prefixIcon: const Icon(Icons.search, color: AppColors.muted),
+              suffixIcon: const Icon(Icons.tune, color: AppColors.muted),
               filled: true,
               fillColor: AppColors.surface,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: context.heightPct(2.5)),
           TrainerJoinCard(
             onTap: () {
               Navigator.of(context).push(

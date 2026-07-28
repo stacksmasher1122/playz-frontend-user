@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/view/USER/More/profile/profile_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -18,6 +18,8 @@ class MenuProfileHeader extends StatelessWidget {
         ? Get.find<UserProfileController>()
         : Get.put(UserProfileController());
 
+    final avatarSize = context.minDimensionPct(14).clamp(48.0, 60.0);
+
     return Obx(() {
       final user = controller.rxUser.value;
       final name = user?.fullName.isNotEmpty == true ? user!.fullName : 'User';
@@ -28,26 +30,26 @@ class MenuProfileHeader extends StatelessWidget {
       return Container(
         decoration: BoxDecoration(
           color: Colors.transparent,
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(24),
-            bottomRight: Radius.circular(24),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(context.minDimensionPct(5)),
+            bottomRight: Radius.circular(context.minDimensionPct(5)),
           ),
           border: Border(
-            left: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
-            right: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
-            bottom: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
+            left: const BorderSide(color: AppColors.divider),
+            right: const BorderSide(color: AppColors.divider),
+            bottom: const BorderSide(color: AppColors.divider),
           ),
         ),
         child: Material(
           color: Colors.transparent,
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(24),
-            bottomRight: Radius.circular(24),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(context.minDimensionPct(5)),
+            bottomRight: Radius.circular(context.minDimensionPct(5)),
           ),
           child: InkWell(
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(24),
-              bottomRight: Radius.circular(24),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(context.minDimensionPct(5)),
+              bottomRight: Radius.circular(context.minDimensionPct(5)),
             ),
             onTap: () {
               Navigator.push(
@@ -57,10 +59,10 @@ class MenuProfileHeader extends StatelessWidget {
             },
             child: Padding(
               padding: EdgeInsets.fromLTRB(
-                ResponsiveHelper.w(20),
-                ResponsiveHelper.h(8),
-                ResponsiveHelper.w(20),
-                ResponsiveHelper.h(18),
+                context.widthPct(5),
+                context.heightPct(1),
+                context.widthPct(5),
+                context.heightPct(2),
               ),
               child: Row(
                 children: [
@@ -72,7 +74,7 @@ class MenuProfileHeader extends StatelessWidget {
                       gradient: tierGradient,
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF00E676).withValues(alpha: 0.2),
+                          color: AppColors.accent.withValues(alpha: 0.2),
                           blurRadius: 8,
                         ),
                       ],
@@ -81,28 +83,28 @@ class MenuProfileHeader extends StatelessWidget {
                       child: imageUrl.isNotEmpty
                           ? CachedNetworkImage(
                               imageUrl: imageUrl,
-                              width: ResponsiveHelper.w(54),
-                              height: ResponsiveHelper.h(54),
+                              width: avatarSize,
+                              height: avatarSize,
                               fit: BoxFit.cover,
                               placeholder: (_, __) => Shimmer.fromColors(
-                                baseColor: Colors.grey.shade800,
-                                highlightColor: Colors.grey.shade700,
-                                child: const CircleAvatar(radius: 27),
+                                baseColor: AppColors.surfaceElevated.withValues(alpha: 0.6),
+                                highlightColor: AppColors.borderDark.withValues(alpha: 0.8),
+                                child: CircleAvatar(radius: avatarSize / 2),
                               ),
-                              errorWidget: (_, __, ___) => const CircleAvatar(
-                                radius: 27,
-                                backgroundColor: Color(0xFF1A1A1A),
-                                child: Icon(Icons.person, color: Colors.white38),
+                              errorWidget: (_, __, ___) => CircleAvatar(
+                                radius: avatarSize / 2,
+                                backgroundColor: AppColors.card,
+                                child: const Icon(Icons.person, color: AppColors.muted),
                               ),
                             )
-                          : const CircleAvatar(
-                              radius: 27,
-                              backgroundColor: Color(0xFF1A1A1A),
-                              child: Icon(Icons.person, color: Colors.white38),
+                          : CircleAvatar(
+                              radius: avatarSize / 2,
+                              backgroundColor: AppColors.card,
+                              child: const Icon(Icons.person, color: AppColors.muted),
                             ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: context.widthPct(4)),
 
                   /// USER NAME + TIER PILL BADGE
                   Expanded(
@@ -113,47 +115,53 @@ class MenuProfileHeader extends StatelessWidget {
                           name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
                             fontWeight: FontWeight.w700,
-                            fontSize: ResponsiveHelper.sp(16),
+                            fontSize: context.responsiveFont(16),
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        SizedBox(height: context.heightPct(0.6)),
 
                         /// TIER GRADIENT PILL BADGE & GREEN FIRE STREAK PILL
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.widthPct(2.5),
+                                vertical: context.heightPct(0.3),
+                              ),
                               decoration: BoxDecoration(
                                 gradient: tierGradient,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
                                 tier.toUpperCase(),
-                                style: GoogleFonts.inter(
-                                  color: Colors.white,
-                                  fontSize: 10,
+                                style: AppTypography.labelCaps10.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontSize: context.responsiveFont(10),
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: 0.8,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: context.widthPct(2)),
 
                             /// GREEN FIRE ACTIVE STREAK PILL
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.widthPct(2),
+                                vertical: context.heightPct(0.3),
+                              ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF00E676).withValues(alpha: 0.12),
+                                color: AppColors.accent.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: const Color(0xFF00E676).withValues(alpha: 0.4),
+                                  color: AppColors.accent.withValues(alpha: 0.4),
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF00E676).withValues(alpha: 0.15),
+                                    color: AppColors.accent.withValues(alpha: 0.15),
                                     blurRadius: 6,
                                   ),
                                 ],
@@ -163,15 +171,15 @@ class MenuProfileHeader extends StatelessWidget {
                                 children: [
                                   const Icon(
                                     Icons.local_fire_department_rounded,
-                                    color: Color(0xFF00E676),
+                                    color: AppColors.accent,
                                     size: 13,
                                   ),
-                                  const SizedBox(width: 3),
+                                  SizedBox(width: context.widthPct(1)),
                                   Text(
                                     '5 Days',
-                                    style: GoogleFonts.inter(
-                                      color: const Color(0xFF00E676),
-                                      fontSize: 10,
+                                    style: AppTypography.labelCaps10.copyWith(
+                                      color: AppColors.accent,
+                                      fontSize: context.responsiveFont(10),
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),

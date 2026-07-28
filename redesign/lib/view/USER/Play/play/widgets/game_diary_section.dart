@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/controller/User_Controller/Match_Controller/match_controller.dart';
@@ -46,89 +46,94 @@ class GameDiaryWidget extends StatelessWidget {
           final totalPlayed = diaryMatches.length;
 
           return ListView(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: 12),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.widthPct(4),
+              vertical: context.heightPct(1.5),
+            ),
             children: [
               /// STATS SUMMARY HEADER CARD
               Container(
-                padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+                padding: EdgeInsets.all(context.widthPct(4)),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                  gradient: AppColors.darkSurfaceOverlay,
                   border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _StatItem(label: 'Total Games', value: '$totalPlayed', icon: Icons.sports_score),
-                    Container(height: 36, width: 1, color: Colors.white12),
+                    Container(height: context.heightPct(4), width: 1, color: AppColors.divider),
                     _StatItem(label: 'Hosted', value: '$hostedCount', icon: Icons.add_task),
-                    Container(height: 36, width: 1, color: Colors.white12),
+                    Container(height: context.heightPct(4), width: 1, color: AppColors.divider),
                     _StatItem(label: 'XP Earned', value: '${totalPlayed * 100}', icon: Icons.stars),
                   ],
                 ),
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: context.heightPct(2.5)),
 
               Row(
                 children: [
                   Text(
                     'My Match History',
-                    style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontSize: ResponsiveHelper.sp(16),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(16),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const Spacer(),
                   Text(
                     '${diaryMatches.length} Matches',
-                    style: GoogleFonts.inter(
+                    style: AppTypography.bodySm.copyWith(
                       color: AppColors.accent,
-                      fontSize: ResponsiveHelper.sp(12),
+                      fontSize: context.responsiveFont(12),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
               ),
 
-              SizedBox(height: 12),
+              SizedBox(height: context.heightPct(1.5)),
 
               if (diaryMatches.isEmpty) ...[
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(36)),
+                  padding: EdgeInsets.symmetric(vertical: context.heightPct(4)),
                   child: Column(
                     children: [
-                      Icon(Icons.history_toggle_off, size: 56, color: Colors.white24),
-                      SizedBox(height: 12),
+                      const Icon(Icons.history_toggle_off, size: 56, color: AppColors.muted),
+                      SizedBox(height: context.heightPct(1.5)),
                       Text(
                         'No Participated Games Yet',
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(16),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(16),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 6),
+                      SizedBox(height: context.heightPct(0.8)),
                       Text(
                         'Join or host a match poll to add entries to your Game Diary!',
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          color: Colors.white54,
-                          fontSize: ResponsiveHelper.sp(13),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.textSecondary,
+                          fontSize: context.responsiveFont(13),
                         ),
                       ),
-                      SizedBox(height: 18),
+                      SizedBox(height: context.heightPct(2.2)),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.accent,
-                          foregroundColor: Colors.black,
+                          foregroundColor: AppColors.background,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                           ),
                         ),
                         onPressed: () {
@@ -137,7 +142,16 @@ class GameDiaryWidget extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.add),
-                        label: const Text('Host Your First Match', style: TextStyle(fontWeight: FontWeight.bold)),
+                        label: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Host Your First Match',
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.background,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -176,20 +190,24 @@ class _StatItem extends StatelessWidget {
     return Column(
       children: [
         Icon(icon, color: AppColors.accent, size: 20),
-        SizedBox(height: 4),
+        SizedBox(height: context.heightPct(0.5)),
         Text(
           value,
-          style: GoogleFonts.inter(
-            color: Colors.white,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
-            fontSize: ResponsiveHelper.sp(16),
+            fontSize: context.responsiveFont(16),
           ),
         ),
         Text(
           label,
-          style: GoogleFonts.inter(
-            color: Colors.white54,
-            fontSize: ResponsiveHelper.sp(11),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.bodyXs.copyWith(
+            color: AppColors.textSecondary,
+            fontSize: context.responsiveFont(11),
           ),
         ),
       ],

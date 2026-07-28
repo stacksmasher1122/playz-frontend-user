@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../home_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
@@ -7,25 +8,32 @@ import 'package:redesign/theme/responsive_helper.dart';
    ============================================================ */
 class HomeSectionHeader extends StatelessWidget {
   final String title;
-  HomeSectionHeader(this.title, {super.key});
+  const HomeSectionHeader(this.title, {super.key});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Row(
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: ResponsiveHelper.sp(18),
-            fontWeight: FontWeight.w700,
+        Expanded(
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.headlineLgMobile.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(18),
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
-        Spacer(),
         Text(
           'See All',
-          style: TextStyle(color: UserHomePage.accent, fontSize: 13),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.accent,
+            fontSize: context.responsiveFont(13),
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ],
     );

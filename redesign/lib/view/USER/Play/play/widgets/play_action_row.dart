@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import '../host_match/host_match_screen.dart';
 import 'sort_filter_bottom_sheet.dart';
 
 class PlayActionRow extends StatelessWidget {
-  PlayActionRow({super.key});
+  const PlayActionRow({super.key});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(10)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(5),
+        vertical: context.heightPct(1.2),
+      ),
       child: Row(
         children: [
           GestureDetector(
@@ -22,7 +25,10 @@ class PlayActionRow extends StatelessWidget {
               );
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.widthPct(3.5),
+                vertical: context.heightPct(1),
+              ),
               decoration: BoxDecoration(
                 color: AppColors.accent.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
@@ -30,21 +36,24 @@ class PlayActionRow extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.add_circle_outline, color: AppColors.accent, size: 18),
-                  SizedBox(width: 6),
-                  Text(
-                    'Host Game +',
-                    style: GoogleFonts.inter(
-                      color: AppColors.accent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  const Icon(Icons.add_circle_outline, color: AppColors.accent, size: 18),
+                  SizedBox(width: context.widthPct(1.5)),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'Host Game +',
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.accent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: context.responsiveFont(14),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           GestureDetector(
             onTap: () {
               showModalBottomSheet(
@@ -55,17 +64,30 @@ class PlayActionRow extends StatelessWidget {
               );
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.widthPct(3.5),
+                vertical: context.heightPct(1),
+              ),
               decoration: BoxDecoration(
-                color: const Color(0xFF1A1A1A),
+                color: AppColors.surface,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white12),
+                border: Border.all(color: AppColors.borderDark),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.swap_vert, color: Colors.white, size: 16),
-                  SizedBox(width: 6),
-                  Text('Sort & Filter', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
+                  const Icon(Icons.swap_vert, color: AppColors.textPrimary, size: 16),
+                  SizedBox(width: context.widthPct(1.5)),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'Sort & Filter',
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: context.responsiveFont(13),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

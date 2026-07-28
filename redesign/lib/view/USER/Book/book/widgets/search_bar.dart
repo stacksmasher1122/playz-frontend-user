@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SearchBarWidget extends StatefulWidget {
@@ -31,27 +31,36 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
+    final barHeight = context.heightPct(6).clamp(44.0, 52.0);
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
       child: Container(
-        height: ResponsiveHelper.h(48),
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+        height: barHeight,
+        padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-          border: Border.all(color: Colors.white12),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+          border: Border.all(color: AppColors.borderDark),
         ),
         child: Row(
           children: [
-            Icon(Icons.search, color: AppColors.muted),
-            const SizedBox(width: 10),
+            const Icon(Icons.search, color: AppColors.muted),
+            SizedBox(width: context.widthPct(2.5)),
             Expanded(
               child: TextField(
                 controller: _textController,
-                style: GoogleFonts.inter(color: Colors.white, fontSize: 13),
+                style: AppTypography.bodyMd.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(13),
+                ),
                 decoration: InputDecoration(
                   hintText: 'Search turfs, sports, or venues...',
-                  hintStyle: GoogleFonts.inter(color: AppColors.muted, fontSize: 13),
+                  hintStyle: AppTypography.bodyMd.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(13),
+                  ),
                   border: InputBorder.none,
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -71,9 +80,9 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   _bookingController.searchQuery.value = '';
                   setState(() {});
                 },
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: Icon(Icons.close, color: Colors.white54, size: 18),
+                child: Padding(
+                  padding: EdgeInsets.only(left: context.widthPct(2)),
+                  child: const Icon(Icons.close, color: AppColors.muted, size: 18),
                 ),
               );
             }),

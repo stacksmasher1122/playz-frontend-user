@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
 import 'home_shimmer.dart';
-import 'package:redesign/theme/responsive_helper.dart';
-import 'notification_screen.dart'; // D3 Fix: Referee Notifications Import
+import 'notification_screen.dart';
 
 /* ============================================================
    TOP APP BAR
@@ -21,13 +21,14 @@ class HomeTopAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final width = MediaQuery.of(context).size.width;
+    final avatarSize = context.minDimensionPct(9).clamp(32.0, 40.0);
+    final iconSize = context.minDimensionPct(6).clamp(20.0, 26.0);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
       child: Row(
         children: [
-          /// LOCATION TEXT + DROPDOWN ICON together
+          /// LOCATION TEXT + DROPDOWN ICON
           Expanded(
             child: GestureDetector(
               onTap: () {
@@ -42,9 +43,9 @@ class HomeTopAppBar extends StatelessWidget {
                   Icon(
                     Icons.location_on,
                     color: AppColors.accent,
-                    size: width < 360 ? 18 : 22,
+                    size: iconSize,
                   ),
-                  SizedBox(width: 6),
+                  SizedBox(width: context.widthPct(1.5)),
                   Flexible(
                     child: Obx(() {
                       final mapsCtrl = Get.find<MapsController>();
@@ -53,48 +54,53 @@ class HomeTopAppBar extends StatelessWidget {
                       final displayText = locality.isNotEmpty
                           ? locality
                           : city.isNotEmpty
-                          ? city
-                          : 'Select Location';
+                              ? city
+                              : 'Select Location';
                       return Text(
                         displayText,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: width < 360 ? 14 : 16,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(15),
                           fontWeight: FontWeight.w600,
                         ),
                       );
                     }),
                   ),
+                  SizedBox(width: context.widthPct(1)),
                   Icon(
                     Icons.keyboard_arrow_down_rounded,
-                    color: Colors.white70,
-                    size: width < 360 ? 20 : 24,
+                    color: AppColors.textSecondary,
+                    size: iconSize,
                   ),
                 ],
               ),
             ),
           ),
 
-          SizedBox(width: 8),
+          SizedBox(width: context.widthPct(2)),
 
           /// NOTIFICATIONS BELL
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => NotificationsScreen(),
+                  builder: (context) => const NotificationsScreen(),
                 ),
               );
             },
-            child: Icon(
-              Icons.notifications_none_rounded,
-              color: Colors.white,
-              size: width < 360 ? 20 : 24,
+            child: Padding(
+              padding: EdgeInsets.all(context.widthPct(1)),
+              child: Icon(
+                Icons.notifications_none_rounded,
+                color: AppColors.textPrimary,
+                size: iconSize,
+              ),
             ),
           ),
-          SizedBox(width: 16),
+
+          SizedBox(width: context.widthPct(3)),
 
           /// AVATAR
           Obx(() {
@@ -103,26 +109,26 @@ class HomeTopAppBar extends StatelessWidget {
               child: profileImageUrl.isNotEmpty
                   ? CachedNetworkImage(
                       imageUrl: profileImageUrl,
-                      width: width < 360 ? 32 : 36,
-                      height: width < 360 ? 32 : 36,
+                      width: avatarSize,
+                      height: avatarSize,
                       fit: BoxFit.cover,
                       placeholder: (_, __) => HomeShimmer(
-                        borderRadius: 20,
-                        width: width < 360 ? 32 : 36,
-                        height: width < 360 ? 32 : 36,
+                        borderRadius: avatarSize / 2,
+                        width: avatarSize,
+                        height: avatarSize,
                       ),
                       errorWidget: (_, __, ___) => HomeShimmer(
-                        width: width < 360 ? 32 : 36,
-                        height: width < 360 ? 32 : 36,
-                        borderRadius: 20,
-                        child: Icon(Icons.person, color: Colors.white38),
+                        width: avatarSize,
+                        height: avatarSize,
+                        borderRadius: avatarSize / 2,
+                        child: const Icon(Icons.person, color: AppColors.muted),
                       ),
                     )
                   : HomeShimmer(
-                      width: width < 360 ? 32 : 36,
-                      height: width < 360 ? 32 : 36,
-                      borderRadius: 20,
-                      child: Icon(Icons.person, color: Colors.white38),
+                      width: avatarSize,
+                      height: avatarSize,
+                      borderRadius: avatarSize / 2,
+                      child: const Icon(Icons.person, color: AppColors.muted),
                     ),
             );
           }),

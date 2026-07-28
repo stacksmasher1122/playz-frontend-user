@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Trainer/trainer_info/trainer_info_screen.dart';
 import '../trainer_models.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class OtherTrainersSection extends StatelessWidget {
-  OtherTrainersSection({super.key});
+  const OtherTrainersSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return SliverMainAxisGroup(
       slivers: [
-        SliverToBoxAdapter(child: SizedBox(height: 12)),
-        SliverToBoxAdapter(child: _FilterChips()),
-        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        SliverToBoxAdapter(child: SizedBox(height: context.heightPct(1.5))),
+        const SliverToBoxAdapter(child: _FilterChips()),
+        SliverToBoxAdapter(child: SizedBox(height: context.heightPct(2))),
         _DiscoveryGrid(),
       ],
     );
@@ -25,7 +25,7 @@ class OtherTrainersSection extends StatelessWidget {
 }
 
 class _FilterChips extends StatefulWidget {
-  _FilterChips();
+  const _FilterChips();
 
   @override
   State<_FilterChips> createState() => _FilterChipsState();
@@ -33,34 +33,38 @@ class _FilterChips extends StatefulWidget {
 
 class _FilterChipsState extends State<_FilterChips> {
   int selected = 0;
-  final chips = ['All', 'Cricket', 'Fitness', 'Football', 'Yoga'];
+  final chips = const ['All', 'Cricket', 'Fitness', 'Football', 'Yoga'];
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final barHeight = context.heightPct(5).clamp(38.0, 44.0);
+
     return SizedBox(
-      height: ResponsiveHelper.h(42),
+      height: barHeight,
       child: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+        padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
         scrollDirection: Axis.horizontal,
         itemCount: chips.length,
-        separatorBuilder: (_, __) => SizedBox(width: 10),
+        separatorBuilder: (_, __) => SizedBox(width: context.widthPct(2.5)),
         itemBuilder: (_, i) {
           final active = selected == i;
           return GestureDetector(
             onTap: () => setState(() => selected = i),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: active ? AppColors.accent : AppColors.surface,
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
               ),
               child: Text(
                 chips[i],
-                style: GoogleFonts.inter(
-                  color: active ? Colors.black : Colors.white,
+                style: AppTypography.headlineSm.copyWith(
+                  color: active ? AppColors.background : AppColors.textPrimary,
                   fontWeight: FontWeight.w600,
+                  fontSize: context.responsiveFont(13),
                 ),
               ),
             ),
@@ -111,24 +115,6 @@ class _DiscoveryGrid extends StatelessWidget {
       tags: ['Pro', 'Coaching'],
       sports: [Icons.sports_tennis],
     ),
-    DiscoveryItem(
-      name: 'Anjali Deshmukh',
-      subtitle: 'Viman Nagar',
-      rating: 5.0,
-      type: EntityType.trainer,
-      images: ['https://images.unsplash.com/photo-1599058917212-d750089bc07c'],
-      tags: ['Women', 'Yoga'],
-      sports: [Icons.self_improvement],
-    ),
-    DiscoveryItem(
-      name: 'Smash Zone',
-      subtitle: 'Baner, Pune',
-      rating: 4.5,
-      type: EntityType.academy,
-      images: ['https://images.unsplash.com/photo-1546519638-68e109498ffc'],
-      tags: ['Pro', 'Coaching'],
-      sports: [Icons.sports_tennis],
-    ),
   ];
 
   @override
@@ -138,7 +124,7 @@ class _DiscoveryGrid extends StatelessWidget {
     final columns = width >= 900 ? 3 : 2;
 
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
           (_, i) => _DiscoveryCard(item: items[i]),
@@ -146,8 +132,8 @@ class _DiscoveryGrid extends StatelessWidget {
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: columns,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
+          mainAxisSpacing: context.widthPct(3),
+          crossAxisSpacing: context.widthPct(3),
           childAspectRatio: 0.68,
         ),
       ),
@@ -157,7 +143,7 @@ class _DiscoveryGrid extends StatelessWidget {
 
 class _DiscoveryCard extends StatefulWidget {
   final DiscoveryItem item;
-  _DiscoveryCard({required this.item});
+  const _DiscoveryCard({required this.item});
 
   @override
   State<_DiscoveryCard> createState() => _DiscoveryCardState();
@@ -182,16 +168,17 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
         );
       },
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.card,
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+            borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+            border: Border.all(color: AppColors.borderDark),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// IMAGE — flex-based so it doesn't push info section out
+              /// IMAGE
               Expanded(
                 flex: 6,
                 child: Stack(
@@ -204,19 +191,21 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
                         imageUrl: item.images[i],
                         fit: BoxFit.cover,
                         placeholder: (_, __) => Shimmer.fromColors(
-                          baseColor: Colors.grey.shade800,
-                          highlightColor: Colors.grey.shade700,
-                          child: Container(color: Colors.grey.shade800),
+                          baseColor: AppColors.surfaceElevated.withValues(alpha: 0.6),
+                          highlightColor: AppColors.borderDark.withValues(alpha: 0.8),
+                          child: Container(color: AppColors.card),
                         ),
-                        errorWidget: (_, __, ___) =>
-                            Icon(Icons.broken_image),
+                        errorWidget: (_, __, ___) => const Icon(
+                          Icons.broken_image,
+                          color: AppColors.muted,
+                        ),
                       ),
                     ),
 
                     /// TYPE BADGE
                     Positioned(
-                      top: ResponsiveHelper.h(8),
-                      left: ResponsiveHelper.w(8),
+                      top: context.heightPct(1),
+                      left: context.widthPct(2),
                       child: _Pill(
                         item.type == EntityType.trainer ? 'TRAINER' : 'ACADEMY',
                       ),
@@ -224,18 +213,18 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
 
                     /// SPORTS ICONS
                     Positioned(
-                      top: ResponsiveHelper.h(8),
-                      right: ResponsiveHelper.w(8),
+                      top: context.heightPct(1),
+                      right: context.widthPct(2),
                       child: Row(
                         children: item.sports.take(2).map((icon) {
                           return Container(
-                            margin: EdgeInsets.only(left: 6),
-                            padding: EdgeInsets.all(ResponsiveHelper.w(6)),
+                            margin: EdgeInsets.only(left: context.widthPct(1.5)),
+                            padding: EdgeInsets.all(context.widthPct(1.5)),
                             decoration: BoxDecoration(
-                              color: Colors.black54,
+                              color: Colors.black.withValues(alpha: 0.54),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(icon, size: 14, color: Colors.white),
+                            child: Icon(icon, size: 14, color: AppColors.textPrimary),
                           );
                         }).toList(),
                       ),
@@ -244,11 +233,11 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
                 ),
               ),
 
-              /// INFO — flex-based so it always fits within card height
+              /// INFO
               Expanded(
                 flex: 4,
                 child: Padding(
-                  padding: EdgeInsets.all(ResponsiveHelper.w(10)),
+                  padding: EdgeInsets.all(context.widthPct(2.5)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -260,8 +249,8 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
                               item.name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
+                              style: AppTypography.headlineSm.copyWith(
+                                color: AppColors.textPrimary,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -269,21 +258,21 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
                           _Rating(item.rating),
                         ],
                       ),
-                      SizedBox(height: 2),
+                      SizedBox(height: context.heightPct(0.3)),
                       Text(
                         item.subtitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
+                        style: AppTypography.bodySm.copyWith(
                           color: AppColors.muted,
-                          fontSize: ResponsiveHelper.sp(12),
+                          fontSize: context.responsiveFont(12),
                         ),
                       ),
-                      SizedBox(height: 6),
+                      SizedBox(height: context.heightPct(0.8)),
                       Wrap(
-                        spacing: 6,
-                        runSpacing: 4,
-                        children: item.tags.map(_TagChip.new).toList(),
+                        spacing: context.widthPct(1.5),
+                        runSpacing: context.heightPct(0.5),
+                        children: item.tags.map((t) => _TagChip(t)).toList(),
                       ),
                     ],
                   ),
@@ -299,23 +288,26 @@ class _DiscoveryCardState extends State<_DiscoveryCard> {
 
 class _Pill extends StatelessWidget {
   final String text;
-  _Pill(this.text);
+  const _Pill(this.text);
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(2.5),
+        vertical: context.heightPct(0.5),
+      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: Colors.white70),
-        color: Colors.black54,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+        border: Border.all(color: AppColors.textSecondary),
+        color: Colors.black.withValues(alpha: 0.54),
       ),
       child: Text(
         text,
-        style: GoogleFonts.inter(
-          fontSize: ResponsiveHelper.sp(10),
-          color: Colors.white,
+        style: AppTypography.labelCaps10.copyWith(
+          fontSize: context.responsiveFont(10),
+          color: AppColors.textPrimary,
           fontWeight: FontWeight.w700,
         ),
       ),
@@ -325,26 +317,29 @@ class _Pill extends StatelessWidget {
 
 class _Rating extends StatelessWidget {
   final double rating;
-  _Rating(this.rating);
+  const _Rating(this.rating);
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(1.5),
+        vertical: context.heightPct(0.3),
+      ),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
       ),
       child: Row(
         children: [
-          Icon(Icons.star, size: 12, color: AppColors.accent),
-          SizedBox(width: 2),
+          const Icon(Icons.star, size: 12, color: AppColors.accent),
+          SizedBox(width: context.widthPct(0.5)),
           Text(
             rating.toString(),
-            style: GoogleFonts.inter(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(11),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(11),
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -356,20 +351,26 @@ class _Rating extends StatelessWidget {
 
 class _TagChip extends StatelessWidget {
   final String text;
-  _TagChip(this.text);
+  const _TagChip(this.text);
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(2),
+        vertical: context.heightPct(0.4),
+      ),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
       ),
       child: Text(
         text,
-        style: GoogleFonts.inter(fontSize: ResponsiveHelper.sp(11), color: Colors.white),
+        style: AppTypography.bodySm.copyWith(
+          fontSize: context.responsiveFont(11),
+          color: AppColors.textPrimary,
+        ),
       ),
     );
   }

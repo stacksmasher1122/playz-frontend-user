@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class EquipmentOptionsSection extends StatelessWidget {
@@ -15,24 +15,25 @@ class EquipmentOptionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             const Icon(Icons.sports_tennis_rounded, color: AppColors.accent, size: 18),
-            const SizedBox(width: 8),
+            SizedBox(width: context.widthPct(2)),
             Text(
               'Equipment Options',
-              style: GoogleFonts.inter(
+              style: AppTypography.headlineSm.copyWith(
                 color: AppColors.accent,
                 fontWeight: FontWeight.bold,
-                fontSize: ResponsiveHelper.sp(14),
+                fontSize: context.responsiveFont(14),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: context.heightPct(1)),
         Row(
           children: [
             Expanded(
@@ -49,7 +50,7 @@ class EquipmentOptionsSection extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: context.widthPct(2.5)),
             Expanded(
               child: _EquipmentOptionCard(
                 title: 'Equipment provided',
@@ -90,12 +91,12 @@ class _EquipmentOptionCard extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(context.widthPct(3)),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.accent.withValues(alpha: 0.15) : AppColors.card,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
           border: Border.all(
-            color: isSelected ? AppColors.accent : Colors.white12,
+            color: isSelected ? AppColors.accent : AppColors.borderDark,
             width: isSelected ? 1.8 : 1.0,
           ),
         ),
@@ -103,17 +104,19 @@ class _EquipmentOptionCard extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.accent : Colors.white54,
+              color: isSelected ? AppColors.accent : AppColors.textSecondary,
               size: 20,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: context.widthPct(2)),
             Expanded(
               child: Text(
                 title,
-                style: GoogleFonts.inter(
-                  color: isSelected ? Colors.white : Colors.white70,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodySm.copyWith(
+                  color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  fontSize: ResponsiveHelper.sp(11),
+                  fontSize: context.responsiveFont(11),
                 ),
               ),
             ),

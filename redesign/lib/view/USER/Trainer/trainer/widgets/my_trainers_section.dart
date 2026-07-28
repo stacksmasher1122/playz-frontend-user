@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MyTrainersSection extends StatefulWidget {
@@ -22,113 +22,117 @@ class _MyTrainersSectionState extends State<MyTrainersSection> {
         .toList();
 
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
-          SizedBox(height: 8),
+        SizedBox(height: context.heightPct(1)),
 
-          /// HEADER
-          Row(
-            children: [
-              Text(
+        /// HEADER
+        Row(
+          children: [
+            Expanded(
+              child: Text(
                 'My Trainers',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(18),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.headlineLgMobile.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(18),
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              Spacer(),
-              Text(
-                'Active & recent coaches',
-                style: GoogleFonts.inter(color: AppColors.muted, fontSize: 13),
+            ),
+            Text(
+              'Active & recent coaches',
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: context.heightPct(1.5)),
+
+        /// FILTER CHIPS (Horizontal Scrollable Row)
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          clipBehavior: Clip.none,
+          child: Row(
+            children: [
+              _FilterButton(
+                label: 'Active packages',
+                icon: Icons.local_fire_department,
+                active: selectedFilter == 'Active packages',
+                onTap: () {
+                  setState(() {
+                    selectedFilter = 'Active packages';
+                  });
+                },
+              ),
+              SizedBox(width: context.widthPct(2)),
+              _FilterButton(
+                label: 'Cricket',
+                active: selectedFilter == 'Cricket',
+                onTap: () {
+                  setState(() {
+                    selectedFilter = 'Cricket';
+                  });
+                },
+              ),
+              SizedBox(width: context.widthPct(2)),
+              _FilterButton(
+                label: 'Football',
+                active: selectedFilter == 'Football',
+                onTap: () {
+                  setState(() {
+                    selectedFilter = 'Football';
+                  });
+                },
+              ),
+              SizedBox(width: context.widthPct(2)),
+              _FilterButton(
+                label: 'Online',
+                active: selectedFilter == 'Online',
+                onTap: () {
+                  setState(() {
+                    selectedFilter = 'Online';
+                  });
+                },
               ),
             ],
           ),
+        ),
 
-          SizedBox(height: 12),
+        SizedBox(height: context.heightPct(1.8)),
 
-          /// FILTER CHIPS (Horizontal Scrollable Row)
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            clipBehavior: Clip.none,
-            child: Row(
-              children: [
-                _FilterButton(
-                  label: 'Active packages',
-                  icon: Icons.local_fire_department,
-                  active: selectedFilter == 'Active packages',
-                  onTap: () {
-                    setState(() {
-                      selectedFilter = 'Active packages';
-                    });
-                  },
-                ),
-                SizedBox(width: 8),
-                _FilterButton(
-                  label: 'Cricket',
-                  active: selectedFilter == 'Cricket',
-                  onTap: () {
-                    setState(() {
-                      selectedFilter = 'Cricket';
-                    });
-                  },
-                ),
-                SizedBox(width: 8),
-                _FilterButton(
-                  label: 'Football',
-                  active: selectedFilter == 'Football',
-                  onTap: () {
-                    setState(() {
-                      selectedFilter = 'Football';
-                    });
-                  },
-                ),
-                SizedBox(width: 8),
-                _FilterButton(
-                  label: 'Online',
-                  active: selectedFilter == 'Online',
-                  onTap: () {
-                    setState(() {
-                      selectedFilter = 'Online';
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          SizedBox(height: 14),
-
-          /// TRAINER CARDS
-          if (filteredTrainers.isEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
-              child: Center(
-                child: Text(
-                  'No trainers found',
-                  style: GoogleFonts.inter(color: AppColors.muted),
-                ),
+        /// TRAINER CARDS
+        if (filteredTrainers.isEmpty)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: context.heightPct(5)),
+            child: Center(
+              child: Text(
+                'No trainers found',
+                style: AppTypography.bodySm.copyWith(color: AppColors.muted),
               ),
-            )
-          else
-            ...filteredTrainers.expand((trainer) => [
-                  _MyTrainerCard(
-                    name: trainer.name,
-                    specialty: trainer.specialty,
-                    rating: trainer.rating,
-                    status: trainer.status,
-                    completionText: trainer.completionText,
-                    progress: trainer.progress,
-                    tags: trainer.tags,
-                  ),
-                  SizedBox(height: 12),
-                ]),
+            ),
+          )
+        else
+          ...filteredTrainers.expand((trainer) => [
+                _MyTrainerCard(
+                  name: trainer.name,
+                  specialty: trainer.specialty,
+                  rating: trainer.rating,
+                  status: trainer.status,
+                  completionText: trainer.completionText,
+                  progress: trainer.progress,
+                  tags: trainer.tags,
+                ),
+                SizedBox(height: context.heightPct(1.5)),
+              ]),
 
-          // Generous bottom spacer to guarantee screen scrollability
-          SizedBox(height: 120),
-        ]),
-      ),
+        SizedBox(height: context.heightPct(12)),
+      ])),
     );
   }
 }
@@ -143,7 +147,6 @@ class _MyTrainerCard extends StatelessWidget {
   final List<String> tags;
 
   const _MyTrainerCard({
-    super.key,
     required this.name,
     required this.specialty,
     required this.rating,
@@ -157,10 +160,10 @@ class _MyTrainerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+      padding: EdgeInsets.all(context.widthPct(3.5)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
         border: Border.all(color: AppColors.accent),
         boxShadow: [
           BoxShadow(color: AppColors.accent.withValues(alpha: 0.15), blurRadius: 12),
@@ -177,41 +180,53 @@ class _MyTrainerCard extends StatelessWidget {
                 backgroundColor: AppColors.surface,
                 child: Text(
                   'Trainer',
-                  style: GoogleFonts.inter(fontSize: ResponsiveHelper.sp(10), color: Colors.white),
+                  style: AppTypography.bodyXs.copyWith(
+                    fontSize: context.responsiveFont(10),
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
-              SizedBox(width: 12),
+              SizedBox(width: context.widthPct(3)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        Text(
-                          name,
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
+                        Expanded(
+                          child: Text(
+                            name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.headlineSm.copyWith(
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                        SizedBox(width: 6),
-                        _statusPill(status),
+                        SizedBox(width: context.widthPct(1.5)),
+                        _statusPill(context, status),
                       ],
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: context.heightPct(0.4)),
                     Text(
                       specialty,
-                      style: GoogleFonts.inter(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySm.copyWith(
                         color: AppColors.muted,
-                        fontSize: ResponsiveHelper.sp(12),
+                        fontSize: context.responsiveFont(12),
                       ),
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: context.heightPct(0.4)),
                     Row(
                       children: [
-                        Icon(Icons.star, size: 14, color: AppColors.accent),
-                        SizedBox(width: 4),
-                        Text(rating, style: TextStyle(color: Colors.white)),
+                        const Icon(Icons.star, size: 14, color: AppColors.accent),
+                        SizedBox(width: context.widthPct(1)),
+                        Text(
+                          rating,
+                          style: AppTypography.bodySm.copyWith(color: AppColors.textPrimary),
+                        ),
                       ],
                     ),
                   ],
@@ -220,16 +235,16 @@ class _MyTrainerCard extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 10),
+          SizedBox(height: context.heightPct(1.2)),
 
           /// TAGS
           Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: tags.map((t) => _Tag(t)).toList(),
+            spacing: context.widthPct(1.5),
+            runSpacing: context.heightPct(0.6),
+            children: tags.map((t) => _Tag(label: t)).toList(),
           ),
 
-          SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.5)),
 
           /// PROGRESS BAR
           Column(
@@ -238,18 +253,18 @@ class _MyTrainerCard extends StatelessWidget {
               LinearProgressIndicator(
                 value: progress,
                 backgroundColor: AppColors.surface,
-                valueColor: AlwaysStoppedAnimation(AppColors.accent),
+                valueColor: const AlwaysStoppedAnimation(AppColors.accent),
                 minHeight: 4,
               ),
-              SizedBox(height: 4),
+              SizedBox(height: context.heightPct(0.4)),
               Text(
                 completionText,
-                style: GoogleFonts.inter(color: AppColors.muted, fontSize: 11),
+                style: AppTypography.bodyXs.copyWith(color: AppColors.muted, fontSize: 11),
               ),
             ],
           ),
 
-          SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.5)),
 
           /// ACTIONS
           Row(
@@ -257,28 +272,40 @@ class _MyTrainerCard extends StatelessWidget {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () {},
-                  icon: Icon(Icons.chat_bubble_outline),
-                  label: Text('Chat'),
+                  icon: const Icon(Icons.chat_bubble_outline),
+                  label: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text('Chat', style: AppTypography.bodySm.copyWith(color: AppColors.textPrimary)),
+                  ),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: BorderSide(color: Colors.white24),
+                    foregroundColor: AppColors.textPrimary,
+                    side: const BorderSide(color: AppColors.borderDark),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: context.widthPct(2.5)),
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () {},
-                  icon: Icon(Icons.calendar_today, size: 16),
-                  label: Text('View Schedule'),
+                  icon: const Icon(Icons.calendar_today, size: 16),
+                  label: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'View Schedule',
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.background,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accent,
-                    foregroundColor: Colors.black,
+                    foregroundColor: AppColors.background,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
                     ),
                   ),
                 ),
@@ -290,18 +317,21 @@ class _MyTrainerCard extends StatelessWidget {
     );
   }
 
-  Widget _statusPill(String text) {
+  Widget _statusPill(BuildContext context, String text) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(2)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(2),
+        vertical: context.heightPct(0.3),
+      ),
       decoration: BoxDecoration(
         color: AppColors.accent.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
       ),
       child: Text(
         text,
-        style: GoogleFonts.inter(
+        style: AppTypography.labelCaps10.copyWith(
           color: AppColors.accent,
-          fontSize: ResponsiveHelper.sp(11),
+          fontSize: context.responsiveFont(11),
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -311,22 +341,25 @@ class _MyTrainerCard extends StatelessWidget {
 
 class _Tag extends StatelessWidget {
   final String label;
-  _Tag(this.label);
+  const _Tag({required this.label});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(5)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(2.5),
+        vertical: context.heightPct(0.6),
+      ),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
       ),
       child: Text(
         label,
-        style: GoogleFonts.inter(
-          fontSize: ResponsiveHelper.sp(11),
-          color: Colors.white,
+        style: AppTypography.bodySm.copyWith(
+          fontSize: context.responsiveFont(11),
+          color: AppColors.textPrimary,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -340,7 +373,7 @@ class _FilterButton extends StatelessWidget {
   final VoidCallback onTap;
   final IconData? icon;
 
-  _FilterButton({
+  const _FilterButton({
     required this.label,
     required this.active,
     required this.onTap,
@@ -352,36 +385,37 @@ class _FilterButton extends StatelessWidget {
     ResponsiveHelper.init(context);
     return AnimatedScale(
       scale: active ? 1 : 0.98,
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
       curve: Curves.easeOut,
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
           splashColor: AppColors.accent.withValues(alpha: 0.2),
           highlightColor: AppColors.accent.withValues(alpha: 0.1),
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 180),
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(9)),
+            duration: const Duration(milliseconds: 180),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.widthPct(3.5),
+              vertical: context.heightPct(1.1),
+            ),
             decoration: BoxDecoration(
               color: active
                   ? AppColors.accent.withValues(alpha: 0.15)
                   : AppColors.surface,
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
               border: Border.all(
-                color: active
-                    ? AppColors.accent
-                    : Colors.white.withValues(alpha: 0.08),
-                width: ResponsiveHelper.w(1),
+                color: active ? AppColors.accent : AppColors.borderDark,
+                width: 1,
               ),
               boxShadow: active
                   ? [
                       BoxShadow(
                         color: AppColors.accent.withValues(alpha: 0.25),
                         blurRadius: 12,
-                        offset: Offset(0, 4),
+                        offset: const Offset(0, 4),
                       ),
                     ]
                   : [],
@@ -393,16 +427,16 @@ class _FilterButton extends StatelessWidget {
                   Icon(
                     icon,
                     size: 14,
-                    color: active ? AppColors.accent : Colors.white,
+                    color: active ? AppColors.accent : AppColors.textPrimary,
                   ),
-                  SizedBox(width: 6),
+                  SizedBox(width: context.widthPct(1.5)),
                 ],
                 Text(
                   label,
-                  style: GoogleFonts.inter(
-                    fontSize: ResponsiveHelper.sp(12),
+                  style: AppTypography.headlineSm.copyWith(
+                    fontSize: context.responsiveFont(12),
                     fontWeight: FontWeight.w600,
-                    color: active ? AppColors.accent : Colors.white,
+                    color: active ? AppColors.accent : AppColors.textPrimary,
                   ),
                 ),
               ],

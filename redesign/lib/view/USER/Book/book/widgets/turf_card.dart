@@ -1,18 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/model/User_Models/Booking_Models/turf_model.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_dimensions.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Book/turf_details/turf_details_screen.dart';
 import 'image_shimmer.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TurfCard extends StatefulWidget {
   final TurfModel turf;
-  TurfCard({super.key, required this.turf});
+  const TurfCard({super.key, required this.turf});
 
   @override
   State<TurfCard> createState() => _TurfCardState();
@@ -68,21 +68,24 @@ class _TurfCardState extends State<TurfCard>
 
     final turf = widget.turf;
     final images = turf.allImages;
-    final width = MediaQuery.of(context).size.width;
-    final imageHeight = width * 0.48;
+    final imageHeight = context.widthPct(48).clamp(160.0, 240.0);
     final displayPrice = turf.lowestPrice?.toInt() ?? 0;
+    final favoriteBtnSize = context.minDimensionPct(9).clamp(32.0, 40.0);
 
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        border: Border.all(color: AppColors.borderDark, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// IMAGE PAGE VIEW (CACHED + SHIMMER)
           ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(context.minDimensionPct(4)),
+            ),
             child: Stack(
               children: [
                 SizedBox(
@@ -98,21 +101,21 @@ class _TurfCardState extends State<TurfCard>
                             width: double.infinity,
                             placeholder: (_, __) =>
                                 ImageShimmer(height: imageHeight),
-                            errorWidget: (_, __, ___) => Center(
+                            errorWidget: (_, __, ___) => const Center(
                               child: Icon(
                                 Icons.broken_image,
-                                color: Colors.white54,
+                                color: AppColors.muted,
                                 size: 32,
                               ),
                             ),
                           ),
                         )
                       : Container(
-                          color: Colors.grey.shade900,
-                          child: Center(
+                          color: AppColors.card,
+                          child: const Center(
                             child: Icon(
                               Icons.image_not_supported,
-                              color: Colors.white38,
+                              color: AppColors.muted,
                               size: 40,
                             ),
                           ),
@@ -122,22 +125,22 @@ class _TurfCardState extends State<TurfCard>
                 /// PAGE INDICATOR
                 if (images.length > 1)
                   Positioned(
-                    bottom: ResponsiveHelper.h(10),
-                    left: ResponsiveHelper.w(0),
-                    right: ResponsiveHelper.w(0),
+                    bottom: context.heightPct(1.2),
+                    left: 0,
+                    right: 0,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
                         images.length,
                         (i) => Container(
-                          margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(3)),
-                          width: ResponsiveHelper.w(6),
-                          height: ResponsiveHelper.h(6),
+                          margin: EdgeInsets.symmetric(horizontal: context.widthPct(0.8)),
+                          width: 6,
+                          height: 6,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: i == _pageIndex
-                                ? Colors.white
-                                : Colors.white38,
+                                ? AppColors.textPrimary
+                                : AppColors.textSecondary.withValues(alpha: 0.5),
                           ),
                         ),
                       ),
@@ -146,8 +149,8 @@ class _TurfCardState extends State<TurfCard>
 
                 /// FAVORITE BUTTON
                 Positioned(
-                  top: ResponsiveHelper.h(12),
-                  right: ResponsiveHelper.w(12),
+                  top: context.heightPct(1.2),
+                  right: context.widthPct(3),
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
@@ -155,16 +158,16 @@ class _TurfCardState extends State<TurfCard>
                       });
                     },
                     child: Container(
-                      width: ResponsiveHelper.w(34),
-                      height: ResponsiveHelper.w(34),
+                      width: favoriteBtnSize,
+                      height: favoriteBtnSize,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.55),
+                        color: Colors.black.withValues(alpha: 0.55),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         _isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: _isFavorite ? AppColors.accent : Colors.white,
-                        size: ResponsiveHelper.w(18),
+                        color: _isFavorite ? AppColors.accent : AppColors.textPrimary,
+                        size: favoriteBtnSize * 0.52,
                       ),
                     ),
                   ),
@@ -175,13 +178,13 @@ class _TurfCardState extends State<TurfCard>
 
           /// DETAILS
           Padding(
-            padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+            padding: EdgeInsets.all(context.widthPct(3.5)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// 🔥 NAVIGABLE CONTENT ONLY
+                /// NAVIGABLE CONTENT ONLY
                 InkWell(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                   onTap: () {
                     // Set selected turf in controller before navigating
                     final bookingCtrl = Get.find<BookingController>();
@@ -194,7 +197,7 @@ class _TurfCardState extends State<TurfCard>
                     );
                   },
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
+                    padding: EdgeInsets.only(bottom: context.heightPct(1.2)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -202,43 +205,46 @@ class _TurfCardState extends State<TurfCard>
                           turf.turfName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
+                          style: AppTypography.headlineSm.copyWith(
                             color: AppColors.accent,
-                            fontSize: ResponsiveHelper.sp(16),
+                            fontSize: context.responsiveFont(16),
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        SizedBox(height: context.heightPct(0.4)),
                         Text(
                           turf.displayLocation,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            color: AppColors.muted,
-                            fontSize: ResponsiveHelper.sp(12),
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.textSecondary,
+                            fontSize: context.responsiveFont(12),
                           ),
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: context.heightPct(0.8)),
 
                         /// Sports tags
                         if (turf.sports.isNotEmpty)
-                          Row(
+                          Wrap(
+                            spacing: context.widthPct(1.5),
+                            runSpacing: context.heightPct(0.4),
                             children: [
-                              ...turf.sports.take(3).map((sport) => Padding(
-                                padding: EdgeInsets.only(right: 6),
-                                child: Text(
-                                  sport,
-                                  style: GoogleFonts.inter(
-                                    fontSize: ResponsiveHelper.sp(12),
-                                    color: AppColors.muted,
-                                  ),
+                              ...turf.sports.take(3).map((sport) => Text(
+                                sport,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.bodySm.copyWith(
+                                  fontSize: context.responsiveFont(12),
+                                  color: AppColors.textSecondary,
                                 ),
                               )),
                               if (turf.sports.length > 3)
                                 Text(
                                   '+${turf.sports.length - 3} more',
-                                  style: GoogleFonts.inter(
-                                    fontSize: ResponsiveHelper.sp(12),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.bodySm.copyWith(
+                                    fontSize: context.responsiveFont(12),
                                     color: AppColors.accent,
                                   ),
                                 ),
@@ -247,35 +253,37 @@ class _TurfCardState extends State<TurfCard>
 
                         /// AMENITY TAGS ROW
                         if (turf.amenities.isNotEmpty) ...[
-                          SizedBox(height: ResponsiveHelper.h(10)),
+                          SizedBox(height: context.heightPct(1.2)),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: turf.amenities.map((amenity) {
                                 return Container(
-                                  margin: EdgeInsets.only(right: ResponsiveHelper.w(8)),
+                                  margin: EdgeInsets.only(right: context.widthPct(2)),
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: ResponsiveHelper.w(10),
-                                    vertical: ResponsiveHelper.h(6),
+                                    horizontal: context.widthPct(2.5),
+                                    vertical: context.heightPct(0.6),
                                   ),
                                   decoration: BoxDecoration(
                                     color: AppColors.card,
-                                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(AppDimensions.radiusMd)),
+                                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
                                         _getAmenityIcon(amenity),
-                                        size: ResponsiveHelper.sp(13),
-                                        color: Colors.white70,
+                                        size: context.responsiveFont(13),
+                                        color: AppColors.textSecondary,
                                       ),
-                                      SizedBox(width: ResponsiveHelper.w(4)),
+                                      SizedBox(width: context.widthPct(1)),
                                       Text(
                                         amenity,
-                                        style: GoogleFonts.inter(
-                                          color: Colors.white.withOpacity(0.9),
-                                          fontSize: ResponsiveHelper.sp(11),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppTypography.bodySm.copyWith(
+                                          color: AppColors.textPrimary,
+                                          fontSize: context.responsiveFont(11),
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -292,14 +300,14 @@ class _TurfCardState extends State<TurfCard>
                 ),
 
                 /// HORIZONTAL DIVIDER LINE
-                Divider(
-                  color: Colors.white.withOpacity(0.08),
+                const Divider(
+                  color: AppColors.divider,
                   thickness: 1,
                   height: 1,
                 ),
-                SizedBox(height: ResponsiveHelper.h(12)),
+                SizedBox(height: context.heightPct(1.2)),
 
-                /// 🔥 PRICE + BOOK (NOT NAVIGABLE)
+                /// PRICE + BOOK BUTTON
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -312,30 +320,30 @@ class _TurfCardState extends State<TurfCard>
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
-                              style: GoogleFonts.inter(
-                                fontSize: ResponsiveHelper.sp(13),
-                                color: AppColors.muted,
+                              style: AppTypography.bodySm.copyWith(
+                                fontSize: context.responsiveFont(13),
+                                color: AppColors.textSecondary,
                               ),
                               children: [
-                                TextSpan(text: 'Starts from '),
+                                const TextSpan(text: 'Starts from '),
                                 TextSpan(
                                   text: displayPrice > 0
                                       ? '₹$displayPrice'
                                       : '₹--',
-                                  style: TextStyle(
+                                  style: AppTypography.headlineSm.copyWith(
                                     color: AppColors.accent,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: ResponsiveHelper.sp(18),
+                                    fontSize: context.responsiveFont(18),
                                   ),
                                 ),
-                                TextSpan(text: '/hr'),
+                                const TextSpan(text: '/hr'),
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: context.widthPct(2.5)),
                     ElevatedButton(
                       onPressed: () {
                         final bookingCtrl = Get.find<BookingController>();
@@ -348,16 +356,25 @@ class _TurfCardState extends State<TurfCard>
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.accent,
-                        foregroundColor: Colors.black,
+                        foregroundColor: AppColors.background,
                         padding: EdgeInsets.symmetric(
-                          horizontal: 18,
-                          vertical: 10,
+                          horizontal: context.widthPct(4.5),
+                          vertical: context.heightPct(1),
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                         ),
                       ),
-                      child: Text('Book'),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Book',
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.background,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

@@ -1,15 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../home_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'home_section_header.dart';
 import 'home_shimmer.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    FEATURED EVENTS
    ============================================================ */
 class HomeFeaturedEvents extends StatefulWidget {
-  HomeFeaturedEvents({super.key});
+  const HomeFeaturedEvents({super.key});
 
   @override
   State<HomeFeaturedEvents> createState() => _HomeFeaturedEventsState();
@@ -46,13 +47,13 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
     _controller = PageController(viewportFraction: 0.86);
 
     Future.doWhile(() async {
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 5));
       if (!mounted) return false;
 
       _index = (_index + 1) % _events.length;
       _controller.animateToPage(
         _index,
-        duration: Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOut,
       );
       return true;
@@ -71,19 +72,16 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
-          child: HomeSectionHeader('Featured Events'),
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
+          child: const HomeSectionHeader('Featured Events'),
         ),
-        SizedBox(height: 14),
+        SizedBox(height: context.heightPct(1.5)),
         LayoutBuilder(
           builder: (context, constraints) {
             final w = constraints.maxWidth;
 
             final cardHeight = (w * 0.42).clamp(140.0, 170.0);
-            final padding = (w * 0.045).clamp(12.0, 16.0);
-            final titleSize = (w * 0.045).clamp(14.0, 16.0);
-            final subtitleSize = (w * 0.035).clamp(11.0, 12.0);
-            final tagSize = (w * 0.032).clamp(10.0, 11.0);
+            final padding = context.widthPct(4.5).clamp(12.0, 16.0);
 
             return SizedBox(
               height: cardHeight,
@@ -96,24 +94,26 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
 
                   return Padding(
                     padding: EdgeInsets.only(
-                      left: index == 0 ? 20 : 0,
-                      right: index == _events.length - 1 ? 20 : 16,
+                      left: index == 0 ? context.widthPct(5) : 0,
+                      right: index == _events.length - 1 ? context.widthPct(5) : context.widthPct(4),
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                      borderRadius: BorderRadius.circular(
+                        context.minDimensionPct(5).clamp(14.0, 20.0),
+                      ),
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          /// ✅ CACHED IMAGE WITH SHIMMER
+                          /// CACHED IMAGE WITH SHIMMER
                           CachedNetworkImage(
                             imageUrl: event['image']!,
                             fit: BoxFit.cover,
                             cacheKey: event['image'],
-                            placeholder: (context, _) => HomeShimmer(),
-                            errorWidget: (context, _, __) => Center(
+                            placeholder: (context, _) => const HomeShimmer(),
+                            errorWidget: (context, _, __) => const Center(
                               child: Icon(
                                 Icons.broken_image,
-                                color: Colors.white54,
+                                color: AppColors.muted,
                                 size: 28,
                               ),
                             ),
@@ -142,49 +142,49 @@ class _HomeFeaturedEventsState extends State<HomeFeaturedEvents> {
                                 /// TAG
                                 Container(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: (w * 0.03).clamp(8.0, 12.0),
-                                    vertical: (w * 0.012).clamp(4.0, 6.0),
+                                    horizontal: context.widthPct(3).clamp(8.0, 12.0),
+                                    vertical: context.heightPct(0.5).clamp(4.0, 6.0),
                                   ),
                                   decoration: BoxDecoration(
-                                    color: UserHomePage.accent,
-                                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                                    color: AppColors.accent,
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     event['tag']!,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: tagSize,
+                                    style: AppTypography.labelCaps.copyWith(
+                                      fontSize: context.responsiveFont(10),
                                       fontWeight: FontWeight.w700,
-                                      color: Colors.black,
+                                      color: AppColors.background,
                                     ),
                                   ),
                                 ),
 
-                                Spacer(),
+                                const Spacer(),
 
                                 /// TITLE
                                 Text(
                                   event['title']!,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: titleSize,
+                                  style: AppTypography.headlineSm.copyWith(
+                                    color: AppColors.textPrimary,
+                                    fontSize: context.responsiveFont(15),
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
 
-                                SizedBox(height: 4),
+                                SizedBox(height: context.heightPct(0.5)),
 
                                 /// SUBTITLE
                                 Text(
                                   event['subtitle']!,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: UserHomePage.muted,
-                                    fontSize: subtitleSize,
+                                  style: AppTypography.bodySm.copyWith(
+                                    color: AppColors.textSecondary,
+                                    fontSize: context.responsiveFont(11),
                                   ),
                                 ),
                               ],

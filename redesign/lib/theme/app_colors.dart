@@ -144,6 +144,14 @@ class AppColors {
     colors: [Color(0xFF1A1A1A), Color(0xFF0A0A0A)],
   );
 
+  /// Grey-Green Gradient (used exclusively for Home Quick Action buttons / tiles).
+  /// Predominantly grey with a very subtle green tint.
+  static const LinearGradient quickActionGreyGreen = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF1F211F), Color(0xFF171917)],
+  );
+
   /// Black Bottom Scrim Gradient (used for hero image text readability).
   static const LinearGradient blackScrim = LinearGradient(
     begin: Alignment.bottomCenter,

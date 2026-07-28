@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TrainerEndOfResults extends StatelessWidget {
-  TrainerEndOfResults({super.key});
+  const TrainerEndOfResults({super.key});
 
   static const _illustrationUrl =
       'https://illustrations.popsy.co/gray/fitness-trainer.svg';
@@ -14,35 +14,33 @@ class TrainerEndOfResults extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final width = MediaQuery.of(context).size.width;
-
-    /// Responsive sizing
-    final imageSize = width < 360
-        ? 90.0
-        : width < 600
-        ? 120.0
-        : 140.0;
+    final imageSize = context.minDimensionPct(28).clamp(90.0, 140.0);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, 36, 20, 56),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(5),
+        context.heightPct(4),
+        context.widthPct(5),
+        context.heightPct(6),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          /// 🖼️ ILLUSTRATION (CACHED + SHIMMER)
+          /// ILLUSTRATION (CACHED + SHIMMER)
           CachedNetworkImage(
             imageUrl: _illustrationUrl,
             height: imageSize,
             width: imageSize,
             fit: BoxFit.contain,
             placeholder: (_, __) => Shimmer.fromColors(
-              baseColor: Colors.grey.shade800,
-              highlightColor: Colors.grey.shade700,
+              baseColor: AppColors.surfaceElevated.withValues(alpha: 0.6),
+              highlightColor: AppColors.borderDark.withValues(alpha: 0.8),
               child: Container(
                 height: imageSize,
                 width: imageSize,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade800,
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+                  color: AppColors.card,
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                 ),
               ),
             ),
@@ -53,53 +51,65 @@ class TrainerEndOfResults extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 20),
+          SizedBox(height: context.heightPct(2.5)),
 
           /// TITLE
           Text(
             'That’s all for now',
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(16),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.headlineLgMobile.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(16),
               fontWeight: FontWeight.w700,
             ),
           ),
 
-          SizedBox(height: 8),
+          SizedBox(height: context.heightPct(1)),
 
           /// SUBTITLE
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 340),
+            constraints: BoxConstraints(maxWidth: context.widthPct(85)),
             child: Text(
               'No more trainers or academies found.\nTry a different sport or expand your filters.',
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.inter(
-                color: AppColors.muted,
-                fontSize: ResponsiveHelper.sp(13),
-                height: ResponsiveHelper.h(1.4),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.textSecondary,
+                fontSize: context.responsiveFont(13),
+                height: 1.4,
               ),
             ),
           ),
 
-          SizedBox(height: 18),
+          SizedBox(height: context.heightPct(2.2)),
 
-          /// CTA – FUTURE READY
+          /// CTA BUTTON
           OutlinedButton(
             onPressed: () {},
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.accent,
-              side: BorderSide(color: AppColors.accent),
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(18), vertical: ResponsiveHelper.h(10)),
+              side: const BorderSide(color: AppColors.accent),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.widthPct(5),
+                vertical: context.heightPct(1.2),
+              ),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
               ),
             ),
-            child: Text(
-              'Try Another Sport',
-              style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                'Try Another Sport',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.accent,
+                  fontSize: context.responsiveFont(13),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ],

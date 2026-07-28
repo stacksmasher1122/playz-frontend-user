@@ -1,45 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/Home/Bookings/bookings/bookings_screen.dart';
 import 'package:redesign/view/USER/Home/Friends/friends/friends_screen.dart';
 import 'package:redesign/view/USER/Home/Groups/groups/groups_screen.dart';
 import 'package:redesign/view/USER/Home/Ranking/rankings/rankings_screen.dart';
 import 'package:redesign/view/USER/Home/scoreboard_screen/scoreboards_screen.dart';
-import '../home_screen.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    QUICK ACCESS TILES
    ============================================================ */
 class HomeQuickAccessTiles extends StatelessWidget {
-  HomeQuickAccessTiles({super.key});
+  const HomeQuickAccessTiles({super.key});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // 2 columns for a dashboard feel
-        const crossAxisCount = 2;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWideScreen = constraints.maxWidth > 500;
+          final crossAxisCount = isWideScreen ? 3 : 2;
 
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
-          child: GridView.builder(
+          return GridView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              // Wide ratio for horizontal layout
-              childAspectRatio: 2.1,
+              crossAxisSpacing: context.widthPct(3),
+              mainAxisSpacing: context.widthPct(3),
+              childAspectRatio: isWideScreen ? 2.4 : 2.15,
             ),
             itemCount: _tiles.length,
             itemBuilder: (_, i) => _tiles[i],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
@@ -80,7 +79,6 @@ final List<HomeQuickTile> _tiles = [
     'AI Trainer',
     'Train smarter',
     highlight: true,
-    // destination: AiTrainerScreen(),
   ),
 ];
 
@@ -92,7 +90,7 @@ class HomeQuickTile extends StatelessWidget {
   final bool highlight;
   final Widget? destination;
 
-  HomeQuickTile(
+  const HomeQuickTile(
     this.icon,
     this.title,
     this.subtitle, {
@@ -105,27 +103,29 @@ class HomeQuickTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final iconContainerSize = context.minDimensionPct(11).clamp(38.0, 48.0);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
         onTap: destination == null
             ? null
             : () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => destination!));
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => destination!),
+                );
               },
         child: Container(
-          padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+          padding: EdgeInsets.all(context.widthPct(3)),
           decoration: BoxDecoration(
-            color: UserHomePage.surface, // #181818
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+            gradient: AppColors.quickActionGreyGreen,
+            borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
             border: Border.all(
               color: highlight
-                  ? UserHomePage.accent.withValues(alpha: 0.5)
-                  : Colors.white.withValues(alpha: 0.05),
-              width: ResponsiveHelper.w(1),
+                  ? AppColors.accent.withValues(alpha: 0.5)
+                  : Colors.white.withValues(alpha: 0.08),
+              width: 1,
             ),
           ),
           child: Stack(
@@ -133,27 +133,26 @@ class HomeQuickTile extends StatelessWidget {
               // Badge (BETA/NEW/Active)
               if (badge != null)
                 Positioned(
-                  top: ResponsiveHelper.h(0),
-                  right: ResponsiveHelper.w(0),
+                  top: 0,
+                  right: 0,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.widthPct(1.5),
+                      vertical: context.heightPct(0.3),
+                    ),
                     decoration: BoxDecoration(
                       color: badge == 'Beta' || badge == 'New'
-                          ? UserHomePage.accent
+                          ? AppColors.accent
                           : Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(
-                        ResponsiveHelper.w(4),
-                      ),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       badge!.toUpperCase(),
-                      style: GoogleFonts.inter(
-                        fontSize: ResponsiveHelper.sp(8),
-                        fontWeight: FontWeight.w900,
+                      style: AppTypography.labelCaps10.copyWith(
+                        fontSize: context.responsiveFont(8),
                         color: badge == 'Beta' || badge == 'New'
-                            ? Colors.black
-                            : Colors.white70,
-                        letterSpacing: 0.5,
+                            ? AppColors.background
+                            : AppColors.textSecondary,
                       ),
                     ),
                   ),
@@ -163,21 +162,21 @@ class HomeQuickTile extends StatelessWidget {
                 children: [
                   // Icon Container
                   Container(
-                    height: ResponsiveHelper.h(44),
-                    width: ResponsiveHelper.w(44),
+                    height: iconContainerSize,
+                    width: iconContainerSize,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
+                      color: Colors.white.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(
-                        ResponsiveHelper.w(10),
+                        context.minDimensionPct(2.5),
                       ),
                     ),
                     child: Icon(
                       icon,
-                      size: 22,
-                      color: highlight ? UserHomePage.accent : Colors.white70,
+                      size: iconContainerSize * 0.5,
+                      color: highlight ? AppColors.accent : AppColors.textPrimary.withValues(alpha: 0.85),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: context.widthPct(2.5)),
                   // Text Info
                   Expanded(
                     child: Column(
@@ -188,20 +187,20 @@ class HomeQuickTile extends StatelessWidget {
                           title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: ResponsiveHelper.sp(14),
+                          style: AppTypography.headlineSm.copyWith(
+                            fontSize: context.responsiveFont(13),
+                            color: AppColors.textPrimary,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(height: 2),
+                        SizedBox(height: context.heightPct(0.3)),
                         Text(
                           subtitle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            color: UserHomePage.muted,
-                            fontSize: ResponsiveHelper.sp(11),
+                          style: AppTypography.bodySm.copyWith(
+                            fontSize: context.responsiveFont(10),
+                            color: AppColors.textSecondary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

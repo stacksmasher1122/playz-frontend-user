@@ -1,25 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
-import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
 
 class TopBar extends StatelessWidget {
   TopBar({super.key});
 
+  final _controller = Get.find<UserProfileController>();
+
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final controller = Get.find<UserProfileController>();
-    final width = MediaQuery.of(context).size.width;
+
+    final avatarSize = context.minDimensionPct(9).clamp(32.0, 40.0);
+    final iconSize = context.minDimensionPct(6).clamp(20.0, 26.0);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
       child: Row(
         children: [
           /// LOCATION TEXT + DROPDOWN ICON (Dynamic)
@@ -37,9 +39,9 @@ class TopBar extends StatelessWidget {
                   Icon(
                     Icons.location_on,
                     color: AppColors.accent,
-                    size: width < 360 ? 18 : 22,
+                    size: iconSize,
                   ),
-                  SizedBox(width: 6),
+                  SizedBox(width: context.widthPct(1.5)),
                   Flexible(
                     child: Obx(() {
                       final mapsCtrl = Get.find<MapsController>();
@@ -48,65 +50,66 @@ class TopBar extends StatelessWidget {
                       final displayText = locality.isNotEmpty
                           ? locality
                           : city.isNotEmpty
-                          ? city
-                          : 'Select Location';
+                              ? city
+                              : 'Select Location';
                       return Text(
                         displayText,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: width < 360 ? 14 : 16,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(15),
                           fontWeight: FontWeight.w600,
                         ),
                       );
                     }),
                   ),
+                  SizedBox(width: context.widthPct(1)),
                   Icon(
                     Icons.keyboard_arrow_down_rounded,
-                    color: Colors.white70,
-                    size: width < 360 ? 20 : 24,
+                    color: AppColors.textSecondary,
+                    size: iconSize,
                   ),
                 ],
               ),
             ),
           ),
 
-          SizedBox(width: 8),
+          SizedBox(width: context.widthPct(2)),
 
           /// NOTIFICATIONS BELL
           Icon(
             Icons.notifications_none_rounded,
-            color: Colors.white,
-            size: width < 360 ? 20 : 24,
+            color: AppColors.textPrimary,
+            size: iconSize,
           ),
-          SizedBox(width: 16),
+
+          SizedBox(width: context.widthPct(3)),
 
           /// AVATAR
           Obx(() {
-            final profileImageUrl = controller.profileImageUrl;
+            final profileImageUrl = _controller.profileImageUrl;
             return ClipOval(
               child: profileImageUrl.isNotEmpty
                   ? CachedNetworkImage(
                       imageUrl: profileImageUrl,
-                      width: width < 360 ? 32 : 36,
-                      height: width < 360 ? 32 : 36,
+                      width: avatarSize,
+                      height: avatarSize,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => Shimmer.fromColors(
-                        baseColor: Colors.grey.shade800,
-                        highlightColor: Colors.grey.shade700,
-                        child: CircleAvatar(radius: width < 360 ? 16 : 18),
+                      placeholder: (_, __) => CircleAvatar(
+                        radius: avatarSize / 2,
+                        backgroundColor: AppColors.card,
                       ),
                       errorWidget: (_, __, ___) => CircleAvatar(
-                        radius: width < 360 ? 16 : 18,
-                        backgroundColor: Color(0xFF1A1A1A),
-                        child: Icon(Icons.person, color: Colors.white38),
+                        radius: avatarSize / 2,
+                        backgroundColor: AppColors.card,
+                        child: const Icon(Icons.person, color: AppColors.muted),
                       ),
                     )
                   : CircleAvatar(
-                      radius: width < 360 ? 16 : 18,
-                      backgroundColor: Color(0xFF1A1A1A),
-                      child: Icon(Icons.person, color: Colors.white38),
+                      radius: avatarSize / 2,
+                      backgroundColor: AppColors.card,
+                      child: const Icon(Icons.person, color: AppColors.muted),
                     ),
             );
           }),

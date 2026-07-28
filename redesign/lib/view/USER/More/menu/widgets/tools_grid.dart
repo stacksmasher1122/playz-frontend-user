@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/Home/Bookings/bookings/bookings_screen.dart';
 import 'package:redesign/view/USER/Home/Groups/groups/groups_screen.dart';
@@ -64,18 +64,16 @@ class ToolsGrid extends StatelessWidget {
           '$toolName section accessed.',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: AppColors.surface,
-          colorText: Colors.white,
+          colorText: AppColors.textPrimary,
         );
         break;
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final tools = [
+    final tools = const [
       ('My Bookings', Icons.event),
       ('My Stats', Icons.bar_chart_rounded),
       ('My Groups', Icons.groups),
@@ -87,77 +85,87 @@ class ToolsGrid extends StatelessWidget {
     ];
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-      child: GridView.builder(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: tools.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 0.9,
-        ),
-        itemBuilder: (_, i) {
-          final toolName = tools[i].$1;
-          final icon = tools[i].$2;
-          final highlight = toolName == 'AI Coach';
-          final isPremium = toolName == 'Join Premium';
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth > 500;
+          final crossAxisCount = isWide ? 5 : 4;
 
-          return Container(
-            decoration: BoxDecoration(
-              color: highlight
-                  ? AppColors.accent
-                  : isPremium
-                      ? Colors.amber.withValues(alpha: 0.15)
-                      : AppColors.surface,
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-              border: isPremium ? Border.all(color: Colors.amber.withValues(alpha: 0.6)) : null,
+          return GridView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: tools.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: context.widthPct(3),
+              crossAxisSpacing: context.widthPct(3),
+              childAspectRatio: 0.9,
             ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => _onToolTap(context, toolName),
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                child: Padding(
-                  padding: EdgeInsets.all(ResponsiveHelper.w(8)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        icon,
-                        color: highlight
-                            ? Colors.black
-                            : isPremium
-                                ? Colors.amber
-                                : Colors.white,
+            itemBuilder: (_, i) {
+              final toolName = tools[i].$1;
+              final icon = tools[i].$2;
+              final highlight = toolName == 'AI Coach';
+              final isPremium = toolName == 'Join Premium';
+
+              final iconColor = highlight
+                  ? AppColors.background
+                  : isPremium
+                      ? Colors.amber
+                      : AppColors.textPrimary;
+              final textColor = highlight
+                  ? AppColors.background
+                  : isPremium
+                      ? Colors.amber
+                      : AppColors.textPrimary;
+
+              return Container(
+                decoration: BoxDecoration(
+                  color: highlight
+                      ? AppColors.accent
+                      : isPremium
+                          ? Colors.amber.withValues(alpha: 0.15)
+                          : AppColors.surface,
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                  border: isPremium ? Border.all(color: Colors.amber.withValues(alpha: 0.6)) : null,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _onToolTap(context, toolName),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                    child: Padding(
+                      padding: EdgeInsets.all(context.widthPct(2)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            icon,
+                            color: iconColor,
+                            size: 24,
+                          ),
+                          SizedBox(height: context.heightPct(0.6)),
+                          Text(
+                            toolName,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.bodyXs.copyWith(
+                              color: textColor,
+                              fontSize: context.responsiveFont(11),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        toolName,
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          color: highlight
-                              ? Colors.black
-                              : isPremium
-                                  ? Colors.amber
-                                  : Colors.white,
-                          fontSize: ResponsiveHelper.sp(11),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         },
       ),
     );
   }
 }
-
-

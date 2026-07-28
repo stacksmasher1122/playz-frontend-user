@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:shimmer/shimmer.dart';
 
 enum XpTier {
@@ -90,7 +91,7 @@ class XpAvatarRing extends StatelessWidget {
         padding: EdgeInsets.all(ringWidth),
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.black,
+            color: AppColors.background,
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(1.5),
@@ -102,20 +103,20 @@ class XpAvatarRing extends StatelessWidget {
                     height: size,
                     fit: BoxFit.cover,
                     placeholder: (_, __) => Shimmer.fromColors(
-                      baseColor: Colors.grey.shade800,
-                      highlightColor: Colors.grey.shade700,
+                      baseColor: AppColors.surfaceElevated.withValues(alpha: 0.6),
+                      highlightColor: AppColors.borderDark.withValues(alpha: 0.8),
                       child: CircleAvatar(radius: radius),
                     ),
                     errorWidget: (_, __, ___) => CircleAvatar(
                       radius: radius,
-                      backgroundColor: const Color(0xFF1A1A1A),
-                      child: Icon(Icons.person, color: Colors.white38, size: radius),
+                      backgroundColor: AppColors.card,
+                      child: Icon(Icons.person, color: AppColors.muted, size: radius),
                     ),
                   )
                 : CircleAvatar(
                     radius: radius,
-                    backgroundColor: const Color(0xFF1A1A1A),
-                    child: Icon(Icons.person, color: Colors.white38, size: radius),
+                    backgroundColor: AppColors.card,
+                    child: Icon(Icons.person, color: AppColors.muted, size: radius),
                   ),
           ),
         ),

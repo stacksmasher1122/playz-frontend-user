@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'turf_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -15,7 +16,7 @@ class AvailableTurfsList extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
       child: Obx(() {
         // Loading state
         if (_controller.isLoadingTurfs.value) {
@@ -23,8 +24,8 @@ class AvailableTurfsList extends StatelessWidget {
             children: List.generate(
               3,
               (_) => Padding(
-                padding: EdgeInsets.only(bottom: 18),
-                child: _TurfCardShimmer(),
+                padding: EdgeInsets.only(bottom: context.heightPct(2)),
+                child: const _TurfCardShimmer(),
               ),
             ),
           );
@@ -35,7 +36,7 @@ class AvailableTurfsList extends StatelessWidget {
           final query = _controller.searchQuery.value.trim();
           return Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40),
+              padding: EdgeInsets.symmetric(vertical: context.heightPct(5)),
               child: Column(
                 children: [
                   const Icon(
@@ -43,21 +44,25 @@ class AvailableTurfsList extends StatelessWidget {
                     color: AppColors.muted,
                     size: 48,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.heightPct(1.5)),
                   Text(
                     query.isNotEmpty ? 'No turfs matching "$query"' : 'No turfs found',
-                    style: TextStyle(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.headlineSm.copyWith(
                       color: AppColors.muted,
-                      fontSize: ResponsiveHelper.sp(16),
+                      fontSize: context.responsiveFont(16),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: context.heightPct(0.5)),
                   Text(
                     'Try changing your search query or filters',
-                    style: TextStyle(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.bodySm.copyWith(
                       color: AppColors.muted.withValues(alpha: 0.6),
-                      fontSize: ResponsiveHelper.sp(13),
+                      fontSize: context.responsiveFont(13),
                     ),
                   ),
                 ],
@@ -71,7 +76,7 @@ class AvailableTurfsList extends StatelessWidget {
           children: _controller.filteredTurfs
               .map(
                 (turf) => Padding(
-                  padding: EdgeInsets.only(bottom: 18),
+                  padding: EdgeInsets.only(bottom: context.heightPct(2)),
                   child: TurfCard(turf: turf),
                 ),
               )
@@ -84,19 +89,21 @@ class AvailableTurfsList extends StatelessWidget {
 
 /// Shimmer placeholder for a turf card while loading
 class _TurfCardShimmer extends StatelessWidget {
+  const _TurfCardShimmer();
+
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final width = MediaQuery.of(context).size.width;
+    final cardHeight = context.widthPct(48) + context.heightPct(14);
 
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade900,
-      highlightColor: Colors.grey.shade800,
+      baseColor: AppColors.surfaceElevated.withValues(alpha: 0.6),
+      highlightColor: AppColors.borderDark.withValues(alpha: 0.8),
       child: Container(
-        height: width * 0.48 + 120,
+        height: cardHeight,
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
         ),
       ),
     );

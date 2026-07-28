@@ -19,13 +19,13 @@ import 'package:redesign/theme/responsive_helper.dart';
    USER HOME PAGE
    ============================================================ */
 class UserHomePage extends StatefulWidget {
-  UserHomePage({super.key});
+  const UserHomePage({super.key});
 
-  // Spotify-style palette
+  // Spotify-style palette mapped from AppColors
   static Color bg = AppColors.background;
-  static Color surface = Color(0xFF181818);
+  static Color surface = AppColors.card;
   static Color accent = AppColors.accent;
-  static Color muted = Color(0xFF9CA3AF);
+  static Color muted = AppColors.textSecondary;
 
   @override
   State<UserHomePage> createState() => _UserHomePageState();
@@ -149,28 +149,27 @@ class _UserHomePageState extends State<UserHomePage>
     ResponsiveHelper.init(context);
     return Scaffold(
       extendBody: true,
-      backgroundColor: UserHomePage.bg,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         top: true,
         bottom: false,
         child: Stack(
           children: [
             ListView(
-              padding: EdgeInsets.fromLTRB(0, 0, 00, 80),
+              padding: EdgeInsets.only(bottom: context.heightPct(10)),
               children: [
                 HomeTopAppBar(),
-                Padding(padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20))),
-                SizedBox(height: 20),
+                SizedBox(height: context.heightPct(2.5)),
                 HomeHeroCTA(),
-                SizedBox(height: 28),
+                SizedBox(height: context.heightPct(3)),
                 HomeQuickAccessTiles(),
-                SizedBox(height: 28),
+                SizedBox(height: context.heightPct(3)),
                 HomePopularVenues(),
-                SizedBox(height: 28),
+                SizedBox(height: context.heightPct(3)),
                 HomeExploreBySport(),
-                SizedBox(height: 28),
+                SizedBox(height: context.heightPct(3)),
                 HomeFeaturedEvents(),
-                SizedBox(height: 20),
+                SizedBox(height: context.heightPct(2.5)),
                 HomeOfficialAppInfo(),
               ],
             ),

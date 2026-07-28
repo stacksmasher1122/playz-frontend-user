@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
-import '../home_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
@@ -9,68 +10,69 @@ import 'package:redesign/theme/responsive_helper.dart';
    ============================================================ */
 class HomeHeader extends StatelessWidget {
   final bool isTrainer;
-  // final AppMode mode;
-  // final ValueChanged<AppMode> onChanged;
   final _controller = Get.find<UserProfileController>();
 
-  HomeHeader({super.key, 
+  HomeHeader({
+    super.key,
     required this.isTrainer,
-    // required this.mode,
-    // required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final width = MediaQuery.of(context).size.width;
 
     if (isTrainer) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: _greeting(width)),
-          SizedBox(width: 20),
+          Expanded(child: _greeting(context)),
+          SizedBox(width: context.widthPct(4)),
           _toggle(),
         ],
       );
     } else {
-      return _greeting(width);
+      return _greeting(context);
     }
   }
 
-  Widget _greeting(double width) {
+  Widget _greeting(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // ✅ FIX: Align to left
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 10),
+        SizedBox(height: context.heightPct(1)),
         Obx(() {
           final fullName = _controller.rxUser.value?.fullName ?? 'User';
           final firstName = fullName.split(' ').first;
-          return RichText(
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "Hey $firstName! 👋\n",
-                  style: TextStyle(
-                    fontSize: width < 360 ? 16 : 20,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Hey $firstName! 👋",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.headlineLg.copyWith(
+                    fontSize: context.responsiveFont(20),
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                    height: ResponsiveHelper.h(1.1),
+                    color: AppColors.textPrimary,
                   ),
                 ),
-                TextSpan(
-                  text: "Ready for some competition?",
-                  style: TextStyle(
-                    fontSize: width < 360 ? 8 : 13,
-                    fontWeight: FontWeight.w500,
-                    color: UserHomePage.muted,
-                    height: ResponsiveHelper.h(1.2),
-                  ),
+              ),
+              SizedBox(height: context.heightPct(0.5)),
+              Text(
+                "Ready for some competition?",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodySm.copyWith(
+                  fontSize: context.responsiveFont(13),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textSecondary,
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         }),
       ],
@@ -81,14 +83,10 @@ class HomeHeader extends StatelessWidget {
     return Flexible(
       child: Column(
         children: [
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 150, minWidth: 110),
-            // child: TrainerModePillToggle(
-            //   mode: mode,
-            //   onChanged: onChanged,
-            //   compact: true,
-            // ),
+            constraints: const BoxConstraints(maxWidth: 150, minWidth: 110),
+            child: const SizedBox.shrink(),
           ),
         ],
       ),

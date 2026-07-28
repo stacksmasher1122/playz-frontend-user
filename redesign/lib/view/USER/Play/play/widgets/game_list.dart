@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Play/match_detail/match_detail_screen.dart';
 import 'package:redesign/controller/User_Controller/Match_Controller/match_controller.dart';
 import 'package:redesign/controller/maps_controller.dart';
@@ -24,7 +24,7 @@ class GameList extends StatelessWidget {
     return Obx(() {
       if (matchCtrl.isLoading.value) {
         return Padding(
-          padding: EdgeInsets.all(ResponsiveHelper.w(32)),
+          padding: EdgeInsets.all(context.widthPct(8)),
           child: const Center(
             child: CircularProgressIndicator(color: AppColors.accent),
           ),
@@ -36,37 +36,41 @@ class GameList extends StatelessWidget {
       if (games.isEmpty) {
         return Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: ResponsiveHelper.w(20),
-            vertical: ResponsiveHelper.h(32),
+            horizontal: context.widthPct(5),
+            vertical: context.heightPct(4),
           ),
           child: Column(
             children: [
-              const Icon(Icons.sports_soccer_outlined, size: 48, color: Colors.white38),
-              const SizedBox(height: 12),
+              const Icon(Icons.sports_soccer_outlined, size: 48, color: AppColors.muted),
+              SizedBox(height: context.heightPct(1.5)),
               Text(
                 'No Matches Found',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(16),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: context.heightPct(0.8)),
               Text(
                 'Try expanding your radius slider or host your own match!',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  color: Colors.white54,
-                  fontSize: ResponsiveHelper.sp(13),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: context.responsiveFont(13),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.heightPct(2)),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accent,
-                  foregroundColor: Colors.black,
+                  foregroundColor: AppColors.background,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                   ),
                 ),
                 onPressed: () {
@@ -75,7 +79,16 @@ class GameList extends StatelessWidget {
                   );
                 },
                 icon: const Icon(Icons.add_circle_outline),
-                label: const Text('Host a Match Now', style: TextStyle(fontWeight: FontWeight.bold)),
+                label: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Host a Match Now',
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.background,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -83,7 +96,7 @@ class GameList extends StatelessWidget {
       }
 
       return ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+        padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: games.length,
@@ -106,7 +119,7 @@ class GameCard extends StatelessWidget {
       case 'tournament':
         return const Color(0xFFEA580C).withValues(alpha: 0.2);
       default:
-        return Colors.white.withValues(alpha: 0.08);
+        return AppColors.card;
     }
   }
 
@@ -119,7 +132,7 @@ class GameCard extends StatelessWidget {
       case 'tournament':
         return const Color(0xFFFB923C);
       default:
-        return Colors.white70;
+        return AppColors.textSecondary;
     }
   }
 
@@ -165,6 +178,7 @@ class GameCard extends StatelessWidget {
     ResponsiveHelper.init(context);
     final progress = (data.currentPlayers / (data.maxPlayers > 0 ? data.maxPlayers : 1)).clamp(0.0, 1.0);
     final calculatedDistance = _getCalculatedDistance();
+    final avatarRadius = context.minDimensionPct(5.5).clamp(18.0, 24.0);
 
     return GestureDetector(
       onTap: () {
@@ -176,12 +190,12 @@ class GameCard extends StatelessWidget {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+        margin: EdgeInsets.only(bottom: context.heightPct(2)),
+        padding: EdgeInsets.all(context.widthPct(4)),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
           color: AppColors.surface,
-          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          border: Border.all(color: AppColors.borderDark),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.4),
@@ -200,8 +214,8 @@ class GameCard extends StatelessWidget {
                 Expanded(
                   child: Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 6,
-                    runSpacing: 6,
+                    spacing: context.widthPct(1.5),
+                    runSpacing: context.heightPct(0.5),
                     children: [
                       if (data.locationType == 'playz_turf')
                         const Tooltip(
@@ -222,7 +236,7 @@ class GameCard extends StatelessWidget {
                             padding: EdgeInsets.only(right: 2),
                             child: Icon(
                               Icons.edit_location_alt_rounded,
-                              color: Colors.white54,
+                              color: AppColors.textSecondary,
                               size: 19,
                             ),
                           ),
@@ -235,24 +249,24 @@ class GameCard extends StatelessWidget {
                       ),
                       _Tag(
                         data.sport.toUpperCase(),
-                        bgColor: Colors.white.withValues(alpha: 0.08),
-                        textColor: Colors.white70,
+                        bgColor: AppColors.card,
+                        textColor: AppColors.textSecondary,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: context.widthPct(2)),
                 Text(
                   data.price,
-                  style: GoogleFonts.inter(
+                  style: AppTypography.headlineSm.copyWith(
                     color: AppColors.accent,
-                    fontSize: ResponsiveHelper.sp(18),
+                    fontSize: context.responsiveFont(18),
                     fontWeight: FontWeight.w800,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: context.heightPct(1.8)),
 
             /// SECTION 2: HOST INFO & PLAYER COUNT
             Row(
@@ -261,9 +275,9 @@ class GameCard extends StatelessWidget {
                 XpAvatarRing(
                   imageUrl: data.avatarUrl,
                   xp: data.hostXp,
-                  radius: 22,
+                  radius: avatarRadius,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: context.widthPct(3)),
 
                 /// Name and Time
                 Expanded(
@@ -272,27 +286,29 @@ class GameCard extends StatelessWidget {
                     children: [
                       Text(
                         _shortName(data.hostName),
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(15),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(15),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: context.heightPct(0.3)),
                       Row(
                         children: [
                           const Icon(
                             Icons.access_time,
-                            color: Colors.white54,
+                            color: AppColors.textSecondary,
                             size: 13,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: context.widthPct(1)),
                           Expanded(
                             child: Text(
                               data.time,
-                              style: GoogleFonts.inter(
-                                color: Colors.white54,
-                                fontSize: ResponsiveHelper.sp(12.5),
+                              style: AppTypography.bodySm.copyWith(
+                                color: AppColors.textSecondary,
+                                fontSize: context.responsiveFont(12.5),
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -307,17 +323,17 @@ class GameCard extends StatelessWidget {
                 /// Player Count Badge
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: ResponsiveHelper.w(12),
-                    vertical: ResponsiveHelper.h(6),
+                    horizontal: context.widthPct(3),
+                    vertical: context.heightPct(0.6),
                   ),
                   decoration: BoxDecoration(
                     color: data.isFull
-                        ? const Color(0xFF450A0A)
+                        ? AppColors.error.withValues(alpha: 0.15)
                         : AppColors.accent.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                     border: Border.all(
                       color: data.isFull
-                          ? Colors.redAccent.withValues(alpha: 0.4)
+                          ? AppColors.error.withValues(alpha: 0.4)
                           : AppColors.accent.withValues(alpha: 0.3),
                     ),
                   ),
@@ -325,15 +341,15 @@ class GameCard extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.group,
-                        color: data.isFull ? Colors.redAccent : AppColors.accent,
+                        color: data.isFull ? AppColors.error : AppColors.accent,
                         size: 14,
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: context.widthPct(1)),
                       Text(
                         '${data.currentPlayers}/${data.maxPlayers}',
-                        style: GoogleFonts.inter(
-                          color: data.isFull ? Colors.redAccent : AppColors.accent,
-                          fontSize: ResponsiveHelper.sp(13),
+                        style: AppTypography.bodySm.copyWith(
+                          color: data.isFull ? AppColors.error : AppColors.accent,
+                          fontSize: context.responsiveFont(13),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -342,28 +358,28 @@ class GameCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: context.heightPct(1.8)),
 
             /// SECTION 3: PROGRESS BAR
             Stack(
               children: [
                 Container(
-                  height: ResponsiveHelper.h(6),
+                  height: context.heightPct(0.7).clamp(4.0, 8.0),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(3),
                   ),
                 ),
                 FractionallySizedBox(
                   widthFactor: progress,
                   child: Container(
-                    height: ResponsiveHelper.h(6),
+                    height: context.heightPct(0.7).clamp(4.0, 8.0),
                     decoration: BoxDecoration(
-                      color: data.isFull ? Colors.redAccent : AppColors.accent,
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
+                      color: data.isFull ? AppColors.error : AppColors.accent,
+                      borderRadius: BorderRadius.circular(3),
                       boxShadow: [
                         BoxShadow(
-                          color: (data.isFull ? Colors.redAccent : AppColors.accent).withValues(alpha: 0.4),
+                          color: (data.isFull ? AppColors.error : AppColors.accent).withValues(alpha: 0.4),
                           blurRadius: 4,
                         ),
                       ],
@@ -372,7 +388,7 @@ class GameCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: context.heightPct(1.8)),
 
             /// SECTION 4: LOCATION & CALCULATED DISTANCE
             Row(
@@ -382,24 +398,24 @@ class GameCard extends StatelessWidget {
                   color: AppColors.accent.withValues(alpha: 0.8),
                   size: 15,
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: context.widthPct(1)),
                 Expanded(
                   child: Text(
                     data.address,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
-                      color: Colors.white70,
-                      fontSize: ResponsiveHelper.sp(12),
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: context.responsiveFont(12),
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: context.widthPct(2)),
                 Text(
                   calculatedDistance,
-                  style: GoogleFonts.inter(
+                  style: AppTypography.bodySm.copyWith(
                     color: AppColors.muted,
-                    fontSize: ResponsiveHelper.sp(12),
+                    fontSize: context.responsiveFont(12),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -429,19 +445,19 @@ class _Tag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.w(10),
-        vertical: ResponsiveHelper.h(4),
+        horizontal: context.widthPct(2.5),
+        vertical: context.heightPct(0.4),
       ),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
         border: borderColor != null ? Border.all(color: borderColor!) : null,
       ),
       child: Text(
         text,
-        style: GoogleFonts.inter(
+        style: AppTypography.labelCaps10.copyWith(
           color: textColor,
-          fontSize: ResponsiveHelper.sp(10.5),
+          fontSize: context.responsiveFont(10.5),
           fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
         ),

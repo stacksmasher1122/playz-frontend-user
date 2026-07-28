@@ -2,17 +2,16 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/Book/book/book_screen.dart';
-//import 'package:redesign/view/USER/Book/booktest.dart';
-// import 'package:redesign/book.dart';
 import 'package:redesign/view/USER/Home/home/home_screen.dart';
 import 'package:redesign/view/USER/More/menu/more_screen.dart';
 import 'package:redesign/view/USER/Play/play/play_screen.dart';
 import 'package:redesign/view/USER/Trainer/trainer/trainer_screen.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 class UserAppNavShell extends StatefulWidget {
-  UserAppNavShell({super.key});
+  const UserAppNavShell({super.key});
 
   @override
   State<UserAppNavShell> createState() => _UserAppNavShellState();
@@ -37,6 +36,10 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
+    final navBarHeight = context.heightPct(9).clamp(64.0, 88.0);
+    final iconSize = context.minDimensionPct(6.5).clamp(22.0, 28.0);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       extendBody: true,
@@ -45,10 +48,14 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
-            height: ResponsiveHelper.h(80),
+            height: navBarHeight,
+            padding: EdgeInsets.only(
+              top: context.heightPct(0.5),
+              bottom: context.bottomInset,
+            ),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.7),
-              border: Border(top: BorderSide(color: Colors.white12)),
+              color: AppColors.background.withValues(alpha: 0.7),
+              border: const Border(top: BorderSide(color: AppColors.divider)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -90,26 +97,39 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
                     return GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () => _onTap(item.index),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            selected ? item.filled : item.outlined,
-                            size: 26,
-                            color: selected ? AppColors.accent : Colors.white60,
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            item.label,
-                            style: TextStyle(
-                              fontSize: ResponsiveHelper.sp(11),
-                              fontWeight: selected
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                              color: selected ? AppColors.accent : Colors.white60,
+                      child: SizedBox(
+                        width: context.widthPct(18),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              selected ? item.filled : item.outlined,
+                              size: iconSize,
+                              color: selected
+                                  ? AppColors.accent
+                                  : AppColors.textSecondary,
                             ),
-                          ),
-                        ],
+                            SizedBox(height: context.heightPct(0.5)),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                item.label,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.labelCaps10.copyWith(
+                                  fontSize: context.responsiveFont(11),
+                                  fontWeight: selected
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
+                                  color: selected
+                                      ? AppColors.accent
+                                      : AppColors.textSecondary,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }).toList(),

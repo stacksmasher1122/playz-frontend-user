@@ -114,7 +114,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     height: logoSize,
                     decoration: BoxDecoration(
                       color: AppColors.spotifyGreen,
-                      borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+                      borderRadius: BorderRadius.circular(
+                        context.minDimensionPct(6),
+                      ),
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.spotifyGreen.withValues(alpha: 0.4),
@@ -195,7 +197,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       child: LinearProgressIndicator(
                         value: _progress,
                         backgroundColor: AppColors.card,
-                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.spotifyGreen),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppColors.spotifyGreen,
+                        ),
                       ),
                     ),
                   ),

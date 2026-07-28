@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 
@@ -19,7 +19,7 @@ import 'widgets/logout_dialog.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MoreScreen extends StatefulWidget {
-  MoreScreen({super.key});
+  const MoreScreen({super.key});
 
   @override
   State<MoreScreen> createState() => _MoreScreenState();
@@ -46,13 +46,14 @@ class _MoreScreenState extends State<MoreScreen> {
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.7),
-      builder: (ctx) => LogoutDialog(),
+      builder: (ctx) => const LogoutDialog(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
       extendBody: true,
       backgroundColor: AppColors.background,
@@ -60,20 +61,20 @@ class _MoreScreenState extends State<MoreScreen> {
         top: true,
         bottom: false,
         child: ListView(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 100),
+          padding: EdgeInsets.only(bottom: context.heightPct(10)),
           children: [
-            MenuProfileHeader(),
-            SizedBox(height: 16),
-            ZCoinsCard(),
-            SizedBox(height: 28),
-            SectionTitle('My Tools'),
-            SizedBox(height: 14),
-            ToolsGrid(),
-            SizedBox(height: 28),
-            RewardsCard(),
-            SizedBox(height: 28),
-            SectionTitle('Help & Preferences'),
-            SizedBox(height: 12),
+            const MenuProfileHeader(),
+            SizedBox(height: context.heightPct(2)),
+            const ZCoinsCard(),
+            SizedBox(height: context.heightPct(3)),
+            const SectionTitle('My Tools'),
+            SizedBox(height: context.heightPct(1.5)),
+            const ToolsGrid(),
+            SizedBox(height: context.heightPct(3)),
+            const RewardsCard(),
+            SizedBox(height: context.heightPct(3)),
+            const SectionTitle('Help & Preferences'),
+            SizedBox(height: context.heightPct(1.5)),
             SettingsTile(
               icon: Icons.help_outline,
               label: 'Support & FAQ',
@@ -101,14 +102,17 @@ class _MoreScreenState extends State<MoreScreen> {
             SettingsTile(
               icon: Icons.logout,
               label: 'Log Out',
-              color: Colors.red,
+              color: AppColors.error,
               onTap: () => _showLogoutDialog(context),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: context.heightPct(2.5)),
             Center(
               child: Text(
                 'Version 2.4.0 (Build 3020)',
-                style: GoogleFonts.inter(color: Colors.white24, fontSize: 11),
+                style: AppTypography.bodyXs.copyWith(
+                  color: AppColors.muted.withValues(alpha: 0.6),
+                  fontSize: context.responsiveFont(11),
+                ),
               ),
             ),
           ],

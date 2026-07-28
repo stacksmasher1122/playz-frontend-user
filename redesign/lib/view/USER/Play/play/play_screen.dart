@@ -13,7 +13,6 @@ import 'widgets/game_list.dart';
 import 'widgets/end_of_results.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import '../tournaments/tournaments_list_screen.dart';
-
 import 'widgets/game_diary_section.dart';
 
 class GameDiaryScreen extends StatefulWidget {
@@ -64,7 +63,10 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> with SingleTickerProv
               indicatorColor: AppColors.accent,
               labelColor: AppColors.accent,
               unselectedLabelColor: AppColors.muted,
-              labelStyle: AppTypography.headlineSm.copyWith(fontWeight: FontWeight.bold),
+              labelStyle: AppTypography.headlineSm.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: context.responsiveFont(14),
+              ),
               tabs: const [
                 Tab(text: "All Games"),
                 Tab(text: "Tournaments"),
@@ -77,15 +79,16 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> with SingleTickerProv
                 children: [
                   // All Games
                   ListView(
+                    padding: EdgeInsets.only(bottom: context.heightPct(10)),
                     children: [
-                      SizedBox(height: 12),
-                      SportFilters(),
-                      SizedBox(height: 22),
-                      DateSelector(),
-                      SizedBox(height: 10),
+                      SizedBox(height: context.heightPct(1.5)),
+                      const SportFilters(),
+                      SizedBox(height: context.heightPct(2.5)),
+                      const DateSelector(),
+                      SizedBox(height: context.heightPct(1.2)),
                       PlayActionRow(),
-                      SizedBox(height: 12),
-                      GameList(),
+                      SizedBox(height: context.heightPct(1.5)),
+                      const GameList(),
                       EndOfResults(),
                     ],
                   ),

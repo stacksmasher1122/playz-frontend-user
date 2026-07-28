@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
@@ -9,16 +9,18 @@ import 'package:redesign/theme/responsive_helper.dart';
 import 'xp_avatar_ring.dart';
 
 class PlayTopBar extends StatelessWidget {
-  PlayTopBar({super.key});
+  const PlayTopBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     final controller = Get.find<UserProfileController>();
-    final width = MediaQuery.of(context).size.width;
+
+    final iconSize = context.minDimensionPct(6).clamp(20.0, 26.0);
+    final avatarRadius = context.minDimensionPct(4.5).clamp(14.0, 18.0);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
       child: Row(
         children: [
           /// LOCATION TEXT + DROPDOWN ICON (Dynamic)
@@ -36,9 +38,9 @@ class PlayTopBar extends StatelessWidget {
                   Icon(
                     Icons.location_on,
                     color: AppColors.accent,
-                    size: width < 360 ? 18 : 22,
+                    size: iconSize,
                   ),
-                  SizedBox(width: 6),
+                  SizedBox(width: context.widthPct(1.5)),
                   Flexible(
                     child: Obx(() {
                       final mapsCtrl = Get.find<MapsController>();
@@ -53,44 +55,45 @@ class PlayTopBar extends StatelessWidget {
                         displayText,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: width < 360 ? 14 : 16,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(15),
                           fontWeight: FontWeight.w600,
                         ),
                       );
                     }),
                   ),
+                  SizedBox(width: context.widthPct(1)),
                   Icon(
                     Icons.keyboard_arrow_down_rounded,
-                    color: Colors.white70,
-                    size: width < 360 ? 20 : 24,
+                    color: AppColors.textSecondary,
+                    size: iconSize,
                   ),
                 ],
               ),
             ),
           ),
 
-          SizedBox(width: 8),
+          SizedBox(width: context.widthPct(2)),
 
           /// NOTIFICATIONS BELL
           Icon(
             Icons.notifications_none_rounded,
-            color: Colors.white,
-            size: width < 360 ? 20 : 24,
+            color: AppColors.textPrimary,
+            size: iconSize,
           ),
-          SizedBox(width: 16),
+
+          SizedBox(width: context.widthPct(3)),
 
           /// AVATAR WITH DYNAMIC XP LEVEL RING
           Obx(() {
             final profileImageUrl = controller.profileImageUrl;
-            final userXp = 250;
-            final radius = width < 360 ? 14.0 : 16.0;
+            const userXp = 250;
 
             return XpAvatarRing(
               imageUrl: profileImageUrl,
               xp: userXp,
-              radius: radius,
+              radius: avatarRadius,
             );
           }),
         ],

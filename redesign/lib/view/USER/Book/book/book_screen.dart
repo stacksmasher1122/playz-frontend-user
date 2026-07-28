@@ -4,6 +4,7 @@ import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 import 'widgets/available_turfs_list.dart';
 import 'widgets/end_of_results.dart';
@@ -13,13 +14,12 @@ import 'widgets/section_header.dart';
 import 'widgets/sport_filters.dart';
 import 'widgets/top_bar.dart';
 import 'widgets/trending_list.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 /* ============================================================
    BOOK TURF SCREEN
    ============================================================ */
 class BookTurfScreen extends StatefulWidget {
-  BookTurfScreen({super.key});
+  const BookTurfScreen({super.key});
 
   @override
   State<BookTurfScreen> createState() => _BookTurfScreenState();
@@ -45,6 +45,7 @@ class _BookTurfScreenState extends State<BookTurfScreen> {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       extendBody: true,
@@ -56,24 +57,23 @@ class _BookTurfScreenState extends State<BookTurfScreen> {
           backgroundColor: AppColors.surface,
           onRefresh: () => _bookingController.fetchAllTurfs(),
           child: ListView(
-            padding: EdgeInsets.only(bottom: 80),
+            padding: EdgeInsets.only(bottom: context.heightPct(10)),
             children: [
               TopBar(),
-              SizedBox(height: 14),
-              SearchBarWidget(),
-              SizedBox(height: 16),
-              SportFilters(),
-              SizedBox(height: 28),
-              SectionHeader(title: 'Trending Near You'),
-              SizedBox(height: 14),
+              SizedBox(height: context.heightPct(1.8)),
+              const SearchBarWidget(),
+              SizedBox(height: context.heightPct(2)),
+              const SportFilters(),
+              SizedBox(height: context.heightPct(3)),
+              const SectionHeader(title: 'Trending Near You'),
+              SizedBox(height: context.heightPct(1.8)),
               TrendingList(),
-              SizedBox(height: 16),
-              FilterRow(),
-              SizedBox(height: 28),
-              SectionHeader(title: 'Available Turfs'),
-              SizedBox(height: 14),
+              SizedBox(height: context.heightPct(2)),
+              const FilterRow(),
+              SizedBox(height: context.heightPct(3)),
+              const SectionHeader(title: 'Available Turfs'),
+              SizedBox(height: context.heightPct(1.8)),
               AvailableTurfsList(),
-              SizedBox(height: 0),
               EndOfResults(),
             ],
           ),

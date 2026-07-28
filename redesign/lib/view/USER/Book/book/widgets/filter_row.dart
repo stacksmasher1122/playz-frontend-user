@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'turf_sort_filter_bottom_sheet.dart';
 
@@ -21,17 +21,18 @@ class FilterRow extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     final bookingController = Get.find<BookingController>();
+    final rowHeight = context.heightPct(5).clamp(38.0, 44.0);
 
     return SizedBox(
-      height: ResponsiveHelper.h(40),
+      height: rowHeight,
       child: Obx(() {
         final currentOption = bookingController.sortOption.value;
 
         return ListView.separated(
           scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
           itemCount: filters.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 10),
+          separatorBuilder: (_, __) => SizedBox(width: context.widthPct(2.5)),
           itemBuilder: (context, index) {
             final item = filters[index];
             final String label = item['label'];
@@ -40,10 +41,10 @@ class FilterRow extends StatelessWidget {
             final bool isSelected = option != null && currentOption == option;
 
             return InkWell(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
               onTap: () {
                 if (index == 0) {
-                  // Open Filter Bottom Sheet just like Play screen
+                  // Open Filter Bottom Sheet
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
@@ -57,22 +58,22 @@ class FilterRow extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 padding: EdgeInsets.symmetric(
-                  horizontal: ResponsiveHelper.w(14),
-                  vertical: ResponsiveHelper.h(8),
+                  horizontal: context.widthPct(3.5),
+                  vertical: context.heightPct(1),
                 ),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.accent : AppColors.surface,
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                 ),
                 child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.inter(
-                    fontSize: ResponsiveHelper.sp(12),
+                  style: AppTypography.headlineSm.copyWith(
+                    fontSize: context.responsiveFont(12),
                     fontWeight: FontWeight.w600,
-                    color: isSelected ? Colors.black : Colors.white,
+                    color: isSelected ? AppColors.background : AppColors.textPrimary,
                   ),
                 ),
               ),
