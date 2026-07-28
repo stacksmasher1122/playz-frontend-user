@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class SetupHeader extends StatelessWidget {
   final MatchMode mode;
 
-  SetupHeader({super.key, required this.mode});
+  const SetupHeader({super.key, required this.mode});
 
   @override
   Widget build(BuildContext context) {

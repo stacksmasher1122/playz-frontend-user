@@ -7,7 +7,7 @@ class QrActionSection extends StatelessWidget {
   final BookingStatus status;
   final Map<String, dynamic>? bookingData;
 
-  QrActionSection({super.key, required this.status, this.bookingData});
+  const QrActionSection({super.key, required this.status, this.bookingData});
 
   @override
   Widget build(BuildContext context) {

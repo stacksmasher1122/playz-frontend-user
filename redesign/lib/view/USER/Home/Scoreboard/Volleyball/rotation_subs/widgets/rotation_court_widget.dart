@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class RotationCourtWidget extends StatelessWidget {
   final VolleyballRotationSubsController controller;
 
-  RotationCourtWidget({super.key, required this.controller});
+  const RotationCourtWidget({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class RotationCourtWidget extends StatelessWidget {
             Obx(() => Container(
               padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.outlineVariant),
+                border: Border.all(color: Colors.transparent),
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
               ),
               child: Text('ROTATION ${controller.rotationNumber.value}', style: AppTypography.labelCaps10.copyWith(color: AppColors.accent)),
@@ -37,7 +37,7 @@ class RotationCourtWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Color(0xFF161616),
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: AppColors.outlineVariant),
+            border: Border.all(color: Colors.transparent),
           ),
           child: Stack(
             children: [
@@ -45,29 +45,9 @@ class RotationCourtWidget extends StatelessWidget {
               Center(
                 child: Container(
                   width: ResponsiveHelper.w(2),
-                  color: AppColors.accent.withOpacity(0.2), // Attack line
+                  color: AppColors.accent.withValues(alpha: 0.2), // Attack line
                 ),
               ),
-              // Players
-              Obx(() {
-                if (controller.courtPositions.isEmpty) return SizedBox.shrink();
-                return Row(
-                  children: [
-                    // Back Row (P5, P6, P1)
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildPos(4), // Front Left (Wait, Volleyball positions: net is right. Front row is 4, 3, 2. Back row is 5, 6, 1)
-                          _buildPos(5),
-                        ],
-                      ), // Actually, let's map visually to match the prompt's rotation map.
-                    ),
-                  ],
-                );
-              }),
-              
-              // Actual correct Volleyball visual layout mapping
               // Front Row (left side of screen if net is middle, or right side of screen).
               // Assuming net is at the top of the container:
               // Front Row: P4 (left), P3 (center), P2 (right)
@@ -87,7 +67,7 @@ class RotationCourtWidget extends StatelessWidget {
                       ],
                     ),
                     // Attack Line visual divider
-                    Divider(color: AppColors.accent.withOpacity(0.2), thickness: 2, indent: 32, endIndent: 32),
+                    Divider(color: AppColors.accent.withValues(alpha: 0.2), thickness: 2, indent: 32, endIndent: 32),
                     // Back Row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

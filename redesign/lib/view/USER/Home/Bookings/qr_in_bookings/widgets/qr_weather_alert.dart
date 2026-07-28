@@ -3,7 +3,7 @@ import '../qr_in_bookings_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrWeatherAlert extends StatelessWidget {
-  QrWeatherAlert({super.key});
+  const QrWeatherAlert({super.key});
 
   @override
   Widget build(BuildContext context) {

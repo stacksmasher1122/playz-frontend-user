@@ -9,7 +9,7 @@ class FeeSuccessSimpleCard extends StatelessWidget {
   final List<Widget> children;
   final Widget? trailing;
 
-  FeeSuccessSimpleCard({
+  const FeeSuccessSimpleCard({
     super.key,
     required this.title,
     required this.children,

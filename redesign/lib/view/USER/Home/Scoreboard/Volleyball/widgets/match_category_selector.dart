@@ -8,7 +8,7 @@ class MatchCategorySelector extends StatelessWidget {
   final RxString selectedCategory;
   final Function(String) onSelect;
 
-  MatchCategorySelector({
+  const MatchCategorySelector({
     super.key,
     required this.selectedCategory,
     required this.onSelect,
@@ -21,9 +21,9 @@ class MatchCategorySelector extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.card.withOpacity(0.8),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

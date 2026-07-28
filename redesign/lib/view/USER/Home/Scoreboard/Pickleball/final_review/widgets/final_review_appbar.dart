@@ -26,15 +26,6 @@ class FinalReviewAppbar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: false,
       titleSpacing: 0,
-      actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 16.0),
-          child: CircleAvatar(
-            radius: 18,
-            backgroundImage: NetworkImage('https://i.pravatar.cc/100'),
-          ),
-        ),
-      ],
     );
   }
 

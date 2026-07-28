@@ -7,7 +7,7 @@ class InfoDetailRow extends StatelessWidget {
   final String value;
   final Color valueColor;
 
-  InfoDetailRow({
+  const InfoDetailRow({
     super.key,
     required this.icon,
     required this.title,

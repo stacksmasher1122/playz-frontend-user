@@ -12,7 +12,7 @@ class SelectSportCategorySection extends StatelessWidget {
   final String searchQuery;
   final VoidCallback onToggle;
 
-  SelectSportCategorySection({
+  const SelectSportCategorySection({
     super.key,
     required this.title,
     required this.sports,

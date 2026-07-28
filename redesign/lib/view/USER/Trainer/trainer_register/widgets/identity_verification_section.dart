@@ -10,7 +10,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kSurface = Color(0xFF0E0E0E);
 
 class IdentityVerificationSection extends StatefulWidget {
-  IdentityVerificationSection({super.key});
+  const IdentityVerificationSection({super.key});
 
   @override
   State<IdentityVerificationSection> createState() =>
@@ -147,7 +147,7 @@ class IDUploadCard extends StatelessWidget {
   final String? image;
   final VoidCallback onTap;
 
-  IDUploadCard({
+  const IDUploadCard({
     super.key,
     required this.label,
     required this.icon,
@@ -196,7 +196,7 @@ class SelfieCard extends StatelessWidget {
   final String? image;
   final VoidCallback onTap;
 
-  SelfieCard({super.key, required this.image, required this.onTap});
+  const SelfieCard({super.key, required this.image, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ class AdvancedActionsGrid extends StatelessWidget {
   final VoidCallback onRetireBatter;
   final VoidCallback onMatchBreak;
 
-  AdvancedActionsGrid({
+  const AdvancedActionsGrid({
     super.key,
     required this.striker,
     required this.nonStriker,

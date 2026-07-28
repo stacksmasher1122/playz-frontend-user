@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class FloatingSetTimer extends StatelessWidget {
   final VolleyballLiveScoringController controller;
 
-  FloatingSetTimer({super.key, required this.controller});
+  const FloatingSetTimer({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +21,12 @@ class FloatingSetTimer extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
           decoration: BoxDecoration(
-            color: AppColors.surface.withOpacity(0.7),
+            color: AppColors.surface.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: AppColors.outlineVariant.withOpacity(0.5)),
+            border: Border.all(color: Colors.transparent),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
                 blurRadius: 10,
                 offset: Offset(0, 5),
               ),

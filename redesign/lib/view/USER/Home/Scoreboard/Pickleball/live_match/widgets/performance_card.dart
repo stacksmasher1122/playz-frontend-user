@@ -9,10 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class PerformanceCard extends StatelessWidget {
   final LivePickleballMatchController controller;
 
-  PerformanceCard({
-    super.key,
-    required this.controller,
-  });
+  PerformanceCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +19,7 @@ class PerformanceCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,49 +29,65 @@ class PerformanceCard extends StatelessWidget {
             children: [
               Text(
                 'LIVE PERFORMANCE',
-                style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               GestureDetector(
                 onTap: () => controller.goToStats(),
                 child: Text(
                   'VIEW FULL STATS',
-                  style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 16),
-          Obx(() => PerformanceProgress(
-            label: 'WIN PERCENTAGE',
-            valueA: '${(controller.winPercentageA.value * 100).toInt()}%',
-            valueB: '${(controller.winPercentageB.value * 100).toInt()}%',
-            fillRatio: controller.winPercentageA.value,
-            isPercentageBar: true,
-          )),
-          Obx(() => PerformanceProgress(
-            label: 'UNFORCED ERRORS',
-            valueA: '${controller.unforcedErrorsA.value}',
-            valueB: '${controller.unforcedErrorsB.value}',
-            isPercentageBar: false,
-          )),
-          Obx(() => PerformanceProgress(
-            label: 'SERVE ACCURACY',
-            valueA: '${(controller.serveAccuracyA.value * 100).toInt()}%',
-            valueB: '${(controller.serveAccuracyB.value * 100).toInt()}%',
-            isPercentageBar: false,
-          )),
-          Obx(() => PerformanceProgress(
-            label: 'AVG RALLY LENGTH',
-            valueA: '${controller.rallyLengthAvg.value} shots',
-            valueB: '',
-            isPercentageBar: false,
-          )),
-          Obx(() => PerformanceProgress(
-            label: 'LONGEST RALLY',
-            valueA: '${controller.longestRally.value} shots',
-            valueB: '',
-            isPercentageBar: false,
-          )),
+          Obx(
+            () => PerformanceProgress(
+              label: 'WIN PERCENTAGE',
+              valueA: '${(controller.winPercentageA.value * 100).toInt()}%',
+              valueB: '${(controller.winPercentageB.value * 100).toInt()}%',
+              fillRatio: controller.winPercentageA.value,
+              isPercentageBar: true,
+            ),
+          ),
+          Obx(
+            () => PerformanceProgress(
+              label: 'UNFORCED ERRORS',
+              valueA: '${controller.unforcedErrorsA.value}',
+              valueB: '${controller.unforcedErrorsB.value}',
+              isPercentageBar: false,
+            ),
+          ),
+          Obx(
+            () => PerformanceProgress(
+              label: 'SERVE ACCURACY',
+              valueA: '${(controller.serveAccuracyA.value * 100).toInt()}%',
+              valueB: '${(controller.serveAccuracyB.value * 100).toInt()}%',
+              isPercentageBar: false,
+            ),
+          ),
+          Obx(
+            () => PerformanceProgress(
+              label: 'AVG RALLY LENGTH',
+              valueA: '${controller.rallyLengthAvg.value} shots',
+              valueB: '',
+              isPercentageBar: false,
+            ),
+          ),
+          Obx(
+            () => PerformanceProgress(
+              label: 'LONGEST RALLY',
+              valueA: '${controller.longestRally.value} shots',
+              valueB: '',
+              isPercentageBar: false,
+            ),
+          ),
         ],
       ),
     );

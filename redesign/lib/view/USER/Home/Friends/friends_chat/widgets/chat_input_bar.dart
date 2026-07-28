@@ -15,7 +15,7 @@ class ChatInputBar extends StatelessWidget {
   final VoidCallback onCameraPressed;
   final VoidCallback onSendPressed;
 
-  ChatInputBar({
+  const ChatInputBar({
     super.key,
     required this.controller,
     required this.isTyping,

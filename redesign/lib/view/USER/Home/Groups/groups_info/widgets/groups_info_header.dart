@@ -16,7 +16,7 @@ class GroupsInfoHeader extends StatelessWidget {
   final GroupModel group;
   final GroupInfoController ctrl;
 
-  GroupsInfoHeader({
+  const GroupsInfoHeader({
     super.key,
     required this.group,
     required this.ctrl,

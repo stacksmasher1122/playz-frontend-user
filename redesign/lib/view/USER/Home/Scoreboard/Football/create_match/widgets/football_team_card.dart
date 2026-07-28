@@ -13,7 +13,7 @@ class FootballTeamCard extends StatelessWidget {
   final Color accentColor;
   final bool isHome;
 
-  FootballTeamCard({
+  const FootballTeamCard({
     super.key,
     required this.context,
     required this.controller,

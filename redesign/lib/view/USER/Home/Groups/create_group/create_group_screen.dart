@@ -18,7 +18,7 @@ const kGreen = Color(0xFF6EDC6A);
 const kMuted = Colors.white54;
 
 class CreateGroupScreen extends StatefulWidget {
-  CreateGroupScreen({super.key});
+  const CreateGroupScreen({super.key});
 
   @override
   State<CreateGroupScreen> createState() => _CreateGroupScreenState();

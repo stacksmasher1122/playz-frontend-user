@@ -8,7 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class RegulationSummaryCard extends StatelessWidget {
   final VolleyballReviewModel reviewData;
 
-  RegulationSummaryCard({super.key, required this.reviewData});
+  const RegulationSummaryCard({super.key, required this.reviewData});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class RegulationSummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Row(
         children: [

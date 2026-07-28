@@ -5,7 +5,7 @@ import '../../../../../../../../controller/User_Controller/Home_Controller/Score
 import 'package:redesign/theme/responsive_helper.dart';
 
 class GeneralInformationCard extends StatelessWidget {
-  GeneralInformationCard({super.key});
+  const GeneralInformationCard({super.key});
 
   @override
   Widget build(BuildContext context) {

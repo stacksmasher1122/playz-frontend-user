@@ -8,7 +8,7 @@ class PossessionButtonWidget extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  PossessionButtonWidget({
+  const PossessionButtonWidget({
     super.key,
     required this.badgeText,
     required this.label,

@@ -8,7 +8,7 @@ Color kGreen = AppColors.accent;
 Color kYellow = Color(0xFFFFC107);
 
 class AcademyReviewsSection extends StatelessWidget {
-  AcademyReviewsSection({super.key});
+  const AcademyReviewsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class ReviewTile extends StatelessWidget {
   final int rating;
   final String text;
 
-  ReviewTile({
+  const ReviewTile({
     super.key,
     required this.name,
     required this.rating,

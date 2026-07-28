@@ -18,7 +18,7 @@ class MyBookingsConstants {
 }
 
 class MyBookingsScreen extends StatefulWidget {
-  MyBookingsScreen({super.key});
+  const MyBookingsScreen({super.key});
 
   @override
   State<MyBookingsScreen> createState() => _MyBookingsScreenState();

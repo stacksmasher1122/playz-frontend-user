@@ -9,7 +9,7 @@ class TournamentTypeSelector extends StatelessWidget {
   final TournamentType selectedType;
   final Function(TournamentType) onTypeChanged;
 
-  TournamentTypeSelector({
+  const TournamentTypeSelector({
     super.key,
     required this.selectedType,
     required this.onTypeChanged,

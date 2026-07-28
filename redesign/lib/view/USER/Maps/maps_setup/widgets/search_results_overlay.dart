@@ -11,7 +11,7 @@ class SearchResultsOverlay extends StatelessWidget {
   final TextEditingController searchController;
   final MapsController mapsCtrl;
 
-  SearchResultsOverlay({
+  const SearchResultsOverlay({
     super.key,
     required this.searchController,
     required this.mapsCtrl,

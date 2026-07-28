@@ -14,7 +14,7 @@ class PlayerRosterCard extends StatelessWidget {
   final VolleyballTeamModel team;
   final VolleyballTeamManagementController controller;
 
-  PlayerRosterCard({
+  const PlayerRosterCard({
     super.key,
     required this.isTeamA,
     required this.team,
@@ -27,9 +27,9 @@ class PlayerRosterCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.card.withOpacity(0.8),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

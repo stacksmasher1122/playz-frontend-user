@@ -7,7 +7,7 @@ class TeamSideWidget extends StatelessWidget {
   final SideSelectionModel team;
   final Function(String teamId, String targetSide) onDrag;
 
-  TeamSideWidget({super.key, required this.team, required this.onDrag});
+  const TeamSideWidget({super.key, required this.team, required this.onDrag});
 
   @override
   Widget build(BuildContext context) {

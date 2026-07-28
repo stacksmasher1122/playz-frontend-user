@@ -8,7 +8,7 @@ import '../../player_management/player_management_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SmCreateButtonWidget extends StatefulWidget {
-  SmCreateButtonWidget({super.key});
+  const SmCreateButtonWidget({super.key});
 
   @override
   State<SmCreateButtonWidget> createState() => _SmCreateButtonWidgetState();

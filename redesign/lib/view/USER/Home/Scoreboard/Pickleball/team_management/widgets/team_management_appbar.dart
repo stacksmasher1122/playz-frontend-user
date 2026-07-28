@@ -3,7 +3,8 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class TeamManagementAppbar extends StatelessWidget implements PreferredSizeWidget {
+class TeamManagementAppbar extends StatelessWidget
+    implements PreferredSizeWidget {
   TeamManagementAppbar({super.key});
 
   @override
@@ -26,15 +27,6 @@ class TeamManagementAppbar extends StatelessWidget implements PreferredSizeWidge
       ),
       centerTitle: false,
       titleSpacing: 0,
-      actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 16.0),
-          child: CircleAvatar(
-            radius: 18,
-            backgroundImage: NetworkImage('https://i.pravatar.cc/100'),
-          ),
-        ),
-      ],
     );
   }
 

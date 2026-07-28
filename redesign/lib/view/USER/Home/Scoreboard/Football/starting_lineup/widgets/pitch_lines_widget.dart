@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PitchLinesWidget extends StatelessWidget {
-  PitchLinesWidget({super.key});
+  const PitchLinesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

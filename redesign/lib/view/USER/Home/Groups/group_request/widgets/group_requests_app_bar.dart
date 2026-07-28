@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const _kGreen = AppColors.accent;
 
 class GroupRequestsAppBar extends StatelessWidget {
-  GroupRequestsAppBar({super.key});
+  const GroupRequestsAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

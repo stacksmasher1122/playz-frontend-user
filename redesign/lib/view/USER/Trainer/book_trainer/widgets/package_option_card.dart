@@ -14,7 +14,7 @@ class PackageOptionCard extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  PackageOptionCard({
+  const PackageOptionCard({
     super.key,
     required this.data,
     required this.selected,

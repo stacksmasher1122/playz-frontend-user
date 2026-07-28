@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class ConfirmLineupButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  ConfirmLineupButton({super.key, required this.onPressed});
+  const ConfirmLineupButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class ConfirmLineupButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             elevation: 8,
-            shadowColor: AppColors.accent.withOpacity(0.5),
+            shadowColor: AppColors.accent.withValues(alpha: 0.5),
           ),
           onPressed: onPressed,
           child: Row(

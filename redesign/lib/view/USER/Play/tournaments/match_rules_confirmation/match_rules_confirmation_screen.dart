@@ -6,7 +6,6 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import '../../../../../model/User_Models/Tournament_Model/tournament_team_model.dart';
 import '../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/badminton_controller.dart';
-import '../../../../../model/User_Models/Home_Models/Scoreboard_Model/badminton_state_models.dart';
 import '../../../../../model/User_Models/Home_Models/Friends_Model/friends_model.dart';
 import 'widgets/rules_summary_card.dart';
 

@@ -13,7 +13,7 @@ const _kMuted = Colors.white54;
 class AddMembersTile extends StatelessWidget {
   final GroupInfoController ctrl;
 
-  AddMembersTile({super.key, required this.ctrl});
+  const AddMembersTile({super.key, required this.ctrl});
 
   @override
   Widget build(BuildContext context) {

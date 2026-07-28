@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class BookingInfoCard extends StatelessWidget {
   final Map<String, dynamic>? bookingData;
 
-  BookingInfoCard({super.key, this.bookingData});
+  const BookingInfoCard({super.key, this.bookingData});
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,7 @@ import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboa
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LsAppbarWidget extends StatefulWidget {
-  LsAppbarWidget({super.key});
+  const LsAppbarWidget({super.key});
 
   @override
   State<LsAppbarWidget> createState() => _LsAppbarWidgetState();

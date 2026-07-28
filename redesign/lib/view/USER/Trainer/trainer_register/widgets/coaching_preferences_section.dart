@@ -8,7 +8,7 @@ const kCard = Color(0xFF1A1A1A);
 const kMuted = Color(0xFFA7A7A7);
 
 class CoachingPreferencesSection extends StatefulWidget {
-  CoachingPreferencesSection({super.key});
+  const CoachingPreferencesSection({super.key});
 
   @override
   State<CoachingPreferencesSection> createState() =>
@@ -100,7 +100,7 @@ class SelectableChip extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  SelectableChip({
+  const SelectableChip({
     super.key,
     required this.label,
     required this.selected,
@@ -142,7 +142,7 @@ class PreferenceToggle extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  PreferenceToggle({
+  const PreferenceToggle({
     super.key,
     required this.label,
     required this.value,

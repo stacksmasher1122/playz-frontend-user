@@ -11,7 +11,7 @@ class ProfileSetupField extends StatelessWidget {
   final bool readOnly;
   final VoidCallback? onTap;
 
-  ProfileSetupField({
+  const ProfileSetupField({
     super.key,
     required this.label,
     required this.hint,

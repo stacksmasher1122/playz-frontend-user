@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class NotchedDashedDivider extends StatelessWidget {
-  NotchedDashedDivider({super.key});
+  const NotchedDashedDivider({super.key});
 
   @override
   Widget build(BuildContext context) {

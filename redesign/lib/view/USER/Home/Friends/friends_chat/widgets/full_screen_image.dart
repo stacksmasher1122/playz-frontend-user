@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class FullScreenImage extends StatelessWidget {
   final String url;
 
-  FullScreenImage({super.key, required this.url});
+  const FullScreenImage({super.key, required this.url});
 
   @override
   Widget build(BuildContext context) {

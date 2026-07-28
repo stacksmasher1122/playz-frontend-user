@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class CoinShadow extends StatelessWidget {
   final double shadowValue;
 
-  CoinShadow({super.key, required this.shadowValue});
+  const CoinShadow({super.key, required this.shadowValue});
 
   @override
   Widget build(BuildContext context) {

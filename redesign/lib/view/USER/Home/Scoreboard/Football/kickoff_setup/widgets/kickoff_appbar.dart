@@ -5,7 +5,7 @@ import '../../../../../../../controller/User_Controller/Home_Controller/Scoreboa
 import 'package:redesign/theme/responsive_helper.dart';
 
 class KickoffAppbar extends StatelessWidget implements PreferredSizeWidget {
-  KickoffAppbar({super.key});
+  const KickoffAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {

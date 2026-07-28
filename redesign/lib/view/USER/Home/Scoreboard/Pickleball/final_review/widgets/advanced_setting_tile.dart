@@ -26,13 +26,21 @@ class AdvancedSettingTile extends StatelessWidget {
         children: [
           Icon(icon, color: AppColors.muted, size: 20),
           SizedBox(width: 12),
-          Text(label, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
+          Text(
+            label,
+            style: AppTypography.bodyMd.copyWith(
+              color: AppColors.accent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           Spacer(),
           Text(
             value,
             style: AppTypography.bodyMd.copyWith(
               color: valueIsHighlighted ? AppColors.accent : AppColors.muted,
-              fontWeight: valueIsHighlighted ? FontWeight.bold : FontWeight.normal,
+              fontWeight: valueIsHighlighted
+                  ? FontWeight.bold
+                  : FontWeight.normal,
             ),
           ),
         ],

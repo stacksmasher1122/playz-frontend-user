@@ -8,7 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class LargeStepperCard extends StatelessWidget {
   final CricketController controller;
 
-  LargeStepperCard({
+  const LargeStepperCard({
     super.key,
     required this.controller,
   });

@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class StartMatchButtonWidget extends StatelessWidget {
   final VoidCallback onTap;
 
-  StartMatchButtonWidget({super.key, required this.onTap});
+  const StartMatchButtonWidget({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -26,7 +26,7 @@ class ProPlanCard extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
-  ProPlanCard({
+  const ProPlanCard({
     super.key,
     required this.plan,
     required this.selected,

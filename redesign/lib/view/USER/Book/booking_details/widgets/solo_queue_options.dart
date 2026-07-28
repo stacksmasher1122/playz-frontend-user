@@ -15,7 +15,7 @@ class SoloQueueOptions extends StatelessWidget {
   final ValueChanged<bool> onSplitAndPayChanged;
   final ValueChanged<bool> onBringOwnEquipmentChanged;
 
-  SoloQueueOptions({
+  const SoloQueueOptions({
     super.key,
     required this.soloQueue,
     required this.players,

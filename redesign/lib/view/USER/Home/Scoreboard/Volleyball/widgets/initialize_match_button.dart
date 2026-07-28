@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class InitializeMatchButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  InitializeMatchButton({super.key, required this.onPressed});
+  const InitializeMatchButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class InitializeMatchButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             elevation: 8,
-            shadowColor: AppColors.accent.withOpacity(0.5),
+            shadowColor: AppColors.accent.withValues(alpha: 0.5),
           ),
           onPressed: onPressed,
           child: Row(

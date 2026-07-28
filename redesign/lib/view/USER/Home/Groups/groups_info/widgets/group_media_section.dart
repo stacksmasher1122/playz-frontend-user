@@ -12,7 +12,7 @@ const _kMuted = Colors.white54;
 class GroupMediaSection extends StatelessWidget {
   final GroupInfoController ctrl;
 
-  GroupMediaSection({super.key, required this.ctrl});
+  const GroupMediaSection({super.key, required this.ctrl});
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ class SwipeToReply extends StatefulWidget {
   final bool isMe;
   final VoidCallback onSwiped;
 
-  SwipeToReply({
+  const SwipeToReply({
     super.key,
     required this.child,
     required this.isMe,

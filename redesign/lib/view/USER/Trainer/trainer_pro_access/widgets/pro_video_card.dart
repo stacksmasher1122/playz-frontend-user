@@ -4,7 +4,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ProVideoCard extends StatelessWidget {
-  ProVideoCard({super.key});
+  const ProVideoCard({super.key});
 
   @override
   Widget build(BuildContext context) {

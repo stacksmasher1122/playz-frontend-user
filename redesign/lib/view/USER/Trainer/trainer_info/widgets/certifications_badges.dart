@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kCard = Color(0xFF1A1A1A);
 
 class CertificationsBadges extends StatelessWidget {
-  CertificationsBadges({super.key});
+  const CertificationsBadges({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class CertificationsBadges extends StatelessWidget {
 
 class CertBadge extends StatelessWidget {
   final String label;
-  CertBadge({super.key, required this.label});
+  const CertBadge({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {

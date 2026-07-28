@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kMuted = Color(0xFFA7A7A7);
 
 class ProBlurredHeader extends StatelessWidget {
-  ProBlurredHeader({super.key});
+  const ProBlurredHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

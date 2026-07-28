@@ -8,7 +8,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class GoalWorkflow extends StatefulWidget {
   final MatchEngine engine;
 
-  GoalWorkflow({super.key, required this.engine});
+  const GoalWorkflow({super.key, required this.engine});
 
   @override
   State<GoalWorkflow> createState() => _GoalWorkflowState();

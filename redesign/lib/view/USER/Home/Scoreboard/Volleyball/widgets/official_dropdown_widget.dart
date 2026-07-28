@@ -8,7 +8,7 @@ class OfficialDropdownWidget extends StatelessWidget {
   final String hint;
   final Function(String?) onChanged;
 
-  OfficialDropdownWidget({
+  const OfficialDropdownWidget({
     super.key,
     required this.label,
     required this.hint,

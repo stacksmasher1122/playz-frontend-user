@@ -5,7 +5,7 @@ import 'package:redesign/view/USER/Maps/maps_constants.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ErrorOverlay extends StatelessWidget {
-  ErrorOverlay({super.key});
+  const ErrorOverlay({super.key});
 
   @override
   Widget build(BuildContext context) {

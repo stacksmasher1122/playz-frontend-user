@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CancellationPolicyBanner extends StatelessWidget {
-  CancellationPolicyBanner({super.key});
+  const CancellationPolicyBanner({super.key});
 
   @override
   Widget build(BuildContext context) {

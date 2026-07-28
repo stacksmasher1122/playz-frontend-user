@@ -9,7 +9,7 @@ class BadmintonScoreboardHeader extends StatelessWidget {
   final BadmintonController controller;
   final BadmintonMatchState state;
 
-  BadmintonScoreboardHeader({
+  const BadmintonScoreboardHeader({
     super.key,
     required this.controller,
     required this.state,

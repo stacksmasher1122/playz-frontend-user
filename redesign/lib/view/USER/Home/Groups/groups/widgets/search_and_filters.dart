@@ -12,7 +12,7 @@ const kGreen = AppColors.accent;
 const kMuted = Colors.white70;
 
 class SearchAndFilters extends StatefulWidget {
-  SearchAndFilters({super.key});
+  const SearchAndFilters({super.key});
 
   @override
   State<SearchAndFilters> createState() => _SearchAndFiltersState();
@@ -150,7 +150,7 @@ class _SearchAndFiltersState extends State<SearchAndFilters> {
 class _SearchResultTile extends StatefulWidget {
   final GroupModel group;
 
-  _SearchResultTile({required this.group});
+  const _SearchResultTile({required this.group});
 
   @override
   State<_SearchResultTile> createState() => _SearchResultTileState();

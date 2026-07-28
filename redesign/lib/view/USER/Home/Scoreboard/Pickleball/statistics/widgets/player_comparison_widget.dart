@@ -14,22 +14,42 @@ class PlayerComparisonWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Player Comparison',
-            style: AppTypography.headlineSm.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.accent,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('J. Smith (A)', style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
-              Text('vs', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-              Text('K. Jones (B)', style: AppTypography.bodyMd.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold)),
+              Text(
+                'J. Smith (A)',
+                style: AppTypography.bodyMd.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'vs',
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.muted,
+                ),
+              ),
+              Text(
+                'K. Jones (B)',
+                style: AppTypography.bodyMd.copyWith(
+                  color: AppColors.muted,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           SizedBox(height: 16),
@@ -52,9 +72,31 @@ class PlayerComparisonWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(width: ResponsiveHelper.w(40), child: Text(valA, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold))),
-          Text(label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-          SizedBox(width: ResponsiveHelper.w(40), child: Text(valB, style: AppTypography.bodyMd.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold), textAlign: TextAlign.right)),
+          SizedBox(
+            width: ResponsiveHelper.w(40),
+            child: Text(
+              valA,
+              style: AppTypography.bodyMd.copyWith(
+                color: AppColors.accent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Text(
+            label,
+            style: AppTypography.labelCaps10.copyWith(color: AppColors.muted),
+          ),
+          SizedBox(
+            width: ResponsiveHelper.w(40),
+            child: Text(
+              valB,
+              style: AppTypography.bodyMd.copyWith(
+                color: AppColors.muted,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
         ],
       ),
     );

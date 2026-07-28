@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class RecentBookingsSocial extends StatelessWidget {
-  RecentBookingsSocial({super.key});
+  const RecentBookingsSocial({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -10,7 +10,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class AvailablePlayersList extends StatelessWidget {
   final VolleyballStartingLineupController controller;
 
-  AvailablePlayersList({super.key, required this.controller});
+  const AvailablePlayersList({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

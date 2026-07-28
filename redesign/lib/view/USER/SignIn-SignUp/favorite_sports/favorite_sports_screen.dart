@@ -8,7 +8,7 @@ import 'widgets/sports_selection_bottom.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class FavoriteSportsScreen extends StatefulWidget {
-  FavoriteSportsScreen({super.key});
+  const FavoriteSportsScreen({super.key});
 
   @override
   State<FavoriteSportsScreen> createState() => _FavoriteSportsScreenState();

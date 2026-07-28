@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kGreen = AppColors.accent;
 
 class SuccessRipple extends StatefulWidget {
-  SuccessRipple({super.key});
+  const SuccessRipple({super.key});
 
   @override
   State<SuccessRipple> createState() => _SuccessRippleState();
@@ -71,7 +71,7 @@ class RippleWave extends StatelessWidget {
   final AnimationController controller;
   final double delay;
 
-  RippleWave({required this.controller, required this.delay, super.key});
+  const RippleWave({required this.controller, required this.delay, super.key});
 
   @override
   Widget build(BuildContext context) {

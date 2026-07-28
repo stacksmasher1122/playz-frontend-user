@@ -8,7 +8,7 @@ Color kGreen = AppColors.accent;
 Color kYellow = Color(0xFFFFC107);
 
 class AcademyInfoSection extends StatelessWidget {
-  AcademyInfoSection({super.key});
+  const AcademyInfoSection({super.key});
 
   @override
   Widget build(BuildContext context) {

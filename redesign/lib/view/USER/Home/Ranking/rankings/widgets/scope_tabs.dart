@@ -8,7 +8,7 @@ class ScopeTabs extends StatelessWidget {
   final int selected;
   final ValueChanged<int> onChanged;
 
-  ScopeTabs({
+  const ScopeTabs({
     super.key,
     required this.selected,
     required this.onChanged,

@@ -6,7 +6,7 @@ Color kMuted = Color(0xFFA7A7A7);
 Color kGold = Color(0xFFFFC107);
 
 class SeasonPrizeCard extends StatelessWidget {
-  SeasonPrizeCard({super.key});
+  const SeasonPrizeCard({super.key});
 
   @override
   Widget build(BuildContext context) {

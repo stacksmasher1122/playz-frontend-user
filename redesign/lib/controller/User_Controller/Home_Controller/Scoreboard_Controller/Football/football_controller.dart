@@ -10,10 +10,6 @@ class FootballController extends GetxController {
   final MatchEngine engine = MatchEngine();
   final RxString currentMatchId = ''.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   @override
   void onClose() {

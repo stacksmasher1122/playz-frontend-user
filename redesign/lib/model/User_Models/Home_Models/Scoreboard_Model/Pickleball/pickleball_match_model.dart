@@ -1,3 +1,5 @@
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/pickleball_rule_engine.dart';
+
 class PickleballMatchModel {
   final String matchName;
   final String? tournament;
@@ -17,6 +19,7 @@ class PickleballMatchModel {
   final bool winByTwo;
   final bool rallyScoring;
   final bool traditionalScoring;
+  final PickleballRuleProfile? ruleProfile;
 
   PickleballMatchModel({
     required this.matchName,
@@ -37,5 +40,6 @@ class PickleballMatchModel {
     required this.winByTwo,
     required this.rallyScoring,
     required this.traditionalScoring,
+    this.ruleProfile,
   });
 }

@@ -10,7 +10,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class CourtWidget extends StatelessWidget {
   final VolleyballStartingLineupController controller;
 
-  CourtWidget({super.key, required this.controller});
+  const CourtWidget({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class CourtWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         children: [
@@ -31,7 +31,7 @@ class CourtWidget extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(4)),
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.outlineVariant),
+                  border: Border.all(color: Colors.transparent),
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                   color: AppColors.background,
                 ),

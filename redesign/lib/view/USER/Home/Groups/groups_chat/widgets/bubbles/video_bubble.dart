@@ -11,7 +11,7 @@ class VideoBubble extends StatefulWidget {
   final String url;
   final GroupChatController ctrl;
 
-  VideoBubble({super.key, required this.url, required this.ctrl});
+  const VideoBubble({super.key, required this.url, required this.ctrl});
 
   @override
   State<VideoBubble> createState() => _VideoBubbleState();

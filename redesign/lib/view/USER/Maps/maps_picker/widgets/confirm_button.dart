@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class ConfirmButton extends StatelessWidget {
   final VoidCallback onConfirm;
 
-  ConfirmButton({
+  const ConfirmButton({
     super.key,
     required this.onConfirm,
   });

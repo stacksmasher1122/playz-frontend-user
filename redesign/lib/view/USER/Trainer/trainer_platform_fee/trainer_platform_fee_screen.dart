@@ -11,7 +11,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kBg = AppColors.background;
 
 class TrainerLimitedAccessScreen extends StatelessWidget {
-  TrainerLimitedAccessScreen({super.key});
+  const TrainerLimitedAccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

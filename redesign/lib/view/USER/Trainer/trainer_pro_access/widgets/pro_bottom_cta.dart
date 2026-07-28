@@ -13,7 +13,7 @@ class ProBottomCTA extends StatelessWidget {
   final List<ProPlan> plans;
   final ValueNotifier<int> selectedIndex;
 
-  ProBottomCTA({
+  const ProBottomCTA({
     super.key,
     required this.plans,
     required this.selectedIndex,

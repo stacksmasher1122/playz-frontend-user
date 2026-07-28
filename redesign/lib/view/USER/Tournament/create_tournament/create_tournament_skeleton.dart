@@ -121,7 +121,7 @@ class _SkeletonCircle extends StatelessWidget {
 class _SkeletonText extends StatelessWidget {
   final double width; 
   final double height;
-  const _SkeletonText({required this.width, this.height=14});
+  const _SkeletonText({required this.width}) : height = 14;
   @override 
   Widget build(BuildContext context) => _SkeletonBox(width: width, height: ResponsiveHelper.h(height), radius: 4);
 }

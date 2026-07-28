@@ -15,7 +15,7 @@ class MemberTile extends StatelessWidget {
   final bool isMe;
   final GroupInfoController ctrl;
 
-  MemberTile({
+  const MemberTile({
     super.key,
     required this.email,
     required this.data,

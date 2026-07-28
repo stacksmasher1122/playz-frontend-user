@@ -8,7 +8,7 @@ import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyba
 class TimelineCard extends StatelessWidget {
   final VolleyballStatsController controller;
 
-  TimelineCard({super.key, required this.controller});
+  const TimelineCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

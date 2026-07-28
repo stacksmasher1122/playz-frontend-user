@@ -8,7 +8,7 @@ class QuickEventButton extends StatefulWidget {
   final bool isPrimary;
   final VoidCallback onTap;
 
-  QuickEventButton({
+  const QuickEventButton({
     super.key,
     required this.title,
     required this.icon,

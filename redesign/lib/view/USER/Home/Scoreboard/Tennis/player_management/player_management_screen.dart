@@ -12,7 +12,7 @@ import '../setup_match/widgets/sm_bottom_nav_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PlayerManagementScreen extends StatefulWidget {
-  PlayerManagementScreen({super.key});
+  const PlayerManagementScreen({super.key});
 
   @override
   State<PlayerManagementScreen> createState() => _PlayerManagementScreenState();

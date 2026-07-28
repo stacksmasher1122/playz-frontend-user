@@ -3,7 +3,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LoadingWidget extends StatelessWidget {
-  LoadingWidget({super.key});
+  const LoadingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

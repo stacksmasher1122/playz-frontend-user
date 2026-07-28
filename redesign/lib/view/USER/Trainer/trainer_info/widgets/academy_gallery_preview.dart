@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kCard = Color(0xFF1A1A1A);
 
 class AcademyGalleryPreview extends StatelessWidget {
-  AcademyGalleryPreview({super.key});
+  const AcademyGalleryPreview({super.key});
 
   @override
   Widget build(BuildContext context) {

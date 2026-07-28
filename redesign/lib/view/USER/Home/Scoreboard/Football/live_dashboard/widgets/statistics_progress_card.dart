@@ -8,7 +8,7 @@ class StatisticsProgressCard extends StatelessWidget {
   final int valueB;
   final bool isPercentage;
 
-  StatisticsProgressCard({
+  const StatisticsProgressCard({
     super.key,
     required this.title,
     required this.valueA,

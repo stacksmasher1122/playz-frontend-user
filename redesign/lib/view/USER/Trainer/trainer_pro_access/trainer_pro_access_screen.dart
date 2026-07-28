@@ -19,7 +19,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kBg = AppColors.background;
 
 class TrainerProAccessScreen extends StatefulWidget {
-  TrainerProAccessScreen({super.key});
+  const TrainerProAccessScreen({super.key});
 
   @override
   State<TrainerProAccessScreen> createState() => _TrainerProAccessScreenState();

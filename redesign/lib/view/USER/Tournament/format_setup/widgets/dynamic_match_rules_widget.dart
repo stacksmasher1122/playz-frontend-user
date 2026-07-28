@@ -147,7 +147,7 @@ class DynamicMatchRulesWidget extends StatelessWidget {
             onChanged: (val) {
               controller.updateRule(key, val);
             },
-            activeColor: AppColors.accent,
+            activeThumbColor: AppColors.accent,
             inactiveTrackColor: AppColors.surface,
           ),
         ],

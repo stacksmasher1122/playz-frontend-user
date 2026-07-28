@@ -178,7 +178,7 @@ class LeaderboardSection extends StatelessWidget {
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
                     ],
                   );
                 },

@@ -7,7 +7,7 @@ const kSurface = Color(0xFF0E0E0E);
 const kGreen = AppColors.accent;
 
 class CreateScoreboardHero extends StatelessWidget {
-  CreateScoreboardHero({super.key});
+  const CreateScoreboardHero({super.key});
 
   @override
   Widget build(BuildContext context) {

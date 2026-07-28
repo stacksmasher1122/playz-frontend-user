@@ -2,10 +2,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/stats/volleyball_stats_screen.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_review_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_live_match_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/volleyballSqflite.dart';
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_match_model.dart';
 
 class VolleyballLiveScoringController extends GetxController {
+  VolleyballMatchModel? _matchModel;
   late VolleyballReviewModel initialData;
 
   // Rx State
@@ -31,12 +37,23 @@ class VolleyballLiveScoringController extends GetxController {
     super.onClose();
   }
 
-  void initializeMatch(VolleyballReviewModel data) {
+  void initializeMatch(VolleyballReviewModel data, bool teamAServesFirst, [VolleyballMatchModel? matchModel]) {
     initialData = data;
-    // By default team A serves first, or whatever coin toss dictates
-    isTeamAServing.value = true;
+    _matchModel = matchModel;
+    if (matchModel != null) {
+      teamAScore.value = matchModel.scoreTeamA;
+      teamBScore.value = matchModel.scoreTeamB;
+      teamASets.value = matchModel.setsTeamA;
+      teamBSets.value = matchModel.setsTeamB;
+      currentSet.value = matchModel.currentSet;
+      isTeamAServing.value = matchModel.isTeamAServing;
+      matchSeconds.value = matchModel.matchSeconds;
+      isPaused.value = matchModel.isPaused;
+    } else {
+      isTeamAServing.value = teamAServesFirst;
+    }
     _saveStateToUndo("Match Started");
-    startTimer();
+    if (!isPaused.value) startTimer();
   }
 
   void startTimer() {
@@ -52,44 +69,91 @@ class VolleyballLiveScoringController extends GetxController {
     isPaused.value = true;
     _timer?.cancel();
     _saveStateToUndo("Match Paused");
+    _syncToDatabase();
   }
 
   void resumeMatch() {
     isPaused.value = false;
     startTimer();
     _saveStateToUndo("Match Resumed");
+    _syncToDatabase();
   }
 
-  void addPointTeamA() {
+  void addPointTeamA({String reason = "Point"}) {
     if (matchFinished.value || isPaused.value) {
       _showWarning();
       return;
     }
     
-    _saveStateToUndo("Point awarded to ${initialData.teamA.teamName}");
+    _saveStateToUndo("$reason awarded to ${initialData.teamA.teamName}");
     teamAScore.value++;
     isTeamAServing.value = true;
     _checkSetWinner();
+    _syncToDatabase();
   }
 
-  void addPointTeamB() {
+  void addPointTeamB({String reason = "Point"}) {
     if (matchFinished.value || isPaused.value) {
       _showWarning();
       return;
     }
 
-    _saveStateToUndo("Point awarded to ${initialData.teamB.teamName}");
+    _saveStateToUndo("$reason awarded to ${initialData.teamB.teamName}");
     teamBScore.value++;
     isTeamAServing.value = false;
     _checkSetWinner();
+    _syncToDatabase();
+  }
+
+  void issuePenalty(String teamName, String cardType, String reason) {
+    bool isTeamA = teamName == initialData.teamA.teamName;
+    _saveStateToUndo("$cardType issued to $teamName for $reason");
+    
+    Get.snackbar(
+      "$cardType: $teamName", 
+      reason, 
+      backgroundColor: cardType == 'Red Card' ? AppColors.error : Colors.amber, 
+      colorText: Colors.white
+    );
+
+    if (cardType == 'Red Card') {
+      // Red card gives a penalty point to the OPPOSING team
+      if (isTeamA) {
+        teamBScore.value++;
+        isTeamAServing.value = false;
+      } else {
+        teamAScore.value++;
+        isTeamAServing.value = true;
+      }
+      _checkSetWinner();
+    }
+    _syncToDatabase();
   }
 
   void _showWarning() {
     if (matchFinished.value) {
-      Get.snackbar("Match Over", "The match has already concluded.", backgroundColor: AppColors.error, colorText: AppColors.accent);
+      showMatchFinishedDialog();
     } else if (isPaused.value) {
       Get.snackbar("Match Paused", "Please resume the timer before scoring.", backgroundColor: AppColors.error, colorText: AppColors.accent);
     }
+  }
+
+  void showMatchFinishedDialog() {
+    Get.defaultDialog(
+      title: "Match Finished!",
+      titleStyle: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+      backgroundColor: AppColors.card,
+      barrierDismissible: false,
+      content: Text("The match has concluded.", style: AppTypography.bodyMd.copyWith(color: Colors.white)),
+      confirm: ElevatedButton(
+        style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
+        onPressed: () {
+          Get.back(); // close dialog
+          Get.off(() => const VolleyballStatsScreen());
+        },
+        child: Text("VIEW STATS", style: AppTypography.headlineMd.copyWith(color: Colors.black)),
+      )
+    );
   }
 
   void undoLastPoint() {
@@ -112,6 +176,7 @@ class VolleyballLiveScoringController extends GetxController {
       latestActions.removeAt(0); // Remove the top action
     }
     matchFinished.value = false;
+    _syncToDatabase();
   }
 
   void _checkSetWinner() {
@@ -161,7 +226,7 @@ class VolleyballLiveScoringController extends GetxController {
 
   void _endMatch(String winner) {
     matchFinished.value = true;
-    pauseMatch();
+    pauseMatch(); // Also calls syncToDatabase
     Get.snackbar("Match Complete", "$winner has won the match!", backgroundColor: AppColors.accent, colorText: Colors.black, duration: Duration(seconds: 5));
     // Navigator.push(context, MaterialPageRoute(builder: (_) => VolleyballMatchSummaryScreen()));
   }
@@ -199,5 +264,39 @@ class VolleyballLiveScoringController extends GetxController {
     int s = seconds % 60;
     if (h > 0) return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  void _syncToDatabase() {
+    if (_matchModel != null) {
+      final updated = _matchModel!.copyWith(
+        scoreTeamA: teamAScore.value,
+        scoreTeamB: teamBScore.value,
+        setsTeamA: teamASets.value,
+        setsTeamB: teamBSets.value,
+        currentSet: currentSet.value,
+        isTeamAServing: isTeamAServing.value,
+        matchSeconds: matchSeconds.value,
+        isPaused: isPaused.value,
+        status: matchFinished.value ? 'completed' : 'active',
+      );
+      
+      VolleyballSqflite.instance.updateMatch(updated);
+      
+      try {
+        FirebaseFirestore.instance.collection('volleyball_matches').doc(updated.matchId).update({
+          'scoreTeamA': updated.scoreTeamA,
+          'scoreTeamB': updated.scoreTeamB,
+          'setsTeamA': updated.setsTeamA,
+          'setsTeamB': updated.setsTeamB,
+          'currentSet': updated.currentSet,
+          'isTeamAServing': updated.isTeamAServing,
+          'matchSeconds': updated.matchSeconds,
+          'isPaused': updated.isPaused,
+          'status': matchFinished.value ? 'completed' : 'active',
+        });
+      } catch (e) {
+        debugPrint('Firestore sync failed: $e');
+      }
+    }
   }
 }

@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class FootballCreateMatchAppbar extends StatelessWidget
     implements PreferredSizeWidget {
-  FootballCreateMatchAppbar({super.key});
+  const FootballCreateMatchAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {

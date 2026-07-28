@@ -12,7 +12,7 @@ class FriendsSelectionSheet extends StatelessWidget {
   final CricketController controller;
   final bool isHome;
 
-  FriendsSelectionSheet({
+  const FriendsSelectionSheet({
     super.key,
     required this.controller,
     required this.isHome,
@@ -123,7 +123,7 @@ class BadmintonFriendsSelectionSheet extends StatelessWidget {
   final BadmintonController controller;
   final bool isSideA;
 
-  BadmintonFriendsSelectionSheet({
+  const BadmintonFriendsSelectionSheet({
     super.key,
     required this.controller,
     required this.isSideA,

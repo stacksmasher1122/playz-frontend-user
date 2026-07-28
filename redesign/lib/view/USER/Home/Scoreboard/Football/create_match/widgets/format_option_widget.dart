@@ -8,7 +8,7 @@ class FormatOptionWidget extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  FormatOptionWidget({
+  const FormatOptionWidget({
     super.key,
     required this.title,
     required this.subtitle,

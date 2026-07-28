@@ -7,11 +7,7 @@ class ModeSelector extends StatelessWidget {
   final bool isSingles;
   final ValueChanged<bool> onChanged;
 
-  ModeSelector({
-    super.key,
-    required this.isSingles,
-    required this.onChanged,
-  });
+  ModeSelector({super.key, required this.isSingles, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

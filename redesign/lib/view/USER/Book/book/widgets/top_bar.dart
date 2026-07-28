@@ -9,7 +9,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/maps_setup_screen.dart';
 
 class TopBar extends StatelessWidget {
-  TopBar({super.key});
+  const TopBar({super.key});
 
   final _controller = Get.find<UserProfileController>();
 

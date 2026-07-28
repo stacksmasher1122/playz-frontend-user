@@ -11,7 +11,7 @@ class LocationTile extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
-  LocationTile({
+  const LocationTile({
     super.key,
     required this.icon,
     required this.title,

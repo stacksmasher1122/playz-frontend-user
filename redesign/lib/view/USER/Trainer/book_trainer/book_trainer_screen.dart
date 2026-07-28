@@ -11,7 +11,7 @@ const kBg = AppColors.background;
 const kYellow = Color(0xFFF5C542);
 
 class ChoosePackageScreen extends StatefulWidget {
-  ChoosePackageScreen({super.key});
+  const ChoosePackageScreen({super.key});
 
   @override
   State<ChoosePackageScreen> createState() => _ChoosePackageScreenState();

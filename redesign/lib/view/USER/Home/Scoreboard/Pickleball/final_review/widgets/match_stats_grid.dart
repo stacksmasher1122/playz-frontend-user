@@ -8,10 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class MatchStatsGrid extends StatelessWidget {
   final PickleballReviewModel reviewData;
 
-  MatchStatsGrid({
-    super.key,
-    required this.reviewData,
-  });
+  MatchStatsGrid({super.key, required this.reviewData});
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +28,22 @@ class MatchStatsGrid extends StatelessWidget {
             value: reviewData.gamesFormat,
           ),
           StatCardWidget(
-            icon: Icon(Icons.scoreboard_outlined, color: AppColors.accent, size: 28),
+            icon: Icon(
+              Icons.scoreboard_outlined,
+              color: AppColors.accent,
+              size: 28,
+            ),
             label: 'TARGET',
             value: '${reviewData.targetPoints} Points',
           ),
           StatCardWidget(
-            icon: Text('+2', style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
+            icon: Text(
+              '+2',
+              style: AppTypography.headlineMd.copyWith(
+                color: AppColors.accent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             label: 'WIN BY 2',
             value: reviewData.winByTwo ? 'Active' : 'Inactive',
           ),

@@ -11,7 +11,7 @@ class RecommendedCard extends StatelessWidget {
   final String status;
   final String imageUrl;
 
-  RecommendedCard({
+  const RecommendedCard({
     super.key,
     required this.name,
     required this.members,

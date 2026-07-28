@@ -8,7 +8,7 @@ import 'score_board_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveScoreCard extends StatelessWidget {
-  LiveScoreCard({super.key});
+  const LiveScoreCard({super.key});
 
   @override
   Widget build(BuildContext context) {

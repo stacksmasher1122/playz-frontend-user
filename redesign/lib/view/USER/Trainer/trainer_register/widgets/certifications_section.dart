@@ -9,7 +9,7 @@ const kCard = Color(0xFF1A1A1A);
 const kMuted = Color(0xFFA7A7A7);
 
 class CertificationsSection extends StatelessWidget {
-  CertificationsSection({super.key});
+  const CertificationsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class CertificationsSection extends StatelessWidget {
 }
 
 class UploadCertificateCard extends StatelessWidget {
-  UploadCertificateCard({super.key});
+  const UploadCertificateCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class UploadedCertificateTile extends StatelessWidget {
   final String fileName;
   final String fileSize;
 
-  UploadedCertificateTile({
+  const UploadedCertificateTile({
     super.key,
     required this.fileName,
     required this.fileSize,

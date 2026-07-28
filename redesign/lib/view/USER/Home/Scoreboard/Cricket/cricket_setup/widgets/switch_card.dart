@@ -10,7 +10,7 @@ class SwitchCard extends StatelessWidget {
   final String subtitle;
   final IconData icon;
 
-  SwitchCard({
+  const SwitchCard({
     super.key,
     required this.valueStream,
     required this.onChanged,

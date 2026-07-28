@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class RecommendedVenuesList extends StatelessWidget {
   final List<String> images;
 
-  RecommendedVenuesList({
+  const RecommendedVenuesList({
     super.key,
     required this.images,
   });

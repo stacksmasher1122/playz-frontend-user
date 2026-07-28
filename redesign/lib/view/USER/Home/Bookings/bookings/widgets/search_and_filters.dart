@@ -4,7 +4,7 @@ import 'filter_chip.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingsSearchAndFilters extends StatelessWidget {
-  BookingsSearchAndFilters({super.key});
+  const BookingsSearchAndFilters({super.key});
 
   @override
   Widget build(BuildContext context) {

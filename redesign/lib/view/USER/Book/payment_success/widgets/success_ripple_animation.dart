@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class SuccessRippleAnimation extends StatelessWidget {
   final AnimationController controller;
 
-  SuccessRippleAnimation({
+  const SuccessRippleAnimation({
     super.key,
     required this.controller,
   });

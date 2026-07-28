@@ -12,7 +12,7 @@ class ModerationSection extends StatelessWidget {
   final GroupModel group;
   final GroupInfoController ctrl;
 
-  ModerationSection({
+  const ModerationSection({
     super.key,
     required this.group,
     required this.ctrl,

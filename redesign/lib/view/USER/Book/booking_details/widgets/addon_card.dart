@@ -8,7 +8,7 @@ class AddonCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  AddonCard({
+  const AddonCard({
     super.key,
     required this.title,
     required this.price,

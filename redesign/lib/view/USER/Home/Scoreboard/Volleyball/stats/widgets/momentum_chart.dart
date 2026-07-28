@@ -6,7 +6,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class MomentumChart extends StatelessWidget {
   final VolleyballStatsController controller;
 
-  MomentumChart({super.key, required this.controller});
+  const MomentumChart({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

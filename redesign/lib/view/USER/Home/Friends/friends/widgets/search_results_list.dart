@@ -11,7 +11,7 @@ class SearchResultsList extends StatelessWidget {
   final List<Map<String, dynamic>> results;
   final Function(Map<String, dynamic>) onAdd;
 
-  SearchResultsList({
+  const SearchResultsList({
     super.key,
     required this.results,
     required this.onAdd,
@@ -61,7 +61,7 @@ class SearchResultTile extends StatefulWidget {
   final Map<String, dynamic> user;
   final VoidCallback onAdd;
 
-  SearchResultTile({super.key, required this.user, required this.onAdd});
+  const SearchResultTile({super.key, required this.user, required this.onAdd});
 
   @override
   State<SearchResultTile> createState() => _SearchResultTileState();

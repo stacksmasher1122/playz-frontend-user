@@ -5,7 +5,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kAmber = Color(0xFFF5C542);
 
 class LimitedAccessBanner extends StatelessWidget {
-  LimitedAccessBanner({super.key});
+  const LimitedAccessBanner({super.key});
 
   @override
   Widget build(BuildContext context) {

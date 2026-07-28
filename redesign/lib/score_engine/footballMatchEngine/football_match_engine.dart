@@ -140,7 +140,7 @@ class MatchEvent {
         'title': title,
         'subtitle': subtitle,
         'icon': icon.codePoint,
-        'color': color.value,
+        'color': color.toARGB32(),
         'playerId': playerId,
         'assistId': assistId,
         'subInId': subInId,

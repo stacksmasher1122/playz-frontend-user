@@ -5,7 +5,7 @@ import '../../../../../../../theme/app_dimensions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MsAppbarWidget extends StatelessWidget {
-  MsAppbarWidget({super.key});
+  const MsAppbarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

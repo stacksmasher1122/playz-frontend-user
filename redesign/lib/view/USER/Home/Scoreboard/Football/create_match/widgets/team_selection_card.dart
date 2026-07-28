@@ -6,7 +6,7 @@ import '../../../../../../../../controller/User_Controller/Home_Controller/Score
 import 'football_team_card.dart';
 
 class TeamSelectionCard extends StatelessWidget {
-  TeamSelectionCard({super.key});
+  const TeamSelectionCard({super.key});
 
   @override
   Widget build(BuildContext context) {

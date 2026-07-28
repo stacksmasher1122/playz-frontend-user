@@ -12,7 +12,7 @@ import 'widgets/ms_bottom_nav_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchStatsScreen extends StatefulWidget {
-  MatchStatsScreen({super.key});
+  const MatchStatsScreen({super.key});
 
   @override
   State<MatchStatsScreen> createState() => _MatchStatsScreenState();

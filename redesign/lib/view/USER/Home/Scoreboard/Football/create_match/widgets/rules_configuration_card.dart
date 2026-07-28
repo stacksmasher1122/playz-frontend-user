@@ -8,7 +8,7 @@ import 'toggle_option_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class RulesConfigurationCard extends StatelessWidget {
-  RulesConfigurationCard({super.key});
+  const RulesConfigurationCard({super.key});
 
   @override
   Widget build(BuildContext context) {

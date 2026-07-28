@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class ShutterButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  ShutterButton({super.key, required this.onTap});
+  const ShutterButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

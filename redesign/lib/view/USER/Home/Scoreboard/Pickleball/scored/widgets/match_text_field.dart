@@ -27,7 +27,10 @@ class MatchTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
+        Text(
+          label,
+          style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+        ),
         SizedBox(height: 6),
         TextFormField(
           controller: controller,
@@ -36,10 +39,15 @@ class MatchTextField extends StatelessWidget {
           style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.outlineVariant),
+            hintStyle: AppTypography.bodyMd.copyWith(
+              color: AppColors.outlineVariant,
+            ),
             filled: true,
-            fillColor: AppColors.card,
-            contentPadding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
+            fillColor: Colors.black,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(16),
+              vertical: ResponsiveHelper.h(14),
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
               borderSide: BorderSide.none,

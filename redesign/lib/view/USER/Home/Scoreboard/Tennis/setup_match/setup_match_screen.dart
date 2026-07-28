@@ -14,7 +14,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 
 class SetupMatchScreen extends StatefulWidget {
-  SetupMatchScreen({super.key});
+  const SetupMatchScreen({super.key});
 
   @override
   State<SetupMatchScreen> createState() => _SetupMatchScreenState();

@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class PlayerCardWidget extends StatelessWidget {
   final PlayerModel player;
 
-  PlayerCardWidget({super.key, required this.player});
+  const PlayerCardWidget({super.key, required this.player});
 
   @override
   Widget build(BuildContext context) {

@@ -13,7 +13,7 @@ const kGreen = AppColors.accent;
 const kMuted = Colors.white70;
 
 class MessagesListSection extends StatelessWidget {
-  MessagesListSection({super.key});
+  const MessagesListSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +113,7 @@ class MessageListTile extends StatelessWidget {
   final String email;
   final bool isOnline;
 
-  MessageListTile({
+  const MessageListTile({
     super.key,
     required this.name,
     required this.subtitle,

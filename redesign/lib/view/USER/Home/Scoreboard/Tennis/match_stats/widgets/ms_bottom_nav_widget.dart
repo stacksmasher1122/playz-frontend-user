@@ -5,7 +5,7 @@ import '../../../../../../../theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MsBottomNavWidget extends StatelessWidget {
-  MsBottomNavWidget({super.key});
+  const MsBottomNavWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ Color kMuted = Color(0xFF9E9E9E);
 class SelectSportSearchBar extends StatelessWidget {
   final ValueChanged<String> onChanged;
 
-  SelectSportSearchBar({super.key, required this.onChanged});
+  const SelectSportSearchBar({super.key, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

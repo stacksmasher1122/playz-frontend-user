@@ -17,15 +17,22 @@ class MomentumChartWidget extends StatefulWidget {
   State<MomentumChartWidget> createState() => _MomentumChartWidgetState();
 }
 
-class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTickerProviderStateMixin {
+class _MomentumChartWidgetState extends State<MomentumChartWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    _animation = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _animController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    _animation = CurvedAnimation(
+      parent: _animController,
+      curve: Curves.easeOut,
+    );
     _animController.forward();
   }
 
@@ -54,16 +61,29 @@ class _MomentumChartWidgetState extends State<MomentumChartWidget> with SingleTi
           color: AppColors.background.withOpacity(0.5),
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         ),
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(16)),
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveHelper.w(16),
+          vertical: ResponsiveHelper.h(16),
+        ),
         child: Stack(
           children: [
             Align(
               alignment: Alignment.topCenter,
-              child: Text('ALPHA MOMENTUM', style: AppTypography.labelCaps10.copyWith(color: AppColors.accent.withOpacity(0.5))),
+              child: Text(
+                'ALPHA MOMENTUM',
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.accent.withOpacity(0.5),
+                ),
+              ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Text('OMEGA MOMENTUM', style: AppTypography.labelCaps10.copyWith(color: AppColors.error.withOpacity(0.5))),
+              child: Text(
+                'OMEGA MOMENTUM',
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.error.withOpacity(0.5),
+                ),
+              ),
             ),
             Center(
               child: Container(

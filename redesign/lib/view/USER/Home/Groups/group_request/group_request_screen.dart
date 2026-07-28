@@ -14,7 +14,7 @@ const _kMuted = Colors.white70;
 class GroupRequestScreen extends StatelessWidget {
   final String groupId;
   
-  GroupRequestScreen({super.key, required this.groupId});
+  const GroupRequestScreen({super.key, required this.groupId});
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class OfferTimerBanner extends StatelessWidget {
   final String text;
-  OfferTimerBanner({super.key, required this.text});
+  const OfferTimerBanner({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {

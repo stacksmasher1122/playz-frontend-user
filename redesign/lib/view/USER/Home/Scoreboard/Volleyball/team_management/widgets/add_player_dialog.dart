@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_player_model.dart';
@@ -10,7 +10,7 @@ class AddPlayerDialog extends StatefulWidget {
   final bool isTeamA;
   final VolleyballTeamManagementController controller;
 
-  AddPlayerDialog({super.key, required this.isTeamA, required this.controller});
+  const AddPlayerDialog({super.key, required this.isTeamA, required this.controller});
 
   @override
   State<AddPlayerDialog> createState() => _AddPlayerDialogState();
@@ -72,7 +72,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
             ),
             SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: selectedPosition,
+              initialValue: selectedPosition,
               decoration: InputDecoration(
                 labelText: 'Position',
                 labelStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
@@ -88,8 +88,11 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
               onChanged: (val) {
                 setState(() {
                   selectedPosition = val!;
-                  if (val.contains('Libero')) isLibero = true;
-                  else isLibero = false;
+                  if (val.contains('Libero')) {
+                    isLibero = true;
+                  } else {
+                    isLibero = false;
+                  }
                 });
               },
             ),

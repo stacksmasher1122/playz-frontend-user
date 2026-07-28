@@ -7,7 +7,7 @@ const kGreen = AppColors.accent;
 const kMuted = Colors.white70;
 
 class SuggestedPlayersSection extends StatelessWidget {
-  SuggestedPlayersSection({super.key});
+  const SuggestedPlayersSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class SuggestedPlayerCard extends StatelessWidget {
   final String level;
   final String meta;
 
-  SuggestedPlayerCard({
+  const SuggestedPlayerCard({
     super.key,
     required this.name,
     required this.level,
@@ -99,7 +99,7 @@ class SuggestedPlayerCard extends StatelessWidget {
 
 class LevelBadge extends StatelessWidget {
   final String label;
-  LevelBadge(this.label, {super.key});
+  const LevelBadge(this.label, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,7 @@ class SectionHeader extends StatelessWidget {
   final String title;
   final String? action;
 
-  SectionHeader(this.title, {super.key, this.action});
+  const SectionHeader(this.title, {super.key, this.action});
 
   @override
   Widget build(BuildContext context) {

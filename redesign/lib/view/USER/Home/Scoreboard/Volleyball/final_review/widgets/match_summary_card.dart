@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class MatchSummaryCard extends StatelessWidget {
   final VolleyballReviewModel reviewData;
 
-  MatchSummaryCard({super.key, required this.reviewData});
+  const MatchSummaryCard({super.key, required this.reviewData});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class MatchSummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,14 +94,14 @@ class MatchSummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Stack(
         children: [
           Positioned(
             top: -20,
             right: -20,
-            child: Icon(Icons.shield, size: 100, color: color.withOpacity(0.1)),
+            child: Icon(Icons.shield, size: 100, color: color.withValues(alpha: 0.1)),
           ),
           Align(
             alignment: Alignment.bottomLeft,

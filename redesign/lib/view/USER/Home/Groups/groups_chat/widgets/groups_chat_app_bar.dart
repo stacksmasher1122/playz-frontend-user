@@ -17,7 +17,7 @@ class GroupsChatAppBar extends StatelessWidget {
   final String pic;
   final int memberCount;
 
-  GroupsChatAppBar({
+  const GroupsChatAppBar({
     super.key,
     required this.groupId,
     required this.name,

@@ -8,7 +8,7 @@ class TeamRow extends StatelessWidget {
   final Team team;
   final VoidCallback onAddPlayer;
 
-  TeamRow({super.key, required this.team, required this.onAddPlayer});
+  const TeamRow({super.key, required this.team, required this.onAddPlayer});
 
   @override
   Widget build(BuildContext context) {

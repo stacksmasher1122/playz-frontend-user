@@ -7,7 +7,7 @@ class RulesSwitchCard extends StatelessWidget {
   final RxBool valueStream;
   final Function(bool) onChanged;
 
-  RulesSwitchCard({
+  const RulesSwitchCard({
     super.key,
     required this.valueStream,
     required this.onChanged,

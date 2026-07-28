@@ -7,7 +7,7 @@ const kSurface = Color(0xFF0E0E0E);
 const kMuted = Color(0xFFA7A7A7);
 
 class CertifiedBanner extends StatelessWidget {
-  CertifiedBanner({super.key});
+  const CertifiedBanner({super.key});
 
   @override
   Widget build(BuildContext context) {

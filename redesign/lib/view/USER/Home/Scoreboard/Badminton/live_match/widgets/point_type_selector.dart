@@ -8,7 +8,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class PointTypeSelector extends StatelessWidget {
   final BadmintonController controller;
 
-  PointTypeSelector({super.key, required this.controller});
+  const PointTypeSelector({super.key, required this.controller});
 
   void _showSelector(BuildContext context) {
     Get.bottomSheet(

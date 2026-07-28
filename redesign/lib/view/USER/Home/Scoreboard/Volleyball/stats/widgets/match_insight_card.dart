@@ -7,7 +7,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class MatchInsightCard extends StatelessWidget {
   final VolleyballStatsController controller;
 
-  MatchInsightCard({super.key, required this.controller});
+  const MatchInsightCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +23,9 @@ class MatchInsightCard extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: 12),
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.accent.withOpacity(0.05),
+                  color: AppColors.accent.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.accent.withOpacity(0.2)),
+                  border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
                 ),
                 child: Row(
                   children: [

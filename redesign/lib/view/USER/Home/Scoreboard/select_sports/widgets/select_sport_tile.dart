@@ -18,7 +18,7 @@ class SelectSportTile extends StatelessWidget {
   final SportItem sport;
   final bool selected;
 
-  SelectSportTile({super.key, required this.sport, required this.selected});
+  const SelectSportTile({super.key, required this.sport, required this.selected});
 
   @override
   Widget build(BuildContext context) {

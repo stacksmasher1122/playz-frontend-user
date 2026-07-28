@@ -7,7 +7,7 @@ class FormationChipWidget extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  FormationChipWidget({
+  const FormationChipWidget({
     super.key,
     required this.name,
     required this.isSelected,

@@ -6,7 +6,7 @@ class MapPickerBottomCard extends StatelessWidget {
   final Widget addressPreview;
   final Widget confirmButton;
 
-  MapPickerBottomCard({
+  const MapPickerBottomCard({
     super.key,
     required this.addressPreview,
     required this.confirmButton,

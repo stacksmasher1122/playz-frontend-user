@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kMuted = Color(0xFFA7A7A7);
 
 class JoinAppBar extends StatelessWidget {
-  JoinAppBar({super.key});
+  const JoinAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -14,7 +14,7 @@ class ScoringConsole extends StatelessWidget {
   final VoidCallback onPointSideB;
   final BadmintonController? controller;
 
-  ScoringConsole({
+  const ScoringConsole({
     super.key,
     required this.onUndo,
     required this.onPointSideA,

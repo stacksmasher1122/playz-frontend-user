@@ -13,7 +13,7 @@ import 'trainer_join_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class TrainerDiscoveryHeader extends StatelessWidget {
-  TrainerDiscoveryHeader({super.key});
+  const TrainerDiscoveryHeader({super.key});
 
   final _controller = Get.find<UserProfileController>();
 

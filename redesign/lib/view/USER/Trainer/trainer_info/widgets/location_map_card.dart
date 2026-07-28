@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kCard = Color(0xFF1A1A1A);
 
 class LocationMapCard extends StatelessWidget {
-  LocationMapCard({super.key});
+  const LocationMapCard({super.key});
 
   @override
   Widget build(BuildContext context) {

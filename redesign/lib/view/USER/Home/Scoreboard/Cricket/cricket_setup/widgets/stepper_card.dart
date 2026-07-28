@@ -12,7 +12,7 @@ class StepperCard extends StatelessWidget {
   final VoidCallback onIncrement;
   final Color? titleColor;
 
-  StepperCard({
+  const StepperCard({
     super.key,
     required this.title,
     required this.mainText,

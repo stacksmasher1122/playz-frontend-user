@@ -6,7 +6,7 @@ class BookingFilterChip extends StatelessWidget {
   final String label;
   final IconData? icon;
 
-  BookingFilterChip(this.label, {super.key, this.icon});
+  const BookingFilterChip(this.label, {super.key, this.icon});
 
   @override
   Widget build(BuildContext context) {

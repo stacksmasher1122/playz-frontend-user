@@ -18,7 +18,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 
 class LocationSelectSliverScreen extends StatefulWidget {
-  LocationSelectSliverScreen({super.key});
+  const LocationSelectSliverScreen({super.key});
 
   @override
   State<LocationSelectSliverScreen> createState() =>

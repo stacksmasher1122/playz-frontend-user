@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kMuted = Colors.white70;
 
 class FriendsAppBar extends StatelessWidget {
-  FriendsAppBar({super.key});
+  const FriendsAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

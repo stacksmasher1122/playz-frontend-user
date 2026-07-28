@@ -25,100 +25,101 @@ class _MyTrainersSectionState extends State<MyTrainersSection> {
       padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
-        SizedBox(height: context.heightPct(1)),
+          SizedBox(height: context.heightPct(1)),
 
-        /// HEADER
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                'My Trainers',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.headlineLgMobile.copyWith(
-                  color: AppColors.textPrimary,
-                  fontSize: context.responsiveFont(18),
-                  fontWeight: FontWeight.w700,
+          /// HEADER
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'My Trainers',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.headlineLgMobile.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(18),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-            ),
-            Text(
-              'Active & recent coaches',
-              style: AppTypography.bodySm.copyWith(
-                color: AppColors.muted,
-                fontSize: context.responsiveFont(13),
-              ),
-            ),
-          ],
-        ),
-
-        SizedBox(height: context.heightPct(1.5)),
-
-        /// FILTER CHIPS (Horizontal Scrollable Row)
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          clipBehavior: Clip.none,
-          child: Row(
-            children: [
-              _FilterButton(
-                label: 'Active packages',
-                icon: Icons.local_fire_department,
-                active: selectedFilter == 'Active packages',
-                onTap: () {
-                  setState(() {
-                    selectedFilter = 'Active packages';
-                  });
-                },
-              ),
-              SizedBox(width: context.widthPct(2)),
-              _FilterButton(
-                label: 'Cricket',
-                active: selectedFilter == 'Cricket',
-                onTap: () {
-                  setState(() {
-                    selectedFilter = 'Cricket';
-                  });
-                },
-              ),
-              SizedBox(width: context.widthPct(2)),
-              _FilterButton(
-                label: 'Football',
-                active: selectedFilter == 'Football',
-                onTap: () {
-                  setState(() {
-                    selectedFilter = 'Football';
-                  });
-                },
-              ),
-              SizedBox(width: context.widthPct(2)),
-              _FilterButton(
-                label: 'Online',
-                active: selectedFilter == 'Online',
-                onTap: () {
-                  setState(() {
-                    selectedFilter = 'Online';
-                  });
-                },
+              Text(
+                'Active & recent coaches',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(13),
+                ),
               ),
             ],
           ),
-        ),
 
-        SizedBox(height: context.heightPct(1.8)),
+          SizedBox(height: context.heightPct(1.5)),
 
-        /// TRAINER CARDS
-        if (filteredTrainers.isEmpty)
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: context.heightPct(5)),
-            child: Center(
-              child: Text(
-                'No trainers found',
-                style: AppTypography.bodySm.copyWith(color: AppColors.muted),
-              ),
+          /// FILTER CHIPS (Horizontal Scrollable Row)
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            child: Row(
+              children: [
+                _FilterButton(
+                  label: 'Active packages',
+                  icon: Icons.local_fire_department,
+                  active: selectedFilter == 'Active packages',
+                  onTap: () {
+                    setState(() {
+                      selectedFilter = 'Active packages';
+                    });
+                  },
+                ),
+                SizedBox(width: context.widthPct(2)),
+                _FilterButton(
+                  label: 'Cricket',
+                  active: selectedFilter == 'Cricket',
+                  onTap: () {
+                    setState(() {
+                      selectedFilter = 'Cricket';
+                    });
+                  },
+                ),
+                SizedBox(width: context.widthPct(2)),
+                _FilterButton(
+                  label: 'Football',
+                  active: selectedFilter == 'Football',
+                  onTap: () {
+                    setState(() {
+                      selectedFilter = 'Football';
+                    });
+                  },
+                ),
+                SizedBox(width: context.widthPct(2)),
+                _FilterButton(
+                  label: 'Online',
+                  active: selectedFilter == 'Online',
+                  onTap: () {
+                    setState(() {
+                      selectedFilter = 'Online';
+                    });
+                  },
+                ),
+              ],
             ),
-          )
-        else
-          ...filteredTrainers.expand((trainer) => [
+          ),
+
+          SizedBox(height: context.heightPct(1.8)),
+
+          /// TRAINER CARDS
+          if (filteredTrainers.isEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: context.heightPct(5)),
+              child: Center(
+                child: Text(
+                  'No trainers found',
+                  style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+                ),
+              ),
+            )
+          else
+            ...filteredTrainers.expand(
+              (trainer) => [
                 _MyTrainerCard(
                   name: trainer.name,
                   specialty: trainer.specialty,
@@ -129,10 +130,12 @@ class _MyTrainersSectionState extends State<MyTrainersSection> {
                   tags: trainer.tags,
                 ),
                 SizedBox(height: context.heightPct(1.5)),
-              ]),
+              ],
+            ),
 
-        SizedBox(height: context.heightPct(12)),
-      ])),
+          SizedBox(height: context.heightPct(12)),
+        ]),
+      ),
     );
   }
 }
@@ -166,7 +169,10 @@ class _MyTrainerCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
         border: Border.all(color: AppColors.accent),
         boxShadow: [
-          BoxShadow(color: AppColors.accent.withValues(alpha: 0.15), blurRadius: 12),
+          BoxShadow(
+            color: AppColors.accent.withValues(alpha: 0.15),
+            blurRadius: 12,
+          ),
         ],
       ),
       child: Column(
@@ -221,11 +227,17 @@ class _MyTrainerCard extends StatelessWidget {
                     SizedBox(height: context.heightPct(0.4)),
                     Row(
                       children: [
-                        const Icon(Icons.star, size: 14, color: AppColors.accent),
+                        const Icon(
+                          Icons.star,
+                          size: 14,
+                          color: AppColors.accent,
+                        ),
                         SizedBox(width: context.widthPct(1)),
                         Text(
                           rating,
-                          style: AppTypography.bodySm.copyWith(color: AppColors.textPrimary),
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                         ),
                       ],
                     ),
@@ -259,7 +271,10 @@ class _MyTrainerCard extends StatelessWidget {
               SizedBox(height: context.heightPct(0.4)),
               Text(
                 completionText,
-                style: AppTypography.bodyXs.copyWith(color: AppColors.muted, fontSize: 11),
+                style: AppTypography.bodyXs.copyWith(
+                  color: AppColors.muted,
+                  fontSize: 11,
+                ),
               ),
             ],
           ),
@@ -275,13 +290,20 @@ class _MyTrainerCard extends StatelessWidget {
                   icon: const Icon(Icons.chat_bubble_outline),
                   label: FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text('Chat', style: AppTypography.bodySm.copyWith(color: AppColors.textPrimary)),
+                    child: Text(
+                      'Chat',
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
                   ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.textPrimary,
                     side: const BorderSide(color: AppColors.borderDark),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+                      borderRadius: BorderRadius.circular(
+                        context.minDimensionPct(6),
+                      ),
                     ),
                   ),
                 ),
@@ -305,7 +327,9 @@ class _MyTrainerCard extends StatelessWidget {
                     backgroundColor: AppColors.accent,
                     foregroundColor: AppColors.background,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+                      borderRadius: BorderRadius.circular(
+                        context.minDimensionPct(6),
+                      ),
                     ),
                   ),
                 ),
@@ -341,7 +365,7 @@ class _MyTrainerCard extends StatelessWidget {
 
 class _Tag extends StatelessWidget {
   final String label;
-  const _Tag({required this.label});
+  _Tag(this.label);
 
   @override
   Widget build(BuildContext context) {

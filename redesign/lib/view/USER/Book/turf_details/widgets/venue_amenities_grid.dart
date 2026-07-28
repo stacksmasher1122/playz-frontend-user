@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class VenueAmenitiesGrid extends StatelessWidget {
   final List<String> amenities;
 
-  VenueAmenitiesGrid({
+  const VenueAmenitiesGrid({
     super.key,
     required this.amenities,
   });

@@ -10,7 +10,7 @@ class FootballFriendsSelectionSheet extends StatelessWidget {
   final FootballCreateMatchController controller;
   final bool isHome;
 
-  FootballFriendsSelectionSheet({
+  const FootballFriendsSelectionSheet({
     super.key,
     required this.controller,
     required this.isHome,

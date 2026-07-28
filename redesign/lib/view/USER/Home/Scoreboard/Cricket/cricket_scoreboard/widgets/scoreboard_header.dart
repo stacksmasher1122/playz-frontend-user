@@ -19,7 +19,7 @@ class ScoreboardHeader extends StatelessWidget {
   final int overs;
   final int balls;
 
-  ScoreboardHeader({
+  const ScoreboardHeader({
     super.key,
     required this.controller,
     required this.totalRuns,

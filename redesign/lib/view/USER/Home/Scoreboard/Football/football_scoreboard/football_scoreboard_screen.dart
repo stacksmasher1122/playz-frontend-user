@@ -19,7 +19,7 @@ class FootballScoreboardScreen extends StatefulWidget {
   final MatchTeam? awayTeam;
   final int? durationMinutes;
 
-  FootballScoreboardScreen({
+  const FootballScoreboardScreen({
     super.key,
     this.homeTeam,
     this.awayTeam,

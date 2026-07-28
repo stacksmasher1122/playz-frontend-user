@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class ExtrasModal extends StatefulWidget {
   final Function(ExtraType, int) onSelect;
-  ExtrasModal({super.key, required this.onSelect});
+  const ExtrasModal({super.key, required this.onSelect});
 
   @override
   State<ExtrasModal> createState() => _ExtrasModalState();

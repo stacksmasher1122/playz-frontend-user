@@ -6,7 +6,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class MatchScoreHeader extends StatelessWidget {
   final VolleyballStatsController controller;
 
-  MatchScoreHeader({super.key, required this.controller});
+  const MatchScoreHeader({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class MatchScoreHeader extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         children: [
@@ -63,7 +63,7 @@ class MatchScoreHeader extends StatelessWidget {
                     if (controller.isMatchPoint)
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(color: AppColors.error.withOpacity(0.2), borderRadius: BorderRadius.circular(4)),
+                        decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
                         child: Text('MATCH POINT', style: AppTypography.labelCaps10.copyWith(color: AppColors.error, fontWeight: FontWeight.bold)),
                       ),
                   ],

@@ -7,7 +7,7 @@ import 'info_card_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueCardWidget extends StatelessWidget {
-  VenueCardWidget({super.key});
+  const VenueCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

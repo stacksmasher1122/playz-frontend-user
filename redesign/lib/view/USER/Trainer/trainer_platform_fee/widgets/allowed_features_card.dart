@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kGreen = AppColors.accent;
 
 class AllowedFeaturesCard extends StatelessWidget {
-  AllowedFeaturesCard({super.key});
+  const AllowedFeaturesCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class AllowedFeaturesCard extends StatelessWidget {
 
 class CheckRow extends StatelessWidget {
   final String text;
-  CheckRow(this.text, {super.key});
+  const CheckRow(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {

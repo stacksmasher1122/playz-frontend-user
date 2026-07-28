@@ -6,7 +6,7 @@ class StatusBadge extends StatelessWidget {
   final Color color;
   final Color? textColor;
 
-  StatusBadge(this.label, this.color, {super.key, this.textColor});
+  const StatusBadge(this.label, this.color, {super.key, this.textColor});
 
   @override
   Widget build(BuildContext context) {

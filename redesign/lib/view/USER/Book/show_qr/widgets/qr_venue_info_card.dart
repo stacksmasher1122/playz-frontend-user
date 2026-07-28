@@ -3,7 +3,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrVenueInfoCard extends StatelessWidget {
-  QrVenueInfoCard({super.key});
+  const QrVenueInfoCard({super.key});
 
   static const _kCard = Color(0xFF1A1A1A);
   static const _kGreen = AppColors.accent;

@@ -8,7 +8,7 @@ import 'empty_state.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PastBookingsWidget extends StatelessWidget {
-  PastBookingsWidget({super.key});
+  const PastBookingsWidget({super.key});
 
   bool _isPast(Map<String, dynamic> data) {
     final status = (data['status'] ?? '').toString().toLowerCase();

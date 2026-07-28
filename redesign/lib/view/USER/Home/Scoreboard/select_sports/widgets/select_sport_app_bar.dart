@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kBg = AppColors.background;
 
 class SelectSportAppBar extends StatelessWidget implements PreferredSizeWidget {
-  SelectSportAppBar({super.key});
+  const SelectSportAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

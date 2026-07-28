@@ -7,7 +7,7 @@ const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class NextStepsCard extends StatelessWidget {
-  NextStepsCard({super.key});
+  const NextStepsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class StepRow extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  StepRow({
+  const StepRow({
     super.key,
     required this.step,
     required this.title,

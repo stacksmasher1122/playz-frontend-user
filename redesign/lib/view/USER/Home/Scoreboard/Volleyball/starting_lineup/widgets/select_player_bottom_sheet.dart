@@ -10,7 +10,7 @@ class SelectPlayerBottomSheet extends StatelessWidget {
   final int position;
   final VolleyballStartingLineupController controller;
 
-  SelectPlayerBottomSheet({super.key, required this.position, required this.controller});
+  const SelectPlayerBottomSheet({super.key, required this.position, required this.controller});
 
   @override
   Widget build(BuildContext context) {

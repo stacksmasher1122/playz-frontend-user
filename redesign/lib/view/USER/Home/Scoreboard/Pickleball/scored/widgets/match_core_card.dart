@@ -43,7 +43,14 @@ class MatchCoreCard extends StatelessWidget {
                   border: Border.all(color: AppColors.warning, width: 2),
                 ),
                 child: Center(
-                  child: Text('i', style: TextStyle(color: AppColors.warning, fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.bold)),
+                  child: Text(
+                    'i',
+                    style: TextStyle(
+                      color: AppColors.warning,
+                      fontSize: ResponsiveHelper.sp(12),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(width: 8),
@@ -57,15 +64,17 @@ class MatchCoreCard extends StatelessWidget {
             controller: nameController,
           ),
           SizedBox(height: 16),
-          Obx(() => MatchDropdown(
-            label: "Tournament (Optional)",
-            hint: "Select Tournament",
-            value: controller.selectedTournament.value,
-            options: controller.tournamentOptions,
-            onChanged: (v) {
-              if (v != null) controller.selectedTournament.value = v;
-            },
-          )),
+          Obx(
+            () => MatchDropdown(
+              label: "Tournament (Optional)",
+              hint: "Select Tournament",
+              value: controller.selectedTournament.value,
+              options: controller.tournamentOptions,
+              onChanged: (v) {
+                if (v != null) controller.selectedTournament.value = v;
+              },
+            ),
+          ),
           SizedBox(height: 16),
           MatchTextField(
             label: "Court Number",
@@ -73,39 +82,25 @@ class MatchCoreCard extends StatelessWidget {
             controller: courtController,
           ),
           SizedBox(height: 16),
-          Obx(() => MatchTextField(
-            label: "Date & Time",
-            hint: controller.selectedDate.value == null 
-                ? "dd-mm-yyyy --:--" 
-                : "${controller.selectedDate.value!.day.toString().padLeft(2, '0')}-${controller.selectedDate.value!.month.toString().padLeft(2, '0')}-${controller.selectedDate.value!.year} ${controller.selectedDate.value!.hour.toString().padLeft(2, '0')}:${controller.selectedDate.value!.minute.toString().padLeft(2, '0')}",
-            controller: TextEditingController(),
-            readOnly: true,
-            suffixIcon: Icon(Icons.calendar_today, color: AppColors.muted, size: 20),
-            onTap: () async {
-              DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2100),
-                builder: (context, child) {
-                  return Theme(
-                    data: Theme.of(context).copyWith(
-                      colorScheme: ColorScheme.dark(
-                        primary: AppColors.accent,
-                        onPrimary: AppColors.background,
-                        surface: AppColors.card,
-                        onSurface: AppColors.accent,
-                      ),
-                    ),
-                    child: child!,
-                  );
-                },
-              );
-              if (pickedDate != null) {
-                // ignore: use_build_context_synchronously
-                TimeOfDay? pickedTime = await showTimePicker(
+          Obx(
+            () => MatchTextField(
+              label: "Date & Time",
+              hint: controller.selectedDate.value == null
+                  ? "dd-mm-yyyy --:--"
+                  : "${controller.selectedDate.value!.day.toString().padLeft(2, '0')}-${controller.selectedDate.value!.month.toString().padLeft(2, '0')}-${controller.selectedDate.value!.year} ${controller.selectedDate.value!.hour.toString().padLeft(2, '0')}:${controller.selectedDate.value!.minute.toString().padLeft(2, '0')}",
+              controller: TextEditingController(),
+              readOnly: true,
+              suffixIcon: Icon(
+                Icons.calendar_today,
+                color: AppColors.muted,
+                size: 20,
+              ),
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
                   context: context,
-                  initialTime: TimeOfDay.now(),
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime(2100),
                   builder: (context, child) {
                     return Theme(
                       data: Theme.of(context).copyWith(
@@ -120,18 +115,38 @@ class MatchCoreCard extends StatelessWidget {
                     );
                   },
                 );
-                if (pickedTime != null) {
-                  controller.selectedDate.value = DateTime(
-                    pickedDate.year,
-                    pickedDate.month,
-                    pickedDate.day,
-                    pickedTime.hour,
-                    pickedTime.minute,
+                if (pickedDate != null) {
+                  // ignore: use_build_context_synchronously
+                  TimeOfDay? pickedTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          colorScheme: ColorScheme.dark(
+                            primary: AppColors.accent,
+                            onPrimary: AppColors.background,
+                            surface: AppColors.card,
+                            onSurface: AppColors.accent,
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
                   );
+                  if (pickedTime != null) {
+                    controller.selectedDate.value = DateTime(
+                      pickedDate.year,
+                      pickedDate.month,
+                      pickedDate.day,
+                      pickedTime.hour,
+                      pickedTime.minute,
+                    );
+                  }
                 }
-              }
-            },
-          )),
+              },
+            ),
+          ),
           SizedBox(height: 16),
           MatchTextField(
             label: "Referee (Optional)",

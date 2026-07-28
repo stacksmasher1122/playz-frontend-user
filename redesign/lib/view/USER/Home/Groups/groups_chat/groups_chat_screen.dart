@@ -23,7 +23,7 @@ class GroupChatScreen extends StatefulWidget {
   final String groupPic;
   final int memberCount;
 
-  GroupChatScreen({
+  const GroupChatScreen({
     super.key,
     required this.groupId,
     required this.groupName,

@@ -17,7 +17,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kBg = Colors.black;
 
 class AcademyDetailScreen extends StatefulWidget {
-  AcademyDetailScreen({super.key});
+  const AcademyDetailScreen({super.key});
 
   @override
   State<AcademyDetailScreen> createState() => _AcademyDetailScreenState();

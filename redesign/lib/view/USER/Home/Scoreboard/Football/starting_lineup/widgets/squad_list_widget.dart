@@ -6,7 +6,7 @@ import 'player_card_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SquadListWidget extends StatelessWidget {
-  SquadListWidget({super.key});
+  const SquadListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

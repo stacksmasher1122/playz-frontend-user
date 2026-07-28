@@ -7,7 +7,7 @@ class SportsSelectionBottom extends StatelessWidget {
   final bool canProceed;
   final VoidCallback onNext;
 
-  SportsSelectionBottom({
+  const SportsSelectionBottom({
     super.key,
     required this.selectedCount,
     required this.canProceed,

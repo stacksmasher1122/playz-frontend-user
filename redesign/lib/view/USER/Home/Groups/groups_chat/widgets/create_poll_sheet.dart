@@ -8,7 +8,7 @@ const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
 
 class CreatePollSheet extends StatefulWidget {
-  CreatePollSheet({super.key});
+  const CreatePollSheet({super.key});
 
   @override
   State<CreatePollSheet> createState() => _CreatePollSheetState();

@@ -6,7 +6,7 @@ import '../../../../../../../theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ConfirmParticipantsButton extends StatefulWidget {
-  ConfirmParticipantsButton({super.key});
+  const ConfirmParticipantsButton({super.key});
 
   @override
   State<ConfirmParticipantsButton> createState() => _ConfirmParticipantsButtonState();

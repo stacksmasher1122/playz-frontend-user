@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 
 class MsPlayerOfMatchWidget extends StatelessWidget {
-  MsPlayerOfMatchWidget({super.key});
+  const MsPlayerOfMatchWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

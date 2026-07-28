@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 Color kYellow = Color(0xFFFFC107);
 
 class AnnouncementBanner extends StatelessWidget {
-  AnnouncementBanner({super.key});
+  const AnnouncementBanner({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ import '../../../../../../../theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PmAppbarWidget extends StatefulWidget {
-  PmAppbarWidget({super.key});
+  const PmAppbarWidget({super.key});
 
   @override
   State<PmAppbarWidget> createState() => _PmAppbarWidgetState();
@@ -80,7 +80,7 @@ class _PmAppbarWidgetState extends State<PmAppbarWidget> {
 class _IconButtonItem extends StatefulWidget {
   final IconData icon;
 
-  _IconButtonItem({required this.icon});
+  const _IconButtonItem({required this.icon});
 
   @override
   State<_IconButtonItem> createState() => _IconButtonItemState();

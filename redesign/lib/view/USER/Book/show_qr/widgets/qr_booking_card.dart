@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class QrBookingCard extends StatelessWidget {
   final Size size;
 
-  QrBookingCard({
+  const QrBookingCard({
     super.key,
     required this.size,
   });

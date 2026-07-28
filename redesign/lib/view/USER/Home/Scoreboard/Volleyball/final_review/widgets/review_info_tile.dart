@@ -8,7 +8,7 @@ class ReviewInfoTile extends StatelessWidget {
   final String value;
   final bool isLast;
 
-  ReviewInfoTile({super.key, required this.label, required this.value, this.isLast = false});
+  const ReviewInfoTile({super.key, required this.label, required this.value, this.isLast = false});
 
   @override
   Widget build(BuildContext context) {

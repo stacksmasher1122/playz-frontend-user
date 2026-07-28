@@ -4,7 +4,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kMuted = Color(0xFFA7A7A7);
 
 class ProTrustTags extends StatelessWidget {
-  ProTrustTags({super.key});
+  const ProTrustTags({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class ProTrustTag extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  ProTrustTag({super.key, required this.icon, required this.label});
+  const ProTrustTag({super.key, required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {

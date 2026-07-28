@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class CreateTournamentCard extends StatelessWidget {
   final VoidCallback onTap;
 
-  CreateTournamentCard({super.key, required this.onTap});
+  const CreateTournamentCard({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -14,7 +14,7 @@ const _kMuted = Colors.white38;
 class PollBubble extends StatelessWidget {
   final GroupChatMessageModel msg;
 
-  PollBubble({super.key, required this.msg});
+  const PollBubble({super.key, required this.msg});
 
   @override
   Widget build(BuildContext context) {

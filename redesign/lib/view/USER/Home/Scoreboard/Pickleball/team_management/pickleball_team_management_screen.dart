@@ -3,21 +3,24 @@ import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/pickleball_team_management_controller.dart';
 import 'widgets/team_management_appbar.dart';
-import 'widgets/team_header_widget.dart';
 import 'widgets/mode_selector.dart';
-import 'widgets/team_section.dart';
-import 'widgets/player_actions.dart';
-import 'widgets/bottom_next_button.dart';
+import 'widgets/interactive_match_arena.dart';
+import 'widgets/player_creation_sheet.dart';
+import 'widgets/head_to_head_card.dart';
+import 'widgets/sticky_bottom_action_panel.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PickleballTeamManagementScreen extends StatefulWidget {
   PickleballTeamManagementScreen({super.key});
 
   @override
-  State<PickleballTeamManagementScreen> createState() => _PickleballTeamManagementScreenState();
+  State<PickleballTeamManagementScreen> createState() =>
+      _PickleballTeamManagementScreenState();
 }
 
-class _PickleballTeamManagementScreenState extends State<PickleballTeamManagementScreen> with SingleTickerProviderStateMixin {
+class _PickleballTeamManagementScreenState
+    extends State<PickleballTeamManagementScreen>
+    with SingleTickerProviderStateMixin {
   late final PickleballTeamManagementController controller;
   late AnimationController _sectionFadeController;
 
@@ -26,7 +29,7 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
     super.initState();
     controller = Get.put(PickleballTeamManagementController());
     controller.initialize();
-    
+
     _sectionFadeController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 600),
@@ -45,27 +48,12 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
     controller.selectPlayer(team, slot);
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.card,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(16))),
-      ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(width: ResponsiveHelper.w(40), height: ResponsiveHelper.h(4), decoration: BoxDecoration(color: AppColors.muted, borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)))),
-                SizedBox(height: 16),
-                PlayerActions(
-                  onCreate: controller.createPlayer,
-                  onSelect: () => controller.selectExistingPlayer(team, slot),
-                  onImport: controller.importTournamentPlayer,
-                ),
-              ],
-            ),
-          ),
+        return PlayerCreationSheet(
+          teamIndex: team,
+          controller: controller,
         );
       },
     );
@@ -78,63 +66,46 @@ class _PickleballTeamManagementScreenState extends State<PickleballTeamManagemen
       backgroundColor: AppColors.background,
       appBar: TeamManagementAppbar(),
       body: SafeArea(
-        child: FadeTransition(
-          opacity: _sectionFadeController,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TeamHeaderWidget(),
-                SizedBox(height: 24),
-                Center(
-                  child: Obx(() => ModeSelector(
-                    isSingles: controller.isSingles.value,
-                    onChanged: controller.changeMode,
-                  )),
+        child: Stack(
+          children: [
+            FadeTransition(
+              opacity: _sectionFadeController,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  ResponsiveHelper.w(16.0),
+                  ResponsiveHelper.w(16.0),
+                  ResponsiveHelper.w(16.0),
+                  ResponsiveHelper.h(200), // padding for sticky bottom panel
                 ),
-                SizedBox(height: 32),
-                Obx(() => TeamSection(
-                  isTeamA: true,
-                  players: controller.teamAPlayers,
-                  maxPlayers: controller.maxPlayersPerTeam,
-                  onRemove: (index) => controller.removePlayer(1, index),
-                  onEmptySlotTap: (slot) => _showPlayerSelectionSheet(1, slot),
-                )),
-                SizedBox(height: 24),
-                Obx(() => TeamSection(
-                  isTeamA: false,
-                  players: controller.teamBPlayers,
-                  maxPlayers: controller.maxPlayersPerTeam,
-                  onRemove: (index) => controller.removePlayer(2, index),
-                  onEmptySlotTap: (slot) => _showPlayerSelectionSheet(2, slot),
-                )),
-                SizedBox(height: 32),
-                // These global action buttons trigger selection for the active empty slot or Team B as fallback.
-                PlayerActions(
-                  onCreate: () {
-                    int defaultTeam = controller.teamAPlayers.length < controller.maxPlayersPerTeam ? 1 : 2;
-                    controller.selectPlayer(defaultTeam, 0);
-                    controller.createPlayer();
-                  },
-                  onSelect: () {
-                    int defaultTeam = controller.teamAPlayers.length < controller.maxPlayersPerTeam ? 1 : 2;
-                    _showPlayerSelectionSheet(defaultTeam, 0);
-                  },
-                  onImport: () {
-                    int defaultTeam = controller.teamAPlayers.length < controller.maxPlayersPerTeam ? 1 : 2;
-                    controller.selectPlayer(defaultTeam, 0);
-                    controller.importTournamentPlayer();
-                  },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 16),
+                    Center(
+                      child: Obx(
+                        () => ModeSelector(
+                          isSingles: controller.isSingles.value,
+                          onChanged: controller.changeMode,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 32),
+                    InteractiveMatchArena(
+                      controller: controller,
+                      onSlotTap: _showPlayerSelectionSheet,
+                    ),
+                    SizedBox(height: 48),
+                    HeadToHeadCard(controller: controller),
+                  ],
                 ),
-                SizedBox(height: 24),
-              ],
+              ),
             ),
-          ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: StickyBottomActionPanel(controller: controller),
+            ),
+          ],
         ),
-      ),
-      bottomNavigationBar: BottomNextButton(
-        onTap: () => controller.goNext(context),
       ),
     );
   }

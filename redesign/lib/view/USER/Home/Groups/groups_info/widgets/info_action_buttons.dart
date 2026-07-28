@@ -5,7 +5,7 @@ const _kSurface = Color(0xFF222222);
 const _kMuted = Colors.white54;
 
 class InfoActionButtons extends StatelessWidget {
-  InfoActionButtons({super.key});
+  const InfoActionButtons({super.key});
 
   @override
   Widget build(BuildContext context) {

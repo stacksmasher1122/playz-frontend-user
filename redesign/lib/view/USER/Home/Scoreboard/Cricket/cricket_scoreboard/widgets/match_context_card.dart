@@ -8,7 +8,7 @@ class MatchContextCard extends StatelessWidget {
   final int partnershipBalls;
   final double requiredRunRate;
 
-  MatchContextCard({
+  const MatchContextCard({
     super.key,
     required this.winProbability,
     required this.partnershipRuns,

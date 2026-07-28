@@ -8,7 +8,7 @@ class InteractiveSearchBar extends StatefulWidget {
   final TextEditingController controller;
   final MapsController mapsCtrl;
 
-  InteractiveSearchBar({
+  const InteractiveSearchBar({
     super.key,
     required this.controller,
     required this.mapsCtrl,

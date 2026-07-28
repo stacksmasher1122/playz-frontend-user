@@ -6,7 +6,7 @@ class DateSelector extends StatelessWidget {
   final DateTime? selectedDate;
   final ValueChanged<DateTime> onDateSelected;
 
-  DateSelector({
+  const DateSelector({
     super.key,
     required this.selectedDate,
     required this.onDateSelected,
@@ -149,7 +149,7 @@ class DateSelector extends StatelessWidget {
 
 class _SectionTitle extends StatelessWidget {
   final String text;
-  _SectionTitle({required this.text});
+  const _SectionTitle({required this.text});
 
   @override
   Widget build(BuildContext context) {

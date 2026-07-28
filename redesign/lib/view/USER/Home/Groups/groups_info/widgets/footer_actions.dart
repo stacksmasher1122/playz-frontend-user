@@ -9,7 +9,7 @@ const _kMuted = Colors.white54;
 class FooterActions extends StatelessWidget {
   final GroupInfoController ctrl;
 
-  FooterActions({super.key, required this.ctrl});
+  const FooterActions({super.key, required this.ctrl});
 
   @override
   Widget build(BuildContext context) {

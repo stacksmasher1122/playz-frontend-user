@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/pickleball_rule_engine.dart';
 
 class PickleballInitializeMatchController extends GetxController {
   RxBool isLoading = false.obs;
@@ -21,6 +22,14 @@ class PickleballInitializeMatchController extends GetxController {
   RxBool medicalTimeout = true.obs;
   RxString courtSideSelection = "Random".obs;
 
+  // Rule Engine Profile
+  Rx<PickleballRuleProfile> currentProfile =
+      PickleballRuleProfile.localTournament.obs;
+  RxList<PickleballRuleProfile> availableProfiles = [
+    PickleballRuleProfile.localTournament,
+    PickleballRuleProfile.proTournament,
+  ].obs;
+
   RxList<String> tournamentOptions = <String>[].obs;
   RxList<String> categoryOptions = <String>[].obs;
   RxList<String> formatOptions = <String>[].obs;
@@ -30,32 +39,74 @@ class PickleballInitializeMatchController extends GetxController {
   RxList<String> servingRuleOptions = <String>[].obs;
 
   void initialize() {
-    tournamentOptions.value = ["Masters Open", "Club League", "City Championship", "Regional Open"];
-    categoryOptions.value = ["Men's Singles", "Men's Doubles", "Women's Singles", "Women's Doubles", "Mixed"];
+    tournamentOptions.value = [
+      "Masters Open",
+      "Club League",
+      "City Championship",
+      "Regional Open",
+    ];
+    categoryOptions.value = [
+      "Men's Singles",
+      "Men's Doubles",
+      "Women's Singles",
+      "Women's Doubles",
+      "Mixed",
+    ];
     formatOptions.value = ["11 Points", "Best of 3", "Best of 5"];
-    matchTypeOptions.value = ["Friendly", "Tournament", "Practice", "Championship"];
+    matchTypeOptions.value = [
+      "Friendly",
+      "Tournament",
+      "Practice",
+      "Championship",
+    ];
     surfaceOptions.value = ["Indoor", "Outdoor", "Synthetic", "Wood"];
-    skillLevelOptions.value = ["Beginner", "Intermediate", "Advanced", "Professional"];
+    skillLevelOptions.value = [
+      "Beginner",
+      "Intermediate",
+      "Advanced",
+      "Professional",
+    ];
     servingRuleOptions.value = ["Standard", "Drop Serve", "Traditional"];
+    loadDefaults();
   }
 
   void loadDefaults() {
+    applyProfile(PickleballRuleProfile.localTournament);
     selectedCategory.value = "Men's Doubles";
-    selectedFormat.value = "11 Points";
     selectedMatchType.value = "Tournament";
     selectedSurface.value = "Indoor";
     selectedSkillLevel.value = "Professional";
     selectedServingRule.value = "Standard";
     selectedTournament.value = "";
     selectedDate.value = null;
-    timeouts.value = 1;
-    maximumScore.value = 11;
-    winByTwo.value = true;
-    rallyScoring.value = false;
-    traditionalScoring.value = true;
-    goldenPoint.value = false;
-    medicalTimeout.value = true;
     courtSideSelection.value = "Random";
+  }
+
+  void applyProfile(PickleballRuleProfile profile) {
+    currentProfile.value = profile;
+
+    // Sync to legacy variables
+    selectedFormat.value = profile.matchFormat == PickleballMatchFormat.oneGame
+        ? "11 Points"
+        : profile.matchFormat == PickleballMatchFormat.bestOf3
+        ? "Best of 3"
+        : "Best of 5";
+    timeouts.value = profile.timeoutsPerTeam;
+    maximumScore.value = profile.winningPoints == WinningPoints.points11
+        ? 11
+        : profile.winningPoints == WinningPoints.points15
+        ? 15
+        : 21;
+    winByTwo.value = profile.winByRule == WinByRule.winBy2;
+    rallyScoring.value = profile.scoringSystem == ScoringSystem.rally;
+    traditionalScoring.value =
+        profile.scoringSystem == ScoringSystem.traditional;
+    medicalTimeout.value = profile.medicalTimeoutEnabled;
+  }
+
+  void changeProfile(PickleballRuleProfile profile) {
+    applyProfile(profile);
+    showSuccess("Applied ${profile.profileName} Rules");
   }
 
   void selectCategory(String v) => selectedCategory.value = v;
@@ -82,11 +133,11 @@ class PickleballInitializeMatchController extends GetxController {
 
   void toggleGoldenPoint() => goldenPoint.toggle();
   void toggleMedicalTimeout() => medicalTimeout.toggle();
-  
+
   void incrementTimeouts() {
     if (timeouts.value < 2) timeouts.value++;
   }
-  
+
   void decrementTimeouts() {
     if (timeouts.value > 0) timeouts.value--;
   }
@@ -98,7 +149,12 @@ class PickleballInitializeMatchController extends GetxController {
     return true; // Bypassed for UI Phase
   }
 
-  void initializeMatch(String name, String court, DateTime? date, VoidCallback onSuccess) async {
+  void initializeMatch(
+    String name,
+    String court,
+    DateTime? date,
+    VoidCallback onSuccess,
+  ) async {
     if (validateForm(name, court, date)) {
       isLoading.value = true;
       await Future.delayed(Duration(seconds: 1));
@@ -118,10 +174,20 @@ class PickleballInitializeMatchController extends GetxController {
   }
 
   void showSuccess(String msg) {
-    Get.snackbar("Success", msg, backgroundColor: AppColors.success, colorText: AppColors.onPrimary);
+    Get.snackbar(
+      "Success",
+      msg,
+      backgroundColor: AppColors.success,
+      colorText: AppColors.onPrimary,
+    );
   }
 
   void showError(String msg) {
-    Get.snackbar("Error", msg, backgroundColor: AppColors.error, colorText: AppColors.onPrimary);
+    Get.snackbar(
+      "Error",
+      msg,
+      backgroundColor: AppColors.error,
+      colorText: AppColors.onPrimary,
+    );
   }
 }

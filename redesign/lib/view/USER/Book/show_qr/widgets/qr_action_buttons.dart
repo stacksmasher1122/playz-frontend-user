@@ -6,7 +6,7 @@ class QrActionButtons extends StatelessWidget {
   final VoidCallback onDownload;
   final VoidCallback onSave;
 
-  QrActionButtons({
+  const QrActionButtons({
     super.key,
     required this.onDownload,
     required this.onSave,

@@ -11,6 +11,7 @@ import 'home_shimmer.dart';
    ============================================================ */
 class HomePopularVenues extends StatelessWidget {
   const HomePopularVenues({super.key});
+  const HomePopularVenues({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +69,7 @@ class HomeVenueTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
-        border: Border.all(
-          color: AppColors.borderDark,
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.borderDark, width: 1),
       ),
       child: Row(
         children: [
@@ -91,10 +89,8 @@ class HomeVenueTile extends StatelessWidget {
                 height: imageSize,
                 borderRadius: 12,
               ),
-              errorWidget: (_, __, ___) => const Icon(
-                Icons.broken_image,
-                color: AppColors.muted,
-              ),
+              errorWidget: (_, __, ___) =>
+                  const Icon(Icons.broken_image, color: AppColors.muted),
             ),
           ),
 

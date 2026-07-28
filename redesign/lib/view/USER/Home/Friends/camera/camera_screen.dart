@@ -10,7 +10,7 @@ import 'widgets/camera_capture_overlay.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CameraScreen extends StatefulWidget {
-  CameraScreen({super.key});
+  const CameraScreen({super.key});
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();

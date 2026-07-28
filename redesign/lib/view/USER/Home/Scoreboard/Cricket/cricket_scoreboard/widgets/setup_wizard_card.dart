@@ -9,7 +9,7 @@ class SetupWizardCard extends StatefulWidget {
   final List<Player> battingTeam;
   final List<Player> bowlingTeam;
 
-  SetupWizardCard({
+  const SetupWizardCard({
     super.key,
     required this.controller,
     required this.battingTeam,

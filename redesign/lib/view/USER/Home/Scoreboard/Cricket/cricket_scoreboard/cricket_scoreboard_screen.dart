@@ -20,7 +20,7 @@ import 'widgets/wicket_wizard_sheet.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CricketScoreboardScreen extends StatefulWidget {
-  CricketScoreboardScreen({super.key});
+  const CricketScoreboardScreen({super.key});
 
   @override
   State<CricketScoreboardScreen> createState() =>

@@ -8,7 +8,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class LineupStatusWidget extends StatelessWidget {
   final VolleyballStartingLineupController controller;
 
-  LineupStatusWidget({super.key, required this.controller});
+  const LineupStatusWidget({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

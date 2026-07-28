@@ -22,7 +22,7 @@ Color kBg = AppColors.background;
 Color kGreen = AppColors.accent;
 
 class TrainerJoinScreen extends StatefulWidget {
-  TrainerJoinScreen({super.key});
+  const TrainerJoinScreen({super.key});
 
   @override
   State<TrainerJoinScreen> createState() => _TrainerJoinScreenState();

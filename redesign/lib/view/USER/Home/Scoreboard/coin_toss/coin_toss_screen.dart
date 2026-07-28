@@ -18,7 +18,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 enum CoinState { idle, anticipating, tossing, landed }
 
 class CoinFlipScreen extends StatefulWidget {
-  CoinFlipScreen({super.key});
+  const CoinFlipScreen({super.key});
 
   @override
   State<CoinFlipScreen> createState() => _CoinFlipScreenState();

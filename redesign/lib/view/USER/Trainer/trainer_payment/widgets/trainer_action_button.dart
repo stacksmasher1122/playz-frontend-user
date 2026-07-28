@@ -10,7 +10,7 @@ class TrainerActionButton extends StatelessWidget {
   final VoidCallback onTap;
   final IconData? icon;
 
-  TrainerActionButton({
+  const TrainerActionButton({
     super.key,
     required this.text,
     required this.onTap,

@@ -10,7 +10,7 @@ class SportSelector extends StatelessWidget {
   final String selectedSport;
   final Function(String) onSportSelected;
 
-  SportSelector({
+  const SportSelector({
     super.key,
     required this.sports,
     required this.selectedSport,

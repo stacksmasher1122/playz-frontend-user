@@ -6,7 +6,7 @@ import 'format_option_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchFormatCard extends StatelessWidget {
-  MatchFormatCard({super.key});
+  const MatchFormatCard({super.key});
 
   @override
   Widget build(BuildContext context) {

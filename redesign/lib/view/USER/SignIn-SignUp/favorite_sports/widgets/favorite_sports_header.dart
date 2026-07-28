@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class FavoriteSportsHeader extends StatelessWidget {
-  FavoriteSportsHeader({super.key});
+  const FavoriteSportsHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

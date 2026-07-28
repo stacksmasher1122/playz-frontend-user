@@ -7,7 +7,7 @@ const kCard = Color(0xFF1A1A1A);
 const kMuted = Color(0xFFA7A7A7);
 
 class ProfilePhotoUploader extends StatelessWidget {
-  ProfilePhotoUploader({super.key});
+  const ProfilePhotoUploader({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class OverProgressRow extends StatelessWidget {
   final List<BallEvent> currentOverBalls;
 
-  OverProgressRow({
+  const OverProgressRow({
     super.key,
     required this.currentOverBalls,
   });

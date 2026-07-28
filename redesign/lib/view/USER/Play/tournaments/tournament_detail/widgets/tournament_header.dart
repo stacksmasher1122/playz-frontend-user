@@ -60,7 +60,7 @@ class TournamentHeader extends StatelessWidget {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    AppColors.background.withOpacity(0.8),
+                    AppColors.background.withValues(alpha: 0.8),
                     AppColors.background,
                   ],
                 ),

@@ -10,7 +10,7 @@ import 'widgets/start_match_button_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class KickoffSetupScreen extends StatefulWidget {
-  KickoffSetupScreen({super.key});
+  const KickoffSetupScreen({super.key});
 
   @override
   State<KickoffSetupScreen> createState() => _KickoffSetupScreenState();

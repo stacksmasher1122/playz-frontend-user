@@ -3,14 +3,14 @@ import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_rotation_subs_controller.dart';
-import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_player_model.dart';
+
 import 'bench_player_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SubstitutionBottomSheet extends StatefulWidget {
   final VolleyballRotationSubsController controller;
 
-  SubstitutionBottomSheet({super.key, required this.controller});
+  const SubstitutionBottomSheet({super.key, required this.controller});
 
   @override
   State<SubstitutionBottomSheet> createState() => _SubstitutionBottomSheetState();
@@ -44,6 +44,8 @@ class _SubstitutionBottomSheetState extends State<SubstitutionBottomSheet> {
           SizedBox(
             height: ResponsiveHelper.h(120),
             child: Obx(() {
+              // Register the observable synchronously to avoid GetX error
+              widget.controller.courtPositions.length; 
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 6,
@@ -59,7 +61,7 @@ class _SubstitutionBottomSheetState extends State<SubstitutionBottomSheet> {
                       width: ResponsiveHelper.w(80),
                       margin: EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.accent.withOpacity(0.2) : AppColors.card,
+                        color: isSelected ? AppColors.accent.withValues(alpha: 0.2) : AppColors.card,
                         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                         border: Border.all(color: isSelected ? AppColors.accent : AppColors.outlineVariant),
                       ),

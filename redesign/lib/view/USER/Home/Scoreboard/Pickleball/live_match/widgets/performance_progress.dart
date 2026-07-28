@@ -23,18 +23,21 @@ class PerformanceProgress extends StatefulWidget {
   State<PerformanceProgress> createState() => _PerformanceProgressState();
 }
 
-class _PerformanceProgressState extends State<PerformanceProgress> with SingleTickerProviderStateMixin {
+class _PerformanceProgressState extends State<PerformanceProgress>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _fillAnimation;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
-    _fillAnimation = Tween<double>(begin: 0.0, end: widget.fillRatio).animate(CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOutCubic,
-    ));
+    _animController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+    _fillAnimation = Tween<double>(begin: 0.0, end: widget.fillRatio).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+    );
     if (widget.isPercentageBar) {
       _animController.forward();
     }
@@ -44,10 +47,16 @@ class _PerformanceProgressState extends State<PerformanceProgress> with SingleTi
   void didUpdateWidget(covariant PerformanceProgress oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isPercentageBar && oldWidget.fillRatio != widget.fillRatio) {
-      _fillAnimation = Tween<double>(begin: _fillAnimation.value, end: widget.fillRatio).animate(CurvedAnimation(
-        parent: _animController,
-        curve: Curves.easeOutCubic,
-      ));
+      _fillAnimation =
+          Tween<double>(
+            begin: _fillAnimation.value,
+            end: widget.fillRatio,
+          ).animate(
+            CurvedAnimation(
+              parent: _animController,
+              curve: Curves.easeOutCubic,
+            ),
+          );
       _animController
         ..reset()
         ..forward();
@@ -72,8 +81,16 @@ class _PerformanceProgressState extends State<PerformanceProgress> with SingleTi
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
-                Text('${widget.valueA} - ${widget.valueB}', style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
+                Text(
+                  widget.label,
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.muted,
+                  ),
+                ),
+                Text(
+                  '${widget.valueA} - ${widget.valueB}',
+                  style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+                ),
               ],
             ),
             if (widget.isPercentageBar) ...[
@@ -94,7 +111,9 @@ class _PerformanceProgressState extends State<PerformanceProgress> with SingleTi
                       child: Container(
                         decoration: BoxDecoration(
                           color: AppColors.accent,
-                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
+                          borderRadius: BorderRadius.circular(
+                            ResponsiveHelper.w(2),
+                          ),
                         ),
                       ),
                     );

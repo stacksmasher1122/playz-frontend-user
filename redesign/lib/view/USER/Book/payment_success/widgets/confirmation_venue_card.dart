@@ -10,7 +10,7 @@ class ConfirmationVenueCard extends StatelessWidget {
   final Size size;
   final Map<String, dynamic>? bookingData;
 
-  ConfirmationVenueCard({super.key, required this.size, this.bookingData});
+  const ConfirmationVenueCard({super.key, required this.size, this.bookingData});
 
   static const _kCard = Color(0xFF1A1A1A);
   static const _kGreen = AppColors.accent;

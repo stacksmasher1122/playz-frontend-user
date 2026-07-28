@@ -3,7 +3,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenuePolicyBox extends StatelessWidget {
-  VenuePolicyBox({super.key});
+  const VenuePolicyBox({super.key});
 
   static const _kGreen = AppColors.accent;
   static const _kMuted = Color(0xFFA7A7A7);

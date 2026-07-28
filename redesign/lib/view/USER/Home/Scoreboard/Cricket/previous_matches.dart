@@ -11,7 +11,7 @@ const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class PreviousMatchesScreen extends StatefulWidget {
-  PreviousMatchesScreen({super.key});
+  const PreviousMatchesScreen({super.key});
 
   @override
   State<PreviousMatchesScreen> createState() => _PreviousMatchesScreenState();
@@ -71,7 +71,7 @@ class _PreviousMatchesScreenState extends State<PreviousMatchesScreen> {
 
 class _MatchCard extends StatelessWidget {
   final CricketMatchModel match;
-  _MatchCard({required this.match});
+  const _MatchCard({required this.match});
 
   @override
   Widget build(BuildContext context) {

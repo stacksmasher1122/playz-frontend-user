@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class BottomNavigation extends StatelessWidget {
   final int selectedIndex;
 
-  BottomNavigation({super.key, this.selectedIndex = 0});
+  const BottomNavigation({super.key, this.selectedIndex = 0});
 
   @override
   Widget build(BuildContext context) {

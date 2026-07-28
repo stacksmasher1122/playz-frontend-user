@@ -7,7 +7,7 @@ const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class AgreementsSection extends StatefulWidget {
-  AgreementsSection({super.key});
+  const AgreementsSection({super.key});
 
   @override
   State<AgreementsSection> createState() => _AgreementsSectionState();
@@ -121,7 +121,7 @@ class AgreementTile extends StatelessWidget {
   final ValueChanged<bool> onChanged;
   final Widget child;
 
-  AgreementTile({
+  const AgreementTile({
     super.key,
     required this.value,
     required this.onChanged,

@@ -8,7 +8,7 @@ const kGreen = Color(0xFF6EDC6A);
 class CreateGroupSubmitButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  CreateGroupSubmitButton({super.key, required this.onPressed});
+  const CreateGroupSubmitButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

@@ -18,21 +18,25 @@ class PerformanceProgressWidget extends StatefulWidget {
   });
 
   @override
-  State<PerformanceProgressWidget> createState() => _PerformanceProgressWidgetState();
+  State<PerformanceProgressWidget> createState() =>
+      _PerformanceProgressWidgetState();
 }
 
-class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> with SingleTickerProviderStateMixin {
+class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _fillAnimation;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: Duration(milliseconds: 1000));
-    _fillAnimation = Tween<double>(begin: 0.0, end: widget.ratioA).animate(CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOutCubic,
-    ));
+    _animController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+    _fillAnimation = Tween<double>(begin: 0.0, end: widget.ratioA).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+    );
     _animController.forward();
   }
 
@@ -51,13 +55,21 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.label, style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
+            Text(
+              widget.label,
+              style: AppTypography.labelCaps10.copyWith(color: AppColors.muted),
+            ),
             SizedBox(height: 8),
             Row(
               children: [
                 SizedBox(
                   width: ResponsiveHelper.w(40),
-                  child: Text(widget.labelA, style: AppTypography.bodySm.copyWith(color: AppColors.accent)),
+                  child: Text(
+                    widget.labelA,
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.accent,
+                    ),
+                  ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
@@ -65,7 +77,9 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
                     height: ResponsiveHelper.h(6),
                     decoration: BoxDecoration(
                       color: AppColors.outlineVariant,
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
+                      borderRadius: BorderRadius.circular(
+                        ResponsiveHelper.w(3),
+                      ),
                     ),
                     child: AnimatedBuilder(
                       animation: _fillAnimation,
@@ -76,7 +90,9 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
                           child: Container(
                             decoration: BoxDecoration(
                               color: AppColors.accent,
-                              borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
+                              borderRadius: BorderRadius.circular(
+                                ResponsiveHelper.w(3),
+                              ),
                             ),
                           ),
                         );
@@ -87,7 +103,13 @@ class _PerformanceProgressWidgetState extends State<PerformanceProgressWidget> w
                 SizedBox(width: 8),
                 SizedBox(
                   width: ResponsiveHelper.w(40),
-                  child: Text(widget.labelB, style: AppTypography.bodySm.copyWith(color: AppColors.muted), textAlign: TextAlign.right),
+                  child: Text(
+                    widget.labelB,
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
                 ),
               ],
             ),

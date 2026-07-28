@@ -7,7 +7,7 @@ import '../../../../../../../model/User_Models/Home_Models/Scoreboard_Model/Tenn
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MsSetBreakdownWidget extends StatelessWidget {
-  MsSetBreakdownWidget({super.key});
+  const MsSetBreakdownWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

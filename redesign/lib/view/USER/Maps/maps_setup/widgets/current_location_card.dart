@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 
 class CurrentLocationCard extends StatelessWidget {
-  CurrentLocationCard({super.key});
+  const CurrentLocationCard({super.key});
 
   @override
   Widget build(BuildContext context) {

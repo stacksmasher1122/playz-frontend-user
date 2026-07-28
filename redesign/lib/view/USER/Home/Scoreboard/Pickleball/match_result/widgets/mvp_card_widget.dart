@@ -7,11 +7,7 @@ class MvpCardWidget extends StatelessWidget {
   final String teamName;
   final String winRate;
 
-  MvpCardWidget({
-    super.key,
-    required this.teamName,
-    required this.winRate,
-  });
+  MvpCardWidget({super.key, required this.teamName, required this.winRate});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +17,7 @@ class MvpCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Stack(
         children: [
@@ -39,7 +35,10 @@ class MvpCardWidget extends StatelessWidget {
             children: [
               Text(
                 'TEAM OF THE MATCH (MVP)',
-                style: AppTypography.labelCaps10.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: 16),
               Row(
@@ -64,8 +63,19 @@ class MvpCardWidget extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(teamName, style: AppTypography.headlineMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
-                      Text(winRate, style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
+                      Text(
+                        teamName,
+                        style: AppTypography.headlineMd.copyWith(
+                          color: AppColors.accent,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        winRate,
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.muted,
+                        ),
+                      ),
                     ],
                   ),
                 ],

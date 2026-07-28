@@ -10,7 +10,7 @@ Color kSilver = Color(0xFFB0BEC5);
 Color kBronze = Color(0xFFCD7F32);
 
 class UserRankCard extends StatelessWidget {
-  UserRankCard({super.key});
+  const UserRankCard({super.key});
 
   @override
   Widget build(BuildContext context) {

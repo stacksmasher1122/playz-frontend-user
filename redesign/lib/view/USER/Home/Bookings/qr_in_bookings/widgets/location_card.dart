@@ -7,7 +7,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 class LocationCard extends StatelessWidget {
   final Map<String, dynamic>? bookingData;
 
-  LocationCard({super.key, this.bookingData});
+  const LocationCard({super.key, this.bookingData});
 
   Future<void> _launchGoogleMaps() async {
     final turfName = bookingData?['turfName'] ?? '';

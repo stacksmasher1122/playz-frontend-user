@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 import '../../../../../../controller/User_Controller/Tournament_Controller/bracket_controller.dart';
-import '../../../../../../model/User_Models/Tournament_Model/bracket_model.dart';
 import '../../bracket_matchmaking/bracket_matchmaking_screen.dart';
 
 class BracketsSection extends StatefulWidget {

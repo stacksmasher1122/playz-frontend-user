@@ -13,7 +13,7 @@ import 'widgets/timeline_card.dart';
 import 'widgets/match_insight_card.dart';
 
 class VolleyballStatsScreen extends StatefulWidget {
-  VolleyballStatsScreen({super.key});
+  const VolleyballStatsScreen({super.key});
 
   @override
   State<VolleyballStatsScreen> createState() => _VolleyballStatsScreenState();
@@ -56,7 +56,7 @@ class _VolleyballStatsScreenState extends State<VolleyballStatsScreen> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.error.withOpacity(0.2),
+              color: AppColors.error.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -72,8 +72,7 @@ class _VolleyballStatsScreenState extends State<VolleyballStatsScreen> {
             ),
           ),
           SizedBox(width: 16),
-          Icon(Icons.account_circle, color: AppColors.muted),
-          SizedBox(width: 16),
+
         ],
       ),
       body: Obx(() {

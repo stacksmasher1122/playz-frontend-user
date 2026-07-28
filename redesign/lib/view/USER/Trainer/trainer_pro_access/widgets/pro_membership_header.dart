@@ -5,7 +5,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kGreen = AppColors.accent;
 
 class ProMembershipHeader extends StatelessWidget {
-  ProMembershipHeader({super.key});
+  const ProMembershipHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

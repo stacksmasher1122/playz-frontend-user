@@ -17,6 +17,7 @@ class BookingCardUpcoming extends StatefulWidget {
   final Map<String, dynamic>? bookingData;
 
   const BookingCardUpcoming({super.key, this.bookingData});
+  const BookingCardUpcoming({super.key, this.bookingData});
 
   @override
   State<BookingCardUpcoming> createState() => _BookingCardUpcomingState();

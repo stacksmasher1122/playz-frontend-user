@@ -12,7 +12,7 @@ const kBg = AppColors.background;
 const kMuted = Colors.white70;
 
 class FriendsRequestsScreen extends StatelessWidget {
-  FriendsRequestsScreen({super.key});
+  const FriendsRequestsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

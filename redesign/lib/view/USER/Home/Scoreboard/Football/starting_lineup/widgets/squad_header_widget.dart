@@ -6,7 +6,7 @@ class SquadHeaderWidget extends StatelessWidget {
   final VoidCallback onFilter;
   final VoidCallback onSearch;
 
-  SquadHeaderWidget({
+  const SquadHeaderWidget({
     super.key,
     required this.onFilter,
     required this.onSearch,

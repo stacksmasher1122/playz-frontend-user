@@ -7,23 +7,23 @@ class StartMatchButton extends StatefulWidget {
   final bool isStarting;
   final VoidCallback onTap;
 
-  StartMatchButton({
-    super.key,
-    required this.isStarting,
-    required this.onTap,
-  });
+  StartMatchButton({super.key, required this.isStarting, required this.onTap});
 
   @override
   State<StartMatchButton> createState() => _StartMatchButtonState();
 }
 
-class _StartMatchButtonState extends State<StartMatchButton> with SingleTickerProviderStateMixin {
+class _StartMatchButtonState extends State<StartMatchButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 150));
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 150),
+    );
   }
 
   @override
@@ -37,9 +37,9 @@ class _StartMatchButtonState extends State<StartMatchButton> with SingleTickerPr
     ResponsiveHelper.init(context);
     return Container(
       color: AppColors.background,
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)).copyWith(
-        bottom: MediaQuery.of(context).padding.bottom + 16,
-      ),
+      padding: EdgeInsets.all(
+        ResponsiveHelper.w(16),
+      ).copyWith(bottom: MediaQuery.of(context).padding.bottom + 16),
       child: GestureDetector(
         onTapDown: (_) => _controller.forward(),
         onTapUp: (_) {
@@ -56,13 +56,15 @@ class _StartMatchButtonState extends State<StartMatchButton> with SingleTickerPr
             decoration: BoxDecoration(
               color: AppColors.accent,
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-              boxShadow: widget.isStarting ? [] : [
-                BoxShadow(
-                  color: AppColors.accent.withOpacity(0.4),
-                  blurRadius: 16,
-                  offset: Offset(0, 4),
-                ),
-              ],
+              boxShadow: widget.isStarting
+                  ? []
+                  : [
+                      BoxShadow(
+                        color: AppColors.accent.withOpacity(0.4),
+                        blurRadius: 16,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
             ),
             child: Center(
               child: AnimatedSwitcher(
@@ -71,7 +73,10 @@ class _StartMatchButtonState extends State<StartMatchButton> with SingleTickerPr
                     ? SizedBox(
                         width: ResponsiveHelper.w(24),
                         height: ResponsiveHelper.h(24),
-                        child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2.5),
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                          strokeWidth: 2.5,
+                        ),
                       )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -80,7 +85,10 @@ class _StartMatchButtonState extends State<StartMatchButton> with SingleTickerPr
                           SizedBox(width: 8),
                           Text(
                             'Start Match',
-                            style: AppTypography.headlineMd.copyWith(color: Colors.black, fontWeight: FontWeight.w900),
+                            style: AppTypography.headlineMd.copyWith(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w900,
+                            ),
                           ),
                         ],
                       ),

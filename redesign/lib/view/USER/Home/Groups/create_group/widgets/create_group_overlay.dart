@@ -6,7 +6,7 @@ import 'package:redesign/theme/responsive_helper.dart';
 const kGreen = Color(0xFF6EDC6A);
 
 class CreateGroupOverlay extends StatelessWidget {
-  CreateGroupOverlay({super.key});
+  const CreateGroupOverlay({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ const kYellow = Color(0xFFFFC107);
 const kSurface = AppColors.surface;
 
 class PackagePurchasedCard extends StatelessWidget {
-  PackagePurchasedCard({super.key});
+  const PackagePurchasedCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,7 @@ class PackagePurchasedCard extends StatelessWidget {
 
 class PackageFeatureChip extends StatelessWidget {
   final String label;
-  PackageFeatureChip({super.key, required this.label});
+  const PackageFeatureChip({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {

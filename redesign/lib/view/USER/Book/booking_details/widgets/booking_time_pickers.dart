@@ -8,7 +8,7 @@ class BookingTimePickers extends StatelessWidget {
   final VoidCallback onPickStartTime;
   final VoidCallback onPickEndTime;
 
-  BookingTimePickers({
+  const BookingTimePickers({
     super.key,
     required this.startTime,
     required this.endTime,
@@ -53,7 +53,7 @@ class _TimeCard extends StatelessWidget {
   final TimeOfDay? time;
   final VoidCallback onTap;
 
-  _TimeCard({
+  const _TimeCard({
     required this.label,
     required this.time,
     required this.onTap,

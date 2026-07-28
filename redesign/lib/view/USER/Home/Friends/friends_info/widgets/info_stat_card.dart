@@ -11,7 +11,7 @@ class InfoStatCard extends StatelessWidget {
   final String value;
   final String label;
 
-  InfoStatCard({
+  const InfoStatCard({
     super.key,
     required this.icon,
     required this.value,

@@ -7,7 +7,7 @@ const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class ScoreboardAppBar extends StatelessWidget {
-  ScoreboardAppBar({super.key});
+  const ScoreboardAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class ScoreboardAppBar extends StatelessWidget {
 class CircleIcon extends StatelessWidget {
   final IconData icon;
   final Color? fill;
-  CircleIcon(this.icon, {super.key, this.fill});
+  const CircleIcon(this.icon, {super.key, this.fill});
 
   @override
   Widget build(BuildContext context) {

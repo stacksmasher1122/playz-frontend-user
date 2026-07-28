@@ -12,7 +12,7 @@ class AudioBubble extends StatefulWidget {
   final String url;
   final bool isMe;
 
-  AudioBubble({super.key, required this.url, required this.isMe});
+  const AudioBubble({super.key, required this.url, required this.isMe});
 
   @override
   State<AudioBubble> createState() => _AudioBubbleState();
@@ -182,7 +182,7 @@ class AnimatedEqualizer extends StatefulWidget {
   final bool isPlaying;
   final bool isMe;
 
-  AnimatedEqualizer({super.key, required this.isPlaying, required this.isMe});
+  const AnimatedEqualizer({super.key, required this.isPlaying, required this.isMe});
 
   @override
   State<AnimatedEqualizer> createState() => _AnimatedEqualizerState();

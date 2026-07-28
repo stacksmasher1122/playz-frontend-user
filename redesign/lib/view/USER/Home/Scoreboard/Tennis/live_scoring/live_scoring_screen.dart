@@ -12,7 +12,7 @@ import 'widgets/ls_bottom_nav_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LiveScoringScreen extends StatefulWidget {
-  LiveScoringScreen({super.key});
+  const LiveScoringScreen({super.key});
 
   @override
   State<LiveScoringScreen> createState() => _LiveScoringScreenState();

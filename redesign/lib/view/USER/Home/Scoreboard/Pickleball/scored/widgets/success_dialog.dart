@@ -10,7 +10,8 @@ class SuccessDialog extends StatefulWidget {
   State<SuccessDialog> createState() => _SuccessDialogState();
 }
 
-class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProviderStateMixin {
+class _SuccessDialogState extends State<SuccessDialog>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -21,7 +22,10 @@ class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProvider
       vsync: this,
       duration: Duration(milliseconds: 300),
     );
-    _scaleAnimation = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
+    _scaleAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    );
     _controller.forward();
   }
 
@@ -43,7 +47,7 @@ class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProvider
           decoration: BoxDecoration(
             color: AppColors.card,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-            border: Border.all(color: AppColors.outlineVariant, width: 1),
+            border: Border.all(color: Colors.transparent),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -69,15 +73,22 @@ class _SuccessDialogState extends State<SuccessDialog> with SingleTickerProvider
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.card,
-                    padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14)),
+                    padding: EdgeInsets.symmetric(
+                      vertical: ResponsiveHelper.h(14),
+                    ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                      borderRadius: BorderRadius.circular(
+                        ResponsiveHelper.w(8),
+                      ),
                     ),
                   ),
                   onPressed: () {
                     Navigator.pop(context); // Close dialog
                   },
-                  child: Text('Done', style: TextStyle(color: AppColors.accent)),
+                  child: Text(
+                    'Done',
+                    style: TextStyle(color: AppColors.accent),
+                  ),
                 ),
               ),
             ],

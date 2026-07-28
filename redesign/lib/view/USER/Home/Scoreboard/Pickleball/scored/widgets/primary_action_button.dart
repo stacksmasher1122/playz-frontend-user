@@ -6,17 +6,14 @@ class PrimaryActionButton extends StatefulWidget {
   final VoidCallback onTap;
   final bool isLoading;
 
-  PrimaryActionButton({
-    super.key,
-    required this.onTap,
-    this.isLoading = false,
-  });
+  PrimaryActionButton({super.key, required this.onTap, this.isLoading = false});
 
   @override
   State<PrimaryActionButton> createState() => _PrimaryActionButtonState();
 }
 
-class _PrimaryActionButtonState extends State<PrimaryActionButton> with SingleTickerProviderStateMixin {
+class _PrimaryActionButtonState extends State<PrimaryActionButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -27,9 +24,10 @@ class _PrimaryActionButtonState extends State<PrimaryActionButton> with SingleTi
       vsync: this,
       duration: Duration(milliseconds: 150),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.97,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

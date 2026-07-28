@@ -13,7 +13,7 @@ class PlayerStatsTabs extends StatefulWidget {
   final int partnershipBalls;
   final List<BallEvent> ballHistory;
 
-  PlayerStatsTabs({
+  const PlayerStatsTabs({
     super.key,
     required this.striker,
     required this.nonStriker,

@@ -133,14 +133,18 @@ class _TurfCardState extends State<TurfCard>
                       children: List.generate(
                         images.length,
                         (i) => Container(
-                          margin: EdgeInsets.symmetric(horizontal: context.widthPct(0.8)),
+                          margin: EdgeInsets.symmetric(
+                            horizontal: context.widthPct(0.8),
+                          ),
                           width: 6,
                           height: 6,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: i == _pageIndex
                                 ? AppColors.textPrimary
-                                : AppColors.textSecondary.withValues(alpha: 0.5),
+                                : AppColors.textSecondary.withValues(
+                                    alpha: 0.5,
+                                  ),
                           ),
                         ),
                       ),
@@ -166,7 +170,9 @@ class _TurfCardState extends State<TurfCard>
                       ),
                       child: Icon(
                         _isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: _isFavorite ? AppColors.accent : AppColors.textPrimary,
+                        color: _isFavorite
+                            ? AppColors.accent
+                            : AppColors.textPrimary,
                         size: favoriteBtnSize * 0.52,
                       ),
                     ),
@@ -184,16 +190,16 @@ class _TurfCardState extends State<TurfCard>
               children: [
                 /// NAVIGABLE CONTENT ONLY
                 InkWell(
-                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                  borderRadius: BorderRadius.circular(
+                    context.minDimensionPct(3),
+                  ),
                   onTap: () {
                     // Set selected turf in controller before navigating
                     final bookingCtrl = Get.find<BookingController>();
                     bookingCtrl.setSelectedTurf(turf);
 
                     Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => TurfDetailScreen(),
-                      ),
+                      MaterialPageRoute(builder: (_) => TurfDetailScreen()),
                     );
                   },
                   child: Padding(
@@ -229,15 +235,19 @@ class _TurfCardState extends State<TurfCard>
                             spacing: context.widthPct(1.5),
                             runSpacing: context.heightPct(0.4),
                             children: [
-                              ...turf.sports.take(3).map((sport) => Text(
-                                sport,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTypography.bodySm.copyWith(
-                                  fontSize: context.responsiveFont(12),
-                                  color: AppColors.textSecondary,
-                                ),
-                              )),
+                              ...turf.sports
+                                  .take(3)
+                                  .map(
+                                    (sport) => Text(
+                                      sport,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTypography.bodySm.copyWith(
+                                        fontSize: context.responsiveFont(12),
+                                        color: AppColors.textSecondary,
+                                      ),
+                                    ),
+                                  ),
                               if (turf.sports.length > 3)
                                 Text(
                                   '+${turf.sports.length - 3} more',
@@ -259,14 +269,18 @@ class _TurfCardState extends State<TurfCard>
                             child: Row(
                               children: turf.amenities.map((amenity) {
                                 return Container(
-                                  margin: EdgeInsets.only(right: context.widthPct(2)),
+                                  margin: EdgeInsets.only(
+                                    right: context.widthPct(2),
+                                  ),
                                   padding: EdgeInsets.symmetric(
                                     horizontal: context.widthPct(2.5),
                                     vertical: context.heightPct(0.6),
                                   ),
                                   decoration: BoxDecoration(
                                     color: AppColors.card,
-                                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                                    borderRadius: BorderRadius.circular(
+                                      AppDimensions.radiusMd,
+                                    ),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -279,11 +293,9 @@ class _TurfCardState extends State<TurfCard>
                                       SizedBox(width: context.widthPct(1)),
                                       Text(
                                         amenity,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppTypography.bodySm.copyWith(
-                                          color: AppColors.textPrimary,
-                                          fontSize: context.responsiveFont(11),
+                                        style: GoogleFonts.inter(
+                                          color: Colors.white.withOpacity(0.9),
+                                          fontSize: ResponsiveHelper.sp(11),
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -300,8 +312,8 @@ class _TurfCardState extends State<TurfCard>
                 ),
 
                 /// HORIZONTAL DIVIDER LINE
-                const Divider(
-                  color: AppColors.divider,
+                Divider(
+                  color: Colors.white.withOpacity(0.08),
                   thickness: 1,
                   height: 1,
                 ),
@@ -349,9 +361,7 @@ class _TurfCardState extends State<TurfCard>
                         final bookingCtrl = Get.find<BookingController>();
                         bookingCtrl.setSelectedTurf(turf);
                         Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => TurfDetailScreen(),
-                          ),
+                          MaterialPageRoute(builder: (_) => TurfDetailScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -362,7 +372,9 @@ class _TurfCardState extends State<TurfCard>
                           vertical: context.heightPct(1),
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+                          borderRadius: BorderRadius.circular(
+                            context.minDimensionPct(5),
+                          ),
                         ),
                       ),
                       child: FittedBox(

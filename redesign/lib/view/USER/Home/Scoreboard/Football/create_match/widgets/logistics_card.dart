@@ -5,7 +5,7 @@ import '../../../../../../../../controller/User_Controller/Home_Controller/Score
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LogisticsCard extends StatelessWidget {
-  LogisticsCard({super.key});
+  const LogisticsCard({super.key});
 
   @override
   Widget build(BuildContext context) {

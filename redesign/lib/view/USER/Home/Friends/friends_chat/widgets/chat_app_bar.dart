@@ -14,7 +14,7 @@ class ChatAppBar extends StatelessWidget {
   final String pic;
   final bool isOnline;
 
-  ChatAppBar({
+  const ChatAppBar({
     super.key,
     required this.email,
     required this.name,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class KickoffBallWidget extends StatelessWidget {
-  KickoffBallWidget({super.key});
+  const KickoffBallWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

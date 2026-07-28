@@ -7,7 +7,7 @@ class QrPrimaryAction extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
 
-  QrPrimaryAction(
+  const QrPrimaryAction(
     this.label,
     this.icon, {super.key, 
     this.onTap,

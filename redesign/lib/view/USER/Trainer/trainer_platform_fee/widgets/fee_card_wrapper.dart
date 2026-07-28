@@ -9,7 +9,7 @@ class FeeCardWrapper extends StatelessWidget {
   final List<Widget> children;
   final Widget? trailing;
 
-  FeeCardWrapper({
+  const FeeCardWrapper({
     super.key,
     required this.title,
     required this.children,

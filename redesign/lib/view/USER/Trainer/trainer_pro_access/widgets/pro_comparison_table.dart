@@ -8,7 +8,7 @@ const kGreen = AppColors.accent;
 const kCard = Color(0xFF1A1A1A);
 
 class ProComparisonTable extends StatelessWidget {
-  ProComparisonTable({super.key});
+  const ProComparisonTable({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +136,7 @@ class CheckIcon extends StatelessWidget {
   final bool enabled;
   final bool highlight;
 
-  CheckIcon({super.key, required this.enabled, this.highlight = false});
+  const CheckIcon({super.key, required this.enabled, this.highlight = false});
 
   @override
   Widget build(BuildContext context) {

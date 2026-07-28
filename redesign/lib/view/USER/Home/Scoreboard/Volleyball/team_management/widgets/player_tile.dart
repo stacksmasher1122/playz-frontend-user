@@ -10,7 +10,7 @@ class PlayerTile extends StatelessWidget {
   final bool isTeamA;
   final VolleyballTeamManagementController controller;
 
-  PlayerTile({super.key, required this.player, required this.isTeamA, required this.controller});
+  const PlayerTile({super.key, required this.player, required this.isTeamA, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class PlayerTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: Colors.transparent),
       ),
       child: IntrinsicHeight(
         child: Row(

@@ -7,7 +7,7 @@ class HalvesSelectorWidget extends StatelessWidget {
   final VoidCallback onIncrease;
   final VoidCallback onDecrease;
 
-  HalvesSelectorWidget({
+  const HalvesSelectorWidget({
     super.key,
     required this.halves,
     required this.onIncrease,

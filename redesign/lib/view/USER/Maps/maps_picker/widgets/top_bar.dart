@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MapPickerTopBar extends StatelessWidget {
-  MapPickerTopBar({super.key});
+  const MapPickerTopBar({super.key});
 
   @override
   Widget build(BuildContext context) {

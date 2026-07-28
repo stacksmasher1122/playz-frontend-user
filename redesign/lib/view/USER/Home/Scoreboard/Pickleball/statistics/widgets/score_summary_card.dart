@@ -13,17 +13,23 @@ class ScoreSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(
+        vertical: ResponsiveHelper.h(24),
+        horizontal: ResponsiveHelper.w(16),
+      ),
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: Colors.transparent),
       ),
       child: Column(
         children: [
           Text(
             'FINAL SCORE',
-            style: AppTypography.labelCaps10.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold),
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.muted,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: 8),
           Text(
@@ -40,7 +46,12 @@ class ScoreSummaryCard extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Text('TEAM ALPHA', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
+                  Text(
+                    'TEAM ALPHA',
+                    style: AppTypography.labelCaps10.copyWith(
+                      color: AppColors.muted,
+                    ),
+                  ),
                   SizedBox(height: 8),
                   Text(
                     '${controller.teamAScore.value}',
@@ -57,7 +68,12 @@ class ScoreSummaryCard extends StatelessWidget {
               SizedBox(width: 24),
               Column(
                 children: [
-                  Text('vs', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
+                  Text(
+                    'vs',
+                    style: AppTypography.labelCaps10.copyWith(
+                      color: AppColors.muted,
+                    ),
+                  ),
                   SizedBox(height: 8),
                   Text(
                     '—',
@@ -74,7 +90,12 @@ class ScoreSummaryCard extends StatelessWidget {
               SizedBox(width: 24),
               Column(
                 children: [
-                  Text('TEAM OMEGA', style: AppTypography.labelCaps10.copyWith(color: AppColors.muted)),
+                  Text(
+                    'TEAM OMEGA',
+                    style: AppTypography.labelCaps10.copyWith(
+                      color: AppColors.muted,
+                    ),
+                  ),
                   SizedBox(height: 8),
                   Text(
                     '${controller.teamBScore.value}',

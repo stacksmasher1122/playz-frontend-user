@@ -7,7 +7,7 @@ Color kSurface = Color(0xFF0E0E0E);
 Color kMuted = Color(0xFFA7A7A7);
 
 class QuickStatsRow extends StatelessWidget {
-  QuickStatsRow({super.key});
+  const QuickStatsRow({super.key});
 
   @override
   Widget build(BuildContext context) {

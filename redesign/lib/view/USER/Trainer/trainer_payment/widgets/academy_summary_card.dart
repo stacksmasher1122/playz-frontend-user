@@ -8,7 +8,7 @@ const kMuted = Color(0xFFA7A7A7);
 const kYellow = Color(0xFFFFC107);
 
 class AcademySummaryCard extends StatelessWidget {
-  AcademySummaryCard({super.key});
+  const AcademySummaryCard({super.key});
 
   @override
   Widget build(BuildContext context) {

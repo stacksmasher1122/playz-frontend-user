@@ -21,7 +21,9 @@ class TeamScoreWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Column(
-      crossAxisAlignment: isLeftAligned ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+      crossAxisAlignment: isLeftAligned
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.end,
       children: [
         Text(
           teamName,

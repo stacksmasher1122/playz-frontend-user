@@ -6,7 +6,7 @@ const kGreen = AppColors.accent;
 const kMuted = Color(0xFFA7A7A7);
 
 class ProValueCard extends StatelessWidget {
-  ProValueCard({super.key});
+  const ProValueCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class ProValueMetric extends StatelessWidget {
   final String value;
   final String label;
 
-  ProValueMetric({super.key, required this.value, required this.label});
+  const ProValueMetric({super.key, required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {

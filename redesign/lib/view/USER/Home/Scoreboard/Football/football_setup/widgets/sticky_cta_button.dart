@@ -9,7 +9,7 @@ class StickyCtaButton extends StatelessWidget {
   final bool isActive;
   final VoidCallback onTap;
 
-  StickyCtaButton({
+  const StickyCtaButton({
     super.key,
     required this.mode,
     required this.isActive,

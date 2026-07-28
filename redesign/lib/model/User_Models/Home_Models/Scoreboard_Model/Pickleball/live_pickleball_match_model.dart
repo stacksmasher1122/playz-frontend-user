@@ -30,4 +30,42 @@ class LivePickleballMatchModel {
     required this.duration,
     required this.statistics,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'matchId': matchId,
+      'teamA': teamA,
+      'teamB': teamB,
+      'scoreA': scoreA,
+      'scoreB': scoreB,
+      'setsA': setsA,
+      'setsB': setsB,
+      'server': server,
+      'game': game,
+      'set': set,
+      'court': court,
+      'status': status,
+      'duration': duration,
+      'statistics': statistics,
+    };
+  }
+
+  factory LivePickleballMatchModel.fromMap(Map<String, dynamic> map) {
+    return LivePickleballMatchModel(
+      matchId: map['matchId'] ?? '',
+      teamA: map['teamA'] ?? '',
+      teamB: map['teamB'] ?? '',
+      scoreA: map['scoreA']?.toInt() ?? 0,
+      scoreB: map['scoreB']?.toInt() ?? 0,
+      setsA: map['setsA']?.toInt() ?? 0,
+      setsB: map['setsB']?.toInt() ?? 0,
+      server: map['server'] ?? '',
+      game: map['game'] ?? '',
+      set: map['set'] ?? '',
+      court: map['court'] ?? '',
+      status: map['status'] ?? '',
+      duration: map['duration'] ?? '',
+      statistics: Map<String, dynamic>.from(map['statistics'] ?? {}),
+    );
+  }
 }

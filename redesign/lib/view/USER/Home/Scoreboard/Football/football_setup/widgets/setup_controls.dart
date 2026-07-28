@@ -11,7 +11,7 @@ class StepperControl extends StatelessWidget {
   final int min;
   final int max;
 
-  StepperControl({
+  const StepperControl({
     super.key,
     required this.label,
     required this.value,
@@ -74,7 +74,7 @@ class SetupSwitch extends StatelessWidget {
   final bool value;
   final Function(bool) onChanged;
 
-  SetupSwitch({
+  const SetupSwitch({
     super.key,
     required this.label,
     required this.value,
@@ -99,7 +99,7 @@ class SetupTextField extends StatelessWidget {
   final String label;
   final String initialValue;
 
-  SetupTextField({super.key, required this.label, required this.initialValue});
+  const SetupTextField({super.key, required this.label, required this.initialValue});
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +127,7 @@ class SegmentedControl extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onSelect;
 
-  SegmentedControl({
+  const SegmentedControl({
     super.key,
     required this.options,
     required this.selectedIndex,

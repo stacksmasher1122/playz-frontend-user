@@ -11,7 +11,7 @@ class WicketWizardSheet extends StatefulWidget {
   final Function(DismissalType, String?, Player?, bool, String?, bool)
   onComplete;
 
-  WicketWizardSheet({
+  const WicketWizardSheet({
     super.key,
     required this.battingTeam,
     required this.bowlingTeam,

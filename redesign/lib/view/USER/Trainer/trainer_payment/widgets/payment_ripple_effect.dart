@@ -8,7 +8,7 @@ class PaymentRippleEffect extends StatelessWidget {
   final AnimationController controller;
   final double baseSize;
 
-  PaymentRippleEffect({
+  const PaymentRippleEffect({
     super.key,
     required this.controller,
     this.baseSize = 96,

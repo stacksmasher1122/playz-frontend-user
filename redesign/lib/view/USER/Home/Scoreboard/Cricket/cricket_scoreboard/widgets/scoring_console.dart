@@ -8,7 +8,7 @@ class ScoringConsole extends StatelessWidget {
   final VoidCallback onExtras;
   final Function(int) onNormalRun;
 
-  ScoringConsole({
+  const ScoringConsole({
     super.key,
     required this.onUndo,
     required this.onWicket,

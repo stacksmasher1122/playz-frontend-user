@@ -7,7 +7,7 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 class BadmintonFormatCard extends StatelessWidget {
   final BadmintonController controller;
 
-  BadmintonFormatCard({
+  const BadmintonFormatCard({
     super.key,
     required this.controller,
   });

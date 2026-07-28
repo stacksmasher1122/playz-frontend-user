@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CameraCaptureOverlay extends StatelessWidget {
-  CameraCaptureOverlay({super.key});
+  const CameraCaptureOverlay({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ class PackageSelectionBottomCta extends StatelessWidget {
   final List<PackageModel> packages;
   final ValueNotifier<int> selectedIndex;
 
-  PackageSelectionBottomCta({
+  const PackageSelectionBottomCta({
     super.key,
     required this.packages,
     required this.selectedIndex,

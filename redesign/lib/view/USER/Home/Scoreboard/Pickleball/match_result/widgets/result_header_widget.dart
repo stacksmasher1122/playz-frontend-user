@@ -3,7 +3,8 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class ResultHeaderWidget extends StatelessWidget implements PreferredSizeWidget {
+class ResultHeaderWidget extends StatelessWidget
+    implements PreferredSizeWidget {
   ResultHeaderWidget({super.key});
 
   @override

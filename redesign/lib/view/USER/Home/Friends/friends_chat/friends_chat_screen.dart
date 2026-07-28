@@ -32,7 +32,7 @@ class ChatScreen extends StatefulWidget {
   final String friendPic;
   final bool isOnline;
 
-  ChatScreen({
+  const ChatScreen({
     super.key,
     required this.friendEmail,
     required this.friendName,

@@ -10,7 +10,7 @@ import 'widgets/live_efficiency_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VolleyballRotationSubsScreen extends StatefulWidget {
-  VolleyballRotationSubsScreen({super.key});
+  const VolleyballRotationSubsScreen({super.key});
 
   @override
   State<VolleyballRotationSubsScreen> createState() => _VolleyballRotationSubsScreenState();
@@ -54,7 +54,7 @@ class _VolleyballRotationSubsScreenState extends State<VolleyballRotationSubsScr
           Container(
             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
             decoration: BoxDecoration(
-              color: AppColors.accent.withOpacity(0.2),
+              color: AppColors.accent.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
             ),
             child: Row(
@@ -70,8 +70,7 @@ class _VolleyballRotationSubsScreenState extends State<VolleyballRotationSubsScr
             ),
           ),
           SizedBox(width: 16),
-          Icon(Icons.account_circle, color: AppColors.muted),
-          SizedBox(width: 16),
+
         ],
       ),
       body: SingleChildScrollView(
