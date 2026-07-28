@@ -4,7 +4,7 @@ import 'package:redesign/view/USER/Home/Bookings/bookings/bookings_screen.dart';
 import 'package:redesign/view/USER/Home/Friends/friends/friends_screen.dart';
 import 'package:redesign/view/USER/Home/Groups/groups/groups_screen.dart';
 import 'package:redesign/view/USER/Home/Ranking/rankings/rankings_screen.dart';
-import 'package:redesign/view/USER/Home/scoreboards/scoreboards_screen.dart';
+import 'package:redesign/view/USER/Home/scoreboard_screen/scoreboards_screen.dart';
 import '../home_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -95,7 +95,8 @@ class HomeQuickTile extends StatelessWidget {
   const HomeQuickTile(
     this.icon,
     this.title,
-    this.subtitle, {super.key, 
+    this.subtitle, {
+    super.key,
     this.badge,
     this.highlight = false,
     this.destination,
@@ -135,15 +136,14 @@ class HomeQuickTile extends StatelessWidget {
                   top: ResponsiveHelper.h(0),
                   right: ResponsiveHelper.w(0),
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: badge == 'Beta' || badge == 'New'
                           ? UserHomePage.accent
                           : Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                      borderRadius: BorderRadius.circular(
+                        ResponsiveHelper.w(4),
+                      ),
                     ),
                     child: Text(
                       badge!.toUpperCase(),
@@ -167,7 +167,9 @@ class HomeQuickTile extends StatelessWidget {
                     width: ResponsiveHelper.w(44),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                      borderRadius: BorderRadius.circular(
+                        ResponsiveHelper.w(10),
+                      ),
                     ),
                     child: Icon(
                       icon,

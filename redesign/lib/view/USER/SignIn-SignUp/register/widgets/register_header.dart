@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterHeader extends StatelessWidget {
@@ -6,30 +8,26 @@ class RegisterHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return Column(
       children: [
-        Image.asset(
-          'assets/logo.png',
-          height: ResponsiveHelper.h(60),
-          width: ResponsiveHelper.w(60),
-          fit: BoxFit.contain,
-        ),
-        SizedBox(height: 16),
+        SizedBox(height: context.heightPct(1.2)),
         Text(
           'Create Account',
-          style: TextStyle(
-            fontSize: ResponsiveHelper.sp(24),
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
+          style: AppTypography.headlineLg.copyWith(
+            fontSize: context.responsiveFont(22),
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+            letterSpacing: -0.2,
           ),
         ),
-        SizedBox(height: 6),
+        SizedBox(height: context.heightPct(0.8)),
         Text(
           'Join the PlayZ sports community',
-          style: TextStyle(
-            fontSize: ResponsiveHelper.sp(14),
-            color: Colors.white.withValues(alpha: 0.65),
+          textAlign: TextAlign.center,
+          style: AppTypography.bodyMd.copyWith(
+            fontSize: context.responsiveFont(13.5),
+            color: AppColors.textSecondary,
+            height: 1.4,
           ),
         ),
       ],

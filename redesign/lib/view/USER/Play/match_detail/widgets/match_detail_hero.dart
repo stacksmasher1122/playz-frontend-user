@@ -5,9 +5,9 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchDetailHero extends StatefulWidget {
   final List<String>? images;
-  final String sport;
-  final String type;
-  final String time;
+  final String? sport;
+  final String? type;
+  final String? time;
 
   const MatchDetailHero({
     super.key,
@@ -44,6 +44,12 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
     final imageList = (widget.images != null && widget.images!.isNotEmpty)
         ? widget.images!
         : _fallbackImages;
+
+    final safeType = (widget.type ?? 'Casual').toString();
+    final safeSport = (widget.sport ?? 'Football').toString();
+    final safeTime = (widget.time ?? 'Today, 18:00').toString();
+
+    final isCompetitive = safeType.toLowerCase() == 'competitive';
 
     return SliverAppBar(
       expandedHeight: height,
@@ -144,26 +150,26 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
                   Row(
                     children: [
                       _HeroTag(
-                        widget.type.toUpperCase(),
-                        bgColor: widget.type.toLowerCase() == 'competitive'
+                        safeType.toUpperCase(),
+                        bgColor: isCompetitive
                             ? const Color(0xFF7C3AED).withValues(alpha: 0.3)
                             : AppColors.accent.withValues(alpha: 0.2),
-                        textColor: widget.type.toLowerCase() == 'competitive'
+                        textColor: isCompetitive
                             ? const Color(0xFFA855F7)
                             : AppColors.accent,
-                        borderColor: widget.type.toLowerCase() == 'competitive'
+                        borderColor: isCompetitive
                             ? const Color(0xFF7C3AED)
                             : AppColors.accent,
                       ),
                       const SizedBox(width: 8),
                       _HeroTag(
-                        widget.sport.toUpperCase(),
+                        safeSport.toUpperCase(),
                         bgColor: Colors.white.withValues(alpha: 0.15),
                         textColor: Colors.white,
                       ),
                     ],
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       Container(
@@ -174,9 +180,9 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
                           shape: BoxShape.circle,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
-                        widget.time,
+                        safeTime,
                         style: GoogleFonts.inter(
                           fontSize: ResponsiveHelper.sp(16),
                           fontWeight: FontWeight.bold,

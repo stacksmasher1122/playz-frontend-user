@@ -5,10 +5,12 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 
+import 'package:redesign/view/USER/More/app_settings/app_settings_screen.dart';
+import 'package:redesign/view/USER/More/support_faq/support_faq_screen.dart';
+
 import 'widgets/menu_profile_header.dart';
 import 'widgets/z_coins_card.dart';
 import 'widgets/tools_grid.dart';
-import 'widgets/sports_row.dart';
 import 'widgets/rewards_card.dart';
 import 'widgets/settings_tile.dart';
 import 'widgets/dark_mode_tile.dart';
@@ -68,10 +70,6 @@ class _MoreScreenState extends State<MoreScreen> {
             SizedBox(height: 14),
             ToolsGrid(),
             SizedBox(height: 28),
-            SectionTitle('Dive Into Your Sports'),
-            SizedBox(height: 14),
-            SportsRow(),
-            SizedBox(height: 28),
             RewardsCard(),
             SizedBox(height: 28),
             SectionTitle('Help & Preferences'),
@@ -79,12 +77,22 @@ class _MoreScreenState extends State<MoreScreen> {
             SettingsTile(
               icon: Icons.help_outline,
               label: 'Support & FAQ',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SupportFaqScreen()),
+                );
+              },
             ),
             SettingsTile(
               icon: Icons.settings,
               label: 'App Settings',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AppSettingsScreen()),
+                );
+              },
             ),
             DarkModeTile(
               value: darkMode,

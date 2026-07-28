@@ -12,6 +12,8 @@ import 'package:redesign/controller/User_Controller/Booking_Controller/booking_c
 import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 
+import 'package:redesign/utils/slot_overlap_helper.dart';
+
 import 'widgets/addon_card.dart';
 import 'widgets/availability_timeline.dart';
 import 'widgets/booking_dropdowns.dart';
@@ -386,7 +388,9 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
     });
   }
 
-  void _onPayPressed() {
+  void _onPayPressed() => _openRazorpay();
+
+  Future<void> _openRazorpay() async {
     if (!_isReadyToPay) {
       Get.snackbar(
         'Incomplete Details',
@@ -401,6 +405,33 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
     final turf = _bookingController.selectedTurf.value;
     final ground = _bookingController.selectedGround.value;
     final user = FirebaseAuth.instance.currentUser;
+
+    if (turf != null && ground != null && selectedDate != null && _startTime != null && _endTime != null) {
+      final dateStr = DateFormat('yyyy-MM-dd').format(selectedDate!);
+      final startTimeStr = '${_startTime!.hourOfPeriod == 0 ? 12 : _startTime!.hourOfPeriod}:00 ${_startTime!.period == DayPeriod.am ? 'AM' : 'PM'}';
+      final endTimeStr = '${_endTime!.hourOfPeriod == 0 ? 12 : _endTime!.hourOfPeriod}:00 ${_endTime!.period == DayPeriod.am ? 'AM' : 'PM'}';
+      final timeRangeStr = '$startTimeStr - $endTimeStr';
+
+      final isOverlapping = await SlotOverlapHelper.isSlotOverlappingInFirestore(
+        ownerId: turf.ownerId,
+        turfId: turf.id,
+        groundId: ground.id,
+        dateStr: dateStr,
+        newTimeRangeStr: timeRangeStr,
+      );
+
+      if (isOverlapping) {
+        Get.snackbar(
+          'Slot Unavailable',
+          'The selected slot ($timeRangeStr) overlaps with an existing booking! Please choose another slot.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 4),
+        );
+        return;
+      }
+    }
 
     var options = {
       'key': 'rzp_test_THjDLg1t3KW9ib',

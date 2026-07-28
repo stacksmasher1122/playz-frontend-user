@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LoginSignupPrompt extends StatelessWidget {
@@ -8,30 +10,27 @@ class LoginSignupPrompt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    const spotifyGreen = Color(0xFF1DB954);
-
     return Padding(
-      padding: EdgeInsets.only(bottom: 24),
+      padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "Don't have an account?",
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.6),
-              fontSize: ResponsiveHelper.sp(13),
+            style: AppTypography.bodyMd.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: context.responsiveFont(13.5),
             ),
           ),
-          SizedBox(width: 6),
+          const SizedBox(width: 6),
           GestureDetector(
             onTap: onSignupTap,
             child: Text(
               'Register here',
-              style: TextStyle(
-                color: spotifyGreen,
-                fontSize: ResponsiveHelper.sp(13),
-                fontWeight: FontWeight.w600,
+              style: AppTypography.bodyMd.copyWith(
+                color: AppColors.spotifyGreen,
+                fontSize: context.responsiveFont(13.5),
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),

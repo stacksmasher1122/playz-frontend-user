@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/login/login_screen.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/favorite_sports/favorite_sports_screen.dart';
 import 'package:redesign/controller/User_Controller/registerController.dart';
@@ -9,7 +10,6 @@ import 'widgets/register_background.dart';
 import 'widgets/register_header.dart';
 import 'widgets/register_form.dart';
 import 'widgets/register_signin_prompt.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -19,7 +19,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  static Color cardColor = Color(0xFF181818);
+  static const Color cardColor = Color(0xFF0E0E0E);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -62,64 +62,81 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_controller.errorMessage ?? "Registration failed")),
+        SnackBar(
+          content: Text(_controller.errorMessage ?? "Registration failed"),
+        ),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surface,
       resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
-          RegisterBackground(),
-          Align(
-            alignment: Alignment.topCenter,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-              ),
-              child: Column(
-                children: [
-                  SizedBox(height: 280),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(24)),
-                    child: Container(
-                      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
-                      decoration: BoxDecoration(
-                        color: cardColor,
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          const RegisterBackground(),
+          SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: EdgeInsets.only(
+              bottom:
+                  MediaQuery.of(context).viewInsets.bottom +
+                  context.heightPct(4),
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: 300),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ResponsiveHelper.w(20),
+                    vertical: ResponsiveHelper.h(24),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(ResponsiveHelper.w(22)),
+                    decoration: BoxDecoration(
+                      color: cardColor,
+                      borderRadius: BorderRadius.circular(
+                        ResponsiveHelper.w(22),
                       ),
-                      child: Column(
-                        children: [
-                          RegisterHeader(),
-                          RegisterForm(
-                            formKey: _formKey,
-                            nameController: _nameController,
-                            emailController: _emailController,
-                            passwordController: _passwordController,
-                            confirmPasswordController: _confirmPasswordController,
-                            isLoading: _isLoading,
-                            onRegister: _handleRegister,
-                          ),
-                        ],
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.06),
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.6),
+                          blurRadius: 24,
+                          offset: const Offset(0, 12),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        const RegisterHeader(),
+                        RegisterForm(
+                          formKey: _formKey,
+                          nameController: _nameController,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          confirmPasswordController: _confirmPasswordController,
+                          isLoading: _isLoading,
+                          onRegister: _handleRegister,
+                        ),
+                      ],
                     ),
                   ),
-                  RegisterSigninPrompt(
-                    onSigninTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => LoginScreen()),
-                      );
-                    },
-                  ),
-                ],
-              ),
+                ),
+                RegisterSigninPrompt(
+                  onSigninTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
+                  },
+                ),
+                SizedBox(height: context.heightPct(2)),
+              ],
             ),
           ),
         ],

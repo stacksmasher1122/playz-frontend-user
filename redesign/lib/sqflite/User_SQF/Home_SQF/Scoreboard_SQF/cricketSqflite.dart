@@ -20,7 +20,7 @@ class CricketSqflite {
 
     return await openDatabase(
       path,
-      version: 5,
+      version: 6,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -54,6 +54,11 @@ class CricketSqflite {
     }
     if (oldVersion < 5) {
       await db.execute('ALTER TABLE matches ADD COLUMN inningsArray TEXT DEFAULT "[]"');
+    }
+    if (oldVersion < 6) {
+      await db.execute('ALTER TABLE matches ADD COLUMN bookingId TEXT');
+      await db.execute('ALTER TABLE matches ADD COLUMN matchType TEXT DEFAULT "NORMAL"');
+      await db.execute('ALTER TABLE matches ADD COLUMN isRecoverable INTEGER DEFAULT 1');
     }
   }
 

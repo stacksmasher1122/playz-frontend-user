@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LoginForm extends StatelessWidget {
@@ -25,28 +27,23 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    const kSpotifyGreen = Color(0xFF1DB954);
-    const kCard = Color(0xFF1A1A1A);
-
     return Form(
       key: formKey,
       child: Column(
         children: [
-          SizedBox(height: 26),
+          SizedBox(height: context.heightPct(2)),
 
           /// 📧 EMAIL
           _InputField(
             controller: emailController,
             icon: Icons.email_outlined,
             hint: 'user@playz.com',
-            fillColor: kCard,
-            validator: (value) => value == null || value.isEmpty
-                ? 'Email is required'
-                : null,
+            fillColor: AppColors.card,
+            validator: (value) =>
+                value == null || value.isEmpty ? 'Email is required' : null,
           ),
 
-          SizedBox(height: 14),
+          SizedBox(height: context.heightPct(1.5)),
 
           /// 🔒 PASSWORD
           _InputField(
@@ -54,14 +51,14 @@ class LoginForm extends StatelessWidget {
             icon: Icons.lock_outline,
             hint: '••••••••',
             obscure: true,
-            fillColor: kCard,
+            fillColor: AppColors.card,
             validator: (value) =>
                 value == null || value.length < 6
-                ? 'Minimum 6 characters'
-                : null,
+                    ? 'Minimum 6 characters'
+                    : null,
           ),
 
-          SizedBox(height: 14),
+          SizedBox(height: context.heightPct(1.2)),
 
           /// ☑ REMEMBER + FORGOT
           Row(
@@ -70,91 +67,77 @@ class LoginForm extends StatelessWidget {
                 scale: 0.9,
                 child: Checkbox(
                   value: rememberMe,
-                  activeColor: kSpotifyGreen,
-                  checkColor: Colors.black,
+                  activeColor: AppColors.spotifyGreen,
+                  checkColor: AppColors.background,
                   side: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.25),
+                    color: AppColors.textSecondary.withValues(alpha: 0.5),
                   ),
                   onChanged: onRememberMeChanged,
                 ),
               ),
               Text(
                 'Remember me',
-                style: TextStyle(
-                  fontSize: ResponsiveHelper.sp(12.5),
-                  color: Colors.white70,
+                style: AppTypography.bodySm.copyWith(
+                  fontSize: context.responsiveFont(12.5),
+                  color: AppColors.textSecondary,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               TextButton(
                 onPressed: onForgotPassword,
                 style: TextButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 8,
                     vertical: 6,
                   ),
                 ),
                 child: Text(
                   'Forgot password?',
-                  style: TextStyle(
-                    color: kSpotifyGreen,
-                    fontSize: ResponsiveHelper.sp(12.5),
-                    fontWeight: FontWeight.w600,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.spotifyGreen,
+                    fontSize: context.responsiveFont(12.5),
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ],
           ),
 
-          SizedBox(height: 18),
+          SizedBox(height: context.heightPct(1.8)),
 
-          /// 🟢 PRIMARY CTA
+          /// PRIMARY CTA BUTTON
           SizedBox(
             width: double.infinity,
-            height: ResponsiveHelper.h(52),
+            height: context.responsiveFont(48),
             child: ElevatedButton(
               onPressed: isLoading ? null : onLogin,
               style: ElevatedButton.styleFrom(
-                backgroundColor: kSpotifyGreen,
-                disabledBackgroundColor: kSpotifyGreen
+                backgroundColor: AppColors.spotifyGreen,
+                disabledBackgroundColor: AppColors.spotifyGreen
                     .withValues(alpha: 0.5),
                 elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
-                ),
+                shape: const StadiumBorder(),
               ),
               child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
+                duration: const Duration(milliseconds: 200),
                 child: isLoading
                     ? SizedBox(
-                        key: ValueKey('loader'),
-                        height: ResponsiveHelper.h(22),
-                        width: ResponsiveHelper.w(22),
-                        child: CircularProgressIndicator(
+                        key: const ValueKey('loader'),
+                        height: context.responsiveFont(20),
+                        width: context.responsiveFont(20),
+                        child: const CircularProgressIndicator(
                           strokeWidth: 2.2,
-                          color: Colors.black,
+                          color: AppColors.background,
                         ),
                       )
-                    : Row(
-                        key: ValueKey('text'),
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Sign In',
-                            style: TextStyle(
-                              fontSize: ResponsiveHelper.sp(15.5),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Icon(
-                            Icons.arrow_forward_rounded,
-                            color: Colors.black,
-                            size: 18,
-                          ),
-                        ],
+                    : Text(
+                        'Sign In',
+                        key: const ValueKey('text'),
+                        style: AppTypography.headlineSm.copyWith(
+                          fontSize: context.responsiveFont(15.5),
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.background,
+                        ),
                       ),
               ),
             ),
@@ -184,20 +167,33 @@ class _InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return TextFormField(
       controller: controller,
       obscureText: obscure,
       validator: validator,
-      style: TextStyle(color: Colors.white),
+      style: AppTypography.bodyMd.copyWith(
+        color: AppColors.textPrimary,
+        fontSize: context.responsiveFont(14),
+      ),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.white.withValues(alpha: 0.7)),
+        prefixIcon: Icon(
+          icon,
+          color: AppColors.textSecondary,
+          size: context.responsiveFont(20),
+        ),
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.4)),
+        hintStyle: AppTypography.bodyMd.copyWith(
+          color: AppColors.textSecondary.withValues(alpha: 0.6),
+          fontSize: context.responsiveFont(14),
+        ),
         filled: true,
         fillColor: fillColor,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: context.widthPct(4),
+          vertical: context.heightPct(1.5),
+        ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
           borderSide: BorderSide.none,
         ),
       ),

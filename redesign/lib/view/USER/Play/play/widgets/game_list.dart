@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/Play/match_detail/match_detail_screen.dart';
 import 'package:redesign/controller/User_Controller/Match_Controller/match_controller.dart';
+import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Play/play/play_models.dart';
 import 'xp_avatar_ring.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -39,8 +41,8 @@ class GameList extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Icon(Icons.sports_soccer_outlined, size: 48, color: Colors.white38),
-              SizedBox(height: 12),
+              const Icon(Icons.sports_soccer_outlined, size: 48, color: Colors.white38),
+              const SizedBox(height: 12),
               Text(
                 'No Matches Found',
                 style: GoogleFonts.inter(
@@ -49,7 +51,7 @@ class GameList extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 6),
+              const SizedBox(height: 6),
               Text(
                 'Try expanding your radius slider or host your own match!',
                 textAlign: TextAlign.center,
@@ -58,7 +60,7 @@ class GameList extends StatelessWidget {
                   fontSize: ResponsiveHelper.sp(13),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accent,
@@ -140,16 +142,37 @@ class GameCard extends StatelessWidget {
     return '${parts.first} ${parts.last[0]}.';
   }
 
+  String _getCalculatedDistance() {
+    if (Get.isRegistered<MapsController>()) {
+      final mapsCtrl = Get.find<MapsController>();
+      final userLoc = mapsCtrl.currentLocation.value;
+      if (userLoc != null && data.latitude != 0.0 && data.longitude != 0.0) {
+        final distM = Geolocator.distanceBetween(
+          userLoc.lat,
+          userLoc.lng,
+          data.latitude,
+          data.longitude,
+        );
+        final km = distM / 1000.0;
+        return '${km.toStringAsFixed(1)} km away';
+      }
+    }
+    return data.distance.contains('away') ? data.distance : '${data.distance} away';
+  }
+
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     final progress = (data.currentPlayers / (data.maxPlayers > 0 ? data.maxPlayers : 1)).clamp(0.0, 1.0);
+    final calculatedDistance = _getCalculatedDistance();
 
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MatchDetailScreen()),
+          MaterialPageRoute(
+            builder: (context) => MatchDetailScreen(gameData: data),
+          ),
         );
       },
       child: Container(
@@ -172,29 +195,53 @@ class GameCard extends StatelessWidget {
           children: [
             /// SECTION 1: TAGS & PRICE
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _Tag(
-                  data.type.toUpperCase(),
-                  bgColor: _typeBgColor(data.type),
-                  textColor: _typeTextColor(data.type),
-                  borderColor: _typeBorderColor(data.type),
-                ),
-                SizedBox(width: 8),
-                _Tag(
-                  data.sport.toUpperCase(),
-                  bgColor: Colors.white.withValues(alpha: 0.08),
-                  textColor: Colors.white70,
-                ),
-                if (data.locationType == 'playz_turf') ...[
-                  SizedBox(width: 8),
-                  _Tag(
-                    'VERIFIED TURF',
-                    bgColor: const Color(0xFF059669).withValues(alpha: 0.2),
-                    textColor: const Color(0xFF34D399),
-                    borderColor: const Color(0xFF059669).withValues(alpha: 0.4),
+                Expanded(
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      if (data.locationType == 'playz_turf')
+                        const Tooltip(
+                          message: 'Verified PlayZ Turf',
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 2),
+                            child: Icon(
+                              Icons.verified_rounded,
+                              color: Color(0xFF34D399),
+                              size: 20,
+                            ),
+                          ),
+                        )
+                      else
+                        const Tooltip(
+                          message: 'Unofficial / Custom Location Ground',
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 2),
+                            child: Icon(
+                              Icons.edit_location_alt_rounded,
+                              color: Colors.white54,
+                              size: 19,
+                            ),
+                          ),
+                        ),
+                      _Tag(
+                        data.type.toUpperCase(),
+                        bgColor: _typeBgColor(data.type),
+                        textColor: _typeTextColor(data.type),
+                        borderColor: _typeBorderColor(data.type),
+                      ),
+                      _Tag(
+                        data.sport.toUpperCase(),
+                        bgColor: Colors.white.withValues(alpha: 0.08),
+                        textColor: Colors.white70,
+                      ),
+                    ],
                   ),
-                ],
-                const Spacer(),
+                ),
+                const SizedBox(width: 8),
                 Text(
                   data.price,
                   style: GoogleFonts.inter(
@@ -205,9 +252,9 @@ class GameCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            /// SECTION 2: HOST INFO (WITH DYNAMIC XP RING) & PLAYER COUNT
+            /// SECTION 2: HOST INFO & PLAYER COUNT
             Row(
               children: [
                 /// DYNAMIC XP RING AVATAR
@@ -216,7 +263,7 @@ class GameCard extends StatelessWidget {
                   xp: data.hostXp,
                   radius: 22,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
 
                 /// Name and Time
                 Expanded(
@@ -231,7 +278,7 @@ class GameCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Row(
                         children: [
                           const Icon(
@@ -239,12 +286,16 @@ class GameCard extends StatelessWidget {
                             color: Colors.white54,
                             size: 13,
                           ),
-                          SizedBox(width: 4),
-                          Text(
-                            data.time,
-                            style: GoogleFonts.inter(
-                              color: Colors.white54,
-                              fontSize: ResponsiveHelper.sp(12.5),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              data.time,
+                              style: GoogleFonts.inter(
+                                color: Colors.white54,
+                                fontSize: ResponsiveHelper.sp(12.5),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -277,7 +328,7 @@ class GameCard extends StatelessWidget {
                         color: data.isFull ? Colors.redAccent : AppColors.accent,
                         size: 14,
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       Text(
                         '${data.currentPlayers}/${data.maxPlayers}',
                         style: GoogleFonts.inter(
@@ -291,7 +342,7 @@ class GameCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             /// SECTION 3: PROGRESS BAR
             Stack(
@@ -321,9 +372,9 @@ class GameCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            /// SECTION 4: LOCATION & DISTANCE
+            /// SECTION 4: LOCATION & CALCULATED DISTANCE
             Row(
               children: [
                 Icon(
@@ -331,7 +382,7 @@ class GameCard extends StatelessWidget {
                   color: AppColors.accent.withValues(alpha: 0.8),
                   size: 15,
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Expanded(
                   child: Text(
                     data.address,
@@ -343,9 +394,9 @@ class GameCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
-                  data.distance,
+                  calculatedDistance,
                   style: GoogleFonts.inter(
                     color: AppColors.muted,
                     fontSize: ResponsiveHelper.sp(12),

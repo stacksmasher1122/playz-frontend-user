@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
-import '../onboarding_models.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import '../onboarding_models.dart';
 
 class OnboardPageContent extends StatelessWidget {
   final OnboardData data;
@@ -10,62 +11,92 @@ class OnboardPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.all(ResponsiveHelper.w(24)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(6),
+        vertical: context.heightPct(2),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Illustration / Image
+          /// Illustration / Image Container
           Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
-              child: Image.network(
-                data.image,
-                fit: BoxFit.cover,
-                width: double.infinity,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.4),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+                child: Image.network(
+                  data.image,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: AppColors.card,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.sports_soccer_rounded,
+                      size: context.minDimensionPct(18),
+                      color: AppColors.spotifyGreen,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
-          SizedBox(height: 32),
+          SizedBox(height: context.heightPct(3)),
 
           /// Tag / Chip
           Container(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.widthPct(3.5),
+              vertical: context.heightPct(0.8),
+            ),
             decoration: BoxDecoration(
-              color: AppColors.accent.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+              color: AppColors.spotifyGreen.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.spotifyGreen.withValues(alpha: 0.3),
+              ),
             ),
             child: Text(
               data.tag,
-              style: TextStyle(
-                color: AppColors.accent,
-                fontSize: ResponsiveHelper.sp(12),
-                fontWeight: FontWeight.w600,
+              style: AppTypography.labelCaps.copyWith(
+                color: AppColors.spotifyGreen,
+                fontSize: context.responsiveFont(11),
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.2,
               ),
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: context.heightPct(1.8)),
 
           /// Title
           Text(
             data.title,
-            style: TextStyle(
-              fontSize: ResponsiveHelper.sp(28),
-              fontWeight: FontWeight.w800,
-              height: ResponsiveHelper.h(1.2),
-              color: Colors.white,
+            style: AppTypography.headlineXl.copyWith(
+              fontSize: context.responsiveFont(26),
+              fontWeight: FontWeight.w900,
+              height: 1.2,
+              color: AppColors.textPrimary,
             ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.2)),
 
           /// Subtitle
           Text(
             data.subtitle,
-            style: TextStyle(
-              fontSize: ResponsiveHelper.sp(14),
-              color: Color(0xFF9CA3AF),
-              height: ResponsiveHelper.h(1.5),
+            style: AppTypography.bodyMd.copyWith(
+              fontSize: context.responsiveFont(14),
+              color: AppColors.textSecondary,
+              height: 1.5,
             ),
           ),
         ],

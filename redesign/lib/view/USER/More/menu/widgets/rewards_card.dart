@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
+import 'package:redesign/view/USER/More/reward_center/reward_center_screen.dart';
+
 class RewardsCard extends StatelessWidget {
   const RewardsCard({super.key});
 
@@ -17,7 +19,10 @@ class RewardsCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
           onTap: () {
-            // TODO: Navigate to Rewards Center
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const RewardCenterScreen()),
+            );
           },
           child: Container(
             padding: EdgeInsets.all(ResponsiveHelper.w(16)),

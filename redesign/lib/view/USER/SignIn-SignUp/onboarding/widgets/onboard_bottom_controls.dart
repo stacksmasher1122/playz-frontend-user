@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -16,11 +17,15 @@ class OnboardBottomControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     final bool isLast = currentIndex == total - 1;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(24, 12, 24, 24),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(6),
+        context.heightPct(1),
+        context.widthPct(6),
+        context.heightPct(3),
+      ),
       child: Row(
         children: [
           /// Progress dots
@@ -28,33 +33,42 @@ class OnboardBottomControls extends StatelessWidget {
             children: List.generate(
               total,
               (index) => AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                margin: EdgeInsets.only(right: 6),
-                height: ResponsiveHelper.h(6),
+                duration: const Duration(milliseconds: 300),
+                margin: const EdgeInsets.only(right: 6),
+                height: 6,
                 width: currentIndex == index ? 24 : 6,
                 decoration: BoxDecoration(
                   color: currentIndex == index
-                      ? AppColors.accent
-                      : Colors.white24,
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
+                      ? AppColors.spotifyGreen
+                      : AppColors.textSecondary.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(3),
                 ),
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
 
-          /// CTA Button
+          /// CTA Pill Button
           ElevatedButton(
             onPressed: onNext,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accent,
-              foregroundColor: Colors.black,
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(22), vertical: ResponsiveHelper.h(14)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+              backgroundColor: AppColors.spotifyGreen,
+              foregroundColor: AppColors.background,
+              padding: EdgeInsets.symmetric(
+                horizontal: context.widthPct(7),
+                vertical: context.heightPct(1.6),
+              ),
+              shape: const StadiumBorder(),
+              elevation: 0,
+            ),
+            child: Text(
+              isLast ? "Let's Play" : 'Next',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w800,
+                fontSize: context.responsiveFont(14),
+                color: AppColors.background,
               ),
             ),
-            child: Text(isLast ? "Let's Play" : 'Next →'),
           ),
         ],
       ),

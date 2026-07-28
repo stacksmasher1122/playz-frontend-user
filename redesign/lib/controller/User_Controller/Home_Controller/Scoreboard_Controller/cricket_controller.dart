@@ -176,8 +176,9 @@ class CricketController extends GetxController {
     String tossDecision,
   ) async {
     try {
-      isLoading.value = true;
-      final String matchId = Uuid().v4();
+      final String matchId = currentMatchId.value.isNotEmpty
+          ? currentMatchId.value
+          : Uuid().v4();
       final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
       final String safeUserId = currentUserId ?? 'local_user';
 
@@ -339,6 +340,25 @@ class CricketController extends GetxController {
       Get.snackbar('Error', 'Match data not found localy.');
     }
     isLoading.value = false;
+  }
+
+  void restoreCricketMatchFromSqflite(CricketMatchModel match) {
+    currentMatchId.value = match.matchId;
+    currentMatch.value = match;
+    homeTeamName.value = match.homeTeamName;
+    awayTeamName.value = match.awayTeamName;
+    overs.value = match.overs;
+
+    _initEngine(match);
+    if (match.engineState != null && match.engineState!.isNotEmpty) {
+      try {
+        engine.restoreState(match.engineState!);
+        liveState.value = engine.state;
+      } catch (e) {
+        debugPrint("Error restoring engine state: $e");
+      }
+    }
+    isEngineReady.value = true;
   }
 
   void _listenToFirestore(String matchId) {

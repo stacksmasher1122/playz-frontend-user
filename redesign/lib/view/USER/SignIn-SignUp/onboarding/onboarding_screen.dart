@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/login/login_screen.dart';
-
 import 'onboarding_models.dart';
 import 'widgets/onboard_top_bar.dart';
 import 'widgets/onboard_page_content.dart';
 import 'widgets/onboard_bottom_controls.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -16,12 +14,10 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  static Color bg = AppColors.surface;
-
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
-  final List<OnboardData> _pages = [
+  final List<OnboardData> _pages = const [
     OnboardData(
       tag: '#1 SPORTS APP',
       title: 'India’s Sports Community,\nin Your Pocket',
@@ -57,7 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       _finishOnboarding();
     } else {
       _pageController.nextPage(
-        duration: Duration(milliseconds: 350),
+        duration: const Duration(milliseconds: 350),
         curve: Curves.easeOut,
       );
     }
@@ -71,32 +67,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: bg,
-      body: SafeArea(
-        child: Column(
-          children: [
-            OnboardTopBar(onSkip: _finishOnboarding),
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _pages.length,
-                onPageChanged: (index) {
-                  setState(() => _currentIndex = index);
-                },
-                itemBuilder: (_, index) {
-                  return OnboardPageContent(data: _pages[index]);
-                },
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.greenBlackBgDark,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              OnboardTopBar(onSkip: _finishOnboarding),
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: _pages.length,
+                  onPageChanged: (index) {
+                    setState(() => _currentIndex = index);
+                  },
+                  itemBuilder: (_, index) {
+                    return OnboardPageContent(data: _pages[index]);
+                  },
+                ),
               ),
-            ),
-            OnboardBottomControls(
-              currentIndex: _currentIndex,
-              total: _pages.length,
-              onNext: _next,
-            ),
-          ],
+              OnboardBottomControls(
+                currentIndex: _currentIndex,
+                total: _pages.length,
+                onNext: _next,
+              ),
+            ],
+          ),
         ),
       ),
     );

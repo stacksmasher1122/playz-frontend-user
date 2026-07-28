@@ -4,7 +4,7 @@ class OnboardData {
   final String subtitle;
   final String image;
 
-  OnboardData({
+  const OnboardData({
     required this.tag,
     required this.title,
     required this.subtitle,

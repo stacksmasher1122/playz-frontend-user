@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
+import 'package:redesign/services/scoreboard_booking_validator.dart';
 import 'booking_card_upcoming.dart';
 import 'empty_state.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -11,11 +12,21 @@ class UpcomingBookingsWidget extends StatelessWidget {
 
   bool _isUpcoming(Map<String, dynamic> data) {
     final status = (data['status'] ?? '').toString().toLowerCase();
-    if (status == 'cancelled' || status == 'rejected' || status == 'refunded' || status == 'completed') {
+    if (status == 'cancelled' || status == 'rejected' || status == 'refunded' || status == 'completed' || status == 'expired') {
       return false;
     }
-    final dateStr = data['date']?.toString() ?? '';
-    if (dateStr.isNotEmpty) {
+
+    final dateStr = (data['dateFormatted'] ?? data['date'] ?? data['bookingDate'] ?? '').toString();
+    final timeSlotStr = (data['timeSlot'] ?? data['slotTime'] ?? data['slot'] ?? data['time'] ?? '').toString();
+
+    final timeParsed = ScoreboardBookingValidator.parseSlotWindow(dateStr, timeSlotStr);
+    if (timeParsed != null) {
+      final slotEnd = timeParsed.$2;
+      final slotEndWithBuffer = slotEnd.add(const Duration(minutes: ScoreboardBookingValidator.bufferMinutes));
+      if (DateTime.now().isAfter(slotEndWithBuffer)) {
+        return false;
+      }
+    } else if (dateStr.isNotEmpty) {
       final parsed = DateTime.tryParse(dateStr);
       if (parsed != null) {
         final now = DateTime.now();

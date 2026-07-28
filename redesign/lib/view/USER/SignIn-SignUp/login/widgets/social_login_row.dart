@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SocialLoginRow extends StatelessWidget {
@@ -16,42 +17,41 @@ class SocialLoginRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return Column(
       children: [
-        SizedBox(height: 28),
+        SizedBox(height: context.heightPct(2.4)),
 
         /// ─── DIVIDER
         Row(
           children: [
             Expanded(
               child: Divider(
-                color: Colors.white.withValues(alpha: 0.12),
+                color: AppColors.divider,
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: 12,
+                horizontal: context.widthPct(3),
               ),
               child: Text(
                 'or continue with',
-                style: TextStyle(
-                  fontSize: ResponsiveHelper.sp(12),
-                  color: Colors.white.withValues(alpha: 0.5),
+                style: AppTypography.bodySm.copyWith(
+                  fontSize: context.responsiveFont(12),
+                  color: AppColors.textSecondary,
                 ),
               ),
             ),
             Expanded(
               child: Divider(
-                color: Colors.white.withValues(alpha: 0.12),
+                color: AppColors.divider,
               ),
             ),
           ],
         ),
 
-        SizedBox(height: 18),
+        SizedBox(height: context.heightPct(1.8)),
 
-        /// 🌐 SOCIAL BUTTONS
+        /// SOCIAL BUTTONS
         Row(
           children: [
             Expanded(
@@ -62,7 +62,7 @@ class SocialLoginRow extends StatelessWidget {
                 isLoading: isLoading,
               ),
             ),
-            SizedBox(width: 12),
+            SizedBox(width: context.widthPct(3)),
             Expanded(
               child: _SocialButton(
                 icon: Icons.phone,
@@ -92,15 +92,27 @@ class _SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
     return OutlinedButton.icon(
       onPressed: isLoading ? null : onPressed ?? () {},
-      icon: Icon(icon, color: AppColors.accent),
-      label: Text(label, style: TextStyle(color: AppColors.accent)),
+      icon: Icon(
+        icon,
+        color: AppColors.spotifyGreen,
+        size: context.responsiveFont(20),
+      ),
+      label: Text(
+        label,
+        style: AppTypography.bodyMd.copyWith(
+          color: AppColors.spotifyGreen,
+          fontSize: context.responsiveFont(13.5),
+          fontWeight: FontWeight.w700,
+        ),
+      ),
       style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
-        side: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
+        padding: EdgeInsets.symmetric(vertical: context.heightPct(1.4)),
+        side: BorderSide(color: AppColors.divider),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+        ),
       ),
     );
   }

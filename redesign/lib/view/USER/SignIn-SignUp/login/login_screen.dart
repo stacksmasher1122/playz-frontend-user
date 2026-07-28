@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   static Color kSurface = Color(0xFF0E0E0E);
   static Color kCard = Color(0xFF1A1A1A);
   static Color kMuted = Color(0xFFA7A7A7);
-  static Color kSpotifyGreen = AppColors.accent;
+  static Color kSpotifyGreen = AppColors.spotifyGreen;
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return PhoneLoginSheet();
+        return const PhoneLoginSheet();
       },
     );
   }
@@ -65,10 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: kSurface,
-          title: Text(
-            "Reset Password",
-            style: TextStyle(color: Colors.white),
-          ),
+          title: Text("Reset Password", style: TextStyle(color: Colors.white)),
           content: TextField(
             controller: resetController,
             style: TextStyle(color: Colors.white),
@@ -106,7 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 } catch (e) {
                   if (!context.mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text("Error: $e")));
                 }
               },
             ),
@@ -133,12 +132,20 @@ class _LoginScreenState extends State<LoginScreen> {
       final exists = await _checkAndFetchUserDoc(docId);
       if (!mounted) return;
       if (exists) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => UserAppNavShell()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => UserAppNavShell()),
+        );
       } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FavoriteSportsScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+        );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_controller.errorMessage ?? "Login failed")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_controller.errorMessage ?? "Login failed")),
+      );
     }
   }
 
@@ -153,29 +160,46 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = FirebaseAuth.instance.currentUser;
       final docId = user?.email ?? '';
       if (docId.isEmpty) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FavoriteSportsScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+        );
         return;
       }
       final exists = await _checkAndFetchUserDoc(docId);
       if (!mounted) return;
       if (exists) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => UserAppNavShell()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => UserAppNavShell()),
+        );
       } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FavoriteSportsScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+        );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_controller.errorMessage ?? "Google Sign-In failed")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_controller.errorMessage ?? "Google Sign-In failed"),
+        ),
+      );
     }
   }
 
   Future<bool> _checkAndFetchUserDoc(String docId) async {
     try {
-      final docSnapshot = await FirebaseFirestore.instance.collection('User').doc(docId).get();
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('User')
+          .doc(docId)
+          .get();
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
         final bool isComplete = (data['isProfileComplete'] ?? false) == true;
         final sports = data['favoriteSports'];
-        final bool hasSports = sports != null && sports is List && sports.length >= 4;
+        final bool hasSports =
+            sports != null && sports is List && sports.length >= 4;
 
         await UserPreferences.saveDocId(docId);
         await UserPreferences.saveUserProfile(
@@ -187,7 +211,9 @@ class _LoginScreenState extends State<LoginScreen> {
           data['profileImageUrl'] ?? '',
         );
         if (sports != null && sports is List) {
-          await UserPreferences.saveFavoriteSports(sports.map((e) => e.toString()).toList());
+          await UserPreferences.saveFavoriteSports(
+            sports.map((e) => e.toString()).toList(),
+          );
         }
         await UserPreferences.setPublicProfile(data['isPublicProfile'] ?? true);
         await UserPreferences.setTrainer(data['isTrainer'] ?? false);
@@ -212,67 +238,80 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: true,
-      body: Stack(
-        children: [
-          LoginBackground(),
-          SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              children: [
-                SizedBox(height: 300),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(24)),
-                  child: Container(
-                    padding: EdgeInsets.all(ResponsiveHelper.w(22)),
-                    decoration: BoxDecoration(
-                      color: kSurface,
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.6),
-                          blurRadius: 24,
-                          offset: Offset(0, 12),
-                        ),
-                      ],
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppColors.greenBlackBg),
+        child: Stack(
+          children: [
+            const LoginBackground(),
+            SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Column(
+                children: [
+                  SizedBox(height: 300),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ResponsiveHelper.w(20),
+                      vertical: ResponsiveHelper.h(24),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        LoginHeader(),
-                        LoginForm(
-                          formKey: _formKey,
-                          emailController: _emailController,
-                          passwordController: _passwordController,
-                          rememberMe: _rememberMe,
-                          isLoading: _isLoading,
-                          onRememberMeChanged: (v) => setState(() => _rememberMe = v ?? false),
-                          onForgotPassword: _forgotPassword,
-                          onLogin: _handleLogin,
+                    child: Container(
+                      padding: EdgeInsets.all(ResponsiveHelper.w(22)),
+                      decoration: BoxDecoration(
+                        color: kSurface,
+                        borderRadius: BorderRadius.circular(
+                          ResponsiveHelper.w(22),
                         ),
-                        SocialLoginRow(
-                          isLoading: _isLoading,
-                          onGoogleLogin: _handleGoogleLogin,
-                          onPhoneLogin: _showPhoneLoginSheet,
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.06),
                         ),
-                      ],
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.6),
+                            blurRadius: 24,
+                            offset: Offset(0, 12),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          LoginHeader(),
+                          LoginForm(
+                            formKey: _formKey,
+                            emailController: _emailController,
+                            passwordController: _passwordController,
+                            rememberMe: _rememberMe,
+                            isLoading: _isLoading,
+                            onRememberMeChanged: (v) =>
+                                setState(() => _rememberMe = v ?? false),
+                            onForgotPassword: _forgotPassword,
+                            onLogin: _handleLogin,
+                          ),
+                          SocialLoginRow(
+                            isLoading: _isLoading,
+                            onGoogleLogin: _handleGoogleLogin,
+                            onPhoneLogin: _showPhoneLoginSheet,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                LoginSignupPrompt(
-                  onSignupTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => RegisterScreen()),
-                    );
-                  },
-                ),
-              ],
+                  LoginSignupPrompt(
+                    onSignupTap: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => RegisterScreen()),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

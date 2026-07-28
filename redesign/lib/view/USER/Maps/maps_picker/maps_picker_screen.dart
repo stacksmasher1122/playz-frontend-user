@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:redesign/controller/maps_controller.dart';
+import 'package:redesign/model/maps_model.dart';
+import 'package:redesign/shared_preferences/maps_preferences.dart';
 import 'package:redesign/view/USER/Maps/maps_constants.dart';
 
 import 'widgets/animated_center_pin.dart';
@@ -62,17 +64,23 @@ class _MapPickerScreenState extends State<MapPickerScreen>
   final _searchFocus = FocusNode();
 
   LatLng _lastCameraPos = LatLng(18.5204, 73.8567); // Default: Pune
+  LocationData? _originalUserLocation;
 
   @override
   void initState() {
     super.initState();
-    // Auto detect on open
+    if (widget.isSelectOnly) {
+      _mapsCtrl.isSelectOnlyMode = true;
+    }
+    final cur = _mapsCtrl.currentLocation.value;
+    if (cur != null) {
+      _originalUserLocation = LocationData.fromMap(cur.toMap());
+      _lastCameraPos = LatLng(cur.lat, cur.lng);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final loc = _mapsCtrl.currentLocation.value;
-      if (loc != null) {
-        _lastCameraPos = LatLng(loc.lat, loc.lng);
+      if (!widget.isSelectOnly) {
+        _mapsCtrl.detectCurrentLocation();
       }
-      _mapsCtrl.detectCurrentLocation();
     });
   }
 
@@ -81,6 +89,14 @@ class _MapPickerScreenState extends State<MapPickerScreen>
     _searchController.dispose();
     _searchFocus.dispose();
     _mapsCtrl.mapController = null;
+    if (widget.isSelectOnly) {
+      _mapsCtrl.isSelectOnlyMode = false;
+      if (_originalUserLocation != null) {
+        _mapsCtrl.currentLocation.value = _originalUserLocation;
+        _mapsCtrl.updateDisplayFields(_originalUserLocation!);
+        MapsPreferences.saveCurrentLocation(_originalUserLocation!);
+      }
+    }
     super.dispose();
   }
 
@@ -97,14 +113,14 @@ class _MapPickerScreenState extends State<MapPickerScreen>
       ),
       builder: (ctx) {
         return Padding(
-          padding: EdgeInsets.fromLTRB(20, 16, 20, 30),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 30),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 width: ResponsiveHelper.w(40),
                 height: ResponsiveHelper.h(4),
-                margin: EdgeInsets.only(bottom: 20),
+                margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
                   color: Colors.white24,
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
@@ -118,7 +134,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
@@ -146,7 +162,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                       child: Column(
                         children: [
                           Icon(icons[label], color: kSpotifyGreen, size: 28),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             label,
                             style: TextStyle(
@@ -161,7 +177,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                   );
                 }).toList(),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
                   selected = null;
@@ -232,7 +248,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 MapPickerTopBar(),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 MapPickerSearchBar(
                   searchController: _searchController,
                   searchFocus: _searchFocus,
@@ -261,8 +277,16 @@ class _MapPickerScreenState extends State<MapPickerScreen>
               confirmButton: ConfirmButton(
                 onConfirm: () async {
                   if (widget.isSelectOnly) {
-                    // Don't save, just return the selected location
-                    Navigator.pop(context, _mapsCtrl.currentLocation.value);
+                    final selectedLoc = _mapsCtrl.currentLocation.value;
+                    if (_originalUserLocation != null) {
+                      _mapsCtrl.currentLocation.value = _originalUserLocation;
+                      _mapsCtrl.updateDisplayFields(_originalUserLocation!);
+                      await MapsPreferences.saveCurrentLocation(_originalUserLocation!);
+                    }
+                    _mapsCtrl.isSelectOnlyMode = false;
+                    if (mounted) {
+                      Navigator.pop(context, selectedLoc);
+                    }
                   } else {
                     await _showLabelDialog();
                   }

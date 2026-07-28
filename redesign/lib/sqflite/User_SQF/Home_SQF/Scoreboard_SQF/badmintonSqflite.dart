@@ -21,7 +21,7 @@ class BadmintonSqflite {
 
     return await openDatabase(
       path,
-      version: 2, // A9 Fix: Version bump for schema migration
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -31,6 +31,11 @@ class BadmintonSqflite {
     if (oldVersion < 2) {
       await db.execute('ALTER TABLE badminton_matches ADD COLUMN tournamentId TEXT');
       await db.execute('ALTER TABLE badminton_matches ADD COLUMN bracketMatchId TEXT');
+    }
+    if (oldVersion < 3) {
+      await db.execute('ALTER TABLE badminton_matches ADD COLUMN bookingId TEXT');
+      await db.execute('ALTER TABLE badminton_matches ADD COLUMN matchType TEXT DEFAULT "NORMAL"');
+      await db.execute('ALTER TABLE badminton_matches ADD COLUMN isRecoverable INTEGER DEFAULT 1');
     }
   }
 
@@ -162,6 +167,15 @@ CREATE TABLE badminton_matches (
       lastUpdatedAt: map['lastUpdatedAt'] != null ? DateTime.parse(map['lastUpdatedAt'] as String) : null,
       matchResult: map['matchResult'] as String? ?? '',
       pointLog: List<Map<String, dynamic>>.from(jsonDecode(map['pointLog'] as String)),
+    );
+  }
+
+  Future<int> deleteMatch(String id) async {
+    final db = await instance.database;
+    return await db.delete(
+      'badminton_matches',
+      where: 'matchId = ?',
+      whereArgs: [id],
     );
   }
 
