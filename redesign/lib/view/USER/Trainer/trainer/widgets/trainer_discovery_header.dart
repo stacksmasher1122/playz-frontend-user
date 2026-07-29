@@ -15,11 +15,10 @@ import 'package:redesign/theme/responsive_helper.dart';
 class TrainerDiscoveryHeader extends StatelessWidget {
   const TrainerDiscoveryHeader({super.key});
 
-  final _controller = Get.find<UserProfileController>();
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final controller = Get.find<UserProfileController>();
 
     final avatarSize = context.minDimensionPct(9).clamp(32.0, 40.0);
     final iconSize = context.minDimensionPct(6).clamp(20.0, 26.0);
@@ -95,7 +94,7 @@ class TrainerDiscoveryHeader extends StatelessWidget {
 
               /// AVATAR
               Obx(() {
-                final profileImageUrl = _controller.profileImageUrl;
+                final profileImageUrl = controller.profileImageUrl;
                 return ClipOval(
                   child: profileImageUrl.isNotEmpty
                       ? CachedNetworkImage(

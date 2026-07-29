@@ -17,6 +17,8 @@ class SocialLoginRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       children: [
         SizedBox(height: context.heightPct(2.4)),
@@ -24,10 +26,8 @@ class SocialLoginRow extends StatelessWidget {
         /// ─── DIVIDER
         Row(
           children: [
-            Expanded(
-              child: Divider(
-                color: AppColors.divider,
-              ),
+            const Expanded(
+              child: Divider(color: AppColors.borderDark),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -41,10 +41,8 @@ class SocialLoginRow extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: Divider(
-                color: AppColors.divider,
-              ),
+            const Expanded(
+              child: Divider(color: AppColors.borderDark),
             ),
           ],
         ),
@@ -56,7 +54,7 @@ class SocialLoginRow extends StatelessWidget {
           children: [
             Expanded(
               child: _SocialButton(
-                icon: Icons.g_mobiledata,
+                icon: Icons.g_mobiledata_rounded,
                 label: 'Google',
                 onPressed: onGoogleLogin,
                 isLoading: isLoading,
@@ -65,7 +63,7 @@ class SocialLoginRow extends StatelessWidget {
             SizedBox(width: context.widthPct(3)),
             Expanded(
               child: _SocialButton(
-                icon: Icons.phone,
+                icon: Icons.phone_rounded,
                 label: 'Phone',
                 onPressed: onPhoneLogin,
               ),
@@ -96,20 +94,23 @@ class _SocialButton extends StatelessWidget {
       onPressed: isLoading ? null : onPressed ?? () {},
       icon: Icon(
         icon,
-        color: AppColors.spotifyGreen,
+        color: AppColors.accent,
         size: context.responsiveFont(20),
       ),
-      label: Text(
-        label,
-        style: AppTypography.bodyMd.copyWith(
-          color: AppColors.spotifyGreen,
-          fontSize: context.responsiveFont(13.5),
-          fontWeight: FontWeight.w700,
+      label: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          label,
+          style: AppTypography.bodyMd.copyWith(
+            color: AppColors.accent,
+            fontSize: context.responsiveFont(13.5),
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: context.heightPct(1.4)),
-        side: BorderSide(color: AppColors.divider),
+        side: const BorderSide(color: AppColors.borderDark),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
         ),

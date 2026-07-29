@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/services/scoreboard_booking_validator.dart';
 import 'booking_card_upcoming.dart';
@@ -51,7 +52,7 @@ class UpcomingBookingsWidget extends StatelessWidget {
         final userId = docSnap.data ?? user?.email ?? user?.uid ?? '';
 
         if (userId.isEmpty) {
-          return Center(
+          return const Center(
             child: BookingsEmptyState(
               icon: Icons.lock_outline,
               text: 'Please sign in to view your bookings',
@@ -70,8 +71,8 @@ class UpcomingBookingsWidget extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: Padding(
-                  padding: EdgeInsets.all(32),
-                  child: CircularProgressIndicator(color: Colors.green),
+                  padding: EdgeInsets.all(context.widthPct(8)),
+                  child: const CircularProgressIndicator(color: AppColors.accent),
                 ),
               );
             }
@@ -83,7 +84,7 @@ class UpcomingBookingsWidget extends StatelessWidget {
             }).toList();
 
             if (upcomingDocs.isEmpty) {
-              return Center(
+              return const Center(
                 child: BookingsEmptyState(
                   icon: Icons.calendar_today_outlined,
                   text: 'No upcoming bookings found',
@@ -92,7 +93,7 @@ class UpcomingBookingsWidget extends StatelessWidget {
             }
 
             return ListView.builder(
-              padding: EdgeInsets.only(bottom: 32),
+              padding: EdgeInsets.only(bottom: context.heightPct(4)),
               itemCount: upcomingDocs.length,
               itemBuilder: (context, index) {
                 final data = upcomingDocs[index].data() as Map<String, dynamic>;

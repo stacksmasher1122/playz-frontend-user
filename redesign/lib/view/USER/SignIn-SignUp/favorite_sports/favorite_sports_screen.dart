@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import '../profile_setup/profile_setup_screen.dart';
 
 import 'widgets/favorite_sports_header.dart';
 import 'widgets/sports_selection_grid.dart';
 import 'widgets/sports_selection_bottom.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 class FavoriteSportsScreen extends StatefulWidget {
   const FavoriteSportsScreen({super.key});
@@ -15,9 +16,6 @@ class FavoriteSportsScreen extends StatefulWidget {
 }
 
 class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
-  static const kSpotifyGreen = AppColors.accent;
-  static const kMuted = Color(0xFFA7A7A7);
-
   final List<String> _sports = [
     'Football', 'Basketball', 'Tennis', 'Cricket',
     'Badminton', 'Boxing', 'Swimming', 'Cycling',
@@ -25,18 +23,18 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
   ];
 
   final List<List<Color>> _gradients = [
-    [Color(0xFF8B9B7E), Color(0xFF4A5C43)], 
-    [Color(0xFFBA7647), Color(0xFF6B3A1C)], 
-    [Color(0xFFB57053), Color(0xFF653018)], 
-    [Color(0xFFD69A6E), Color(0xFF345864)], 
-    [Color(0xFFCE8853), Color(0xFF69351C)], 
-    [Color(0xFFDAC090), Color(0xFF4A4B56)], 
-    [Color(0xFFDB9A54), Color(0xFF5A3018)], 
-    [Color(0xFF90A39C), Color(0xFF354641)], 
-    [Color(0xFF9CB8B5), Color(0xFF425654)], 
-    [Color(0xFFD38B6B), Color(0xFF4B201A)], 
-    [Color(0xFF9DB8A9), Color(0xFF324647)], 
-    [Color(0xFFC9A254), Color(0xFF324B4C)],
+    [const Color(0xFF8B9B7E), const Color(0xFF4A5C43)], 
+    [const Color(0xFFBA7647), const Color(0xFF6B3A1C)], 
+    [const Color(0xFFB57053), const Color(0xFF653018)], 
+    [const Color(0xFFD69A6E), const Color(0xFF345864)], 
+    [const Color(0xFFCE8853), const Color(0xFF69351C)], 
+    [const Color(0xFFDAC090), const Color(0xFF4A4B56)], 
+    [const Color(0xFFDB9A54), const Color(0xFF5A3018)], 
+    [const Color(0xFF90A39C), const Color(0xFF354641)], 
+    [const Color(0xFF9CB8B5), const Color(0xFF425654)], 
+    [const Color(0xFFD38B6B), const Color(0xFF4B201A)], 
+    [const Color(0xFF9DB8A9), const Color(0xFF324647)], 
+    [const Color(0xFFC9A254), const Color(0xFF324B4C)],
   ];
 
   final Set<String> _selectedSports = {};
@@ -67,32 +65,46 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
     final bool canProceed = _selectedSports.length >= 4;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
           children: [
             Text(
               'STEP 1 OF 2',
-              style: TextStyle(
-                color: kMuted,
-                fontSize: ResponsiveHelper.sp(11),
+              style: AppTypography.labelCaps10.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(11),
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.5,
               ),
             ),
-            SizedBox(height: 6),
+            SizedBox(height: context.heightPct(0.8)),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(height: ResponsiveHelper.h(3), width: ResponsiveHelper.w(30), color: kSpotifyGreen),
-                SizedBox(width: 4),
-                Container(height: ResponsiveHelper.h(3), width: ResponsiveHelper.w(30), color: Colors.white24),
+                Container(
+                  height: context.heightPct(0.4).clamp(3.0, 4.0),
+                  width: context.widthPct(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.accent,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                SizedBox(width: context.widthPct(1)),
+                Container(
+                  height: context.heightPct(0.4).clamp(3.0, 4.0),
+                  width: context.widthPct(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.borderDark,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
               ],
             ),
           ],
@@ -102,7 +114,7 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FavoriteSportsHeader(),
+          const FavoriteSportsHeader(),
           SportsSelectionGrid(
             sports: _sports,
             gradients: _gradients,

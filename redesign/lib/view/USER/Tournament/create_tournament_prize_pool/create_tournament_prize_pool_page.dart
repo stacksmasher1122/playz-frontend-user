@@ -35,26 +35,39 @@ class _CreateTournamentPrizePoolPageState extends State<CreateTournamentPrizePoo
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.onPrimary, size: ResponsiveHelper.w(24)),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.textPrimary,
+            size: context.responsiveFont(20),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          "Create Tournament",
-          style: AppTypography.headlineSm.copyWith(
-            color: AppColors.accent,
-            fontWeight: FontWeight.bold,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "Create Tournament",
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.accent,
+              fontSize: context.responsiveFont(18),
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.close, color: AppColors.onPrimary, size: ResponsiveHelper.w(24)),
+            icon: Icon(
+              Icons.close_rounded,
+              color: AppColors.textPrimary,
+              size: context.responsiveFont(22),
+            ),
             onPressed: () => Navigator.pop(context),
           ),
         ],
@@ -73,23 +86,23 @@ class _CreateTournamentPrizePoolPageState extends State<CreateTournamentPrizePoo
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                  padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: ResponsiveHelper.h(16)),
+                      SizedBox(height: context.heightPct(2)),
                       const ProgressHeader(
                         currentStep: 4,
                         totalSteps: 5,
                         title: "Step 4 of 5: Prize Pool & Entry Fee",
                       ),
-                      SizedBox(height: ResponsiveHelper.h(32)),
+                      SizedBox(height: context.heightPct(3)),
 
                       EntryFeeCard(controller: controller),
-                      SizedBox(height: ResponsiveHelper.h(24)),
+                      SizedBox(height: context.heightPct(2.5)),
 
                       PrizePoolCard(controller: controller),
-                      SizedBox(height: ResponsiveHelper.h(32)),
+                      SizedBox(height: context.heightPct(3)),
                     ],
                   ),
                 ),

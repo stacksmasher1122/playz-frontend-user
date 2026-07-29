@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ShutterButton extends StatelessWidget {
@@ -9,19 +10,21 @@ class ShutterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final shutterSize = context.minDimensionPct(18).clamp(64.0, 80.0);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(ResponsiveHelper.w(4)),
+        padding: EdgeInsets.all(context.widthPct(1)),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 3),
+          border: Border.all(color: AppColors.textPrimary, width: 3),
         ),
         child: Container(
-          width: ResponsiveHelper.w(72),
-          height: ResponsiveHelper.h(72),
-          decoration: BoxDecoration(
-            color: Colors.white,
+          width: shutterSize,
+          height: shutterSize,
+          decoration: const BoxDecoration(
+            color: AppColors.textPrimary,
             shape: BoxShape.circle,
           ),
         ),

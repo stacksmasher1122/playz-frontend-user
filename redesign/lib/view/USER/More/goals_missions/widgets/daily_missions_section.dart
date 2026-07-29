@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/More_Models/goals_missions_model.dart';
 
@@ -19,33 +19,35 @@ class DailyMissionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final cardWidth = context.widthPct(65).clamp(240.0, 300.0);
+    final carouselHeight = context.heightPct(20).clamp(150.0, 180.0);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Daily Missions',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(18),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(18),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Row(
                 children: [
                   const Icon(Icons.timer_outlined, color: AppColors.muted, size: 13),
-                  SizedBox(width: ResponsiveHelper.w(4)),
+                  SizedBox(width: context.widthPct(1)),
                   Text(
                     'Resets in $resetCountdown',
-                    style: GoogleFonts.inter(
+                    style: AppTypography.bodySm.copyWith(
                       color: AppColors.muted,
-                      fontSize: ResponsiveHelper.sp(11),
+                      fontSize: context.responsiveFont(11),
                     ),
                   ),
                 ],
@@ -53,13 +55,13 @@ class DailyMissionsSection extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: ResponsiveHelper.h(14)),
+        SizedBox(height: context.heightPct(1.5)),
 
         // Horizontal Carousel
         SizedBox(
-          height: 160,
+          height: carouselHeight,
           child: ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+            padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
             itemCount: missions.length,
@@ -69,14 +71,14 @@ class DailyMissionsSection extends StatelessWidget {
               final progressFraction = (m.currentProgress / m.totalTarget).clamp(0.0, 1.0);
 
               return Container(
-                width: ResponsiveHelper.w(260),
-                margin: EdgeInsets.only(right: ResponsiveHelper.w(14)),
-                padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+                width: cardWidth,
+                margin: EdgeInsets.only(right: context.widthPct(3.5)),
+                padding: EdgeInsets.all(context.widthPct(4)),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF141414),
-                  borderRadius: BorderRadius.circular(20),
+                  color: AppColors.card,
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                   border: Border.all(
-                    color: isCompleted ? AppColors.accent.withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.05),
+                    color: isCompleted ? AppColors.accent.withValues(alpha: 0.6) : AppColors.borderDark,
                     width: 1.5,
                   ),
                 ),
@@ -90,30 +92,31 @@ class DailyMissionsSection extends StatelessWidget {
                       children: [
                         Container(
                           padding: EdgeInsets.symmetric(
-                            horizontal: ResponsiveHelper.w(10),
-                            vertical: ResponsiveHelper.h(4),
+                            horizontal: context.widthPct(2.5),
+                            vertical: context.heightPct(0.5),
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1B2B20),
-                            borderRadius: BorderRadius.circular(20),
+                            color: AppColors.accent.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                             border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
                           ),
                           child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               const Icon(Icons.stars, color: AppColors.accent, size: 12),
-                              SizedBox(width: ResponsiveHelper.w(4)),
+                              SizedBox(width: context.widthPct(1)),
                               Text(
                                 '+${m.zCoinsReward} Z Coins',
-                                style: GoogleFonts.inter(
+                                style: AppTypography.labelCaps10.copyWith(
                                   color: AppColors.accent,
-                                  fontSize: ResponsiveHelper.sp(11),
+                                  fontSize: context.responsiveFont(11),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        Icon(m.icon, color: Colors.white70, size: 20),
+                        Icon(m.icon, color: AppColors.muted, size: 20),
                       ],
                     ),
 
@@ -122,9 +125,9 @@ class DailyMissionsSection extends StatelessWidget {
                       m.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: ResponsiveHelper.sp(16),
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.textPrimary,
+                        fontSize: context.responsiveFont(16),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -137,27 +140,27 @@ class DailyMissionsSection extends StatelessWidget {
                           children: [
                             Text(
                               'Progress',
-                              style: GoogleFonts.inter(
+                              style: AppTypography.bodySm.copyWith(
                                 color: AppColors.muted,
-                                fontSize: ResponsiveHelper.sp(11),
+                                fontSize: context.responsiveFont(11),
                               ),
                             ),
                             Text(
                               '${m.currentProgress}/${m.totalTarget}',
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontSize: ResponsiveHelper.sp(12),
+                              style: AppTypography.bodySm.copyWith(
+                                color: AppColors.textPrimary,
+                                fontSize: context.responsiveFont(12),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: ResponsiveHelper.h(6)),
+                        SizedBox(height: context.heightPct(0.8)),
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
                           child: LinearProgressIndicator(
                             value: progressFraction,
-                            backgroundColor: const Color(0xFF242424),
+                            backgroundColor: AppColors.surfaceElevated,
                             valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
                             minHeight: 6,
                           ),

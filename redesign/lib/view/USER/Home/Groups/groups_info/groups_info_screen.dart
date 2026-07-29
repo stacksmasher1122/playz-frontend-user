@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_info_controller.dart';
 
 // Modular Widgets
@@ -11,9 +12,6 @@ import 'widgets/group_members_section.dart';
 import 'widgets/moderation_section.dart';
 import 'widgets/footer_actions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const _kGreen = AppColors.accent;
-const _kBg = AppColors.surface;
 
 class GroupsInfoScreen extends StatefulWidget {
   final String groupId;
@@ -42,25 +40,26 @@ class _GroupsInfoScreenState extends State<GroupsInfoScreen> {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: _kBg,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           "SQUAD",
-          style: TextStyle(
-            color: _kGreen,
+          style: AppTypography.displayLg.copyWith(
+            color: AppColors.accent,
+            fontSize: context.responsiveFont(18),
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
           ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.white),
+            icon: const Icon(Icons.more_vert, color: AppColors.textPrimary),
             onPressed: () {},
           ),
         ],
@@ -68,27 +67,30 @@ class _GroupsInfoScreenState extends State<GroupsInfoScreen> {
       body: Obx(() {
         final group = _ctrl.currentGroup.value;
         if (group == null) {
-          return Center(child: CircularProgressIndicator(color: _kGreen));
+          return const Center(child: CircularProgressIndicator(color: AppColors.accent));
         }
 
         return SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(20)),
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(
+            horizontal: context.widthPct(4),
+            vertical: context.heightPct(2),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GroupsInfoHeader(group: group, ctrl: _ctrl),
-              SizedBox(height: 24),
-              InfoActionButtons(),
-              SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
+              const InfoActionButtons(),
+              SizedBox(height: context.heightPct(2.5)),
               GroupMediaSection(ctrl: _ctrl),
-              SizedBox(height: 16),
+              SizedBox(height: context.heightPct(2)),
               GroupMembersSection(group: group, ctrl: _ctrl),
-              SizedBox(height: 16),
+              SizedBox(height: context.heightPct(2)),
               if (_ctrl.isAdmin.value) ModerationSection(group: group, ctrl: _ctrl),
-              if (_ctrl.isAdmin.value) SizedBox(height: 16),
+              if (_ctrl.isAdmin.value) SizedBox(height: context.heightPct(2)),
               FooterActions(ctrl: _ctrl),
-              SizedBox(height: 40),
+              SizedBox(height: context.heightPct(4)),
             ],
           ),
         );

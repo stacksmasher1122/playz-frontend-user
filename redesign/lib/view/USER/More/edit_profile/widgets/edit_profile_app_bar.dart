@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
-import '../edit_profile_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -22,14 +22,14 @@ class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.white),
+        icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         'Edit Profile',
-        style: GoogleFonts.inter(
-          color: Colors.white,
-          fontSize: ResponsiveHelper.sp(18),
+        style: AppTypography.headlineSm.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(18),
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -39,18 +39,18 @@ class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: controller.isLoading.value ? null : onSave,
               child: controller.isLoading.value
                   ? SizedBox(
-                      width: ResponsiveHelper.w(20),
-                      height: ResponsiveHelper.h(20),
-                      child: CircularProgressIndicator(
+                      width: context.widthPct(5),
+                      height: context.widthPct(5),
+                      child: const CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: kEditProfileGreen,
+                        color: AppColors.accent,
                       ),
                     )
                   : Text(
                       'Save',
-                      style: GoogleFonts.inter(
-                        color: kEditProfileGreen,
-                        fontSize: ResponsiveHelper.sp(16),
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.accent,
+                        fontSize: context.responsiveFont(16),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -60,5 +60,5 @@ class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

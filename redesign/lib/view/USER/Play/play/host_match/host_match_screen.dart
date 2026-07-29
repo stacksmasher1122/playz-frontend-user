@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redesign/utils/slot_overlap_helper.dart';
 
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/Match_Controller/match_controller.dart';
 import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
@@ -159,7 +159,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
       'Payment Interrupted',
       response.message ?? 'Payment failed or was cancelled.',
       backgroundColor: AppColors.card,
-      colorText: Colors.white,
+      colorText: AppColors.textPrimary,
     );
     setState(() => _isSubmitting = false);
   }
@@ -250,7 +250,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
           'Select Ground First',
           'Please select a PlayZ Turf and Ground/Court first to load available slot time sheets.',
           backgroundColor: AppColors.card,
-          colorText: Colors.white,
+          colorText: AppColors.textPrimary,
         );
         return;
       }
@@ -333,7 +333,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
         'Select Sport',
         'Please select a sport for your match poll.',
         backgroundColor: AppColors.card,
-        colorText: Colors.white,
+        colorText: AppColors.textPrimary,
       );
       return;
     }
@@ -343,7 +343,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
         'Missing Location',
         'Please enter an address or select a location on Google Maps.',
         backgroundColor: AppColors.card,
-        colorText: Colors.white,
+        colorText: AppColors.textPrimary,
       );
       return;
     }
@@ -353,7 +353,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
         'Select Turf',
         'Please select a PlayZ Turf venue.',
         backgroundColor: AppColors.card,
-        colorText: Colors.white,
+        colorText: AppColors.textPrimary,
       );
       return;
     }
@@ -363,7 +363,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
         'Select Date',
         'Please select a match date.',
         backgroundColor: AppColors.card,
-        colorText: Colors.white,
+        colorText: AppColors.textPrimary,
       );
       return;
     }
@@ -373,7 +373,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
         'Select Time',
         'Please select start and end match time.',
         backgroundColor: AppColors.card,
-        colorText: Colors.white,
+        colorText: AppColors.textPrimary,
       );
       return;
     }
@@ -386,7 +386,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
           'Invalid Price Per Player',
           'Price per player (₹${_pricePerPlayer.toInt()}) cannot exceed total turf slot price (₹${turfSlotCost.toInt()}).',
           backgroundColor: AppColors.card,
-          colorText: Colors.white,
+          colorText: AppColors.textPrimary,
         );
         return;
       }
@@ -409,7 +409,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
           'Slot Overlap Detected',
           'The selected slot ($timeRangeStr) overlaps with an existing booking on this ground! Please pick another date or time slot.',
           backgroundColor: AppColors.card,
-          colorText: Colors.white,
+          colorText: AppColors.textPrimary,
           duration: const Duration(seconds: 4),
         );
         return;
@@ -577,7 +577,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
             ? 'Your match poll is live and turf slot is BOOKED! ⚡'
             : 'Your match poll is live! Turf slot will be booked once all player payments are gathered. ⏳',
         backgroundColor: AppColors.accent,
-        colorText: Colors.black,
+        colorText: AppColors.background,
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -629,21 +629,22 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Host a Match',
-          style: GoogleFonts.inter(
-            color: Colors.white,
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
-            fontSize: ResponsiveHelper.sp(18),
+            fontSize: context.responsiveFont(18),
           ),
         ),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+          padding: EdgeInsets.all(context.widthPct(4)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -674,7 +675,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 },
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
               // 2. MATCH MODE (CASUAL VS COMPETITIVE)
               MatchModeSection(
@@ -682,7 +683,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 onModeChanged: (val) => setState(() => _isCompetitive = val),
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
               // 3. TOTAL PLAYERS COUNTER (+ / - CARD)
               PlayerCounterSection(
@@ -690,7 +691,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 onPlayersChanged: (val) => setState(() => _maxPlayers = val),
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
               // 4. VENUE & GROUND LOCATION
               VenueLocationSection(
@@ -747,7 +748,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 calculateDistance: _calculateTurfDistance,
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
               // 5. MATCH SCHEDULE (DATE & TIME PICKED AFTER VENUE SELECTION)
               ScheduleSection(
@@ -770,7 +771,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 onPickEndTime: () => _pickTimeSheet(isStart: false),
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
               // 6. SPECIAL INSTRUCTIONS
               SpecialInstructionsSection(
@@ -786,7 +787,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 },
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
               // 7. EQUIPMENT OPTIONS
               EquipmentOptionsSection(
@@ -794,7 +795,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 onOptionSelected: (option) => setState(() => _selectedEquipmentOption = option),
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
               // 8. PRICING & FEE (MOVED TO LAST POSITION BEFORE PUBLISH BUTTON)
               PricingSection(
@@ -820,36 +821,40 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 hostDepositAmount: hostDeposit,
               ),
 
-              const SizedBox(height: 32),
+              SizedBox(height: context.heightPct(3.5)),
 
               // 9. PUBLISH MATCH BUTTON
               SizedBox(
                 width: double.infinity,
-                height: ResponsiveHelper.h(52),
+                height: context.heightPct(6).clamp(48.0, 56.0),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accent,
-                    foregroundColor: Colors.black,
+                    foregroundColor: AppColors.background,
                     elevation: 4,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                     ),
                   ),
                   onPressed: _isSubmitting ? null : _onHostMatchPressed,
                   child: _isSubmitting
-                      ? const CircularProgressIndicator(color: Colors.black)
-                      : Text(
-                          _locationType == 'playz_turf' && hostDeposit > 0
-                              ? 'Pay ₹${hostDeposit.toInt()} & Host Poll'
-                              : 'Publish Match Poll',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.bold,
-                            fontSize: ResponsiveHelper.sp(16),
+                      ? const CircularProgressIndicator(color: AppColors.background)
+                      : FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            _locationType == 'playz_turf' && hostDeposit > 0
+                                ? 'Pay ₹${hostDeposit.toInt()} & Host Poll'
+                                : 'Publish Match Poll',
+                            style: AppTypography.headlineSm.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: context.responsiveFont(16),
+                              color: AppColors.background,
+                            ),
                           ),
                         ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: context.heightPct(2.5)),
             ],
           ),
         ),

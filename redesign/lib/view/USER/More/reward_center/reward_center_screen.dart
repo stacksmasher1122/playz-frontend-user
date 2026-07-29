@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/More_Controller/reward_center_controller.dart';
 import 'package:redesign/model/User_Models/More_Models/reward_center_model.dart';
@@ -37,16 +38,24 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF1E1E1E),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+        ),
         title: Row(
           children: [
-            const Icon(Icons.card_giftcard_rounded, color: Color(0xFF00E676), size: 28),
-            const SizedBox(width: 10),
+            const Icon(Icons.card_giftcard_rounded, color: AppColors.accent, size: 28),
+            SizedBox(width: context.widthPct(2.5)),
             Expanded(
               child: Text(
                 'Redeem Reward',
-                style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(18),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -57,29 +66,46 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
           children: [
             Text(
               item.title,
-              style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: context.responsiveFont(15),
+              ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: context.heightPct(0.5)),
             Text(
               item.subtitle,
-              style: GoogleFonts.inter(color: Colors.white70, fontSize: 13),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+              ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: context.heightPct(2)),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(context.widthPct(3)),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(12),
+                color: AppColors.textPrimary.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
               ),
               child: Row(
                 children: [
-                  Text('Cost:', style: GoogleFonts.inter(color: Colors.white54, fontSize: 13)),
+                  Text(
+                    'Cost:',
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(13),
+                    ),
+                  ),
                   const Spacer(),
-                  const Icon(Icons.monetization_on_rounded, color: Colors.amberAccent, size: 16),
-                  const SizedBox(width: 4),
+                  const Icon(Icons.monetization_on_rounded, color: AppColors.coinsGold, size: 16),
+                  SizedBox(width: context.widthPct(1)),
                   Text(
                     '${item.coinCost} Z-Coins',
-                    style: GoogleFonts.inter(color: Colors.amberAccent, fontWeight: FontWeight.bold, fontSize: 14),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.coinsGold,
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.responsiveFont(14),
+                    ),
                   ),
                 ],
               ),
@@ -89,7 +115,13 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel', style: GoogleFonts.inter(color: Colors.white54)),
+            child: Text(
+              'Cancel',
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(14),
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -101,18 +133,25 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Insufficient Z-Coins balance! Invite friends to earn more.'),
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: AppColors.error,
                   ),
                 );
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF00E676),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              backgroundColor: AppColors.accent,
+              foregroundColor: AppColors.background,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+              ),
             ),
             child: Text(
               'Confirm & Redeem',
-              style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold),
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.background,
+                fontWeight: FontWeight.bold,
+                fontSize: context.responsiveFont(14),
+              ),
             ),
           ),
         ],
@@ -124,22 +163,28 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF1E1E1E),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+        ),
         title: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(context.widthPct(4)),
               decoration: const BoxDecoration(
-                color: Color(0xFF00E676),
+                color: AppColors.accent,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check_rounded, color: Colors.black, size: 36),
+              child: const Icon(Icons.check_rounded, color: AppColors.background, size: 36),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: context.heightPct(1.5)),
             Text(
               'Reward Unlocked!',
-              style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+              style: AppTypography.displayLg.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: context.responsiveFont(20),
+              ),
             ),
           ],
         ),
@@ -148,37 +193,43 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
           children: [
             Text(
               'Use this promo code at checkout:',
-              style: GoogleFonts.inter(color: Colors.white70, fontSize: 13),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+              ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: context.heightPct(1.5)),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.widthPct(4),
+                vertical: context.heightPct(1.5),
+              ),
               decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF00E676)),
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                border: Border.all(color: AppColors.accent),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     item.discountCode,
-                    style: GoogleFonts.inter(
-                      color: const Color(0xFF00E676),
+                    style: AppTypography.displayLg.copyWith(
+                      color: AppColors.accent,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: context.responsiveFont(18),
                       letterSpacing: 2.0,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: context.widthPct(2.5)),
                   IconButton(
-                    icon: const Icon(Icons.copy_rounded, color: Colors.white, size: 18),
+                    icon: const Icon(Icons.copy_rounded, color: AppColors.textPrimary, size: 18),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: item.discountCode));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Promo code copied!'),
-                          backgroundColor: Color(0xFF00E676),
+                          backgroundColor: AppColors.accent,
                         ),
                       );
                     },
@@ -193,11 +244,24 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
             child: ElevatedButton(
               onPressed: () => Navigator.pop(ctx),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00E676),
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.background,
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.widthPct(8),
+                  vertical: context.heightPct(1.5),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                ),
               ),
-              child: Text('Done', style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold)),
+              child: Text(
+                'Done',
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.background,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(14),
+                ),
+              ),
             ),
           ),
         ],
@@ -210,21 +274,21 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
     ResponsiveHelper.init(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: AppColors.background,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Rewards Center',
-          style: GoogleFonts.inter(
-            color: Colors.white,
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: context.responsiveFont(18),
           ),
         ),
         centerTitle: true,
@@ -237,25 +301,30 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
             colors: [
               Color(0xFF1A2D24),
               Color(0xFF121E18),
-              Color(0xFF121212),
+              AppColors.background,
             ],
             stops: [0.0, 0.35, 1.0],
           ),
         ),
         child: SafeArea(
           child: ListView(
-            padding: const EdgeInsets.only(bottom: 40),
+            padding: EdgeInsets.only(bottom: context.heightPct(5)),
             children: [
               Obx(() => RewardCenterHeader(coinsBalance: controller.userCoins.value)),
               Obx(() => ReferralShareCard(code: userProfileController.referralCode)),
 
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+                padding: EdgeInsets.fromLTRB(
+                  context.widthPct(4),
+                  context.heightPct(2.5),
+                  context.widthPct(4),
+                  context.heightPct(1),
+                ),
                 child: Text(
                   'REDEEM EXCLUSIVE REWARDS',
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF00E676),
-                    fontSize: 12,
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.accent,
+                    fontSize: context.responsiveFont(12),
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.2,
                   ),
@@ -264,32 +333,32 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
 
               /// CATEGORY CHIPS
               SizedBox(
-                height: 40,
+                height: context.heightPct(5).clamp(36.0, 44.0),
                 child: Obx(() {
                   final selCat = controller.selectedCategory.value;
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                     itemCount: controller.categories.length,
                     itemBuilder: (context, index) {
                       final cat = controller.categories[index];
                       final isSelected = cat == selCat;
                       return Padding(
-                        padding: const EdgeInsets.only(right: 8),
+                        padding: EdgeInsets.only(right: context.widthPct(2)),
                         child: ChoiceChip(
                           label: Text(cat),
                           selected: isSelected,
-                          selectedColor: const Color(0xFF00E676),
-                          backgroundColor: const Color(0xFF1E1E1E),
-                          labelStyle: GoogleFonts.inter(
-                            color: isSelected ? Colors.black : Colors.white70,
+                          selectedColor: AppColors.accent,
+                          backgroundColor: AppColors.card,
+                          labelStyle: AppTypography.bodySm.copyWith(
+                            color: isSelected ? AppColors.background : AppColors.muted,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: context.responsiveFont(12),
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                             side: BorderSide(
-                              color: isSelected ? const Color(0xFF00E676) : Colors.white10,
+                              color: isSelected ? AppColors.accent : AppColors.borderDark,
                             ),
                           ),
                           onSelected: (_) => controller.selectedCategory.value = cat,
@@ -300,7 +369,7 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
                 }),
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: context.heightPct(1.2)),
 
               Obx(() {
                 final rewards = controller.filteredRewards;
@@ -321,7 +390,7 @@ class _RewardCenterScreenState extends State<RewardCenterScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Referral invite link copied to clipboard!'),
-                      backgroundColor: Color(0xFF00E676),
+                      backgroundColor: AppColors.accent,
                     ),
                   );
                 },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kMuted = Colors.white70;
 
 class FriendsAppBar extends StatelessWidget {
   const FriendsAppBar({super.key});
@@ -11,7 +11,12 @@ class FriendsAppBar extends StatelessWidget {
     ResponsiveHelper.init(context);
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+        padding: EdgeInsets.fromLTRB(
+          context.widthPct(4),
+          context.heightPct(1.5),
+          context.widthPct(4),
+          context.heightPct(1.5),
+        ),
         child: Row(
           children: [
             Expanded(
@@ -20,16 +25,23 @@ class FriendsAppBar extends StatelessWidget {
                 children: [
                   Text(
                     'Friends Hub',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: ResponsiveHelper.sp(22),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.displayLg.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(22),
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  SizedBox(height: context.heightPct(0.3)),
                   Text(
                     'Play together. Stay connected.',
-                    style: TextStyle(color: kMuted, fontSize: 13),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: context.responsiveFont(13),
+                    ),
                   ),
                 ],
               ),

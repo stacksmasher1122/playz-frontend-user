@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SportSelector extends StatelessWidget {
@@ -20,19 +21,22 @@ class SportSelector extends StatelessWidget {
 
     if (sports.isEmpty) {
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+        padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
         child: Text(
           'No sports available',
-          style: TextStyle(color: AppColors.muted),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.muted,
+            fontSize: context.responsiveFont(14),
+          ),
         ),
       );
     }
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Wrap(
-        spacing: 12,
-        runSpacing: 12,
+        spacing: context.widthPct(3),
+        runSpacing: context.heightPct(1.2),
         children: sports.map((sport) {
           final bool isActive = selectedSport == sport;
 
@@ -58,31 +62,32 @@ class _SportPill extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _kGreen = AppColors.accent;
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
+      borderRadius: BorderRadius.circular(context.minDimensionPct(8)),
       onTap: onTap,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 180),
+        duration: const Duration(milliseconds: 180),
         curve: Curves.easeOut,
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(18), vertical: ResponsiveHelper.h(10)),
+        padding: EdgeInsets.symmetric(
+          horizontal: context.widthPct(4.5),
+          vertical: context.heightPct(1.2),
+        ),
         decoration: BoxDecoration(
-          color: active ? _kGreen.withValues(alpha: 0.15) : Colors.black,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
+          color: active ? AppColors.accent.withValues(alpha: 0.15) : AppColors.card,
+          borderRadius: BorderRadius.circular(context.minDimensionPct(8)),
           border: Border.all(
-            color: active ? _kGreen : Colors.grey.shade700,
+            color: active ? AppColors.accent : AppColors.borderDark,
             width: active ? 1.4 : 1,
           ),
         ),
         child: Text(
           label,
-          style: TextStyle(
-            color: active ? _kGreen : Colors.white,
-            fontSize: ResponsiveHelper.sp(14),
+          style: AppTypography.headlineSm.copyWith(
+            color: active ? AppColors.accent : AppColors.textPrimary,
+            fontSize: context.responsiveFont(14),
             fontWeight: FontWeight.w600,
             letterSpacing: 0.2,
           ),

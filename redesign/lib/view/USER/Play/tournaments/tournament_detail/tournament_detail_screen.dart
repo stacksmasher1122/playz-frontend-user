@@ -37,7 +37,6 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
   bool get isOpen => widget.data['status'] == 'registration_open';
   bool get isInProgress => widget.data['status'] == 'in_progress';
 
-  // Future checks:
   bool userHasRegisteredTeam = false;
 
   @override
@@ -47,7 +46,6 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
   }
 
   Future<void> _checkUserRegistration() async {
-    // B3 Fix: Get current auth user ID dynamically
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
     if (currentUserId == null) return;
 
@@ -67,6 +65,8 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: CustomScrollView(
@@ -77,30 +77,39 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+              padding: EdgeInsets.all(context.widthPct(4)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // D4 Fix: Allow both organizer and referees to access bracket to manage/drive their matches
                   if (isOrganizer || isInProgress || (widget.data['status'] == 'completed'))
                     Container(
                       width: double.infinity,
-                      margin: EdgeInsets.only(bottom: ResponsiveHelper.h(24)),
+                      height: context.heightPct(6).clamp(48.0, 56.0),
+                      margin: EdgeInsets.only(bottom: context.heightPct(2.5)),
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.accent,
-                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12))),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                          ),
                         ),
                         icon: Icon(
-                          widget.data['status'] == 'completed' ? Icons.emoji_events : Icons.play_arrow,
+                          widget.data['status'] == 'completed' ? Icons.emoji_events_rounded : Icons.play_arrow_rounded,
                           color: AppColors.background,
                         ),
-                        label: Text(
-                          isOrganizer && widget.data['status'] != 'completed'
-                              ? "Manage Tournament Matches"
-                              : "View Bracket & Results",
-                          style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 16),
+                        label: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            isOrganizer && widget.data['status'] != 'completed'
+                                ? "Manage Tournament Matches"
+                                : "View Bracket & Results",
+                            style: AppTypography.labelCaps10.copyWith(
+                              color: AppColors.background,
+                              fontWeight: FontWeight.bold,
+                              fontSize: context.responsiveFont(15),
+                            ),
+                          ),
                         ),
                         onPressed: () {
                           Get.to(() => BracketMatchmakingScreen(
@@ -111,9 +120,9 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                       ),
                     ),
                   FormatSummary(data: widget.data),
-                  SizedBox(height: ResponsiveHelper.h(24)),
+                  SizedBox(height: context.heightPct(2.5)),
                   PrizePoolSection(data: widget.data),
-                  SizedBox(height: ResponsiveHelper.h(24)),
+                  SizedBox(height: context.heightPct(2.5)),
                   TeamsSection(
                     tournamentId: widget.tournamentId,
                     maxTeams: (widget.data['format']?['maxTeams'] as num?)?.toInt() ??
@@ -126,20 +135,20 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                     isOpen: isOpen,
                     userHasRegisteredTeam: userHasRegisteredTeam,
                   ),
-                  SizedBox(height: ResponsiveHelper.h(24)),
+                  SizedBox(height: context.heightPct(2.5)),
                   BracketsSection(tournamentId: widget.tournamentId, isOrganizer: isOrganizer),
-                  SizedBox(height: ResponsiveHelper.h(24)),
+                  SizedBox(height: context.heightPct(2.5)),
                   LeaderboardSection(
                     tournamentId: widget.tournamentId,
                     matchType: widget.data['format']?['matchType'] ?? 'knockout',
                   ),
-                  SizedBox(height: ResponsiveHelper.h(24)),
+                  SizedBox(height: context.heightPct(2.5)),
                   WinnersSection(
                     tournamentId: widget.tournamentId,
                     data: widget.data,
-                    isOrganizer: isOrganizer
+                    isOrganizer: isOrganizer,
                   ),
-                  SizedBox(height: ResponsiveHelper.h(40)), // padding
+                  SizedBox(height: context.heightPct(5)),
                 ],
               ),
             ),

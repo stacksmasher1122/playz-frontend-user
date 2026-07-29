@@ -11,6 +11,8 @@ class OnboardPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: context.widthPct(6),
@@ -26,7 +28,7 @@ class OnboardPageContent extends StatelessWidget {
                 borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.4),
+                    color: AppColors.background.withValues(alpha: 0.4),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
@@ -44,7 +46,7 @@ class OnboardPageContent extends StatelessWidget {
                     child: Icon(
                       Icons.sports_soccer_rounded,
                       size: context.minDimensionPct(18),
-                      color: AppColors.spotifyGreen,
+                      color: AppColors.accent,
                     ),
                   ),
                 ),
@@ -60,19 +62,22 @@ class OnboardPageContent extends StatelessWidget {
               vertical: context.heightPct(0.8),
             ),
             decoration: BoxDecoration(
-              color: AppColors.spotifyGreen.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.accent.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
               border: Border.all(
-                color: AppColors.spotifyGreen.withValues(alpha: 0.3),
+                color: AppColors.accent.withValues(alpha: 0.3),
               ),
             ),
-            child: Text(
-              data.tag,
-              style: AppTypography.labelCaps.copyWith(
-                color: AppColors.spotifyGreen,
-                fontSize: context.responsiveFont(11),
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.2,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                data.tag,
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.accent,
+                  fontSize: context.responsiveFont(11),
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.2,
+                ),
               ),
             ),
           ),
@@ -87,6 +92,8 @@ class OnboardPageContent extends StatelessWidget {
               height: 1.2,
               color: AppColors.textPrimary,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: context.heightPct(1.2)),
 
@@ -98,6 +105,8 @@ class OnboardPageContent extends StatelessWidget {
               color: AppColors.textSecondary,
               height: 1.5,
             ),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

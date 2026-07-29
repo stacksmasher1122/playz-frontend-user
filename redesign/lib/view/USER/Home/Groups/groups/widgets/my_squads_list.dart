@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'squad_list_tile.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kGreen = AppColors.accent;
-const kMuted = Colors.white70;
 
 class MySquadsList extends StatelessWidget {
   const MySquadsList({super.key});
@@ -20,12 +18,17 @@ class MySquadsList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
+          padding: EdgeInsets.fromLTRB(
+            context.widthPct(4),
+            context.heightPct(2),
+            context.widthPct(4),
+            context.heightPct(1),
+          ),
           child: Text(
             'MY SQUADS',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(14),
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(14),
               fontWeight: FontWeight.w400,
               letterSpacing: 1.2,
             ),
@@ -35,36 +38,42 @@ class MySquadsList extends StatelessWidget {
         Obx(() {
           if (ctrl.isLoading.value && ctrl.myGroups.isEmpty) {
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(40)),
-              child: Center(
-                child: CircularProgressIndicator(color: kGreen),
+              padding: EdgeInsets.symmetric(vertical: context.heightPct(4)),
+              child: const Center(
+                child: CircularProgressIndicator(color: AppColors.accent),
               ),
             );
           }
 
           if (ctrl.myGroups.isEmpty) {
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(40), horizontal: ResponsiveHelper.w(16)),
+              padding: EdgeInsets.symmetric(
+                vertical: context.heightPct(4),
+                horizontal: context.widthPct(4),
+              ),
               child: Center(
                 child: Column(
                   children: [
-                    Icon(Icons.group_outlined,
-                        color: Colors.white.withValues(alpha: 0.2), size: 48),
-                    SizedBox(height: 12),
+                    Icon(
+                      Icons.group_outlined,
+                      color: AppColors.muted.withValues(alpha: 0.4),
+                      size: 48,
+                    ),
+                    SizedBox(height: context.heightPct(1.5)),
                     Text(
                       'No groups yet',
-                      style: TextStyle(
-                        color: kMuted,
-                        fontSize: ResponsiveHelper.sp(15),
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.textSecondary,
+                        fontSize: context.responsiveFont(15),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: context.heightPct(0.5)),
                     Text(
                       'Create a group or join one to get started!',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.4),
-                        fontSize: ResponsiveHelper.sp(13),
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(13),
                       ),
                     ),
                   ],
@@ -75,13 +84,13 @@ class MySquadsList extends StatelessWidget {
 
           return ListView.separated(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: ctrl.myGroups.length,
             separatorBuilder: (_, __) => Divider(
-              height: ResponsiveHelper.h(1),
-              color: Colors.white12,
-              indent: 80,
-              endIndent: 16,
+              height: context.heightPct(0.1),
+              color: AppColors.borderDark,
+              indent: context.widthPct(20),
+              endIndent: context.widthPct(4),
             ),
             itemBuilder: (context, index) {
               final group = ctrl.myGroups[index];
@@ -90,7 +99,12 @@ class MySquadsList extends StatelessWidget {
           );
         }),
 
-        Divider(height: ResponsiveHelper.h(1), color: Colors.white12, indent: 80, endIndent: 16),
+        Divider(
+          height: context.heightPct(0.1),
+          color: AppColors.borderDark,
+          indent: context.widthPct(20),
+          endIndent: context.widthPct(4),
+        ),
       ],
     );
   }

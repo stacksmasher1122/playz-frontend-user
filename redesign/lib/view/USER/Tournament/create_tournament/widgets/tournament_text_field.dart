@@ -19,7 +19,6 @@ class TournamentTextField extends StatefulWidget {
     this.maxLines = 1,
   });
 
-  
   @override
   State<TournamentTextField> createState() => _TournamentTextFieldState();
 }
@@ -27,47 +26,56 @@ class TournamentTextField extends StatefulWidget {
 class _TournamentTextFieldState extends State<TournamentTextField> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           widget.label,
           style: AppTypography.headlineSm.copyWith(
-            color: AppColors.onPrimary,
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(15),
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: ResponsiveHelper.h(8)),
+        SizedBox(height: context.heightPct(1)),
         TextFormField(
           controller: widget.controller,
           validator: widget.validator,
           maxLines: widget.maxLines,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary),
+          style: AppTypography.bodyMd.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(14),
+          ),
           decoration: InputDecoration(
             hintText: widget.hint,
-            hintStyle: AppTypography.bodyMd.copyWith(color: AppColors.muted),
+            hintStyle: AppTypography.bodyMd.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(13.5),
+            ),
             filled: true,
             fillColor: AppColors.card,
             contentPadding: EdgeInsets.symmetric(
-              horizontal: ResponsiveHelper.w(16),
-              vertical: ResponsiveHelper.h(16),
+              horizontal: context.widthPct(4),
+              vertical: context.heightPct(1.8),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
               borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.accent, width: 1),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+              borderSide: const BorderSide(color: AppColors.accent, width: 1),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.error, width: 1),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+              borderSide: const BorderSide(color: AppColors.error, width: 1),
             ),
           ),
         ),

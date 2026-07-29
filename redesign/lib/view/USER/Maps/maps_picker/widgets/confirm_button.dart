@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/maps_controller.dart';
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ConfirmButton extends StatelessWidget {
@@ -26,18 +27,18 @@ class ConfirmButton extends StatelessWidget {
       return GestureDetector(
         onTap: canConfirm ? onConfirm : null,
         child: AnimatedContainer(
-          duration: Duration(milliseconds: 200),
-          height: ResponsiveHelper.h(55),
+          duration: const Duration(milliseconds: 200),
+          height: context.heightPct(6.5).clamp(48.0, 58.0),
           width: double.infinity,
           decoration: BoxDecoration(
-            color: canConfirm ? kSpotifyGreen : kSpotifyGreen.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
+            color: canConfirm ? AppColors.accent : AppColors.accent.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(context.minDimensionPct(8)),
             boxShadow: canConfirm
                 ? [
                     BoxShadow(
-                      color: kSpotifyGreen.withValues(alpha: 0.4),
+                      color: AppColors.accent.withValues(alpha: 0.4),
                       blurRadius: 20,
-                      offset: Offset(0, 8),
+                      offset: const Offset(0, 8),
                     ),
                   ]
                 : [],
@@ -45,19 +46,22 @@ class ConfirmButton extends StatelessWidget {
           child: Center(
             child: mapsCtrl.isLoading.value
                 ? SizedBox(
-                    width: ResponsiveHelper.w(24),
-                    height: ResponsiveHelper.h(24),
-                    child: CircularProgressIndicator(
+                    width: context.widthPct(6),
+                    height: context.widthPct(6),
+                    child: const CircularProgressIndicator(
                       strokeWidth: 2.5,
-                      color: Colors.black,
+                      color: AppColors.background,
                     ),
                   )
-                : Text(
-                    "Confirm Location",
-                    style: TextStyle(
-                      color: canConfirm ? Colors.black : Colors.black38,
-                      fontWeight: FontWeight.bold,
-                      fontSize: ResponsiveHelper.sp(16),
+                : FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "Confirm Location",
+                      style: AppTypography.headlineSm.copyWith(
+                        color: canConfirm ? AppColors.background : AppColors.background.withValues(alpha: 0.4),
+                        fontWeight: FontWeight.bold,
+                        fontSize: context.responsiveFont(16),
+                      ),
                     ),
                   ),
           ),

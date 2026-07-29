@@ -1,43 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
-import 'package:redesign/controller/user_profile_controller.dart';
-import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-import 'widgets/trainer_discovery_header.dart';
-import 'widgets/trainers_toggle.dart';
-import 'widgets/my_trainers_section.dart';
-import 'widgets/other_trainers_section.dart';
-import 'widgets/trainer_end_of_results.dart';
-
-class TrainerDiscoveryScreen extends StatefulWidget {
+class TrainerDiscoveryScreen extends StatelessWidget {
   const TrainerDiscoveryScreen({super.key});
-
-  @override
-  State<TrainerDiscoveryScreen> createState() => _TrainerDiscoveryScreenState();
-}
-
-class _TrainerDiscoveryScreenState extends State<TrainerDiscoveryScreen> {
-  late final UserProfileController _controller;
-  bool showMyTrainers = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = Get.isRegistered<UserProfileController>()
-        ? Get.find<UserProfileController>()
-        : Get.put(UserProfileController());
-    _loadUserData();
-  }
-
-  Future<void> _loadUserData() async {
-    final docId = await UserPreferences.getDocId();
-    if (docId != null) {
-      _controller.fetchUserProfile(docId);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,28 +146,6 @@ class _TrainerDiscoveryScreenState extends State<TrainerDiscoveryScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  // Preserved original screen UI layout for future activation
-  Widget buildOriginalView(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(child: TrainerDiscoveryHeader()),
-        SliverToBoxAdapter(
-          child: TrainersToggle(
-            isMyTrainers: showMyTrainers,
-            onChanged: (v) => setState(() => showMyTrainers = v),
-          ),
-        ),
-        if (showMyTrainers)
-          const MyTrainersSection()
-        else ...[
-          OtherTrainersSection(),
-          SliverToBoxAdapter(child: TrainerEndOfResults()),
-          SliverToBoxAdapter(child: SizedBox(height: context.heightPct(5))),
-        ],
-      ],
     );
   }
 }

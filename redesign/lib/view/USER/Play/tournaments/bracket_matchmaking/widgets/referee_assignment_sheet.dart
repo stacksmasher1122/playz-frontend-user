@@ -89,7 +89,6 @@ class _RefereeAssignmentSheetState extends State<RefereeAssignmentSheet> {
       final userEmail = (selectedUser['primaryEmail'] ?? '').toString();
       final userName = (selectedUser['fullName'] ?? selectedUser['rawName'] ?? 'User').toString();
 
-      // 1. Fetch tournament name and match scheduled date for notification
       final tourneyDoc = await FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).get();
       final tourneyName = tourneyDoc.data()?['name'] ?? 'Tournament';
 
@@ -102,7 +101,6 @@ class _RefereeAssignmentSheetState extends State<RefereeAssignmentSheet> {
       final matchData = matchDoc.data();
       final Timestamp? scheduledTs = matchData?['scheduledDate'] as Timestamp?;
 
-      // 2. Write Notification FIRST (store both userId and userEmail so query matches reliably)
       await FirebaseFirestore.instance.collection('notifications').add({
         'userId': userId,
         'userEmail': userEmail,
@@ -116,7 +114,6 @@ class _RefereeAssignmentSheetState extends State<RefereeAssignmentSheet> {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      // 3. Update bracket match SECOND (status: 'invited', NOT 'accepted')
       final matchRef = FirebaseFirestore.instance
           .collection('tournaments')
           .doc(widget.tournamentId)
@@ -134,9 +131,19 @@ class _RefereeAssignmentSheetState extends State<RefereeAssignmentSheet> {
       });
 
       Get.back();
-      Get.snackbar("Success", "Referee invitation sent to $userName", backgroundColor: Colors.green, colorText: Colors.white);
+      Get.snackbar(
+        "Success",
+        "Referee invitation sent to $userName",
+        backgroundColor: AppColors.card,
+        colorText: AppColors.textPrimary,
+      );
     } catch (e) {
-      Get.snackbar("Error", "Failed to invite referee: $e", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "Failed to invite referee: $e",
+        backgroundColor: AppColors.card,
+        colorText: AppColors.error,
+      );
     }
   }
 
@@ -153,41 +160,138 @@ class _RefereeAssignmentSheetState extends State<RefereeAssignmentSheet> {
       });
 
       Get.back();
-      Get.snackbar("Success", "Referee revoked", backgroundColor: Colors.green, colorText: Colors.white);
+      Get.snackbar(
+        "Success",
+        "Referee revoked",
+        backgroundColor: AppColors.card,
+        colorText: AppColors.textPrimary,
+      );
     } catch (e) {
-      Get.snackbar("Error", "Failed to revoke referee: $e", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "Failed to revoke referee: $e",
+        backgroundColor: AppColors.card,
+        colorText: AppColors.error,
+      );
     }
+  }
+
+  Widget _buildSearchResultsList(BuildContext context) {
+    if (_isSearching) {
+      return const Center(child: CircularProgressIndicator(color: AppColors.accent));
+    }
+    if (_searchResults.isEmpty && _searchCtrl.text.isNotEmpty) {
+      return Center(
+        child: Text(
+          "No users found",
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.muted,
+            fontSize: context.responsiveFont(13),
+          ),
+        ),
+      );
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: _searchResults.length,
+      itemBuilder: (context, i) {
+        final user = _searchResults[i];
+        final isMe = user['id'] == _currentUserId || user['primaryEmail'] == _currentUserId;
+        final rawName = user['fullName'] ?? user['primaryEmail'] ?? 'User';
+        final displayName = isMe ? "$rawName (you)" : rawName;
+        final photoUrl = (user['profileImageUrl'] ?? '').toString();
+
+        return ListTile(
+          leading: CircleAvatar(
+            backgroundColor: AppColors.surface,
+            backgroundImage: photoUrl.isNotEmpty
+                ? CachedNetworkImageProvider(photoUrl)
+                : null,
+            child: photoUrl.isEmpty ? const Icon(Icons.person, color: AppColors.muted) : null,
+          ),
+          title: Text(
+            displayName,
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: isMe ? FontWeight.bold : FontWeight.normal,
+              fontSize: context.responsiveFont(14),
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            user['primaryEmail'] ?? '',
+            style: AppTypography.bodyXs.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(12),
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accent,
+              padding: EdgeInsets.symmetric(horizontal: context.widthPct(3)),
+              minimumSize: const Size(0, 32),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+              ),
+            ),
+            onPressed: () => _assignReferee(user),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "Assign",
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.background,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.85,
+        maxHeight: context.heightPct(85),
       ),
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       decoration: BoxDecoration(
         color: AppColors.background,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(16))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(4))),
       ),
       child: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+          padding: EdgeInsets.all(context.widthPct(4)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Assign Referee", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
-              SizedBox(height: ResponsiveHelper.h(16)),
+              Text(
+                "Assign Referee",
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(18),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: context.heightPct(2)),
 
               if (widget.currentReferee != null && widget.currentReferee!['status'] != 'revoked' && widget.currentReferee!['status'] != 'none') ...[
                 Container(
-                  padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+                  padding: EdgeInsets.all(context.widthPct(3)),
                   decoration: BoxDecoration(
                     color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
+                    border: Border.all(color: AppColors.borderDark),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -196,105 +300,105 @@ class _RefereeAssignmentSheetState extends State<RefereeAssignmentSheet> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Current Referee", style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
-                            SizedBox(height: 4),
+                            Text(
+                              "Current Referee",
+                              style: AppTypography.bodySm.copyWith(
+                                color: AppColors.muted,
+                                fontSize: context.responsiveFont(12),
+                              ),
+                            ),
+                            SizedBox(height: context.heightPct(0.5)),
                             FutureBuilder<DocumentSnapshot>(
                               future: FirebaseFirestore.instance.collection('User').doc(widget.currentReferee!['userId']).get(),
                               builder: (context, snap) {
-                                if (!snap.hasData) return Text("Loading...", style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary));
+                                if (!snap.hasData) {
+                                  return Text(
+                                    "Loading...",
+                                    style: AppTypography.bodyMd.copyWith(color: AppColors.textPrimary),
+                                  );
+                                }
                                 final uData = snap.data?.data() as Map<String, dynamic>?;
                                 final name = uData != null ? (uData['fullName'] ?? uData['primaryEmail'] ?? 'User') : 'User';
                                 final isMe = widget.currentReferee!['userId'] == _currentUserId;
                                 return Text(
                                   isMe ? "$name (you)" : name,
-                                  style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary),
+                                  style: AppTypography.headlineSm.copyWith(
+                                    color: AppColors.textPrimary,
+                                    fontSize: context.responsiveFont(14),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                 );
-                              }
+                              },
                             ),
-                            SizedBox(height: 4),
-                            Text("Status: ${widget.currentReferee!['status']}", style: AppTypography.labelCaps.copyWith(color: widget.currentReferee!['status'] == 'accepted' ? AppColors.accent : Colors.orange)),
+                            SizedBox(height: context.heightPct(0.5)),
+                            Text(
+                              "Status: ${widget.currentReferee!['status']}",
+                              style: AppTypography.labelCaps10.copyWith(
+                                color: widget.currentReferee!['status'] == 'accepted' ? AppColors.accent : AppColors.warning,
+                                fontSize: context.responsiveFont(11),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      SizedBox(width: ResponsiveHelper.w(8)),
+                      SizedBox(width: context.widthPct(2)),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.error,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                          ),
+                        ),
                         onPressed: _revokeReferee,
-                        child: Text("Revoke", style: TextStyle(color: Colors.white)),
-                      )
+                        child: Text(
+                          "Revoke",
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: ResponsiveHelper.h(16)),
-                Text("Reassign to someone else:", style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary)),
-                SizedBox(height: ResponsiveHelper.h(8)),
+                SizedBox(height: context.heightPct(2)),
+                Text(
+                  "Reassign to someone else:",
+                  style: AppTypography.bodyMd.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(14),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: context.heightPct(1)),
               ],
 
               TextField(
                 controller: _searchCtrl,
-                style: TextStyle(color: AppColors.onPrimary),
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(14),
+                ),
                 decoration: InputDecoration(
                   hintText: "Search user by name or email...",
-                  hintStyle: TextStyle(color: AppColors.muted),
+                  hintStyle: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted.withValues(alpha: 0.6),
+                    fontSize: context.responsiveFont(13),
+                  ),
                   filled: true,
                   fillColor: AppColors.surface,
-                  prefixIcon: Icon(Icons.search, color: AppColors.muted),
+                  prefixIcon: const Icon(Icons.search, color: AppColors.accent),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
+                    borderSide: const BorderSide(color: AppColors.borderDark),
                   ),
                 ),
                 onChanged: _searchUsers,
               ),
-              SizedBox(height: ResponsiveHelper.h(16)),
-
-              if (_isSearching)
-                Center(child: CircularProgressIndicator(color: AppColors.accent))
-              else if (_searchResults.isEmpty && _searchCtrl.text.isNotEmpty)
-                Center(child: Text("No users found", style: TextStyle(color: AppColors.muted)))
-              else
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _searchResults.length,
-                  itemBuilder: (context, i) {
-                    final user = _searchResults[i];
-                    final isMe = user['id'] == _currentUserId || user['primaryEmail'] == _currentUserId;
-                    final rawName = user['fullName'] ?? user['primaryEmail'] ?? 'User';
-                    final displayName = isMe ? "$rawName (you)" : rawName;
-                    final photoUrl = (user['profileImageUrl'] ?? '').toString();
-
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: AppColors.surface,
-                        backgroundImage: photoUrl.isNotEmpty
-                            ? CachedNetworkImageProvider(photoUrl)
-                            : null,
-                        child: photoUrl.isEmpty ? Icon(Icons.person, color: AppColors.muted) : null,
-                      ),
-                      title: Text(
-                        displayName,
-                        style: TextStyle(color: AppColors.onPrimary, fontWeight: isMe ? FontWeight.bold : FontWeight.normal),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Text(
-                        user['primaryEmail'] ?? '',
-                        style: TextStyle(color: AppColors.muted),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.accent,
-                          padding: EdgeInsets.symmetric(horizontal: 12),
-                          minimumSize: Size(0, 30),
-                        ),
-                        onPressed: () => _assignReferee(user),
-                        child: Text("Assign", style: TextStyle(color: AppColors.background, fontWeight: FontWeight.bold)),
-                      ),
-                    );
-                  }
-                ),
+              SizedBox(height: context.heightPct(2)),
+              _buildSearchResultsList(context),
             ],
           ),
         ),

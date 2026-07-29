@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SettingsActionTile extends StatelessWidget {
   final IconData icon;
@@ -19,46 +21,59 @@ class SettingsActionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(0.5),
+      ),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: ListTile(
         onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: context.widthPct(4),
+          vertical: context.heightPct(0.5),
+        ),
         leading: Container(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(context.widthPct(2.5)),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: AppColors.textPrimary.withValues(alpha: 0.05),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, color: iconColor ?? const Color(0xFF00E676), size: 20),
+          child: Icon(icon, color: iconColor ?? AppColors.accent, size: 20),
         ),
         title: Text(
           title,
-          style: GoogleFonts.inter(
-            color: Colors.white,
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.w600,
-            fontSize: 14,
+            fontSize: context.responsiveFont(14),
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (valueText != null)
-              Text(
-                valueText!,
-                style: GoogleFonts.inter(
-                  color: Colors.white54,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+              Flexible(
+                child: Text(
+                  valueText!,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(13),
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white30, size: 14),
+            SizedBox(width: context.widthPct(2)),
+            const Icon(Icons.arrow_forward_ios_rounded, color: AppColors.muted, size: 14),
           ],
         ),
       ),

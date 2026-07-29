@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/controller/maps_controller.dart';
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
-import 'package:redesign/view/USER/Maps/maps_setup/widgets/interactive_search_bar.dart';
+import 'interactive_search_bar.dart';
 
 class SearchBarDelegate extends SliverPersistentHeaderDelegate {
   final TextEditingController searchController;
@@ -22,10 +23,16 @@ class SearchBarDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
+    ResponsiveHelper.init(context);
     return Container(
       height: maxExtent,
-      color: kBg,
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 14),
+      color: AppColors.background,
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(1.5),
+        context.widthPct(4),
+        context.heightPct(1.8),
+      ),
       child: InteractiveSearchBar(
         controller: searchController,
         mapsCtrl: mapsCtrl,

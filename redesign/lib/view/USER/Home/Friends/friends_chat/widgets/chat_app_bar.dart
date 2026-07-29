@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Friends/friends_info/friends_info_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kGreen = AppColors.accent;
-const kSurface = Color(0xFF222222);
-const kMuted = Colors.white38;
 
 class ChatAppBar extends StatelessWidget {
   final String email;
@@ -25,16 +22,23 @@ class ChatAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final avatarRadius = context.minDimensionPct(5).clamp(18.0, 24.0);
+
     return Container(
-      color: Colors.black.withValues(alpha: 0.8),
-      padding: EdgeInsets.fromLTRB(8, 12, 16, 12),
+      color: AppColors.background.withValues(alpha: 0.8),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(2),
+        context.heightPct(1.2),
+        context.widthPct(3),
+        context.heightPct(1.2),
+      ),
       child: Row(
         children: [
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_ios_new,
-              color: Colors.white,
+              color: AppColors.textPrimary,
               size: 20,
             ),
           ),
@@ -57,75 +61,89 @@ class ChatAppBar extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      CircleAvatar(
-                        radius: 19,
-                        backgroundColor: kSurface,
-                        backgroundImage: pic.isNotEmpty
-                            ? CachedNetworkImageProvider(pic) as ImageProvider
-                            : null,
-                        child: pic.isEmpty
-                            ? Icon(Icons.person, color: kMuted)
-                            : null,
+                      ClipOval(
+                        child: pic.isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: pic,
+                                width: avatarRadius * 2,
+                                height: avatarRadius * 2,
+                                fit: BoxFit.cover,
+                                placeholder: (_, __) => CircleAvatar(
+                                  radius: avatarRadius,
+                                  backgroundColor: AppColors.surface,
+                                ),
+                                errorWidget: (_, __, ___) => CircleAvatar(
+                                  radius: avatarRadius,
+                                  backgroundColor: AppColors.surface,
+                                  child: const Icon(Icons.person, color: AppColors.muted),
+                                ),
+                              )
+                            : CircleAvatar(
+                                radius: avatarRadius,
+                                backgroundColor: AppColors.surface,
+                                child: const Icon(Icons.person, color: AppColors.muted),
+                              ),
                       ),
                       if (isOnline)
                         Positioned(
-                          right: ResponsiveHelper.w(0),
-                          bottom: ResponsiveHelper.h(0),
+                          right: 0,
+                          bottom: 0,
                           child: Container(
-                            width: ResponsiveHelper.w(12),
-                            height: ResponsiveHelper.h(12),
+                            width: 10,
+                            height: 10,
                             decoration: BoxDecoration(
-                              color: kGreen,
+                              color: AppColors.accent,
                               shape: BoxShape.circle,
-                              border: Border.all(color: Colors.black, width: 2),
+                              border: Border.all(color: AppColors.background, width: 2),
                             ),
                           ),
                         ),
                     ],
                   ),
-                  SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(16),
-                          fontWeight: FontWeight.bold,
+                  SizedBox(width: context.widthPct(2.5)),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          name,
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(16),
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        isOnline ? "ONLINE" : "OFFLINE",
-                        style: TextStyle(
-                          color: isOnline ? kGreen : kMuted,
-                          fontSize: ResponsiveHelper.sp(11),
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          isOnline ? "ONLINE" : "OFFLINE",
+                          style: AppTypography.labelCaps10.copyWith(
+                            color: isOnline ? AppColors.accent : AppColors.muted,
+                            fontSize: context.responsiveFont(11),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-          Spacer(),
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.videocam_outlined,
-              color: Colors.white,
+              color: AppColors.textPrimary,
               size: 26,
             ),
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.call_outlined,
-              color: Colors.white,
+              color: AppColors.textPrimary,
               size: 22,
             ),
           ),

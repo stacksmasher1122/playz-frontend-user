@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingDropdowns extends StatelessWidget {
@@ -26,14 +27,11 @@ class BookingDropdowns extends StatelessWidget {
     required this.onSizeSelected,
   });
 
-  static const _kGreen = AppColors.accent;
-  static const _kBottomSheetColor = AppColors.surface;
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = constraints.maxWidth > 500;
@@ -54,7 +52,7 @@ class BookingDropdowns extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: isWide ? 16 : 12),
+              SizedBox(width: isWide ? context.widthPct(4) : context.widthPct(3)),
               Expanded(
                 child: _DropdownCard(
                   label: sizeLabel,
@@ -82,92 +80,62 @@ class BookingDropdowns extends StatelessWidget {
     String? selected,
     required ValueChanged<String> onSelected,
   }) {
-    if (options.isEmpty) {
-      showModalBottomSheet(
-        context: context,
-        backgroundColor: _kBottomSheetColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
-        ),
-        builder: (_) {
-          return SafeArea(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: ResponsiveHelper.sp(18),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 24),
-                  Text(
-                    'No options available',
-                    style: TextStyle(color: AppColors.muted),
-                  ),
-                  SizedBox(height: 16),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-      return;
-    }
-
     showModalBottomSheet(
       context: context,
-      backgroundColor: _kBottomSheetColor,
+      backgroundColor: AppColors.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(6))),
       ),
       builder: (_) {
         return SafeArea(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 24),
+            padding: EdgeInsets.all(context.widthPct(4)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// TITLE
                 Text(
                   title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ResponsiveHelper.sp(18),
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(18),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16),
-
-                /// OPTIONS
-                ...options.map((option) {
-                  final isSelected = option == selected;
-
-                  return ListTile(
-                    onTap: () {
-                      onSelected(option);
-                      Navigator.pop(context);
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      option,
-                      style: TextStyle(
-                        color: isSelected ? _kGreen : Colors.white,
-                        fontWeight: isSelected
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                SizedBox(height: context.heightPct(2)),
+                if (options.isEmpty)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: context.heightPct(2)),
+                    child: Center(
+                      child: Text(
+                        'No options available',
+                        style: AppTypography.bodySm.copyWith(color: AppColors.muted),
                       ),
                     ),
-                    trailing: isSelected
-                        ? Icon(Icons.check_circle, color: _kGreen)
-                        : null,
-                  );
-                }),
+                  )
+                else
+                  ...options.map((option) {
+                    final isSelected = option == selected;
+
+                    return ListTile(
+                      onTap: () {
+                        onSelected(option);
+                        Navigator.pop(context);
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        option,
+                        style: AppTypography.bodySm.copyWith(
+                          color: isSelected ? AppColors.accent : AppColors.textPrimary,
+                          fontSize: context.responsiveFont(14),
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                      trailing: isSelected
+                          ? const Icon(Icons.check_circle, color: AppColors.accent)
+                          : null,
+                    );
+                  }),
               ],
             ),
           ),
@@ -190,21 +158,21 @@ class _DropdownCard extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _kMuted = Color(0xFFA7A7A7);
-  static const _kCardColor = Color(0xFF1A1A1A);
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+      borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(14)),
+        padding: EdgeInsets.symmetric(
+          horizontal: context.widthPct(4),
+          vertical: context.heightPct(1.5),
+        ),
         decoration: BoxDecoration(
-          color: _kCardColor,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-          border: Border.all(color: Colors.grey.shade800, width: 1),
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+          border: Border.all(color: AppColors.borderDark, width: 1),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -216,15 +184,15 @@ class _DropdownCard extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: TextStyle(
-                      color: _kMuted,
-                      fontSize: ResponsiveHelper.sp(11),
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(11),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: context.heightPct(0.5)),
                   isLoading
-                      ? SizedBox(
+                      ? const SizedBox(
                           height: 14,
                           width: 14,
                           child: CircularProgressIndicator(
@@ -236,18 +204,18 @@ class _DropdownCard extends StatelessWidget {
                           value ?? 'Select',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: value == null ? _kMuted : Colors.white,
-                            fontSize: ResponsiveHelper.sp(14),
+                          style: AppTypography.headlineSm.copyWith(
+                            color: value == null ? AppColors.muted : AppColors.textPrimary,
+                            fontSize: context.responsiveFont(14),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                 ],
               ),
             ),
-            Icon(
+            const Icon(
               Icons.keyboard_arrow_down_rounded,
-              color: _kMuted,
+              color: AppColors.muted,
               size: 22,
             ),
           ],

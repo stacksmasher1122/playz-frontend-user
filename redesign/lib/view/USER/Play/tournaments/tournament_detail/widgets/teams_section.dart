@@ -31,11 +31,14 @@ class TeamsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -53,16 +56,29 @@ class TeamsSection extends StatelessWidget {
               Wrap(
                 alignment: WrapAlignment.spaceBetween,
                 crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: ResponsiveHelper.w(8),
-                runSpacing: ResponsiveHelper.h(8),
+                spacing: context.widthPct(2),
+                runSpacing: context.heightPct(1),
                 children: [
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Registered Teams", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
-                      SizedBox(width: ResponsiveHelper.w(8)),
+                      Text(
+                        "Registered Teams",
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(16),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: context.widthPct(2)),
                       if (maxTeams > 0)
-                        Text("($teamCount/$maxTeams)", style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
+                        Text(
+                          "($teamCount/$maxTeams)",
+                          style: AppTypography.bodyMd.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(13),
+                          ),
+                        ),
                     ],
                   ),
                   Row(
@@ -72,8 +88,14 @@ class TeamsSection extends StatelessWidget {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.accent,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
-                            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.widthPct(3),
+                              vertical: context.heightPct(0.8),
+                            ),
                           ),
                           onPressed: () {
                             Get.to(() => RegisterTeamScreen(
@@ -82,24 +104,44 @@ class TeamsSection extends StatelessWidget {
                               currentUserId: currentUserId,
                             ));
                           },
-                          child: Text(
-                            "Register Team",
-                            style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              "Register Team",
+                              style: AppTypography.labelCaps10.copyWith(
+                                color: AppColors.background,
+                                fontWeight: FontWeight.bold,
+                                fontSize: context.responsiveFont(12),
+                              ),
+                            ),
                           ),
                         ),
                       if (isOpen && (!userHasRegisteredTeam || isOrganizer) && !isFull && isOrganizer && teamCount >= 2)
-                        SizedBox(width: ResponsiveHelper.w(8)),
+                        SizedBox(width: context.widthPct(2)),
                       if (isOrganizer && isOpen && teamCount >= 2)
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orangeAccent,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
-                            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
+                            backgroundColor: AppColors.warning,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.widthPct(3),
+                              vertical: context.heightPct(0.8),
+                            ),
                           ),
                           onPressed: () => _startTournament(context, teamCount, isFull),
-                          child: Text(
-                            "Start Tournament",
-                            style: AppTypography.labelCaps.copyWith(color: AppColors.background, fontWeight: FontWeight.bold),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              "Start Tournament",
+                              style: AppTypography.labelCaps10.copyWith(
+                                color: AppColors.background,
+                                fontWeight: FontWeight.bold,
+                                fontSize: context.responsiveFont(12),
+                              ),
+                            ),
                           ),
                         ),
                     ],
@@ -108,22 +150,28 @@ class TeamsSection extends StatelessWidget {
               ),
               if (maxTeams > 0)
                 Padding(
-                  padding: EdgeInsets.only(top: ResponsiveHelper.h(4)),
+                  padding: EdgeInsets.only(top: context.heightPct(0.5)),
                   child: Text(
                     "$teamCount / $maxTeams Teams",
-                    style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(12),
+                    ),
                   ),
                 ),
-              SizedBox(height: ResponsiveHelper.h(16)),
+              SizedBox(height: context.heightPct(1.5)),
               if (snapshot.connectionState == ConnectionState.waiting)
-                Center(child: CircularProgressIndicator(color: AppColors.accent))
+                const Center(child: CircularProgressIndicator(color: AppColors.accent))
               else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.docs.isEmpty)
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+                    padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
                     child: Text(
                       "No teams registered yet.",
-                      style: AppTypography.bodyMd.copyWith(color: AppColors.muted),
+                      style: AppTypography.bodyMd.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(13),
+                      ),
                     ),
                   ),
                 )
@@ -136,31 +184,43 @@ class TeamsSection extends StatelessWidget {
                     final players = data['players'] as List<dynamic>? ?? [];
 
                     return Padding(
-                      padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
+                      padding: EdgeInsets.only(bottom: context.heightPct(1.2)),
                       child: Row(
                         children: [
                           CircleAvatar(
-                            radius: ResponsiveHelper.w(20),
+                            radius: context.minDimensionPct(4.5).clamp(16.0, 22.0),
                             backgroundColor: AppColors.surface,
                             backgroundImage: logoUrl.isNotEmpty ? CachedNetworkImageProvider(logoUrl) : null,
-                            child: logoUrl.isEmpty ? Icon(Icons.group, color: AppColors.muted) : null,
+                            child: logoUrl.isEmpty
+                                ? const Icon(Icons.group_rounded, color: AppColors.muted, size: 18)
+                                : null,
                           ),
-                          SizedBox(width: ResponsiveHelper.w(12)),
+                          SizedBox(width: context.widthPct(3)),
                           Expanded(
-                            child: Text(name, style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary)),
+                            child: Text(
+                              name,
+                              style: AppTypography.bodyLg.copyWith(
+                                color: AppColors.textPrimary,
+                                fontSize: context.responsiveFont(14),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                           Text(
                             "${players.length} players",
-                            style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.muted,
+                              fontSize: context.responsiveFont(12),
+                            ),
                           ),
-                          // B2 Fix: Organizer must be able to remove a registered team
                           if (isOrganizer && isOpen)
                             IconButton(
-                              icon: Icon(Icons.remove_circle_outline, color: Colors.redAccent),
+                              icon: const Icon(Icons.remove_circle_outline_rounded, color: AppColors.error, size: 20),
                               onPressed: () {
                                 _showRemoveTeamDialog(context, doc.id, name, data['paymentStatus'] == 'paid');
                               },
-                            )
+                            ),
                         ],
                       ),
                     );
@@ -173,32 +233,63 @@ class TeamsSection extends StatelessWidget {
     );
   }
 
-  // B2 Fix: Handle removing a team
   void _showRemoveTeamDialog(BuildContext context, String teamId, String teamName, bool hasPaid) {
     Get.dialog(
       AlertDialog(
         backgroundColor: AppColors.surface,
-        title: Text("Remove Team", style: TextStyle(color: Colors.white)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+        ),
+        title: Text(
+          "Remove Team",
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(16),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         content: Text(
           "Are you sure you want to remove $teamName from the tournament?"
           "${hasPaid ? '\n\nNote: This team paid an entry fee — removing them does not automatically refund it. You must handle refunds manually.' : ''}",
-          style: TextStyle(color: Colors.white70),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.textSecondary,
+            fontSize: context.responsiveFont(13),
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text("Cancel", style: TextStyle(color: AppColors.muted)),
+            child: Text(
+              "Cancel",
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+              ),
+            ),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.error,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+              ),
+            ),
             onPressed: () {
               Get.back();
               _removeTeam(teamId);
             },
-            child: Text("Remove", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text(
+              "Remove",
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: context.responsiveFont(13),
+              ),
+            ),
           ),
         ],
-      )
+      ),
     );
   }
 
@@ -212,9 +303,19 @@ class TeamsSection extends StatelessWidget {
         transaction.update(tournamentRef, {'teamCount': FieldValue.increment(-1)});
       });
 
-      Get.snackbar("Success", "Team removed successfully", backgroundColor: Colors.green, colorText: Colors.white);
+      Get.snackbar(
+        "Success",
+        "Team removed successfully",
+        backgroundColor: AppColors.card,
+        colorText: AppColors.textPrimary,
+      );
     } catch (e) {
-      Get.snackbar("Error", "Failed to remove team: $e", backgroundColor: Colors.redAccent, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "Failed to remove team: $e",
+        backgroundColor: AppColors.card,
+        colorText: AppColors.error,
+      );
     }
   }
 
@@ -223,26 +324,58 @@ class TeamsSection extends StatelessWidget {
       Get.dialog(
         AlertDialog(
           backgroundColor: AppColors.surface,
-          title: Text("Start Anyway?", style: TextStyle(color: Colors.white)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+          ),
+          title: Text(
+            "Start Anyway?",
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(16),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           content: Text(
             "Only $teamCount of $maxTeams teams registered.\n\nAre you sure you want to start the tournament? Registration will be closed permanently.",
-            style: TextStyle(color: Colors.white70),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: context.responsiveFont(13),
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Get.back(),
-              child: Text("Cancel", style: TextStyle(color: AppColors.muted)),
+              child: Text(
+                "Cancel",
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(13),
+                ),
+              ),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accent,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                ),
+              ),
               onPressed: () {
                 Get.back();
                 _triggerStartTournament();
               },
-              child: Text("Start", style: TextStyle(color: AppColors.background, fontWeight: FontWeight.bold)),
+              child: Text(
+                "Start",
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.background,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(13),
+                ),
+              ),
             ),
           ],
-        )
+        ),
       );
     } else {
       _triggerStartTournament();
@@ -269,7 +402,12 @@ class TeamsSection extends StatelessWidget {
         colorText: AppColors.background,
       );
     } catch (e) {
-      Get.snackbar("Error", "Failed to start tournament: $e", backgroundColor: AppColors.error, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "Failed to start tournament: $e",
+        backgroundColor: AppColors.card,
+        colorText: AppColors.error,
+      );
     }
   }
 }

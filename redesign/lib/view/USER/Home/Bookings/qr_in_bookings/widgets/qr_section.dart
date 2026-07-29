@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import '../qr_in_bookings_screen.dart';
 import 'qr_status_badge.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -13,11 +15,11 @@ class QrSection extends StatelessWidget {
   Color get glowColor {
     switch (status) {
       case BookingStatus.confirmed:
-        return QrBookingConstants.green;
+        return AppColors.accent;
       case BookingStatus.cancelled:
-        return QrBookingConstants.red;
+        return AppColors.error;
       case BookingStatus.expired:
-        return Colors.white24;
+        return AppColors.muted;
     }
   }
 
@@ -45,50 +47,50 @@ class QrSection extends StatelessWidget {
           builder: (context, constraints) {
             final size = constraints.maxWidth * 0.72;
             return Container(
-              padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+              padding: EdgeInsets.all(context.widthPct(4)),
               decoration: BoxDecoration(
-                color: QrBookingConstants.surface,
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+                border: Border.all(color: AppColors.borderDark),
                 boxShadow: [
                   BoxShadow(
                     color: glowColor.withValues(alpha: 0.35),
                     blurRadius: 12,
                     spreadRadius: 2,
-                  )
+                  ),
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(ResponsiveHelper.w(10))),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
                 child: QrImageView(
                   data: qrData,
                   size: size,
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.textPrimary,
                 ),
               ),
             );
           },
         ),
-        SizedBox(height: 16),
+        SizedBox(height: context.heightPct(2)),
         Text(
           'Scan at venue entry counter',
-          style: TextStyle(
-            color: QrBookingConstants.muted,
-            fontSize: ResponsiveHelper.sp(13),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.muted,
+            fontSize: context.responsiveFont(13),
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: context.heightPct(1.2)),
         QrStatusBadge(
           statusText,
-          status == BookingStatus.confirmed ? QrBookingConstants.green : QrBookingConstants.red,
+          status == BookingStatus.confirmed ? AppColors.accent : AppColors.error,
         ),
-        SizedBox(height: 6),
+        SizedBox(height: context.heightPct(0.8)),
         Text(
           'Booking ID: #$bookingId',
-          style: TextStyle(
-            color: QrBookingConstants.muted,
-            fontSize: ResponsiveHelper.sp(12),
+          style: AppTypography.bodyXs.copyWith(
+            color: AppColors.muted,
+            fontSize: context.responsiveFont(12),
             fontWeight: FontWeight.w500,
           ),
         ),

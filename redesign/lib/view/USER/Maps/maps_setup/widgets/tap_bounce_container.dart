@@ -24,7 +24,7 @@ class _TapBounceContainerState extends State<TapBounceContainer> {
       onTap: widget.onTap,
       child: AnimatedScale(
         scale: _isPressed ? 0.97 : 1.0,
-        duration: Duration(milliseconds: 100),
+        duration: const Duration(milliseconds: 100),
         child: widget.child,
       ),
     );

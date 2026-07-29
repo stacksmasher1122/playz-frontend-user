@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/Play/play/widgets/xp_avatar_ring.dart';
 
@@ -92,22 +92,27 @@ class PlayerPoolSection extends StatelessWidget {
       context: context,
       backgroundColor: AppColors.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(6))),
       ),
       builder: (ctx) {
         return Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 30),
+          padding: EdgeInsets.fromLTRB(
+            context.widthPct(5),
+            context.heightPct(2),
+            context.widthPct(5),
+            context.heightPct(4),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Container(
-                  width: 40,
+                  width: context.widthPct(10).clamp(36.0, 44.0),
                   height: 4,
-                  margin: const EdgeInsets.only(bottom: 20),
+                  margin: EdgeInsets.only(bottom: context.heightPct(2)),
                   decoration: BoxDecoration(
-                    color: Colors.white24,
+                    color: AppColors.muted.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -117,31 +122,31 @@ class PlayerPoolSection extends StatelessWidget {
                 children: [
                   Text(
                     "All Joined Players (${players.length})",
-                    style: GoogleFonts.inter(
-                      fontSize: ResponsiveHelper.sp(17),
+                    style: AppTypography.headlineSm.copyWith(
+                      fontSize: context.responsiveFont(17),
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white60),
+                    icon: const Icon(Icons.close, color: AppColors.textSecondary),
                     onPressed: () => Navigator.pop(ctx),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.heightPct(1.5)),
               Flexible(
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemCount: players.length,
-                  separatorBuilder: (_, __) => const Divider(color: Colors.white10),
+                  separatorBuilder: (_, __) => const Divider(color: AppColors.borderDark),
                   itemBuilder: (context, index) {
                     final player = players[index];
                     final isHost = index == 0 || player.id == hostId;
                     final displayName = isHost ? "${player.name} (Host)" : player.name;
 
                     return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      padding: EdgeInsets.symmetric(vertical: context.heightPct(0.8)),
                       child: Row(
                         children: [
                           XpAvatarRing(
@@ -149,25 +154,27 @@ class PlayerPoolSection extends StatelessWidget {
                             xp: player.xp,
                             radius: 22,
                           ),
-                          const SizedBox(width: 14),
+                          SizedBox(width: context.widthPct(3.5)),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   displayName,
-                                  style: GoogleFonts.inter(
-                                    fontSize: ResponsiveHelper.sp(14),
+                                  style: AppTypography.headlineSm.copyWith(
+                                    fontSize: context.responsiveFont(14),
                                     fontWeight: isHost ? FontWeight.bold : FontWeight.w600,
-                                    color: isHost ? AppColors.accent : Colors.white,
+                                    color: isHost ? AppColors.accent : AppColors.textPrimary,
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                const SizedBox(height: 2),
+                                SizedBox(height: context.heightPct(0.3)),
                                 Text(
                                   "${player.xp} XP",
-                                  style: GoogleFonts.inter(
-                                    fontSize: ResponsiveHelper.sp(11.5),
-                                    color: Colors.white54,
+                                  style: AppTypography.bodySm.copyWith(
+                                    fontSize: context.responsiveFont(11.5),
+                                    color: AppColors.muted,
                                   ),
                                 ),
                               ],
@@ -175,16 +182,19 @@ class PlayerPoolSection extends StatelessWidget {
                           ),
                           if (isHost)
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.widthPct(2.5),
+                                vertical: context.heightPct(0.5),
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.accent.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                                 border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
                               ),
                               child: Text(
                                 "HOST 👑",
-                                style: GoogleFonts.inter(
-                                  fontSize: ResponsiveHelper.sp(10.5),
+                                style: AppTypography.labelCaps10.copyWith(
+                                  fontSize: context.responsiveFont(10.5),
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.accent,
                                 ),
@@ -220,11 +230,11 @@ class PlayerPoolSection extends StatelessWidget {
         ];
 
         return Container(
-          padding: EdgeInsets.all(ResponsiveHelper.w(18)),
+          padding: EdgeInsets.all(context.widthPct(4.5)),
           decoration: BoxDecoration(
             color: AppColors.surface,
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+            borderRadius: BorderRadius.circular(context.minDimensionPct(4.5)),
+            border: Border.all(color: AppColors.borderDark),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,28 +244,31 @@ class PlayerPoolSection extends StatelessWidget {
                 children: [
                   Text(
                     "Joined Player Pool",
-                    style: GoogleFonts.inter(
-                      fontSize: ResponsiveHelper.sp(15),
+                    style: AppTypography.headlineSm.copyWith(
+                      fontSize: context.responsiveFont(15),
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   InkWell(
                     onTap: () => _showAllPlayersBottomSheet(context, players),
                     borderRadius: BorderRadius.circular(8),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.widthPct(1.5),
+                        vertical: context.heightPct(0.5),
+                      ),
                       child: Row(
                         children: [
                           Text(
                             "Show All (${players.length})",
-                            style: GoogleFonts.inter(
-                              fontSize: ResponsiveHelper.sp(12.5),
+                            style: AppTypography.headlineSm.copyWith(
+                              fontSize: context.responsiveFont(12.5),
                               fontWeight: FontWeight.bold,
                               color: AppColors.accent,
                             ),
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: context.widthPct(1)),
                           const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColors.accent),
                         ],
                       ),
@@ -263,13 +276,13 @@ class PlayerPoolSection extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.heightPct(2)),
               SizedBox(
-                height: ResponsiveHelper.h(95),
+                height: context.heightPct(12).clamp(88.0, 108.0),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: players.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 14),
+                  separatorBuilder: (_, __) => SizedBox(width: context.widthPct(3.5)),
                   itemBuilder: (context, index) {
                     final player = players[index];
                     final isHost = index == 0 || player.id == hostId;
@@ -284,18 +297,18 @@ class PlayerPoolSection extends StatelessWidget {
                             xp: player.xp,
                             radius: 24,
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: context.heightPct(0.8)),
                           SizedBox(
-                            width: 70,
+                            width: context.widthPct(18).clamp(64.0, 76.0),
                             child: Text(
                               displayName,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.inter(
-                                fontSize: ResponsiveHelper.sp(11),
+                              style: AppTypography.bodySm.copyWith(
+                                fontSize: context.responsiveFont(11),
                                 fontWeight: isHost ? FontWeight.bold : FontWeight.w500,
-                                color: isHost ? AppColors.accent : Colors.white70,
+                                color: isHost ? AppColors.accent : AppColors.textSecondary,
                               ),
                             ),
                           ),

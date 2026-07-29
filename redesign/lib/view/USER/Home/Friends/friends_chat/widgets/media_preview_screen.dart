@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kGreen = AppColors.accent;
-const kMuted = Colors.white38;
 
 class MediaPreviewScreen extends StatefulWidget {
   final String filePath;
@@ -56,13 +54,16 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.background,
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
         title: Text(
           widget.isVideo ? "Send Video" : "Send Photo",
-          style: TextStyle(color: Colors.white),
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(18),
+          ),
         ),
       ),
       body: Column(
@@ -76,8 +77,11 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
           ),
           // Bottom bar with send button
           Container(
-            color: Colors.black.withValues(alpha: 0.8),
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
+            color: AppColors.background.withValues(alpha: 0.8),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.widthPct(4),
+              vertical: context.heightPct(1.5),
+            ),
             child: SafeArea(
               top: false,
               child: Row(
@@ -85,24 +89,28 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
                   Expanded(
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+                        horizontal: context.widthPct(4),
+                        vertical: context.heightPct(1.2),
                       ),
                       decoration: BoxDecoration(
-                        color: Color(0xFF1E1E1E),
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+                        border: Border.all(color: AppColors.borderDark),
                       ),
                       child: TextField(
                         controller: _captionController,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(16),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(15),
                         ),
                         textCapitalization: TextCapitalization.sentences,
                         maxLines: null,
                         decoration: InputDecoration(
                           hintText: "Add a caption...",
-                          hintStyle: TextStyle(color: kMuted, fontSize: 16),
+                          hintStyle: AppTypography.bodySm.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(15),
+                          ),
                           border: InputBorder.none,
                           isDense: true,
                           contentPadding: EdgeInsets.zero,
@@ -110,19 +118,19 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: context.widthPct(3)),
                   GestureDetector(
                     onTap: () =>
                         Navigator.pop(context, _captionController.text),
                     child: Container(
-                      width: ResponsiveHelper.w(52),
-                      height: ResponsiveHelper.h(52),
-                      decoration: BoxDecoration(
-                        color: kGreen,
+                      width: context.minDimensionPct(13).clamp(44.0, 52.0),
+                      height: context.minDimensionPct(13).clamp(44.0, 52.0),
+                      decoration: const BoxDecoration(
+                        color: AppColors.accent,
                         shape: BoxShape.circle,
                       ),
-                      child: Center(
-                        child: Icon(Icons.send, color: Colors.black, size: 24),
+                      child: const Center(
+                        child: Icon(Icons.send, color: AppColors.background, size: 22),
                       ),
                     ),
                   ),
@@ -151,7 +159,7 @@ class _MediaPreviewScreenState extends State<MediaPreviewScreen> {
     if (_chewieController == null ||
         _videoController == null ||
         !_videoController!.value.isInitialized) {
-      return CircularProgressIndicator(color: kGreen);
+      return const CircularProgressIndicator(color: AppColors.accent);
     }
     return AspectRatio(
       aspectRatio: _videoController!.value.aspectRatio,

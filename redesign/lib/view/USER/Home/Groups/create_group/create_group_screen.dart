@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 
 // Internal Widgets
@@ -11,11 +13,6 @@ import 'widgets/member_count_slider.dart';
 import 'widgets/create_group_submit_button.dart';
 import 'widgets/create_group_overlay.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kBg = Color(0xFF0C0C0C);
-const kSurface = Color(0xFF161616);
-const kGreen = Color(0xFF6EDC6A);
-const kMuted = Colors.white54;
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});
@@ -81,19 +78,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: kBg,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Create Group',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: ResponsiveHelper.sp(20),
+          style: AppTypography.displayLg.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -102,119 +99,126 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         children: [
           SafeArea(
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(20)),
-              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.widthPct(4),
+                vertical: context.heightPct(2),
+              ),
+              physics: const BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Photo section
-                  GroupImagePicker(),
-                  SizedBox(height: 32),
+                  const GroupImagePicker(),
+                  SizedBox(height: context.heightPct(3)),
 
                   // Group Name
-                  _buildSectionTitle('GROUP NAME'),
-                  SizedBox(height: 12),
+                  _buildSectionTitle(context, 'GROUP NAME'),
+                  SizedBox(height: context.heightPct(1.2)),
                   CreateGroupTextField(
                     controller: _nameController,
                     hint: 'Enter your squad name',
                   ),
-                  SizedBox(height: 24),
+                  SizedBox(height: context.heightPct(2.5)),
 
                   // Group Description
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildSectionTitle('GROUP DESCRIPTION'),
+                      _buildSectionTitle(context, 'GROUP DESCRIPTION'),
                       Text(
                         '$_descLength / 200',
-                        style: TextStyle(
-                          color: kMuted,
-                          fontSize: ResponsiveHelper.sp(10),
+                        style: AppTypography.labelCaps10.copyWith(
+                          color: AppColors.muted,
+                          fontSize: context.responsiveFont(10),
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: context.heightPct(1.2)),
                   CreateGroupTextField(
                     controller: _descController,
                     hint: 'Tell players what this group is about...',
                     maxLines: 4,
                     maxLength: 200,
                   ),
-                  SizedBox(height: 24),
+                  SizedBox(height: context.heightPct(2.5)),
 
                   // Select Sport
-                  _buildSectionTitle('SELECT SPORT'),
-                  SizedBox(height: 12),
+                  _buildSectionTitle(context, 'SELECT SPORT'),
+                  SizedBox(height: context.heightPct(1.2)),
                   SportSelector(
                     sports: _sports,
                     selectedSport: _selectedSport,
                     onSportSelected: (sport) =>
                         setState(() => _selectedSport = sport),
                   ),
-                  SizedBox(height: 24),
+                  SizedBox(height: context.heightPct(2.5)),
 
                   // Group Privacy
-                  _buildSectionTitle('GROUP PRIVACY'),
-                  SizedBox(height: 12),
+                  _buildSectionTitle(context, 'GROUP PRIVACY'),
+                  SizedBox(height: context.heightPct(1.2)),
                   PrivacySelector(
                     isPublic: _isPublic,
                     onPrivacyChanged: (val) => setState(() => _isPublic = val),
                   ),
-                  SizedBox(height: 24),
+                  SizedBox(height: context.heightPct(2.5)),
 
                   // Maximum Members
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildSectionTitle('MAXIMUM MEMBERS'),
+                      _buildSectionTitle(context, 'MAXIMUM MEMBERS'),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.widthPct(2.5),
+                          vertical: context.heightPct(0.5),
+                        ),
                         decoration: BoxDecoration(
-                          color: kSurface,
-                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(1.5)),
+                          border: Border.all(color: AppColors.borderDark),
                         ),
                         child: Text(
                           _maxMembers.toInt().toString(),
-                          style: TextStyle(
-                            color: kGreen,
-                            fontSize: ResponsiveHelper.sp(13),
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.accent,
+                            fontSize: context.responsiveFont(13),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: context.heightPct(1)),
                   MemberCountSlider(
                     maxMembers: _maxMembers,
                     onChanged: (val) => setState(() => _maxMembers = val),
                   ),
-                  SizedBox(height: 48),
+                  SizedBox(height: context.heightPct(4)),
 
                   // Create Group Button
                   CreateGroupSubmitButton(onPressed: _handleCreate),
-                  SizedBox(height: 20),
+                  SizedBox(height: context.heightPct(2)),
                 ],
               ),
             ),
           ),
 
           // Full-screen loading overlay during creation
-          CreateGroupOverlay(),
+          const CreateGroupOverlay(),
         ],
       ),
     );
   }
 
-  Widget _buildSectionTitle(String text) {
+  Widget _buildSectionTitle(BuildContext context, String text) {
     return Text(
       text,
-      style: TextStyle(
-        color: kMuted,
-        fontSize: ResponsiveHelper.sp(10),
+      style: AppTypography.labelCaps10.copyWith(
+        color: AppColors.muted,
+        fontSize: context.responsiveFont(11),
         fontWeight: FontWeight.bold,
         letterSpacing: 1.2,
       ),

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Groups_Model/groups_model.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_info_controller.dart';
 import 'member_tile.dart';
 import 'add_members_tile.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const _kSurface = Color(0xFF222222);
-const _kMuted = Colors.white54;
 
 class GroupMembersSection extends StatelessWidget {
   final GroupModel group;
@@ -41,10 +40,11 @@ class GroupMembersSection extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: _kSurface.withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        border: Border.all(color: AppColors.borderDark),
       ),
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -53,17 +53,17 @@ class GroupMembersSection extends StatelessWidget {
             children: [
               Text(
                 "MEMBERS ($totalCount MEMBERS)",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(12),
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(12),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5,
                 ),
               ),
-              Icon(Icons.search, color: _kMuted, size: 20),
+              const Icon(Icons.search, color: AppColors.muted, size: 20),
             ],
           ),
-          SizedBox(height: 16),
+          SizedBox(height: context.heightPct(1.5)),
           
           if (ctrl.isAdmin.value)
              AddMembersTile(ctrl: ctrl),

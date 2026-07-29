@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kGreen = AppColors.accent;
 
 class BuildSquadCTA extends StatelessWidget {
   const BuildSquadCTA({super.key});
@@ -11,12 +10,17 @@ class BuildSquadCTA extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(1.2),
+        context.widthPct(4),
+        context.heightPct(1.2),
+      ),
       child: Container(
-        padding: EdgeInsets.all(ResponsiveHelper.w(18)),
+        padding: EdgeInsets.all(context.widthPct(4)),
         decoration: BoxDecoration(
-          color: kGreen,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(22)),
+          color: AppColors.accent,
+          borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
         ),
         child: Row(
           children: [
@@ -26,30 +30,47 @@ class BuildSquadCTA extends StatelessWidget {
                 children: [
                   Text(
                     'Build a New Squad',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: ResponsiveHelper.sp(16),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.background,
+                      fontSize: context.responsiveFont(16),
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  SizedBox(height: context.heightPct(0.3)),
                   Text(
                     'Book turfs faster with your team.',
-                    style: TextStyle(color: Colors.black87),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.background.withValues(alpha: 0.85),
+                      fontSize: context.responsiveFont(13),
+                    ),
                   ),
                 ],
               ),
             ),
+            SizedBox(width: context.widthPct(2)),
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.background,
+                foregroundColor: AppColors.textPrimary,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                 ),
               ),
-              child: Text('Start Now'),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Start Now',
+                  style: AppTypography.bodySm.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

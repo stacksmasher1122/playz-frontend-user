@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CameraCaptureOverlay extends StatelessWidget {
@@ -9,8 +10,8 @@ class CameraCaptureOverlay extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       color: Colors.black.withValues(alpha: 0.4),
-      child: Center(
-        child: CircularProgressIndicator(color: Colors.white),
+      child: const Center(
+        child: CircularProgressIndicator(color: AppColors.accent),
       ),
     );
   }

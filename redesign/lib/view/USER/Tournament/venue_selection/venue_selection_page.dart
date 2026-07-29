@@ -38,26 +38,39 @@ class _VenueSelectionPageState extends State<VenueSelectionPage> {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.onPrimary, size: ResponsiveHelper.w(20)),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.textPrimary,
+            size: context.responsiveFont(20),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          "Create Tournament",
-          style: AppTypography.headlineMd.copyWith(
-            color: AppColors.accent,
-            fontWeight: FontWeight.bold,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "Create Tournament",
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.accent,
+              fontSize: context.responsiveFont(18),
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.close, color: AppColors.onPrimary, size: ResponsiveHelper.w(24)),
+            icon: Icon(
+              Icons.close_rounded,
+              color: AppColors.textPrimary,
+              size: context.responsiveFont(22),
+            ),
             onPressed: () => Navigator.pop(context),
           ),
         ],
@@ -72,30 +85,26 @@ class _VenueSelectionPageState extends State<VenueSelectionPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: ResponsiveHelper.h(8)),
+                    SizedBox(height: context.heightPct(1)),
                     const ProgressHeader(
                       currentStep: 2,
                       totalSteps: 5,
                       title: "Step 2 of 5: Venue Selection",
                     ),
-                    SizedBox(height: ResponsiveHelper.h(24)),
+                    SizedBox(height: context.heightPct(2.5)),
                     
                     Obx(() => VenueTabbar(
                       selectedTab: controller.selectedTab.value,
                       onTabChanged: controller.changeTab,
                     )),
-                    SizedBox(height: ResponsiveHelper.h(24)),
+                    SizedBox(height: context.heightPct(2.5)),
                     
                     Obx(() {
-                      // Read the .value out of the Rx<double?> wrapper before null-checking.
-                      // Without .value, we're comparing the Rx object itself (always non-null),
-                      // which is why the analyzer warned about unnecessary null comparison.
                       final lat = controller.selectedVenueLatitude.value;
                       final lng = controller.selectedVenueLongitude.value;
                       if (lat != null && lng != null) {
                         return Padding(
-                          padding: EdgeInsets.only(bottom: ResponsiveHelper.h(24)),
-                          // Pass the unwrapped double values — MapPreview expects non-nullable double.
+                          padding: EdgeInsets.only(bottom: context.heightPct(2.5)),
                           child: MapPreview(latitude: lat, longitude: lng),
                         );
                       }
@@ -106,13 +115,13 @@ class _VenueSelectionPageState extends State<VenueSelectionPage> {
                       controller: controller.searchController,
                       onLocationTap: () => controller.onLocationTap(context),
                     ),
-                    SizedBox(height: ResponsiveHelper.h(24)),
+                    SizedBox(height: context.heightPct(2.5)),
                     
                     // Filter Chips
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                       child: Obx(() => Row(
                         children: controller.availableFilters.map((filter) {
                           return VenueFilterChip(
@@ -123,25 +132,26 @@ class _VenueSelectionPageState extends State<VenueSelectionPage> {
                         }).toList(),
                       )),
                     ),
-                    SizedBox(height: ResponsiveHelper.h(24)),
+                    SizedBox(height: context.heightPct(2.5)),
                     
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                       child: Text(
                         "Recommended Venues",
                         style: AppTypography.headlineMd.copyWith(
-                          color: AppColors.onPrimary,
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(16),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    SizedBox(height: ResponsiveHelper.h(16)),
+                    SizedBox(height: context.heightPct(1.8)),
                     
                     // Venue List
                     Obx(() => ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                       itemCount: controller.filteredVenues.length,
                       itemBuilder: (context, index) {
                         final venue = controller.filteredVenues[index];
@@ -151,7 +161,7 @@ class _VenueSelectionPageState extends State<VenueSelectionPage> {
                         );
                       },
                     )),
-                    SizedBox(height: ResponsiveHelper.h(24)),
+                    SizedBox(height: context.heightPct(2.5)),
                   ],
                 ),
               ),

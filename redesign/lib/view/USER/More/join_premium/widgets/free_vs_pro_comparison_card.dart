@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class FreeVsProComparisonCard extends StatelessWidget {
@@ -11,24 +11,24 @@ class FreeVsProComparisonCard extends StatelessWidget {
     ResponsiveHelper.init(context);
 
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
-        color: const Color(0xFF141414),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         children: [
           // Header Title
           Text(
             'Free vs Pro',
-            style: GoogleFonts.inter(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(18),
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(18),
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: ResponsiveHelper.h(14)),
+          SizedBox(height: context.heightPct(1.8)),
 
           // Subheader Row: FREE | PRO
           Row(
@@ -39,9 +39,9 @@ class FreeVsProComparisonCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'FREE',
-                    style: GoogleFonts.inter(
+                    style: AppTypography.labelCaps10.copyWith(
                       color: AppColors.muted,
-                      fontSize: ResponsiveHelper.sp(11),
+                      fontSize: context.responsiveFont(11),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -52,9 +52,9 @@ class FreeVsProComparisonCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'PRO',
-                    style: GoogleFonts.inter(
+                    style: AppTypography.labelCaps10.copyWith(
                       color: AppColors.accent,
-                      fontSize: ResponsiveHelper.sp(11),
+                      fontSize: context.responsiveFont(11),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -62,23 +62,23 @@ class FreeVsProComparisonCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: ResponsiveHelper.h(10)),
+          SizedBox(height: context.heightPct(1.2)),
 
           // Row 1: Match History
-          _ComparisonRow(
+          const _ComparisonRow(
             feature: 'Match History',
             freeVal: '30 Days',
             proVal: 'Unlimited',
           ),
-          const Divider(color: Colors.white10, height: 20),
+          const Divider(color: AppColors.borderDark, height: 20),
 
           // Row 2: Analytics
-          _ComparisonRow(
+          const _ComparisonRow(
             feature: 'Analytics',
             freeVal: 'Basic',
             proVal: 'Advanced',
           ),
-          const Divider(color: Colors.white10, height: 20),
+          const Divider(color: AppColors.borderDark, height: 20),
 
           // Row 3: AI Insights
           Row(
@@ -87,7 +87,10 @@ class FreeVsProComparisonCard extends StatelessWidget {
                 flex: 4,
                 child: Text(
                   'AI Insights',
-                  style: GoogleFonts.inter(color: Colors.white, fontSize: ResponsiveHelper.sp(13)),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(13),
+                  ),
                 ),
               ),
               const Expanded(
@@ -129,9 +132,9 @@ class _ComparisonRow extends StatelessWidget {
           flex: 4,
           child: Text(
             feature,
-            style: GoogleFonts.inter(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(13),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(13),
             ),
           ),
         ),
@@ -140,9 +143,9 @@ class _ComparisonRow extends StatelessWidget {
           child: Center(
             child: Text(
               freeVal,
-              style: GoogleFonts.inter(
-                color: Colors.white70,
-                fontSize: ResponsiveHelper.sp(12),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(12),
               ),
             ),
           ),
@@ -152,9 +155,9 @@ class _ComparisonRow extends StatelessWidget {
           child: Center(
             child: Text(
               proVal,
-              style: GoogleFonts.inter(
+              style: AppTypography.bodySm.copyWith(
                 color: AppColors.accent,
-                fontSize: ResponsiveHelper.sp(12),
+                fontSize: context.responsiveFont(12),
                 fontWeight: FontWeight.bold,
               ),
             ),

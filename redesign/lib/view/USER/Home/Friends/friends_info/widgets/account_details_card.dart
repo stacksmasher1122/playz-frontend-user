@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/player_info_model.dart';
 import 'info_detail_row.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-Color _kGreen = AppColors.accent;
-Color _kSurface = Color(0xFF222222);
 
 class AccountDetailsCard extends StatelessWidget {
   final PlayerInfoModel info;
@@ -23,19 +21,20 @@ class AccountDetailsCard extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             "ACCOUNT DETAILS",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(12),
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(12),
               fontWeight: FontWeight.w800,
               letterSpacing: 2.0,
             ),
           ),
         ),
-        SizedBox(height: 16),
+        SizedBox(height: context.heightPct(1.5)),
         Container(
           decoration: BoxDecoration(
-            color: _kSurface,
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+            border: Border.all(color: AppColors.borderDark),
           ),
           child: Column(
             children: [
@@ -43,13 +42,13 @@ class AccountDetailsCard extends StatelessWidget {
                 icon: Icons.alternate_email,
                 title: "Username",
                 value: info.username,
-                valueColor: _kGreen,
+                valueColor: AppColors.accent,
               ),
               Divider(
-                color: Colors.white12,
-                height: ResponsiveHelper.h(1),
-                indent: 20,
-                endIndent: 20,
+                color: AppColors.borderDark,
+                height: context.heightPct(0.1),
+                indent: context.widthPct(4),
+                endIndent: context.widthPct(4),
               ),
               InfoDetailRow(
                 icon: Icons.calendar_today_outlined,
@@ -57,13 +56,13 @@ class AccountDetailsCard extends StatelessWidget {
                 value: info.joinedAt != null
                     ? DateFormat('MMM yyyy').format(info.joinedAt!)
                     : "-",
-                valueColor: Colors.white,
+                valueColor: AppColors.textPrimary,
               ),
               Divider(
-                color: Colors.white12,
-                height: ResponsiveHelper.h(1),
-                indent: 20,
-                endIndent: 20,
+                color: AppColors.borderDark,
+                height: context.heightPct(0.1),
+                indent: context.widthPct(4),
+                endIndent: context.widthPct(4),
               ),
               InfoDetailRow(
                 icon: Icons.people_outline,
@@ -71,7 +70,7 @@ class AccountDetailsCard extends StatelessWidget {
                 value: info.friendsSince != null
                     ? DateFormat('MMM yyyy').format(info.friendsSince!)
                     : "-",
-                valueColor: Colors.white,
+                valueColor: AppColors.textPrimary,
               ),
             ],
           ),

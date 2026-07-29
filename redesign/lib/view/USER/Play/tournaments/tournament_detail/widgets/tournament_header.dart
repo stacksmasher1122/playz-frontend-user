@@ -14,6 +14,8 @@ class TournamentHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     final String coverUrl = data['coverImageUrl'] ?? '';
     final String name = data['name'] ?? 'Tournament';
     final String venueName = data['venue']?['name'] ?? 'TBD';
@@ -27,14 +29,17 @@ class TournamentHeader extends StatelessWidget {
     }
 
     return SliverAppBar(
-      expandedHeight: ResponsiveHelper.h(250),
+      expandedHeight: context.heightPct(30).clamp(220.0, 280.0),
       pinned: true,
       backgroundColor: AppColors.background,
       leading: IconButton(
         icon: Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
-          child: Icon(Icons.arrow_back, color: AppColors.onPrimary, size: 20),
+          padding: EdgeInsets.all(context.widthPct(2)),
+          decoration: BoxDecoration(
+            color: AppColors.background.withValues(alpha: 0.6),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 18),
         ),
         onPressed: onBack,
       ),
@@ -47,10 +52,16 @@ class TournamentHeader extends StatelessWidget {
                 imageUrl: coverUrl,
                 fit: BoxFit.cover,
                 placeholder: (context, url) => Container(color: AppColors.card),
-                errorWidget: (context, url, error) => Container(color: AppColors.card, child: Icon(Icons.image, color: AppColors.muted)),
+                errorWidget: (context, url, error) => Container(
+                  color: AppColors.card,
+                  child: const Icon(Icons.image, color: AppColors.muted),
+                ),
               )
             else
-              Container(color: AppColors.card, child: Icon(Icons.emoji_events, size: 64, color: AppColors.muted)),
+              Container(
+                color: AppColors.card,
+                child: const Icon(Icons.emoji_events_rounded, size: 64, color: AppColors.muted),
+              ),
 
             // Gradient Overlay
             Container(
@@ -68,32 +79,58 @@ class TournamentHeader extends StatelessWidget {
             ),
 
             Positioned(
-              bottom: 16,
-              left: 16,
-              right: 16,
+              bottom: context.heightPct(2),
+              left: context.widthPct(4),
+              right: context.widthPct(4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     name,
-                    style: AppTypography.displaySm.copyWith(color: AppColors.onPrimary, fontWeight: FontWeight.bold),
+                    style: AppTypography.displayLg.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.responsiveFont(22),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: context.heightPct(1)),
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, color: AppColors.accent, size: 16),
-                      SizedBox(width: 6),
-                      Text(dateStr, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary)),
+                      const Icon(Icons.calendar_today_rounded, color: AppColors.accent, size: 16),
+                      SizedBox(width: context.widthPct(1.5)),
+                      Expanded(
+                        child: Text(
+                          dateStr,
+                          style: AppTypography.bodyMd.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(13),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: context.heightPct(0.5)),
                   Row(
                     children: [
-                      Icon(Icons.location_on, color: AppColors.accent, size: 16),
-                      SizedBox(width: 6),
-                      Text(venueName, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary)),
+                      const Icon(Icons.location_on_rounded, color: AppColors.accent, size: 16),
+                      SizedBox(width: context.widthPct(1.5)),
+                      Expanded(
+                        child: Text(
+                          venueName,
+                          style: AppTypography.bodyMd.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(13),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

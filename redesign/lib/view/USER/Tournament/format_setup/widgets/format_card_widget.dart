@@ -28,16 +28,18 @@ class FormatCardWidget extends StatefulWidget {
 class _FormatCardWidgetState extends State<FormatCardWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return GestureDetector(
       onTap: widget.onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+        padding: EdgeInsets.all(context.widthPct(3.5)),
         decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+          color: widget.isSelected ? AppColors.accent.withValues(alpha: 0.08) : AppColors.card,
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
           border: Border.all(
-            color: widget.isSelected ? AppColors.accent : Colors.transparent,
+            color: widget.isSelected ? AppColors.accent : AppColors.card,
             width: 2,
           ),
         ),
@@ -48,8 +50,8 @@ class _FormatCardWidgetState extends State<FormatCardWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: ResponsiveHelper.w(40),
-                  height: ResponsiveHelper.w(40),
+                  width: context.widthPct(10).clamp(38.0, 44.0),
+                  height: context.widthPct(10).clamp(38.0, 44.0),
                   decoration: BoxDecoration(
                     color: widget.isSelected
                         ? AppColors.accent.withValues(alpha: 0.2)
@@ -59,22 +61,29 @@ class _FormatCardWidgetState extends State<FormatCardWidget> {
                   child: Icon(
                     widget.icon,
                     color: widget.isSelected ? AppColors.accent : AppColors.muted,
-                    size: ResponsiveHelper.w(20),
+                    size: context.responsiveFont(20),
                   ),
                 ),
-                SizedBox(height: ResponsiveHelper.h(12)),
+                SizedBox(height: context.heightPct(1.2)),
                 Text(
                   widget.title,
                   style: AppTypography.headlineSm.copyWith(
-                    color: widget.isSelected ? AppColors.accent : AppColors.onPrimary,
+                    color: widget.isSelected ? AppColors.accent : AppColors.textPrimary,
+                    fontSize: context.responsiveFont(14),
+                    fontWeight: FontWeight.bold,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: ResponsiveHelper.h(4)),
+                SizedBox(height: context.heightPct(0.5)),
                 Text(
                   widget.description,
                   style: AppTypography.bodySm.copyWith(
                     color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -83,9 +92,9 @@ class _FormatCardWidgetState extends State<FormatCardWidget> {
                 top: 0,
                 right: 0,
                 child: Icon(
-                  Icons.check_circle,
+                  Icons.check_circle_rounded,
                   color: AppColors.accent,
-                  size: ResponsiveHelper.w(24),
+                  size: context.responsiveFont(20),
                 ),
               ),
           ],

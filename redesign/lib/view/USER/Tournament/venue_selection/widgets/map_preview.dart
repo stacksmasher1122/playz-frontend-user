@@ -15,6 +15,8 @@ class MapPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     // Basic dark style for preview
     final String darkMapStyle = '''
     [
@@ -27,16 +29,16 @@ class MapPreview extends StatelessWidget {
     ''';
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      margin: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       width: double.infinity,
-      height: ResponsiveHelper.w(328) * (7 / 16), // Aspect ratio 16:7 approx
+      height: context.heightPct(18).clamp(120.0, 160.0),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: Border.all(color: AppColors.card, width: 1),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+        border: Border.all(color: AppColors.borderDark, width: 1),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
         child: AbsorbPointer(
           child: GoogleMap(
             initialCameraPosition: CameraPosition(

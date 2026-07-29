@@ -1,6 +1,3 @@
-/* ============================================================
-   SPLASH SCREEN
-   ============================================================ */
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
@@ -62,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (isProfileComplete && sports.length >= 4) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => UserAppNavShell()),
+          MaterialPageRoute(builder: (_) => const UserAppNavShell()),
         );
       } else {
         Navigator.pushReplacement(
@@ -73,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => OnboardingScreen()),
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
       );
     }
   }
@@ -86,6 +83,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     final logoSize = context.minDimensionPct(24);
     final progressWidth = context.widthPct(75);
     final percentageVal = (_progress * 100).toInt();
@@ -113,13 +112,13 @@ class _SplashScreenState extends State<SplashScreen> {
                     width: logoSize,
                     height: logoSize,
                     decoration: BoxDecoration(
-                      color: AppColors.spotifyGreen,
+                      color: AppColors.accent,
                       borderRadius: BorderRadius.circular(
                         context.minDimensionPct(6),
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.spotifyGreen.withValues(alpha: 0.4),
+                          color: AppColors.accent.withValues(alpha: 0.4),
                           blurRadius: 24,
                           spreadRadius: 2,
                         ),
@@ -151,7 +150,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     textAlign: TextAlign.center,
                     style: AppTypography.headlineXl.copyWith(
                       fontSize: context.responsiveFont(22),
-                      color: AppColors.spotifyGreen,
+                      color: AppColors.accent,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.8,
                       height: 1.3,
@@ -180,7 +179,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         '$percentageVal%',
                         style: AppTypography.monoMd.copyWith(
                           fontSize: context.responsiveFont(14),
-                          color: AppColors.spotifyGreen,
+                          color: AppColors.accent,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -198,7 +197,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         value: _progress,
                         backgroundColor: AppColors.card,
                         valueColor: const AlwaysStoppedAnimation<Color>(
-                          AppColors.spotifyGreen,
+                          AppColors.accent,
                         ),
                       ),
                     ),

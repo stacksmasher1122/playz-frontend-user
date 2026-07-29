@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/More_Models/support_faq_model.dart';
 
 class FaqAccordionItem extends StatelessWidget {
@@ -16,94 +18,117 @@ class FaqAccordionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(0.8),
+      ),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
         border: Border.all(
-          color: item.isExpanded ? const Color(0xFF00E676).withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.06),
+          color: item.isExpanded ? AppColors.accent.withValues(alpha: 0.5) : AppColors.borderDark,
         ),
       ),
       child: Column(
         children: [
           ListTile(
             onTap: onToggle,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: context.widthPct(4),
+              vertical: context.heightPct(0.5),
+            ),
             title: Text(
               item.question,
-              style: GoogleFonts.inter(
-                color: Colors.white,
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
                 fontWeight: FontWeight.w600,
-                fontSize: 14,
+                fontSize: context.responsiveFont(14),
               ),
             ),
             trailing: Icon(
               item.isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
-              color: item.isExpanded ? const Color(0xFF00E676) : Colors.white54,
+              color: item.isExpanded ? AppColors.accent : AppColors.muted,
             ),
           ),
           if (item.isExpanded) ...[
-            const Divider(color: Colors.white10, height: 1),
+            const Divider(color: AppColors.borderDark, height: 1),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(context.widthPct(4)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     item.answer,
-                    style: GoogleFonts.inter(
-                      color: Colors.white70,
-                      fontSize: 13,
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: context.responsiveFont(13),
                       height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  SizedBox(height: context.heightPct(1.8)),
                   Row(
                     children: [
                       Text(
                         'Was this helpful?',
-                        style: GoogleFonts.inter(color: Colors.white38, fontSize: 12),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.muted,
+                          fontSize: context.responsiveFont(12),
+                        ),
                       ),
                       const Spacer(),
                       InkWell(
                         onTap: () => onVote(true),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.widthPct(2.5),
+                            vertical: context.heightPct(0.5),
+                          ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.05),
-                            borderRadius: BorderRadius.circular(8),
+                            color: AppColors.textPrimary.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.thumb_up_alt_outlined, color: Color(0xFF00E676), size: 14),
-                              const SizedBox(width: 4),
+                              const Icon(Icons.thumb_up_alt_outlined, color: AppColors.accent, size: 14),
+                              SizedBox(width: context.widthPct(1)),
                               Text(
                                 '${item.helpfulCount}',
-                                style: GoogleFonts.inter(color: Colors.white70, fontSize: 12),
+                                style: AppTypography.bodySm.copyWith(
+                                  color: AppColors.textSecondary,
+                                  fontSize: context.responsiveFont(12),
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: context.widthPct(2)),
                       InkWell(
                         onTap: () => onVote(false),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.widthPct(2.5),
+                            vertical: context.heightPct(0.5),
+                          ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.05),
-                            borderRadius: BorderRadius.circular(8),
+                            color: AppColors.textPrimary.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.thumb_down_alt_outlined, color: Colors.white38, size: 14),
-                              const SizedBox(width: 4),
+                              const Icon(Icons.thumb_down_alt_outlined, color: AppColors.muted, size: 14),
+                              SizedBox(width: context.widthPct(1)),
                               Text(
                                 '${item.unhelpfulCount}',
-                                style: GoogleFonts.inter(color: Colors.white70, fontSize: 12),
+                                style: AppTypography.bodySm.copyWith(
+                                  color: AppColors.textSecondary,
+                                  fontSize: context.responsiveFont(12),
+                                ),
                               ),
                             ],
                           ),

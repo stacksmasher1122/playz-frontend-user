@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../bookings_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingsHeader extends StatelessWidget {
@@ -9,7 +10,12 @@ class BookingsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(1.5),
+        context.widthPct(4),
+        context.heightPct(1),
+      ),
       child: Row(
         children: [
           Expanded(
@@ -18,16 +24,23 @@ class BookingsHeader extends StatelessWidget {
               children: [
                 Text(
                   'My Bookings',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ResponsiveHelper.sp(22),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.displayLg.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(22),
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: context.heightPct(0.4)),
                 Text(
                   'Upcoming sessions & history',
-                  style: TextStyle(color: MyBookingsConstants.muted, fontSize: 13),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.textSecondary,
+                    fontSize: context.responsiveFont(13),
+                  ),
                 ),
               ],
             ),

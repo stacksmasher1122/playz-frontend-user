@@ -10,6 +10,8 @@ class PrizePoolSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     final entryFee = data['entryFee'] ?? {};
     final bool isFree = entryFee['isFree'] ?? true;
     final num? amount = entryFee['amount'];
@@ -19,10 +21,11 @@ class PrizePoolSection extends StatelessWidget {
     final List<dynamic> tiers = prizePool['tiers'] ?? [];
 
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,31 +33,53 @@ class PrizePoolSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Entry Fee & Prizes", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
+              Expanded(
+                child: Text(
+                  "Entry Fee & Prizes",
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(16),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.widthPct(3),
+                  vertical: context.heightPct(0.8),
+                ),
                 decoration: BoxDecoration(
                   color: isFree ? AppColors.accent.withValues(alpha: 0.2) : AppColors.surface,
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                  border: Border.all(color: isFree ? AppColors.accent : AppColors.outlineVariant),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                  border: Border.all(color: isFree ? AppColors.accent : AppColors.borderDark),
                 ),
                 child: Text(
                   isFree ? "Free Entry" : "₹$amount",
-                  style: AppTypography.labelCaps.copyWith(
-                    color: isFree ? AppColors.accent : AppColors.onPrimary,
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: isFree ? AppColors.accent : AppColors.textPrimary,
+                    fontSize: context.responsiveFont(12),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: ResponsiveHelper.h(16)),
-          Divider(color: AppColors.surface, height: 1),
-          SizedBox(height: ResponsiveHelper.h(16)),
+          SizedBox(height: context.heightPct(1.5)),
+          const Divider(color: AppColors.borderDark, height: 1),
+          SizedBox(height: context.heightPct(1.5)),
           if (!hasPrizePool || tiers.isEmpty)
             Center(
-              child: Text(
-                "No prizes configured for this tournament.",
-                style: AppTypography.bodyMd.copyWith(color: AppColors.muted),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
+                child: Text(
+                  "No prizes configured for this tournament.",
+                  style: AppTypography.bodyMd.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(13),
+                  ),
+                ),
               ),
             )
           else
@@ -65,15 +90,34 @@ class PrizePoolSection extends StatelessWidget {
                 final String title = isRank ? "${tier['rankPosition']} Place" : (tier['title'] ?? 'Prize');
                 final num tierAmount = tier['amount'] ?? 0;
                 return Padding(
-                  padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
+                  padding: EdgeInsets.only(bottom: context.heightPct(1.2)),
                   child: Row(
                     children: [
-                      Icon(isRank ? Icons.emoji_events : Icons.star, color: AppColors.accent, size: ResponsiveHelper.w(20)),
-                      SizedBox(width: ResponsiveHelper.w(12)),
-                      Expanded(
-                        child: Text(title, style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary)),
+                      Icon(
+                        isRank ? Icons.emoji_events_rounded : Icons.star_rounded,
+                        color: AppColors.accent,
+                        size: 20,
                       ),
-                      Text("₹$tierAmount", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
+                      SizedBox(width: context.widthPct(3)),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: AppTypography.bodyLg.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(14),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        "₹$tierAmount",
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: context.responsiveFont(14),
+                        ),
+                      ),
                     ],
                   ),
                 );

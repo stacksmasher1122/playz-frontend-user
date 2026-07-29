@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class ReferralShareCard extends StatelessWidget {
   final String code;
@@ -12,7 +14,7 @@ class ReferralShareCard extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Referral Code "$code" copied to clipboard!'),
-        backgroundColor: const Color(0xFF00E676),
+        backgroundColor: AppColors.accent,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -24,7 +26,7 @@ class ReferralShareCard extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Invitation link & code copied! Share with your friends via WhatsApp or Messages.'),
-        backgroundColor: Color(0xFF00E676),
+        backgroundColor: AppColors.accent,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -32,20 +34,25 @@ class ReferralShareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(1),
+      ),
+      padding: EdgeInsets.all(context.widthPct(5)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF1E1E1E),
-            const Color(0xFF0F2B1D),
+            AppColors.card,
+            AppColors.accent.withValues(alpha: 0.12),
           ],
         ),
-        border: Border.all(color: const Color(0xFF00E676).withValues(alpha: 0.3)),
+        border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,104 +60,127 @@ class ReferralShareCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(context.widthPct(2.5)),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF00E676).withValues(alpha: 0.15),
+                  color: AppColors.accent.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.group_add_rounded, color: Color(0xFF00E676), size: 24),
+                child: const Icon(Icons.group_add_rounded, color: AppColors.accent, size: 24),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: context.widthPct(3)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Invite Friends & Earn 500 Coins',
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: 15,
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.textPrimary,
+                        fontSize: context.responsiveFont(15),
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: context.heightPct(0.3)),
                     Text(
                       'Your friend gets 500 coins on signup too!',
-                      style: GoogleFonts.inter(
-                        color: Colors.white54,
-                        fontSize: 12,
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(12),
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.heightPct(2)),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.widthPct(4),
+              vertical: context.heightPct(1.2),
+            ),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white10),
+              color: AppColors.background.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+              border: Border.all(color: AppColors.borderDark),
             ),
             child: Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'YOUR REFERRAL CODE',
-                      style: GoogleFonts.inter(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      code,
-                      style: GoogleFonts.inter(
-                        color: const Color(0xFF00E676),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.5,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'YOUR REFERRAL CODE',
+                        style: AppTypography.labelCaps10.copyWith(
+                          color: AppColors.muted,
+                          fontSize: context.responsiveFont(10),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: context.heightPct(0.3)),
+                      Text(
+                        code,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.accent,
+                          fontSize: context.responsiveFont(16),
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.5,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
-                const Spacer(),
                 TextButton.icon(
                   onPressed: () => _copyToClipboard(context),
-                  icon: const Icon(Icons.copy_rounded, color: Colors.white70, size: 16),
+                  icon: const Icon(Icons.copy_rounded, color: AppColors.textSecondary, size: 16),
                   label: Text(
                     'Copy',
-                    style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.responsiveFont(12),
+                    ),
                   ),
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.white.withValues(alpha: 0.08),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    backgroundColor: AppColors.textPrimary.withValues(alpha: 0.08),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.widthPct(3),
+                      vertical: context.heightPct(1),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: context.heightPct(1.8)),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () => _shareApp(context),
-              icon: const Icon(Icons.share_rounded, color: Colors.black, size: 18),
+              icon: const Icon(Icons.share_rounded, color: AppColors.background, size: 18),
               label: Text(
                 'Share PlayZ App Now',
-                style: GoogleFonts.inter(
-                  color: Colors.black,
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.background,
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: context.responsiveFont(14),
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00E676),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                backgroundColor: AppColors.accent,
+                padding: EdgeInsets.symmetric(vertical: context.heightPct(1.8)),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                 ),
               ),
             ),

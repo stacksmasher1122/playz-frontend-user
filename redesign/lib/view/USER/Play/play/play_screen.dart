@@ -57,7 +57,7 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> with SingleTickerProv
         bottom: false,
         child: Column(
           children: [
-            PlayTopBar(),
+            const PlayTopBar(),
             TabBar(
               controller: _tabController,
               indicatorColor: AppColors.accent,
@@ -86,10 +86,10 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> with SingleTickerProv
                       SizedBox(height: context.heightPct(2.5)),
                       const DateSelector(),
                       SizedBox(height: context.heightPct(1.2)),
-                      PlayActionRow(),
+                      const PlayActionRow(),
                       SizedBox(height: context.heightPct(1.5)),
                       const GameList(),
-                      EndOfResults(),
+                      const EndOfResults(),
                     ],
                   ),
                   // Tournaments

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class LanguageSelectorSheet extends StatelessWidget {
   final List<String> languages;
@@ -15,11 +17,12 @@ class LanguageSelectorSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      padding: EdgeInsets.all(context.widthPct(6)),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(6))),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -27,30 +30,34 @@ class LanguageSelectorSheet extends StatelessWidget {
         children: [
           Center(
             child: Container(
-              width: 40,
-              height: 4,
+              width: context.widthPct(10),
+              height: context.heightPct(0.5),
               decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(2),
+                color: AppColors.borderDark,
+                borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: context.heightPct(2.5)),
           Row(
             children: [
-              const Icon(Icons.language_rounded, color: Color(0xFF00E676), size: 24),
-              const SizedBox(width: 10),
-              Text(
-                'Select Preferred Language',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              const Icon(Icons.language_rounded, color: AppColors.accent, size: 24),
+              SizedBox(width: context.widthPct(2.5)),
+              Expanded(
+                child: Text(
+                  'Select Preferred Language',
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(18),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.heightPct(2)),
           Flexible(
             child: ListView.builder(
               shrinkWrap: true,
@@ -59,12 +66,14 @@ class LanguageSelectorSheet extends StatelessWidget {
                 final lang = languages[index];
                 final isSelected = lang == currentLanguage;
                 return Container(
-                  margin: const EdgeInsets.only(bottom: 8),
+                  margin: EdgeInsets.only(bottom: context.heightPct(1)),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF00E676).withValues(alpha: 0.15) : Colors.white.withValues(alpha: 0.04),
-                    borderRadius: BorderRadius.circular(14),
+                    color: isSelected
+                        ? AppColors.accent.withValues(alpha: 0.15)
+                        : AppColors.textPrimary.withValues(alpha: 0.04),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                     border: Border.all(
-                      color: isSelected ? const Color(0xFF00E676) : Colors.transparent,
+                      color: isSelected ? AppColors.accent : Colors.transparent,
                     ),
                   ),
                   child: ListTile(
@@ -74,13 +83,14 @@ class LanguageSelectorSheet extends StatelessWidget {
                     },
                     title: Text(
                       lang,
-                      style: GoogleFonts.inter(
-                        color: isSelected ? const Color(0xFF00E676) : Colors.white,
+                      style: AppTypography.bodySm.copyWith(
+                        color: isSelected ? AppColors.accent : AppColors.textPrimary,
                         fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                        fontSize: context.responsiveFont(14),
                       ),
                     ),
                     trailing: isSelected
-                        ? const Icon(Icons.check_circle_rounded, color: Color(0xFF00E676))
+                        ? const Icon(Icons.check_circle_rounded, color: AppColors.accent)
                         : null,
                   ),
                 );

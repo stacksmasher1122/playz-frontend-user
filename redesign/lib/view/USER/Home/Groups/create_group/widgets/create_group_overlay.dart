@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kGreen = Color(0xFF6EDC6A);
 
 class CreateGroupOverlay extends StatelessWidget {
   const CreateGroupOverlay({super.key});
@@ -14,21 +14,21 @@ class CreateGroupOverlay extends StatelessWidget {
     final ctrl = Get.find<GroupsController>();
 
     return Obx(() {
-      if (!ctrl.isCreating.value) return SizedBox.shrink();
+      if (!ctrl.isCreating.value) return const SizedBox.shrink();
       return Positioned.fill(
         child: Container(
-          color: Colors.black.withValues(alpha: 0.5),
+          color: AppColors.background.withValues(alpha: 0.7),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(color: kGreen),
-                SizedBox(height: 16),
+                const CircularProgressIndicator(color: AppColors.accent),
+                SizedBox(height: context.heightPct(2)),
                 Text(
                   'Creating your group...',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ResponsiveHelper.sp(15),
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(15),
                     fontWeight: FontWeight.bold,
                   ),
                 ),

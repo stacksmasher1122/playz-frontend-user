@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kGreen = Color(0xFF6EDC6A);
 
 class GroupImagePicker extends StatelessWidget {
   const GroupImagePicker({super.key});
@@ -12,6 +12,7 @@ class GroupImagePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     final ctrl = Get.find<GroupsController>();
+    final size = context.minDimensionPct(22).clamp(70.0, 90.0);
 
     return Center(
       child: GestureDetector(
@@ -21,13 +22,13 @@ class GroupImagePicker extends StatelessWidget {
             Obx(() {
               final img = ctrl.pickedImage.value;
               return Container(
-                height: ResponsiveHelper.h(80),
-                width: ResponsiveHelper.w(80),
+                height: size,
+                width: size,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: kGreen.withValues(alpha: 0.5),
-                    width: ResponsiveHelper.w(1.5),
+                    color: AppColors.accent.withValues(alpha: 0.5),
+                    width: 1.5,
                   ),
                   color: Colors.transparent,
                   image: img != null
@@ -38,18 +39,18 @@ class GroupImagePicker extends StatelessWidget {
                       : null,
                 ),
                 child: img == null
-                    ? Center(
-                        child: Icon(Icons.camera_alt, color: kGreen, size: 28),
+                    ? const Center(
+                        child: Icon(Icons.camera_alt, color: AppColors.accent, size: 28),
                       )
                     : null,
               );
             }),
-            SizedBox(height: 12),
+            SizedBox(height: context.heightPct(1.5)),
             Text(
               'Add Group Photo',
-              style: TextStyle(
-                color: kGreen,
-                fontSize: ResponsiveHelper.sp(13),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.accent,
+                fontSize: context.responsiveFont(13),
                 fontWeight: FontWeight.w600,
               ),
             ),

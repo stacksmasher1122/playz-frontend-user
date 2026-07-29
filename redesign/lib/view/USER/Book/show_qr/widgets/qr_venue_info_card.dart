@@ -1,42 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrVenueInfoCard extends StatelessWidget {
   const QrVenueInfoCard({super.key});
 
-  static const _kCard = Color(0xFF1A1A1A);
-  static const _kGreen = AppColors.accent;
-  static const _kMuted = Color(0xFFA7A7A7);
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
-        color: _kCard,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Row(
         children: [
-          Icon(Icons.location_on, color: _kGreen),
-          SizedBox(width: 12),
+          const Icon(Icons.location_on, color: AppColors.accent),
+          SizedBox(width: context.widthPct(3)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Venue',
-                  style: TextStyle(color: _kMuted, fontSize: 12),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
+                  ),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: context.heightPct(0.4)),
                 Text(
                   'Shivajinagar, Pune',
-                  style: TextStyle(
-                    color: Colors.white,
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
+                    fontSize: context.responsiveFont(14),
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -46,26 +50,40 @@ class QrVenueInfoCard extends StatelessWidget {
             children: [
               Text(
                 'Gate Access',
-                style: TextStyle(color: _kMuted, fontSize: 12),
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(12),
+                ),
               ),
-              SizedBox(height: 4),
+              SizedBox(height: context.heightPct(0.4)),
               Text(
                 'QR Scan Required',
-                style: TextStyle(color: _kGreen),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.accent,
+                  fontSize: context.responsiveFont(13),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              SizedBox(height: 6),
+              SizedBox(height: context.heightPct(0.8)),
               OutlinedButton.icon(
                 onPressed: () {},
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: _kGreen),
+                  side: const BorderSide(color: AppColors.accent),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                   ),
                 ),
-                icon: Icon(Icons.navigation, size: 16, color: _kGreen),
-                label: Text(
-                  'Get Directions',
-                  style: TextStyle(color: _kGreen),
+                icon: const Icon(Icons.navigation, size: 16, color: AppColors.accent),
+                label: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Get Directions',
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.accent,
+                      fontSize: context.responsiveFont(12),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],

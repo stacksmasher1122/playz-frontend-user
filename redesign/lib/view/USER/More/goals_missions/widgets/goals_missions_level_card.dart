@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class GoalsMissionsLevelCard extends StatelessWidget {
@@ -21,24 +21,25 @@ class GoalsMissionsLevelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     final progress = (currentXp / maxXp).clamp(0.0, 1.0);
+    final badgeSize = context.minDimensionPct(13).clamp(48.0, 58.0);
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      margin: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
-        color: const Color(0xFF141414),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Row(
         children: [
           // Level Badge Icon Box
           Container(
-            width: 52,
-            height: 52,
+            width: badgeSize,
+            height: badgeSize,
             decoration: BoxDecoration(
-              color: const Color(0xFF1E2B22),
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.accent.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
               border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
             ),
             child: Center(
@@ -47,17 +48,17 @@ class GoalsMissionsLevelCard extends StatelessWidget {
                 children: [
                   Text(
                     'LVL',
-                    style: GoogleFonts.inter(
+                    style: AppTypography.labelCaps10.copyWith(
                       color: AppColors.muted,
-                      fontSize: 9,
+                      fontSize: context.responsiveFont(9),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     '$level',
-                    style: GoogleFonts.inter(
+                    style: AppTypography.headlineSm.copyWith(
                       color: AppColors.accent,
-                      fontSize: 18,
+                      fontSize: context.responsiveFont(18),
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -65,7 +66,7 @@ class GoalsMissionsLevelCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: ResponsiveHelper.w(14)),
+          SizedBox(width: context.widthPct(3.5)),
 
           // Level Title & XP Bar
           Expanded(
@@ -75,30 +76,35 @@ class GoalsMissionsLevelCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      levelTitle,
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: ResponsiveHelper.sp(15),
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Text(
+                        levelTitle,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(15),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    SizedBox(width: context.widthPct(2)),
                     Text(
                       '$currentXp / $maxXp XP',
-                      style: GoogleFonts.inter(
+                      style: AppTypography.bodySm.copyWith(
                         color: AppColors.accent,
-                        fontSize: ResponsiveHelper.sp(11),
+                        fontSize: context.responsiveFont(11),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: ResponsiveHelper.h(8)),
+                SizedBox(height: context.heightPct(1)),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                   child: LinearProgressIndicator(
                     value: progress,
-                    backgroundColor: const Color(0xFF242424),
+                    backgroundColor: AppColors.surfaceElevated,
                     valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
                     minHeight: 7,
                   ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/More_Models/leaderboard_model.dart';
 
@@ -20,7 +20,7 @@ class LeaderboardPodium extends StatelessWidget {
     final rank3 = top3.firstWhere((p) => p.rank == 3, orElse: () => top3[2]);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -29,27 +29,27 @@ class LeaderboardPodium extends StatelessWidget {
           Expanded(
             child: _PodiumColumn(
               player: rank2,
-              podiumHeight: ResponsiveHelper.h(70),
+              podiumHeight: context.heightPct(9).clamp(60.0, 80.0),
               isFirst: false,
             ),
           ),
-          SizedBox(width: ResponsiveHelper.w(10)),
+          SizedBox(width: context.widthPct(2.5)),
 
           // Rank 1 (Center - Elevated)
           Expanded(
             child: _PodiumColumn(
               player: rank1,
-              podiumHeight: ResponsiveHelper.h(100),
+              podiumHeight: context.heightPct(13).clamp(90.0, 115.0),
               isFirst: true,
             ),
           ),
-          SizedBox(width: ResponsiveHelper.w(10)),
+          SizedBox(width: context.widthPct(2.5)),
 
           // Rank 3 (Right)
           Expanded(
             child: _PodiumColumn(
               player: rank3,
-              podiumHeight: ResponsiveHelper.h(50),
+              podiumHeight: context.heightPct(7).clamp(45.0, 60.0),
               isFirst: false,
             ),
           ),
@@ -73,6 +73,7 @@ class _PodiumColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final avatarRadius = isFirst ? context.widthPct(8.5).clamp(30.0, 38.0) : context.widthPct(7).clamp(24.0, 32.0);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -99,8 +100,8 @@ class _PodiumColumn extends StatelessWidget {
                     : null,
               ),
               child: CircleAvatar(
-                radius: isFirst ? ResponsiveHelper.w(34) : ResponsiveHelper.w(28),
-                backgroundColor: const Color(0xFF222222),
+                radius: avatarRadius,
+                backgroundColor: AppColors.card,
                 backgroundImage: NetworkImage(player.avatarUrl),
               ),
             ),
@@ -122,9 +123,9 @@ class _PodiumColumn extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '${player.rank}',
-                    style: GoogleFonts.inter(
-                      color: isFirst ? Colors.black : Colors.white,
-                      fontSize: ResponsiveHelper.sp(isFirst ? 11 : 9),
+                    style: AppTypography.labelCaps10.copyWith(
+                      color: isFirst ? AppColors.background : AppColors.textPrimary,
+                      fontSize: context.responsiveFont(isFirst ? 11 : 9),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -134,40 +135,42 @@ class _PodiumColumn extends StatelessWidget {
           ],
         ),
 
-        SizedBox(height: ResponsiveHelper.h(12)),
+        SizedBox(height: context.heightPct(1.5)),
 
         // Name
         Text(
           player.name,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: ResponsiveHelper.sp(isFirst ? 14 : 12),
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(isFirst ? 14 : 12),
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 2),
+        SizedBox(height: context.heightPct(0.3)),
 
         // Points
         Text(
           '${player.points.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} pts',
-          style: GoogleFonts.inter(
+          style: AppTypography.bodySm.copyWith(
             color: AppColors.accent,
-            fontSize: ResponsiveHelper.sp(isFirst ? 12 : 10),
+            fontSize: context.responsiveFont(isFirst ? 12 : 10),
             fontWeight: FontWeight.bold,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
 
-        SizedBox(height: ResponsiveHelper.h(10)),
+        SizedBox(height: context.heightPct(1.2)),
 
         // Dark Gray Rounded Pedestal Block
         Container(
           width: double.infinity,
           height: podiumHeight,
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
-            borderRadius: BorderRadius.circular(16),
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
           ),
         ),
       ],

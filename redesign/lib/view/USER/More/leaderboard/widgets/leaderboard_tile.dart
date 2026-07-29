@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/More_Models/leaderboard_model.dart';
 
@@ -14,35 +14,36 @@ class LeaderboardTile extends StatelessWidget {
     ResponsiveHelper.init(context);
 
     final isUser = player.isCurrentUser;
+    final avatarRadius = context.minDimensionPct(4.5).clamp(16.0, 22.0);
 
     return Container(
-      margin: EdgeInsets.only(bottom: ResponsiveHelper.h(10)),
+      margin: EdgeInsets.only(bottom: context.heightPct(1.2)),
       padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.w(16),
-        vertical: ResponsiveHelper.h(12),
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(1.5),
       ),
       decoration: BoxDecoration(
-        color: isUser ? const Color(0xFF16251C) : const Color(0xFF181818),
-        borderRadius: BorderRadius.circular(16),
+        color: isUser ? AppColors.accent.withValues(alpha: 0.15) : AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
         border: isUser
             ? Border.all(color: AppColors.accent.withValues(alpha: 0.5), width: 1.5)
-            : null,
+            : Border.all(color: AppColors.borderDark),
       ),
       child: Row(
         children: [
           // Rank Number
           SizedBox(
-            width: 28,
+            width: context.widthPct(7).clamp(24.0, 32.0),
             child: Text(
               '${player.rank}',
-              style: GoogleFonts.inter(
-                color: isUser ? AppColors.accent : Colors.white,
-                fontSize: ResponsiveHelper.sp(14),
+              style: AppTypography.headlineSm.copyWith(
+                color: isUser ? AppColors.accent : AppColors.textPrimary,
+                fontSize: context.responsiveFont(14),
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          SizedBox(width: ResponsiveHelper.w(8)),
+          SizedBox(width: context.widthPct(2)),
 
           // Avatar Image
           Container(
@@ -52,31 +53,33 @@ class LeaderboardTile extends StatelessWidget {
               border: isUser ? Border.all(color: AppColors.accent, width: 1.5) : null,
             ),
             child: CircleAvatar(
-              radius: ResponsiveHelper.w(18),
-              backgroundColor: const Color(0xFF2B2B2B),
+              radius: avatarRadius,
+              backgroundColor: AppColors.surface,
               backgroundImage: NetworkImage(player.avatarUrl),
             ),
           ),
-          SizedBox(width: ResponsiveHelper.w(14)),
+          SizedBox(width: context.widthPct(3.5)),
 
           // Name
           Expanded(
             child: Text(
               player.name,
-              style: GoogleFonts.inter(
-                color: isUser ? AppColors.accent : Colors.white,
-                fontSize: ResponsiveHelper.sp(14),
+              style: AppTypography.headlineSm.copyWith(
+                color: isUser ? AppColors.accent : AppColors.textPrimary,
+                fontSize: context.responsiveFont(14),
                 fontWeight: FontWeight.bold,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
 
           // Points
           Text(
             '${player.points.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} pts',
-            style: GoogleFonts.inter(
-              color: isUser ? AppColors.accent : Colors.white,
-              fontSize: ResponsiveHelper.sp(14),
+            style: AppTypography.headlineSm.copyWith(
+              color: isUser ? AppColors.accent : AppColors.textPrimary,
+              fontSize: context.responsiveFont(14),
               fontWeight: FontWeight.bold,
             ),
           ),

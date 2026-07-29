@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SlotMatrixBottomSheet extends StatelessWidget {
@@ -24,9 +25,8 @@ class SlotMatrixBottomSheet extends StatelessWidget {
     this.onDateChanged,
   });
 
-  // Matte Colors
-  static const _kMatteGreenBorder = Color(0xFF00B45D);
-  static const _kMatteRedBorder = Color(0xFF8B2626);
+  static const _kMatteGreenBorder = AppColors.accent;
+  static const _kMatteRedBorder = AppColors.error;
 
   int get _turfStartHour {
     if (slots.isNotEmpty) {
@@ -134,7 +134,7 @@ class SlotMatrixBottomSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(ResponsiveHelper.w(24)),
+          top: Radius.circular(context.minDimensionPct(6)),
         ),
       ),
       child: Column(
@@ -142,12 +142,12 @@ class SlotMatrixBottomSheet extends StatelessWidget {
           /// HEADER
           Container(
             padding: EdgeInsets.symmetric(
-              horizontal: ResponsiveHelper.w(16),
-              vertical: ResponsiveHelper.h(14),
+              horizontal: context.widthPct(4),
+              vertical: context.heightPct(1.5),
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+                bottom: BorderSide(color: AppColors.borderDark),
               ),
             ),
             child: Column(
@@ -157,55 +157,58 @@ class SlotMatrixBottomSheet extends StatelessWidget {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade600,
+                      color: AppColors.borderDark,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: context.heightPct(1.2)),
                 Row(
                   children: [
                     Expanded(
                       child: Text(
                         title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(15),
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(15),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.close, color: Colors.white70),
+                      icon: const Icon(Icons.close, color: AppColors.muted),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
                 ),
-                SizedBox(height: 6),
+                SizedBox(height: context.heightPct(0.6)),
 
                 // DATE DISPLAY & CHANGE DATE BUTTON
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.widthPct(2.5),
+                        vertical: context.heightPct(0.5),
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.card,
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                         border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.calendar_today_rounded, color: AppColors.accent, size: 14),
-                          SizedBox(width: 6),
+                          const Icon(Icons.calendar_today_rounded, color: AppColors.accent, size: 14),
+                          SizedBox(width: context.widthPct(1.5)),
                           Text(
                             selectedDate != null
                                 ? DateFormat('EEE, dd MMM yyyy').format(selectedDate!)
                                 : DateFormat('EEE, dd MMM yyyy').format(DateTime.now()),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: ResponsiveHelper.sp(12),
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.textPrimary,
+                              fontSize: context.responsiveFont(12),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -224,11 +227,11 @@ class SlotMatrixBottomSheet extends StatelessWidget {
                             builder: (context, child) {
                               return Theme(
                                 data: ThemeData.dark().copyWith(
-                                  colorScheme: ColorScheme.dark(
+                                  colorScheme: const ColorScheme.dark(
                                     primary: AppColors.accent,
-                                    onPrimary: Colors.black,
+                                    onPrimary: AppColors.background,
                                     surface: AppColors.card,
-                                    onSurface: Colors.white,
+                                    onSurface: AppColors.textPrimary,
                                   ),
                                 ),
                                 child: child!,
@@ -240,22 +243,25 @@ class SlotMatrixBottomSheet extends StatelessWidget {
                           }
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.widthPct(2.5),
+                            vertical: context.heightPct(0.5),
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.accent.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                             border: Border.all(color: AppColors.accent),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.edit_calendar_rounded, color: AppColors.accent, size: 14),
-                              SizedBox(width: 4),
+                              const Icon(Icons.edit_calendar_rounded, color: AppColors.accent, size: 14),
+                              SizedBox(width: context.widthPct(1)),
                               Text(
                                 'Change Date',
-                                style: TextStyle(
+                                style: AppTypography.headlineSm.copyWith(
                                   color: AppColors.accent,
-                                  fontSize: ResponsiveHelper.sp(12),
+                                  fontSize: context.responsiveFont(12),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -265,10 +271,10 @@ class SlotMatrixBottomSheet extends StatelessWidget {
                       ),
                   ],
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: context.heightPct(1)),
 
                 /// LEGEND
-                Row(
+                const Row(
                   children: [
                     _LegendItem(color: _kMatteGreenBorder, label: 'Available'),
                     SizedBox(width: 16),
@@ -284,16 +290,19 @@ class SlotMatrixBottomSheet extends StatelessWidget {
             child: items.isEmpty
                 ? Center(
                     child: Padding(
-                      padding: EdgeInsets.all(24.0),
+                      padding: EdgeInsets.all(context.widthPct(6)),
                       child: Text(
                         'No more slots available for today.',
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.muted,
+                          fontSize: context.responsiveFont(14),
+                        ),
                       ),
                     ),
                   )
                 : GridView.builder(
-                    padding: EdgeInsets.all(ResponsiveHelper.w(12)),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    padding: EdgeInsets.all(context.widthPct(3)),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4,
                       childAspectRatio: 1.35,
                       crossAxisSpacing: 6,
@@ -318,7 +327,7 @@ class SlotMatrixBottomSheet extends StatelessWidget {
                                       : 'Slot range includes booked hours!',
                                 ),
                                 backgroundColor: _kMatteRedBorder,
-                                duration: Duration(seconds: 2),
+                                duration: const Duration(seconds: 2),
                               ),
                             );
                             return;
@@ -370,12 +379,12 @@ class _LegendItem extends StatelessWidget {
           height: 8,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        SizedBox(width: 6),
+        SizedBox(width: context.widthPct(1.5)),
         Text(
           label,
-          style: TextStyle(
-            color: Color(0xFFA7A7A7),
-            fontSize: ResponsiveHelper.sp(12),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.muted,
+            fontSize: context.responsiveFont(12),
           ),
         ),
       ],
@@ -394,33 +403,30 @@ class _MatteSlotCard extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _kMatteGreenBg = Color(0xFF1B382B);
-  static const _kMatteGreenBorder = Color(0xFF00B45D);
-  static const _kMatteRedBg = Color(0xFF381B1B);
-  static const _kMatteRedBorder = Color(0xFF8B2626);
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
 
-    final Color bgColor = item.isAvailable ? _kMatteGreenBg : _kMatteRedBg;
-    final Color borderColor = item.isAvailable ? _kMatteGreenBorder : _kMatteRedBorder;
+    final Color bgColor = item.isAvailable
+        ? AppColors.accent.withValues(alpha: 0.2)
+        : AppColors.error.withValues(alpha: 0.2);
+    final Color borderColor = item.isAvailable ? AppColors.accent : AppColors.error;
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+      borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 180),
+        duration: const Duration(milliseconds: 180),
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveHelper.w(4),
-          vertical: ResponsiveHelper.h(4),
+          horizontal: context.widthPct(1),
+          vertical: context.heightPct(0.4),
         ),
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
           border: Border.all(
-            color: isSelected ? Colors.white : borderColor,
+            color: isSelected ? AppColors.textPrimary : borderColor,
             width: isSelected ? 1.8 : 1.0,
           ),
         ),
@@ -432,22 +438,22 @@ class _MatteSlotCard extends StatelessWidget {
               child: Text(
                 item.displayTime,
                 maxLines: 1,
-                style: TextStyle(
-                  color: item.isAvailable ? Colors.white : Colors.white54,
-                  fontSize: ResponsiveHelper.sp(10.5),
+                style: AppTypography.headlineSm.copyWith(
+                  color: item.isAvailable ? AppColors.textPrimary : AppColors.muted,
+                  fontSize: context.responsiveFont(10.5),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             if (item.subtitle != null) ...[
-              SizedBox(height: 2),
+              SizedBox(height: context.heightPct(0.2)),
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
                   item.subtitle!,
-                  style: TextStyle(
-                    color: item.isAvailable ? AppColors.accent : Colors.white38,
-                    fontSize: ResponsiveHelper.sp(9.5),
+                  style: AppTypography.bodySm.copyWith(
+                    color: item.isAvailable ? AppColors.accent : AppColors.muted,
+                    fontSize: context.responsiveFont(9.5),
                     fontWeight: FontWeight.w600,
                   ),
                 ),

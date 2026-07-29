@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RewardCenterHeader extends StatelessWidget {
   final int coinsBalance;
@@ -8,27 +10,32 @@ class RewardCenterHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(1),
+      ),
+      padding: EdgeInsets.all(context.widthPct(5)),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(24),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF1E1E1E),
-            const Color(0xFF14291F),
-            const Color(0xFF0F1E17),
+            AppColors.card,
+            AppColors.accent.withValues(alpha: 0.15),
+            AppColors.accent.withValues(alpha: 0.08),
           ],
         ),
         border: Border.all(
-          color: const Color(0xFF00E676).withValues(alpha: 0.25),
+          color: AppColors.accent.withValues(alpha: 0.25),
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF00E676).withValues(alpha: 0.1),
+            color: AppColors.accent.withValues(alpha: 0.1),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -42,7 +49,7 @@ class RewardCenterHeader extends StatelessWidget {
             child: Icon(
               Icons.stars_rounded,
               size: 140,
-              color: const Color(0xFF00E676).withValues(alpha: 0.05),
+              color: AppColors.accent.withValues(alpha: 0.05),
             ),
           ),
           Column(
@@ -51,22 +58,25 @@ class RewardCenterHeader extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.widthPct(2.5),
+                      vertical: context.heightPct(0.5),
+                    ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF00E676).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: const Color(0xFF00E676).withValues(alpha: 0.3)),
+                      color: AppColors.accent.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+                      border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.workspace_premium_rounded, color: Color(0xFF00E676), size: 16),
-                        const SizedBox(width: 4),
+                        const Icon(Icons.workspace_premium_rounded, color: AppColors.accent, size: 16),
+                        SizedBox(width: context.widthPct(1)),
                         Text(
                           'PLAYZ REWARDS CLUB',
-                          style: GoogleFonts.inter(
-                            color: const Color(0xFF00E676),
-                            fontSize: 11,
+                          style: AppTypography.labelCaps10.copyWith(
+                            color: AppColors.accent,
+                            fontSize: context.responsiveFont(11),
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.8,
                           ),
@@ -76,58 +86,60 @@ class RewardCenterHeader extends StatelessWidget {
                   ),
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.all(6),
+                    padding: EdgeInsets.all(context.widthPct(1.5)),
                     decoration: BoxDecoration(
-                      color: Colors.amberAccent.withValues(alpha: 0.15),
+                      color: AppColors.coinsGold.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.bolt_rounded, color: Colors.amberAccent, size: 18),
+                    child: const Icon(Icons.bolt_rounded, color: AppColors.coinsGold, size: 18),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.heightPct(2)),
               Text(
                 'YOUR Z-COINS BALANCE',
-                style: GoogleFonts.inter(
-                  color: Colors.white54,
-                  fontSize: 11,
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(11),
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.1,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: context.heightPct(0.5)),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
-                  const Icon(Icons.monetization_on_rounded, color: Colors.amberAccent, size: 36),
-                  const SizedBox(width: 8),
+                  const Icon(Icons.monetization_on_rounded, color: AppColors.coinsGold, size: 36),
+                  SizedBox(width: context.widthPct(2)),
                   Text(
                     '$coinsBalance',
-                    style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontSize: 38,
+                    style: AppTypography.displayLg.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(38),
                       fontWeight: FontWeight.w900,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: context.widthPct(2)),
                   Text(
                     'Coins',
-                    style: GoogleFonts.inter(
-                      color: Colors.white70,
-                      fontSize: 16,
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: context.responsiveFont(16),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.heightPct(1.5)),
               Text(
                 'Earn more coins by playing matches, hosting games, & inviting friends!',
-                style: GoogleFonts.inter(
-                  color: Colors.white60,
-                  fontSize: 12,
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(12),
                 ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

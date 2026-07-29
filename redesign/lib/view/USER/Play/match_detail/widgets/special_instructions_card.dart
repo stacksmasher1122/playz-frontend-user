@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SpecialInstructionsCard extends StatelessWidget {
@@ -19,11 +19,11 @@ class SpecialInstructionsCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(ResponsiveHelper.w(18)),
+      padding: EdgeInsets.all(context.widthPct(4.5)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4.5)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,11 +31,11 @@ class SpecialInstructionsCard extends StatelessWidget {
           Row(
             children: [
               const Icon(Icons.sticky_note_2_rounded, color: AppColors.accent, size: 18),
-              const SizedBox(width: 8),
+              SizedBox(width: context.widthPct(2)),
               Text(
                 "HOST SPECIAL INSTRUCTIONS",
-                style: GoogleFonts.inter(
-                  fontSize: ResponsiveHelper.sp(12),
+                style: AppTypography.labelCaps10.copyWith(
+                  fontSize: context.responsiveFont(12),
                   letterSpacing: 0.8,
                   fontWeight: FontWeight.bold,
                   color: AppColors.muted,
@@ -43,20 +43,20 @@ class SpecialInstructionsCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.5)),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(context.widthPct(3)),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.04),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white10),
+              color: AppColors.textPrimary.withValues(alpha: 0.04),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+              border: Border.all(color: AppColors.borderDark),
             ),
             child: Text(
               instructions,
-              style: GoogleFonts.inter(
-                fontSize: ResponsiveHelper.sp(13),
-                color: Colors.white70,
+              style: AppTypography.bodySm.copyWith(
+                fontSize: context.responsiveFont(13),
+                color: AppColors.textSecondary,
                 height: 1.4,
               ),
             ),

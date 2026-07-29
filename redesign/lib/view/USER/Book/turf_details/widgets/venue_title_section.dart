@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueTitleSection extends StatelessWidget {
@@ -22,49 +23,63 @@ class VenueTitleSection extends StatelessWidget {
       children: [
         /// VENUE INFO
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: context.heightPct(1)),
               Text(
                 turfName,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(26),
+                style: AppTypography.displayLg.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(24),
                   fontWeight: FontWeight.bold,
                 ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 6),
+              SizedBox(height: context.heightPct(0.6)),
               Row(
                 children: [
-                  Icon(Icons.location_on, color: Colors.grey, size: 16),
-                  SizedBox(width: 4),
+                  const Icon(Icons.location_on, color: AppColors.muted, size: 16),
+                  SizedBox(width: context.widthPct(1)),
                   Expanded(
                     child: Text(
                       location,
-                      style: TextStyle(color: Color(0xFFA7A7A7)),
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(13),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   TextButton(
                     onPressed: () {},
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                        horizontal: context.widthPct(3),
+                        vertical: context.heightPct(0.6),
                       ),
                       backgroundColor: isOpen
                           ? AppColors.accent.withValues(alpha: 0.15)
-                          : Colors.red.withValues(alpha: 0.15),
-                      foregroundColor: isOpen ? AppColors.accent : Colors.red,
+                          : AppColors.error.withValues(alpha: 0.15),
+                      foregroundColor: isOpen ? AppColors.accent : AppColors.error,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                       ),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: Text(
-                      isOpen ? 'Open Now' : 'Closed',
-                      style: TextStyle(fontSize: ResponsiveHelper.sp(12), fontWeight: FontWeight.w600),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        isOpen ? 'Open Now' : 'Closed',
+                        style: AppTypography.headlineSm.copyWith(
+                          fontSize: context.responsiveFont(12),
+                          fontWeight: FontWeight.w600,
+                          color: isOpen ? AppColors.accent : AppColors.error,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -73,11 +88,11 @@ class VenueTitleSection extends StatelessWidget {
           ),
         ),
 
-        SizedBox(height: 0),
+        SizedBox(height: context.heightPct(1)),
 
         /// RATING ROW
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
           child: Row(
             children: [
               Row(
@@ -86,19 +101,26 @@ class VenueTitleSection extends StatelessWidget {
                   (index) => Icon(
                     Icons.star,
                     size: 16,
-                    color: index < 4 ? Colors.amber : Colors.grey,
+                    color: index < 4 ? Colors.amber : AppColors.muted,
                   ),
                 ),
               ),
-              SizedBox(width: 8),
+              SizedBox(width: context.widthPct(2)),
               Text(
                 '5.0',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(14),
+                ),
               ),
-              SizedBox(width: 6),
+              SizedBox(width: context.widthPct(1.5)),
               Text(
                 '(128 Reviews)',
-                style: TextStyle(color: Color(0xFFA7A7A7)),
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(13),
+                ),
               ),
             ],
           ),

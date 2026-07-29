@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Bookings/qr_in_bookings/qr_in_bookings_screen.dart';
-import '../bookings_screen.dart';
-import 'action_chip.dart';
 import 'status_badge.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -22,10 +22,12 @@ class CancelledBookingCard extends StatelessWidget {
     final dateFormatted = bookingData?['dateFormatted'] ?? bookingData?['date'] ?? '';
     final statusText = (bookingData?['status'] ?? 'CANCELLED').toString().toUpperCase();
 
+    final imageSize = context.minDimensionPct(13).clamp(44.0, 56.0);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -34,13 +36,11 @@ class CancelledBookingCard extends StatelessWidget {
           );
         },
         child: Container(
-          padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+          padding: EdgeInsets.all(context.widthPct(3.5)),
           decoration: BoxDecoration(
-            color: MyBookingsConstants.surface,
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.08),
-            ),
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+            border: Border.all(color: AppColors.borderDark),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,21 +50,21 @@ class CancelledBookingCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                     child: Image.network(
                       turfImage,
-                      height: ResponsiveHelper.h(52),
-                      width: ResponsiveHelper.w(52),
+                      height: imageSize,
+                      width: imageSize,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => Container(
-                        height: ResponsiveHelper.h(52),
-                        width: ResponsiveHelper.w(52),
-                        color: Colors.grey.shade800,
-                        child: Icon(Icons.sports_soccer, color: Colors.white),
+                        height: imageSize,
+                        width: imageSize,
+                        color: AppColors.surface,
+                        child: const Icon(Icons.sports_soccer, color: AppColors.textPrimary),
                       ),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: context.widthPct(3)),
 
                   Expanded(
                     child: Column(
@@ -74,58 +74,38 @@ class CancelledBookingCard extends StatelessWidget {
                           turfName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: ResponsiveHelper.sp(15),
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(15),
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        SizedBox(height: context.heightPct(0.4)),
                         Text(
                           '$groundName · $sport',
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.textSecondary,
+                            fontSize: context.responsiveFont(12),
+                          ),
                         ),
-                        SizedBox(height: 6),
+                        SizedBox(height: context.heightPct(0.6)),
                         Text(
                           '$dateFormatted  $timeSlot',
-                          style: TextStyle(color: Colors.white54, fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.bodyXs.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(12),
+                          ),
                         ),
                       ],
                     ),
                   ),
 
-                  StatusBadge(statusText, MyBookingsConstants.red),
-                ],
-              ),
-
-              SizedBox(height: 14),
-
-              /// BOTTOM ROW
-              Row(
-                children: [
-                  Icon(Icons.cancel_outlined, size: 16, color: MyBookingsConstants.red),
-                  SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      'Booking $statusText',
-                      style: TextStyle(
-                        color: MyBookingsConstants.red,
-                        fontSize: ResponsiveHelper.sp(13),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  ActionChipWidget(
-                    Icons.info_outline,
-                    'Details',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => BookingQrScreen(bookingData: bookingData),
-                        ),
-                      );
-                    },
-                  ),
+                  SizedBox(width: context.widthPct(2)),
+                  StatusBadge(statusText, AppColors.error),
                 ],
               ),
             ],

@@ -10,14 +10,15 @@ class SuccessRippleAnimation extends StatelessWidget {
     required this.controller,
   });
 
-  static const _kGreen = AppColors.accent;
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final size = context.minDimensionPct(28).clamp(100.0, 130.0);
+    final centerCircleSize = context.minDimensionPct(15).clamp(56.0, 72.0);
+
     return SizedBox(
-      height: ResponsiveHelper.h(120),
-      width: ResponsiveHelper.w(120),
+      height: size,
+      width: size,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -25,23 +26,23 @@ class SuccessRippleAnimation extends StatelessWidget {
             animation: controller,
             builder: (_, __) {
               return Container(
-                width: 120 * controller.value,
-                height: 120 * controller.value,
+                width: size * controller.value,
+                height: size * controller.value,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _kGreen.withValues(alpha: 1 - controller.value),
+                  color: AppColors.accent.withValues(alpha: 1 - controller.value),
                 ),
               );
             },
           ),
           Container(
-            width: ResponsiveHelper.w(64),
-            height: ResponsiveHelper.h(64),
-            decoration: BoxDecoration(
+            width: centerCircleSize,
+            height: centerCircleSize,
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: _kGreen,
+              color: AppColors.accent,
             ),
-            child: Icon(Icons.check, size: 36, color: Colors.black),
+            child: const Icon(Icons.check, size: 36, color: AppColors.background),
           ),
         ],
       ),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kSurface = Color(0xFF161616);
-const kGreen = Color(0xFF6EDC6A);
-const kMuted = Colors.white54;
 
 class SportSelector extends StatelessWidget {
   final List<String> sports;
@@ -22,31 +20,37 @@ class SportSelector extends StatelessWidget {
     ResponsiveHelper.init(context);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       child: Row(
         children: sports.map((sport) {
           final isSelected = selectedSport == sport;
           return Padding(
-            padding: EdgeInsets.only(right: 12),
+            padding: EdgeInsets.only(right: context.widthPct(3)),
             child: InkWell(
               onTap: () => onSportSelected(sport),
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20), vertical: ResponsiveHelper.h(10)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.widthPct(4.5),
+                  vertical: context.heightPct(1.2),
+                ),
                 decoration: BoxDecoration(
-                  color: isSelected ? Colors.transparent : kSurface,
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                  color: isSelected ? AppColors.accent.withValues(alpha: 0.15) : AppColors.surface,
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                   border: Border.all(
-                    color: isSelected ? kGreen : Colors.transparent,
-                    width: ResponsiveHelper.w(1),
+                    color: isSelected ? AppColors.accent : AppColors.borderDark,
+                    width: 1,
                   ),
                 ),
-                child: Text(
-                  sport,
-                  style: TextStyle(
-                    color: isSelected ? kGreen : kMuted,
-                    fontSize: ResponsiveHelper.sp(13),
-                    fontWeight: FontWeight.w600,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    sport,
+                    style: AppTypography.bodySm.copyWith(
+                      color: isSelected ? AppColors.accent : AppColors.muted,
+                      fontSize: context.responsiveFont(13),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),

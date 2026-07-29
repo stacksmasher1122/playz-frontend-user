@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MapPickerTopBar extends StatelessWidget {
@@ -8,20 +10,24 @@ class MapPickerTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Row(
         children: [
           IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
             onPressed: () => Navigator.pop(context),
           ),
-          SizedBox(width: 4),
-          Text(
-            "Select Location",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(18),
-              fontWeight: FontWeight.w600,
+          SizedBox(width: context.widthPct(1)),
+          Expanded(
+            child: Text(
+              "Select Location",
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(18),
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

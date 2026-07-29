@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ConfirmationActions extends StatelessWidget {
@@ -12,8 +13,6 @@ class ConfirmationActions extends StatelessWidget {
     required this.onInviteFriends,
   });
 
-  static const _kGreen = AppColors.accent;
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
@@ -23,32 +22,49 @@ class ConfirmationActions extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: _kGreen,
+              backgroundColor: AppColors.accent,
+              foregroundColor: AppColors.background,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(8)),
               ),
-              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+              padding: EdgeInsets.symmetric(vertical: context.heightPct(1.8)),
             ),
             onPressed: onGoToBookings,
-            child: Text(
-              'Go to My Bookings',
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                'Go to My Bookings',
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.background,
+                  fontSize: context.responsiveFont(16),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ),
-        SizedBox(height: 12),
+        SizedBox(height: context.heightPct(1.5)),
         OutlinedButton(
           style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Colors.grey.shade800),
+            side: const BorderSide(color: AppColors.borderDark),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(8)),
             ),
-            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14), horizontal: ResponsiveHelper.w(32)),
+            padding: EdgeInsets.symmetric(
+              vertical: context.heightPct(1.5),
+              horizontal: context.widthPct(8),
+            ),
           ),
           onPressed: onInviteFriends,
-          child: Text(
-            'Invite Friends',
-            style: TextStyle(color: Colors.white),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'Invite Friends',
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(14),
+              ),
+            ),
           ),
         ),
       ],

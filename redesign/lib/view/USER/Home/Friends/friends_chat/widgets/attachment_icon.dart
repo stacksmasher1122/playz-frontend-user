@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class AttachmentIcon extends StatelessWidget {
@@ -18,20 +20,28 @@ class AttachmentIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final avatarRadius = context.minDimensionPct(7.5).clamp(24.0, 32.0);
+
     return InkWell(
       onTap: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           CircleAvatar(
-            radius: 30,
+            radius: avatarRadius,
             backgroundColor: color.withValues(alpha: 0.2),
             child: Icon(icon, color: color, size: 28),
           ),
-          SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(color: Colors.white, fontSize: 13),
+          SizedBox(height: context.heightPct(0.8)),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(13),
+              ),
+            ),
           ),
         ],
       ),

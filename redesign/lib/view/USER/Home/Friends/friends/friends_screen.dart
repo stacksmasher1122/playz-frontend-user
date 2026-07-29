@@ -46,9 +46,9 @@ class _FriendsHubScreenState extends State<FriendsHubScreen> {
           children: [
             // ── Main scroll content ──
             CustomScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               slivers: [
-                FriendsAppBar(),
+                const FriendsAppBar(),
                 SliverToBoxAdapter(
                   child: SearchBarWidget(
                     controller: _searchController,
@@ -61,23 +61,23 @@ class _FriendsHubScreenState extends State<FriendsHubScreen> {
                     },
                   ),
                 ),
-                SliverToBoxAdapter(child: OnlineNowSection()),
-                SliverToBoxAdapter(child: MessagesListSection()),
-                SliverToBoxAdapter(child: BuildSquadCTA()),
-                SliverToBoxAdapter(child: SuggestedPlayersSection()),
-                SliverToBoxAdapter(child: SizedBox(height: 32)),
+                const SliverToBoxAdapter(child: OnlineNowSection()),
+                const SliverToBoxAdapter(child: MessagesListSection()),
+                const SliverToBoxAdapter(child: BuildSquadCTA()),
+                const SliverToBoxAdapter(child: SuggestedPlayersSection()),
+                SizedBox(height: context.heightPct(4)),
               ],
             ),
 
             // ── Search results overlay ──
             Obx(() {
               if (!_ctrl.isSearching.value || _ctrl.searchResults.isEmpty) {
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               }
               return Positioned(
-                top: ResponsiveHelper.h(120), // below app bar + search bar
-                left: ResponsiveHelper.w(16),
-                right: ResponsiveHelper.w(16),
+                top: context.heightPct(14), // below app bar + search bar
+                left: context.widthPct(4),
+                right: context.widthPct(4),
                 child: GestureDetector(
                   onTap: () {
                     _searchController.clear();

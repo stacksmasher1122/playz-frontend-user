@@ -46,7 +46,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
-                SliverToBoxAdapter(child: SizedBox(height: ResponsiveHelper.h(10))),
+                SliverToBoxAdapter(child: SizedBox(height: context.heightPct(1.2))),
 
                 // Scope Toggle (Friends, City, Global)
                 SliverToBoxAdapter(
@@ -56,7 +56,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   ),
                 ),
 
-                SliverToBoxAdapter(child: SizedBox(height: ResponsiveHelper.h(16))),
+                SliverToBoxAdapter(child: SizedBox(height: context.heightPct(2))),
 
                 // Sport Filter Pills (All, Cricket, Football, Tennis, Badminton)
                 SliverToBoxAdapter(
@@ -66,18 +66,18 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   ),
                 ),
 
-                SliverToBoxAdapter(child: SizedBox(height: ResponsiveHelper.h(24))),
+                SliverToBoxAdapter(child: SizedBox(height: context.heightPct(3))),
 
                 // Podium Top 3 Section (Rank 1, 2, 3)
                 SliverToBoxAdapter(
                   child: LeaderboardPodium(top3: top3),
                 ),
 
-                SliverToBoxAdapter(child: SizedBox(height: ResponsiveHelper.h(20))),
+                SliverToBoxAdapter(child: SizedBox(height: context.heightPct(2.5))),
 
                 // Ranking List Items (Rank 4, 5, 6, 7...)
                 SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                  padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
@@ -89,15 +89,15 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 ),
 
                 // Space for bottom sticky user tile
-                SliverToBoxAdapter(child: SizedBox(height: ResponsiveHelper.h(85))),
+                SliverToBoxAdapter(child: SizedBox(height: context.heightPct(11))),
               ],
             ),
 
             // Bottom Sticky "You" Tile (Rank 47)
             Positioned(
-              left: ResponsiveHelper.w(16),
-              right: ResponsiveHelper.w(16),
-              bottom: ResponsiveHelper.h(12),
+              left: context.widthPct(4),
+              right: context.widthPct(4),
+              bottom: context.heightPct(1.5),
               child: LeaderboardUserStickyTile(userPlayer: currentUser),
             ),
           ],

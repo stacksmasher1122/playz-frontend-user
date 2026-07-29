@@ -111,12 +111,12 @@ class ToolsGrid extends StatelessWidget {
               final iconColor = highlight
                   ? AppColors.background
                   : isPremium
-                      ? Colors.amber
+                      ? AppColors.coinsGold
                       : AppColors.textPrimary;
               final textColor = highlight
                   ? AppColors.background
                   : isPremium
-                      ? Colors.amber
+                      ? AppColors.coinsGold
                       : AppColors.textPrimary;
 
               return Container(
@@ -124,10 +124,10 @@ class ToolsGrid extends StatelessWidget {
                   color: highlight
                       ? AppColors.accent
                       : isPremium
-                          ? Colors.amber.withValues(alpha: 0.15)
+                          ? AppColors.coinsGold.withValues(alpha: 0.15)
                           : AppColors.surface,
                   borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
-                  border: isPremium ? Border.all(color: Colors.amber.withValues(alpha: 0.6)) : null,
+                  border: isPremium ? Border.all(color: AppColors.coinsGold.withValues(alpha: 0.6)) : null,
                 ),
                 child: Material(
                   color: Colors.transparent,

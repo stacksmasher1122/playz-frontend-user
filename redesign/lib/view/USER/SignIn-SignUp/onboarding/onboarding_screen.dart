@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/login/login_screen.dart';
 import 'onboarding_models.dart';
 import 'widgets/onboard_top_bar.dart';
@@ -62,7 +63,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _finishOnboarding() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => LoginScreen()),
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
   }
 
@@ -74,6 +75,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(

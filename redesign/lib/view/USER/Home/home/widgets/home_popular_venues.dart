@@ -11,7 +11,6 @@ import 'home_shimmer.dart';
    ============================================================ */
 class HomePopularVenues extends StatelessWidget {
   const HomePopularVenues({super.key});
-  const HomePopularVenues({super.key});
 
   @override
   Widget build(BuildContext context) {

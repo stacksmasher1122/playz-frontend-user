@@ -5,14 +5,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/model/User_Models/Home_Models/Groups_Model/groups_model.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/view/USER/Home/Groups/groups_chat/groups_chat_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kSurface = Color(0xFF0E0E0E);
-const kGreen = AppColors.accent;
-const kMuted = Colors.white70;
 
 class SquadListTile extends StatelessWidget {
   final GroupModel group;
@@ -46,6 +43,7 @@ class SquadListTile extends StatelessWidget {
     final memberCount = group.members.length;
     final ctrl = Get.find<GroupsController>();
     final myEmail = ctrl.myEmail;
+    final avatarRadius = context.minDimensionPct(7).clamp(24.0, 30.0);
 
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
@@ -147,40 +145,39 @@ class SquadListTile extends StatelessWidget {
                 );
               },
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.widthPct(4),
+                  vertical: context.heightPct(1.5),
+                ),
                 child: Row(
                   children: [
                     // Group Avatar
                     group.imageUrl.isNotEmpty
-                        ? CircleAvatar(
-                            radius: 28,
-                            backgroundColor: kSurface,
-                            child: ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: group.imageUrl,
-                                width: ResponsiveHelper.w(56),
-                                height: ResponsiveHelper.h(56),
-                                fit: BoxFit.cover,
-                                placeholder: (_, __) => _buildShimmerCircle(),
-                                errorWidget: (_, __, ___) => _buildDefaultAvatar(),
-                              ),
+                        ? ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: group.imageUrl,
+                              width: avatarRadius * 2,
+                              height: avatarRadius * 2,
+                              fit: BoxFit.cover,
+                              placeholder: (_, __) => _buildShimmerCircle(context, avatarRadius),
+                              errorWidget: (_, __, ___) => _buildDefaultAvatar(context, avatarRadius),
                             ),
                           )
                         : CircleAvatar(
-                            radius: 28,
-                            backgroundColor: kSurface,
+                            radius: avatarRadius,
+                            backgroundColor: AppColors.surface,
                             child: Text(
                               group.name.isNotEmpty
                                   ? group.name[0].toUpperCase()
                                   : 'G',
-                              style: TextStyle(
-                                color: kGreen,
-                                fontSize: ResponsiveHelper.sp(22),
+                              style: AppTypography.headlineSm.copyWith(
+                                color: AppColors.accent,
+                                fontSize: context.responsiveFont(22),
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                           ),
-                    SizedBox(width: 16),
+                    SizedBox(width: context.widthPct(4)),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,16 +193,18 @@ class SquadListTile extends StatelessWidget {
                                         group.name,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: ResponsiveHelper.sp(16),
+                                        style: AppTypography.headlineSm.copyWith(
+                                          color: AppColors.textPrimary,
+                                          fontSize: context.responsiveFont(16),
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 4),
-                                    Text(_sportEmoji(group.sport),
-                                        style: TextStyle(fontSize: 14)),
+                                    SizedBox(width: context.widthPct(1)),
+                                    Text(
+                                      _sportEmoji(group.sport),
+                                      style: TextStyle(fontSize: context.responsiveFont(14)),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -214,9 +213,9 @@ class SquadListTile extends StatelessWidget {
                                 children: [
                                   Text(
                                     displayTime,
-                                    style: TextStyle(
-                                      color: unreadCount > 0 ? kGreen : kMuted,
-                                      fontSize: ResponsiveHelper.sp(11),
+                                    style: AppTypography.labelCaps10.copyWith(
+                                      color: unreadCount > 0 ? AppColors.accent : AppColors.muted,
+                                      fontSize: context.responsiveFont(11),
                                       fontWeight: unreadCount > 0
                                           ? FontWeight.w800
                                           : FontWeight.w600,
@@ -224,21 +223,27 @@ class SquadListTile extends StatelessWidget {
                                     ),
                                   ),
                                   if (unreadCount > 0) ...[
-                                    SizedBox(height: 6),
+                                    SizedBox(height: context.heightPct(0.5)),
                                     Container(
-                                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6), vertical: ResponsiveHelper.h(2)),
-                                      decoration: BoxDecoration(
-                                        color: kGreen,
-                                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: context.widthPct(1.8),
+                                        vertical: context.heightPct(0.3),
                                       ),
-                                      child: Text(
-                                        unreadCount > 20
-                                            ? '20+'
-                                            : unreadCount.toString(),
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: ResponsiveHelper.sp(10),
-                                          fontWeight: FontWeight.w800,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.accent,
+                                        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                                      ),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          unreadCount > 20
+                                              ? '20+'
+                                              : unreadCount.toString(),
+                                          style: AppTypography.labelCaps10.copyWith(
+                                            color: AppColors.background,
+                                            fontSize: context.responsiveFont(10),
+                                            fontWeight: FontWeight.w800,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -247,7 +252,7 @@ class SquadListTile extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 4),
+                          SizedBox(height: context.heightPct(0.5)),
                           Row(
                             children: [
                               Expanded(
@@ -255,11 +260,11 @@ class SquadListTile extends StatelessWidget {
                                   latestText,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
+                                  style: AppTypography.bodySm.copyWith(
                                     color: unreadCount > 0
-                                        ? Colors.white
-                                        : Colors.white.withValues(alpha: 0.5),
-                                    fontSize: ResponsiveHelper.sp(13),
+                                        ? AppColors.textPrimary
+                                        : AppColors.textSecondary,
+                                    fontSize: context.responsiveFont(13),
                                     fontWeight: unreadCount > 0
                                         ? FontWeight.w700
                                         : FontWeight.w400,
@@ -268,10 +273,12 @@ class SquadListTile extends StatelessWidget {
                               ),
                               if (!group.isPublic)
                                 Padding(
-                                  padding: EdgeInsets.only(left: 8),
-                                  child: Icon(Icons.lock,
-                                      color: Colors.white.withValues(alpha: 0.3),
-                                      size: 14),
+                                  padding: EdgeInsets.only(left: context.widthPct(2)),
+                                  child: const Icon(
+                                    Icons.lock,
+                                    color: AppColors.muted,
+                                    size: 14,
+                                  ),
                                 ),
                             ],
                           ),
@@ -299,30 +306,30 @@ class SquadListTile extends StatelessWidget {
     return DateFormat('dd MMM').format(dt);
   }
 
-  Widget _buildShimmerCircle() {
+  Widget _buildShimmerCircle(BuildContext context, double radius) {
     return Shimmer.fromColors(
-      baseColor: Color(0xFF2A2A2A),
-      highlightColor: Color(0xFF3A3A3A),
+      baseColor: AppColors.surface,
+      highlightColor: AppColors.card,
       child: Container(
-        width: ResponsiveHelper.w(56),
-        height: ResponsiveHelper.h(56),
-        decoration: BoxDecoration(
-          color: Color(0xFF2A2A2A),
+        width: radius * 2,
+        height: radius * 2,
+        decoration: const BoxDecoration(
+          color: AppColors.surface,
           shape: BoxShape.circle,
         ),
       ),
     );
   }
 
-  Widget _buildDefaultAvatar() {
+  Widget _buildDefaultAvatar(BuildContext context, double radius) {
     return Container(
-      width: ResponsiveHelper.w(56),
-      height: ResponsiveHelper.h(56),
-      decoration: BoxDecoration(
-        color: kSurface,
+      width: radius * 2,
+      height: radius * 2,
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
         shape: BoxShape.circle,
       ),
-      child: Icon(Icons.group, color: kMuted, size: 24),
+      child: const Icon(Icons.group, color: AppColors.muted, size: 24),
     );
   }
 }

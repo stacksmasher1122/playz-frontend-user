@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class RaiseTicketBottomSheet extends StatefulWidget {
   const RaiseTicketBottomSheet({super.key});
@@ -18,15 +20,19 @@ class _RaiseTicketBottomSheetState extends State<RaiseTicketBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Color(0xFF1E1E1E),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        padding: EdgeInsets.all(context.widthPct(6)),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(context.minDimensionPct(6)),
+          ),
         ),
         child: SingleChildScrollView(
           child: Form(
@@ -37,108 +43,199 @@ class _RaiseTicketBottomSheetState extends State<RaiseTicketBottomSheet> {
               children: [
                 Center(
                   child: Container(
-                    width: 40,
+                    width: context.widthPct(10).clamp(36.0, 44.0),
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.white24,
+                      color: AppColors.muted.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: context.heightPct(2.5)),
                 Row(
                   children: [
-                    const Icon(Icons.confirmation_number_outlined, color: Colors.amberAccent, size: 24),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Raise Support Ticket',
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    const Icon(Icons.confirmation_number_outlined, color: AppColors.coinsGold, size: 24),
+                    SizedBox(width: context.widthPct(2.5)),
+                    Expanded(
+                      child: Text(
+                        'Raise Support Ticket',
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(18),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: context.heightPct(0.8)),
                 Text(
                   'Our support team will get back to you within 2-4 hours.',
-                  style: GoogleFonts.inter(color: Colors.white54, fontSize: 13),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(13),
+                  ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: context.heightPct(2.5)),
 
-                Text('Category', style: GoogleFonts.inter(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
+                Text(
+                  'Category',
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: context.heightPct(0.8)),
                 DropdownButtonFormField<String>(
-                  value: _category,
-                  dropdownColor: const Color(0xFF2C2C2C),
-                  style: GoogleFonts.inter(color: Colors.white, fontSize: 14),
+                  initialValue: _category,
+                  dropdownColor: AppColors.surfaceElevated,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(14),
+                  ),
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.white.withValues(alpha: 0.04),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    fillColor: AppColors.textPrimary.withValues(alpha: 0.04),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      borderSide: const BorderSide(color: AppColors.borderDark),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      borderSide: const BorderSide(color: AppColors.borderDark),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      borderSide: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
+                    ),
                   ),
                   items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
-                  onChanged: (val) => setState(() => _category = val!),
+                  onChanged: (val) {
+                    if (val != null) {
+                      setState(() => _category = val);
+                    }
+                  },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: context.heightPct(2)),
 
-                Text('Subject', style: GoogleFonts.inter(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
+                Text(
+                  'Subject',
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: context.heightPct(0.8)),
                 TextFormField(
-                  style: GoogleFonts.inter(color: Colors.white, fontSize: 14),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(14),
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Brief summary of the issue...',
-                    hintStyle: GoogleFonts.inter(color: Colors.white30, fontSize: 14),
+                    hintStyle: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted.withValues(alpha: 0.5),
+                      fontSize: context.responsiveFont(14),
+                    ),
                     filled: true,
-                    fillColor: Colors.white.withValues(alpha: 0.04),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    fillColor: AppColors.textPrimary.withValues(alpha: 0.04),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      borderSide: const BorderSide(color: AppColors.borderDark),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      borderSide: const BorderSide(color: AppColors.borderDark),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      borderSide: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
+                    ),
                   ),
                   validator: (v) => v == null || v.trim().isEmpty ? 'Please enter a subject' : null,
                   onSaved: (v) => _subject = v ?? '',
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: context.heightPct(2)),
 
-                Text('Description', style: GoogleFonts.inter(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
+                Text(
+                  'Description',
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: context.heightPct(0.8)),
                 TextFormField(
                   maxLines: 4,
-                  style: GoogleFonts.inter(color: Colors.white, fontSize: 14),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(14),
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Describe your query or issue in detail...',
-                    hintStyle: GoogleFonts.inter(color: Colors.white30, fontSize: 14),
+                    hintStyle: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted.withValues(alpha: 0.5),
+                      fontSize: context.responsiveFont(14),
+                    ),
                     filled: true,
-                    fillColor: Colors.white.withValues(alpha: 0.04),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    fillColor: AppColors.textPrimary.withValues(alpha: 0.04),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      borderSide: const BorderSide(color: AppColors.borderDark),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      borderSide: const BorderSide(color: AppColors.borderDark),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      borderSide: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
+                    ),
                   ),
                   validator: (v) => v == null || v.trim().isEmpty ? 'Please enter a description' : null,
                   onSaved: (v) => _description = v ?? '',
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: context.heightPct(3)),
 
                 SizedBox(
                   width: double.infinity,
+                  height: context.heightPct(6).clamp(48.0, 56.0),
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
+                        debugPrint('Ticket Submitted -> Category: $_category, Subject: $_subject, Desc: $_description');
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Ticket created! Support reference #TK-84920'),
-                            backgroundColor: Color(0xFF00E676),
+                            backgroundColor: AppColors.accent,
                           ),
                         );
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00E676),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      backgroundColor: AppColors.accent,
+                      foregroundColor: AppColors.background,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+                      ),
                     ),
-                    child: Text(
-                      'Submit Ticket',
-                      style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'Submit Ticket',
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.background,
+                          fontWeight: FontWeight.bold,
+                          fontSize: context.responsiveFont(15),
+                        ),
+                      ),
                     ),
                   ),
                 ),

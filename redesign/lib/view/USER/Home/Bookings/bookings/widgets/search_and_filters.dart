@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../bookings_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'filter_chip.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -12,17 +13,28 @@ class BookingsSearchAndFilters extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+          padding: EdgeInsets.fromLTRB(
+            context.widthPct(4),
+            context.heightPct(1),
+            context.widthPct(4),
+            context.heightPct(1),
+          ),
           child: TextField(
-            style: TextStyle(color: Colors.white),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(13),
+            ),
             decoration: InputDecoration(
               hintText: 'Search by venue, sport or ID…',
-              hintStyle: TextStyle(color: Colors.white54),
-              prefixIcon: Icon(Icons.search, color: Colors.white54),
+              hintStyle: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+              ),
+              prefixIcon: const Icon(Icons.search, color: AppColors.muted),
               filled: true,
-              fillColor: MyBookingsConstants.surface,
+              fillColor: AppColors.surface,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                 borderSide: BorderSide.none,
               ),
             ),
@@ -30,8 +42,8 @@ class BookingsSearchAndFilters extends StatelessWidget {
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-          child: Row(
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
+          child: const Row(
             children: [
               BookingFilterChip('Filters', icon: Icons.tune),
               BookingFilterChip('This Week'),

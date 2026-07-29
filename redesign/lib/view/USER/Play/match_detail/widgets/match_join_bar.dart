@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchJoinBar extends StatelessWidget {
@@ -46,34 +46,38 @@ class MatchJoinBar extends StatelessWidget {
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accent,
-                  foregroundColor: Colors.black,
+                  foregroundColor: AppColors.background,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                   ),
                   elevation: 4,
                 ),
                 onPressed: onHostBookSlotPressed,
                 icon: const Icon(Icons.bolt_rounded, size: 20),
-                label: Text(
-                  'Book Slot Now',
-                  style: GoogleFonts.inter(
-                    fontSize: ResponsiveHelper.sp(14),
-                    fontWeight: FontWeight.bold,
+                label: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Book Slot Now',
+                    style: AppTypography.headlineSm.copyWith(
+                      fontSize: context.responsiveFont(14),
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.background,
+                    ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: context.widthPct(2.5)),
             IconButton(
               style: IconButton.styleFrom(
                 backgroundColor: AppColors.card,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-                  side: const BorderSide(color: Colors.white24),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                  side: const BorderSide(color: AppColors.borderDark),
                 ),
               ),
               onPressed: onHostChangeSlotPressed,
-              icon: const Icon(Icons.edit_calendar_rounded, color: Colors.white),
+              icon: const Icon(Icons.edit_calendar_rounded, color: AppColors.textPrimary),
               tooltip: 'Change Date or Time Slot',
             ),
           ],
@@ -84,18 +88,21 @@ class MatchJoinBar extends StatelessWidget {
             backgroundColor: const Color(0xFF059669).withValues(alpha: 0.2),
             foregroundColor: const Color(0xFF34D399),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
               side: const BorderSide(color: Color(0xFF059669)),
             ),
             elevation: 0,
           ),
           onPressed: null,
-          child: Text(
-            'You are Host (Slot Booked ⚡)',
-            style: GoogleFonts.inter(
-              fontSize: ResponsiveHelper.sp(15),
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF34D399),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'You are Host (Slot Booked ⚡)',
+              style: AppTypography.headlineSm.copyWith(
+                fontSize: context.responsiveFont(15),
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF34D399),
+              ),
             ),
           ),
         );
@@ -103,19 +110,22 @@ class MatchJoinBar extends StatelessWidget {
         childWidget = ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.card,
-            foregroundColor: Colors.white54,
+            foregroundColor: AppColors.muted,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
             ),
             elevation: 0,
           ),
           onPressed: null,
-          child: Text(
-            'You are the Host (Included in Poll)',
-            style: GoogleFonts.inter(
-              fontSize: ResponsiveHelper.sp(14),
-              fontWeight: FontWeight.w600,
-              color: Colors.white60,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'You are the Host (Included in Poll)',
+              style: AppTypography.headlineSm.copyWith(
+                fontSize: context.responsiveFont(14),
+                fontWeight: FontWeight.w600,
+                color: AppColors.muted,
+              ),
             ),
           ),
         );
@@ -126,40 +136,46 @@ class MatchJoinBar extends StatelessWidget {
           backgroundColor: const Color(0xFF059669).withValues(alpha: 0.2),
           foregroundColor: const Color(0xFF34D399),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+            borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
             side: const BorderSide(color: Color(0xFF059669)),
           ),
           elevation: 0,
         ),
         onPressed: null,
         icon: const Icon(Icons.check_circle_rounded, color: Color(0xFF34D399), size: 18),
-        label: Text(
-          'Already Joined Match Poll',
-          style: GoogleFonts.inter(
-            fontSize: ResponsiveHelper.sp(15),
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF34D399),
+        label: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'Already Joined Match Poll',
+            style: AppTypography.headlineSm.copyWith(
+              fontSize: context.responsiveFont(15),
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF34D399),
+            ),
           ),
         ),
       );
     } else if (isFull) {
       childWidget = ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.redAccent.withValues(alpha: 0.2),
-          foregroundColor: Colors.redAccent,
+          backgroundColor: AppColors.error.withValues(alpha: 0.2),
+          foregroundColor: AppColors.error,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-            side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.5)),
+            borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+            side: BorderSide(color: AppColors.error.withValues(alpha: 0.5)),
           ),
           elevation: 0,
         ),
         onPressed: null,
-        child: Text(
-          'Match Poll Full 🔒',
-          style: GoogleFonts.inter(
-            fontSize: ResponsiveHelper.sp(15),
-            fontWeight: FontWeight.bold,
-            color: Colors.redAccent,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'Match Poll Full 🔒',
+            style: AppTypography.headlineSm.copyWith(
+              fontSize: context.responsiveFont(15),
+              fontWeight: FontWeight.bold,
+              color: AppColors.error,
+            ),
           ),
         ),
       );
@@ -167,9 +183,9 @@ class MatchJoinBar extends StatelessWidget {
       childWidget = ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.accent,
-          foregroundColor: Colors.black,
+          foregroundColor: AppColors.background,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+            borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
           ),
           elevation: 4,
         ),
@@ -179,28 +195,29 @@ class MatchJoinBar extends StatelessWidget {
           children: [
             Text(
               "Join Match Poll",
-              style: GoogleFonts.inter(
-                fontSize: ResponsiveHelper.sp(16),
+              style: AppTypography.headlineSm.copyWith(
+                fontSize: context.responsiveFont(16),
                 fontWeight: FontWeight.bold,
+                color: AppColors.background,
               ),
             ),
             Row(
               children: [
                 Text(
                   "Per Person",
-                  style: GoogleFonts.inter(
-                    fontSize: ResponsiveHelper.sp(11),
-                    color: Colors.black54,
+                  style: AppTypography.bodySm.copyWith(
+                    fontSize: context.responsiveFont(11),
+                    color: AppColors.background.withValues(alpha: 0.7),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: context.widthPct(1.5)),
                 Text(
                   price,
-                  style: GoogleFonts.inter(
-                    fontSize: ResponsiveHelper.sp(18),
+                  style: AppTypography.displayLg.copyWith(
+                    fontSize: context.responsiveFont(18),
                     fontWeight: FontWeight.w900,
-                    color: Colors.black,
+                    color: AppColors.background,
                   ),
                 ),
               ],
@@ -214,15 +231,15 @@ class MatchJoinBar extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Container(
         padding: EdgeInsets.fromLTRB(
-          ResponsiveHelper.w(20),
-          ResponsiveHelper.h(16),
-          ResponsiveHelper.w(20),
-          ResponsiveHelper.h(28),
+          context.widthPct(5),
+          context.heightPct(2),
+          context.widthPct(5),
+          context.heightPct(3.5),
         ),
         decoration: BoxDecoration(
-          color: const Color(0xFF0E0E0E),
-          border: Border(
-            top: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+          color: AppColors.background,
+          border: const Border(
+            top: BorderSide(color: AppColors.borderDark),
           ),
           boxShadow: [
             BoxShadow(
@@ -234,7 +251,7 @@ class MatchJoinBar extends StatelessWidget {
         ),
         child: SizedBox(
           width: double.infinity,
-          height: ResponsiveHelper.h(50),
+          height: context.heightPct(6).clamp(48.0, 56.0),
           child: childWidget,
         ),
       ),

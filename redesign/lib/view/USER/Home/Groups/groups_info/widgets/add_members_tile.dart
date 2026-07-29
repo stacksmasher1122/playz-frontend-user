@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/group_info_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const _kGreen = AppColors.accent;
-const _kBg = AppColors.surface;
-const _kSurface = Color(0xFF222222);
-const _kMuted = Colors.white54;
 
 class AddMembersTile extends StatelessWidget {
   final GroupInfoController ctrl;
@@ -18,20 +14,26 @@ class AddMembersTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final avatarSize = context.minDimensionPct(11).clamp(40.0, 48.0);
+
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: Container(
-        width: ResponsiveHelper.w(46),
-        height: ResponsiveHelper.h(46),
+        width: avatarSize,
+        height: avatarSize,
         decoration: BoxDecoration(
-          color: _kGreen.withValues(alpha: 0.2),
+          color: AppColors.accent.withValues(alpha: 0.2),
           shape: BoxShape.circle,
         ),
-        child: Icon(Icons.person_add, color: _kGreen),
+        child: const Icon(Icons.person_add, color: AppColors.accent),
       ),
       title: Text(
         "Add Members",
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: AppTypography.headlineSm.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(15),
+          fontWeight: FontWeight.bold,
+        ),
       ),
       onTap: () => _showAddMembersSheet(context),
     );
@@ -48,32 +50,54 @@ class AddMembersTile extends StatelessWidget {
           builder: (_, controller) {
             return Container(
               decoration: BoxDecoration(
-                color: _kBg,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
+                color: AppColors.surface,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(6))),
               ),
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: ResponsiveHelper.h(12), bottom: 8),
-                    width: ResponsiveHelper.w(40),
-                    height: ResponsiveHelper.h(4),
-                    decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(ResponsiveHelper.w(2))),
+                    margin: EdgeInsets.only(
+                      top: context.heightPct(1.5),
+                      bottom: context.heightPct(1),
+                    ),
+                    width: context.widthPct(10),
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.borderDark,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(ResponsiveHelper.w(16)),
-                    child: Text("Add Members", style: TextStyle(color: Colors.white, fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.bold)),
+                    padding: EdgeInsets.all(context.widthPct(4)),
+                    child: Text(
+                      "Add Members",
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.textPrimary,
+                        fontSize: context.responsiveFont(18),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                    padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                     child: TextField(
-                      style: TextStyle(color: Colors.white),
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.textPrimary,
+                        fontSize: context.responsiveFont(14),
+                      ),
                       decoration: InputDecoration(
                         hintText: "Search name or email...",
-                        hintStyle: TextStyle(color: _kMuted),
-                        prefixIcon: Icon(Icons.search, color: _kMuted),
+                        hintStyle: AppTypography.bodySm.copyWith(
+                          color: AppColors.muted,
+                          fontSize: context.responsiveFont(14),
+                        ),
+                        prefixIcon: const Icon(Icons.search, color: AppColors.muted),
                         filled: true,
-                        fillColor: _kSurface,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)), borderSide: BorderSide.none),
+                        fillColor: AppColors.card,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
                       onChanged: (val) => ctrl.searchUsers(val),
                     ),
@@ -82,11 +106,19 @@ class AddMembersTile extends StatelessWidget {
                     child: Obx(() {
                       final results = ctrl.searchResults;
                       if (results.isEmpty) {
-                        return Center(child: Text("Search to find people", style: TextStyle(color: _kMuted)));
+                        return Center(
+                          child: Text(
+                            "Search to find people",
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.muted,
+                              fontSize: context.responsiveFont(14),
+                            ),
+                          ),
+                        );
                       }
                       return ListView.builder(
                         controller: controller,
-                        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+                        padding: EdgeInsets.all(context.widthPct(4)),
                         itemCount: results.length,
                         itemBuilder: (context, index) {
                           final user = results[index];
@@ -95,16 +127,41 @@ class AddMembersTile extends StatelessWidget {
                           final picUrl = user['profileImageUrl'] ?? '';
                           return ListTile(
                             leading: CircleAvatar(
-                              backgroundColor: _kSurface,
+                              backgroundColor: AppColors.card,
                               backgroundImage: picUrl.isNotEmpty ? CachedNetworkImageProvider(picUrl) : null,
-                              child: picUrl.isEmpty ? Icon(Icons.person, color: _kMuted) : null,
+                              child: picUrl.isEmpty ? const Icon(Icons.person, color: AppColors.muted) : null,
                             ),
-                            title: Text(name, style: TextStyle(color: Colors.white)),
-                            subtitle: Text(email, style: TextStyle(color: _kMuted, fontSize: 12)),
+                            title: Text(
+                              name,
+                              style: AppTypography.bodySm.copyWith(
+                                color: AppColors.textPrimary,
+                                fontSize: context.responsiveFont(14),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              email,
+                              style: AppTypography.bodySm.copyWith(
+                                color: AppColors.muted,
+                                fontSize: context.responsiveFont(12),
+                              ),
+                            ),
                             trailing: ElevatedButton(
-                              style: ElevatedButton.styleFrom(backgroundColor: _kGreen, foregroundColor: Colors.black),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.accent,
+                                foregroundColor: AppColors.background,
+                              ),
                               onPressed: () => ctrl.addMember(email, user),
-                              child: Text("ADD"),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  "ADD",
+                                  style: AppTypography.bodySm.copyWith(
+                                    color: AppColors.background,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           );
                         },

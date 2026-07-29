@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,6 +16,13 @@ import 'package:redesign/controller/User_Controller/Booking_Controller/booking_c
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Force lock application to portrait vertical orientation only
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   await Firebase.initializeApp();
   await dotenv.load(fileName: ".env");
 
@@ -45,8 +53,7 @@ class PlayZApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Inter',
       ),
-      home:  SplashScreen(),
-      //  home: const TurfDetailScreen(),
+      home: const SplashScreen(),
     );
   }
 }

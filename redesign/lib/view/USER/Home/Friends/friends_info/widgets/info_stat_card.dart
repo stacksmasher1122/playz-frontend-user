@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-Color _kGreen = AppColors.accent;
-Color _kSurface = Color(0xFF222222);
-Color _kMuted = Colors.white60;
 
 class InfoStatCard extends StatelessWidget {
   final IconData icon;
@@ -22,52 +19,57 @@ class InfoStatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return ClipRRect(
-      borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+      borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
       child: Container(
-        height: ResponsiveHelper.h(145),
-        decoration: BoxDecoration(color: _kSurface),
+        height: context.heightPct(17),
+        decoration: const BoxDecoration(color: AppColors.card),
         child: Stack(
           children: [
             // Background arc decoration
             Positioned(
-              top: -40,
-              right: -40,
+              top: -30,
+              right: -30,
               child: Container(
-                width: ResponsiveHelper.w(110),
-                height: ResponsiveHelper.h(110),
+                width: context.widthPct(26),
+                height: context.widthPct(26),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: _kGreen.withValues(alpha: 0.15),
-                    width: ResponsiveHelper.w(18),
+                    color: AppColors.accent.withValues(alpha: 0.15),
+                    width: context.widthPct(4),
                   ),
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(ResponsiveHelper.w(20)),
+              padding: EdgeInsets.all(context.widthPct(4)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(icon, color: _kGreen, size: 26),
+                  Icon(icon, color: AppColors.accent, size: 26),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        value,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(34),
-                          fontWeight: FontWeight.bold,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          value,
+                          style: AppTypography.displayLg.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(30),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: context.heightPct(0.3)),
                       Text(
                         label,
-                        style: TextStyle(
-                          color: _kMuted,
-                          fontSize: ResponsiveHelper.sp(9),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.labelCaps10.copyWith(
+                          color: AppColors.muted,
+                          fontSize: context.responsiveFont(9),
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.2,
                         ),

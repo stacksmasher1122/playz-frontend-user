@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 // Internal Widgets
 import 'widgets/camera_top_bar.dart';
 import 'widgets/camera_bottom_controls.dart';
 import 'widgets/camera_capture_overlay.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -38,7 +38,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       if (_cameras.isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('No camera available')),
+            const SnackBar(content: Text('No camera available')),
           );
         }
         return;
@@ -119,8 +119,8 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     if (!_isInit || _controller == null) {
-      return Scaffold(
-        backgroundColor: Colors.black,
+      return const Scaffold(
+        backgroundColor: AppColors.background,
         body: Center(
           child: CircularProgressIndicator(color: AppColors.accent),
         ),
@@ -128,7 +128,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -138,7 +138,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
           ),
 
           // ── Top Controls ──
-          CameraTopBar(),
+          const CameraTopBar(),
 
           // ── Bottom Controls ──
           CameraBottomControls(
@@ -148,7 +148,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
           
           // ── Loading Overlay (While capturing) ──
           if (_isTakingPicture)
-            CameraCaptureOverlay(),
+            const CameraCaptureOverlay(),
         ],
       ),
     );

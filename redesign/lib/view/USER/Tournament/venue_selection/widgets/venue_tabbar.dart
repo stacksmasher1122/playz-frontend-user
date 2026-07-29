@@ -22,12 +22,14 @@ class _VenueTabbarState extends State<VenueTabbar> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-      height: ResponsiveHelper.h(48),
+      margin: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
+      height: context.heightPct(6).clamp(44.0, 52.0),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
       ),
       child: Row(
         children: tabs.map((tab) {
@@ -39,14 +41,18 @@ class _VenueTabbarState extends State<VenueTabbar> {
                 duration: const Duration(milliseconds: 200),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.surface : Colors.transparent,
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                  color: isSelected ? AppColors.surface : AppColors.card,
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                 ),
-                child: Text(
-                  tab,
-                  style: AppTypography.bodyMd.copyWith(
-                    color: isSelected ? AppColors.onPrimary : AppColors.muted,
-                    fontWeight: FontWeight.bold,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    tab,
+                    style: AppTypography.bodyMd.copyWith(
+                      color: isSelected ? AppColors.textPrimary : AppColors.muted,
+                      fontSize: context.responsiveFont(13.5),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

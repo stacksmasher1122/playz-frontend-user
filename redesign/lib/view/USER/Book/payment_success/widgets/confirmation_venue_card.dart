@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Bookings/qr_in_bookings/qr_in_bookings_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'notched_dashed_divider.dart';
@@ -11,11 +12,6 @@ class ConfirmationVenueCard extends StatelessWidget {
   final Map<String, dynamic>? bookingData;
 
   const ConfirmationVenueCard({super.key, required this.size, this.bookingData});
-
-  static const _kCard = Color(0xFF1A1A1A);
-  static const _kGreen = AppColors.accent;
-  static const _kMuted = Color(0xFFA7A7A7);
-  static const _kYellow = Color(0xFFFFC107);
 
   @override
   Widget build(BuildContext context) {
@@ -31,53 +27,57 @@ class ConfirmationVenueCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: _kCard,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // IMAGE
           ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(16))),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(4))),
             child: Stack(
               children: [
                 CachedNetworkImage(
                   imageUrl: turfImage,
-                  height: size.width * 0.45,
+                  height: context.widthPct(45).clamp(160.0, 240.0),
                   width: double.infinity,
                   fit: BoxFit.cover,
                   placeholder: (_, __) => Shimmer.fromColors(
-                    baseColor: Colors.grey.shade900,
-                    highlightColor: Colors.grey.shade800,
-                    child: Container(color: Colors.black),
+                    baseColor: AppColors.surfaceElevated,
+                    highlightColor: AppColors.borderDark,
+                    child: Container(color: AppColors.surface),
                   ),
                   errorWidget: (_, __, ___) => Container(
-                    height: size.width * 0.45,
-                    color: Colors.grey.shade900,
-                    child: Icon(Icons.sports_soccer, size: 50, color: Colors.white),
+                    height: context.widthPct(45).clamp(160.0, 240.0),
+                    color: AppColors.surface,
+                    child: const Icon(Icons.sports_soccer, size: 50, color: AppColors.textPrimary),
                   ),
                 ),
                 Positioned(
-                  top: ResponsiveHelper.h(12),
-                  right: ResponsiveHelper.w(12),
+                  top: context.heightPct(1.5),
+                  right: context.widthPct(3),
                   child: Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                      horizontal: context.widthPct(3),
+                      vertical: context.heightPct(0.8),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.7),
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                      color: AppColors.background.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.sports_soccer, color: _kGreen, size: 16),
-                        SizedBox(width: 6),
+                        const Icon(Icons.sports_soccer, color: AppColors.accent, size: 16),
+                        SizedBox(width: context.widthPct(1.5)),
                         Text(
                           sport,
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: context.responsiveFont(12),
+                          ),
                         ),
                       ],
                     ),
@@ -88,43 +88,49 @@ class ConfirmationVenueCard extends StatelessWidget {
           ),
 
           Padding(
-            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+            padding: EdgeInsets.symmetric(vertical: context.heightPct(2)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                  padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                   child: Text(
                     turfName,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: ResponsiveHelper.sp(18),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(18),
                       fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(height: context.heightPct(0.5)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
+                  child: Text(
+                    'ID: #$bookingId',
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontFamily: 'monospace',
+                      fontSize: context.responsiveFont(13),
                     ),
                   ),
                 ),
-                SizedBox(height: 4),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-                  child: Text(
-                    'ID: #$bookingId',
-                    style: TextStyle(color: _kMuted, fontFamily: 'monospace'),
-                  ),
-                ),
 
-                SizedBox(height: 16),
+                SizedBox(height: context.heightPct(2)),
 
                 /// NOTCHED DASHED DIVIDER
-                NotchedDashedDivider(),
+                const NotchedDashedDivider(),
 
-                SizedBox(height: 16),
+                SizedBox(height: context.heightPct(2)),
 
-                _infoRow('Date', dateFormatted),
-                _infoRow('Time', timeSlot),
-                _infoRow('Location', location),
-                SizedBox(height: 8),
-                _weatherCard(),
-                SizedBox(height: 12),
+                _infoRow(context, 'Date', dateFormatted),
+                _infoRow(context, 'Time', timeSlot),
+                _infoRow(context, 'Location', location),
+                SizedBox(height: context.heightPct(1)),
+                _weatherCard(context),
+                SizedBox(height: context.heightPct(1.5)),
                 _qrBlock(context),
               ],
             ),
@@ -134,21 +140,33 @@ class ConfirmationVenueCard extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(String label, String value) {
+  Widget _infoRow(BuildContext context, String label, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(6), horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(
+        vertical: context.heightPct(0.6),
+        horizontal: context.widthPct(4),
+      ),
       child: Row(
         children: [
           Expanded(
-            child: Text(label, style: TextStyle(color: _kMuted)),
+            child: Text(
+              label,
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+              ),
+            ),
           ),
           Expanded(
             child: Text(
               value,
               textAlign: TextAlign.right,
-              style: TextStyle(
-                color: Colors.white,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
                 fontWeight: FontWeight.w600,
+                fontSize: context.responsiveFont(13),
               ),
             ),
           ),
@@ -157,23 +175,26 @@ class ConfirmationVenueCard extends StatelessWidget {
     );
   }
 
-  Widget _weatherCard() {
+  Widget _weatherCard(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Container(
-        padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+        padding: EdgeInsets.all(context.widthPct(3)),
         decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+          color: AppColors.background,
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
         ),
         child: Row(
           children: [
-            Icon(Icons.wb_sunny, color: _kYellow),
-            SizedBox(width: 8),
+            const Icon(Icons.wb_sunny, color: Color(0xFFFFC107)),
+            SizedBox(width: context.widthPct(2)),
             Expanded(
               child: Text(
                 '24°C • Good match conditions',
-                style: TextStyle(color: Colors.white),
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(13),
+                ),
               ),
             ),
           ],
@@ -184,7 +205,7 @@ class ConfirmationVenueCard extends StatelessWidget {
 
   Widget _qrBlock(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
@@ -194,11 +215,11 @@ class ConfirmationVenueCard extends StatelessWidget {
           );
         },
         child: Container(
-          padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+          padding: EdgeInsets.all(context.widthPct(3)),
           decoration: BoxDecoration(
-            color: Color(0xFF1E3A2B),
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            border: Border.all(color: Colors.greenAccent, width: 1.2),
+            color: AppColors.accent.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+            border: Border.all(color: AppColors.accent, width: 1.2),
           ),
           child: Row(
             children: [
@@ -208,34 +229,37 @@ class ConfirmationVenueCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.qr_code_scanner, color: Colors.greenAccent, size: 18),
-                        SizedBox(width: 6),
+                        const Icon(Icons.qr_code_scanner, color: AppColors.accent, size: 18),
+                        SizedBox(width: context.widthPct(1.5)),
                         Text(
                           'Scan at Entry',
-                          style: TextStyle(
-                            color: Colors.white,
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
                             fontWeight: FontWeight.bold,
-                            fontSize: ResponsiveHelper.sp(14),
+                            fontSize: context.responsiveFont(14),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: context.heightPct(0.5)),
                     Text(
                       'Tap to view your entry QR code',
-                      style: TextStyle(color: _kMuted, fontSize: 12),
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(12),
+                      ),
                     ),
                   ],
                 ),
               ),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
-                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
+                  color: AppColors.textPrimary,
                 ),
-                width: ResponsiveHelper.w(52),
-                height: ResponsiveHelper.h(52),
-                child: Icon(Icons.qr_code_2, size: 38, color: Colors.black),
+                width: context.minDimensionPct(13).clamp(44.0, 56.0),
+                height: context.minDimensionPct(13).clamp(44.0, 56.0),
+                child: const Icon(Icons.qr_code_2, size: 36, color: AppColors.background),
               ),
             ],
           ),

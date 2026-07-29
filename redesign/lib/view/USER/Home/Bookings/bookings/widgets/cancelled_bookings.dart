@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'cancelled_booking_card.dart';
 import 'empty_state.dart';
@@ -25,7 +26,7 @@ class CancelledBookingsWidget extends StatelessWidget {
         final userId = docSnap.data ?? user?.email ?? user?.uid ?? '';
 
         if (userId.isEmpty) {
-          return Center(
+          return const Center(
             child: BookingsEmptyState(
               icon: Icons.lock_outline,
               text: 'Please sign in to view your bookings',
@@ -44,8 +45,8 @@ class CancelledBookingsWidget extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: Padding(
-                  padding: EdgeInsets.all(32),
-                  child: CircularProgressIndicator(color: Colors.green),
+                  padding: EdgeInsets.all(context.widthPct(8)),
+                  child: const CircularProgressIndicator(color: AppColors.accent),
                 ),
               );
             }
@@ -57,7 +58,7 @@ class CancelledBookingsWidget extends StatelessWidget {
             }).toList();
 
             if (cancelledDocs.isEmpty) {
-              return Center(
+              return const Center(
                 child: BookingsEmptyState(
                   icon: Icons.cancel_outlined,
                   text: 'No cancelled bookings found',
@@ -66,12 +67,17 @@ class CancelledBookingsWidget extends StatelessWidget {
             }
 
             return ListView.builder(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 32),
+              padding: EdgeInsets.fromLTRB(
+                context.widthPct(4),
+                context.heightPct(1.5),
+                context.widthPct(4),
+                context.heightPct(4),
+              ),
               itemCount: cancelledDocs.length,
               itemBuilder: (context, index) {
                 final data = cancelledDocs[index].data() as Map<String, dynamic>;
                 return Padding(
-                  padding: EdgeInsets.only(bottom: 12),
+                  padding: EdgeInsets.only(bottom: context.heightPct(1.5)),
                   child: CancelledBookingCard(bookingData: data),
                 );
               },

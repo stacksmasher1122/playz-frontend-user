@@ -47,18 +47,20 @@ class _PrizeTierWidgetState extends State<PrizeTierWidget> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      margin: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      margin: EdgeInsets.only(bottom: context.heightPct(1.5)),
+      padding: EdgeInsets.all(context.widthPct(3.5)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(ResponsiveHelper.w(10)),
+            padding: EdgeInsets.all(context.widthPct(2.5)),
             decoration: const BoxDecoration(
               color: AppColors.surface,
               shape: BoxShape.circle,
@@ -66,10 +68,10 @@ class _PrizeTierWidgetState extends State<PrizeTierWidget> {
             child: Icon(
               widget.tier.icon,
               color: AppColors.accent,
-              size: ResponsiveHelper.w(20),
+              size: context.responsiveFont(20),
             ),
           ),
-          SizedBox(width: ResponsiveHelper.w(12)),
+          SizedBox(width: context.widthPct(3)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,34 +79,55 @@ class _PrizeTierWidgetState extends State<PrizeTierWidget> {
                 if (widget.tier.isDefault && widget.tier.title != null)
                   Text(
                     widget.tier.title!,
-                    style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary),
+                    style: AppTypography.bodyLg.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(14.5),
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   )
                 else
                   TextFormField(
                     controller: _titleController,
-                    style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary),
+                    style: AppTypography.bodyLg.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(14.5),
+                      fontWeight: FontWeight.w600,
+                    ),
                     decoration: InputDecoration(
                       hintText: "Custom Prize Title",
-                      hintStyle: AppTypography.bodyLg.copyWith(color: AppColors.muted),
+                      hintStyle: AppTypography.bodyLg.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(14),
+                      ),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
                     ),
                     onChanged: widget.onTitleChanged,
                   ),
-                SizedBox(height: ResponsiveHelper.h(8)),
+                SizedBox(height: context.heightPct(1)),
                 CommonTextField(
                   controller: widget.tier.amountController,
                   hintText: "0.00",
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  prefixIcon: Icon(Icons.attach_money, color: AppColors.muted),
+                  prefixIcon: Icon(
+                    Icons.attach_money_rounded,
+                    color: AppColors.muted,
+                    size: context.responsiveFont(20),
+                  ),
                 ),
               ],
             ),
           ),
           if (!widget.tier.isDefault && widget.onDelete != null)
             IconButton(
-              icon: Icon(Icons.delete_outline, color: AppColors.error),
+              icon: Icon(
+                Icons.delete_outline_rounded,
+                color: AppColors.error,
+                size: context.responsiveFont(20),
+              ),
               onPressed: widget.onDelete,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),

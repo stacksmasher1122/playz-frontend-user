@@ -110,12 +110,12 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
           if (exists) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => UserAppNavShell()),
+              MaterialPageRoute(builder: (_) => const UserAppNavShell()),
             );
           } else {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+              MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
             );
           }
         }
@@ -166,12 +166,12 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
         if (exists) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => UserAppNavShell()),
+            MaterialPageRoute(builder: (_) => const UserAppNavShell()),
           );
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+            MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
           );
         }
       }
@@ -229,6 +229,8 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -314,7 +316,7 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
         SizedBox(height: context.heightPct(2)),
         SizedBox(
           width: double.infinity,
-          height: context.responsiveFont(48),
+          height: context.heightPct(6).clamp(48.0, 56.0),
           child: ElevatedButton(
             onPressed: () {
               String phone = phoneController.text.trim();
@@ -324,16 +326,19 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
               sendOTP(phone);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.spotifyGreen,
+              backgroundColor: AppColors.accent,
               elevation: 0,
               shape: const StadiumBorder(),
             ),
-            child: Text(
-              "Send OTP",
-              style: AppTypography.headlineSm.copyWith(
-                color: AppColors.background,
-                fontWeight: FontWeight.w800,
-                fontSize: context.responsiveFont(15),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "Send OTP",
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.background,
+                  fontWeight: FontWeight.w800,
+                  fontSize: context.responsiveFont(15),
+                ),
               ),
             ),
           ),
@@ -443,8 +448,8 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
               : null,
           child: Text(
             "RESEND CODE",
-            style: AppTypography.labelCaps.copyWith(
-              color: secondsLeft == 0 ? AppColors.spotifyGreen : AppColors.textSecondary,
+            style: AppTypography.labelCaps10.copyWith(
+              color: secondsLeft == 0 ? AppColors.accent : AppColors.textSecondary,
               fontSize: context.responsiveFont(12),
             ),
           ),
@@ -452,20 +457,23 @@ class _PhoneLoginSheetState extends State<PhoneLoginSheet> with CodeAutoFill {
         SizedBox(height: context.heightPct(1)),
         SizedBox(
           width: double.infinity,
-          height: context.responsiveFont(48),
+          height: context.heightPct(6).clamp(48.0, 56.0),
           child: ElevatedButton(
             onPressed: verifyOTP,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.spotifyGreen,
+              backgroundColor: AppColors.accent,
               elevation: 0,
               shape: const StadiumBorder(),
             ),
-            child: Text(
-              "Verify & Continue",
-              style: AppTypography.headlineSm.copyWith(
-                color: AppColors.background,
-                fontWeight: FontWeight.w800,
-                fontSize: context.responsiveFont(15),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "Verify & Continue",
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.background,
+                  fontWeight: FontWeight.w800,
+                  fontSize: context.responsiveFont(15),
+                ),
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../bookings_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingFilterChip extends StatelessWidget {
@@ -12,21 +13,26 @@ class BookingFilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.only(right: 8),
+      padding: EdgeInsets.only(right: context.widthPct(2)),
       child: Chip(
-        backgroundColor: MyBookingsConstants.surface,
+        backgroundColor: AppColors.surface,
         label: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (icon != null) Icon(icon, size: 14, color: MyBookingsConstants.green),
-            if (icon != null) SizedBox(width: 6),
+            if (icon != null) Icon(icon, size: 14, color: AppColors.accent),
+            if (icon != null) SizedBox(width: context.widthPct(1.5)),
             Text(
               label,
-              style: TextStyle(color: Colors.white, fontSize: 12),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(12),
+              ),
             ),
           ],
         ),
-        shape: StadiumBorder(side: BorderSide(color: MyBookingsConstants.green.withValues(alpha: 0.6))),
+        shape: StadiumBorder(
+          side: BorderSide(color: AppColors.accent.withValues(alpha: 0.6)),
+        ),
       ),
     );
   }

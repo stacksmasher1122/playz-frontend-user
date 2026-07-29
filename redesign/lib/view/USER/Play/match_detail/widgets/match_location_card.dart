@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchLocationCard extends StatelessWidget {
@@ -31,11 +31,11 @@ class MatchLocationCard extends StatelessWidget {
     final bool isPlayZTurf = locationType == 'playz_turf';
 
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(18)),
+      padding: EdgeInsets.all(context.widthPct(4.5)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4.5)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,20 +43,20 @@ class MatchLocationCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(context.widthPct(2.5)),
                 decoration: BoxDecoration(
                   color: isPlayZTurf
                       ? AppColors.accent.withValues(alpha: 0.15)
-                      : Colors.white.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(12),
+                      : AppColors.textPrimary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                 ),
                 child: Icon(
                   isPlayZTurf ? Icons.stadium_rounded : Icons.location_on_rounded,
-                  color: isPlayZTurf ? AppColors.accent : Colors.white70,
+                  color: isPlayZTurf ? AppColors.accent : AppColors.textSecondary,
                   size: 22,
                 ),
               ),
-              const SizedBox(width: 14),
+              SizedBox(width: context.widthPct(3.5)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,16 +66,16 @@ class MatchLocationCard extends StatelessWidget {
                         Flexible(
                           child: Text(
                             venueName,
-                            style: GoogleFonts.inter(
-                              fontSize: ResponsiveHelper.sp(16),
+                            style: AppTypography.headlineSm.copyWith(
+                              fontSize: context.responsiveFont(16),
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: AppColors.textPrimary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: context.widthPct(1.5)),
                         if (isPlayZTurf)
                           const Icon(
                             Icons.verified_rounded,
@@ -84,59 +84,68 @@ class MatchLocationCard extends StatelessWidget {
                           ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: context.heightPct(0.5)),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.widthPct(2),
+                        vertical: context.heightPct(0.3),
+                      ),
                       decoration: BoxDecoration(
                         color: isPlayZTurf
                             ? const Color(0xFF059669).withValues(alpha: 0.2)
-                            : Colors.white.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(6),
+                            : AppColors.textPrimary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(1.5)),
                         border: Border.all(
                           color: isPlayZTurf
                               ? const Color(0xFF059669).withValues(alpha: 0.4)
-                              : Colors.white12,
+                              : AppColors.borderDark,
                         ),
                       ),
                       child: Text(
                         isPlayZTurf ? 'PLAYZ VERIFIED TURF' : 'UNOFFICIAL GROUND',
-                        style: GoogleFonts.inter(
-                          fontSize: ResponsiveHelper.sp(10),
+                        style: AppTypography.labelCaps10.copyWith(
+                          fontSize: context.responsiveFont(10),
                           fontWeight: FontWeight.bold,
-                          color: isPlayZTurf ? const Color(0xFF34D399) : Colors.white60,
+                          color: isPlayZTurf ? const Color(0xFF34D399) : AppColors.muted,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    SizedBox(height: context.heightPct(0.8)),
                     Text(
                       address,
-                      style: GoogleFonts.inter(
-                        fontSize: ResponsiveHelper.sp(12),
+                      style: AppTypography.bodySm.copyWith(
+                        fontSize: context.responsiveFont(12),
                         color: AppColors.muted,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: context.heightPct(2)),
           SizedBox(
             width: double.infinity,
-            height: ResponsiveHelper.h(44),
+            height: context.heightPct(5.5).clamp(44.0, 52.0),
             child: OutlinedButton.icon(
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.accent,
                 side: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                 ),
               ),
               onPressed: _launchGoogleMaps,
               icon: const Icon(Icons.map_outlined, size: 18),
               label: Text(
                 'Open Location in Google Maps',
-                style: GoogleFonts.inter(fontWeight: FontWeight.bold),
+                style: AppTypography.headlineSm.copyWith(
+                  fontSize: context.responsiveFont(13),
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.accent,
+                ),
               ),
             ),
           ),

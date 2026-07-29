@@ -19,11 +19,14 @@ class LeaderboardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +34,18 @@ class LeaderboardSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Leaderboard", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
+              Expanded(
+                child: Text(
+                  "Leaderboard",
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(16),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               TextButton(
                 onPressed: () {
                   Get.to(() => LeaderboardScreen(
@@ -39,11 +53,18 @@ class LeaderboardSection extends StatelessWidget {
                     matchType: matchType,
                   ));
                 },
-                child: Text("View All", style: AppTypography.labelCaps.copyWith(color: AppColors.accent)),
-              )
+                child: Text(
+                  "View All",
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.accent,
+                    fontSize: context.responsiveFont(12),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
-          SizedBox(height: ResponsiveHelper.h(16)),
+          SizedBox(height: context.heightPct(1.5)),
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('tournaments')
@@ -52,15 +73,18 @@ class LeaderboardSection extends StatelessWidget {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator(color: AppColors.accent));
+                return const Center(child: CircularProgressIndicator(color: AppColors.accent));
               }
               if (snapshot.hasError || !snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return Center(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+                    padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
                     child: Text(
                       "No data available yet.",
-                      style: AppTypography.bodyMd.copyWith(color: AppColors.muted),
+                      style: AppTypography.bodyMd.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(13),
+                      ),
                     ),
                   ),
                 );
@@ -76,7 +100,7 @@ class LeaderboardSection extends StatelessWidget {
                     .get(),
                 builder: (context, teamSnapshot) {
                   if (teamSnapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator(color: AppColors.accent));
+                    return const Center(child: CircularProgressIndicator(color: AppColors.accent));
                   }
 
                   Map<String, Map<String, dynamic>> teamMap = {};
@@ -102,7 +126,6 @@ class LeaderboardSection extends StatelessWidget {
                     int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
                     if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
 
-                    // A13 Fix: Leaderboard tiebreaker should account for matches played
                     int matchesPlayedA = a['matchesPlayed'] ?? 0;
                     int matchesPlayedB = b['matchesPlayed'] ?? 0;
                     return matchesPlayedB.compareTo(matchesPlayedA);
@@ -115,70 +138,130 @@ class LeaderboardSection extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text("Team", style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text("W", textAlign: TextAlign.center, style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text("L", textAlign: TextAlign.center, style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text("Pts", textAlign: TextAlign.center, style: AppTypography.labelCaps.copyWith(color: AppColors.accent)),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: ResponsiveHelper.h(12)),
-                  ...teams.map((data) {
-                    final teamData = data['teamData'] as Map<String, dynamic>? ?? {};
-                    final name = teamData['name'] ?? 'Unknown Team';
-                    final logoUrl = teamData['logoUrl'] ?? '';
-                    final wins = data['wins'] ?? 0;
-                    final losses = data['losses'] ?? 0;
-                    final points = data['points'] ?? 0;
-
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
-                      child: Row(
-                        children: [
                           Expanded(
                             flex: 3,
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: ResponsiveHelper.w(16),
-                                  backgroundColor: AppColors.surface,
-                                  backgroundImage: logoUrl.isNotEmpty ? CachedNetworkImageProvider(logoUrl) : null,
-                                  child: logoUrl.isEmpty ? Icon(Icons.group, color: AppColors.muted, size: 16) : null,
-                                ),
-                                SizedBox(width: ResponsiveHelper.w(8)),
-                                Expanded(
-                                  child: Text(name, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary), overflow: TextOverflow.ellipsis),
-                                ),
-                              ],
+                            child: Text(
+                              "Team",
+                              style: AppTypography.labelCaps10.copyWith(
+                                color: AppColors.muted,
+                                fontSize: context.responsiveFont(11),
+                              ),
                             ),
                           ),
                           Expanded(
                             flex: 1,
-                            child: Text(wins.toString(), textAlign: TextAlign.center, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary)),
+                            child: Text(
+                              "W",
+                              textAlign: TextAlign.center,
+                              style: AppTypography.labelCaps10.copyWith(
+                                color: AppColors.muted,
+                                fontSize: context.responsiveFont(11),
+                              ),
+                            ),
                           ),
                           Expanded(
                             flex: 1,
-                            child: Text(losses.toString(), textAlign: TextAlign.center, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary)),
+                            child: Text(
+                              "L",
+                              textAlign: TextAlign.center,
+                              style: AppTypography.labelCaps10.copyWith(
+                                color: AppColors.muted,
+                                fontSize: context.responsiveFont(11),
+                              ),
+                            ),
                           ),
                           Expanded(
                             flex: 1,
-                            child: Text(points.toString(), textAlign: TextAlign.center, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
+                            child: Text(
+                              "Pts",
+                              textAlign: TextAlign.center,
+                              style: AppTypography.labelCaps10.copyWith(
+                                color: AppColors.accent,
+                                fontSize: context.responsiveFont(11),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    );
-                  }),
+                      SizedBox(height: context.heightPct(1.2)),
+                      ...teams.map((data) {
+                        final teamData = data['teamData'] as Map<String, dynamic>? ?? {};
+                        final name = teamData['name'] ?? 'Unknown Team';
+                        final logoUrl = teamData['logoUrl'] ?? '';
+                        final wins = data['wins'] ?? 0;
+                        final losses = data['losses'] ?? 0;
+                        final points = data['points'] ?? 0;
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: context.heightPct(1.2)),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: context.minDimensionPct(3.5).clamp(12.0, 16.0),
+                                      backgroundColor: AppColors.surface,
+                                      backgroundImage: logoUrl.isNotEmpty ? CachedNetworkImageProvider(logoUrl) : null,
+                                      child: logoUrl.isEmpty
+                                          ? const Icon(Icons.group_rounded, color: AppColors.muted, size: 14)
+                                          : null,
+                                    ),
+                                    SizedBox(width: context.widthPct(2)),
+                                    Expanded(
+                                      child: Text(
+                                        name,
+                                        style: AppTypography.bodyMd.copyWith(
+                                          color: AppColors.textPrimary,
+                                          fontSize: context.responsiveFont(13),
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  wins.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: AppTypography.bodyMd.copyWith(
+                                    color: AppColors.textPrimary,
+                                    fontSize: context.responsiveFont(13),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  losses.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: AppTypography.bodyMd.copyWith(
+                                    color: AppColors.textPrimary,
+                                    fontSize: context.responsiveFont(13),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  points.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: AppTypography.bodyMd.copyWith(
+                                    color: AppColors.accent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: context.responsiveFont(13.5),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
                     ],
                   );
                 },

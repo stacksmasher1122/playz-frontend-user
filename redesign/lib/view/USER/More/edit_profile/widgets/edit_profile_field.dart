@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../edit_profile_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class EditProfileField extends StatelessWidget {
@@ -30,47 +31,53 @@ class EditProfileField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            color: Colors.white54,
-            fontSize: ResponsiveHelper.sp(10),
+          style: AppTypography.labelCaps10.copyWith(
+            color: AppColors.muted,
+            fontSize: context.responsiveFont(10),
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
           ),
         ),
-        SizedBox(height: 8),
+        SizedBox(height: context.heightPct(0.8)),
         TextField(
           controller: controller,
           maxLines: maxLines,
           readOnly: readOnly,
           onTap: onTap,
-          style: TextStyle(color: Colors.white, fontSize: 15),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(15),
+          ),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.white24),
+            hintStyle: AppTypography.bodySm.copyWith(
+              color: AppColors.muted.withValues(alpha: 0.5),
+              fontSize: context.responsiveFont(14),
+            ),
             prefixIcon: maxLines == 1
-                ? Icon(icon, color: Colors.white38, size: 20)
+                ? Icon(icon, color: AppColors.muted, size: 20)
                 : Padding(
-                    padding: EdgeInsets.only(bottom: 40),
-                    child: Icon(icon, color: Colors.white38, size: 20),
+                    padding: EdgeInsets.only(bottom: context.heightPct(4)),
+                    child: Icon(icon, color: AppColors.muted, size: 20),
                   ),
             filled: true,
-            fillColor: kEditProfileCard,
+            fillColor: AppColors.card,
             contentPadding: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: maxLines > 1 ? 16 : 18,
+              horizontal: context.widthPct(4),
+              vertical: maxLines > 1 ? context.heightPct(1.8) : context.heightPct(2),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+              borderSide: const BorderSide(color: AppColors.borderDark),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+              borderSide: const BorderSide(color: AppColors.borderDark),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
               borderSide: BorderSide(
-                color: kEditProfileGreen.withValues(alpha: 0.5),
+                color: AppColors.accent.withValues(alpha: 0.5),
               ),
             ),
           ),

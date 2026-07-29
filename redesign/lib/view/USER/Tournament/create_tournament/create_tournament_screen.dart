@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
-import 'package:redesign/theme/app_dimensions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 import '../../../../controller/User_Controller/Tournament_Controller/create_tournament_controller.dart';
@@ -88,6 +87,8 @@ class _CreateTournamentContent extends StatefulWidget {
 class _CreateTournamentContentState extends State<_CreateTournamentContent> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       children: [
         TournamentAppbarWidget(
@@ -100,8 +101,8 @@ class _CreateTournamentContentState extends State<_CreateTournamentContent> {
             physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.w(16),
-                vertical: ResponsiveHelper.h(24),
+                horizontal: context.widthPct(4),
+                vertical: context.heightPct(2.5),
               ),
               child: Form(
                 key: widget.formKey,
@@ -113,12 +114,12 @@ class _CreateTournamentContentState extends State<_CreateTournamentContent> {
                       selectedSport: widget.controller.selectedSport.value,
                       onSportSelected: widget.controller.selectSport,
                     )),
-                    SizedBox(height: ResponsiveHelper.h(AppDimensions.xl)),
+                    SizedBox(height: context.heightPct(2.5)),
                     Obx(() => CoverImageWidget(
                       onTap: widget.controller.pickCoverImage,
                       imagePath: widget.controller.coverImagePath.value,
                     )),
-                    SizedBox(height: ResponsiveHelper.h(AppDimensions.md)),
+                    SizedBox(height: context.heightPct(2)),
                     TournamentTextField(
                       label: "Tournament Name",
                       controller: widget.nameController,
@@ -128,14 +129,14 @@ class _CreateTournamentContentState extends State<_CreateTournamentContent> {
                         return null;
                       },
                     ),
-                    SizedBox(height: ResponsiveHelper.h(AppDimensions.md)),
+                    SizedBox(height: context.heightPct(2)),
                     Obx(() => DateRangeWidget(
                       startDate: widget.controller.startDate.value,
                       endDate: widget.controller.endDate.value,
                       onStartTap: () => widget.controller.selectStartDate(context),
                       onEndTap: () => widget.controller.selectEndDate(context),
                     )),
-                    SizedBox(height: ResponsiveHelper.h(AppDimensions.md)),
+                    SizedBox(height: context.heightPct(2)),
                     Obx(() => TimingDropdownWidget(
                       options: widget.controller.timingOptions,
                       selectedValue: widget.controller.selectedTiming.value,
@@ -143,14 +144,14 @@ class _CreateTournamentContentState extends State<_CreateTournamentContent> {
                         if (val != null) widget.controller.selectTiming(val);
                       },
                     )),
-                    SizedBox(height: ResponsiveHelper.h(AppDimensions.md)),
+                    SizedBox(height: context.heightPct(2)),
                     Obx(() => AccessToggleWidget(
                       isEnabled: widget.controller.isPublicAccess.value,
                       onToggle: widget.controller.toggleAccess,
                     )),
-                    SizedBox(height: ResponsiveHelper.h(AppDimensions.md)),
+                    SizedBox(height: context.heightPct(2)),
                     DescriptionFieldWidget(controller: widget.descriptionController),
-                    SizedBox(height: ResponsiveHelper.h(AppDimensions.xl)),
+                    SizedBox(height: context.heightPct(3)),
                   ],
                 ),
               ),

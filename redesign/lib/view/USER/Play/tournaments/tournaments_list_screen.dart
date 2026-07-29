@@ -24,15 +24,19 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
 
   Future<void> _loadUser() async {
     final docId = await UserPreferences.getDocId();
-    setState(() {
-      currentUserId = docId;
-    });
+    if (mounted) {
+      setState(() {
+        currentUserId = docId;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     if (currentUserId == null) {
-      return Center(
+      return const Center(
         child: CircularProgressIndicator(color: AppColors.accent),
       );
     }
@@ -44,13 +48,19 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(color: AppColors.accent));
+          return const Center(child: CircularProgressIndicator(color: AppColors.accent));
         }
 
         if (snapshot.hasError) {
           debugPrint("Error loading tournaments: ${snapshot.error}");
           return Center(
-            child: Text("Error loading tournaments", style: AppTypography.bodyLg.copyWith(color: AppColors.error)),
+            child: Text(
+              "Error loading tournaments",
+              style: AppTypography.bodyLg.copyWith(
+                color: AppColors.error,
+                fontSize: context.responsiveFont(14),
+              ),
+            ),
           );
         }
 
@@ -78,12 +88,18 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
 
         if (docs.isEmpty) {
           return Center(
-            child: Text("No upcoming tournaments found.", style: AppTypography.bodyLg.copyWith(color: AppColors.muted)),
+            child: Text(
+              "No upcoming tournaments found.",
+              style: AppTypography.bodyLg.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(14),
+              ),
+            ),
           );
         }
 
         return ListView.builder(
-          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+          padding: EdgeInsets.all(context.widthPct(4)),
           itemCount: docs.length,
           itemBuilder: (context, index) {
             final data = docs[index].data() as Map<String, dynamic>;

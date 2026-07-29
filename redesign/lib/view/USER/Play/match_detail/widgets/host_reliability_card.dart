@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class HostReliabilityCard extends StatelessWidget {
@@ -14,12 +14,13 @@ class HostReliabilityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(ResponsiveHelper.w(18)),
+      padding: EdgeInsets.all(context.widthPct(4.5)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4.5)),
         border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
       ),
       child: Column(
@@ -27,44 +28,48 @@ class HostReliabilityCard extends StatelessWidget {
         children: [
           Text(
             "HOST RELIABILITY & SCORE",
-            style: GoogleFonts.inter(
-              fontSize: ResponsiveHelper.sp(11),
+            style: AppTypography.labelCaps10.copyWith(
+              fontSize: context.responsiveFont(11),
               letterSpacing: 0.8,
               fontWeight: FontWeight.bold,
               color: AppColors.muted,
             ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.5)),
           Row(
             children: [
               Text(
                 "$reliabilityScore%",
-                style: GoogleFonts.inter(
-                  fontSize: ResponsiveHelper.sp(36),
+                style: AppTypography.displayLg.copyWith(
+                  fontSize: context.responsiveFont(36),
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                 ),
               ),
-              SizedBox(width: 14),
+              SizedBox(width: context.widthPct(3.5)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Verified Trusted Host 🛡️",
-                      style: GoogleFonts.inter(
+                      style: AppTypography.headlineSm.copyWith(
                         color: AppColors.accent,
-                        fontSize: ResponsiveHelper.sp(14),
+                        fontSize: context.responsiveFont(14),
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 2),
+                    SizedBox(height: context.heightPct(0.3)),
                     Text(
                       "98% match completion rate with zero no-shows",
-                      style: GoogleFonts.inter(
+                      style: AppTypography.bodySm.copyWith(
                         color: AppColors.muted,
-                        fontSize: ResponsiveHelper.sp(11.5),
+                        fontSize: context.responsiveFont(11.5),
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

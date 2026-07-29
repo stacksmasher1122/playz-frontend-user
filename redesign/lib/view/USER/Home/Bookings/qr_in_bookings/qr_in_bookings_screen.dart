@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 import 'widgets/qr_section.dart';
 import 'widgets/booking_info_card.dart';
 import 'widgets/location_card.dart';
 import 'widgets/payment_summary_card.dart';
 import 'widgets/qr_action_section.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 class QrBookingConstants {
   static Color bg = AppColors.background;
-  static Color surface = Color(0xFF0E0E0E);
+  static Color surface = AppColors.surface;
   static Color green = AppColors.accent;
-  static Color red = Color(0xFFE53935);
-  static Color amber = Color(0xFFF5C542);
-  static Color muted = Color(0xFFA7A7A7);
+  static Color red = AppColors.error;
+  static Color amber = Colors.amber;
+  static Color muted = AppColors.muted;
 }
 
 enum BookingStatus { confirmed, cancelled, expired }
@@ -36,52 +37,59 @@ class BookingQrScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: QrBookingConstants.bg,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.fromLTRB(16, 8, 16, 24),
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.fromLTRB(
+            context.widthPct(4),
+            context.heightPct(1),
+            context.widthPct(4),
+            context.heightPct(3),
+          ),
           child: Column(
             children: [
               // Header
               Padding(
-                padding: EdgeInsets.only(bottom: 8.0),
+                padding: EdgeInsets.only(bottom: context.heightPct(1)),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.white),
+                      icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
                       onPressed: () => Navigator.of(context).maybePop(),
                     ),
                     Expanded(
                       child: Text(
                         'Booking Details',
-                        style: TextStyle(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.headlineSm.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(18),
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(18),
                         ),
-                        textAlign: TextAlign.left,
                       ),
                     ),
                   ],
                 ),
               ),
               QrSection(status: status, bookingData: bookingData),
-              SizedBox(height: 20),
+              SizedBox(height: context.heightPct(2.5)),
               BookingInfoCard(bookingData: bookingData),
-              SizedBox(height: 12),
+              SizedBox(height: context.heightPct(1.5)),
               LocationCard(bookingData: bookingData),
-              SizedBox(height: 12),
+              SizedBox(height: context.heightPct(1.5)),
               PaymentSummaryCard(bookingData: bookingData),
-              SizedBox(height: 20),
+              SizedBox(height: context.heightPct(2.5)),
               QrActionSection(status: status, bookingData: bookingData),
-              SizedBox(height: 24),
+              SizedBox(height: context.heightPct(3)),
               GestureDetector(
                 onTap: () {},
                 child: Text(
                   'Need help? Contact Support',
-                  style: TextStyle(
-                    color: QrBookingConstants.muted,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(13),
                     decoration: TextDecoration.underline,
                   ),
                 ),

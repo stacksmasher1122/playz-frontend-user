@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ProfilePhotoPicker extends StatelessWidget {
@@ -15,21 +17,23 @@ class ProfilePhotoPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
+    final pickerSize = context.minDimensionPct(25).clamp(84.0, 110.0);
+
     return Center(
       child: GestureDetector(
         onTap: onPickImage,
         child: Stack(
           children: [
             Container(
-              width: ResponsiveHelper.w(100),
-              height: ResponsiveHelper.h(100),
+              width: pickerSize,
+              height: pickerSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: imageFile == null
                     ? Border.all(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        width: ResponsiveHelper.w(1),
-                        style: BorderStyle.none,
+                        color: AppColors.borderDark,
+                        width: 1.5,
                       )
                     : null,
               ),
@@ -37,30 +41,31 @@ class ProfilePhotoPicker extends StatelessWidget {
                   ? ClipOval(
                       child: Image.file(
                         imageFile!,
-                        width: ResponsiveHelper.w(100),
-                        height: ResponsiveHelper.h(100),
+                        width: pickerSize,
+                        height: pickerSize,
                         fit: BoxFit.cover,
                       ),
                     )
                   : CustomPaint(
                       painter: DashedCirclePainter(
-                        color: Colors.white24,
+                        color: AppColors.borderDark,
                       ),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.camera_alt,
-                              color: Colors.white.withValues(alpha: 0.5),
+                              Icons.camera_alt_rounded,
+                              color: AppColors.muted,
+                              size: pickerSize * 0.28,
                             ),
-                            SizedBox(height: 4),
+                            SizedBox(height: context.heightPct(0.5)),
                             Text(
                               'ADD PHOTO',
-                              style: TextStyle(
-                                fontSize: ResponsiveHelper.sp(9),
+                              style: AppTypography.labelCaps10.copyWith(
+                                fontSize: context.responsiveFont(9.5),
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white.withValues(alpha: 0.5),
+                                color: AppColors.muted,
                                 letterSpacing: 1,
                               ),
                             ),
@@ -70,25 +75,24 @@ class ProfilePhotoPicker extends StatelessWidget {
                     ),
             ),
             Positioned(
-              bottom: ResponsiveHelper.h(0),
-              right: ResponsiveHelper.w(0),
+              bottom: 0,
+              right: 0,
               child: Container(
-                padding: EdgeInsets.all(ResponsiveHelper.w(4)),
-                decoration: BoxDecoration(
-                  color: Colors.black,
+                padding: EdgeInsets.all(context.widthPct(1)),
+                decoration: const BoxDecoration(
+                  color: AppColors.background,
                   shape: BoxShape.circle,
                 ),
                 child: Container(
-                  padding: EdgeInsets.all(ResponsiveHelper.w(4)),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF00FF7F),
+                  padding: EdgeInsets.all(context.widthPct(1.2)),
+                  decoration: const BoxDecoration(
+                    color: AppColors.accent,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    imageFile != null ? Icons.edit : Icons.add,
-                    color: Colors.black,
+                    imageFile != null ? Icons.edit_rounded : Icons.add_rounded,
+                    color: AppColors.background,
                     size: 16,
-                    weight: 800,
                   ),
                 ),
               ),

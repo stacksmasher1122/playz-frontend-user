@@ -15,7 +15,6 @@ class BottomActionBarWidget extends StatefulWidget {
     required this.onNext,
   });
 
-  
   @override
   State<BottomActionBarWidget> createState() => _BottomActionBarWidgetState();
 }
@@ -23,12 +22,12 @@ class BottomActionBarWidget extends StatefulWidget {
 class _BottomActionBarWidgetState extends State<BottomActionBarWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      padding: EdgeInsets.only(
-        top: ResponsiveHelper.h(16),
-        bottom: ResponsiveHelper.h(32), // accounts for safe area usually
-        left: ResponsiveHelper.w(16),
-        right: ResponsiveHelper.w(16),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(1.8),
       ),
       color: AppColors.background,
       child: Row(
@@ -38,22 +37,28 @@ class _BottomActionBarWidgetState extends State<BottomActionBarWidget> {
           GestureDetector(
             onTap: widget.onBack,
             child: Container(
-              width: ResponsiveHelper.w(80),
-              height: ResponsiveHelper.h(48),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.widthPct(3.5),
+                vertical: context.heightPct(1.2),
+              ),
               decoration: BoxDecoration(
                 color: AppColors.card,
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
               ),
-              alignment: Alignment.center,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.chevron_left, color: AppColors.onPrimary, size: ResponsiveHelper.w(20)),
-                  SizedBox(width: ResponsiveHelper.w(4)),
+                  Icon(
+                    Icons.chevron_left_rounded,
+                    color: AppColors.textPrimary,
+                    size: context.responsiveFont(20),
+                  ),
+                  SizedBox(width: context.widthPct(1)),
                   Text(
                     "Back",
                     style: AppTypography.bodyMd.copyWith(
-                      color: AppColors.onPrimary,
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(14),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -65,11 +70,15 @@ class _BottomActionBarWidgetState extends State<BottomActionBarWidget> {
           // Save Draft
           GestureDetector(
             onTap: widget.onSaveDraft,
-            child: Text(
-              "Save Draft",
-              style: AppTypography.bodyMd.copyWith(
-                color: AppColors.accent,
-                fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: context.widthPct(2)),
+              child: Text(
+                "Save Draft",
+                style: AppTypography.bodyMd.copyWith(
+                  color: AppColors.accent,
+                  fontSize: context.responsiveFont(14),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -78,25 +87,31 @@ class _BottomActionBarWidgetState extends State<BottomActionBarWidget> {
           GestureDetector(
             onTap: widget.onNext,
             child: Container(
-              width: ResponsiveHelper.w(100),
-              height: ResponsiveHelper.h(48),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.widthPct(4.5),
+                vertical: context.heightPct(1.2),
+              ),
               decoration: BoxDecoration(
                 color: AppColors.accent,
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(7)),
               ),
-              alignment: Alignment.center,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     "Next",
                     style: AppTypography.bodyMd.copyWith(
-                      color: AppColors.background, // Dark text on green background
+                      color: AppColors.background,
+                      fontSize: context.responsiveFont(14),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: ResponsiveHelper.w(4)),
-                  Icon(Icons.chevron_right, color: AppColors.background, size: ResponsiveHelper.w(20)),
+                  SizedBox(width: context.widthPct(1)),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.background,
+                    size: context.responsiveFont(20),
+                  ),
                 ],
               ),
             ),

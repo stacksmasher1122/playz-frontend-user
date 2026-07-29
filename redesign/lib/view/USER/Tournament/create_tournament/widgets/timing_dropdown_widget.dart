@@ -15,7 +15,6 @@ class TimingDropdownWidget extends StatefulWidget {
     required this.onChanged,
   });
 
-  
   @override
   State<TimingDropdownWidget> createState() => _TimingDropdownWidgetState();
 }
@@ -23,46 +22,62 @@ class TimingDropdownWidget extends StatefulWidget {
 class _TimingDropdownWidgetState extends State<TimingDropdownWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Preferred Match Timings",
           style: AppTypography.headlineSm.copyWith(
-            color: AppColors.onPrimary,
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(15),
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: ResponsiveHelper.h(8)),
+        SizedBox(height: context.heightPct(1)),
         DropdownButtonFormField<String>(
           initialValue: widget.selectedValue,
-          icon: Icon(Icons.keyboard_arrow_down, color: AppColors.muted, size: ResponsiveHelper.w(24)),
+          icon: Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: AppColors.muted,
+            size: context.responsiveFont(22),
+          ),
           dropdownColor: AppColors.card,
-          style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary),
+          style: AppTypography.bodyMd.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(14),
+          ),
           decoration: InputDecoration(
             filled: true,
             fillColor: AppColors.card,
             contentPadding: EdgeInsets.symmetric(
-              horizontal: ResponsiveHelper.w(16),
-              vertical: ResponsiveHelper.h(16),
+              horizontal: context.widthPct(4),
+              vertical: context.heightPct(1.8),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
               borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              borderSide: BorderSide(color: AppColors.accent, width: 1),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+              borderSide: const BorderSide(color: AppColors.accent, width: 1),
             ),
           ),
           items: widget.options.map((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(
+                value,
+                style: AppTypography.bodyMd.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(14),
+                ),
+              ),
             );
           }).toList(),
           onChanged: widget.onChanged,

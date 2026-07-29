@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 
@@ -104,30 +104,53 @@ class _ZCoinsScreenState extends State<ZCoinsScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          backgroundColor: const Color(0xFF1E1E1E),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: AppColors.card,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+          ),
           title: Row(
             children: [
-              const Icon(Icons.stars_rounded, color: Colors.amberAccent, size: 28),
-              const SizedBox(width: 10),
-              Text(
-                'Payment Successful!',
-                style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+              const Icon(Icons.stars_rounded, color: AppColors.coinsGold, size: 28),
+              SizedBox(width: context.widthPct(2.5)),
+              Expanded(
+                child: Text(
+                  'Payment Successful!',
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: context.responsiveFont(18),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
           content: Text(
             '+$_pendingCoinsToBuy Z-Coins have been added to your balance!',
-            style: GoogleFonts.inter(color: Colors.white70, fontSize: 14),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: context.responsiveFont(14),
+            ),
           ),
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.pop(ctx),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00E676),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.background,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                ),
               ),
-              child: Text('Awesome!', style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold)),
+              child: Text(
+                'Awesome!',
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.background,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(14),
+                ),
+              ),
             ),
           ],
         ),
@@ -139,7 +162,7 @@ class _ZCoinsScreenState extends State<ZCoinsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Payment failed: ${response.message}'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: AppColors.error,
       ),
     );
   }
@@ -159,150 +182,192 @@ class _ZCoinsScreenState extends State<ZCoinsScreen> {
         backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Z-Coins Store',
-          style: GoogleFonts.inter(
-            color: Colors.white,
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: context.responsiveFont(18),
           ),
         ),
         centerTitle: true,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(context.widthPct(4)),
         children: [
           /// COINS BALANCE CARD
           Obx(() {
             final balance = controller.zCoins;
             return Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(context.widthPct(5)),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E1E1E),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: const Color(0xFF00E676).withValues(alpha: 0.3)),
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF1E1E1E), Color(0xFF12261B)],
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+                border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
+                gradient: LinearGradient(
+                  colors: [AppColors.card, AppColors.accent.withValues(alpha: 0.12)],
                 ),
               ),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(14),
+                    padding: EdgeInsets.all(context.widthPct(3.5)),
                     decoration: BoxDecoration(
-                      color: Colors.amberAccent.withValues(alpha: 0.15),
+                      color: AppColors.coinsGold.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.monetization_on_rounded, color: Colors.amberAccent, size: 36),
+                    child: const Icon(Icons.monetization_on_rounded, color: AppColors.coinsGold, size: 36),
                   ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'CURRENT BALANCE',
-                        style: GoogleFonts.inter(color: Colors.white54, fontSize: 11, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '$balance Z-Coins',
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900,
+                  SizedBox(width: context.widthPct(4)),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'CURRENT BALANCE',
+                          style: AppTypography.labelCaps10.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(11),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: context.heightPct(0.3)),
+                        Text(
+                          '$balance Z-Coins',
+                          style: AppTypography.displayLg.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(24),
+                            fontWeight: FontWeight.w900,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             );
           }),
-          const SizedBox(height: 24),
+          SizedBox(height: context.heightPct(3)),
 
           Text(
             'BUY Z-COINS PACKAGES',
-            style: GoogleFonts.inter(
-              color: const Color(0xFF00E676),
-              fontSize: 12,
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.accent,
+              fontSize: context.responsiveFont(12),
               fontWeight: FontWeight.w700,
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.5)),
 
           /// COIN PACKAGES
           ..._coinPacks.map((pack) {
             final isPopular = pack['isPopular'] == true;
             return Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(18),
+              margin: EdgeInsets.only(bottom: context.heightPct(1.5)),
+              padding: EdgeInsets.all(context.widthPct(4.5)),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E1E1E),
-                borderRadius: BorderRadius.circular(20),
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                 border: Border.all(
-                  color: isPopular ? const Color(0xFF00E676) : Colors.white.withValues(alpha: 0.08),
+                  color: isPopular ? AppColors.accent : AppColors.borderDark,
                   width: isPopular ? 1.5 : 1.0,
                 ),
               ),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: EdgeInsets.all(context.widthPct(2.5)),
                     decoration: BoxDecoration(
-                      color: Colors.amberAccent.withValues(alpha: 0.12),
+                      color: AppColors.coinsGold.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.stars_rounded, color: Colors.amberAccent, size: 24),
+                    child: const Icon(Icons.stars_rounded, color: AppColors.coinsGold, size: 24),
                   ),
-                  const SizedBox(width: 14),
+                  SizedBox(width: context.widthPct(3.5)),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Text(
-                              '${pack['coins']} Coins',
-                              style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                            Flexible(
+                              child: Text(
+                                '${pack['coins']} Coins',
+                                style: AppTypography.headlineSm.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: context.responsiveFont(16),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                             if (isPopular) ...[
-                              const SizedBox(width: 8),
+                              SizedBox(width: context.widthPct(2)),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: context.widthPct(2),
+                                  vertical: context.heightPct(0.3),
+                                ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF00E676),
-                                  borderRadius: BorderRadius.circular(10),
+                                  color: AppColors.accent,
+                                  borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
                                 ),
                                 child: Text(
                                   'BEST VALUE',
-                                  style: GoogleFonts.inter(color: Colors.black, fontSize: 9, fontWeight: FontWeight.w900),
+                                  style: AppTypography.labelCaps10.copyWith(
+                                    color: AppColors.background,
+                                    fontSize: context.responsiveFont(9),
+                                    fontWeight: FontWeight.w900,
+                                  ),
                                 ),
                               ),
                             ],
                           ],
                         ),
-                        const SizedBox(height: 2),
+                        SizedBox(height: context.heightPct(0.3)),
                         Text(
                           '${pack['title']} · ${pack['bonus']}',
-                          style: GoogleFonts.inter(color: Colors.white54, fontSize: 12),
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(12),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
                   ),
+                  SizedBox(width: context.widthPct(2)),
                   ElevatedButton(
                     onPressed: () => _buyCoinPack(pack),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00E676),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      backgroundColor: AppColors.accent,
+                      foregroundColor: AppColors.background,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.widthPct(4),
+                        vertical: context.heightPct(1.2),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      ),
                     ),
-                    child: Text(
-                      '₹${pack['price']}',
-                      style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '₹${pack['price']}',
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.background,
+                          fontWeight: FontWeight.bold,
+                          fontSize: context.responsiveFont(14),
+                        ),
+                      ),
                     ),
                   ),
                 ],

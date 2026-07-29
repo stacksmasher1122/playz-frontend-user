@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../qr_in_bookings_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrInfoRow extends StatelessWidget {
@@ -9,7 +10,8 @@ class QrInfoRow extends StatelessWidget {
 
   const QrInfoRow(
     this.label,
-    this.value, {super.key, 
+    this.value, {
+    super.key,
     this.highlight = false,
   });
 
@@ -17,15 +19,17 @@ class QrInfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(6)),
+      padding: EdgeInsets.symmetric(vertical: context.heightPct(0.6)),
       child: Row(
         children: [
           Expanded(
             child: Text(
               label,
-              style: TextStyle(
-                color: QrBookingConstants.muted,
-                fontSize: ResponsiveHelper.sp(13),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
               ),
             ),
           ),
@@ -33,11 +37,12 @@ class QrInfoRow extends StatelessWidget {
             child: Text(
               value,
               textAlign: TextAlign.right,
-              style: TextStyle(
-                color: highlight ? QrBookingConstants.green : Colors.white,
-                fontSize: ResponsiveHelper.sp(13),
-                fontWeight:
-                    highlight ? FontWeight.w700 : FontWeight.w500,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodySm.copyWith(
+                color: highlight ? AppColors.accent : AppColors.textPrimary,
+                fontSize: context.responsiveFont(13),
+                fontWeight: highlight ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
           ),

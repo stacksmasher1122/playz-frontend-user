@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PremiumHeroHeader extends StatelessWidget {
@@ -9,6 +9,7 @@ class PremiumHeroHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final badgeSize = context.minDimensionPct(16).clamp(60.0, 76.0);
 
     return Column(
       children: [
@@ -17,29 +18,29 @@ class PremiumHeroHeader extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: InkWell(
             onTap: () => Navigator.pop(context),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
             child: Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(context.widthPct(2)),
               decoration: const BoxDecoration(
                 color: Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.close,
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 size: 24,
               ),
             ),
           ),
         ),
-        SizedBox(height: ResponsiveHelper.h(10)),
+        SizedBox(height: context.heightPct(1)),
 
         // Circular Green Medal Badge
         Container(
-          width: 72,
-          height: 72,
+          width: badgeSize,
+          height: badgeSize,
           decoration: BoxDecoration(
-            color: const Color(0xFF16251C),
+            color: AppColors.accent.withValues(alpha: 0.15),
             shape: BoxShape.circle,
             border: Border.all(
               color: AppColors.accent.withValues(alpha: 0.6),
@@ -54,28 +55,32 @@ class PremiumHeroHeader extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: ResponsiveHelper.h(16)),
+        SizedBox(height: context.heightPct(2)),
 
         // Title: Upgrade to PlayZ Pro
         Text(
           'Upgrade to PlayZ Pro',
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: ResponsiveHelper.sp(24),
+          style: AppTypography.displayLg.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(24),
             fontWeight: FontWeight.w900,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
-        SizedBox(height: ResponsiveHelper.h(6)),
+        SizedBox(height: context.heightPct(0.8)),
 
         // Subtitle: Unlock premium features for every sport
         Text(
           'Unlock premium features for every sport',
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white70,
-            fontSize: ResponsiveHelper.sp(14),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.muted,
+            fontSize: context.responsiveFont(14),
           ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

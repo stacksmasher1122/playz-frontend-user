@@ -4,7 +4,7 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class EquipmentOptionsSection extends StatelessWidget {
-  final String? selectedOption;
+  final String? selectedOption; // null, 'carry_own', 'provided'
   final ValueChanged<String?> onOptionSelected;
 
   const EquipmentOptionsSection({
@@ -16,20 +16,23 @@ class EquipmentOptionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Icon(Icons.sports_tennis_rounded, color: AppColors.accent, size: 18),
+            const Icon(Icons.sports_soccer_outlined, color: AppColors.accent, size: 18),
             SizedBox(width: context.widthPct(2)),
             Text(
-              'Equipment Options',
+              'Equipment Requirement Options',
               style: AppTypography.headlineSm.copyWith(
                 color: AppColors.accent,
                 fontWeight: FontWeight.bold,
                 fontSize: context.responsiveFont(14),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -37,31 +40,25 @@ class EquipmentOptionsSection extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _EquipmentOptionCard(
-                title: 'Carry your own equipment',
+              child: _buildEquipmentChip(
+                context: context,
+                label: 'Carry Your Own',
                 icon: Icons.backpack_outlined,
                 isSelected: selectedOption == 'carry_own',
                 onTap: () {
-                  if (selectedOption == 'carry_own') {
-                    onOptionSelected(null);
-                  } else {
-                    onOptionSelected('carry_own');
-                  }
+                  onOptionSelected(selectedOption == 'carry_own' ? null : 'carry_own');
                 },
               ),
             ),
             SizedBox(width: context.widthPct(2.5)),
             Expanded(
-              child: _EquipmentOptionCard(
-                title: 'Equipment provided',
+              child: _buildEquipmentChip(
+                context: context,
+                label: 'Provided by Host',
                 icon: Icons.inventory_2_outlined,
                 isSelected: selectedOption == 'provided',
                 onTap: () {
-                  if (selectedOption == 'provided') {
-                    onOptionSelected(null);
-                  } else {
-                    onOptionSelected('provided');
-                  }
+                  onOptionSelected(selectedOption == 'provided' ? null : 'provided');
                 },
               ),
             ),
@@ -70,28 +67,22 @@ class EquipmentOptionsSection extends StatelessWidget {
       ],
     );
   }
-}
 
-class _EquipmentOptionCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _EquipmentOptionCard({
-    required this.title,
-    required this.icon,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildEquipmentChip({
+    required BuildContext context,
+    required String label,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: EdgeInsets.all(context.widthPct(3)),
+        duration: const Duration(milliseconds: 180),
+        padding: EdgeInsets.symmetric(
+          horizontal: context.widthPct(3),
+          vertical: context.heightPct(1.5),
+        ),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.accent.withValues(alpha: 0.15) : AppColors.card,
           borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
@@ -101,27 +92,26 @@ class _EquipmentOptionCard extends StatelessWidget {
           ),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.accent : AppColors.textSecondary,
-              size: 20,
+              size: 18,
+              color: isSelected ? AppColors.accent : AppColors.muted,
             ),
             SizedBox(width: context.widthPct(2)),
-            Expanded(
+            Flexible(
               child: Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                label,
                 style: AppTypography.bodySm.copyWith(
-                  color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+                  color: isSelected ? AppColors.accent : AppColors.textSecondary,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  fontSize: context.responsiveFont(11),
+                  fontSize: context.responsiveFont(12),
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            if (isSelected)
-              const Icon(Icons.check_circle, color: AppColors.accent, size: 16),
           ],
         ),
       ),

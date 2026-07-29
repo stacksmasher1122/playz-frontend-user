@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrTopBar extends StatelessWidget {
   const QrTopBar({super.key});
-
-  static const _kMuted = Color(0xFFA7A7A7);
 
   @override
   Widget build(BuildContext context) {
@@ -12,32 +12,39 @@ class QrTopBar extends StatelessWidget {
     return Row(
       children: [
         IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
-        SizedBox(width: 4),
+        SizedBox(width: context.widthPct(1)),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Show this QR Code at the Venue',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(18),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(18),
                   fontWeight: FontWeight.w600,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 4),
+              SizedBox(height: context.heightPct(0.3)),
               Text(
                 'Your booking is confirmed. This is your entry pass.',
-                style: TextStyle(color: _kMuted, fontSize: 13),
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(13),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
         ),
         IconButton(
-          icon: Icon(Icons.share, color: Colors.white),
+          icon: const Icon(Icons.share, color: AppColors.textPrimary),
           onPressed: () {},
         ),
       ],

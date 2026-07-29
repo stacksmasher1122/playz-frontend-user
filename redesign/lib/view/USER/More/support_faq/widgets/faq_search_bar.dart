@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FaqSearchBar extends StatelessWidget {
   final ValueChanged<String> onChanged;
@@ -8,22 +10,33 @@ class FaqSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(1),
+      ),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: TextField(
         onChanged: onChanged,
-        style: GoogleFonts.inter(color: Colors.white, fontSize: 14),
+        style: AppTypography.bodySm.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(14),
+        ),
         decoration: InputDecoration(
           hintText: 'Search FAQs, scoreboards, bookings...',
-          hintStyle: GoogleFonts.inter(color: Colors.white38, fontSize: 14),
-          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF00E676)),
+          hintStyle: AppTypography.bodySm.copyWith(
+            color: AppColors.muted.withValues(alpha: 0.6),
+            fontSize: context.responsiveFont(14),
+          ),
+          prefixIcon: const Icon(Icons.search_rounded, color: AppColors.accent),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 14),
+          contentPadding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
         ),
       ),
     );

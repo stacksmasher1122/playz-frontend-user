@@ -10,6 +10,8 @@ class LoginSignupPrompt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
       child: Row(
@@ -22,13 +24,13 @@ class LoginSignupPrompt extends StatelessWidget {
               fontSize: context.responsiveFont(13.5),
             ),
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: context.widthPct(1.5)),
           GestureDetector(
             onTap: onSignupTap,
             child: Text(
               'Register here',
               style: AppTypography.bodyMd.copyWith(
-                color: AppColors.spotifyGreen,
+                color: AppColors.accent,
                 fontSize: context.responsiveFont(13.5),
                 fontWeight: FontWeight.w700,
               ),

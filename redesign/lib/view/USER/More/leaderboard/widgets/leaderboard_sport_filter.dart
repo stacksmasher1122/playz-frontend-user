@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LeaderboardSportFilter extends StatelessWidget {
@@ -21,34 +21,34 @@ class LeaderboardSportFilter extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Row(
         children: sports.map((sport) {
           final isSelected = sport == selectedSport;
           return Padding(
-            padding: EdgeInsets.only(right: ResponsiveHelper.w(10)),
+            padding: EdgeInsets.only(right: context.widthPct(2.5)),
             child: InkWell(
               onTap: () => onSportChanged(sport),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
                 padding: EdgeInsets.symmetric(
-                  horizontal: ResponsiveHelper.w(18),
-                  vertical: ResponsiveHelper.h(8),
+                  horizontal: context.widthPct(4.5),
+                  vertical: context.heightPct(1),
                 ),
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.accent : Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                   border: Border.all(
-                    color: isSelected ? AppColors.accent : Colors.white24,
+                    color: isSelected ? AppColors.accent : AppColors.borderDark,
                     width: 1,
                   ),
                 ),
                 child: Text(
                   sport,
-                  style: GoogleFonts.inter(
-                    color: isSelected ? Colors.black : Colors.white,
-                    fontSize: ResponsiveHelper.sp(13),
+                  style: AppTypography.bodySm.copyWith(
+                    color: isSelected ? AppColors.background : AppColors.textPrimary,
+                    fontSize: context.responsiveFont(13),
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                   ),
                 ),

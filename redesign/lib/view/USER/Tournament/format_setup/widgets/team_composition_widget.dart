@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-// Corrected: was '../../../../controller/...' but widgets/ is one level deeper, so 5 levels up are needed
+
 import '../../../../../controller/User_Controller/Tournament_Controller/format_setup_controller.dart';
 
 class TeamCompositionWidget extends StatelessWidget {
@@ -13,6 +13,8 @@ class TeamCompositionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Obx(() {
       String sport = controller.selectedSport;
       bool isRacquet = (sport == "Badminton" || sport == "Tennis" || sport == "Table Tennis" || sport == "Pickleball");
@@ -24,10 +26,10 @@ class TeamCompositionWidget extends StatelessWidget {
               child: GestureDetector(
                 onTap: () => controller.setTeamMode("singles"),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+                  padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
                   decoration: BoxDecoration(
                     color: controller.teamMode.value == "singles" ? AppColors.accent.withValues(alpha: 0.1) : AppColors.card,
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
                     border: Border.all(
                       color: controller.teamMode.value == "singles" ? AppColors.accent : AppColors.card,
                     ),
@@ -36,7 +38,8 @@ class TeamCompositionWidget extends StatelessWidget {
                     child: Text(
                       "Singles",
                       style: AppTypography.bodyMd.copyWith(
-                        color: controller.teamMode.value == "singles" ? AppColors.accent : AppColors.onPrimary,
+                        color: controller.teamMode.value == "singles" ? AppColors.accent : AppColors.textPrimary,
+                        fontSize: context.responsiveFont(14),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -44,15 +47,15 @@ class TeamCompositionWidget extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: ResponsiveHelper.w(16)),
+            SizedBox(width: context.widthPct(4)),
             Expanded(
               child: GestureDetector(
                 onTap: () => controller.setTeamMode("doubles"),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+                  padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
                   decoration: BoxDecoration(
                     color: controller.teamMode.value == "doubles" ? AppColors.accent.withValues(alpha: 0.1) : AppColors.card,
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
                     border: Border.all(
                       color: controller.teamMode.value == "doubles" ? AppColors.accent : AppColors.card,
                     ),
@@ -61,7 +64,8 @@ class TeamCompositionWidget extends StatelessWidget {
                     child: Text(
                       "Doubles",
                       style: AppTypography.bodyMd.copyWith(
-                        color: controller.teamMode.value == "doubles" ? AppColors.accent : AppColors.onPrimary,
+                        color: controller.teamMode.value == "doubles" ? AppColors.accent : AppColors.textPrimary,
+                        fontSize: context.responsiveFont(14),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -77,7 +81,11 @@ class TeamCompositionWidget extends StatelessWidget {
           children: [
             Text(
               "Team Size",
-              style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary),
+              style: AppTypography.bodyLg.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(14.5),
+                fontWeight: FontWeight.w600,
+              ),
             ),
             Row(
               children: [
@@ -88,31 +96,43 @@ class TeamCompositionWidget extends StatelessWidget {
                     }
                   },
                   child: Container(
-                    padding: EdgeInsets.all(ResponsiveHelper.w(8)),
+                    padding: EdgeInsets.all(context.widthPct(2)),
                     decoration: BoxDecoration(
                       color: AppColors.card,
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
                     ),
-                    child: Icon(Icons.remove, color: AppColors.onPrimary, size: ResponsiveHelper.w(20)),
+                    child: Icon(
+                      Icons.remove_rounded,
+                      color: AppColors.textPrimary,
+                      size: context.responsiveFont(18),
+                    ),
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(16)),
+                SizedBox(width: context.widthPct(3)),
                 Text(
                   "${controller.teamSize.value}",
-                  style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(16),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(16)),
+                SizedBox(width: context.widthPct(3)),
                 GestureDetector(
                   onTap: () {
                     controller.teamSize.value++;
                   },
                   child: Container(
-                    padding: EdgeInsets.all(ResponsiveHelper.w(8)),
+                    padding: EdgeInsets.all(context.widthPct(2)),
                     decoration: BoxDecoration(
                       color: AppColors.card,
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
                     ),
-                    child: Icon(Icons.add, color: AppColors.onPrimary, size: ResponsiveHelper.w(20)),
+                    child: Icon(
+                      Icons.add_rounded,
+                      color: AppColors.textPrimary,
+                      size: context.responsiveFont(18),
+                    ),
                   ),
                 ),
               ],

@@ -22,31 +22,34 @@ class ProgressHeader extends StatefulWidget {
 class _ProgressHeaderState extends State<ProgressHeader> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
           child: Row(
             children: List.generate(widget.totalSteps, (index) {
               final isActive = index < widget.currentStep;
               return Expanded(
                 child: Container(
-                  height: ResponsiveHelper.h(4),
-                  margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(3)),
+                  height: context.heightPct(0.5).clamp(3.0, 4.0),
+                  margin: EdgeInsets.symmetric(horizontal: context.widthPct(0.8)),
                   decoration: BoxDecoration(
                     color: isActive ? AppColors.accent : AppColors.card,
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               );
             }),
           ),
         ),
-        SizedBox(height: ResponsiveHelper.h(12)),
+        SizedBox(height: context.heightPct(1.2)),
         Text(
           widget.title,
           style: AppTypography.bodySm.copyWith(
-            color: AppColors.onPrimary,
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(13),
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,

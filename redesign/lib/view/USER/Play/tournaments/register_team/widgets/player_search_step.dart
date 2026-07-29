@@ -15,6 +15,8 @@ class PlayerSearchStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -23,15 +25,23 @@ class PlayerSearchStep extends StatelessWidget {
           children: [
             Text(
               "Roster",
-              style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(16),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Obx(() => Text(
               "${controller.selectedPlayers.length}/${controller.teamSize}",
-              style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
+              style: AppTypography.bodyMd.copyWith(
+                color: AppColors.accent,
+                fontWeight: FontWeight.bold,
+                fontSize: context.responsiveFont(14),
+              ),
             )),
           ],
         ),
-        SizedBox(height: ResponsiveHelper.h(16)),
+        SizedBox(height: context.heightPct(1.5)),
 
         // Selected Players List
         Obx(() => ListView.builder(
@@ -43,42 +53,49 @@ class PlayerSearchStep extends StatelessWidget {
             final isMe = player.userId == controller.currentUserId;
 
             return Container(
-              margin: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
-              padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+              margin: EdgeInsets.only(bottom: context.heightPct(1.5)),
+              padding: EdgeInsets.all(context.widthPct(3)),
               decoration: BoxDecoration(
                 color: AppColors.card,
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                border: Border.all(color: AppColors.borderDark),
               ),
               child: Row(
                 children: [
                   CircleAvatar(
-                    radius: ResponsiveHelper.w(20),
+                    radius: context.minDimensionPct(4.5).clamp(16.0, 22.0),
                     backgroundColor: AppColors.surface,
                     backgroundImage: player.profileImageUrl.isNotEmpty
                         ? CachedNetworkImageProvider(player.profileImageUrl)
                         : null,
                     child: player.profileImageUrl.isEmpty
-                        ? Icon(Icons.person, color: AppColors.muted)
+                        ? const Icon(Icons.person_rounded, color: AppColors.muted, size: 18)
                         : null,
                   ),
-                  SizedBox(width: ResponsiveHelper.w(12)),
+                  SizedBox(width: context.widthPct(3)),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           isMe ? "${player.name} (you)" : player.name,
-                          style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary),
+                          style: AppTypography.bodyLg.copyWith(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: context.responsiveFont(14),
+                          ),
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: ResponsiveHelper.h(4)),
+                        SizedBox(height: context.heightPct(0.5)),
                         // Role Dropdown
                         Container(
-                          height: ResponsiveHelper.h(30),
-                          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8)),
+                          height: context.heightPct(4).clamp(28.0, 36.0),
+                          padding: EdgeInsets.symmetric(horizontal: context.widthPct(2)),
                           decoration: BoxDecoration(
                             color: AppColors.surface,
-                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(6)),
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(1.5)),
+                            border: Border.all(color: AppColors.borderDark),
                           ),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
@@ -86,8 +103,12 @@ class PlayerSearchStep extends StatelessWidget {
                                   ? player.sportRole
                                   : controller.availableRoles.keys.first,
                               dropdownColor: AppColors.card,
-                              icon: Icon(Icons.arrow_drop_down, color: AppColors.muted, size: 16),
-                              style: AppTypography.bodySm.copyWith(color: AppColors.accent),
+                              icon: const Icon(Icons.arrow_drop_down_rounded, color: AppColors.muted, size: 18),
+                              style: AppTypography.bodySm.copyWith(
+                                color: AppColors.accent,
+                                fontWeight: FontWeight.w600,
+                                fontSize: context.responsiveFont(12),
+                              ),
                               items: controller.availableRoles.keys.map((role) {
                                 return DropdownMenuItem(
                                   value: role,
@@ -104,7 +125,7 @@ class PlayerSearchStep extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.remove_circle_outline, color: AppColors.error),
+                    icon: const Icon(Icons.remove_circle_outline_rounded, color: AppColors.error, size: 22),
                     onPressed: () => controller.removePlayer(player.userId),
                   ),
                 ],
@@ -113,13 +134,17 @@ class PlayerSearchStep extends StatelessWidget {
           },
         )),
 
-        SizedBox(height: ResponsiveHelper.h(24)),
+        SizedBox(height: context.heightPct(2.5)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               "Add Players",
-              style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(16),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Obx(() {
               if (controller.selectedPlayers.any((p) => p.userId == controller.currentUserId)) {
@@ -127,34 +152,49 @@ class PlayerSearchStep extends StatelessWidget {
               }
               return TextButton.icon(
                 onPressed: controller.addCurrentUserAction,
-                icon: Icon(Icons.person_add, color: AppColors.accent, size: ResponsiveHelper.w(18)),
-                label: Text("Add Myself", style: AppTypography.labelCaps.copyWith(color: AppColors.accent)),
+                icon: const Icon(Icons.person_add_rounded, color: AppColors.accent, size: 18),
+                label: Text(
+                  "Add Myself",
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.accent,
+                    fontSize: context.responsiveFont(12),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               );
             }),
           ],
         ),
-        SizedBox(height: ResponsiveHelper.h(12)),
+        SizedBox(height: context.heightPct(1.2)),
 
         CommonTextField(
           controller: controller.searchController,
           hintText: "Search name or username...",
-          prefixIcon: Icon(Icons.search, color: AppColors.muted),
+          prefixIcon: const Icon(Icons.search_rounded, color: AppColors.accent),
           onChanged: (val) {
-            // Simple debounce handled in UI or controller
             controller.searchPlayers(val);
           },
         ),
-        SizedBox(height: ResponsiveHelper.h(16)),
+        SizedBox(height: context.heightPct(1.5)),
 
         // Search Results
         Obx(() {
           if (controller.isSearching.value) {
-            return Center(child: CircularProgressIndicator(color: AppColors.accent));
+            return const Center(child: CircularProgressIndicator(color: AppColors.accent));
           }
 
           if (controller.searchController.text.isNotEmpty && controller.searchResults.isEmpty) {
             return Center(
-              child: Text("No players found", style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: context.heightPct(2)),
+                child: Text(
+                  "No players found",
+                  style: AppTypography.bodyMd.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(13),
+                  ),
+                ),
+              ),
             );
           }
 
@@ -172,26 +212,29 @@ class PlayerSearchStep extends StatelessWidget {
                       ? CachedNetworkImageProvider(result['profileImageUrl'])
                       : null,
                   child: result['profileImageUrl'].toString().isEmpty
-                      ? Icon(Icons.person, color: AppColors.muted)
+                      ? const Icon(Icons.person_rounded, color: AppColors.muted)
                       : null,
                 ),
                 title: Row(
                   children: [
-                    Flexible(
+                    Expanded(
                       child: Text(
                         result['name'],
-                        style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary),
+                        style: AppTypography.bodyLg.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(14),
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (result['isFriend'] == true) ...[
-                      SizedBox(width: ResponsiveHelper.w(6)),
-                      Icon(Icons.handshake, color: AppColors.accent, size: ResponsiveHelper.w(16)),
-                    ]
+                      SizedBox(width: context.widthPct(1.5)),
+                      const Icon(Icons.handshake_rounded, color: AppColors.accent, size: 16),
+                    ],
                   ],
                 ),
                 trailing: IconButton(
-                  icon: Icon(Icons.add_circle, color: AppColors.accent),
+                  icon: const Icon(Icons.add_circle_rounded, color: AppColors.accent),
                   onPressed: () => controller.addPlayer(result),
                 ),
               );

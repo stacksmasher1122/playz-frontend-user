@@ -2,14 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Groups_Model/groups_model.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kSurface = Color(0xFF0E0E0E);
-const kGreen = AppColors.accent;
-const kMuted = Colors.white70;
 
 class SearchAndFilters extends StatefulWidget {
   const SearchAndFilters({super.key});
@@ -33,7 +30,7 @@ class _SearchAndFiltersState extends State<SearchAndFilters> {
 
   void _onSearchChanged(String query) {
     _debounce?.cancel();
-    _debounce = Timer(Duration(milliseconds: 400), () {
+    _debounce = Timer(const Duration(milliseconds: 400), () {
       Get.find<GroupsController>().searchGroups(query);
     });
   }
@@ -44,32 +41,44 @@ class _SearchAndFiltersState extends State<SearchAndFilters> {
     final ctrl = Get.find<GroupsController>();
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(1.2),
+        context.widthPct(4),
+        context.heightPct(0.8),
+      ),
       child: Column(
         children: [
           // ── Search Bar ──
           Container(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14)),
+            padding: EdgeInsets.symmetric(horizontal: context.widthPct(3.5)),
             decoration: BoxDecoration(
-              color: kSurface,
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(999)),
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(context.minDimensionPct(10)),
+              border: Border.all(color: AppColors.borderDark),
             ),
             child: TextField(
               controller: _searchCtrl,
               focusNode: _focusNode,
-              style: TextStyle(color: Colors.white),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(14),
+              ),
               onChanged: _onSearchChanged,
               decoration: InputDecoration(
-                icon: Icon(Icons.search, color: kMuted),
+                icon: const Icon(Icons.search, color: AppColors.muted),
                 hintText: 'Search groups to join...',
-                hintStyle: TextStyle(color: kMuted),
+                hintStyle: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(14),
+                ),
                 border: InputBorder.none,
                 suffixIcon: Obx(() {
                   if (ctrl.searchQuery.value.isEmpty) {
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                   return IconButton(
-                    icon: Icon(Icons.close, color: kMuted, size: 18),
+                    icon: const Icon(Icons.close, color: AppColors.muted, size: 18),
                     onPressed: () {
                       _searchCtrl.clear();
                       ctrl.searchGroups('');
@@ -83,17 +92,17 @@ class _SearchAndFiltersState extends State<SearchAndFilters> {
 
           // ── Search Results ──
           Obx(() {
-            if (ctrl.searchQuery.value.isEmpty) return SizedBox.shrink();
+            if (ctrl.searchQuery.value.isEmpty) return const SizedBox.shrink();
 
             if (ctrl.isSearching.value) {
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(20)),
+                padding: EdgeInsets.symmetric(vertical: context.heightPct(2)),
                 child: Center(
                   child: SizedBox(
-                    width: ResponsiveHelper.w(20),
-                    height: ResponsiveHelper.h(20),
-                    child: CircularProgressIndicator(
-                      color: kGreen,
+                    width: 20,
+                    height: 20,
+                    child: const CircularProgressIndicator(
+                      color: AppColors.accent,
                       strokeWidth: 2,
                     ),
                   ),
@@ -103,35 +112,38 @@ class _SearchAndFiltersState extends State<SearchAndFilters> {
 
             if (ctrl.searchResults.isEmpty) {
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+                padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
                 child: Center(
                   child: Text(
                     'No groups found for "${ctrl.searchQuery.value}"',
-                    style: TextStyle(color: kMuted, fontSize: 13),
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(13),
+                    ),
                   ),
                 ),
               );
             }
 
             return Container(
-              margin: EdgeInsets.only(top: 8),
-              constraints: BoxConstraints(maxHeight: 300),
+              margin: EdgeInsets.only(top: context.heightPct(1)),
+              constraints: BoxConstraints(maxHeight: context.heightPct(35)),
               decoration: BoxDecoration(
-                color: Color(0xFF161616),
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                border: Border.all(color: Colors.white10),
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                border: Border.all(color: AppColors.borderDark),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                 child: ListView.separated(
                   shrinkWrap: true,
                   padding: EdgeInsets.zero,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: ctrl.searchResults.length,
                   separatorBuilder: (_, __) => Divider(
-                    height: ResponsiveHelper.h(1),
-                    color: Colors.white10,
-                    indent: 70,
+                    height: context.heightPct(0.1),
+                    color: AppColors.borderDark,
+                    indent: context.widthPct(16),
                   ),
                   itemBuilder: (context, i) {
                     final group = ctrl.searchResults[i];
@@ -165,40 +177,47 @@ class _SearchResultTileState extends State<_SearchResultTile> {
     final ctrl = Get.find<GroupsController>();
     final group = widget.group;
     final memberCount = group.members.length;
+    final avatarRadius = context.minDimensionPct(5.5).clamp(20.0, 24.0);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(10)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(3.5),
+        vertical: context.heightPct(1.2),
+      ),
       child: Row(
         children: [
           // ── Avatar ──
           group.imageUrl.isNotEmpty
-              ? CircleAvatar(
-                  radius: 22,
-                  backgroundColor: kSurface,
-                  child: ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl: group.imageUrl,
-                      width: ResponsiveHelper.w(44),
-                      height: ResponsiveHelper.h(44),
-                      fit: BoxFit.cover,
-                      errorWidget: (_, __, ___) =>
-                          Icon(Icons.group, color: kMuted, size: 20),
+              ? ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: group.imageUrl,
+                    width: avatarRadius * 2,
+                    height: avatarRadius * 2,
+                    fit: BoxFit.cover,
+                    placeholder: (_, __) => CircleAvatar(
+                      radius: avatarRadius,
+                      backgroundColor: AppColors.surface,
+                    ),
+                    errorWidget: (_, __, ___) => CircleAvatar(
+                      radius: avatarRadius,
+                      backgroundColor: AppColors.surface,
+                      child: const Icon(Icons.group, color: AppColors.muted, size: 20),
                     ),
                   ),
                 )
               : CircleAvatar(
-                  radius: 22,
-                  backgroundColor: kSurface,
+                  radius: avatarRadius,
+                  backgroundColor: AppColors.surface,
                   child: Text(
                     group.name.isNotEmpty ? group.name[0].toUpperCase() : 'G',
-                    style: TextStyle(
-                      color: kGreen,
-                      fontSize: ResponsiveHelper.sp(18),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.accent,
+                      fontSize: context.responsiveFont(18),
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),
-          SizedBox(width: 12),
+          SizedBox(width: context.widthPct(3)),
 
           // ── Info ──
           Expanded(
@@ -212,54 +231,67 @@ class _SearchResultTileState extends State<_SearchResultTile> {
                         group.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(14),
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(14),
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                     if (!group.isPublic) ...[
-                      SizedBox(width: 4),
-                      Icon(Icons.lock,
-                          color: Colors.white.withValues(alpha: 0.4), size: 12),
+                      SizedBox(width: context.widthPct(1)),
+                      const Icon(
+                        Icons.lock,
+                        color: AppColors.muted,
+                        size: 12,
+                      ),
                     ],
                   ],
                 ),
-                SizedBox(height: 2),
+                SizedBox(height: context.heightPct(0.3)),
                 Text(
                   '$memberCount member${memberCount == 1 ? '' : 's'} • ${group.sport}',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.4),
-                    fontSize: ResponsiveHelper.sp(11),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(11),
                   ),
                 ),
               ],
             ),
           ),
 
+          SizedBox(width: context.widthPct(2)),
+
           // ── Join / Request Button ──
           AnimatedSwitcher(
-            duration: Duration(milliseconds: 250),
+            duration: const Duration(milliseconds: 250),
             child: _actionTaken
                 ? Container(
-                    key: ValueKey('done'),
-                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(14), vertical: ResponsiveHelper.h(7)),
-                    decoration: BoxDecoration(
-                      color: kGreen.withAlpha(38),
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+                    key: const ValueKey('done'),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.widthPct(3.5),
+                      vertical: context.heightPct(0.8),
                     ),
-                    child: Text(
-                      group.isPublic ? 'Joined' : 'Requested',
-                      style: TextStyle(
-                        color: kGreen,
-                        fontSize: ResponsiveHelper.sp(12),
-                        fontWeight: FontWeight.w700,
+                    decoration: BoxDecoration(
+                      color: AppColors.accent.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        group.isPublic ? 'Joined' : 'Requested',
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.accent,
+                          fontSize: context.responsiveFont(12),
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   )
                 : ElevatedButton(
-                    key: ValueKey('action'),
+                    key: const ValueKey('action'),
                     onPressed: () async {
                       setState(() => _actionTaken = true);
                       if (group.isPublic) {
@@ -269,25 +301,29 @@ class _SearchResultTileState extends State<_SearchResultTile> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: group.isPublic ? kGreen : Colors.transparent,
+                      backgroundColor: group.isPublic ? AppColors.accent : Colors.transparent,
                       foregroundColor:
-                          group.isPublic ? Colors.black : kGreen,
+                          group.isPublic ? AppColors.background : AppColors.accent,
                       elevation: 0,
-                      minimumSize: Size(64, 32),
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                      minimumSize: const Size(64, 32),
+                      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                         side: group.isPublic
                             ? BorderSide.none
-                            : BorderSide(color: kGreen, width: 1.2),
+                            : const BorderSide(color: AppColors.accent, width: 1.2),
                       ),
                     ),
-                    child: Text(
-                      group.isPublic ? 'JOIN' : 'REQUEST',
-                      style: TextStyle(
-                        fontSize: ResponsiveHelper.sp(11),
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        group.isPublic ? 'JOIN' : 'REQUEST',
+                        style: AppTypography.bodySm.copyWith(
+                          color: group.isPublic ? AppColors.background : AppColors.accent,
+                          fontSize: context.responsiveFont(11),
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ),
                   ),

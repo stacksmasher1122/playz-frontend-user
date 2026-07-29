@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchSlotsCard extends StatelessWidget {
@@ -36,11 +36,11 @@ class MatchSlotsCard extends StatelessWidget {
         : progress;
 
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(18)),
+      padding: EdgeInsets.all(context.widthPct(4.5)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4.5)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,29 +50,32 @@ class MatchSlotsCard extends StatelessWidget {
             children: [
               Text(
                 "Slots Filling Status",
-                style: GoogleFonts.inter(
-                  fontSize: ResponsiveHelper.sp(12),
+                style: AppTypography.bodySm.copyWith(
+                  fontSize: context.responsiveFont(12),
                   color: AppColors.muted,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               if (isSlotBooked)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.widthPct(2),
+                    vertical: context.heightPct(0.4),
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF059669).withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                     border: Border.all(color: const Color(0xFF059669).withValues(alpha: 0.4)),
                   ),
                   child: Row(
                     children: [
                       const Icon(Icons.bolt_rounded, color: Color(0xFF34D399), size: 14),
-                      const SizedBox(width: 4),
+                      SizedBox(width: context.widthPct(1)),
                       Text(
                         'SLOT BOOKED',
-                        style: GoogleFonts.inter(
+                        style: AppTypography.labelCaps10.copyWith(
                           color: const Color(0xFF34D399),
-                          fontSize: ResponsiveHelper.sp(10),
+                          fontSize: context.responsiveFont(10),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -81,51 +84,51 @@ class MatchSlotsCard extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: context.heightPct(0.5)),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
                 "$currentPlayers",
-                style: GoogleFonts.inter(
-                  fontSize: ResponsiveHelper.sp(32),
+                style: AppTypography.displayLg.copyWith(
+                  fontSize: context.responsiveFont(32),
                   fontWeight: FontWeight.bold,
-                  color: isFull ? Colors.redAccent : AppColors.accent,
+                  color: isFull ? AppColors.error : AppColors.accent,
                 ),
               ),
               Text(
                 " / $maxPlayers Players Joined",
-                style: GoogleFonts.inter(
-                  fontSize: ResponsiveHelper.sp(14),
-                  color: Colors.white70,
+                style: AppTypography.headlineSm.copyWith(
+                  fontSize: context.responsiveFont(14),
+                  color: AppColors.textSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: context.heightPct(1.8)),
 
           /// PLAYER PROGRESS BAR
           Stack(
             children: [
               Container(
-                height: ResponsiveHelper.h(8),
+                height: context.heightPct(1).clamp(6.0, 10.0),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                  color: AppColors.textPrimary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
                 ),
               ),
               FractionallySizedBox(
                 widthFactor: progress,
                 child: Container(
-                  height: ResponsiveHelper.h(8),
+                  height: context.heightPct(1).clamp(6.0, 10.0),
                   decoration: BoxDecoration(
-                    color: isFull ? Colors.redAccent : AppColors.accent,
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                    color: isFull ? AppColors.error : AppColors.accent,
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
                     boxShadow: [
                       BoxShadow(
-                        color: (isFull ? Colors.redAccent : AppColors.accent).withValues(alpha: 0.4),
+                        color: (isFull ? AppColors.error : AppColors.accent).withValues(alpha: 0.4),
                         blurRadius: 6,
                       ),
                     ],
@@ -137,21 +140,21 @@ class MatchSlotsCard extends StatelessWidget {
 
           /// GATHERED POLL MONEY SECTION (Shown if target amount exists)
           if (targetAmount > 0) ...[
-            const SizedBox(height: 16),
-            const Divider(color: Colors.white10, height: 1),
-            const SizedBox(height: 14),
+            SizedBox(height: context.heightPct(2)),
+            const Divider(color: AppColors.borderDark, height: 1),
+            SizedBox(height: context.heightPct(1.8)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
                     const Icon(Icons.account_balance_wallet_outlined, color: AppColors.accent, size: 16),
-                    const SizedBox(width: 6),
+                    SizedBox(width: context.widthPct(1.5)),
                     Text(
                       "Gathered Poll Funds",
-                      style: GoogleFonts.inter(
-                        fontSize: ResponsiveHelper.sp(12),
-                        color: Colors.white70,
+                      style: AppTypography.bodySm.copyWith(
+                        fontSize: context.responsiveFont(12),
+                        color: AppColors.textSecondary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -159,31 +162,31 @@ class MatchSlotsCard extends StatelessWidget {
                 ),
                 Text(
                   "₹${collectedAmount.toInt()} / ₹${targetAmount.toInt()}",
-                  style: GoogleFonts.inter(
-                    fontSize: ResponsiveHelper.sp(14),
+                  style: AppTypography.headlineSm.copyWith(
+                    fontSize: context.responsiveFont(14),
                     fontWeight: FontWeight.bold,
                     color: AppColors.accent,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: context.heightPct(1)),
             Stack(
               children: [
                 Container(
-                  height: ResponsiveHelper.h(6),
+                  height: context.heightPct(0.8).clamp(5.0, 8.0),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
+                    color: AppColors.textPrimary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
                   ),
                 ),
                 FractionallySizedBox(
                   widthFactor: moneyProgress,
                   child: Container(
-                    height: ResponsiveHelper.h(6),
+                    height: context.heightPct(0.8).clamp(5.0, 8.0),
                     decoration: BoxDecoration(
                       color: AppColors.accent,
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(3)),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
                     ),
                   ),
                 ),
@@ -193,21 +196,21 @@ class MatchSlotsCard extends StatelessWidget {
 
           /// BOOKED SLOTS ON TURF FOR THIS DATE (Displayed if any existing bookings exist)
           if (bookedSlotsForDate.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            const Divider(color: Colors.white10, height: 1),
-            const SizedBox(height: 14),
+            SizedBox(height: context.heightPct(2)),
+            const Divider(color: AppColors.borderDark, height: 1),
+            SizedBox(height: context.heightPct(1.8)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.error_outline_rounded, color: Colors.redAccent, size: 16),
-                    const SizedBox(width: 6),
+                    const Icon(Icons.error_outline_rounded, color: AppColors.error, size: 16),
+                    SizedBox(width: context.widthPct(1.5)),
                     Text(
                       "Booked Slots on Turf",
-                      style: GoogleFonts.inter(
-                        fontSize: ResponsiveHelper.sp(12),
-                        color: Colors.redAccent,
+                      style: AppTypography.bodySm.copyWith(
+                        fontSize: context.responsiveFont(12),
+                        color: AppColors.error,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -218,8 +221,8 @@ class MatchSlotsCard extends StatelessWidget {
                     onTap: onChangeSlotPressed,
                     child: Text(
                       "Change Slot / Date >",
-                      style: GoogleFonts.inter(
-                        fontSize: ResponsiveHelper.sp(11),
+                      style: AppTypography.bodySm.copyWith(
+                        fontSize: context.responsiveFont(11),
                         color: AppColors.accent,
                         fontWeight: FontWeight.bold,
                       ),
@@ -227,28 +230,31 @@ class MatchSlotsCard extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: context.heightPct(1.2)),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: context.widthPct(2),
+              runSpacing: context.heightPct(1),
               children: bookedSlotsForDate.map((slotTime) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.widthPct(2.5),
+                    vertical: context.heightPct(0.6),
+                  ),
                   decoration: BoxDecoration(
-                    color: Colors.redAccent.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.4)),
+                    color: AppColors.error.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.block_rounded, color: Colors.redAccent, size: 12),
-                      const SizedBox(width: 4),
+                      const Icon(Icons.block_rounded, color: AppColors.error, size: 12),
+                      SizedBox(width: context.widthPct(1)),
                       Text(
                         slotTime,
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(11),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(11),
                           fontWeight: FontWeight.w600,
                         ),
                       ),

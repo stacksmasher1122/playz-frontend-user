@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/More_Models/join_premium_model.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
@@ -98,30 +98,40 @@ class _JoinPremiumScreenState extends State<JoinPremiumScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          backgroundColor: const Color(0xFF1E1E1E),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          backgroundColor: AppColors.card,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+          ),
           title: Column(
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(context.widthPct(4)),
                 decoration: const BoxDecoration(
                   gradient: AppColors.tierZPremium,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.workspace_premium_rounded, color: Colors.black, size: 36),
+                child: const Icon(Icons.workspace_premium_rounded, color: AppColors.background, size: 36),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.heightPct(1.5)),
               Text(
                 'Welcome to Z Premium!',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                style: AppTypography.displayLg.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(20),
+                ),
               ),
             ],
           ),
           content: Text(
             'Your Z Premium membership is now ACTIVE. Enjoy unlimited scoreboards, VIP stats analytics, and priority slot access!',
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(color: Colors.white70, fontSize: 13, height: 1.4),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(13),
+              height: 1.4,
+            ),
           ),
           actions: [
             Center(
@@ -131,11 +141,24 @@ class _JoinPremiumScreenState extends State<JoinPremiumScreen> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00E676),
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: AppColors.background,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.widthPct(6),
+                    vertical: context.heightPct(1.5),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                  ),
                 ),
-                child: Text('Start VIP Experience', style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold)),
+                child: Text(
+                  'Start VIP Experience',
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.background,
+                    fontWeight: FontWeight.bold,
+                    fontSize: context.responsiveFont(14),
+                  ),
+                ),
               ),
             ),
           ],
@@ -148,7 +171,7 @@ class _JoinPremiumScreenState extends State<JoinPremiumScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Payment failed: ${response.message}'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: AppColors.error,
       ),
     );
   }
@@ -167,24 +190,24 @@ class _JoinPremiumScreenState extends State<JoinPremiumScreen> {
             // Scrollable Content
             Expanded(
               child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  SizedBox(height: ResponsiveHelper.h(10)),
+                  SizedBox(height: context.heightPct(1.2)),
                   const PremiumHeroHeader(),
-                  SizedBox(height: ResponsiveHelper.h(20)),
+                  SizedBox(height: context.heightPct(2.5)),
                   const PremiumFeatureList(),
-                  SizedBox(height: ResponsiveHelper.h(24)),
+                  SizedBox(height: context.heightPct(3)),
                   PremiumPlanCards(
                     plans: _plans,
                     selectedPlanId: _selectedPlanId,
                     onPlanSelected: (id) => setState(() => _selectedPlanId = id),
                   ),
-                  SizedBox(height: ResponsiveHelper.h(16)),
+                  SizedBox(height: context.heightPct(2)),
                   const FreeVsProComparisonCard(),
-                  SizedBox(height: ResponsiveHelper.h(24)),
+                  SizedBox(height: context.heightPct(3)),
                   const PremiumGuaranteeRating(),
-                  SizedBox(height: ResponsiveHelper.h(24)),
+                  SizedBox(height: context.heightPct(3)),
                 ],
               ),
             ),

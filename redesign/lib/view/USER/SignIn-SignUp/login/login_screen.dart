@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/registerController.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
@@ -24,11 +25,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  static Color kSurface = Color(0xFF0E0E0E);
-  static Color kCard = Color(0xFF1A1A1A);
-  static Color kMuted = Color(0xFFA7A7A7);
-  static Color kSpotifyGreen = AppColors.spotifyGreen;
-
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -64,32 +60,64 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: kSurface,
-          title: Text("Reset Password", style: TextStyle(color: Colors.white)),
+          backgroundColor: AppColors.surface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+          ),
+          title: Text(
+            "Reset Password",
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(16),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           content: TextField(
             controller: resetController,
-            style: TextStyle(color: Colors.white),
+            style: AppTypography.bodyMd.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(14),
+            ),
             decoration: InputDecoration(
               hintText: "Enter your email",
-              hintStyle: TextStyle(color: kMuted),
+              hintStyle: AppTypography.bodyMd.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(14),
+              ),
               filled: true,
-              fillColor: kCard,
+              fillColor: AppColors.card,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
           actions: [
             TextButton(
-              child: Text("Cancel"),
+              child: Text(
+                "Cancel",
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(13),
+                ),
+              ),
               onPressed: () => Navigator.pop(context),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: kSpotifyGreen),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accent,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                ),
+              ),
               child: Text(
                 "Send Reset Link",
-                style: TextStyle(color: Colors.black),
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.background,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(13),
+                ),
               ),
               onPressed: () async {
                 try {
@@ -99,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (!context.mounted) return;
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Password reset email sent")),
+                    const SnackBar(content: Text("Password reset email sent")),
                   );
                 } catch (e) {
                   if (!context.mounted) return;
@@ -134,12 +162,12 @@ class _LoginScreenState extends State<LoginScreen> {
       if (exists) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => UserAppNavShell()),
+          MaterialPageRoute(builder: (_) => const UserAppNavShell()),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+          MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
         );
       }
     } else {
@@ -162,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (docId.isEmpty) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+          MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
         );
         return;
       }
@@ -171,12 +199,12 @@ class _LoginScreenState extends State<LoginScreen> {
       if (exists) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => UserAppNavShell()),
+          MaterialPageRoute(builder: (_) => const UserAppNavShell()),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+          MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
         );
       }
     } else {
@@ -244,34 +272,34 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             const LoginBackground(),
             SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 300),
+                  SizedBox(height: context.heightPct(30)),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: ResponsiveHelper.w(20),
-                      vertical: ResponsiveHelper.h(24),
+                      horizontal: context.widthPct(5),
+                      vertical: context.heightPct(2.5),
                     ),
                     child: Container(
-                      padding: EdgeInsets.all(ResponsiveHelper.w(22)),
+                      padding: EdgeInsets.all(context.widthPct(5.5)),
                       decoration: BoxDecoration(
-                        color: kSurface,
+                        color: AppColors.surface,
                         borderRadius: BorderRadius.circular(
-                          ResponsiveHelper.w(22),
+                          context.minDimensionPct(5.5),
                         ),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.06),
+                          color: AppColors.textPrimary.withValues(alpha: 0.06),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.6),
+                            color: AppColors.background.withValues(alpha: 0.6),
                             blurRadius: 24,
-                            offset: Offset(0, 12),
+                            offset: const Offset(0, 12),
                           ),
                         ],
                       ),
@@ -279,7 +307,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          LoginHeader(),
+                          const LoginHeader(),
                           LoginForm(
                             formKey: _formKey,
                             emailController: _emailController,
@@ -303,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   LoginSignupPrompt(
                     onSignupTap: () {
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => RegisterScreen()),
+                        MaterialPageRoute(builder: (_) => const RegisterScreen()),
                       );
                     },
                   ),

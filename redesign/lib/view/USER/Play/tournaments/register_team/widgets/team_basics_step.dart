@@ -15,38 +15,50 @@ class TeamBasicsStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
+    final logoSize = context.minDimensionPct(28).clamp(90.0, 130.0);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Team Name",
-          style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(15),
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        SizedBox(height: ResponsiveHelper.h(12)),
+        SizedBox(height: context.heightPct(1.5)),
         CommonTextField(
           controller: controller.teamNameController,
           hintText: "e.g. Neon Panthers",
-          prefixIcon: Icon(Icons.shield, color: AppColors.muted),
+          prefixIcon: const Icon(Icons.shield_outlined, color: AppColors.accent),
         ),
-        SizedBox(height: ResponsiveHelper.h(32)),
+        SizedBox(height: context.heightPct(3.5)),
 
         Text(
           "Team Logo (Optional)",
-          style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(15),
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        SizedBox(height: ResponsiveHelper.h(12)),
+        SizedBox(height: context.heightPct(1.5)),
         Center(
           child: GestureDetector(
             onTap: controller.pickTeamLogo,
             child: Obx(() {
               final path = controller.teamLogoPath.value;
               return Container(
-                width: ResponsiveHelper.w(120),
-                height: ResponsiveHelper.w(120),
+                width: logoSize,
+                height: logoSize,
                 decoration: BoxDecoration(
                   color: AppColors.card,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.outlineVariant),
+                  border: Border.all(color: AppColors.borderDark),
                   image: path.isNotEmpty
                       ? DecorationImage(image: FileImage(File(path)), fit: BoxFit.cover)
                       : null,
@@ -55,9 +67,19 @@ class TeamBasicsStep extends StatelessWidget {
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.camera_alt, color: AppColors.muted, size: ResponsiveHelper.w(32)),
-                          SizedBox(height: ResponsiveHelper.h(4)),
-                          Text("Upload", style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
+                          Icon(
+                            Icons.camera_alt_outlined,
+                            color: AppColors.muted,
+                            size: logoSize * 0.28,
+                          ),
+                          SizedBox(height: context.heightPct(0.5)),
+                          Text(
+                            "Upload",
+                            style: AppTypography.labelCaps10.copyWith(
+                              color: AppColors.muted,
+                              fontSize: context.responsiveFont(11),
+                            ),
+                          ),
                         ],
                       )
                     : null,

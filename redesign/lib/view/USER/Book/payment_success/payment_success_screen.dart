@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Bookings/qr_in_bookings/qr_in_bookings_screen.dart';
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 
@@ -9,9 +11,6 @@ import 'widgets/confirmation_venue_card.dart';
 import 'widgets/payment_summary_card.dart';
 import 'widgets/success_ripple_animation.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kBg = Colors.black;
-const kMuted = Color(0xFFA7A7A7);
 
 class BookingConfirmationScreen extends StatefulWidget {
   final Map<String, dynamic>? bookingData;
@@ -32,7 +31,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
     super.initState();
     _rippleController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     )..repeat();
   }
 
@@ -43,7 +42,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
   }
 
   void _navigateToHome() {
-    Get.offAll(() => UserAppNavShell());
+    Get.offAll(() => const UserAppNavShell());
   }
 
   @override
@@ -60,12 +59,12 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
         }
       },
       child: Scaffold(
-        backgroundColor: kBg,
+        backgroundColor: AppColors.background,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
             onPressed: _navigateToHome,
           ),
         ),
@@ -73,36 +72,44 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
           top: false,
           bottom: false,
           child: SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
+            padding: EdgeInsets.fromLTRB(
+              context.widthPct(4),
+              context.heightPct(2),
+              context.widthPct(4),
+              context.heightPct(4),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SuccessRippleAnimation(controller: _rippleController),
-                SizedBox(height: 0),
+                SizedBox(height: context.heightPct(1)),
                 Text(
                   'Booking Confirmed!',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ResponsiveHelper.sp(22),
+                  style: AppTypography.displayLg.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(22),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 6),
+                SizedBox(height: context.heightPct(0.8)),
                 Text(
                   'Confirmation & QR ticket generated for $userEmail',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: kMuted, fontSize: ResponsiveHelper.sp(12)),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
+                  ),
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: context.heightPct(3)),
 
                 ConfirmationVenueCard(size: size, bookingData: widget.bookingData),
-                SizedBox(height: 20),
+                SizedBox(height: context.heightPct(2.5)),
 
                 PaymentSummaryCard(bookingData: widget.bookingData),
-                SizedBox(height: 20),
+                SizedBox(height: context.heightPct(2.5)),
 
-                BookingReminders(),
-                SizedBox(height: 28),
+                const BookingReminders(),
+                SizedBox(height: context.heightPct(3.5)),
 
                 ConfirmationActions(
                   onGoToBookings: () {
@@ -114,15 +121,16 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
                   },
                   onInviteFriends: () {},
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: context.heightPct(2.5)),
 
                 GestureDetector(
                   onTap: () {},
                   child: Text(
                     'Need help? Contact Support',
-                    style: TextStyle(
-                      color: kMuted,
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
                       decoration: TextDecoration.underline,
+                      fontSize: context.responsiveFont(13),
                     ),
                   ),
                 ),

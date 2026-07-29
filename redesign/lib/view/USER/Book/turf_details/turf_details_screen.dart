@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/view/USER/Book/booking_details/booking_details_screen.dart';
 
@@ -53,7 +54,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
         top: false,
         child: Scaffold(
           extendBody: true,
-          backgroundColor: Colors.black,
+          backgroundColor: AppColors.background,
           body: CustomScrollView(
             slivers: [
               /// IMAGE SLIDER HEADER
@@ -71,7 +72,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
 
               /// CONTENT
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 80),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, context.heightPct(10)),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     VenueTitleSection(
@@ -79,23 +80,23 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
                       location: turf?.displayLocation ?? '',
                       isOpen: turf?.isCurrentlyOpen ?? false,
                     ),
-                    SizedBox(height: 24),
+                    SizedBox(height: context.heightPct(2.5)),
                     VenueAboutSection(
                       description: turf?.description ?? '',
                       isExpanded: _expanded,
                       onToggleExpand: () => setState(() => _expanded = !_expanded),
                     ),
-                    SizedBox(height: 24),
+                    SizedBox(height: context.heightPct(2.5)),
                     VenueAmenitiesGrid(
                       amenities: turf?.amenities ?? [],
                     ),
-                    SizedBox(height: 24),
-                    CancellationPolicyBanner(),
-                    SizedBox(height: 24),
-                    RecentBookingsSocial(),
-                    SizedBox(height: 24),
-                    VenueReviewsSection(),
-                    SizedBox(height: 24),
+                    SizedBox(height: context.heightPct(2.5)),
+                    const CancellationPolicyBanner(),
+                    SizedBox(height: context.heightPct(2.5)),
+                    const RecentBookingsSocial(),
+                    SizedBox(height: context.heightPct(2.5)),
+                    const VenueReviewsSection(),
+                    SizedBox(height: context.heightPct(2.5)),
                     RecommendedVenuesList(images: images),
                   ]),
                 ),
@@ -109,7 +110,7 @@ class _TurfDetailScreenState extends State<TurfDetailScreen> {
             onBookNow: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ConfirmSlotScreen(),
+                  builder: (context) => const ConfirmSlotScreen(),
                 ),
               );
             },

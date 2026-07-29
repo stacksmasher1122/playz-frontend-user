@@ -253,7 +253,7 @@ class _MyTrainerCard extends StatelessWidget {
           Wrap(
             spacing: context.widthPct(1.5),
             runSpacing: context.heightPct(0.6),
-            children: tags.map((t) => _Tag(label: t)).toList(),
+            children: tags.map((t) => _Tag(t)).toList(),
           ),
 
           SizedBox(height: context.heightPct(1.5)),
@@ -365,7 +365,7 @@ class _MyTrainerCard extends StatelessWidget {
 
 class _Tag extends StatelessWidget {
   final String label;
-  _Tag(this.label);
+  const _Tag(this.label);
 
   @override
   Widget build(BuildContext context) {

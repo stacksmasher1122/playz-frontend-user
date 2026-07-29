@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PremiumGuaranteeRating extends StatelessWidget {
@@ -23,30 +23,30 @@ class PremiumGuaranteeRating extends StatelessWidget {
                 child: Icon(Icons.star, color: AppColors.accent, size: 18),
               ),
             ),
-            SizedBox(width: ResponsiveHelper.w(8)),
+            SizedBox(width: context.widthPct(2)),
             Text(
               '4.9/5 Rating',
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: ResponsiveHelper.sp(13),
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(13),
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
-        SizedBox(height: ResponsiveHelper.h(8)),
+        SizedBox(height: context.heightPct(1)),
 
         // 7-Day Money Back Guarantee Row
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.shield_outlined, color: AppColors.muted, size: 14),
-            SizedBox(width: ResponsiveHelper.w(6)),
+            SizedBox(width: context.widthPct(1.5)),
             Text(
               '7-Day Money Back Guarantee',
-              style: GoogleFonts.inter(
+              style: AppTypography.bodySm.copyWith(
                 color: AppColors.muted,
-                fontSize: ResponsiveHelper.sp(12),
+                fontSize: context.responsiveFont(12),
               ),
             ),
           ],

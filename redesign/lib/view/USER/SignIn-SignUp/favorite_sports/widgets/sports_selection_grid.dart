@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SportsSelectionGrid extends StatelessWidget {
@@ -19,16 +20,18 @@ class SportsSelectionGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    const kSpotifyGreen = AppColors.accent;
 
     return Expanded(
       child: GridView.builder(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
+        padding: EdgeInsets.symmetric(
+          horizontal: context.widthPct(4),
+          vertical: context.heightPct(1),
+        ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 0.75,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
+          crossAxisSpacing: context.widthPct(3),
+          mainAxisSpacing: context.heightPct(1.5),
         ),
         itemCount: sports.length,
         itemBuilder: (context, index) {
@@ -39,20 +42,20 @@ class SportsSelectionGrid extends StatelessWidget {
           return GestureDetector(
             onTap: () => onSportToggle(sport),
             child: AnimatedContainer(
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                 border: Border.all(
-                  color: isSelected ? kSpotifyGreen : Colors.transparent,
-                  width: ResponsiveHelper.w(2),
+                  color: isSelected ? AppColors.accent : Colors.transparent,
+                  width: context.widthPct(0.6).clamp(1.5, 3.0),
                 ),
               ),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Blurred Gradient Background
+                  // Gradient Background
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -65,20 +68,20 @@ class SportsSelectionGrid extends StatelessWidget {
                   ),
                   // Dark overlay at bottom for text readability
                   Positioned(
-                    bottom: ResponsiveHelper.h(0),
-                    left: ResponsiveHelper.w(0),
-                    right: ResponsiveHelper.w(0),
-                    height: ResponsiveHelper.h(50),
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: context.heightPct(6),
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(ResponsiveHelper.w(14)),
+                          bottom: Radius.circular(context.minDimensionPct(3.5)),
                         ),
                         gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [
-                            Colors.black.withValues(alpha: 0.8),
+                            AppColors.background.withValues(alpha: 0.8),
                             Colors.transparent,
                           ],
                         ),
@@ -88,48 +91,50 @@ class SportsSelectionGrid extends StatelessWidget {
                   // Soft overlay on the whole card
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-                      color: Colors.black.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+                      color: AppColors.background.withValues(alpha: 0.1),
                     ),
                   ),
                   // Selection Icon
                   if (isSelected)
                     Positioned(
-                      top: ResponsiveHelper.h(8),
-                      right: ResponsiveHelper.w(8),
+                      top: context.heightPct(1),
+                      right: context.widthPct(2),
                       child: Container(
-                        padding: EdgeInsets.all(ResponsiveHelper.w(2)),
-                        decoration: BoxDecoration(
-                          color: kSpotifyGreen,
+                        padding: EdgeInsets.all(context.widthPct(0.8)),
+                        decoration: const BoxDecoration(
+                          color: AppColors.accent,
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          Icons.check,
-                          color: Colors.black,
+                        child: const Icon(
+                          Icons.check_rounded,
+                          color: AppColors.background,
                           size: 14,
-                          weight: 700,
                         ),
                       ),
                     ),
                   // Label text (pill shape behind text)
                   Positioned(
-                    bottom: ResponsiveHelper.h(12),
-                    left: ResponsiveHelper.w(8),
-                    right: ResponsiveHelper.w(8),
+                    bottom: context.heightPct(1.2),
+                    left: context.widthPct(2),
+                    right: context.widthPct(2),
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(6)),
+                      padding: EdgeInsets.symmetric(
+                        vertical: context.heightPct(0.8),
+                        horizontal: context.widthPct(1),
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                        color: AppColors.textPrimary.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                       ),
                       child: Text(
                         sport,
                         textAlign: TextAlign.center,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(12),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(12),
                           fontWeight: FontWeight.w600,
                         ),
                       ),

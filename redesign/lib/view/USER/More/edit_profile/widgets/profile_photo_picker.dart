@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -21,6 +22,7 @@ class ProfilePhotoPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     final controller = Get.find<UserProfileController>();
+    final photoSize = context.widthPct(25).clamp(80.0, 120.0);
 
     return Center(
       child: GestureDetector(
@@ -28,21 +30,21 @@ class ProfilePhotoPicker extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              width: ResponsiveHelper.w(100),
-              height: ResponsiveHelper.h(100),
+              width: photoSize,
+              height: photoSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  width: ResponsiveHelper.w(1),
+                  color: AppColors.borderDark,
+                  width: 1,
                 ),
               ),
               child: imageFile != null
                   ? ClipOval(
                       child: Image.file(
                         imageFile!,
-                        width: ResponsiveHelper.w(100),
-                        height: ResponsiveHelper.h(100),
+                        width: photoSize,
+                        height: photoSize,
                         fit: BoxFit.cover,
                       ),
                     )
@@ -50,32 +52,32 @@ class ProfilePhotoPicker extends StatelessWidget {
                       ? ClipOval(
                           child: CachedNetworkImage(
                             imageUrl: controller.profileImageUrl,
-                            width: ResponsiveHelper.w(100),
-                            height: ResponsiveHelper.h(100),
+                            width: photoSize,
+                            height: photoSize,
                             fit: BoxFit.cover,
                             placeholder: (_, __) => Shimmer.fromColors(
-                              baseColor: Colors.grey.shade800,
-                              highlightColor: Colors.grey.shade700,
+                              baseColor: AppColors.surfaceElevated,
+                              highlightColor: AppColors.borderDark,
                               child: Container(
-                                width: ResponsiveHelper.w(100),
-                                height: ResponsiveHelper.h(100),
-                                decoration: BoxDecoration(
+                                width: photoSize,
+                                height: photoSize,
+                                decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.white,
+                                  color: AppColors.surface,
                                 ),
                               ),
                             ),
-                            errorWidget: (_, __, ___) => _buildPlaceholderAvatar(),
+                            errorWidget: (_, __, ___) => _buildPlaceholderAvatar(context, photoSize),
                           ),
                         )
-                      : _buildPlaceholderAvatar()),
+                      : _buildPlaceholderAvatar(context, photoSize)),
             ),
-            SizedBox(height: 12),
+            SizedBox(height: context.heightPct(1.2)),
             Text(
               'Change photo',
-              style: GoogleFonts.inter(
-                color: Colors.white70,
-                fontSize: ResponsiveHelper.sp(14),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(14),
               ),
             ),
           ],
@@ -84,17 +86,17 @@ class ProfilePhotoPicker extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceholderAvatar() {
+  Widget _buildPlaceholderAvatar(BuildContext context, double size) {
     return Container(
-      width: ResponsiveHelper.w(100),
-      height: ResponsiveHelper.h(100),
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white.withValues(alpha: 0.1),
+        color: AppColors.textPrimary.withValues(alpha: 0.1),
       ),
-      child: Icon(
+      child: const Icon(
         Icons.person,
-        color: Colors.white.withValues(alpha: 0.4),
+        color: AppColors.muted,
         size: 48,
       ),
     );

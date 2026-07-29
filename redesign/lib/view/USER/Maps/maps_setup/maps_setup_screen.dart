@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/model/maps_model.dart';
 import 'package:redesign/shared_preferences/maps_preferences.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Maps/maps_picker/maps_picker_screen.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/widgets/current_location_card.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/widgets/location_tile.dart';
@@ -12,10 +14,7 @@ import 'package:redesign/view/USER/Maps/maps_setup/widgets/search_bar_delegate.d
 import 'package:redesign/view/USER/Maps/maps_setup/widgets/section_header.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/widgets/tap_bounce_container.dart';
 import 'package:redesign/view/USER/Maps/maps_setup/widgets/search_results_overlay.dart';
-
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
 
 class LocationSelectSliverScreen extends StatefulWidget {
   const LocationSelectSliverScreen({super.key});
@@ -67,7 +66,7 @@ class _LocationSelectSliverScreenState
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: kBg,
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
           CustomScrollView(
@@ -75,7 +74,7 @@ class _LocationSelectSliverScreenState
             slivers: [
               /// 🔥 PREMIUM COLLAPSING APP BAR
               SliverAppBar(
-                backgroundColor: kBg,
+                backgroundColor: AppColors.background,
                 expandedHeight: 130,
                 pinned: true,
                 floating: false,
@@ -83,9 +82,9 @@ class _LocationSelectSliverScreenState
                 leadingWidth: 40,
                 titleSpacing: 0,
                 leading: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     size: 22,
                   ),
                   onPressed: () => Navigator.pop(context),
@@ -94,9 +93,9 @@ class _LocationSelectSliverScreenState
                   opacity: _smallTitleOpacity,
                   child: Text(
                     "Select Location",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: ResponsiveHelper.sp(18),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(18),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -104,15 +103,18 @@ class _LocationSelectSliverScreenState
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.parallax,
                   background: Container(
-                    padding: EdgeInsets.only(left: ResponsiveHelper.w(16), bottom: 20),
+                    padding: EdgeInsets.only(
+                      left: context.widthPct(4),
+                      bottom: context.heightPct(2.5),
+                    ),
                     alignment: Alignment.bottomLeft,
                     child: Opacity(
                       opacity: (1.0 - _smallTitleOpacity).clamp(0.0, 1.0),
                       child: Text(
                         "Select Location",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: ResponsiveHelper.sp(28),
+                        style: AppTypography.displayLg.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(28),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -130,7 +132,7 @@ class _LocationSelectSliverScreenState
               /// 🔥 CONTENT
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+                  padding: EdgeInsets.all(context.widthPct(4)),
                   child: Column(
                     children: [
                       /// CURRENT LOCATION
@@ -138,27 +140,28 @@ class _LocationSelectSliverScreenState
                         onTap: () async {
                           HapticFeedback.lightImpact();
                           await _mapsCtrl.useCurrentLocation();
-                          if (mounted && _mapsCtrl.isLocationResolved.value) {
+                          if (!context.mounted) return;
+                          if (_mapsCtrl.isLocationResolved.value) {
                             Navigator.pop(context);
                           }
                         },
-                        child: CurrentLocationCard(),
+                        child: const CurrentLocationCard(),
                       ),
 
-                      SizedBox(height: 24),
+                      SizedBox(height: context.heightPct(2.5)),
 
                       /// SUBTLE DIVIDER
                       Container(
-                        height: ResponsiveHelper.h(1),
-                        margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4)),
-                        color: Colors.white.withValues(alpha: 0.05),
+                        height: 1,
+                        margin: EdgeInsets.symmetric(horizontal: context.widthPct(1)),
+                        color: AppColors.textPrimary.withValues(alpha: 0.05),
                       ),
 
-                      SizedBox(height: 24),
+                      SizedBox(height: context.heightPct(2.5)),
 
                       /// LABELED LOCATIONS HEADER
-                      SectionHeader(title: "SAVED LOCATIONS"),
-                      SizedBox(height: 16),
+                      const SectionHeader(title: "SAVED LOCATIONS"),
+                      SizedBox(height: context.heightPct(1.8)),
                     ],
                   ),
                 ),
@@ -168,7 +171,7 @@ class _LocationSelectSliverScreenState
               Obx(() {
                 final labeled = _mapsCtrl.labeledLocations;
                 if (labeled.isEmpty) {
-                  return SliverToBoxAdapter(child: SizedBox.shrink());
+                  return const SliverToBoxAdapter(child: SizedBox.shrink());
                 }
                 return SliverList(
                   delegate: SliverChildBuilderDelegate((_, i) {
@@ -179,7 +182,7 @@ class _LocationSelectSliverScreenState
                       'Gym': Icons.fitness_center,
                     };
                     return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                       child: TapBounceContainer(
                         onTap: () => _selectSavedLocation(loc),
                         child: LocationTile(
@@ -195,7 +198,7 @@ class _LocationSelectSliverScreenState
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MapPickerScreen(),
+                                builder: (context) => const MapPickerScreen(),
                               ),
                             ).then((_) {
                               _mapsCtrl.recentLocations.refresh();
@@ -216,8 +219,13 @@ class _LocationSelectSliverScreenState
               /// RECENT LOCATIONS HEADER
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 24, 20, 16),
-                  child: SectionHeader(title: "RECENT"),
+                  padding: EdgeInsets.fromLTRB(
+                    context.widthPct(5),
+                    context.heightPct(2.5),
+                    context.widthPct(5),
+                    context.heightPct(1.8),
+                  ),
+                  child: const SectionHeader(title: "RECENT"),
                 ),
               ),
 
@@ -227,12 +235,12 @@ class _LocationSelectSliverScreenState
                 if (recents.isEmpty) {
                   return SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+                      padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
                       child: Text(
                         "No recent locations yet",
-                        style: TextStyle(
-                          color: kMuted.withValues(alpha: 0.5),
-                          fontSize: ResponsiveHelper.sp(13),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.muted.withValues(alpha: 0.5),
+                          fontSize: context.responsiveFont(13),
                         ),
                       ),
                     ),
@@ -242,7 +250,7 @@ class _LocationSelectSliverScreenState
                   delegate: SliverChildBuilderDelegate((_, i) {
                     final loc = recents[i];
                     return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                       child: TapBounceContainer(
                         onTap: () => _selectSavedLocation(loc),
                         child: LocationTile(
@@ -261,7 +269,7 @@ class _LocationSelectSliverScreenState
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MapPickerScreen(),
+                                builder: (context) => const MapPickerScreen(),
                               ),
                             ).then((_) {
                               _mapsCtrl.recentLocations.refresh();
@@ -282,8 +290,13 @@ class _LocationSelectSliverScreenState
               /// NEARBY HEADER
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 24, 20, 16),
-                  child: SectionHeader(title: "NEARBY"),
+                  padding: EdgeInsets.fromLTRB(
+                    context.widthPct(5),
+                    context.heightPct(2.5),
+                    context.widthPct(5),
+                    context.heightPct(1.8),
+                  ),
+                  child: const SectionHeader(title: "NEARBY"),
                 ),
               ),
 
@@ -293,12 +306,12 @@ class _LocationSelectSliverScreenState
                 if (nearby.isEmpty) {
                   return SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+                      padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
                       child: Text(
                         "No nearby places found",
-                        style: TextStyle(
-                          color: kMuted.withValues(alpha: 0.5),
-                          fontSize: ResponsiveHelper.sp(13),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.muted.withValues(alpha: 0.5),
+                          fontSize: context.responsiveFont(13),
                         ),
                       ),
                     ),
@@ -308,7 +321,7 @@ class _LocationSelectSliverScreenState
                   delegate: SliverChildBuilderDelegate((_, i) {
                     final place = nearby[i];
                     return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                       child: TapBounceContainer(
                         onTap: () => _selectNearbyPlace(place),
                         child: LocationTile(
@@ -326,20 +339,25 @@ class _LocationSelectSliverScreenState
               /// MAP TILE
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(16, 24, 16, 40),
+                  padding: EdgeInsets.fromLTRB(
+                    context.widthPct(4),
+                    context.heightPct(2.5),
+                    context.widthPct(4),
+                    context.heightPct(4),
+                  ),
                   child: TapBounceContainer(
                     onTap: () async {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MapPickerScreen(),
+                          builder: (context) => const MapPickerScreen(),
                         ),
                       );
                       // Refresh after returning from picker
                       _mapsCtrl.recentLocations.refresh();
                       _mapsCtrl.labeledLocations.refresh();
                     },
-                    child: MapTile(),
+                    child: const MapTile(),
                   ),
                 ),
               ),

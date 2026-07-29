@@ -20,11 +20,13 @@ class EntryFeeCard extends StatefulWidget {
 class _EntryFeeCardState extends State<EntryFeeCard> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,15 +41,22 @@ class _EntryFeeCardState extends State<EntryFeeCard> {
                     Text(
                       "Registration Fee",
                       style: AppTypography.headlineSm.copyWith(
-                        color: AppColors.onPrimary,
+                        color: AppColors.textPrimary,
+                        fontSize: context.responsiveFont(15),
+                        fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: ResponsiveHelper.h(4)),
+                    SizedBox(height: context.heightPct(0.5)),
                     Text(
                       "Charge teams to enter the tournament",
                       style: AppTypography.bodySm.copyWith(
                         color: AppColors.muted,
+                        fontSize: context.responsiveFont(12.5),
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -61,20 +70,29 @@ class _EntryFeeCardState extends State<EntryFeeCard> {
           Obx(() {
             if (widget.controller.hasEntryFee.value) {
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: ResponsiveHelper.h(16)),
-                  Divider(color: AppColors.outlineVariant, thickness: 1),
-                  SizedBox(height: ResponsiveHelper.h(16)),
+                  SizedBox(height: context.heightPct(1.8)),
+                  const Divider(color: AppColors.outlineVariant, thickness: 1),
+                  SizedBox(height: context.heightPct(1.8)),
                   Text(
                     "Entry Fee per Team",
-                    style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary),
+                    style: AppTypography.bodyLg.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(14),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  SizedBox(height: ResponsiveHelper.h(8)),
+                  SizedBox(height: context.heightPct(1)),
                   CommonTextField(
                     controller: widget.controller.entryFeeController,
                     hintText: "0.00",
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    prefixIcon: Icon(Icons.attach_money, color: AppColors.muted),
+                    prefixIcon: Icon(
+                      Icons.attach_money_rounded,
+                      color: AppColors.muted,
+                      size: context.responsiveFont(20),
+                    ),
                   ),
                 ],
               );

@@ -26,11 +26,13 @@ class ParticipantCounterWidget extends StatefulWidget {
 class _ParticipantCounterWidgetState extends State<ParticipantCounterWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,33 +44,41 @@ class _ParticipantCounterWidgetState extends State<ParticipantCounterWidget> {
                 Text(
                   widget.title,
                   style: AppTypography.bodyLg.copyWith(
-                    color: AppColors.onPrimary,
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(14.5),
+                    fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: ResponsiveHelper.h(4)),
+                SizedBox(height: context.heightPct(0.5)),
                 Text(
                   widget.subtitle,
                   style: AppTypography.bodySm.copyWith(
                     color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          SizedBox(width: ResponsiveHelper.w(16)),
+          SizedBox(width: context.widthPct(3)),
           Row(
             children: [
-              _buildButton(Icons.remove, widget.onDecrement),
-              SizedBox(width: ResponsiveHelper.w(16)),
+              _buildButton(context, Icons.remove_rounded, widget.onDecrement),
+              SizedBox(width: context.widthPct(3)),
               Text(
                 "${widget.count}",
                 style: AppTypography.headlineMd.copyWith(
                   color: AppColors.accent,
+                  fontSize: context.responsiveFont(18),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(width: ResponsiveHelper.w(16)),
-              _buildButton(Icons.add, widget.onIncrement),
+              SizedBox(width: context.widthPct(3)),
+              _buildButton(context, Icons.add_rounded, widget.onIncrement),
             ],
           ),
         ],
@@ -76,20 +86,20 @@ class _ParticipantCounterWidgetState extends State<ParticipantCounterWidget> {
     );
   }
 
-  Widget _buildButton(IconData icon, VoidCallback onTap) {
+  Widget _buildButton(BuildContext context, IconData icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: ResponsiveHelper.w(40),
-        height: ResponsiveHelper.w(40),
+        width: context.widthPct(10).clamp(36.0, 44.0),
+        height: context.widthPct(10).clamp(36.0, 44.0),
         decoration: const BoxDecoration(
           color: AppColors.surface,
           shape: BoxShape.circle,
         ),
         child: Icon(
           icon,
-          color: AppColors.onPrimary,
-          size: ResponsiveHelper.w(20),
+          color: AppColors.textPrimary,
+          size: context.responsiveFont(20),
         ),
       ),
     );

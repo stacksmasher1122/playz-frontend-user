@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/More_Models/reward_center_model.dart';
 
 class RewardItemCard extends StatelessWidget {
@@ -30,7 +32,7 @@ class RewardItemCard extends StatelessWidget {
   Color _getIconColor() {
     switch (item.iconType) {
       case 'discount':
-        return const Color(0xFF00E676);
+        return AppColors.accent;
       case 'theme':
         return Colors.purpleAccent;
       case 'merch':
@@ -38,64 +40,73 @@ class RewardItemCard extends StatelessWidget {
       case 'pass':
         return Colors.lightBlueAccent;
       default:
-        return const Color(0xFF00E676);
+        return AppColors.accent;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(0.8),
+      ),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
         border: Border.all(
-          color: item.isRedeemed ? Colors.white10 : const Color(0xFF00E676).withValues(alpha: 0.15),
+          color: item.isRedeemed ? AppColors.borderDark : AppColors.accent.withValues(alpha: 0.15),
         ),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(context.widthPct(3)),
             decoration: BoxDecoration(
               color: _getIconColor().withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(_getIcon(), color: _getIconColor(), size: 24),
           ),
-          const SizedBox(width: 14),
+          SizedBox(width: context.widthPct(3.5)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   item.title,
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: context.responsiveFont(14),
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: context.heightPct(0.3)),
                 Text(
                   item.subtitle,
-                  style: GoogleFonts.inter(
-                    color: Colors.white54,
-                    fontSize: 12,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: context.heightPct(1)),
                 Row(
                   children: [
-                    const Icon(Icons.monetization_on_rounded, color: Colors.amberAccent, size: 16),
-                    const SizedBox(width: 4),
+                    const Icon(Icons.monetization_on_rounded, color: AppColors.coinsGold, size: 16),
+                    SizedBox(width: context.widthPct(1)),
                     Text(
                       '${item.coinCost} Coins',
-                      style: GoogleFonts.inter(
-                        color: Colors.amberAccent,
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.coinsGold,
                         fontWeight: FontWeight.bold,
-                        fontSize: 13,
+                        fontSize: context.responsiveFont(13),
                       ),
                     ),
                   ],
@@ -103,23 +114,29 @@ class RewardItemCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: context.widthPct(3)),
           ElevatedButton(
             onPressed: item.isRedeemed ? null : onRedeem,
             style: ElevatedButton.styleFrom(
-              backgroundColor: item.isRedeemed ? Colors.white10 : const Color(0xFF00E676),
-              disabledBackgroundColor: Colors.white12,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              backgroundColor: item.isRedeemed ? AppColors.borderDark : AppColors.accent,
+              disabledBackgroundColor: AppColors.borderDark.withValues(alpha: 0.5),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.widthPct(4),
+                vertical: context.heightPct(1.2),
+              ),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
               ),
             ),
-            child: Text(
-              item.isRedeemed ? 'Redeemed' : 'Redeem',
-              style: GoogleFonts.inter(
-                color: item.isRedeemed ? Colors.white38 : Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                item.isRedeemed ? 'Redeemed' : 'Redeem',
+                style: AppTypography.headlineSm.copyWith(
+                  color: item.isRedeemed ? AppColors.muted : AppColors.background,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(13),
+                ),
               ),
             ),
           ),

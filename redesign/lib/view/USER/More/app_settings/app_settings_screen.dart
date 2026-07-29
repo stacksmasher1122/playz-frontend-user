@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/More_Controller/app_settings_controller.dart';
 import 'widgets/settings_section_title.dart';
@@ -27,15 +27,15 @@ class AppSettingsScreen extends StatelessWidget {
         backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'App Settings',
-          style: GoogleFonts.inter(
-            color: Colors.white,
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: context.responsiveFont(18),
           ),
         ),
         centerTitle: true,
@@ -43,7 +43,7 @@ class AppSettingsScreen extends StatelessWidget {
       body: Obx(() {
         final s = controller.settings.value;
         return ListView(
-          padding: const EdgeInsets.only(bottom: 40),
+          padding: EdgeInsets.only(bottom: context.heightPct(5)),
           children: [
             const SettingsSectionTitle(title: 'Preferences'),
             SettingsActionTile(
@@ -131,14 +131,14 @@ class AppSettingsScreen extends StatelessWidget {
               onChanged: controller.toggleSoundEffects,
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: context.heightPct(3)),
             Center(
               child: Text(
                 'PlayZ v2.4.0 (Build 3020)\nMade with ❤️ for Sports Enthusiasts',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  color: Colors.white30,
-                  fontSize: 12,
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(12),
                   height: 1.5,
                 ),
               ),

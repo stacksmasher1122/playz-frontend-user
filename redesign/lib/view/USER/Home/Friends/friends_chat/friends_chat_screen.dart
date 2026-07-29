@@ -23,8 +23,8 @@ import 'widgets/media_preview_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
-const kBg = AppColors.surface;
-const kMuted = Colors.white38;
+const kBg = AppColors.background;
+const kMuted = AppColors.muted;
 
 class ChatScreen extends StatefulWidget {
   final String friendEmail;

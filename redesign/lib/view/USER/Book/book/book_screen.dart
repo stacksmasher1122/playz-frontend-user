@@ -59,7 +59,7 @@ class _BookTurfScreenState extends State<BookTurfScreen> {
           child: ListView(
             padding: EdgeInsets.only(bottom: context.heightPct(10)),
             children: [
-              TopBar(),
+              const TopBar(),
               SizedBox(height: context.heightPct(1.8)),
               const SearchBarWidget(),
               SizedBox(height: context.heightPct(2)),
@@ -74,7 +74,7 @@ class _BookTurfScreenState extends State<BookTurfScreen> {
               const SectionHeader(title: 'Available Turfs'),
               SizedBox(height: context.heightPct(1.8)),
               AvailableTurfsList(),
-              EndOfResults(),
+              const EndOfResults(),
             ],
           ),
         ),

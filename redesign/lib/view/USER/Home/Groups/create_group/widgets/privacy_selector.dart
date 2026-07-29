@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kSurface = Color(0xFF161616);
-const kGreen = Color(0xFF6EDC6A);
-const kMuted = Colors.white54;
 
 class PrivacySelector extends StatelessWidget {
   final bool isPublic;
@@ -29,7 +27,7 @@ class PrivacySelector extends StatelessWidget {
             onTap: () => onPrivacyChanged(true),
           ),
         ),
-        SizedBox(width: 16),
+        SizedBox(width: context.widthPct(4)),
         Expanded(
           child: _PrivacyCard(
             title: 'Private',
@@ -64,30 +62,30 @@ class _PrivacyCard extends StatelessWidget {
     ResponsiveHelper.init(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(20)),
+        padding: EdgeInsets.symmetric(vertical: context.heightPct(2.5)),
         decoration: BoxDecoration(
-          color: kSurface,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
           border: Border.all(
-            color: isSelected ? kGreen : Colors.transparent,
-            width: ResponsiveHelper.w(1.5),
+            color: isSelected ? AppColors.accent : AppColors.borderDark,
+            width: 1.5,
           ),
         ),
         child: Column(
           children: [
             Icon(
               icon,
-              color: isSelected ? kGreen : kMuted,
+              color: isSelected ? AppColors.accent : AppColors.muted,
               size: 24,
             ),
-            SizedBox(height: 8),
+            SizedBox(height: context.heightPct(1)),
             Text(
               title,
-              style: TextStyle(
-                color: isSelected ? Colors.white : kMuted,
-                fontSize: ResponsiveHelper.sp(14),
+              style: AppTypography.headlineSm.copyWith(
+                color: isSelected ? AppColors.textPrimary : AppColors.muted,
+                fontSize: context.responsiveFont(14),
                 fontWeight: FontWeight.w700,
               ),
             ),

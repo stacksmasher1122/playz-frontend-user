@@ -20,7 +20,7 @@ class UserAppNavShell extends StatefulWidget {
 class _UserAppNavShellState extends State<UserAppNavShell> {
   int _currentIndex = 0;
 
-  final _pages = [
+  final _pages = const [
     UserHomePage(),
     BookTurfScreen(),
     GameDiaryScreen(),
@@ -50,7 +50,7 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
           child: Container(
             height: navBarHeight,
             padding: EdgeInsets.only(
-              top: context.heightPct(0.5),
+              top: context.heightPct(0.7),
               bottom: context.bottomInset,
             ),
             decoration: BoxDecoration(
@@ -61,31 +61,31 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children:
                   [
-                    _NavItem(
+                    const _NavItem(
                       filled: Icons.home,
                       outlined: Icons.home_outlined,
                       label: 'Home',
                       index: 0,
                     ),
-                    _NavItem(
+                    const _NavItem(
                       filled: Icons.calendar_month,
                       outlined: Icons.calendar_month_outlined,
                       label: 'Book',
                       index: 1,
                     ),
-                    _NavItem(
+                    const _NavItem(
                       filled: Icons.play_circle,
                       outlined: Icons.play_circle_outline,
                       label: 'Play',
                       index: 2,
                     ),
-                    _NavItem(
+                    const _NavItem(
                       filled: Icons.supervisor_account_sharp,
                       outlined: Icons.supervisor_account_outlined,
                       label: 'Trainer',
                       index: 3,
                     ),
-                    _NavItem(
+                    const _NavItem(
                       filled: Icons.menu,
                       outlined: Icons.menu_outlined,
                       label: 'More',
@@ -150,7 +150,7 @@ class _NavItem {
   final String label;
   final int index;
 
-  _NavItem({
+  const _NavItem({
     required this.filled,
     required this.outlined,
     required this.label,

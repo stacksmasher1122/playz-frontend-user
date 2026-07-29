@@ -4,22 +4,17 @@ import 'package:redesign/controller/User_Controller/Booking_Controller/booking_c
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'turf_sort_filter_bottom_sheet.dart';
 
-class FilterRow extends StatefulWidget {
+class FilterRow extends StatelessWidget {
   const FilterRow({super.key});
 
-  @override
-  State<FilterRow> createState() => _FilterRowState();
-}
-
-class _FilterRowState extends State<FilterRow> {
-  int _selectedIndex = 0;
-
-  final List<String> filters = [
-    'Filters',
-    'Nearest',
-    'Top Rated',
-    'Low Price',
+  final List<Map<String, dynamic>> filters = const [
+    {'label': 'Filters', 'option': null},
+    {'label': 'Nearest', 'option': TurfSortOption.nearest},
+    {'label': 'Top Rated', 'option': TurfSortOption.topRated},
+    {'label': 'Low Price', 'option': TurfSortOption.priceAsc},
+    {'label': 'High Price', 'option': TurfSortOption.priceDesc},
   ];
 
   @override

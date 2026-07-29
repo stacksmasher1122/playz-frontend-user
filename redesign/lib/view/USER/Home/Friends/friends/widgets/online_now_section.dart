@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/friends_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kBg = AppColors.background;
-const kSurface = Color(0xFF0E0E0E);
-const kGreen = AppColors.accent;
 
 class OnlineNowSection extends StatelessWidget {
   const OnlineNowSection({super.key});
@@ -21,27 +18,34 @@ class OnlineNowSection extends StatelessWidget {
       final onlineFriends = ctrl.friends.take(4).toList();
 
       if (onlineFriends.isEmpty) {
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       }
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+            padding: EdgeInsets.fromLTRB(
+              context.widthPct(4),
+              0,
+              context.widthPct(4),
+              context.heightPct(1.5),
+            ),
             child: Text(
               'Online Now',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: ResponsiveHelper.sp(20),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.displayLg.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(20),
                 fontWeight: FontWeight.w800,
               ),
             ),
           ),
           SizedBox(
-            height: ResponsiveHelper.h(110),
+            height: context.heightPct(14),
             child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+              padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
               scrollDirection: Axis.horizontal,
               itemCount: onlineFriends.length,
               itemBuilder: (_, i) => OnlineAvatar(
@@ -65,8 +69,10 @@ class OnlineAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final avatarSize = context.minDimensionPct(14).clamp(48.0, 60.0);
+
     return Padding(
-      padding: EdgeInsets.only(right: 20),
+      padding: EdgeInsets.only(right: context.widthPct(4)),
       child: Column(
         children: [
           Stack(
@@ -74,45 +80,63 @@ class OnlineAvatar extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: kGreen, width: 2),
+                  border: Border.all(color: AppColors.accent, width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: kGreen.withAlpha(76),
+                      color: AppColors.accent.withValues(alpha: 0.3),
                       blurRadius: 10,
                       spreadRadius: 1,
                     ),
                   ],
                 ),
-                padding: EdgeInsets.all(ResponsiveHelper.w(3)),
-                child: CircleAvatar(
-                  radius: 32,
-                  backgroundImage: imageUrl.isNotEmpty
-                      ? CachedNetworkImageProvider(imageUrl) as ImageProvider
-                      : null,
-                  backgroundColor: kSurface,
+                padding: EdgeInsets.all(context.widthPct(0.8)),
+                child: ClipOval(
+                  child: imageUrl.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          width: avatarSize,
+                          height: avatarSize,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => CircleAvatar(
+                            radius: avatarSize / 2,
+                            backgroundColor: AppColors.surface,
+                          ),
+                          errorWidget: (_, __, ___) => CircleAvatar(
+                            radius: avatarSize / 2,
+                            backgroundColor: AppColors.surface,
+                            child: const Icon(Icons.person, color: AppColors.muted),
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: avatarSize / 2,
+                          backgroundColor: AppColors.surface,
+                          child: const Icon(Icons.person, color: AppColors.muted),
+                        ),
                 ),
               ),
               Positioned(
-                bottom: ResponsiveHelper.h(2),
-                right: ResponsiveHelper.w(2),
+                bottom: context.heightPct(0.3),
+                right: context.widthPct(0.5),
                 child: Container(
-                  height: ResponsiveHelper.h(14),
-                  width: ResponsiveHelper.w(14),
+                  height: 12,
+                  width: 12,
                   decoration: BoxDecoration(
-                    color: kGreen,
+                    color: AppColors.accent,
                     shape: BoxShape.circle,
-                    border: Border.all(color: kBg, width: 2.5),
+                    border: Border.all(color: AppColors.background, width: 2),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 8),
+          SizedBox(height: context.heightPct(0.8)),
           Text(
             name,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(13),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(13),
               fontWeight: FontWeight.w600,
             ),
           ),

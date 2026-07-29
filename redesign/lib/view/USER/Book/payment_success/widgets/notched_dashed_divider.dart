@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class NotchedDashedDivider extends StatelessWidget {
@@ -7,8 +8,11 @@ class NotchedDashedDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final notchHeight = context.heightPct(3.5).clamp(28.0, 36.0);
+    final notchWidth = context.widthPct(4).clamp(14.0, 20.0);
+
     return SizedBox(
-      height: ResponsiveHelper.h(32),
+      height: notchHeight,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -19,12 +23,12 @@ class NotchedDashedDivider extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Container(
-              width: ResponsiveHelper.w(16),
-              height: ResponsiveHelper.h(32),
+              width: notchWidth,
+              height: notchHeight,
               decoration: BoxDecoration(
-                color: Colors.black, // matches background
+                color: AppColors.background,
                 borderRadius: BorderRadius.horizontal(
-                  right: Radius.circular(ResponsiveHelper.w(16)),
+                  right: Radius.circular(notchWidth),
                 ),
               ),
             ),
@@ -34,12 +38,12 @@ class NotchedDashedDivider extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: Container(
-              width: ResponsiveHelper.w(16),
-              height: ResponsiveHelper.h(32),
+              width: notchWidth,
+              height: notchHeight,
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: AppColors.background,
                 borderRadius: BorderRadius.horizontal(
-                  left: Radius.circular(ResponsiveHelper.w(16)),
+                  left: Radius.circular(notchWidth),
                 ),
               ),
             ),
@@ -54,7 +58,7 @@ class _DashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey.shade700
+      ..color = AppColors.borderDark
       ..strokeWidth = 1;
 
     const dashWidth = 6.0;

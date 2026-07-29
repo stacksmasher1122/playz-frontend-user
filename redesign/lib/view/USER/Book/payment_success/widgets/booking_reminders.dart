@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class BookingReminders extends StatelessWidget {
   const BookingReminders({super.key});
-
-  static const _kGreen = AppColors.accent;
-  static const _kMuted = Color(0xFFA7A7A7);
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +21,28 @@ class BookingReminders extends StatelessWidget {
       children: [
         Text(
           'Things to Remember',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(16),
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        SizedBox(height: 12),
+        SizedBox(height: context.heightPct(1.2)),
         ...reminders.map(
           (e) => Padding(
-            padding: EdgeInsets.only(bottom: 8),
+            padding: EdgeInsets.only(bottom: context.heightPct(0.8)),
             child: Row(
               children: [
-                Icon(Icons.circle, size: 6, color: _kGreen),
-                SizedBox(width: 10),
+                const Icon(Icons.circle, size: 6, color: AppColors.accent),
+                SizedBox(width: context.widthPct(2.5)),
                 Expanded(
-                  child: Text(e, style: TextStyle(color: _kMuted)),
+                  child: Text(
+                    e,
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(13),
+                    ),
+                  ),
                 ),
               ],
             ),

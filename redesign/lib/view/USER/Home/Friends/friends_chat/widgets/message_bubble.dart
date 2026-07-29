@@ -16,8 +16,8 @@ import 'full_screen_image.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 const kGreen = AppColors.accent;
-const kSurface = Color(0xFF222222);
-const kMuted = Colors.white38;
+const kSurface = AppColors.surface;
+const kMuted = AppColors.muted;
 
 class MessageBubble extends StatelessWidget {
   final ChatMessageModel msg;
@@ -744,13 +744,13 @@ class _DynamicImageBubbleState extends State<DynamicImageBubble> {
               imageUrl: widget.imageUrl,
               fit: BoxFit.cover,
               placeholder: (_, __) => Shimmer.fromColors(
-                baseColor: Colors.grey.shade900.withValues(alpha: 0.5),
-                highlightColor: Colors.grey.shade800.withValues(alpha: 0.4),
+                baseColor: AppColors.surface,
+                highlightColor: AppColors.card,
                 child: Container(
                   width: size?.width ?? widget.maxWidth,
                   height: size?.height ?? 200,
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: AppColors.background,
                     borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
                   ),
                 ),

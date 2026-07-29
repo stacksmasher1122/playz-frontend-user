@@ -16,7 +16,6 @@ class SportSelectorWidget extends StatefulWidget {
     required this.onSportSelected,
   });
 
-  
   @override
   State<SportSelectorWidget> createState() => _SportSelectorWidgetState();
 }
@@ -24,17 +23,20 @@ class SportSelectorWidget extends StatefulWidget {
 class _SportSelectorWidgetState extends State<SportSelectorWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Select Sport",
           style: AppTypography.headlineMd.copyWith(
-            color: AppColors.onPrimary,
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(16),
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: ResponsiveHelper.h(12)),
+        SizedBox(height: context.heightPct(1.2)),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),

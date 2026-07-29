@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'venue_policy_box.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -13,10 +14,6 @@ class BookingSummary extends StatelessWidget {
     this.hours = 1,
   });
 
-  static const _kGreen = AppColors.accent;
-  static const _kMuted = Color(0xFFA7A7A7);
-  static const _kCardColor = Color(0xFF1A1A1A);
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
@@ -25,56 +22,74 @@ class BookingSummary extends StatelessWidget {
     final displayTotal = slotPrice > 0 ? '₹${slotTotal.toInt()}' : '₹--';
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _SectionTitle(text: 'Additional Notes'),
-          _textArea('Write any special requests...'),
-          SizedBox(height: 16),
+          const _SectionTitle(text: 'Additional Notes'),
+          _textArea(context, 'Write any special requests...'),
+          SizedBox(height: context.heightPct(2)),
 
-          VenuePolicyBox(),
-          SizedBox(height: 24),
+          const VenuePolicyBox(),
+          SizedBox(height: context.heightPct(2.5)),
 
           _priceRow(
+            context,
             'Slot Price ($hours hr${hours > 1 ? 's' : ''})',
             displaySlotPrice,
           ),
-          _priceRow('Add-ons', '₹0'),
-          Divider(color: Colors.grey),
-          _priceRow('Total Amount', displayTotal, highlight: true),
+          _priceRow(context, 'Add-ons', '₹0'),
+          const Divider(color: AppColors.borderDark),
+          _priceRow(context, 'Total Amount', displayTotal, highlight: true),
         ],
       ),
     );
   }
 
-  Widget _textArea(String hint) {
+  Widget _textArea(BuildContext context, String hint) {
     return Container(
-      margin: EdgeInsets.only(top: 8),
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      margin: EdgeInsets.only(top: context.heightPct(1)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
-        color: _kCardColor,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: TextField(
         maxLines: 3,
-        style: TextStyle(color: Colors.white),
-        decoration: InputDecoration.collapsed(hintText: hint),
+        style: AppTypography.bodySm.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(14),
+        ),
+        decoration: InputDecoration.collapsed(
+          hintText: hint,
+          hintStyle: AppTypography.bodySm.copyWith(
+            color: AppColors.muted,
+            fontSize: context.responsiveFont(14),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _priceRow(String label, String value, {bool highlight = false}) {
+  Widget _priceRow(BuildContext context, String label, String value, {bool highlight = false}) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(6)),
+      padding: EdgeInsets.symmetric(vertical: context.heightPct(0.6)),
       child: Row(
         children: [
-          Text(label, style: TextStyle(color: _kMuted)),
-          Spacer(),
+          Text(
+            label,
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(14),
+            ),
+          ),
+          const Spacer(),
           Text(
             value,
-            style: TextStyle(
-              color: highlight ? _kGreen : Colors.white,
+            style: AppTypography.headlineSm.copyWith(
+              color: highlight ? AppColors.accent : AppColors.textPrimary,
+              fontSize: context.responsiveFont(highlight ? 16 : 14),
               fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -93,9 +108,9 @@ class _SectionTitle extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Text(
       text,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: ResponsiveHelper.sp(18),
+      style: AppTypography.headlineSm.copyWith(
+        color: AppColors.textPrimary,
+        fontSize: context.responsiveFont(18),
         fontWeight: FontWeight.bold,
       ),
     );

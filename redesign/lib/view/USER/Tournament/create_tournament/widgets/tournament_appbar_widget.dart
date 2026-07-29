@@ -13,7 +13,6 @@ class TournamentAppbarWidget extends StatefulWidget {
     required this.onClose,
   });
 
-  
   @override
   State<TournamentAppbarWidget> createState() => _TournamentAppbarWidgetState();
 }
@@ -21,30 +20,44 @@ class TournamentAppbarWidget extends StatefulWidget {
 class _TournamentAppbarWidgetState extends State<TournamentAppbarWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.w(16),
-        vertical: ResponsiveHelper.h(12),
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(1.2),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             onPressed: widget.onBack,
-            icon: Icon(Icons.arrow_back_ios, color: AppColors.onPrimary, size: ResponsiveHelper.w(20)),
+            icon: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.textPrimary,
+              size: context.responsiveFont(18),
+            ),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
           ),
-          Text(
-            "Create Tournament",
-            style: AppTypography.headlineMd.copyWith(
-              color: AppColors.accent,
-              fontWeight: FontWeight.bold,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              "Create Tournament",
+              style: AppTypography.headlineMd.copyWith(
+                color: AppColors.accent,
+                fontSize: context.responsiveFont(18),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           IconButton(
             onPressed: widget.onClose,
-            icon: Icon(Icons.close, color: AppColors.onPrimary, size: ResponsiveHelper.w(24)),
+            icon: Icon(
+              Icons.close_rounded,
+              color: AppColors.textPrimary,
+              size: context.responsiveFont(22),
+            ),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
           ),

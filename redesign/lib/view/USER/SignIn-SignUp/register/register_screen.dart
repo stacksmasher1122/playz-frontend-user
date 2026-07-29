@@ -19,8 +19,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  static const Color cardColor = Color(0xFF0E0E0E);
-
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
@@ -58,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (success) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => FavoriteSportsScreen()),
+        MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -71,8 +69,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
@@ -87,25 +87,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             child: Column(
               children: [
-                SizedBox(height: 300),
+                SizedBox(height: context.heightPct(30)),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: ResponsiveHelper.w(20),
-                    vertical: ResponsiveHelper.h(24),
+                    horizontal: context.widthPct(5),
+                    vertical: context.heightPct(2.5),
                   ),
                   child: Container(
-                    padding: EdgeInsets.all(ResponsiveHelper.w(22)),
+                    padding: EdgeInsets.all(context.widthPct(5.5)),
                     decoration: BoxDecoration(
-                      color: cardColor,
+                      color: AppColors.surface,
                       borderRadius: BorderRadius.circular(
-                        ResponsiveHelper.w(22),
+                        context.minDimensionPct(5.5),
                       ),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.06),
+                        color: AppColors.textPrimary.withValues(alpha: 0.06),
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.6),
+                          color: AppColors.background.withValues(alpha: 0.6),
                           blurRadius: 24,
                           offset: const Offset(0, 12),
                         ),

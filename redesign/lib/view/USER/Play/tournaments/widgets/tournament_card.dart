@@ -5,7 +5,6 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import '../tournament_detail/tournament_detail_screen.dart';
 
@@ -23,6 +22,8 @@ class TournamentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     final String name = data['name'] ?? 'Tournament';
     final String sport = data['sport'] ?? 'Sport';
     final Timestamp? start = data['startDate'];
@@ -58,14 +59,14 @@ class TournamentCard extends StatelessWidget {
         ));
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: ResponsiveHelper.h(16)),
+        margin: EdgeInsets.only(bottom: context.heightPct(2)),
         decoration: BoxDecoration(
           color: AppColors.card,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
           border: Border.all(
             color: isCompleted
                 ? AppColors.accent.withValues(alpha: 0.6)
-                : (isInProgress ? Colors.orange.withValues(alpha: 0.6) : AppColors.card),
+                : (isInProgress ? AppColors.warning.withValues(alpha: 0.6) : AppColors.borderDark),
             width: isCompleted || isInProgress ? 1.5 : 1.0,
           ),
         ),
@@ -74,46 +75,64 @@ class TournamentCard extends StatelessWidget {
           children: [
             // Top Header: Sport Icon, Dates, Status & Fee Badges
             Padding(
-              padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+              padding: EdgeInsets.all(context.widthPct(4)),
               child: Row(
                 children: [
-                  Icon(Icons.sports_soccer, color: AppColors.accent, size: ResponsiveHelper.w(24)),
-                  SizedBox(width: ResponsiveHelper.w(12)),
+                  Icon(
+                    Icons.sports_soccer_rounded,
+                    color: AppColors.accent,
+                    size: context.minDimensionPct(6).clamp(20.0, 26.0),
+                  ),
+                  SizedBox(width: context.widthPct(3)),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           sport,
-                          style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(12),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           dateStr,
-                          style: AppTypography.labelCaps.copyWith(color: AppColors.onPrimary),
+                          style: AppTypography.labelCaps10.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(12),
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
                   ),
                   if (isCompleted)
                     Container(
-                      margin: EdgeInsets.only(right: ResponsiveHelper.w(8)),
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+                      margin: EdgeInsets.only(right: context.widthPct(2)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.widthPct(2),
+                        vertical: context.heightPct(0.5),
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.accent.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                         border: Border.all(color: AppColors.accent.withValues(alpha: 0.6)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.check_circle, color: AppColors.accent, size: 12),
-                          SizedBox(width: 4),
+                          const Icon(Icons.check_circle_rounded, color: AppColors.accent, size: 12),
+                          SizedBox(width: context.widthPct(1)),
                           Text(
                             "COMPLETED",
-                            style: AppTypography.labelCaps.copyWith(
+                            style: AppTypography.labelCaps10.copyWith(
                               color: AppColors.accent,
                               fontWeight: FontWeight.bold,
-                              fontSize: 10,
+                              fontSize: context.responsiveFont(10),
                             ),
                           ),
                         ],
@@ -121,40 +140,48 @@ class TournamentCard extends StatelessWidget {
                     )
                   else if (isInProgress)
                     Container(
-                      margin: EdgeInsets.only(right: ResponsiveHelper.w(8)),
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+                      margin: EdgeInsets.only(right: context.widthPct(2)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.widthPct(2),
+                        vertical: context.heightPct(0.5),
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.orange.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                        border: Border.all(color: Colors.orange.withValues(alpha: 0.6)),
+                        color: AppColors.warning.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                        border: Border.all(color: AppColors.warning.withValues(alpha: 0.6)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.play_circle_fill, color: Colors.orange, size: 12),
-                          SizedBox(width: 4),
+                          const Icon(Icons.play_circle_fill_rounded, color: AppColors.warning, size: 12),
+                          SizedBox(width: context.widthPct(1)),
                           Text(
                             "LIVE",
-                            style: AppTypography.labelCaps.copyWith(
-                              color: Colors.orange,
+                            style: AppTypography.labelCaps10.copyWith(
+                              color: AppColors.warning,
                               fontWeight: FontWeight.bold,
-                              fontSize: 10,
+                              fontSize: context.responsiveFont(10),
                             ),
                           ),
                         ],
                       ),
                     ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.widthPct(2.5),
+                      vertical: context.heightPct(0.5),
+                    ),
                     decoration: BoxDecoration(
                       color: isFree ? AppColors.accent.withValues(alpha: 0.2) : AppColors.surface,
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                      border: Border.all(color: isFree ? AppColors.accent : AppColors.outlineVariant),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                      border: Border.all(color: isFree ? AppColors.accent : AppColors.borderDark),
                     ),
                     child: Text(
                       feeStr,
-                      style: AppTypography.labelCaps.copyWith(
-                        color: isFree ? AppColors.accent : AppColors.onPrimary,
+                      style: AppTypography.labelCaps10.copyWith(
+                        color: isFree ? AppColors.accent : AppColors.textPrimary,
+                        fontSize: context.responsiveFont(11),
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -162,38 +189,58 @@ class TournamentCard extends StatelessWidget {
               ),
             ),
 
-            Divider(color: AppColors.surface, height: 1),
+            const Divider(color: AppColors.borderDark, height: 1),
 
             // Body: Title and Venue
             Padding(
-              padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+              padding: EdgeInsets.all(context.widthPct(4)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     name,
-                    style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(16),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: ResponsiveHelper.h(8)),
+                  SizedBox(height: context.heightPct(1)),
                   Row(
                     children: [
-                      Icon(Icons.location_on, color: AppColors.muted, size: ResponsiveHelper.w(16)),
-                      SizedBox(width: ResponsiveHelper.w(6)),
-                      Text(
-                        venueName,
-                        style: AppTypography.bodyMd.copyWith(color: AppColors.muted),
+                      const Icon(Icons.location_on_rounded, color: AppColors.muted, size: 16),
+                      SizedBox(width: context.widthPct(1.5)),
+                      Expanded(
+                        child: Text(
+                          venueName,
+                          style: AppTypography.bodyMd.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(13),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: ResponsiveHelper.h(16)),
+                  SizedBox(height: context.heightPct(1.5)),
                   Row(
                     children: [
-                      Icon(Icons.groups, color: AppColors.accent, size: ResponsiveHelper.w(16)),
-                      SizedBox(width: ResponsiveHelper.w(6)),
-                      Text(
-                        // C1 Fix: Show ratio
-                        maxTeams > 0 ? "$teamCount/$maxTeams registered" : "$teamCount Teams Registered",
-                        style: AppTypography.bodyMd.copyWith(color: AppColors.accent),
+                      const Icon(Icons.groups_rounded, color: AppColors.accent, size: 18),
+                      SizedBox(width: context.widthPct(1.5)),
+                      Expanded(
+                        child: Text(
+                          maxTeams > 0 ? "$teamCount/$maxTeams registered" : "$teamCount Teams Registered",
+                          style: AppTypography.bodyMd.copyWith(
+                            color: AppColors.accent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: context.responsiveFont(13.5),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/model/User_Models/Booking_Models/turf_model.dart';
@@ -51,24 +51,28 @@ class VenueLocationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             const Icon(Icons.location_on_rounded, color: AppColors.accent, size: 18),
-            const SizedBox(width: 8),
+            SizedBox(width: context.widthPct(2)),
             Text(
               'Venue & Ground Location',
-              style: GoogleFonts.inter(
+              style: AppTypography.headlineSm.copyWith(
                 color: AppColors.accent,
                 fontWeight: FontWeight.bold,
-                fontSize: ResponsiveHelper.sp(14),
+                fontSize: context.responsiveFont(14),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: context.heightPct(1)),
 
         // Location Type Selector (PlayZ Turf vs Custom / Unofficial)
         Row(
@@ -79,42 +83,38 @@ class VenueLocationSection extends StatelessWidget {
                 label: Center(
                   child: Text(
                     'PlayZ Turf',
-                    style: GoogleFonts.inter(
+                    style: AppTypography.headlineSm.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: ResponsiveHelper.sp(13),
+                      fontSize: context.responsiveFont(13),
+                      color: locationType == 'playz_turf' ? AppColors.background : AppColors.muted,
                     ),
                   ),
                 ),
                 selected: locationType == 'playz_turf',
                 selectedColor: AppColors.accent,
                 backgroundColor: AppColors.card,
-                labelStyle: TextStyle(
-                  color: locationType == 'playz_turf' ? Colors.black : Colors.white70,
-                ),
                 onSelected: (val) {
                   if (val) onLocationTypeChanged('playz_turf');
                 },
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: context.widthPct(2.5)),
             Expanded(
               child: ChoiceChip(
                 showCheckmark: false,
                 label: Center(
                   child: Text(
                     'Custom / Unofficial',
-                    style: GoogleFonts.inter(
+                    style: AppTypography.headlineSm.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: ResponsiveHelper.sp(13),
+                      fontSize: context.responsiveFont(13),
+                      color: locationType == 'custom' ? AppColors.background : AppColors.muted,
                     ),
                   ),
                 ),
                 selected: locationType == 'custom',
                 selectedColor: AppColors.accent,
                 backgroundColor: AppColors.card,
-                labelStyle: TextStyle(
-                  color: locationType == 'custom' ? Colors.black : Colors.white70,
-                ),
                 onSelected: (val) {
                   if (val) onLocationTypeChanged('custom');
                 },
@@ -123,35 +123,41 @@ class VenueLocationSection extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 14),
+        SizedBox(height: context.heightPct(1.5)),
 
         // PLAYZ TURF FLOW (Search Bar + Distance + Closest Turfs for Selected Sport)
         if (locationType == 'playz_turf') ...[
           TextField(
             controller: turfSearchController,
-            style: const TextStyle(color: Colors.white),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(14),
+            ),
             decoration: InputDecoration(
               hintText: 'Search PlayZ turfs by name, city...',
-              hintStyle: const TextStyle(color: Colors.white38),
+              hintStyle: AppTypography.bodySm.copyWith(
+                color: AppColors.muted.withValues(alpha: 0.6),
+                fontSize: context.responsiveFont(13),
+              ),
               prefixIcon: const Icon(Icons.search, color: AppColors.accent),
               suffixIcon: turfSearchQuery.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(Icons.clear, color: Colors.white54),
+                      icon: const Icon(Icons.clear, color: AppColors.muted),
                       onPressed: onClearTurfSearch,
                     )
                   : null,
               filled: true,
               fillColor: AppColors.card,
-              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              contentPadding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: Colors.white12),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+                borderSide: const BorderSide(color: AppColors.borderDark),
               ),
             ),
             onChanged: onTurfSearchChanged,
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.5)),
 
           // Turf Results / Closest Turfs Filtered by Selected Sport
           Obx(() {
@@ -159,24 +165,26 @@ class VenueLocationSection extends StatelessWidget {
 
             if (selectedSport == null || selectedSport!.trim().isEmpty) {
               return Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(context.widthPct(4)),
                 decoration: BoxDecoration(
                   color: AppColors.card,
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                   border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
                     const Icon(Icons.sports_soccer_outlined, color: AppColors.accent, size: 22),
-                    const SizedBox(width: 12),
+                    SizedBox(width: context.widthPct(3)),
                     Expanded(
                       child: Text(
                         'Please select a sport at the top first to view nearby turfs available for your sport.',
-                        style: GoogleFonts.inter(
-                          color: Colors.white70,
-                          fontSize: ResponsiveHelper.sp(12.5),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.textSecondary,
+                          fontSize: context.responsiveFont(12.5),
                           fontWeight: FontWeight.w500,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -186,15 +194,18 @@ class VenueLocationSection extends StatelessWidget {
 
             if (turfs.isEmpty) {
               return Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(context.widthPct(4)),
                 decoration: BoxDecoration(
                   color: AppColors.card,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
                     'No PlayZ Turfs available',
-                    style: TextStyle(color: Colors.white54),
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(13),
+                    ),
                   ),
                 ),
               );
@@ -216,15 +227,18 @@ class VenueLocationSection extends StatelessWidget {
 
             if (displayList.isEmpty) {
               return Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(context.widthPct(4)),
                 decoration: BoxDecoration(
                   color: AppColors.card,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                 ),
                 child: Center(
                   child: Text(
                     'No turfs nearby supporting "$selectedSport"',
-                    style: const TextStyle(color: Colors.white54),
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(13),
+                    ),
                   ),
                 ),
               );
@@ -237,18 +251,18 @@ class VenueLocationSection extends StatelessWidget {
                   turfSearchQuery.isEmpty
                       ? 'Closest Turfs for $selectedSport Near You'
                       : 'Matching $selectedSport Turfs (${displayList.length})',
-                  style: GoogleFonts.inter(
-                    color: Colors.white70,
-                    fontSize: ResponsiveHelper.sp(12),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.textSecondary,
+                    fontSize: context.responsiveFont(12),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: context.heightPct(1)),
                 ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: displayList.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  separatorBuilder: (_, __) => SizedBox(height: context.heightPct(1)),
                   itemBuilder: (context, index) {
                     final turf = displayList[index];
                     final isSelected = selectedTurf?.id == turf.id;
@@ -258,66 +272,70 @@ class VenueLocationSection extends StatelessWidget {
                       onTap: () => onTurfSelected(turf),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 150),
-                        padding: const EdgeInsets.all(12),
+                        padding: EdgeInsets.all(context.widthPct(3)),
                         decoration: BoxDecoration(
                           color: isSelected
                               ? AppColors.accent.withValues(alpha: 0.12)
                               : AppColors.card,
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                           border: Border.all(
-                            color: isSelected ? AppColors.accent : Colors.white12,
+                            color: isSelected ? AppColors.accent : AppColors.borderDark,
                             width: isSelected ? 1.8 : 1.0,
                           ),
                         ),
                         child: Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(context.widthPct(2.5)),
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? AppColors.accent
-                                    : Colors.white.withValues(alpha: 0.05),
+                                    : AppColors.textPrimary.withValues(alpha: 0.05),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 Icons.stadium_rounded,
-                                color: isSelected ? Colors.black : AppColors.accent,
+                                color: isSelected ? AppColors.background : AppColors.accent,
                                 size: 20,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: context.widthPct(3)),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     turf.turfName,
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white,
+                                    style: AppTypography.headlineSm.copyWith(
+                                      color: AppColors.textPrimary,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: ResponsiveHelper.sp(14),
+                                      fontSize: context.responsiveFont(14),
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 2),
+                                  SizedBox(height: context.heightPct(0.3)),
                                   Text(
                                     turf.city,
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white60,
-                                      fontSize: ResponsiveHelper.sp(12),
+                                    style: AppTypography.bodySm.copyWith(
+                                      color: AppColors.muted,
+                                      fontSize: context.responsiveFont(12),
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
                             ),
                             // Distance Pill
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.widthPct(2.5),
+                                vertical: context.heightPct(0.5),
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.08),
-                                borderRadius: BorderRadius.circular(12),
+                                color: AppColors.textPrimary.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                               ),
                               child: Row(
                                 children: [
@@ -326,13 +344,13 @@ class VenueLocationSection extends StatelessWidget {
                                     color: AppColors.accent,
                                     size: 12,
                                   ),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: context.widthPct(1)),
                                   Text(
                                     distanceStr,
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white70,
+                                    style: AppTypography.bodySm.copyWith(
+                                      color: AppColors.textSecondary,
                                       fontWeight: FontWeight.w600,
-                                      fontSize: ResponsiveHelper.sp(11),
+                                      fontSize: context.responsiveFont(11),
                                     ),
                                   ),
                                 ],
@@ -350,7 +368,7 @@ class VenueLocationSection extends StatelessWidget {
 
           // Ground / Court Selector for Selected Turf
           if (selectedTurf != null) ...[
-            const SizedBox(height: 14),
+            SizedBox(height: context.heightPct(1.5)),
             Obx(() {
               final grounds = bookingController.grounds.toList();
               if (grounds.isEmpty) return const SizedBox.shrink();
@@ -360,32 +378,36 @@ class VenueLocationSection extends StatelessWidget {
                 children: [
                   Text(
                     'Select Ground / Court',
-                    style: GoogleFonts.inter(
-                      color: Colors.white70,
-                      fontSize: ResponsiveHelper.sp(12),
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: context.responsiveFont(12),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: context.heightPct(0.8)),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: EdgeInsets.symmetric(horizontal: context.widthPct(3)),
                     decoration: BoxDecoration(
                       color: AppColors.card,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white12),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                      border: Border.all(color: AppColors.borderDark),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<GroundModel>(
                         value: selectedGround,
-                        hint: const Text(
+                        hint: Text(
                           'Select Ground / Court',
-                          style: TextStyle(color: Colors.white54),
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(13),
+                          ),
                         ),
                         dropdownColor: AppColors.card,
                         isExpanded: true,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
                           fontWeight: FontWeight.w600,
+                          fontSize: context.responsiveFont(14),
                         ),
                         items: grounds.map((g) {
                           final specStr = g.dimensions.isNotEmpty ? ' (${g.dimensions})' : '';
@@ -408,10 +430,10 @@ class VenueLocationSection extends StatelessWidget {
           GestureDetector(
             onTap: onOpenGoogleMapsPicker,
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(context.widthPct(4)),
               decoration: BoxDecoration(
                 color: AppColors.card,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                 border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
                 gradient: LinearGradient(
                   colors: [
@@ -428,53 +450,57 @@ class VenueLocationSection extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: EdgeInsets.all(context.widthPct(2.5)),
                         decoration: BoxDecoration(
                           color: AppColors.accent,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                         ),
                         child: const Icon(
                           Icons.map_rounded,
-                          color: Colors.black,
+                          color: AppColors.background,
                           size: 22,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: context.widthPct(3)),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'Pick Location on Google Maps',
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
+                              style: AppTypography.headlineSm.copyWith(
+                                color: AppColors.textPrimary,
                                 fontWeight: FontWeight.bold,
-                                fontSize: ResponsiveHelper.sp(14),
+                                fontSize: context.responsiveFont(14),
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 2),
+                            SizedBox(height: context.heightPct(0.3)),
                             Text(
                               'Tap to open interactive map picker',
-                              style: GoogleFonts.inter(
+                              style: AppTypography.bodySm.copyWith(
                                 color: AppColors.accent,
-                                fontSize: ResponsiveHelper.sp(11),
+                                fontSize: context.responsiveFont(11),
                                 fontWeight: FontWeight.w600,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
                       ),
                       const Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.white54,
+                        color: AppColors.muted,
                         size: 16,
                       ),
                     ],
                   ),
                   if (customAddressController.text.isNotEmpty) ...[
-                    const SizedBox(height: 12),
-                    const Divider(color: Colors.white10, height: 1),
-                    const SizedBox(height: 10),
+                    SizedBox(height: context.heightPct(1.5)),
+                    const Divider(color: AppColors.borderDark, height: 1),
+                    SizedBox(height: context.heightPct(1.2)),
                     Row(
                       children: [
                         const Icon(
@@ -482,13 +508,13 @@ class VenueLocationSection extends StatelessWidget {
                           color: AppColors.accent,
                           size: 16,
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: context.widthPct(1.5)),
                         Expanded(
                           child: Text(
                             customAddressController.text,
-                            style: GoogleFonts.inter(
-                              color: Colors.white70,
-                              fontSize: ResponsiveHelper.sp(12),
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.textSecondary,
+                              fontSize: context.responsiveFont(12),
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -501,19 +527,25 @@ class VenueLocationSection extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: context.heightPct(1.2)),
           TextField(
             controller: customAddressController,
-            style: const TextStyle(color: Colors.white),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(14),
+            ),
             decoration: InputDecoration(
               hintText: 'Or enter custom address manually...',
-              hintStyle: const TextStyle(color: Colors.white38),
+              hintStyle: AppTypography.bodySm.copyWith(
+                color: AppColors.muted.withValues(alpha: 0.6),
+                fontSize: context.responsiveFont(13),
+              ),
               prefixIcon: const Icon(Icons.edit_location_alt_rounded, color: AppColors.accent),
               filled: true,
               fillColor: AppColors.card,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: Colors.white12),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+                borderSide: const BorderSide(color: AppColors.borderDark),
               ),
             ),
           ),

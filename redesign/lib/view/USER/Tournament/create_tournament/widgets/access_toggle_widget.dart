@@ -13,7 +13,6 @@ class AccessToggleWidget extends StatefulWidget {
     required this.onToggle,
   });
 
-  
   @override
   State<AccessToggleWidget> createState() => _AccessToggleWidgetState();
 }
@@ -21,61 +20,71 @@ class AccessToggleWidget extends StatefulWidget {
 class _AccessToggleWidgetState extends State<AccessToggleWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
       width: double.infinity,
-      height: ResponsiveHelper.h(70),
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      height: context.heightPct(8.5).clamp(64.0, 76.0),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Tournament Access",
-                style: AppTypography.headlineSm.copyWith(
-                  color: AppColors.onPrimary,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Tournament Access",
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(15),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              SizedBox(height: ResponsiveHelper.h(4)),
-              Text(
-                "Control who can join",
-                style: AppTypography.bodySm.copyWith(
-                  color: AppColors.muted,
+                SizedBox(height: context.heightPct(0.5)),
+                Text(
+                  "Control who can join",
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12.5),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          SizedBox(width: context.widthPct(3)),
           GestureDetector(
             onTap: widget.onToggle,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: ResponsiveHelper.w(48),
-              height: ResponsiveHelper.h(28),
+              width: context.widthPct(12).clamp(44.0, 52.0),
+              height: context.heightPct(3.5).clamp(24.0, 30.0),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-                color: widget.isEnabled ? AppColors.accent : AppColors.card,
+                borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                color: widget.isEnabled ? AppColors.accent : AppColors.surface,
               ),
               child: Stack(
                 children: [
                   AnimatedPositioned(
                     duration: const Duration(milliseconds: 200),
                     curve: Curves.easeIn,
-                    top: ResponsiveHelper.h(2),
-                    left: widget.isEnabled ? ResponsiveHelper.w(22) : ResponsiveHelper.w(2),
-                    right: widget.isEnabled ? ResponsiveHelper.w(2) : ResponsiveHelper.w(22),
+                    top: 2,
+                    left: widget.isEnabled ? context.widthPct(5.5).clamp(20.0, 26.0) : 2,
                     child: Container(
-                      width: ResponsiveHelper.w(24),
-                      height: ResponsiveHelper.w(24),
+                      width: context.heightPct(3).clamp(20.0, 24.0),
+                      height: context.heightPct(3).clamp(20.0, 24.0),
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white,
+                        color: AppColors.background,
                       ),
                     ),
                   ),

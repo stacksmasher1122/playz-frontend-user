@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
- // For kMuted constant
 
 class SectionHeader extends StatelessWidget {
   final String title;
@@ -17,12 +17,12 @@ class SectionHeader extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-        padding: EdgeInsets.only(left: 4),
+        padding: EdgeInsets.only(left: context.widthPct(1)),
         child: Text(
           title,
-          style: TextStyle(
-            color: kMuted.withValues(alpha: 0.5),
-            fontSize: ResponsiveHelper.sp(10),
+          style: AppTypography.labelCaps10.copyWith(
+            color: AppColors.muted.withValues(alpha: 0.5),
+            fontSize: context.responsiveFont(10),
             letterSpacing: 1.5,
             fontWeight: FontWeight.w800,
           ),

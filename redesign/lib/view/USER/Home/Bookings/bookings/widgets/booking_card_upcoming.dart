@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Bookings/qr_in_bookings/qr_in_bookings_screen.dart';
 import 'package:redesign/services/scoreboard_booking_validator.dart';
 import 'package:redesign/services/scoreboard_recovery_manager.dart';
@@ -8,7 +10,6 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/badminton_controller.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_setup/cricket_setup_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Badminton/badminton_setup/badminton_setup_screen.dart';
-import '../bookings_screen.dart';
 import 'action_chip.dart';
 import 'status_badge.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -16,7 +17,6 @@ import 'package:redesign/theme/responsive_helper.dart';
 class BookingCardUpcoming extends StatefulWidget {
   final Map<String, dynamic>? bookingData;
 
-  const BookingCardUpcoming({super.key, this.bookingData});
   const BookingCardUpcoming({super.key, this.bookingData});
 
   @override
@@ -31,6 +31,7 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
     super.initState();
     _checkExistingScoreboard();
   }
+
   Future<void> _checkExistingScoreboard() async {
     final rawBookingId = (widget.bookingData?['bookingId'] ?? widget.bookingData?['id'] ?? widget.bookingData?['docId'] ?? '').toString().trim();
     if (rawBookingId.isNotEmpty) {
@@ -71,28 +72,40 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          backgroundColor: const Color(0xFF1E1E1E),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: AppColors.card,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(context.minDimensionPct(4))),
           title: Row(
             children: [
-              const Icon(Icons.timer_off_outlined, color: Colors.orangeAccent, size: 24),
-              const SizedBox(width: 10),
-              const Expanded(
+              const Icon(Icons.timer_off_outlined, color: Colors.amber, size: 24),
+              SizedBox(width: context.widthPct(2.5)),
+              Expanded(
                 child: Text(
                   'Scoreboard Access',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
           ),
           content: Text(
             result.message,
-            style: const TextStyle(color: Colors.white70, fontSize: 14),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: context.responsiveFont(14),
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('OK', style: TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold)),
+              child: Text(
+                'OK',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),
@@ -129,28 +142,40 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          backgroundColor: const Color(0xFF1E1E1E),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: AppColors.card,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(context.minDimensionPct(4))),
           title: Row(
             children: [
-              const Icon(Icons.timer_off_outlined, color: Colors.orangeAccent, size: 24),
-              const SizedBox(width: 10),
-              const Expanded(
+              const Icon(Icons.timer_off_outlined, color: Colors.amber, size: 24),
+              SizedBox(width: context.widthPct(2.5)),
+              Expanded(
                 child: Text(
                   'Scoreboard Access Expired',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
           ),
           content: Text(
             result.message,
-            style: const TextStyle(color: Colors.white70, fontSize: 14),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: context.responsiveFont(14),
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('OK', style: TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold)),
+              child: Text(
+                'OK',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),
@@ -178,13 +203,19 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
     final statusText = (widget.bookingData?['status'] ?? 'CONFIRMED').toString().toUpperCase();
 
     final hasActiveMatch = _existingMatch != null;
+    final imageSize = context.minDimensionPct(14).clamp(48.0, 60.0);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 6, 16, 12),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(0.8),
+        context.widthPct(4),
+        context.heightPct(1.5),
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -193,12 +224,12 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
             );
           },
           child: Container(
-            padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+            padding: EdgeInsets.all(context.widthPct(3.5)),
             decoration: BoxDecoration(
-              color: MyBookingsConstants.surface,
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+              color: AppColors.card,
+              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
               border: Border.all(
-                color: hasActiveMatch ? MyBookingsConstants.green.withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.08),
+                color: hasActiveMatch ? AppColors.accent.withValues(alpha: 0.6) : AppColors.borderDark,
                 width: hasActiveMatch ? 1.5 : 1.0,
               ),
             ),
@@ -209,21 +240,21 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
                 Row(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                       child: Image.network(
                         turfImage,
-                        height: ResponsiveHelper.h(56),
-                        width: ResponsiveHelper.w(56),
+                        height: imageSize,
+                        width: imageSize,
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Container(
-                          height: ResponsiveHelper.h(56),
-                          width: ResponsiveHelper.w(56),
-                          color: Colors.grey.shade800,
-                          child: Icon(Icons.sports_soccer, color: Colors.white),
+                          height: imageSize,
+                          width: imageSize,
+                          color: AppColors.surface,
+                          child: const Icon(Icons.sports_soccer, color: AppColors.textPrimary),
                         ),
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: context.widthPct(3)),
 
                     Expanded(
                       child: Column(
@@ -233,57 +264,62 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
                             turfName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
+                            style: AppTypography.headlineSm.copyWith(
+                              color: AppColors.textPrimary,
                               fontWeight: FontWeight.w700,
-                              fontSize: ResponsiveHelper.sp(14),
+                              fontSize: context.responsiveFont(14),
                             ),
                           ),
-                          SizedBox(height: 4),
+                          SizedBox(height: context.heightPct(0.4)),
                           Text(
                             '$groundName · $sport',
-                            style: TextStyle(
-                              color: MyBookingsConstants.muted,
-                              fontSize: ResponsiveHelper.sp(12),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.muted,
+                              fontSize: context.responsiveFont(12),
                             ),
                           ),
                         ],
                       ),
                     ),
 
-                    StatusBadge(statusText, MyBookingsConstants.green),
+                    SizedBox(width: context.widthPct(2)),
+                    StatusBadge(statusText, AppColors.accent),
                   ],
                 ),
 
-                SizedBox(height: 10),
+                SizedBox(height: context.heightPct(1.2)),
 
                 Text(
                   '$dateFormatted · $timeSlot',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: ResponsiveHelper.sp(12),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(12),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
 
-                SizedBox(height: 6),
+                SizedBox(height: context.heightPct(0.6)),
 
                 Text(
                   '📍 $address',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: MyBookingsConstants.muted,
-                    fontSize: ResponsiveHelper.sp(12),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
                   ),
                 ),
 
-                SizedBox(height: 12),
+                SizedBox(height: context.heightPct(1.5)),
 
                 /// ACTIONS
                 Wrap(
-                  spacing: 10,
-                  runSpacing: 8,
+                  spacing: context.widthPct(2.5),
+                  runSpacing: context.heightPct(1),
                   children: [
                     ActionChipWidget(
                       hasActiveMatch ? Icons.play_circle_fill : Icons.sports_score,

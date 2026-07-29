@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
 
 class SportsSelectionBottom extends StatelessWidget {
   final int selectedCount;
@@ -17,49 +18,56 @@ class SportsSelectionBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    const kMuted = Color(0xFFA7A7A7);
-    const kCard = Color(0xFF282828);
 
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 16, 20, 32),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(5),
+        context.heightPct(2),
+        context.widthPct(5),
+        context.heightPct(4),
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
-          colors: [Colors.black, Colors.black.withValues(alpha: 0.0)],
+          colors: [
+            AppColors.background,
+            AppColors.background.withValues(alpha: 0.0),
+          ],
         ),
       ),
       child: Column(
         children: [
           Text(
             '$selectedCount of 4 sports selected',
-            style: TextStyle(
-              color: canProceed ? Colors.white : kMuted,
-              fontSize: ResponsiveHelper.sp(13),
+            style: AppTypography.bodySm.copyWith(
+              color: canProceed ? AppColors.textPrimary : AppColors.muted,
+              fontSize: context.responsiveFont(13),
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: context.heightPct(2)),
           SizedBox(
             width: double.infinity,
-            height: ResponsiveHelper.h(56),
+            height: context.heightPct(6).clamp(48.0, 56.0),
             child: ElevatedButton(
               onPressed: canProceed ? onNext : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: canProceed
-                    ? Color(0xFF384358)
-                    : kCard,
-                disabledBackgroundColor: Color(0xFF20242F),
+                backgroundColor: canProceed ? AppColors.accent : AppColors.surfaceElevated,
+                disabledBackgroundColor: AppColors.surface,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(28)),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(7)),
                 ),
                 elevation: 0,
               ),
-              child: Text(
-                'Next',
-                style: TextStyle(
-                  fontSize: ResponsiveHelper.sp(16),
-                  fontWeight: FontWeight.w700,
-                  color: canProceed ? Colors.white : Colors.white38,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Next',
+                  style: AppTypography.labelCaps10.copyWith(
+                    fontSize: context.responsiveFont(16),
+                    fontWeight: FontWeight.w700,
+                    color: canProceed ? AppColors.background : AppColors.muted,
+                  ),
                 ),
               ),
             ),

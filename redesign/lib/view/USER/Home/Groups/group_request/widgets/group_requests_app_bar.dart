@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const _kGreen = AppColors.accent;
 
 class GroupRequestsAppBar extends StatelessWidget {
   const GroupRequestsAppBar({super.key});
@@ -15,43 +14,54 @@ class GroupRequestsAppBar extends StatelessWidget {
     final ctrl = Get.find<GroupsController>();
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(4, 8, 16, 0),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(1),
+        context.heightPct(1),
+        context.widthPct(4),
+        0,
+      ),
       child: Row(
         children: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back,
-              color: _kGreen,
+              color: AppColors.accent,
               size: 26,
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          SizedBox(width: 4),
-          Text(
-            'Group Requests',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(22),
-              fontWeight: FontWeight.w800,
+          SizedBox(width: context.widthPct(1)),
+          Expanded(
+            child: Text(
+              'Group Requests',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.displayLg.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(22),
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
-          Spacer(),
           Obx(() => Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 5,
+                  horizontal: context.widthPct(3),
+                  vertical: context.heightPct(0.6),
                 ),
                 decoration: BoxDecoration(
-                  border: Border.all(color: _kGreen, width: 1.5),
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+                  border: Border.all(color: AppColors.accent, width: 1.5),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                 ),
-                child: Text(
-                  '${ctrl.pendingGroupRequests.length} NEW',
-                  style: TextStyle(
-                    color: _kGreen,
-                    fontSize: ResponsiveHelper.sp(12),
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.8,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '${ctrl.pendingGroupRequests.length} NEW',
+                    style: AppTypography.labelCaps10.copyWith(
+                      color: AppColors.accent,
+                      fontSize: context.responsiveFont(12),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.8,
+                    ),
                   ),
                 ),
               )),

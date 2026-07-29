@@ -12,7 +12,6 @@ class StepProgressWidget extends StatefulWidget {
     this.totalSteps = 5,
   });
 
-  
   @override
   State<StepProgressWidget> createState() => _StepProgressWidgetState();
 }
@@ -20,18 +19,20 @@ class StepProgressWidget extends StatefulWidget {
 class _StepProgressWidgetState extends State<StepProgressWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Row(
         children: List.generate(widget.totalSteps, (index) {
           final isActive = index < widget.currentStep;
           return Expanded(
             child: Container(
-              height: ResponsiveHelper.h(4),
-              margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(3)),
+              height: context.heightPct(0.5).clamp(3.0, 4.0),
+              margin: EdgeInsets.symmetric(horizontal: context.widthPct(0.8)),
               decoration: BoxDecoration(
                 color: isActive ? AppColors.accent : AppColors.card,
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
           );

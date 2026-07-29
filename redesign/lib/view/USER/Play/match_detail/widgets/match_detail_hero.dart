@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MatchDetailHero extends StatefulWidget {
@@ -53,28 +53,28 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
 
     return SliverAppBar(
       expandedHeight: height,
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       pinned: true,
       elevation: 0,
       leading: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(context.widthPct(2)),
         child: CircleAvatar(
-          backgroundColor: Colors.black45,
+          backgroundColor: AppColors.background.withValues(alpha: 0.5),
           child: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 18),
             onPressed: () => Navigator.pop(context),
           ),
         ),
       ),
       actions: [
         CircleAvatar(
-          backgroundColor: Colors.black45,
+          backgroundColor: AppColors.background.withValues(alpha: 0.5),
           child: IconButton(
-            icon: const Icon(Icons.share_outlined, color: Colors.white, size: 20),
+            icon: const Icon(Icons.share_outlined, color: AppColors.textPrimary, size: 20),
             onPressed: () {},
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: context.widthPct(3)),
       ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
@@ -92,8 +92,8 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
                   imageList[index],
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
-                    color: Colors.grey.shade900,
-                    child: const Icon(Icons.sports_soccer, color: Colors.white38, size: 48),
+                    color: AppColors.surface,
+                    child: const Icon(Icons.sports_soccer, color: AppColors.muted, size: 48),
                   ),
                 );
               },
@@ -118,7 +118,7 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
             /// PAGE INDICATOR DOTS
             if (imageList.length > 1)
               Positioned(
-                top: ResponsiveHelper.h(50),
+                top: context.heightPct(6),
                 left: 0,
                 right: 0,
                 child: Row(
@@ -131,7 +131,7 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
                       width: _currentPage == idx ? 18 : 6,
                       height: 6,
                       decoration: BoxDecoration(
-                        color: _currentPage == idx ? AppColors.accent : Colors.white38,
+                        color: _currentPage == idx ? AppColors.accent : AppColors.muted.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
@@ -141,9 +141,9 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
 
             /// BOTTOM TAGS & TIME INDICATOR
             Positioned(
-              bottom: ResponsiveHelper.h(16),
-              left: ResponsiveHelper.w(20),
-              right: ResponsiveHelper.w(20),
+              bottom: context.heightPct(2),
+              left: context.widthPct(5),
+              right: context.widthPct(5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -161,15 +161,15 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
                             ? const Color(0xFF7C3AED)
                             : AppColors.accent,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: context.widthPct(2)),
                       _HeroTag(
                         safeSport.toUpperCase(),
-                        bgColor: Colors.white.withValues(alpha: 0.15),
-                        textColor: Colors.white,
+                        bgColor: AppColors.textPrimary.withValues(alpha: 0.15),
+                        textColor: AppColors.textPrimary,
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.heightPct(1.5)),
                   Row(
                     children: [
                       Container(
@@ -180,13 +180,17 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
                           shape: BoxShape.circle,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        safeTime,
-                        style: GoogleFonts.inter(
-                          fontSize: ResponsiveHelper.sp(16),
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      SizedBox(width: context.widthPct(2)),
+                      Expanded(
+                        child: Text(
+                          safeTime,
+                          style: AppTypography.headlineSm.copyWith(
+                            fontSize: context.responsiveFont(16),
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -218,18 +222,18 @@ class _HeroTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.w(12),
-        vertical: ResponsiveHelper.h(5),
+        horizontal: context.widthPct(3),
+        vertical: context.heightPct(0.6),
       ),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
         border: borderColor != null ? Border.all(color: borderColor!) : null,
       ),
       child: Text(
         label,
-        style: GoogleFonts.inter(
-          fontSize: ResponsiveHelper.sp(11),
+        style: AppTypography.labelCaps10.copyWith(
+          fontSize: context.responsiveFont(11),
           fontWeight: FontWeight.bold,
           color: textColor,
           letterSpacing: 0.5,

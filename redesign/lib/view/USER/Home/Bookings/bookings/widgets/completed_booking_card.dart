@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Bookings/qr_in_bookings/qr_in_bookings_screen.dart';
-import '../bookings_screen.dart';
 import 'action_chip.dart';
 import 'status_badge.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -31,12 +32,12 @@ class CompletedBookingCard extends StatelessWidget {
     final sport = bookingData?['sport'] ?? 'Ground';
     final timeSlot = bookingData?['timeSlot'] ?? '';
     final dateFormatted = bookingData?['dateFormatted'] ?? bookingData?['date'] ?? '';
-    final amount = bookingData?['amount'] ?? 0;
+    final imageSize = context.minDimensionPct(13).clamp(44.0, 56.0);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -45,13 +46,11 @@ class CompletedBookingCard extends StatelessWidget {
           );
         },
         child: Container(
-          padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+          padding: EdgeInsets.all(context.widthPct(3.5)),
           decoration: BoxDecoration(
-            color: MyBookingsConstants.surface,
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.08),
-            ),
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+            border: Border.all(color: AppColors.borderDark),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,21 +60,21 @@ class CompletedBookingCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                     child: Image.network(
                       turfImage,
-                      height: ResponsiveHelper.h(52),
-                      width: ResponsiveHelper.w(52),
+                      height: imageSize,
+                      width: imageSize,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => Container(
-                        height: ResponsiveHelper.h(52),
-                        width: ResponsiveHelper.w(52),
-                        color: Colors.grey.shade800,
-                        child: Icon(Icons.sports_soccer, color: Colors.white),
+                        height: imageSize,
+                        width: imageSize,
+                        color: AppColors.surface,
+                        child: const Icon(Icons.sports_soccer, color: AppColors.textPrimary),
                       ),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  SizedBox(width: context.widthPct(3)),
 
                   Expanded(
                     child: Column(
@@ -85,45 +84,56 @@ class CompletedBookingCard extends StatelessWidget {
                           turfName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: ResponsiveHelper.sp(15),
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(15),
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        SizedBox(height: context.heightPct(0.4)),
                         Text(
                           '$groundName · $sport',
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.textSecondary,
+                            fontSize: context.responsiveFont(12),
+                          ),
                         ),
-                        SizedBox(height: 6),
+                        SizedBox(height: context.heightPct(0.6)),
                         Text(
-                          '$dateFormatted  $timeSlot  •  ₹$amount Paid',
-                          style: TextStyle(color: Colors.white54, fontSize: 12),
+                          '$dateFormatted  $timeSlot',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.bodyXs.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(12),
+                          ),
                         ),
                       ],
                     ),
                   ),
 
-                  StatusBadge(
-                    'COMPLETED',
-                    Colors.white24,
-                    textColor: Colors.white70,
-                  ),
+                  SizedBox(width: context.widthPct(2)),
+                  const StatusBadge('COMPLETED', AppColors.accent),
                 ],
               ),
 
-              SizedBox(height: 14),
+              SizedBox(height: context.heightPct(1.5)),
 
-              /// ACTIONS
+              /// ACTION BUTTONS ROW
               Row(
                 children: [
-                  ActionChipWidget(Icons.directions, 'Directions', onTap: _launchGoogleMaps),
-                  Spacer(),
                   ActionChipWidget(
-                    Icons.qr_code,
-                    'View Pass',
+                    Icons.directions_outlined,
+                    'Directions',
+                    onTap: _launchGoogleMaps,
                     outlined: true,
+                  ),
+                  SizedBox(width: context.widthPct(2)),
+                  ActionChipWidget(
+                    Icons.qr_code_2,
+                    'View Pass',
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -131,6 +141,7 @@ class CompletedBookingCard extends StatelessWidget {
                         ),
                       );
                     },
+                    outlined: false,
                   ),
                 ],
               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LeaderboardScopeToggle extends StatelessWidget {
@@ -19,11 +19,11 @@ class LeaderboardScopeToggle extends StatelessWidget {
     final scopes = ['Friends', 'City', 'Global'];
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-      padding: EdgeInsets.all(ResponsiveHelper.w(4)),
+      margin: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
+      padding: EdgeInsets.all(context.widthPct(1)),
       decoration: BoxDecoration(
-        color: const Color(0xFF181818),
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
       ),
       child: Row(
         children: scopes.map((scope) {
@@ -31,20 +31,20 @@ class LeaderboardScopeToggle extends StatelessWidget {
           return Expanded(
             child: InkWell(
               onTap: () => onScopeChanged(scope),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(10)),
+                padding: EdgeInsets.symmetric(vertical: context.heightPct(1.2)),
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.accent : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                 ),
                 child: Center(
                   child: Text(
                     scope,
-                    style: GoogleFonts.inter(
-                      color: isSelected ? Colors.black : Colors.white70,
-                      fontSize: ResponsiveHelper.sp(13),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: isSelected ? AppColors.background : AppColors.muted,
+                      fontSize: context.responsiveFont(13),
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                     ),
                   ),

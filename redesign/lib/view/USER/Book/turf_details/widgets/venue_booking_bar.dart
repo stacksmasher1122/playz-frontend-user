@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueBookingBar extends StatelessWidget {
@@ -22,15 +23,18 @@ class VenueBookingBar extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
+          padding: EdgeInsets.symmetric(
+            horizontal: context.widthPct(4),
+            vertical: context.heightPct(1.5),
+          ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(ResponsiveHelper.w(20)),
-              topRight: Radius.circular(ResponsiveHelper.w(20)),
+              topLeft: Radius.circular(context.minDimensionPct(5)),
+              topRight: Radius.circular(context.minDimensionPct(5)),
             ),
-            color: Color.fromRGBO(0, 0, 0, 0.9),
-            border: Border(
-              top: BorderSide(color: Color.fromARGB(100, 163, 163, 163)),
+            color: AppColors.background.withValues(alpha: 0.9),
+            border: const Border(
+              top: BorderSide(color: AppColors.borderDark),
             ),
           ),
           child: Row(
@@ -38,28 +42,38 @@ class VenueBookingBar extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Starts from $displayPrice',
-                  style: TextStyle(
+                  style: AppTypography.headlineSm.copyWith(
                     color: AppColors.accent,
-                    fontSize: ResponsiveHelper.sp(16),
+                    fontSize: context.responsiveFont(16),
                     fontWeight: FontWeight.bold,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accent,
+                  foregroundColor: AppColors.background,
                   padding: EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 14,
+                    horizontal: context.widthPct(6),
+                    vertical: context.heightPct(1.5),
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(8)),
                   ),
                 ),
                 onPressed: onBookNow,
-                child: Text(
-                  'Book Now',
-                  style: TextStyle(color: Colors.black),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Book Now',
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.background,
+                      fontSize: context.responsiveFont(14),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],

@@ -13,39 +13,52 @@ class PublishSettingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Make Public",
-                style: AppTypography.bodyLg.copyWith(
-                  color: AppColors.onPrimary,
-                  fontWeight: FontWeight.w600,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Make Public",
+                  style: AppTypography.bodyLg.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(15),
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              SizedBox(height: ResponsiveHelper.h(4)),
-              Text(
-                "Allow anyone to find and register",
-                style: AppTypography.bodySm.copyWith(color: AppColors.muted),
-              ),
-            ],
+                SizedBox(height: context.heightPct(0.5)),
+                Text(
+                  "Allow anyone to find and register",
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12.5),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
+          SizedBox(width: context.widthPct(2)),
           Obx(() => Switch(
                 value: controller.isPublic.value,
                 onChanged: controller.togglePublicSetting,
-                activeThumbColor: AppColors.accent,
-                activeTrackColor: AppColors.accent.withValues(alpha: 0.3),
-                inactiveThumbColor: AppColors.card,
-                inactiveTrackColor: AppColors.surface,
+                activeThumbColor: AppColors.background,
+                activeTrackColor: AppColors.accent,
+                inactiveThumbColor: AppColors.muted,
+                inactiveTrackColor: AppColors.card,
               )),
         ],
       ),

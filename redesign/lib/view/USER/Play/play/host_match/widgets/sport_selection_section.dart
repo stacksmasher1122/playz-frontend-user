@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SportSelectionSection extends StatelessWidget {
@@ -25,169 +25,190 @@ class SportSelectionSection extends StatelessWidget {
     required this.onClearSearch,
   });
 
+  IconData _getSportIcon(String sport) {
+    switch (sport.toLowerCase()) {
+      case 'football':
+        return Icons.sports_soccer;
+      case 'cricket':
+        return Icons.sports_cricket;
+      case 'badminton':
+      case 'tennis':
+      case 'table tennis':
+      case 'squash':
+      case 'padel':
+      case 'pickleball':
+        return Icons.sports_tennis;
+      case 'basketball':
+        return Icons.sports_basketball;
+      case 'volleyball':
+        return Icons.sports_volleyball;
+      case 'golf':
+        return Icons.sports_golf;
+      case 'hockey':
+        return Icons.sports_hockey;
+      default:
+        return Icons.sports;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Section Title
         Row(
           children: [
-            const Icon(Icons.sports, color: AppColors.accent, size: 18),
-            const SizedBox(width: 8),
+            const Icon(Icons.sports_rounded, color: AppColors.accent, size: 18),
+            SizedBox(width: context.widthPct(2)),
             Text(
               'Select Sport',
-              style: GoogleFonts.inter(
+              style: AppTypography.headlineSm.copyWith(
                 color: AppColors.accent,
                 fontWeight: FontWeight.bold,
-                fontSize: ResponsiveHelper.sp(14),
+                fontSize: context.responsiveFont(14),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: context.heightPct(1.2)),
 
-        // Sports Search Bar
+        // SEARCH BAR
         TextField(
           controller: searchController,
-          style: const TextStyle(color: Colors.white),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(14),
+          ),
           decoration: InputDecoration(
-            hintText: 'Search sports (e.g. Football, Cricket)...',
-            hintStyle: const TextStyle(color: Colors.white38),
+            hintText: 'Search sport (Football, Cricket, Badminton...)...',
+            hintStyle: AppTypography.bodySm.copyWith(
+              color: AppColors.muted.withValues(alpha: 0.6),
+              fontSize: context.responsiveFont(13),
+            ),
             prefixIcon: const Icon(Icons.search, color: AppColors.accent),
             suffixIcon: searchQuery.isNotEmpty
                 ? IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.white54),
+                    icon: const Icon(Icons.clear, color: AppColors.muted),
                     onPressed: onClearSearch,
                   )
                 : null,
             filled: true,
             fillColor: AppColors.card,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            contentPadding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Colors.white12),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: AppColors.accent),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+              borderSide: const BorderSide(color: AppColors.borderDark),
             ),
           ),
           onChanged: onSearchChanged,
         ),
-        const SizedBox(height: 10),
 
-        // 1. AFTER SELECTING A SPORT: Search results & Popular Sports are replaced by selected sport pill (with cross X icon)
-        if (selectedSport != null) ...[
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.accent,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  selectedSport!,
-                  style: GoogleFonts.inter(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: ResponsiveHelper.sp(13),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () => onSportSelected(null),
-                  child: const Icon(
-                    Icons.cancel,
-                    color: Colors.black54,
-                    size: 18,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ]
-        // 2. IF NO SPORT IS SELECTED & USER IS SEARCHING: Show Search Results Pills below search bar
-        else if (searchQuery.isNotEmpty) ...[
-          Text(
-            'Search Results:',
-            style: GoogleFonts.inter(
-              color: Colors.white54,
-              fontSize: ResponsiveHelper.sp(12),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: filteredSports.map((sport) {
-              return GestureDetector(
-                onTap: () => onSportSelected(sport),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.card,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white12),
-                  ),
-                  child: Text(
-                    sport,
-                    style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: ResponsiveHelper.sp(13),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ]
-        // 3. POPULAR SPORTS SECTION (Only visible when NO sport is selected)
-        else ...[
+        SizedBox(height: context.heightPct(1.5)),
+
+        if (searchQuery.isEmpty) ...[
           Text(
             'Popular Sports',
-            style: GoogleFonts.inter(
-              color: Colors.white70,
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: context.responsiveFont(12),
               fontWeight: FontWeight.w600,
-              fontSize: ResponsiveHelper.sp(12),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: context.heightPct(1)),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: context.widthPct(2.5),
+            runSpacing: context.heightPct(1.2),
             children: popularSports.map((sport) {
-              return ChoiceChip(
-                showCheckmark: false, // NO TICK ICON
+              final isSelected = selectedSport == sport;
+              return FilterChip(
+                showCheckmark: false,
+                avatar: Icon(
+                  _getSportIcon(sport),
+                  size: 16,
+                  color: isSelected ? AppColors.background : AppColors.accent,
+                ),
                 label: Text(sport),
-                selected: false,
+                selected: isSelected,
                 selectedColor: AppColors.accent,
                 backgroundColor: AppColors.card,
+                labelStyle: AppTypography.bodySm.copyWith(
+                  color: isSelected ? AppColors.background : AppColors.textPrimary,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  fontSize: context.responsiveFont(12),
+                ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: const BorderSide(color: Colors.white12),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+                  side: BorderSide(
+                    color: isSelected ? AppColors.accent : AppColors.borderDark,
+                  ),
                 ),
-                labelStyle: GoogleFonts.inter(
-                  color: Colors.white70,
-                  fontWeight: FontWeight.w500,
-                  fontSize: ResponsiveHelper.sp(13),
-                ),
-                onSelected: (val) {
-                  if (val) onSportSelected(sport);
+                onSelected: (selected) {
+                  onSportSelected(selected ? sport : null);
                 },
               );
             }).toList(),
           ),
+        ] else ...[
+          Text(
+            'Search Results (${filteredSports.length})',
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: context.responsiveFont(12),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: context.heightPct(1)),
+          if (filteredSports.isEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: context.heightPct(2)),
+              child: Center(
+                child: Text(
+                  'No sport found matching "$searchQuery"',
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(13),
+                  ),
+                ),
+              ),
+            )
+          else
+            Wrap(
+              spacing: context.widthPct(2.5),
+              runSpacing: context.heightPct(1.2),
+              children: filteredSports.map((sport) {
+                final isSelected = selectedSport == sport;
+                return FilterChip(
+                  showCheckmark: false,
+                  avatar: Icon(
+                    _getSportIcon(sport),
+                    size: 16,
+                    color: isSelected ? AppColors.background : AppColors.accent,
+                  ),
+                  label: Text(sport),
+                  selected: isSelected,
+                  selectedColor: AppColors.accent,
+                  backgroundColor: AppColors.card,
+                  labelStyle: AppTypography.bodySm.copyWith(
+                    color: isSelected ? AppColors.background : AppColors.textPrimary,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    fontSize: context.responsiveFont(12),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+                    side: BorderSide(
+                      color: isSelected ? AppColors.accent : AppColors.borderDark,
+                    ),
+                  ),
+                  onSelected: (selected) {
+                    onSportSelected(selected ? sport : null);
+                  },
+                );
+              }).toList(),
+            ),
         ],
       ],
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class FavoriteSportsSheet extends StatelessWidget {
   final List<String> allSports;
@@ -15,11 +17,12 @@ class FavoriteSportsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      padding: EdgeInsets.all(context.widthPct(6)),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(6))),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -27,38 +30,45 @@ class FavoriteSportsSheet extends StatelessWidget {
         children: [
           Center(
             child: Container(
-              width: 40,
-              height: 4,
+              width: context.widthPct(10),
+              height: context.heightPct(0.5),
               decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(2),
+                color: AppColors.borderDark,
+                borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: context.heightPct(2.5)),
           Row(
             children: [
-              const Icon(Icons.sports_soccer, color: Color(0xFF00E676), size: 24),
-              const SizedBox(width: 10),
-              Text(
-                'Customize Favorite Sports',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              const Icon(Icons.sports_soccer, color: AppColors.accent, size: 24),
+              SizedBox(width: context.widthPct(2.5)),
+              Expanded(
+                child: Text(
+                  'Customize Favorite Sports',
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(18),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: context.heightPct(0.8)),
           Text(
             'Select sports to customize your home feed and match recommendations.',
-            style: GoogleFonts.inter(color: Colors.white54, fontSize: 13),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(13),
+            ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: context.heightPct(2.5)),
           Wrap(
-            spacing: 10,
-            runSpacing: 10,
+            spacing: context.widthPct(2.5),
+            runSpacing: context.heightPct(1.2),
             children: allSports.map((sport) {
               final isSelected = selectedSports.contains(sport);
               return StatefulBuilder(
@@ -66,16 +76,17 @@ class FavoriteSportsSheet extends StatelessWidget {
                   return ChoiceChip(
                     label: Text(sport),
                     selected: isSelected,
-                    selectedColor: const Color(0xFF00E676),
-                    backgroundColor: Colors.white.withValues(alpha: 0.06),
-                    labelStyle: GoogleFonts.inter(
-                      color: isSelected ? Colors.black : Colors.white,
+                    selectedColor: AppColors.accent,
+                    backgroundColor: AppColors.textPrimary.withValues(alpha: 0.06),
+                    labelStyle: AppTypography.bodySm.copyWith(
+                      color: isSelected ? AppColors.background : AppColors.textPrimary,
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                      fontSize: context.responsiveFont(13),
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                       side: BorderSide(
-                        color: isSelected ? const Color(0xFF00E676) : Colors.transparent,
+                        color: isSelected ? AppColors.accent : Colors.transparent,
                       ),
                     ),
                     onSelected: (_) {
@@ -87,24 +98,28 @@ class FavoriteSportsSheet extends StatelessWidget {
               );
             }).toList(),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: context.heightPct(3)),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00E676),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.background,
+                padding: EdgeInsets.symmetric(vertical: context.heightPct(1.8)),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                 ),
               ),
-              child: Text(
-                'Done',
-                style: GoogleFonts.inter(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Done',
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.background,
+                    fontWeight: FontWeight.bold,
+                    fontSize: context.responsiveFont(15),
+                  ),
                 ),
               ),
             ),

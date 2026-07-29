@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrSupportFooter extends StatelessWidget {
   const QrSupportFooter({super.key});
-
-  static const _kMuted = Color(0xFFA7A7A7);
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +13,18 @@ class QrSupportFooter extends StatelessWidget {
       child: RichText(
         text: TextSpan(
           text: 'Having trouble at the venue? ',
-          style: TextStyle(color: _kMuted),
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.muted,
+            fontSize: context.responsiveFont(13),
+          ),
           children: [
             TextSpan(
               text: 'Contact Support',
-              style: TextStyle(
-                color: Colors.white,
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.textPrimary,
                 decoration: TextDecoration.underline,
+                fontSize: context.responsiveFont(13),
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrBookingCard extends StatelessWidget {
@@ -11,37 +12,35 @@ class QrBookingCard extends StatelessWidget {
     required this.size,
   });
 
-  static const _kCard = Color(0xFF1A1A1A);
-  static const _kGreen = AppColors.accent;
-  static const _kMuted = Color(0xFFA7A7A7);
-
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final qrBoxSize = context.widthPct(55).clamp(180.0, 240.0);
+
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
+      padding: EdgeInsets.all(context.widthPct(5)),
       decoration: BoxDecoration(
-        color: _kCard,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(color: Colors.white10),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         children: [
-          _verifiedBadge(),
-          SizedBox(height: 20),
+          _verifiedBadge(context),
+          SizedBox(height: context.heightPct(2.5)),
 
           /// QR PLACEHOLDER
           Container(
-            width: size.width * 0.55,
-            constraints: BoxConstraints(maxWidth: 240),
-            padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+            width: qrBoxSize,
+            constraints: const BoxConstraints(maxWidth: 240),
+            padding: EdgeInsets.all(context.widthPct(4)),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
               boxShadow: [
                 BoxShadow(
-                  color: _kGreen.withValues(alpha: 0.15),
+                  color: AppColors.accent.withValues(alpha: 0.15),
                   blurRadius: 20,
                   spreadRadius: 2,
                 ),
@@ -50,12 +49,19 @@ class QrBookingCard extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                 child: QrImageView(
                   data: 'PZ-883492-QR|CrossFit Arena|08:00-09:00', // dynamic later
                   version: QrVersions.auto,
                   backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
+                  dataModuleStyle: const QrDataModuleStyle(
+                    dataModuleShape: QrDataModuleShape.square,
+                    color: Colors.black,
+                  ),
+                  eyeStyle: const QrEyeStyle(
+                    eyeShape: QrEyeShape.square,
+                    color: Colors.black,
+                  ),
                   gapless: false,
                   errorCorrectionLevel: QrErrorCorrectLevel.H,
                 ),
@@ -63,72 +69,95 @@ class QrBookingCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 20),
+          SizedBox(height: context.heightPct(2.5)),
 
           Text(
             'CrossFit Arena',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(18),
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(18),
               fontWeight: FontWeight.bold,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: 6),
+          SizedBox(height: context.heightPct(0.6)),
 
           Text(
             'Thu, 4 Dec · 08:00 AM – 09:00 AM',
-            style: TextStyle(color: _kMuted),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(14),
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
 
-          SizedBox(height: 6),
+          SizedBox(height: context.heightPct(0.6)),
 
           Text(
             'Football · Solo Queue · 4 Players',
-            style: TextStyle(color: _kMuted, fontSize: 13),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(13),
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
 
-          SizedBox(height: 14),
+          SizedBox(height: context.heightPct(1.8)),
 
-          _bookingId(),
+          _bookingId(context),
         ],
       ),
     );
   }
 
-  Widget _verifiedBadge() {
+  Widget _verifiedBadge(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(3),
+        vertical: context.heightPct(0.8),
+      ),
       decoration: BoxDecoration(
-        color: _kGreen.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+        color: AppColors.accent.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.verified, color: _kGreen, size: 16),
-          SizedBox(width: 6),
+          const Icon(Icons.verified, color: AppColors.accent, size: 16),
+          SizedBox(width: context.widthPct(1.5)),
           Text(
             'Verified PlayZ Booking',
-            style: TextStyle(color: _kGreen, fontSize: 12),
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.accent,
+              fontSize: context.responsiveFont(12),
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _bookingId() {
+  Widget _bookingId(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(6)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(3),
+        vertical: context.heightPct(0.8),
+      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-        border: Border.all(
-          color: Colors.white24,
-          style: BorderStyle.solid,
-        ),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Text(
         'Booking ID: PZ-883492-QR',
-        style: TextStyle(color: _kMuted, fontSize: 12),
+        style: AppTypography.bodySm.copyWith(
+          color: AppColors.muted,
+          fontSize: context.responsiveFont(12),
+          fontFamily: 'monospace',
+        ),
       ),
     );
   }

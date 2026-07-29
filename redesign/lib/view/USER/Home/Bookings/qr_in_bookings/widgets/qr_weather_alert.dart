@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../qr_in_bookings_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class QrWeatherAlert extends StatelessWidget {
@@ -9,21 +10,24 @@ class QrWeatherAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+      padding: EdgeInsets.all(context.widthPct(3.5)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        gradient: LinearGradient(
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        gradient: const LinearGradient(
           colors: [Color(0xFF3A2C00), Color(0xFF1E1400)],
         ),
       ),
       child: Row(
         children: [
-          Icon(Icons.cloud_outlined, color: QrBookingConstants.amber),
-          SizedBox(width: 10),
+          const Icon(Icons.cloud_outlined, color: Colors.amber),
+          SizedBox(width: context.widthPct(2.5)),
           Expanded(
             child: Text(
               'Light rain expected during your slot. Venue has covered roof available.',
-              style: TextStyle(color: QrBookingConstants.amber),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(13),
+              ),
             ),
           ),
         ],

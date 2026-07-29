@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kGreen = Color(0xFF6EDC6A);
 
 class CreateGroupSubmitButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -14,38 +14,42 @@ class CreateGroupSubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     final ctrl = Get.find<GroupsController>();
+    final buttonHeight = context.heightPct(6.5).clamp(48.0, 56.0);
 
     return Obx(() {
       final creating = ctrl.isCreating.value;
       return SizedBox(
         width: double.infinity,
-        height: ResponsiveHelper.h(52),
+        height: buttonHeight,
         child: ElevatedButton(
           onPressed: creating ? null : onPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: kGreen,
-            disabledBackgroundColor: kGreen.withValues(alpha: 0.4),
+            backgroundColor: AppColors.accent,
+            disabledBackgroundColor: AppColors.accent.withValues(alpha: 0.4),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
             ),
             elevation: 0,
           ),
           child: creating
-              ? SizedBox(
-                  height: ResponsiveHelper.h(22),
-                  width: ResponsiveHelper.w(22),
+              ? const SizedBox(
+                  height: 22,
+                  width: 22,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    color: Colors.black,
+                    color: AppColors.background,
                   ),
                 )
-              : Text(
-                  'CREATE GROUP',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: ResponsiveHelper.sp(15),
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.0,
+              : FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'CREATE GROUP',
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.background,
+                      fontSize: context.responsiveFont(15),
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.0,
+                    ),
                   ),
                 ),
         ),

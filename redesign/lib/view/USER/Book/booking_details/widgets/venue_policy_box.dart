@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenuePolicyBox extends StatelessWidget {
   const VenuePolicyBox({super.key});
-
-  static const _kGreen = AppColors.accent;
-  static const _kMuted = Color(0xFFA7A7A7);
-  static const _kCardColor = Color(0xFF1A1A1A);
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
-        color: _kCardColor, // Spotify dark surface
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-        border: Border.all(color: Colors.grey.shade800),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,44 +24,48 @@ class VenuePolicyBox extends StatelessWidget {
           /// HEADER
           Row(
             children: [
-              Icon(Icons.info_outline, color: _kGreen, size: 18),
-              SizedBox(width: 8),
+              const Icon(Icons.info_outline, color: AppColors.accent, size: 18),
+              SizedBox(width: context.widthPct(2)),
               Text(
                 'Venue Policy',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(16),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(16),
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
 
-          SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.5)),
 
           /// POLICY ITEMS
-          _policyItem('Non-refundable within 4 hours'),
-          _policyItem('Steel studs are prohibited'),
+          _policyItem(context, 'Non-refundable within 4 hours'),
+          _policyItem(context, 'Steel studs are prohibited'),
         ],
       ),
     );
   }
 
-  Widget _policyItem(String text) {
+  Widget _policyItem(BuildContext context, String text) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 6),
+      padding: EdgeInsets.only(bottom: context.heightPct(0.6)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Icon(Icons.circle, size: 6, color: _kMuted),
+            padding: EdgeInsets.only(top: context.heightPct(0.6)),
+            child: const Icon(Icons.circle, size: 6, color: AppColors.muted),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: context.widthPct(2.5)),
           Expanded(
             child: Text(
               text,
-              style: TextStyle(color: _kMuted, fontSize: ResponsiveHelper.sp(13), height: 1.4),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+                height: 1.4,
+              ),
             ),
           ),
         ],

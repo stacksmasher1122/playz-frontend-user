@@ -11,6 +11,8 @@ import 'package:redesign/view/USER/Book/payment_success/payment_success_screen.d
 import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 
 import 'package:redesign/utils/slot_overlap_helper.dart';
 
@@ -25,9 +27,6 @@ import 'widgets/solo_queue_options.dart';
 import 'widgets/sport_selector.dart';
 import 'widgets/slot_matrix_bottom_sheet.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kBgColor = Colors.black;
-const kMuted = Color(0xFFA7A7A7);
 
 class ConfirmSlotScreen extends StatefulWidget {
   const ConfirmSlotScreen({super.key});
@@ -107,7 +106,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
     // Auto-scroll when reactive slots finish loading
     _slotsWorker = ever(_bookingController.slots, (_) {
-      Future.delayed(Duration(milliseconds: 150), () {
+      Future.delayed(const Duration(milliseconds: 150), () {
         _autoScrollToNextHour();
       });
     });
@@ -160,8 +159,8 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
       index = currentHour.clamp(0, 23);
     }
 
-    final double slotWidth = ResponsiveHelper.w(110);
-    final double separatorWidth = ResponsiveHelper.w(2);
+    final double slotWidth = context.widthPct(28).clamp(90.0, 130.0);
+    final double separatorWidth = context.widthPct(0.5);
     final double itemExtent = slotWidth + separatorWidth;
 
     double offset = index * itemExtent;
@@ -176,7 +175,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
     _timelineController.animateTo(
       offset,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeOutCubic,
     );
   }
@@ -198,25 +197,39 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
-      backgroundColor: kBgColor,
+      backgroundColor: AppColors.background,
       extendBody: true,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.background,
         elevation: 0,
-        leading: BackButton(),
+        leading: const BackButton(color: AppColors.textPrimary),
         title: Obx(() {
           final turfName = _bookingController.selectedTurf.value?.turfName ?? 'Confirm Slot';
           return Text(
             turfName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            style: AppTypography.displayLg.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(18),
+              fontWeight: FontWeight.bold,
+            ),
           );
         }),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Text('Step 2/3', style: TextStyle(color: kMuted)),
+            padding: EdgeInsets.only(right: context.widthPct(4)),
+            child: Center(
+              child: Text(
+                'Step 2/3',
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(12),
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -246,7 +259,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
           return false;
         },
         child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 110),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, context.heightPct(14)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -267,16 +280,16 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
                   }
                 },
               ),
-              SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
-              _SectionTitle(text: 'Sport & Ground'),
-              SizedBox(height: 8),
+              const _SectionTitle(text: 'Sport & Ground'),
+              SizedBox(height: context.heightPct(1)),
               SportSelector(
                 sports: _sportOptions,
                 selectedSport: selectedSport,
                 onSportSelected: (sport) => setState(() => selectedSport = sport),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: context.heightPct(2)),
               Obx(() => BookingDropdowns(
                 selectedType: selectedGround,
                 selectedSize: selectedSize,
@@ -288,7 +301,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
                 onTypeSelected: _onGroundSelected,
                 onSizeSelected: (v) => setState(() => selectedSize = v),
               )),
-              SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
               Obx(() => AvailabilityTimeline(
                 controller: _timelineController,
@@ -296,7 +309,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
                 isLoading: _bookingController.isLoadingSlots.value,
                 selectedDate: selectedDate,
               )),
-              SizedBox(height: 24),
+              SizedBox(height: context.heightPct(2.5)),
 
               BookingTimePickers(
                 startTime: _startTime,
@@ -304,10 +317,10 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
                 onPickStartTime: () => _pickTime(isStart: true),
                 onPickEndTime: () => _pickTime(isStart: false),
               ),
-              SizedBox(height: 32),
+              SizedBox(height: context.heightPct(3)),
 
-              _SectionTitle(text: 'Add-ons & Equipment'),
-              SizedBox(height: 5),
+              const _SectionTitle(text: 'Add-ons & Equipment'),
+              SizedBox(height: context.heightPct(0.6)),
               AddonCard(
                 title: 'Pro Match Ball',
                 price: '+ ₹200',
@@ -326,7 +339,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
                 isSelected: _selectedAddons.contains('Referee Service'),
                 onTap: () => _toggleAddon('Referee Service'),
               ),
-              SizedBox(height: 28),
+              SizedBox(height: context.heightPct(3)),
 
               SoloQueueOptions(
                 soloQueue: soloQueue,
@@ -342,7 +355,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
                 onBringOwnEquipmentChanged: (v) =>
                     setState(() => bringOwnEquipment = v),
               ),
-              SizedBox(height: 32),
+              SizedBox(height: context.heightPct(3.5)),
 
               Obx(() => BookingSummary(
                 slotPrice: _bookingController.selectedGround.value?.defaultPrice ?? 0,
@@ -363,9 +376,9 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
         valueListenable: _isBottomBarVisible,
         builder: (context, visible, child) {
           return AnimatedSlide(
-            duration: Duration(milliseconds: 250),
+            duration: const Duration(milliseconds: 250),
             curve: Curves.easeInOut,
-            offset: visible ? Offset.zero : Offset(0, 1.5),
+            offset: visible ? Offset.zero : const Offset(0, 1.5),
             child: child,
           );
         },
@@ -396,8 +409,8 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
         'Incomplete Details',
         'Please select Date, Sport, Ground, and Time Slot before proceeding.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.textPrimary,
       );
       return;
     }
@@ -425,8 +438,8 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
           'Slot Unavailable',
           'The selected slot ($timeRangeStr) overlaps with an existing booking! Please choose another slot.',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
+          backgroundColor: AppColors.error,
+          colorText: AppColors.textPrimary,
           duration: const Duration(seconds: 4),
         );
         return;
@@ -563,9 +576,9 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
         'Booking Confirmed! 🎉',
         'Your QR entry ticket is saved in Bookings!',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
+        backgroundColor: AppColors.accent,
+        colorText: AppColors.background,
+        duration: const Duration(seconds: 4),
       );
 
       Get.offAll(() => BookingConfirmationScreen(bookingData: bookingMap));
@@ -581,8 +594,8 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
       'Payment Cancelled / Failed',
       response.message ?? 'Payment process was interrupted.',
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.redAccent,
-      colorText: Colors.white,
+      backgroundColor: AppColors.error,
+      colorText: AppColors.textPrimary,
     );
   }
 
@@ -618,8 +631,8 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
       index = startHour.clamp(0, 23);
     }
 
-    final double slotWidth = ResponsiveHelper.w(110);
-    final double separatorWidth = ResponsiveHelper.w(2);
+    final double slotWidth = context.widthPct(28).clamp(90.0, 130.0);
+    final double separatorWidth = context.widthPct(0.5);
     final double itemExtent = slotWidth + separatorWidth;
 
     double offset = index * itemExtent;
@@ -634,7 +647,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
     _timelineController.animateTo(
       offset,
-      duration: Duration(milliseconds: 450),
+      duration: const Duration(milliseconds: 450),
       curve: Curves.easeOutCubic,
     );
   }
@@ -667,7 +680,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
             // Automatically open End Time Sheet after picking Start Time
             if (isStart) {
-              Future.delayed(Duration(milliseconds: 250), () {
+              Future.delayed(const Duration(milliseconds: 250), () {
                 if (mounted) {
                   _pickTime(isStart: false);
                 }
@@ -688,12 +701,12 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Text(
         text,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: ResponsiveHelper.sp(18),
+        style: AppTypography.headlineSm.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(18),
           fontWeight: FontWeight.bold,
         ),
       ),

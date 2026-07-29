@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/maps_controller.dart';
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class AddressPreview extends StatelessWidget {
@@ -40,25 +41,28 @@ class AddressPreview extends StatelessWidget {
       }
 
       return AnimatedSwitcher(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         child: Column(
           key: ValueKey('$title-${subtitle.hashCode}'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: ResponsiveHelper.sp(18),
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(18),
                 fontWeight: FontWeight.w600,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 4),
+            SizedBox(height: context.heightPct(0.4)),
             Text(
               subtitle,
-              style: TextStyle(color: kMuted, fontSize: 12),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(12),
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

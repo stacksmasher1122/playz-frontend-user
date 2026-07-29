@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/model/user_profile_model.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
@@ -22,10 +23,6 @@ class ProfileSetupScreen extends StatefulWidget {
 }
 
 class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
-  static const kMuted = Color(0xFFA7A7A7);
-  static const kSpotifyGreen = Color(0xFF22C55E);
-  static const kCard = Color(0xFF282828);
-
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
@@ -103,7 +100,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       debugPrint("Pick image error: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to pick image")),
+          const SnackBar(content: Text("Failed to pick image")),
         );
       }
     }
@@ -112,7 +109,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   Future<void> _completeSetup() async {
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Name is required")),
+        const SnackBar(content: Text("Name is required")),
       );
       return;
     }
@@ -129,7 +126,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
     if (docId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("An email or phone number is required.")),
+        const SnackBar(content: Text("An email or phone number is required.")),
       );
       return;
     }
@@ -160,7 +157,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => UserAppNavShell()),
+        MaterialPageRoute(builder: (_) => const UserAppNavShell()),
         (route) => false,
       );
     }
@@ -169,33 +166,48 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
           children: [
             Text(
               'STEP 2 OF 2',
-              style: TextStyle(
-                color: kMuted,
-                fontSize: ResponsiveHelper.sp(11),
+              style: AppTypography.labelCaps10.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(11),
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.5,
               ),
             ),
-            SizedBox(height: 6),
+            SizedBox(height: context.heightPct(0.8)),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(height: ResponsiveHelper.h(3), width: ResponsiveHelper.w(30), color: kSpotifyGreen),
-                SizedBox(width: 4),
-                Container(height: ResponsiveHelper.h(3), width: ResponsiveHelper.w(30), color: kSpotifyGreen),
+                Container(
+                  height: context.heightPct(0.4).clamp(3.0, 4.0),
+                  width: context.widthPct(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.accent,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                SizedBox(width: context.widthPct(1)),
+                Container(
+                  height: context.heightPct(0.4).clamp(3.0, 4.0),
+                  width: context.widthPct(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.accent,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
               ],
             ),
           ],
@@ -203,74 +215,77 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+        padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 16),
+            SizedBox(height: context.heightPct(2)),
             Text(
               'Complete your profile',
-              style: GoogleFonts.inter(
-                fontSize: ResponsiveHelper.sp(28),
+              style: AppTypography.displaySm.copyWith(
+                fontSize: context.responsiveFont(26),
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 letterSpacing: -0.5,
               ),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: context.heightPct(1)),
             Text(
               'Tell us a bit about yourself to get started.',
-              style: GoogleFonts.inter(fontSize: ResponsiveHelper.sp(15), color: Colors.white70),
+              style: AppTypography.bodyMd.copyWith(
+                fontSize: context.responsiveFont(14),
+                color: AppColors.muted,
+              ),
             ),
-            SizedBox(height: 32),
+            SizedBox(height: context.heightPct(3)),
             ProfilePhotoPicker(
               imageFile: _imageFile,
               onPickImage: _pickImage,
             ),
-            SizedBox(height: 32),
+            SizedBox(height: context.heightPct(3)),
             ProfileSetupField(
               label: 'FULL NAME',
               hint: 'Alex Morgan',
-              icon: Icons.person,
+              icon: Icons.person_rounded,
               controller: _nameController,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: context.heightPct(2)),
             ProfileSetupField(
               label: 'PHONE NUMBER',
               hint: '+1 (555) 000-1234',
-              icon: Icons.phone,
+              icon: Icons.phone_rounded,
               controller: _phoneController,
               readOnly: _isPhoneBound,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: context.heightPct(2)),
             ProfileSetupField(
               label: 'EMAIL ADDRESS',
               hint: 'alex.morgan@example.com',
-              icon: Icons.email,
+              icon: Icons.email_rounded,
               controller: _emailController,
               readOnly: _isEmailBound,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: context.heightPct(2)),
             ProfileSetupField(
               label: 'DATE OF BIRTH',
               hint: 'mm/dd/yyyy',
-              icon: Icons.calendar_today,
+              icon: Icons.calendar_today_rounded,
               controller: _dobController,
               readOnly: true,
               onTap: () async {
                 final date = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now().subtract(Duration(days: 365 * 18)),
+                  initialDate: DateTime.now().subtract(const Duration(days: 365 * 18)),
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
                   builder: (context, child) {
                     return Theme(
                       data: Theme.of(context).copyWith(
-                        colorScheme: ColorScheme.dark(
-                          primary: Color(0xFF00FF7F),
-                          onPrimary: Colors.black,
-                          surface: kCard,
-                          onSurface: Colors.white,
+                        colorScheme: const ColorScheme.dark(
+                          primary: AppColors.accent,
+                          onPrimary: AppColors.background,
+                          surface: AppColors.surface,
+                          onSurface: AppColors.textPrimary,
                         ),
                       ),
                       child: child!,
@@ -285,38 +300,40 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 }
               },
             ),
-            SizedBox(height: 20),
+            SizedBox(height: context.heightPct(2)),
             ProfileSetupField(
               label: 'BIO',
               hint: "Tell us about your favorite sports,\nteams, or what you're looking for...",
-              icon: Icons.description,
+              icon: Icons.description_rounded,
               controller: _bioController,
               maxLines: 3,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: context.heightPct(2.5)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Public Profile',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: ResponsiveHelper.sp(16),
-                        fontWeight: FontWeight.w600,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Public Profile',
+                        style: AppTypography.bodyLg.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(15),
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Allow anyone to see your stats',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.5),
-                        fontSize: ResponsiveHelper.sp(12),
+                      SizedBox(height: context.heightPct(0.5)),
+                      Text(
+                        'Allow anyone to see your stats',
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.muted,
+                          fontSize: context.responsiveFont(12),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 Obx(
                   () => Switch(
@@ -329,47 +346,55 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         _controller.setUser(UserProfileModel(docId: 'temp', isPublicProfile: value));
                       }
                     },
-                    activeThumbColor: Colors.black,
-                    activeTrackColor: Color(0xFF00FF7F),
-                    inactiveThumbColor: Colors.white54,
-                    inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
+                    activeThumbColor: AppColors.background,
+                    activeTrackColor: AppColors.accent,
+                    inactiveThumbColor: AppColors.muted,
+                    inactiveTrackColor: AppColors.card,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 40),
+            SizedBox(height: context.heightPct(4)),
             SizedBox(
               width: double.infinity,
-              height: ResponsiveHelper.h(56),
+              height: context.heightPct(6).clamp(48.0, 56.0),
               child: ElevatedButton(
                 onPressed: () => _controller.isLoading.value ? null : _completeSetup(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF00FF7F),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(28))),
+                  backgroundColor: AppColors.accent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(7)),
+                  ),
                   elevation: 0,
                 ),
                 child: Obx(
                   () => _controller.isLoading.value
-                      ? CircularProgressIndicator(color: Colors.black)
-                      : Text(
-                          'Complete Setup',
-                          style: TextStyle(
-                            fontSize: ResponsiveHelper.sp(16),
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
+                      ? const CircularProgressIndicator(color: AppColors.background)
+                      : FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Complete Setup',
+                            style: AppTypography.labelCaps10.copyWith(
+                              fontSize: context.responsiveFont(16),
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.background,
+                            ),
                           ),
                         ),
                 ),
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: context.heightPct(2.5)),
             Center(
               child: Text(
                 'By continuing, you agree to our Terms of Service',
-                style: TextStyle(color: Colors.white54, fontSize: 12),
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(11.5),
+                ),
               ),
             ),
-            SizedBox(height: 40),
+            SizedBox(height: context.heightPct(4)),
           ],
         ),
       ),

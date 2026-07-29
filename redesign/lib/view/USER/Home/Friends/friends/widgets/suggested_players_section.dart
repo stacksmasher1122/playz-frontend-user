@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kSurface = Color(0xFF0E0E0E);
-const kGreen = AppColors.accent;
-const kMuted = Colors.white70;
 
 class SuggestedPlayersSection extends StatelessWidget {
   const SuggestedPlayersSection({super.key});
@@ -13,7 +10,7 @@ class SuggestedPlayersSection extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Column(
-      children: [
+      children: const [
         SectionHeader('Suggested Players', action: 'View Map'),
         SuggestedPlayerCard(
           name: 'Rahul S.',
@@ -45,49 +42,67 @@ class SuggestedPlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final avatarSize = context.minDimensionPct(11).clamp(38.0, 48.0);
+
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(0.6),
+        context.widthPct(4),
+        context.heightPct(0.6),
+      ),
       child: Container(
-        padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+        padding: EdgeInsets.all(context.widthPct(3.5)),
         decoration: BoxDecoration(
-          color: kSurface,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+          border: Border.all(color: AppColors.borderDark),
         ),
         child: Row(
           children: [
             CircleAvatar(
-              radius: 22,
-              backgroundImage: NetworkImage(
-                'https://randomuser.me/api/portraits/women/44.jpg',
-              ),
+              radius: avatarSize / 2,
+              backgroundColor: AppColors.card,
+              child: const Icon(Icons.person, color: AppColors.muted),
             ),
-            SizedBox(width: 12),
+            SizedBox(width: context.widthPct(3)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                      Flexible(
+                        child: Text(
+                          name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(15),
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
-                      SizedBox(width: 6),
+                      SizedBox(width: context.widthPct(1.5)),
                       LevelBadge(level),
                     ],
                   ),
+                  SizedBox(height: context.heightPct(0.3)),
                   Text(
                     meta,
-                    style: TextStyle(color: kMuted, fontSize: 12),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(12),
+                    ),
                   ),
                 ],
               ),
             ),
             IconButton(
-              icon: Icon(Icons.person_add_alt, color: Colors.white),
+              icon: const Icon(Icons.person_add_alt, color: AppColors.textPrimary),
               onPressed: () {},
             ),
           ],
@@ -104,14 +119,26 @@ class LevelBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final color = label == 'Pro' ? kGreen : kMuted;
+    final color = label == 'Pro' ? AppColors.accent : AppColors.muted;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(3)),
-      decoration: BoxDecoration(
-        color: color.withAlpha(38),
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(2),
+        vertical: context.heightPct(0.4),
       ),
-      child: Text(label, style: TextStyle(color: color, fontSize: 11)),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
+      ),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          label,
+          style: AppTypography.labelCaps10.copyWith(
+            color: color,
+            fontSize: context.responsiveFont(11),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -126,24 +153,32 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(2),
+        context.widthPct(4),
+        context.heightPct(1),
+      ),
       child: Row(
         children: [
           Text(
             title,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(16),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(16),
               fontWeight: FontWeight.w800,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           if (action != null)
             Text(
               action!,
-              style: TextStyle(
-                color: kGreen,
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.accent,
                 fontWeight: FontWeight.w600,
+                fontSize: context.responsiveFont(13),
               ),
             ),
         ],

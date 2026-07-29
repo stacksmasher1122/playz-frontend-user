@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class SettingsSectionTitle extends StatelessWidget {
   final String title;
@@ -8,13 +10,19 @@ class SettingsSectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(2),
+        context.widthPct(4),
+        context.heightPct(1),
+      ),
       child: Text(
         title.toUpperCase(),
-        style: GoogleFonts.inter(
-          color: const Color(0xFF00E676),
-          fontSize: 12,
+        style: AppTypography.labelCaps10.copyWith(
+          color: AppColors.accent,
+          fontSize: context.responsiveFont(12),
           fontWeight: FontWeight.w700,
           letterSpacing: 1.2,
         ),

@@ -16,42 +16,50 @@ class MatchModeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Icon(Icons.emoji_events, color: AppColors.accent, size: 18),
+            const Icon(Icons.tune_rounded, color: AppColors.accent, size: 18),
             SizedBox(width: context.widthPct(2)),
             Text(
-              'Match Mode',
+              'Match Type & Mode',
               style: AppTypography.headlineSm.copyWith(
                 color: AppColors.accent,
                 fontWeight: FontWeight.bold,
                 fontSize: context.responsiveFont(14),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
         SizedBox(height: context.heightPct(1)),
+
         Row(
           children: [
             Expanded(
-              child: _ModeCard(
+              child: _buildModeCard(
+                context: context,
                 title: 'Casual Match',
-                subtitle: 'Friendly, low-stakes game',
-                icon: Icons.sports_soccer,
+                subtitle: 'Friendly, open to all skill levels',
+                icon: Icons.emoji_events_outlined,
                 isSelected: !isCompetitive,
+                activeColor: AppColors.accent,
                 onTap: () => onModeChanged(false),
               ),
             ),
-            SizedBox(width: context.widthPct(3)),
+            SizedBox(width: context.widthPct(2.5)),
             Expanded(
-              child: _ModeCard(
+              child: _buildModeCard(
+                context: context,
                 title: 'Competitive',
-                subtitle: 'High intensity & rank XP',
-                icon: Icons.emoji_events,
+                subtitle: 'Ranked, XP points & leaderboard',
+                icon: Icons.workspace_premium_rounded,
                 isSelected: isCompetitive,
+                activeColor: const Color(0xFFA855F7),
                 onTap: () => onModeChanged(true),
               ),
             ),
@@ -60,82 +68,53 @@ class MatchModeSection extends StatelessWidget {
       ],
     );
   }
-}
 
-class _ModeCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _ModeCard({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final cardHeight = context.heightPct(11).clamp(84.0, 100.0);
-
+  Widget _buildModeCard({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required bool isSelected,
+    required Color activeColor,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
-        height: cardHeight,
-        padding: EdgeInsets.all(context.widthPct(3)),
+        padding: EdgeInsets.all(context.widthPct(3.5)),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.accent.withValues(alpha: 0.15)
-              : AppColors.card,
-          borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+          color: isSelected ? activeColor.withValues(alpha: 0.12) : AppColors.card,
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
           border: Border.all(
-            color: isSelected ? AppColors.accent : AppColors.borderDark,
+            color: isSelected ? activeColor : AppColors.borderDark,
             width: isSelected ? 1.8 : 1.0,
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Icon(
-                  icon,
-                  color: isSelected ? AppColors.accent : AppColors.textSecondary,
-                  size: 22,
-                ),
-                const Spacer(),
-                if (isSelected)
-                  const Icon(Icons.check_circle, color: AppColors.accent, size: 18),
-              ],
+            Icon(icon, color: isSelected ? activeColor : AppColors.muted, size: 22),
+            SizedBox(height: context.heightPct(1)),
+            Text(
+              title,
+              style: AppTypography.headlineSm.copyWith(
+                color: isSelected ? activeColor : AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: context.responsiveFont(13),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.headlineSm.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: context.responsiveFont(13),
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: AppTypography.bodySm.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: context.responsiveFont(10),
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            SizedBox(height: context.heightPct(0.3)),
+            Text(
+              subtitle,
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(11),
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

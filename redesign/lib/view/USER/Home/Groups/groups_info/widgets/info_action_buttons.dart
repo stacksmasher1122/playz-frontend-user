@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const _kSurface = Color(0xFF222222);
-const _kMuted = Colors.white54;
 
 class InfoActionButtons extends StatelessWidget {
   const InfoActionButtons({super.key});
@@ -13,34 +12,40 @@ class InfoActionButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildActionButton(Icons.search, "SEARCH", () {}),
-        SizedBox(width: 16),
-        _buildActionButton(Icons.share, "SHARE", () {}),
+        _buildActionButton(context, Icons.search, "SEARCH", () {}),
+        SizedBox(width: context.widthPct(4)),
+        _buildActionButton(context, Icons.share, "SHARE", () {}),
       ],
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label, VoidCallback onTap) {
+  Widget _buildActionButton(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+    final size = context.minDimensionPct(20).clamp(70.0, 90.0);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: ResponsiveHelper.w(80),
-        height: ResponsiveHelper.h(80),
+        width: size,
+        height: size,
         decoration: BoxDecoration(
-          color: _kSurface.withValues(alpha: 0.6),
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+          border: Border.all(color: AppColors.borderDark),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white, size: 28),
-            SizedBox(height: 8),
-            Text(
-              label,
-              style: TextStyle(
-                color: _kMuted,
-                fontSize: ResponsiveHelper.sp(10),
-                fontWeight: FontWeight.bold,
+            Icon(icon, color: AppColors.textPrimary, size: 28),
+            SizedBox(height: context.heightPct(0.8)),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(10),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],

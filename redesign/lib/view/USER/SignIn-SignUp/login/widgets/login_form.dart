@@ -27,6 +27,8 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Form(
       key: formKey,
       child: Column(
@@ -67,7 +69,7 @@ class LoginForm extends StatelessWidget {
                 scale: 0.9,
                 child: Checkbox(
                   value: rememberMe,
-                  activeColor: AppColors.spotifyGreen,
+                  activeColor: AppColors.accent,
                   checkColor: AppColors.background,
                   side: BorderSide(
                     color: AppColors.textSecondary.withValues(alpha: 0.5),
@@ -86,15 +88,15 @@ class LoginForm extends StatelessWidget {
               TextButton(
                 onPressed: onForgotPassword,
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 6,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.widthPct(2),
+                    vertical: context.heightPct(0.5),
                   ),
                 ),
                 child: Text(
                   'Forgot password?',
                   style: AppTypography.bodySm.copyWith(
-                    color: AppColors.spotifyGreen,
+                    color: AppColors.accent,
                     fontSize: context.responsiveFont(12.5),
                     fontWeight: FontWeight.w700,
                   ),
@@ -108,13 +110,12 @@ class LoginForm extends StatelessWidget {
           /// PRIMARY CTA BUTTON
           SizedBox(
             width: double.infinity,
-            height: context.responsiveFont(48),
+            height: context.heightPct(6).clamp(48.0, 56.0),
             child: ElevatedButton(
               onPressed: isLoading ? null : onLogin,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.spotifyGreen,
-                disabledBackgroundColor: AppColors.spotifyGreen
-                    .withValues(alpha: 0.5),
+                backgroundColor: AppColors.accent,
+                disabledBackgroundColor: AppColors.accent.withValues(alpha: 0.5),
                 elevation: 0,
                 shape: const StadiumBorder(),
               ),
@@ -130,13 +131,16 @@ class LoginForm extends StatelessWidget {
                           color: AppColors.background,
                         ),
                       )
-                    : Text(
-                        'Sign In',
-                        key: const ValueKey('text'),
-                        style: AppTypography.headlineSm.copyWith(
-                          fontSize: context.responsiveFont(15.5),
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.background,
+                    : FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Sign In',
+                          key: const ValueKey('text'),
+                          style: AppTypography.headlineSm.copyWith(
+                            fontSize: context.responsiveFont(15.5),
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.background,
+                          ),
                         ),
                       ),
               ),

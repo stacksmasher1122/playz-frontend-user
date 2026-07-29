@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class LeaderboardAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -11,48 +12,54 @@ class LeaderboardAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final buttonSize = context.minDimensionPct(10).clamp(36.0, 44.0);
 
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+        padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Circular Back Button
             InkWell(
               onTap: () => Navigator.pop(context),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
               child: Container(
-                width: 40,
-                height: 40,
+                width: buttonSize,
+                height: buttonSize,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF1E1E1E),
+                  color: AppColors.card,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.arrow_back,
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                   size: 20,
                 ),
               ),
             ),
 
             // Centered Title
-            Text(
-              'Leaderboards',
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: ResponsiveHelper.sp(20),
-                fontWeight: FontWeight.bold,
+            Expanded(
+              child: Text(
+                'Leaderboards',
+                textAlign: TextAlign.center,
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(20),
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
 
             // Circular Right Avatar Placeholder
             Container(
-              width: 40,
-              height: 40,
+              width: buttonSize,
+              height: buttonSize,
               decoration: const BoxDecoration(
-                color: Color(0xFF1E1E1E),
+                color: AppColors.card,
                 shape: BoxShape.circle,
               ),
             ),

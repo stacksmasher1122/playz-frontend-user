@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
 
 class LocationTile extends StatelessWidget {
   final IconData icon;
@@ -25,30 +25,31 @@ class LocationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+      margin: EdgeInsets.only(bottom: context.heightPct(1.5)),
+      padding: EdgeInsets.all(context.widthPct(3.5)),
       decoration: BoxDecoration(
-        color: kCard.withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+        color: AppColors.card.withValues(alpha: 0.8),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        border: Border.all(color: AppColors.borderDark),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 8,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(ResponsiveHelper.w(10)),
+            padding: EdgeInsets.all(context.widthPct(2.5)),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+              color: AppColors.textPrimary.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
             ),
-            child: Icon(icon, color: Colors.white70, size: 20),
+            child: Icon(icon, color: AppColors.muted, size: 20),
           ),
-          SizedBox(width: 14),
+          SizedBox(width: context.widthPct(3.5)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,30 +59,31 @@ class LocationTile extends StatelessWidget {
                     Flexible(
                       child: Text(
                         title,
-                        style: TextStyle(
-                          color: Colors.white,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
                           fontWeight: FontWeight.w600,
+                          fontSize: context.responsiveFont(14),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (tag != null) ...[
-                      SizedBox(width: 8),
+                      SizedBox(width: context.widthPct(2)),
                       Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
+                          horizontal: context.widthPct(1.5),
+                          vertical: context.heightPct(0.3),
                         ),
                         decoration: BoxDecoration(
-                          color: kSpotifyGreen.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                          color: AppColors.accent.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
                         ),
                         child: Text(
                           tag!,
-                          style: TextStyle(
-                            color: kSpotifyGreen,
-                            fontSize: ResponsiveHelper.sp(8),
+                          style: AppTypography.labelCaps10.copyWith(
+                            color: AppColors.accent,
+                            fontSize: context.responsiveFont(8),
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -89,10 +91,13 @@ class LocationTile extends StatelessWidget {
                     ],
                   ],
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: context.heightPct(0.4)),
                 Text(
                   subtitle,
-                  style: TextStyle(color: kMuted, fontSize: 12),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -101,15 +106,15 @@ class LocationTile extends StatelessWidget {
           ),
           if (onEdit != null || onDelete != null)
             PopupMenuButton<String>(
-              icon: Icon(
+              icon: const Icon(
                 Icons.more_vert,
-                color: Colors.white54,
+                color: AppColors.muted,
                 size: 20,
               ),
-              color: kSurface,
+              color: AppColors.surface,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-                side: BorderSide(color: Colors.white12),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                side: const BorderSide(color: AppColors.borderDark),
               ),
               onSelected: (val) {
                 if (val == 'edit') {
@@ -124,15 +129,18 @@ class LocationTile extends StatelessWidget {
                     value: 'edit',
                     child: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.edit_outlined,
-                          color: kSpotifyGreen,
+                          color: AppColors.accent,
                           size: 18,
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: context.widthPct(2.5)),
                         Text(
                           'Edit',
-                          style: TextStyle(color: Colors.white, fontSize: 13),
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(13),
+                          ),
                         ),
                       ],
                     ),
@@ -142,15 +150,18 @@ class LocationTile extends StatelessWidget {
                     value: 'delete',
                     child: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.delete_outline,
-                          color: Colors.redAccent,
+                          color: AppColors.error,
                           size: 18,
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: context.widthPct(2.5)),
                         Text(
                           'Delete',
-                          style: TextStyle(color: Colors.white, fontSize: 13),
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.error,
+                            fontSize: context.responsiveFont(13),
+                          ),
                         ),
                       ],
                     ),

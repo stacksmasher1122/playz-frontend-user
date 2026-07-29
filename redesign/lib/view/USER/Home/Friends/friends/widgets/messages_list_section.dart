@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/friends_controller.dart';
 import 'package:redesign/view/USER/Home/Friends/friends_chat/friends_chat_screen.dart';
 import 'package:redesign/view/USER/Home/Friends/friends_requests/friends_requests_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kBg = AppColors.background;
-const kSurface = Color(0xFF0E0E0E);
-const kGreen = AppColors.accent;
-const kMuted = Colors.white70;
 
 class MessagesListSection extends StatelessWidget {
   const MessagesListSection({super.key});
@@ -27,15 +23,20 @@ class MessagesListSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
+            padding: EdgeInsets.fromLTRB(
+              context.widthPct(4),
+              context.heightPct(2.5),
+              context.widthPct(4),
+              context.heightPct(1),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'MESSAGES',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ResponsiveHelper.sp(14),
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(14),
                     fontWeight: FontWeight.w400,
                     letterSpacing: 1.2,
                   ),
@@ -44,19 +45,21 @@ class MessagesListSection extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => FriendsRequestsScreen(),
+                        builder: (_) => const FriendsRequestsScreen(),
                       ),
                     );
                   },
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
                   child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4), vertical: ResponsiveHelper.h(2)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.widthPct(1),
+                      vertical: context.heightPct(0.3),
+                    ),
                     child: Text(
                       '$requestCount Requests',
-                      style: TextStyle(
-                        color: kGreen,
-                        fontSize: ResponsiveHelper.sp(13),
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.accent,
+                        fontSize: context.responsiveFont(13),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -70,19 +73,30 @@ class MessagesListSection extends StatelessWidget {
             final friendsList = ctrl.friends;
             if (friendsList.isEmpty) {
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(24)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.widthPct(4),
+                  vertical: context.heightPct(3),
+                ),
                 child: Center(
                   child: Text(
                     'No friends yet. Search and add players!',
-                    style: TextStyle(color: kMuted, fontSize: 14),
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(14),
+                    ),
                   ),
                 ),
               );
             }
             return ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+              physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.fromLTRB(
+                context.widthPct(4),
+                0,
+                context.widthPct(4),
+                context.heightPct(2),
+              ),
               itemCount: friendsList.length,
               itemBuilder: (_, i) {
                 final f = friendsList[i];
@@ -127,8 +141,10 @@ class MessageListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final avatarSize = context.minDimensionPct(13).clamp(44.0, 56.0);
+
     return InkWell(
-      borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+      borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ChatScreen(
@@ -143,35 +159,51 @@ class MessageListTile extends StatelessWidget {
         _showRemoveFriendSheet(context);
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+        padding: EdgeInsets.symmetric(vertical: context.heightPct(1.2)),
         child: Row(
           children: [
             Stack(
               children: [
-                CircleAvatar(
-                  radius: 26,
-                  backgroundImage: imageUrl.isNotEmpty
-                      ? CachedNetworkImageProvider(imageUrl) as ImageProvider
-                      : null,
-                  backgroundColor: kSurface,
+                ClipOval(
+                  child: imageUrl.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          width: avatarSize,
+                          height: avatarSize,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => CircleAvatar(
+                            radius: avatarSize / 2,
+                            backgroundColor: AppColors.surface,
+                          ),
+                          errorWidget: (_, __, ___) => CircleAvatar(
+                            radius: avatarSize / 2,
+                            backgroundColor: AppColors.surface,
+                            child: const Icon(Icons.person, color: AppColors.muted),
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: avatarSize / 2,
+                          backgroundColor: AppColors.surface,
+                          child: const Icon(Icons.person, color: AppColors.muted),
+                        ),
                 ),
                 if (hasDot)
                   Positioned(
-                    bottom: ResponsiveHelper.h(0),
-                    right: ResponsiveHelper.w(0),
+                    bottom: 0,
+                    right: 0,
                     child: Container(
-                      width: ResponsiveHelper.w(14),
-                      height: ResponsiveHelper.h(14),
+                      width: 12,
+                      height: 12,
                       decoration: BoxDecoration(
-                        color: kGreen,
+                        color: AppColors.accent,
                         shape: BoxShape.circle,
-                        border: Border.all(color: kBg, width: 2.5),
+                        border: Border.all(color: AppColors.background, width: 2),
                       ),
                     ),
                   ),
               ],
             ),
-            SizedBox(width: 16),
+            SizedBox(width: context.widthPct(3.5)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,27 +212,27 @@ class MessageListTile extends StatelessWidget {
                     name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: ResponsiveHelper.sp(16),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(16),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: context.heightPct(0.4)),
                   Text(
                     subtitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: isNew ? kGreen : kMuted,
-                      fontSize: ResponsiveHelper.sp(14),
+                    style: AppTypography.bodySm.copyWith(
+                      color: isNew ? AppColors.accent : AppColors.muted,
+                      fontSize: context.responsiveFont(14),
                       fontWeight: isNew ? FontWeight.w500 : FontWeight.w400,
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: context.widthPct(2)),
           ],
         ),
       ),
@@ -210,31 +242,62 @@ class MessageListTile extends StatelessWidget {
   void _showRemoveFriendSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Color(0xFF141414),
+      backgroundColor: AppColors.card,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(20))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(5))),
       ),
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 8),
-            Container(width: ResponsiveHelper.w(40), height: ResponsiveHelper.h(4), decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(ResponsiveHelper.w(2)))),
-            SizedBox(height: 20),
-            Text('Remove $name?', style: TextStyle(color: Colors.white, fontSize: ResponsiveHelper.sp(18), fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            Text('This will delete all messages permanently.', style: TextStyle(color: kMuted, fontSize: 13)),
-            SizedBox(height: 24),
+            SizedBox(height: context.heightPct(1)),
+            Container(
+              width: context.widthPct(10),
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.borderDark,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            SizedBox(height: context.heightPct(2.5)),
+            Text(
+              'Remove $name?',
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(18),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: context.heightPct(1)),
+            Text(
+              'This will delete all messages permanently.',
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+              ),
+            ),
+            SizedBox(height: context.heightPct(3)),
             ListTile(
-              leading: Icon(Icons.person_remove, color: Colors.redAccent),
-              title: Text('Remove Friend', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
+              leading: const Icon(Icons.person_remove, color: AppColors.error),
+              title: Text(
+                'Remove Friend',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Get.find<FriendsController>().removeFriend(email);
-                Get.snackbar('Removed', '$name removed from friends', backgroundColor: Colors.redAccent.withAlpha(50), colorText: Colors.white);
+                Get.snackbar(
+                  'Removed',
+                  '$name removed from friends',
+                  backgroundColor: AppColors.error.withValues(alpha: 0.2),
+                  colorText: AppColors.textPrimary,
+                );
               },
             ),
-            SizedBox(height: 16),
+            SizedBox(height: context.heightPct(2)),
           ],
         ),
       ),

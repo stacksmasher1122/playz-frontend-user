@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class AppTutorialModal extends StatefulWidget {
   const AppTutorialModal({super.key});
@@ -37,11 +39,16 @@ class _AppTutorialModalState extends State<AppTutorialModal> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+    final sliderHeight = context.heightPct(30).clamp(200.0, 260.0);
+
     return Dialog(
-      backgroundColor: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      backgroundColor: AppColors.card,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(context.widthPct(5)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -49,11 +56,11 @@ class _AppTutorialModalState extends State<AppTutorialModal> {
               alignment: Alignment.topRight,
               child: IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.close, color: Colors.white54),
+                icon: const Icon(Icons.close, color: AppColors.muted),
               ),
             ),
             SizedBox(
-              height: 240,
+              height: sliderHeight,
               child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: (idx) => setState(() => _currentPage = idx),
@@ -64,37 +71,42 @@ class _AppTutorialModalState extends State<AppTutorialModal> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(18),
+                        padding: EdgeInsets.all(context.widthPct(4.5)),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00E676).withValues(alpha: 0.15),
+                          color: AppColors.accent.withValues(alpha: 0.15),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           step['icon'] as IconData,
-                          size: 40,
-                          color: const Color(0xFF00E676),
+                          size: context.minDimensionPct(10).clamp(32.0, 44.0),
+                          color: AppColors.accent,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: context.heightPct(2)),
                       Text(
                         step['title'] as String,
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: 18,
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(18),
                           fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: context.heightPct(1)),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                         child: Text(
                           step['desc'] as String,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
-                            color: Colors.white70,
-                            fontSize: 13,
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(13),
                             height: 1.4,
                           ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -102,23 +114,23 @@ class _AppTutorialModalState extends State<AppTutorialModal> {
                 },
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: context.heightPct(1.5)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 _steps.length,
                 (i) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  margin: EdgeInsets.symmetric(horizontal: context.widthPct(1)),
                   width: _currentPage == i ? 20 : 6,
                   height: 6,
                   decoration: BoxDecoration(
-                    color: _currentPage == i ? const Color(0xFF00E676) : Colors.white24,
+                    color: _currentPage == i ? AppColors.accent : AppColors.borderDark,
                     borderRadius: BorderRadius.circular(3),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: context.heightPct(2.5)),
             Row(
               children: [
                 if (_currentPage > 0)
@@ -131,19 +143,25 @@ class _AppTutorialModalState extends State<AppTutorialModal> {
                         );
                       },
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white24),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        side: const BorderSide(color: AppColors.borderDark),
+                        padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                         ),
                       ),
-                      child: Text(
-                        'Back',
-                        style: GoogleFonts.inter(color: Colors.white),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Back',
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(14),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                if (_currentPage > 0) const SizedBox(width: 12),
+                if (_currentPage > 0) SizedBox(width: context.widthPct(3)),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -157,17 +175,22 @@ class _AppTutorialModalState extends State<AppTutorialModal> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00E676),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      backgroundColor: AppColors.accent,
+                      foregroundColor: AppColors.background,
+                      padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                       ),
                     ),
-                    child: Text(
-                      _currentPage == _steps.length - 1 ? 'Got It!' : 'Next',
-                      style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        _currentPage == _steps.length - 1 ? 'Got It!' : 'Next',
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.background,
+                          fontWeight: FontWeight.bold,
+                          fontSize: context.responsiveFont(14),
+                        ),
                       ),
                     ),
                   ),

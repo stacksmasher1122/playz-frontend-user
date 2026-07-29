@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'shutter_button.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -16,16 +17,16 @@ class CameraBottomControls extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Positioned(
-      bottom: ResponsiveHelper.h(40),
-      left: ResponsiveHelper.w(0),
-      right: ResponsiveHelper.w(0),
+      bottom: context.heightPct(5),
+      left: 0,
+      right: 0,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Flash Toggle (Placeholder)
           IconButton(
-            icon: Icon(Icons.flash_off, color: Colors.white70, size: 28),
+            icon: const Icon(Icons.flash_off, color: AppColors.textSecondary, size: 28),
             onPressed: () {
               // Future feature: flash toggle
             },
@@ -36,7 +37,7 @@ class CameraBottomControls extends StatelessWidget {
 
           // Switch Camera Button
           IconButton(
-            icon: Icon(Icons.flip_camera_ios, color: Colors.white, size: 32),
+            icon: const Icon(Icons.flip_camera_ios, color: AppColors.textPrimary, size: 32),
             onPressed: onSwitchCamera,
           ),
         ],

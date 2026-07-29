@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../qr_in_bookings_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'qr_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -30,28 +31,45 @@ class LocationCard extends StatelessWidget {
       title: 'Location',
       trailing: Text(
         turfName,
-        style: TextStyle(color: QrBookingConstants.green, fontWeight: FontWeight.w600),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppTypography.bodySm.copyWith(
+          color: AppColors.accent,
+          fontWeight: FontWeight.w600,
+          fontSize: context.responsiveFont(13),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             address,
-            style: TextStyle(color: QrBookingConstants.muted),
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(13),
+            ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.5)),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.background,
+              foregroundColor: AppColors.textPrimary,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
               ),
             ),
             onPressed: _launchGoogleMaps,
-            icon: Icon(Icons.near_me_outlined),
-            label: Text('Get Directions'),
-          )
+            icon: const Icon(Icons.near_me_outlined),
+            label: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                'Get Directions',
+                style: AppTypography.bodySm.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

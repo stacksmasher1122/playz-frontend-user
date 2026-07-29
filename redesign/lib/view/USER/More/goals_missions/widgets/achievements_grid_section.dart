@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/More_Models/goals_missions_model.dart';
 
@@ -19,20 +19,20 @@ class AchievementsGridSection extends StatelessWidget {
     ResponsiveHelper.init(context);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section Title
           Text(
             'Achievements',
-            style: GoogleFonts.inter(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(18),
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(18),
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: ResponsiveHelper.h(14)),
+          SizedBox(height: context.heightPct(1.5)),
 
           // 2-Column Grid
           GridView.builder(
@@ -42,8 +42,8 @@ class AchievementsGridSection extends StatelessWidget {
             itemCount: achievements.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              mainAxisSpacing: ResponsiveHelper.h(14),
-              crossAxisSpacing: ResponsiveHelper.w(14),
+              mainAxisSpacing: context.heightPct(1.5),
+              crossAxisSpacing: context.widthPct(3.5),
               childAspectRatio: 1.15,
             ),
             itemBuilder: (context, index) {
@@ -52,14 +52,14 @@ class AchievementsGridSection extends StatelessWidget {
 
               return InkWell(
                 onTap: () => onAchievementTap(a),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                 child: Container(
-                  padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+                  padding: EdgeInsets.all(context.widthPct(3.5)),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF141414),
-                    borderRadius: BorderRadius.circular(20),
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                     border: Border.all(
-                      color: isUnlocked ? AppColors.accent : Colors.white.withValues(alpha: 0.05),
+                      color: isUnlocked ? AppColors.accent : AppColors.borderDark,
                       width: isUnlocked ? 1.5 : 1.0,
                     ),
                   ),
@@ -68,27 +68,27 @@ class AchievementsGridSection extends StatelessWidget {
                     children: [
                       Icon(
                         a.icon,
-                        color: isUnlocked ? AppColors.accent : Colors.white38,
+                        color: isUnlocked ? AppColors.accent : AppColors.muted,
                         size: 32,
                       ),
-                      SizedBox(height: ResponsiveHelper.h(10)),
+                      SizedBox(height: context.heightPct(1)),
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
                           a.title,
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: ResponsiveHelper.sp(14),
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(14),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      SizedBox(height: 2),
+                      SizedBox(height: context.heightPct(0.3)),
                       Text(
                         isUnlocked ? 'Unlocked' : 'Locked',
-                        style: GoogleFonts.inter(
+                        style: AppTypography.bodySm.copyWith(
                           color: isUnlocked ? AppColors.accent : AppColors.muted,
-                          fontSize: ResponsiveHelper.sp(11),
+                          fontSize: context.responsiveFont(11),
                           fontWeight: isUnlocked ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),

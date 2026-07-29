@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class FullScreenImage extends StatelessWidget {
@@ -12,10 +13,10 @@ class FullScreenImage extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.background,
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
       body: Center(
         child: Hero(
@@ -27,12 +28,12 @@ class FullScreenImage extends StatelessWidget {
               imageUrl: url,
               fit: BoxFit.contain,
               placeholder: (_, __) => Shimmer.fromColors(
-                baseColor: Colors.grey.shade900.withValues(alpha: 0.5),
-                highlightColor: Colors.grey.shade800.withValues(alpha: 0.4),
+                baseColor: AppColors.surface,
+                highlightColor: AppColors.card,
                 child: Container(
                   width: double.infinity,
-                  height: ResponsiveHelper.h(300),
-                  color: Colors.black,
+                  height: context.heightPct(35),
+                  color: AppColors.background,
                 ),
               ),
             ),

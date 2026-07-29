@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class GoalsMissionsAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -20,54 +20,60 @@ class GoalsMissionsAppBar extends StatelessWidget implements PreferredSizeWidget
 
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+        padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Back Button
             InkWell(
               onTap: () => Navigator.pop(context),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
               child: Container(
-                width: 38,
-                height: 38,
+                width: context.minDimensionPct(10).clamp(36.0, 44.0),
+                height: context.minDimensionPct(10).clamp(36.0, 44.0),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF1A1A1A),
+                  color: AppColors.card,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.arrow_back,
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                   size: 20,
                 ),
               ),
             ),
 
             // Title
-            Text(
-              'Goals & Missions',
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: ResponsiveHelper.sp(18),
-                fontWeight: FontWeight.bold,
+            Expanded(
+              child: Text(
+                'Goals & Missions',
+                textAlign: TextAlign.center,
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(18),
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
 
             // Top Right Z Coins Pill
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.w(12),
-                vertical: ResponsiveHelper.h(6),
+                horizontal: context.widthPct(3),
+                vertical: context.heightPct(0.8),
               ),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E2B22),
-                borderRadius: BorderRadius.circular(20),
+                color: AppColors.accent.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                 border: Border.all(
                   color: AppColors.accent.withValues(alpha: 0.5),
                   width: 1,
                 ),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(2),
@@ -77,16 +83,16 @@ class GoalsMissionsAppBar extends StatelessWidget implements PreferredSizeWidget
                     ),
                     child: const Icon(
                       Icons.attach_money,
-                      color: Colors.black,
+                      color: AppColors.background,
                       size: 13,
                     ),
                   ),
-                  SizedBox(width: ResponsiveHelper.w(6)),
+                  SizedBox(width: context.widthPct(1.5)),
                   Text(
                     '$zCoinsBalance',
-                    style: GoogleFonts.inter(
+                    style: AppTypography.headlineSm.copyWith(
                       color: AppColors.accent,
-                      fontSize: ResponsiveHelper.sp(13),
+                      fontSize: context.responsiveFont(13),
                       fontWeight: FontWeight.w900,
                     ),
                   ),

@@ -40,7 +40,7 @@ class ZCoinsCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.monetization_on, color: Colors.amberAccent, size: 28),
+                const Icon(Icons.monetization_on, color: AppColors.coinsGold, size: 28),
                 SizedBox(width: context.widthPct(3)),
                 Expanded(
                   child: Column(

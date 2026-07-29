@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CancellationPolicyBanner extends StatelessWidget {
@@ -8,22 +10,25 @@ class CancellationPolicyBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Container(
-        padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+        padding: EdgeInsets.all(context.widthPct(3)),
         decoration: BoxDecoration(
-          color: Colors.red.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-          border: Border.all(color: Colors.red),
+          color: AppColors.error.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+          border: Border.all(color: AppColors.error),
         ),
         child: Row(
           children: [
-            Icon(Icons.warning, color: Colors.red),
-            SizedBox(width: 8),
+            const Icon(Icons.warning, color: AppColors.error),
+            SizedBox(width: context.widthPct(2)),
             Expanded(
               child: Text(
                 'Free cancellation up to 4 hours before the booked slot. 50% refund thereafter.',
-                style: TextStyle(color: Colors.red),
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.error,
+                  fontSize: context.responsiveFont(13),
+                ),
               ),
             ),
           ],

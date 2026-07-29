@@ -14,7 +14,6 @@ class CoverImageWidget extends StatefulWidget {
     this.imagePath,
   });
 
-  
   @override
   State<CoverImageWidget> createState() => _CoverImageWidgetState();
 }
@@ -22,30 +21,33 @@ class CoverImageWidget extends StatefulWidget {
 class _CoverImageWidgetState extends State<CoverImageWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Basic Details",
           style: AppTypography.headlineMd.copyWith(
-            color: AppColors.onPrimary,
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(16),
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: ResponsiveHelper.h(12)),
+        SizedBox(height: context.heightPct(1.2)),
         GestureDetector(
           onTap: widget.onTap,
           child: Container(
             width: double.infinity,
-            height: ResponsiveHelper.h(130),
+            height: context.heightPct(16).clamp(110.0, 150.0),
             decoration: BoxDecoration(
               color: AppColors.card,
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-              border: Border.all(color: AppColors.card, width: 1), // Optional: wrap in dashed border if required
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+              border: Border.all(color: AppColors.borderDark),
             ),
             child: (widget.imagePath != null && widget.imagePath!.isNotEmpty)
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                     child: Image.file(
                       File(widget.imagePath!),
                       width: double.infinity,
@@ -59,13 +61,14 @@ class _CoverImageWidgetState extends State<CoverImageWidget> {
                       Icon(
                         Icons.add_a_photo_outlined,
                         color: AppColors.muted,
-                        size: ResponsiveHelper.w(32),
+                        size: context.responsiveFont(28),
                       ),
-                      SizedBox(height: ResponsiveHelper.h(8)),
+                      SizedBox(height: context.heightPct(0.8)),
                       Text(
                         "Add Cover Image",
                         style: AppTypography.bodySm.copyWith(
                           color: AppColors.muted,
+                          fontSize: context.responsiveFont(13),
                         ),
                       ),
                     ],

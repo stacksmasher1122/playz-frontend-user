@@ -8,8 +8,6 @@ import 'widgets/my_squads_list.dart';
 import 'widgets/recommended_for_you_section.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-const kBg = AppColors.background;
-
 class GroupsScreen extends StatelessWidget {
   const GroupsScreen({super.key});
 
@@ -17,19 +15,19 @@ class GroupsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: kBg,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         top: true,
         bottom: false,
         child: CustomScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           slivers: [
-            GroupsAppBar(),
-            SliverToBoxAdapter(child: SearchAndFilters()),
-            SliverToBoxAdapter(child: SizedBox(height: 16)),
-            SliverToBoxAdapter(child: MySquadsList()),
-            SliverToBoxAdapter(child: RecommendedForYouSection()),
-            SliverToBoxAdapter(child: SizedBox(height: 32)),
+            const GroupsAppBar(),
+            const SliverToBoxAdapter(child: SearchAndFilters()),
+            SliverToBoxAdapter(child: SizedBox(height: context.heightPct(2))),
+            const SliverToBoxAdapter(child: MySquadsList()),
+            const SliverToBoxAdapter(child: RecommendedForYouSection()),
+            SliverToBoxAdapter(child: SizedBox(height: context.heightPct(4))),
           ],
         ),
       ),

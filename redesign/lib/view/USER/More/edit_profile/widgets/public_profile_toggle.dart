@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/user_profile_controller.dart';
-import '../edit_profile_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PublicProfileToggle extends StatelessWidget {
@@ -15,29 +16,35 @@ class PublicProfileToggle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Public Profile',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: ResponsiveHelper.sp(16),
-                fontWeight: FontWeight.w600,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Public Profile',
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(16),
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            SizedBox(height: 4),
-            Text(
-              'Allow anyone to see your stats',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.5),
-                fontSize: ResponsiveHelper.sp(12),
+              SizedBox(height: context.heightPct(0.4)),
+              Text(
+                'Allow anyone to see your stats',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(12),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Obx(
-          () => Switch(
+          () => Switch.adaptive(
             value: controller.rxUser.value?.isPublicProfile ?? true,
             onChanged: (value) {
               final user = controller.rxUser.value;
@@ -45,10 +52,10 @@ class PublicProfileToggle extends StatelessWidget {
                 controller.setUser(user.copyWith(isPublicProfile: value));
               }
             },
-            activeThumbColor: Colors.black,
-            activeTrackColor: kEditProfileGreen,
-            inactiveThumbColor: Colors.white54,
-            inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
+            activeThumbColor: AppColors.background,
+            activeTrackColor: AppColors.accent,
+            inactiveThumbColor: AppColors.muted,
+            inactiveTrackColor: AppColors.textPrimary.withValues(alpha: 0.1),
           ),
         ),
       ],

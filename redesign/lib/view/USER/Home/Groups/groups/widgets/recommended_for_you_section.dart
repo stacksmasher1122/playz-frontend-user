@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'recommended_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kGreen = AppColors.accent;
 
 class RecommendedForYouSection extends StatelessWidget {
   const RecommendedForYouSection({super.key});
@@ -12,22 +11,22 @@ class RecommendedForYouSection extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      color: Color(0xFF0C0C0C),
-      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24)),
-      margin: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(8)),
+      color: AppColors.background,
+      padding: EdgeInsets.symmetric(vertical: context.heightPct(2)),
+      margin: EdgeInsets.symmetric(vertical: context.heightPct(0.8)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+            padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'RECOMMENDED FOR YOU',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ResponsiveHelper.sp(12),
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: context.responsiveFont(12),
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.5,
                   ),
@@ -36,9 +35,9 @@ class RecommendedForYouSection extends StatelessWidget {
                   onTap: () {},
                   child: Text(
                     'SEE ALL',
-                    style: TextStyle(
-                      color: kGreen,
-                      fontSize: ResponsiveHelper.sp(11),
+                    style: AppTypography.labelCaps10.copyWith(
+                      color: AppColors.accent,
+                      fontSize: context.responsiveFont(11),
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.5,
                     ),
@@ -47,16 +46,16 @@ class RecommendedForYouSection extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 16),
-          RecommendedCard(
+          SizedBox(height: context.heightPct(1.5)),
+          const RecommendedCard(
             name: 'Pune Runners Club',
             members: '1.2K MEMBERS',
             status: 'ACTIVE NOW',
             imageUrl:
                 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5',
           ),
-          SizedBox(height: 12),
-          RecommendedCard(
+          SizedBox(height: context.heightPct(1.2)),
+          const RecommendedCard(
             name: 'Badminton Smashers',
             members: '840 MEMBERS',
             status: '12 ACTIVE',

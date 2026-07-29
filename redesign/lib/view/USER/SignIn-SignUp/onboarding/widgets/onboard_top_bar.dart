@@ -10,6 +10,8 @@ class OnboardTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: context.widthPct(5),
@@ -22,7 +24,7 @@ class OnboardTopBar extends StatelessWidget {
             style: AppTypography.headlineLg.copyWith(
               fontSize: context.responsiveFont(22),
               fontWeight: FontWeight.w900,
-              color: AppColors.spotifyGreen,
+              color: AppColors.accent,
               letterSpacing: -0.5,
             ),
           ),

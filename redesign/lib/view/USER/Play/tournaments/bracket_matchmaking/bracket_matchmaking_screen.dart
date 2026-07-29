@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import '../../../../../controller/User_Controller/Tournament_Controller/bracket_controller.dart';
 import '../../../../../model/User_Models/Tournament_Model/bracket_model.dart';
@@ -47,8 +47,6 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
     if (id == null) return "BYE";
     final team = controller.teams.firstWhereOrNull((t) => t.id == id);
 
-    // C3 Fix: Display real name appropriately if "(me)" is needed for the current user
-    // However, BracketMatchmaking displays team names. We should append "(me)" if the current user is part of the team.
     String name = team?.name ?? "TBD";
     final currentUser = FirebaseAuth.instance.currentUser;
     if (team != null && currentUser != null) {
@@ -78,6 +76,8 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
     final authUid = FirebaseAuth.instance.currentUser?.uid;
     final authEmail = FirebaseAuth.instance.currentUser?.email;
     final docId = await UserPreferences.getDocId();
+
+    if (!mounted) return;
 
     final refUserId = freshMatch.referee?['userId']?.toString();
     final refUserEmail = freshMatch.referee?['userEmail']?.toString();
@@ -115,24 +115,47 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
         Get.dialog(
           AlertDialog(
             backgroundColor: AppColors.surface,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+            ),
             title: Row(
               children: [
-                Icon(Icons.lock_clock, color: Colors.orange, size: 24),
-                const SizedBox(width: 8),
-                Text("Tournament Not Started", style: TextStyle(color: AppColors.onPrimary, fontSize: 16)),
+                const Icon(Icons.lock_clock_rounded, color: AppColors.warning, size: 24),
+                SizedBox(width: context.widthPct(2)),
+                Expanded(
+                  child: Text(
+                    "Tournament Not Started",
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: context.responsiveFont(16),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
             content: Text(
               widget.isOrganizer
                   ? "You must click 'Start Tournament' before matches can be started."
                   : "The tournament organizer has not started the tournament yet. Please wait for the organizer to start it.",
-              style: TextStyle(color: AppColors.muted, fontSize: 14),
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(13),
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Get.back(),
-                child: Text("OK", style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
+                child: Text(
+                  "OK",
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: context.responsiveFont(14),
+                  ),
+                ),
               ),
             ],
           ),
@@ -148,7 +171,12 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
           teamBId: freshMatch.teamBId!,
         ));
       } else {
-        Get.snackbar("Notice", "This match has not started yet.");
+        Get.snackbar(
+          "Notice",
+          "This match has not started yet.",
+          backgroundColor: AppColors.card,
+          colorText: AppColors.textPrimary,
+        );
       }
     } else if (freshMatch.status == 'completed' && freshMatch.liveMatchId != null) {
       // Completed match: view-only scoreboard for everyone
@@ -163,26 +191,40 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.surface,
-        title: Text("Bracket & Matchmaking", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          "Bracket & Matchmaking",
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(18),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.onPrimary),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
           onPressed: () => Get.back(),
         ),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(color: AppColors.accent));
         }
 
         if (controller.matches.isEmpty) {
           return Center(
             child: Text(
               "No bracket available.",
-              style: AppTypography.bodyMd.copyWith(color: AppColors.muted),
+              style: AppTypography.bodyMd.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(14),
+              ),
             ),
           );
         }
@@ -260,43 +302,56 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
           children: [
             if (showStartBanner)
               Container(
-                margin: EdgeInsets.all(ResponsiveHelper.w(16)),
-                padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+                margin: EdgeInsets.all(context.widthPct(4)),
+                padding: EdgeInsets.all(context.widthPct(3.5)),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-                  border: Border.all(color: Colors.orange.withValues(alpha: 0.4)),
+                  color: AppColors.warning.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                  border: Border.all(color: AppColors.warning.withValues(alpha: 0.4)),
                 ),
                 child: Column(
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.info_outline, color: Colors.orange, size: 22),
-                        const SizedBox(width: 10),
+                        const Icon(Icons.info_outline_rounded, color: AppColors.warning, size: 22),
+                        SizedBox(width: context.widthPct(2.5)),
                         Expanded(
                           child: Text(
                             widget.isOrganizer
                                 ? "Tournament has not started yet. Click 'Start Tournament' to open match scoring for referees."
                                 : "Tournament has not started yet. Matches will become active once the organizer starts the tournament.",
-                            style: TextStyle(color: AppColors.onPrimary, fontSize: 12),
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.textPrimary,
+                              fontSize: context.responsiveFont(12),
+                            ),
                           ),
                         ),
                       ],
                     ),
                     if (widget.isOrganizer) ...[
-                      const SizedBox(height: 12),
+                      SizedBox(height: context.heightPct(1.5)),
                       SizedBox(
                         width: double.infinity,
+                        height: context.heightPct(5).clamp(42.0, 50.0),
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.accent,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                            ),
                           ),
-                          icon: Icon(Icons.play_circle_fill, color: AppColors.background),
-                          label: Text(
-                            "START TOURNAMENT",
-                            style: TextStyle(color: AppColors.background, fontWeight: FontWeight.bold, fontSize: 14),
+                          icon: const Icon(Icons.play_circle_fill_rounded, color: AppColors.background),
+                          label: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              "START TOURNAMENT",
+                              style: AppTypography.headlineSm.copyWith(
+                                color: AppColors.background,
+                                fontWeight: FontWeight.bold,
+                                fontSize: context.responsiveFont(14),
+                              ),
+                            ),
                           ),
                           onPressed: () => controller.startTournament(context),
                         ),
@@ -307,103 +362,121 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
               ),
             Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+                padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                 itemCount: sortedKeys.length + (allMatchesCompleted ? 1 : 0),
                 itemBuilder: (context, index) {
-            // Show completion banner at the top
-            if (allMatchesCompleted && index == 0) {
-              return Container(
-                margin: EdgeInsets.only(bottom: ResponsiveHelper.h(16)),
-                padding: EdgeInsets.all(ResponsiveHelper.w(16)),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.accent.withValues(alpha: 0.15),
-                      AppColors.accent.withValues(alpha: 0.05),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-                  border: Border.all(color: AppColors.accent.withValues(alpha: 0.5)),
-                ),
-                child: Column(
-                  children: [
-                    Icon(Icons.emoji_events, color: AppColors.accent, size: 36),
-                    SizedBox(height: ResponsiveHelper.h(8)),
-                    Text(
-                      "Tournament Complete",
-                      style: AppTypography.headlineSm.copyWith(color: AppColors.accent),
-                    ),
-                    if (championName != null) ...[
-                      SizedBox(height: ResponsiveHelper.h(4)),
-                      Text(
-                        "Champion: $championName",
-                        style: AppTypography.bodyLg.copyWith(color: AppColors.onPrimary, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                    SizedBox(height: ResponsiveHelper.h(8)),
-                    Text(
-                      "All ${realMatches.length} matches completed",
-                      style: AppTypography.bodySm.copyWith(color: AppColors.muted),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            final adjustedIndex = allMatchesCompleted ? index - 1 : index;
-            String key = sortedKeys[adjustedIndex];
-            List<BracketMatchModel> matches = grouped[key]!;
-
-            // Rename the final round for display
-            String displayKey = key;
-            if (key == finalRoundKey) {
-              displayKey = "Final";
-            } else if (sortedKeys.length > 2 && key == sortedKeys[sortedKeys.length - 2]) {
-              if (key.startsWith('Round') && matches.length <= 2) {
-                displayKey = "Semi-Final";
-              }
-            }
-
-            // Compute round completion summary
-            final completedInRound = matches.where((m) => m.status == 'completed').length;
-            final totalInRound = matches.where((m) => m.teamAId != null && m.teamBId != null).length;
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        displayKey,
-                        style: AppTypography.bodyLg.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
-                      ),
-                      if (totalInRound > 0)
-                        Text(
-                          "$completedInRound/$totalInRound played",
-                          style: AppTypography.bodySm.copyWith(color: AppColors.muted, fontSize: 11),
+                  // Show completion banner at the top
+                  if (allMatchesCompleted && index == 0) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: context.heightPct(2)),
+                      padding: EdgeInsets.all(context.widthPct(4)),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.accent.withValues(alpha: 0.15),
+                            AppColors.accent.withValues(alpha: 0.05),
+                          ],
                         ),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                        border: Border.all(color: AppColors.accent.withValues(alpha: 0.5)),
+                      ),
+                      child: Column(
+                        children: [
+                          const Icon(Icons.emoji_events_rounded, color: AppColors.accent, size: 36),
+                          SizedBox(height: context.heightPct(1)),
+                          Text(
+                            "Tournament Complete",
+                            style: AppTypography.headlineSm.copyWith(
+                              color: AppColors.accent,
+                              fontSize: context.responsiveFont(16),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (championName != null) ...[
+                            SizedBox(height: context.heightPct(0.5)),
+                            Text(
+                              "Champion: $championName",
+                              style: AppTypography.bodyLg.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: context.responsiveFont(14),
+                              ),
+                            ),
+                          ],
+                          SizedBox(height: context.heightPct(1)),
+                          Text(
+                            "All ${realMatches.length} matches completed",
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.muted,
+                              fontSize: context.responsiveFont(12),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  final adjustedIndex = allMatchesCompleted ? index - 1 : index;
+                  String key = sortedKeys[adjustedIndex];
+                  List<BracketMatchModel> matches = grouped[key]!;
+
+                  // Rename the final round for display
+                  String displayKey = key;
+                  if (key == finalRoundKey) {
+                    displayKey = "Final";
+                  } else if (sortedKeys.length > 2 && key == sortedKeys[sortedKeys.length - 2]) {
+                    if (key.startsWith('Round') && matches.length <= 2) {
+                      displayKey = "Semi-Final";
+                    }
+                  }
+
+                  // Compute round completion summary
+                  final completedInRound = matches.where((m) => m.status == 'completed').length;
+                  final totalInRound = matches.where((m) => m.teamAId != null && m.teamBId != null).length;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              displayKey,
+                              style: AppTypography.bodyLg.copyWith(
+                                color: AppColors.accent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: context.responsiveFont(15),
+                              ),
+                            ),
+                            if (totalInRound > 0)
+                              Text(
+                                "$completedInRound/$totalInRound played",
+                                style: AppTypography.bodySm.copyWith(
+                                  color: AppColors.muted,
+                                  fontSize: context.responsiveFont(11),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      ...matches.map((match) => MatchSlotCard(
+                        tournamentId: widget.tournamentId,
+                        match: match,
+                        teamA: _getTeamName(match.teamAId),
+                        teamB: _getTeamName(match.teamBId),
+                        isOrganizer: widget.isOrganizer,
+                        onTap: () => _handleMatchTap(match),
+                      )),
                     ],
-                  ),
-                ),
-                ...matches.map((match) => MatchSlotCard(
-                  tournamentId: widget.tournamentId,
-                  match: match,
-                  teamA: _getTeamName(match.teamAId),
-                  teamB: _getTeamName(match.teamBId),
-                  isOrganizer: widget.isOrganizer,
-                  onTap: () => _handleMatchTap(match),
-                )),
-              ],
-            );
-          },
-        ),
-      ),
-    ],
-  );
-}),
-);
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      }),
+    );
   }
 }

@@ -1,10 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Groups/create_group/create_group_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kSurface = Color(0xFF0E0E0E);
-const kMuted = Colors.white70;
 
 class GroupsAppBar extends StatelessWidget {
   const GroupsAppBar({super.key});
@@ -19,15 +18,20 @@ class GroupsAppBar extends StatelessWidget {
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.7),
-              border: Border(
-                bottom: BorderSide(color: Colors.white12),
+              color: AppColors.background.withValues(alpha: 0.8),
+              border: const Border(
+                bottom: BorderSide(color: AppColors.borderDark),
               ),
             ),
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
+                padding: EdgeInsets.fromLTRB(
+                  context.widthPct(4),
+                  context.heightPct(1.2),
+                  context.widthPct(4),
+                  context.heightPct(1.2),
+                ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -41,27 +45,27 @@ class GroupsAppBar extends StatelessWidget {
                             'Groups',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: ResponsiveHelper.sp(22),
+                            style: AppTypography.displayLg.copyWith(
+                              color: AppColors.textPrimary,
+                              fontSize: context.responsiveFont(22),
                               fontWeight: FontWeight.w800,
                             ),
                           ),
-                          SizedBox(height: 2),
+                          SizedBox(height: context.heightPct(0.3)),
                           Text(
                             'Play together. Compete harder.',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: kMuted,
-                              fontSize: ResponsiveHelper.sp(13),
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.textSecondary,
+                              fontSize: context.responsiveFont(13),
                             ),
                           ),
                         ],
                       ),
                     ),
 
-                    SizedBox(width: 12),
+                    SizedBox(width: context.widthPct(3)),
 
                     /// ACTION ICONS
                     _HeaderIcon(
@@ -70,7 +74,7 @@ class GroupsAppBar extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CreateGroupScreen(),
+                            builder: (context) => const CreateGroupScreen(),
                           ),
                         );
                       },
@@ -96,15 +100,16 @@ class _HeaderIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(ResponsiveHelper.w(999)),
+      borderRadius: BorderRadius.circular(context.minDimensionPct(10)),
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(ResponsiveHelper.w(10)),
+        padding: EdgeInsets.all(context.widthPct(2.5)),
         decoration: BoxDecoration(
-          color: kSurface,
+          color: AppColors.surface,
           shape: BoxShape.circle,
+          border: Border.all(color: AppColors.borderDark),
         ),
-        child: Icon(icon, color: Colors.white, size: 20),
+        child: const Icon(Icons.group_add, color: AppColors.textPrimary, size: 20),
       ),
     );
   }

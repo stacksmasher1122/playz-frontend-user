@@ -5,7 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/model/maps_model.dart';
 import 'package:redesign/shared_preferences/maps_preferences.dart';
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 
 import 'widgets/animated_center_pin.dart';
 import 'widgets/top_bar.dart';
@@ -63,7 +64,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
   final _searchController = TextEditingController();
   final _searchFocus = FocusNode();
 
-  LatLng _lastCameraPos = LatLng(18.5204, 73.8567); // Default: Pune
+  LatLng _lastCameraPos = const LatLng(18.5204, 73.8567); // Default: Pune
   LocationData? _originalUserLocation;
 
   @override
@@ -107,37 +108,42 @@ class _MapPickerScreenState extends State<MapPickerScreen>
 
     await showModalBottomSheet(
       context: context,
-      backgroundColor: kCard,
+      backgroundColor: AppColors.card,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(6))),
       ),
       builder: (ctx) {
         return Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 30),
+          padding: EdgeInsets.fromLTRB(
+            context.widthPct(5),
+            context.heightPct(2),
+            context.widthPct(5),
+            context.heightPct(3.5),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: ResponsiveHelper.w(40),
-                height: ResponsiveHelper.h(4),
-                margin: const EdgeInsets.only(bottom: 20),
+                width: context.widthPct(10),
+                height: context.heightPct(0.5),
+                margin: EdgeInsets.only(bottom: context.heightPct(2.5)),
                 decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                  color: AppColors.borderDark,
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                 ),
               ),
               Text(
                 'Save Location As',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(18),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(18),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: context.heightPct(2.5)),
               Wrap(
-                spacing: 12,
-                runSpacing: 12,
+                spacing: context.widthPct(3),
+                runSpacing: context.heightPct(1.5),
                 children: labels.map((label) {
                   final icons = {
                     'Home': Icons.home_outlined,
@@ -152,22 +158,22 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                       Navigator.pop(ctx);
                     },
                     child: Container(
-                      width: ResponsiveHelper.w(80),
-                      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+                      width: context.widthPct(20).clamp(70.0, 90.0),
+                      padding: EdgeInsets.symmetric(vertical: context.heightPct(2)),
                       decoration: BoxDecoration(
-                        color: kSurface,
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                        border: Border.all(color: Colors.white10),
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                        border: Border.all(color: AppColors.borderDark),
                       ),
                       child: Column(
                         children: [
-                          Icon(icons[label], color: kSpotifyGreen, size: 28),
-                          const SizedBox(height: 8),
+                          Icon(icons[label], color: AppColors.accent, size: 28),
+                          SizedBox(height: context.heightPct(1)),
                           Text(
                             label,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: ResponsiveHelper.sp(12),
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.textPrimary,
+                              fontSize: context.responsiveFont(12),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -177,7 +183,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.heightPct(2)),
               GestureDetector(
                 onTap: () {
                   selected = null;
@@ -185,7 +191,10 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                 },
                 child: Text(
                   'Skip',
-                  style: TextStyle(color: kMuted, fontSize: 14),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(14),
+                  ),
                 ),
               ),
             ],
@@ -203,7 +212,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Scaffold(
-      backgroundColor: kBg,
+      backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -240,15 +249,15 @@ class _MapPickerScreenState extends State<MapPickerScreen>
           }),
 
           // ─── CENTER PIN + LABEL ─────────────────────────────
-          Center(child: AnimatedCenterPin()),
+          const Center(child: AnimatedCenterPin()),
 
           // ─── TOP BAR + SEARCH ───────────────────────────────
           SafeArea(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                MapPickerTopBar(),
-                const SizedBox(height: 12),
+                const MapPickerTopBar(),
+                SizedBox(height: context.heightPct(1.5)),
                 MapPickerSearchBar(
                   searchController: _searchController,
                   searchFocus: _searchFocus,
@@ -264,16 +273,16 @@ class _MapPickerScreenState extends State<MapPickerScreen>
 
           // ─── GPS BUTTON ─────────────────────────────────────
           Positioned(
-            right: ResponsiveHelper.w(16),
-            bottom: ResponsiveHelper.h(220),
-            child: GpsButton(),
+            right: context.widthPct(4),
+            bottom: context.heightPct(26),
+            child: const GpsButton(),
           ),
 
           // ─── BOTTOM SHEET ───────────────────────────────────
           Align(
             alignment: Alignment.bottomCenter,
             child: MapPickerBottomCard(
-              addressPreview: AddressPreview(),
+              addressPreview: const AddressPreview(),
               confirmButton: ConfirmButton(
                 onConfirm: () async {
                   if (widget.isSelectOnly) {
@@ -284,9 +293,8 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                       await MapsPreferences.saveCurrentLocation(_originalUserLocation!);
                     }
                     _mapsCtrl.isSelectOnlyMode = false;
-                    if (mounted) {
-                      Navigator.pop(context, selectedLoc);
-                    }
+                    if (!context.mounted) return;
+                    Navigator.pop(context, selectedLoc);
                   } else {
                     await _showLabelDialog();
                   }
@@ -296,7 +304,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
           ),
 
           // ─── ERROR OVERLAY ──────────────────────────────────
-          ErrorOverlay(),
+          const ErrorOverlay(),
         ],
       ),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class EquipmentStatusCard extends StatelessWidget {
@@ -26,42 +26,46 @@ class EquipmentStatusCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4.5)),
         border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(context.widthPct(2.5)),
             decoration: BoxDecoration(
               color: AppColors.accent.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
             ),
             child: Icon(icon, color: AppColors.accent, size: 22),
           ),
-          const SizedBox(width: 14),
+          SizedBox(width: context.widthPct(3.5)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.inter(
-                    fontSize: ResponsiveHelper.sp(14),
+                  style: AppTypography.headlineSm.copyWith(
+                    fontSize: context.responsiveFont(14),
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: context.heightPct(0.3)),
                 Text(
                   subtitle,
-                  style: GoogleFonts.inter(
-                    fontSize: ResponsiveHelper.sp(11.5),
-                    color: Colors.white60,
+                  style: AppTypography.bodySm.copyWith(
+                    fontSize: context.responsiveFont(11.5),
+                    color: AppColors.textSecondary,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

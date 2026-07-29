@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/view/USER/Play/play/play_models.dart';
 import 'package:redesign/controller/User_Controller/Match_Controller/match_controller.dart';
@@ -185,7 +185,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
       'Payment Cancelled',
       response.message ?? 'Payment was cancelled or interrupted.',
       backgroundColor: AppColors.card,
-      colorText: Colors.white,
+      colorText: AppColors.textPrimary,
     );
     if (mounted) setState(() => _isProcessing = false);
   }
@@ -263,7 +263,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
         'Slot Booked',
         'This match poll has no associated turf owner ID.',
         backgroundColor: AppColors.card,
-        colorText: Colors.white,
+        colorText: AppColors.textPrimary,
       );
       return;
     }
@@ -292,8 +292,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
       Get.snackbar(
         'Booking Failed ❌',
         'The slot ($timeStr) or an overlapping portion of it has already been booked! Please select a new date or time slot below.',
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+        backgroundColor: AppColors.error,
+        colorText: AppColors.textPrimary,
         duration: const Duration(seconds: 5),
         snackPosition: SnackPosition.BOTTOM,
       );
@@ -427,22 +427,53 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                           context: context,
                           builder: (ctx) => AlertDialog(
                             backgroundColor: AppColors.surface,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                            title: const Text('Slot Price Overhead 💳', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                            ),
+                            title: Text(
+                              'Slot Price Overhead 💳',
+                              style: AppTypography.headlineSm.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: context.responsiveFont(16),
+                              ),
+                            ),
                             content: Text(
                               'The newly selected time slot ($newTimeRangeStr) costs ₹${newSlotTotalCost.toInt()} (original: ₹${originalTurfCost.toInt()}).\n\n'
                               'You need to pay the remaining overhead balance of ₹${overheadPrice.toInt()} to book this slot.',
-                              style: const TextStyle(color: Colors.white70, fontSize: 14),
+                              style: AppTypography.bodySm.copyWith(
+                                color: AppColors.textSecondary,
+                                fontSize: context.responsiveFont(14),
+                              ),
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, false),
-                                child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+                                child: Text(
+                                  'Cancel',
+                                  style: AppTypography.bodySm.copyWith(
+                                    color: AppColors.muted,
+                                    fontSize: context.responsiveFont(14),
+                                  ),
+                                ),
                               ),
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.accent,
+                                  foregroundColor: AppColors.background,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                                  ),
+                                ),
                                 onPressed: () => Navigator.pop(ctx, true),
-                                child: const Text('Pay Overhead & Book', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'Pay Overhead & Book',
+                                  style: AppTypography.headlineSm.copyWith(
+                                    color: AppColors.background,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: context.responsiveFont(14),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -524,10 +555,10 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
-                    ResponsiveHelper.w(16),
-                    ResponsiveHelper.h(16),
-                    ResponsiveHelper.w(16),
-                    ResponsiveHelper.h(110),
+                    context.widthPct(4),
+                    context.heightPct(2),
+                    context.widthPct(4),
+                    context.heightPct(14),
                   ),
                   child: Column(
                     children: [
@@ -535,24 +566,24 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                       if (hasConflict) ...[
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(14),
+                          padding: EdgeInsets.all(context.widthPct(3.5)),
                           decoration: BoxDecoration(
                             color: Colors.orangeAccent.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
                             border: Border.all(color: Colors.orangeAccent),
                           ),
                           child: Row(
                             children: [
                               const Icon(Icons.warning_amber_rounded, color: Colors.orangeAccent, size: 24),
-                              const SizedBox(width: 10),
+                              SizedBox(width: context.widthPct(2.5)),
                               Expanded(
                                 child: Text(
                                   isHost
                                       ? 'Slot Conflict Detected: The original slot was booked by another user during the poll. Tap below to pick a new slot or date.'
                                       : 'Slot Conflict Detected: The host is selecting an available slot for this match poll.',
-                                  style: GoogleFonts.inter(
-                                    color: Colors.white,
-                                    fontSize: ResponsiveHelper.sp(12),
+                                  style: AppTypography.bodySm.copyWith(
+                                    color: AppColors.textPrimary,
+                                    fontSize: context.responsiveFont(12),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -560,7 +591,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: context.heightPct(2)),
                       ],
 
                       // 1. Slots & Gathered Poll Funds Card
@@ -574,18 +605,18 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                         isHost: isHost,
                         onChangeSlotPressed: _onHostChangeSlotPressed,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: context.heightPct(2)),
 
                       // 2. Equipment Status Card (Dynamic - shown only if option set)
                       if (activeEquipmentOption != 'none' && activeEquipmentOption.isNotEmpty) ...[
                         EquipmentStatusCard(option: activeEquipmentOption),
-                        const SizedBox(height: 16),
+                        SizedBox(height: context.heightPct(2)),
                       ],
 
                       // 3. Special Instructions Card (Dynamic - shown only if instructions exist)
                       if (activeInstructions.isNotEmpty) ...[
                         SpecialInstructionsCard(instructions: activeInstructions),
-                        const SizedBox(height: 16),
+                        SizedBox(height: context.heightPct(2)),
                       ],
 
                       // 4. Common Discussion & Queries Chat Card
@@ -594,7 +625,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                         sport: activeSport,
                         memberCount: activeCurrentPlayers,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: context.heightPct(2)),
 
                       // 5. Dynamic Joined Player Pool (Linked to Firebase, Host in bracket & Show All option)
                       PlayerPoolSection(
@@ -604,7 +635,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                         hostXp: activeHostXp,
                         playerIds: activePlayerIds,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: context.heightPct(2)),
 
                       // 6. Location Card (Cleaned with locationType indicator badge)
                       MatchLocationCard(

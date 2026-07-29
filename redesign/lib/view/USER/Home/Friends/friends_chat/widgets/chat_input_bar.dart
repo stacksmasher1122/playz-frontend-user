@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/chat_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-const kGreen = AppColors.accent;
-const kMuted = Colors.white38;
 
 class ChatInputBar extends StatelessWidget {
   final TextEditingController controller;
@@ -29,10 +27,16 @@ class ChatInputBar extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     final chatCtrl = Get.find<ChatController>();
+    final buttonSize = context.minDimensionPct(12).clamp(44.0, 52.0);
 
     return Container(
-      color: Colors.black.withValues(alpha: 0.6),
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+      color: AppColors.background.withValues(alpha: 0.8),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(1),
+        context.widthPct(4),
+        context.heightPct(1),
+      ),
       child: SafeArea(
         top: false,
         child: Row(
@@ -41,46 +45,55 @@ class ChatInputBar extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFF1E1E1E),
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+                  border: Border.all(color: AppColors.borderDark),
                 ),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.emoji_emotions_outlined,
-                        color: Colors.white60,
+                        color: AppColors.muted,
                       ),
                       onPressed: () {},
                     ),
                     Expanded(
                       child: TextField(
                         controller: controller,
-                        style: TextStyle(color: Colors.white),
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(15),
+                        ),
                         textCapitalization: TextCapitalization.sentences,
                         minLines: 1,
                         maxLines: 5,
                         onChanged: onTypingChanged,
                         decoration: InputDecoration(
                           hintText: "Type a message...",
-                          hintStyle: TextStyle(color: kMuted, fontSize: 16),
+                          hintStyle: AppTypography.bodySm.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(14),
+                          ),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: context.heightPct(1.2),
+                          ),
                         ),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.attach_file,
-                        color: Colors.white60,
+                        color: AppColors.muted,
                       ),
                       onPressed: onAttachmentPressed,
                     ),
                     if (!isTyping)
                       IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.camera_alt_outlined,
-                          color: Colors.white60,
+                          color: AppColors.muted,
                         ),
                         onPressed: onCameraPressed,
                       ),
@@ -88,7 +101,7 @@ class ChatInputBar extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: context.widthPct(2)),
 
             // Send/Mic Button
             GestureDetector(
@@ -102,20 +115,20 @@ class ChatInputBar extends StatelessWidget {
               child: Obx(() {
                 final isRec = chatCtrl.isRecording.value;
                 return AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  height: isRec ? 56 : 48,
-                  width: isRec ? 56 : 48,
+                  duration: const Duration(milliseconds: 200),
+                  height: isRec ? buttonSize + 8 : buttonSize,
+                  width: isRec ? buttonSize + 8 : buttonSize,
                   decoration: BoxDecoration(
                     color: isTyping
-                        ? kGreen
-                        : (isRec ? Colors.redAccent : kGreen),
+                        ? AppColors.accent
+                        : (isRec ? AppColors.error : AppColors.accent),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: Icon(
                       isTyping ? Icons.send : (isRec ? Icons.stop : Icons.mic),
-                      color: isRec ? Colors.white : Colors.black,
-                      size: isRec ? 30 : 22,
+                      color: isRec ? AppColors.textPrimary : AppColors.background,
+                      size: isRec ? 28 : 22,
                     ),
                   ),
                 );

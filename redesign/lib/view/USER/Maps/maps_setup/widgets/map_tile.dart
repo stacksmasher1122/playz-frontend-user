@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
 
 class MapTile extends StatelessWidget {
   const MapTile({super.key});
@@ -10,55 +10,63 @@ class MapTile extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+      padding: EdgeInsets.all(context.widthPct(3.5)),
       decoration: BoxDecoration(
-        color: kCard,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        border: Border.all(color: AppColors.borderDark),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [kCard, kSurface.withValues(alpha: 0.8)],
+          colors: [AppColors.card, AppColors.surface.withValues(alpha: 0.8)],
         ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 12,
-            offset: Offset(0, 6),
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(ResponsiveHelper.w(10)),
+            padding: EdgeInsets.all(context.widthPct(2.5)),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+              color: AppColors.textPrimary.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
             ),
-            child: Icon(Icons.location_on_outlined, color: Colors.white),
+            child: const Icon(Icons.location_on_outlined, color: AppColors.textPrimary),
           ),
-          SizedBox(width: 14),
+          SizedBox(width: context.widthPct(3.5)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "Choose location on map",
-                  style: TextStyle(
-                    color: Colors.white,
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
+                    fontSize: context.responsiveFont(14),
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: context.heightPct(0.4)),
                 Text(
                   "Move pin to set precise location",
-                  style: TextStyle(color: kMuted, fontSize: 12),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(12),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: Colors.white70),
+          const Icon(Icons.chevron_right, color: AppColors.textPrimary),
         ],
       ),
     );

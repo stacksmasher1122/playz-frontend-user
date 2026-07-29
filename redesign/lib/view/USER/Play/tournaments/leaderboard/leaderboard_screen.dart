@@ -16,15 +16,39 @@ class LeaderboardScreen extends StatelessWidget {
     required this.matchType,
   });
 
+  Color _getRankColor(int rank) {
+    switch (rank) {
+      case 1:
+        return AppColors.coinsGold;
+      case 2:
+        return const Color(0xFFE0E0E0);
+      case 3:
+        return const Color(0xFFCD7F32);
+      default:
+        return AppColors.muted;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.surface,
-        title: Text("Leaderboard", style: AppTypography.headlineSm.copyWith(color: AppColors.onPrimary)),
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          "Leaderboard",
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(18),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.onPrimary),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
           onPressed: () => Get.back(),
         ),
       ),
@@ -36,12 +60,25 @@ class LeaderboardScreen extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: AppColors.accent));
+            return const Center(child: CircularProgressIndicator(color: AppColors.accent));
           }
 
           if (snapshot.hasError || !snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return Center(
-              child: Text("No leaderboard data available.", style: AppTypography.bodyMd.copyWith(color: AppColors.muted)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.leaderboard_outlined, size: 48, color: AppColors.muted),
+                  SizedBox(height: context.heightPct(1.5)),
+                  Text(
+                    "No leaderboard data available.",
+                    style: AppTypography.bodyMd.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(14),
+                    ),
+                  ),
+                ],
+              ),
             );
           }
 
@@ -56,7 +93,7 @@ class LeaderboardScreen extends StatelessWidget {
                 .get(),
             builder: (context, teamSnapshot) {
               if (teamSnapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator(color: AppColors.accent));
+                return const Center(child: CircularProgressIndicator(color: AppColors.accent));
               }
 
               Map<String, Map<String, dynamic>> teamMap = {};
@@ -84,52 +121,80 @@ class LeaderboardScreen extends StatelessWidget {
                 int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
                 if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
 
-                // A13 Fix: Leaderboard tiebreaker should account for matches played
+                // Tiebreaker account for matches played
                 int matchesPlayedA = a['matchesPlayed'] ?? 0;
                 int matchesPlayedB = b['matchesPlayed'] ?? 0;
                 return matchesPlayedB.compareTo(matchesPlayedA);
               });
 
               return ListView(
-                padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+                padding: EdgeInsets.all(context.widthPct(4)),
                 children: [
-                  _buildHeader(),
-                  SizedBox(height: ResponsiveHelper.h(12)),
-                  ...entries.asMap().entries.map((e) => _buildRow(e.key + 1, e.value)),
+                  _buildHeader(context),
+                  SizedBox(height: context.heightPct(1.5)),
+                  ...entries.asMap().entries.map((e) => _buildRow(context, e.key + 1, e.value)),
                 ],
               );
-            }
+            },
           );
         },
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: ResponsiveHelper.w(30)), // For rank
+        SizedBox(width: context.widthPct(8)), // For rank
         Expanded(
           flex: 4,
-          child: Text("Team", style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
+          child: Text(
+            "Team",
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(11),
+            ),
+          ),
         ),
         Expanded(
           flex: 1,
-          child: Text("W", textAlign: TextAlign.center, style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
+          child: Text(
+            "W",
+            textAlign: TextAlign.center,
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(11),
+            ),
+          ),
         ),
         Expanded(
           flex: 1,
-          child: Text("L", textAlign: TextAlign.center, style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
+          child: Text(
+            "L",
+            textAlign: TextAlign.center,
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(11),
+            ),
+          ),
         ),
         Expanded(
           flex: 1,
-          child: Text("Pts", textAlign: TextAlign.center, style: AppTypography.labelCaps.copyWith(color: AppColors.accent)),
+          child: Text(
+            "Pts",
+            textAlign: TextAlign.center,
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.accent,
+              fontSize: context.responsiveFont(11),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildRow(int rank, Map<String, dynamic> entry) {
+  Widget _buildRow(BuildContext context, int rank, Map<String, dynamic> entry) {
     final teamData = entry['teamData'] as Map<String, dynamic>;
     final name = teamData['name'] ?? 'Unknown Team';
     final logoUrl = teamData['logoUrl'] ?? '';
@@ -137,48 +202,94 @@ class LeaderboardScreen extends StatelessWidget {
     final losses = entry['losses'] ?? 0;
     final points = entry['points'] ?? 0;
 
+    final rankColor = _getRankColor(rank);
+
     return Padding(
-      padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
+      padding: EdgeInsets.only(bottom: context.heightPct(1.5)),
       child: Container(
-        padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+        padding: EdgeInsets.all(context.widthPct(3)),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+          border: Border.all(
+            color: rank <= 3 ? rankColor.withValues(alpha: 0.4) : AppColors.borderDark,
+            width: rank <= 3 ? 1.5 : 1.0,
+          ),
         ),
         child: Row(
           children: [
             SizedBox(
-              width: ResponsiveHelper.w(30),
-              child: Text("$rank", style: AppTypography.bodyLg.copyWith(color: AppColors.muted, fontWeight: FontWeight.bold)),
+              width: context.widthPct(8),
+              child: Text(
+                "$rank",
+                style: AppTypography.bodyLg.copyWith(
+                  color: rankColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(14),
+                ),
+              ),
             ),
             Expanded(
               flex: 4,
               child: Row(
                 children: [
                   CircleAvatar(
-                    radius: ResponsiveHelper.w(16),
+                    radius: context.minDimensionPct(4).clamp(14.0, 18.0),
                     backgroundColor: AppColors.card,
                     backgroundImage: logoUrl.isNotEmpty ? CachedNetworkImageProvider(logoUrl) : null,
-                    child: logoUrl.isEmpty ? Icon(Icons.group, color: AppColors.muted, size: 16) : null,
+                    child: logoUrl.isEmpty
+                        ? const Icon(Icons.group_rounded, color: AppColors.muted, size: 16)
+                        : null,
                   ),
-                  SizedBox(width: ResponsiveHelper.w(8)),
+                  SizedBox(width: context.widthPct(2)),
                   Expanded(
-                    child: Text(name, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary), overflow: TextOverflow.ellipsis),
+                    child: Text(
+                      name,
+                      style: AppTypography.bodyMd.copyWith(
+                        color: AppColors.textPrimary,
+                        fontSize: context.responsiveFont(13.5),
+                        fontWeight: rank <= 3 ? FontWeight.bold : FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
             ),
             Expanded(
               flex: 1,
-              child: Text(wins.toString(), textAlign: TextAlign.center, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary)),
+              child: Text(
+                wins.toString(),
+                textAlign: TextAlign.center,
+                style: AppTypography.bodyMd.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(13.5),
+                ),
+              ),
             ),
             Expanded(
               flex: 1,
-              child: Text(losses.toString(), textAlign: TextAlign.center, style: AppTypography.bodyMd.copyWith(color: AppColors.onPrimary)),
+              child: Text(
+                losses.toString(),
+                textAlign: TextAlign.center,
+                style: AppTypography.bodyMd.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(13.5),
+                ),
+              ),
             ),
             Expanded(
               flex: 1,
-              child: Text(points.toString(), textAlign: TextAlign.center, style: AppTypography.bodyMd.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold)),
+              child: Text(
+                points.toString(),
+                textAlign: TextAlign.center,
+                style: AppTypography.bodyMd.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(14),
+                ),
+              ),
             ),
           ],
         ),

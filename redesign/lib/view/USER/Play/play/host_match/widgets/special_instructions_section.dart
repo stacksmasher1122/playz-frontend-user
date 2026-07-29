@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SpecialInstructionsSection extends StatelessWidget {
@@ -17,87 +17,76 @@ class SpecialInstructionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Icon(Icons.sticky_note_2_rounded, color: AppColors.accent, size: 18),
-            const SizedBox(width: 8),
+            const Icon(Icons.sticky_note_2_outlined, color: AppColors.accent, size: 18),
+            SizedBox(width: context.widthPct(2)),
             Text(
-              'Special Instructions / Notes',
-              style: GoogleFonts.inter(
+              'Host Special Instructions (Optional)',
+              style: AppTypography.headlineSm.copyWith(
                 color: AppColors.accent,
                 fontWeight: FontWeight.bold,
-                fontSize: ResponsiveHelper.sp(14),
+                fontSize: context.responsiveFont(14),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: AppColors.card,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white12),
+        SizedBox(height: context.heightPct(1.2)),
+
+        TextField(
+          controller: instructionsController,
+          maxLines: 3,
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: context.responsiveFont(14),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: instructionsController,
-                maxLines: 3,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintText:
-                      'Add instructions for players (e.g. Bring non-marking shoes, arrive 15 min early, carry ID)...',
-                  hintStyle: TextStyle(color: Colors.white38, fontSize: 13),
-                  border: InputBorder.none,
+          decoration: InputDecoration(
+            hintText: 'Enter rules e.g., Arrive 15m early, non-marking shoes only...',
+            hintStyle: AppTypography.bodySm.copyWith(
+              color: AppColors.muted.withValues(alpha: 0.6),
+              fontSize: context.responsiveFont(13),
+            ),
+            filled: true,
+            fillColor: AppColors.card,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+              borderSide: const BorderSide(color: AppColors.borderDark),
+            ),
+          ),
+        ),
+
+        SizedBox(height: context.heightPct(1.2)),
+
+        SizedBox(
+          height: context.heightPct(4.5).clamp(34.0, 42.0),
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: instructionPresets.length,
+            separatorBuilder: (_, __) => SizedBox(width: context.widthPct(2)),
+            itemBuilder: (context, index) {
+              final preset = instructionPresets[index];
+              return ActionChip(
+                label: Text(preset),
+                backgroundColor: AppColors.card,
+                labelStyle: AppTypography.bodySm.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: context.responsiveFont(11.5),
+                  fontWeight: FontWeight.w500,
                 ),
-              ),
-              const Divider(color: Colors.white10, height: 1),
-              const SizedBox(height: 8),
-              Text(
-                'Quick Presets:',
-                style: GoogleFonts.inter(
-                  color: Colors.white54,
-                  fontSize: ResponsiveHelper.sp(11),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                  side: const BorderSide(color: AppColors.borderDark),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: instructionPresets.map((preset) {
-                  return GestureDetector(
-                    onTap: () => onPresetTapped(preset),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.06),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white10),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.add, color: AppColors.accent, size: 12),
-                          const SizedBox(width: 4),
-                          Text(
-                            preset,
-                            style: GoogleFonts.inter(
-                              color: Colors.white70,
-                              fontSize: ResponsiveHelper.sp(11),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ],
+                onPressed: () => onPresetTapped(preset),
+              );
+            },
           ),
         ),
       ],

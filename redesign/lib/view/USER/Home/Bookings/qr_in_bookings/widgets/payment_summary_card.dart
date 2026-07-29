@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'qr_amount_row.dart';
 import 'qr_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -22,9 +23,9 @@ class PaymentSummaryCard extends StatelessWidget {
       child: Column(
         children: [
           QrAmountRow('Court Fee', '₹$amount'),
-          Divider(color: Colors.white12),
+          const Divider(color: AppColors.borderDark),
           QrAmountRow('Total Paid', '₹$amount', highlight: true),
-          SizedBox(height: 6),
+          SizedBox(height: context.heightPct(0.6)),
           QrAmountRow('Payment Method / Ref', refText),
         ],
       ),

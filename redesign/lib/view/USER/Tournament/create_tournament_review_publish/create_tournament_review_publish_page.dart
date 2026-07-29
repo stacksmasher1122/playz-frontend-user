@@ -9,7 +9,6 @@ import '../venue_selection/widgets/progress_header.dart';
 import 'widget/detail_card_widget.dart';
 import 'widget/prize_pool_card.dart';
 import 'widget/publish_setting_tile.dart';
-// NOTE: registered_team_card.dart was removed because the file does not exist in widget/ directory.
 import 'widget/tournament_banner_widget.dart';
 
 class CreateTournamentReviewPublishPage extends StatefulWidget {
@@ -39,6 +38,7 @@ class _CreateTournamentReviewPublishPageState
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -46,23 +46,30 @@ class _CreateTournamentReviewPublishPageState
         elevation: 0,
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back,
-            color: AppColors.muted,
-            size: ResponsiveHelper.w(24),
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.textPrimary,
+            size: context.responsiveFont(20),
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          "Create Tournament",
-          style: AppTypography.headlineMd.copyWith(color: AppColors.accent),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "Create Tournament",
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.accent,
+              fontSize: context.responsiveFont(18),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(
-              Icons.close,
-              color: AppColors.muted,
-              size: ResponsiveHelper.w(24),
+              Icons.close_rounded,
+              color: AppColors.textPrimary,
+              size: context.responsiveFont(22),
             ),
             onPressed: () => Navigator.pop(context),
           ),
@@ -80,21 +87,18 @@ class _CreateTournamentReviewPublishPageState
                 physics: const BouncingScrollPhysics(),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: ResponsiveHelper.w(16),
+                    horizontal: context.widthPct(4),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: ResponsiveHelper.h(32),
-                      ), // pt-[80px] equivalent
-                      // Progress Indicator
+                      SizedBox(height: context.heightPct(2)),
                       const ProgressHeader(
                         currentStep: 5,
                         totalSteps: 5,
                         title: "Step 5 of 5: Review & Publish",
                       ),
-                      SizedBox(height: ResponsiveHelper.h(32)),
+                      SizedBox(height: context.heightPct(3)),
 
                       // Banner
                       TournamentBannerWidget(
@@ -108,86 +112,96 @@ class _CreateTournamentReviewPublishPageState
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Tournament Details",
-                            style: AppTypography.headlineSm.copyWith(
-                              color: AppColors.onPrimary,
+                          Expanded(
+                            child: Text(
+                              "Tournament Details",
+                              style: AppTypography.headlineSm.copyWith(
+                                color: AppColors.textPrimary,
+                                fontSize: context.responsiveFont(16),
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           TextButton(
                             onPressed: () => controller.editAll(context),
                             child: Text(
                               "EDIT ALL",
-                              style: AppTypography.labelCaps.copyWith(
+                              style: AppTypography.labelCaps10.copyWith(
                                 color: AppColors.accent,
+                                fontSize: context.responsiveFont(12),
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: ResponsiveHelper.h(16)),
+                      SizedBox(height: context.heightPct(1.5)),
 
-                      // Bento Grid
-                      // On mobile we just stack them, on larger screens (tablet) we could wrap.
+                      // Bento Grid Cards
                       DetailCardWidget(
-                        icon: Icons.location_on,
+                        icon: Icons.location_on_rounded,
                         title: "Venue & Date",
                         value1: controller.venueName,
                         value2: controller.dateRange,
                       ),
-                      SizedBox(height: ResponsiveHelper.h(16)),
+                      SizedBox(height: context.heightPct(1.5)),
                       DetailCardWidget(
-                        icon: Icons.account_tree,
+                        icon: Icons.account_tree_rounded,
                         title: "Format",
                         value1: controller.formatType,
                         value2: controller.formatDetails,
                       ),
-                      SizedBox(height: ResponsiveHelper.h(16)),
+                      SizedBox(height: context.heightPct(1.5)),
                       PrizePoolCard(
                         title: "Prize Pool",
                         total: controller.prizeTotal,
                         distribution: controller.prizeDistribution,
                       ),
-                      SizedBox(height: ResponsiveHelper.h(32)),
+                      SizedBox(height: context.heightPct(3)),
 
                       // Publish Settings
                       Text(
                         "Publish Settings",
                         style: AppTypography.headlineSm.copyWith(
-                          color: AppColors.onPrimary,
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(16),
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: ResponsiveHelper.h(16)),
+                      SizedBox(height: context.heightPct(1.5)),
                       PublishSettingTile(controller: controller),
-                      SizedBox(height: ResponsiveHelper.h(16)),
+                      SizedBox(height: context.heightPct(1.5)),
 
                       // Copy Invite Link Button
                       InkWell(
                         onTap: controller.copyInviteLink,
                         borderRadius: BorderRadius.circular(
-                          ResponsiveHelper.w(12),
+                          context.minDimensionPct(3.5),
                         ),
                         child: Container(
-                          padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+                          padding: EdgeInsets.all(context.widthPct(4)),
                           decoration: BoxDecoration(
                             color: AppColors.card,
                             borderRadius: BorderRadius.circular(
-                              ResponsiveHelper.w(12),
+                              context.minDimensionPct(3.5),
                             ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.link,
-                                color: AppColors.onPrimary,
-                                size: ResponsiveHelper.w(24),
+                                Icons.link_rounded,
+                                color: AppColors.textPrimary,
+                                size: context.responsiveFont(22),
                               ),
-                              SizedBox(width: ResponsiveHelper.w(8)),
+                              SizedBox(width: context.widthPct(2)),
                               Text(
                                 "Copy Invite Link",
                                 style: AppTypography.bodyLg.copyWith(
-                                  color: AppColors.onPrimary,
+                                  color: AppColors.textPrimary,
+                                  fontSize: context.responsiveFont(14),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -195,9 +209,7 @@ class _CreateTournamentReviewPublishPageState
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: ResponsiveHelper.h(100),
-                      ), // padding for bottom nav
+                      SizedBox(height: context.heightPct(3)),
                     ],
                   ),
                 ),
@@ -206,12 +218,11 @@ class _CreateTournamentReviewPublishPageState
 
             // Custom Bottom Navigation
             Container(
-              height: ResponsiveHelper.h(96),
               padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.w(16),
-                vertical: ResponsiveHelper.h(16),
+                horizontal: context.widthPct(4),
+                vertical: context.heightPct(1.8),
               ),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.background,
                 border: Border(top: BorderSide(color: AppColors.card)),
               ),
@@ -222,45 +233,47 @@ class _CreateTournamentReviewPublishPageState
                     child: InkWell(
                       onTap: () => controller.goBack(context),
                       borderRadius: BorderRadius.circular(
-                        ResponsiveHelper.w(12),
+                        context.minDimensionPct(3.5),
                       ),
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          vertical: ResponsiveHelper.h(16),
+                          vertical: context.heightPct(1.5),
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.card,
                           borderRadius: BorderRadius.circular(
-                            ResponsiveHelper.w(12),
+                            context.minDimensionPct(3.5),
                           ),
                         ),
                         child: Center(
                           child: Text(
                             "Back",
-                            style: AppTypography.labelCaps.copyWith(
-                              color: AppColors.onPrimary,
+                            style: AppTypography.labelCaps10.copyWith(
+                              color: AppColors.textPrimary,
+                              fontSize: context.responsiveFont(13.5),
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: ResponsiveHelper.w(16)),
+                  SizedBox(width: context.widthPct(3)),
                   Expanded(
                     flex: 2,
                     child: InkWell(
                       onTap: () => controller.publishTournament(context),
                       borderRadius: BorderRadius.circular(
-                        ResponsiveHelper.w(12),
+                        context.minDimensionPct(3.5),
                       ),
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          vertical: ResponsiveHelper.h(16),
+                          vertical: context.heightPct(1.5),
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.accent,
                           borderRadius: BorderRadius.circular(
-                            ResponsiveHelper.w(12),
+                            context.minDimensionPct(3.5),
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -274,11 +287,11 @@ class _CreateTournamentReviewPublishPageState
                           if (controller.isPublishing.value) {
                             return Center(
                               child: SizedBox(
-                                width: ResponsiveHelper.w(20),
-                                height: ResponsiveHelper.w(20),
-                                child: CircularProgressIndicator(
+                                width: context.responsiveFont(20),
+                                height: context.responsiveFont(20),
+                                child: const CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: AppColors.onPrimary,
+                                  color: AppColors.background,
                                 ),
                               ),
                             );
@@ -287,17 +300,22 @@ class _CreateTournamentReviewPublishPageState
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.rocket_launch,
+                                Icons.rocket_launch_rounded,
                                 color: AppColors.background,
-                                size: ResponsiveHelper.w(20),
+                                size: context.responsiveFont(20),
                               ),
-                              SizedBox(width: ResponsiveHelper.w(8)),
+                              SizedBox(width: context.widthPct(2)),
                               Flexible(
-                                child: Text(
-                                  "Publish Tournament",
-                                  textAlign: TextAlign.center,
-                                  style: AppTypography.headlineSm.copyWith(
-                                    color: AppColors.background,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    "Publish Tournament",
+                                    textAlign: TextAlign.center,
+                                    style: AppTypography.headlineSm.copyWith(
+                                      color: AppColors.background,
+                                      fontSize: context.responsiveFont(14.5),
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),

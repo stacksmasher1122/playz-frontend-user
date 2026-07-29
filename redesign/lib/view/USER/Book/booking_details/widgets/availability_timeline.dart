@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class AvailabilityTimeline extends StatelessWidget {
@@ -16,8 +17,6 @@ class AvailabilityTimeline extends StatelessWidget {
     this.isLoading = false,
     this.selectedDate,
   });
-
-  static const _kMuted = Color(0xFFA7A7A7);
 
   @override
   Widget build(BuildContext context) {
@@ -82,20 +81,20 @@ class AvailabilityTimeline extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
           child: Row(
             children: [
               Text(
                 'Availability Timeline',
-                style: TextStyle(
-                  color: _kMuted,
-                  fontSize: ResponsiveHelper.sp(14),
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(14),
                   fontWeight: FontWeight.w500,
                 ),
               ),
               if (isLoading) ...[
-                SizedBox(width: 8),
-                SizedBox(
+                SizedBox(width: context.widthPct(2)),
+                const SizedBox(
                   width: 12,
                   height: 12,
                   child: CircularProgressIndicator(
@@ -107,14 +106,14 @@ class AvailabilityTimeline extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 12),
+        SizedBox(height: context.heightPct(1.5)),
 
         /// SINGLE SCROLLABLE TIMELINE
         SingleChildScrollView(
           controller: controller,
           scrollDirection: Axis.horizontal,
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
           child: Row(
             children: List.generate(timelineSlots.length, (index) {
               final slot = timelineSlots[index];
@@ -130,9 +129,9 @@ class AvailabilityTimeline extends StatelessWidget {
                   ),
                   if (!isLast)
                     Container(
-                      width: ResponsiveHelper.w(2),
-                      height: ResponsiveHelper.h(64),
-                      color: Colors.grey.shade800,
+                      width: 2,
+                      height: context.heightPct(7.5).clamp(50.0, 70.0),
+                      color: AppColors.borderDark,
                     ),
                 ],
               );
@@ -140,24 +139,42 @@ class AvailabilityTimeline extends StatelessWidget {
           ),
         ),
 
-        SizedBox(height: 12),
+        SizedBox(height: context.heightPct(1.5)),
 
         /// LEGEND
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+          padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
           child: Row(
             children: [
-              _LegendDot(color: Color(0xFFD60101)),
-              SizedBox(width: 6),
-              Text('Booked', style: TextStyle(color: _kMuted, fontSize: ResponsiveHelper.sp(12))),
-              SizedBox(width: 16),
-              _LegendDot(color: Color(0xFF00B45D)),
-              SizedBox(width: 6),
-              Text('Available', style: TextStyle(color: _kMuted, fontSize: ResponsiveHelper.sp(12))),
-              SizedBox(width: 16),
-              _LegendDot(color: Color(0xFF555555)),
-              SizedBox(width: 6),
-              Text('Unavailable', style: TextStyle(color: _kMuted, fontSize: ResponsiveHelper.sp(12))),
+              const _LegendDot(color: AppColors.error),
+              SizedBox(width: context.widthPct(1.5)),
+              Text(
+                'Booked',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(12),
+                ),
+              ),
+              SizedBox(width: context.widthPct(4)),
+              const _LegendDot(color: AppColors.accent),
+              SizedBox(width: context.widthPct(1.5)),
+              Text(
+                'Available',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(12),
+                ),
+              ),
+              SizedBox(width: context.widthPct(4)),
+              const _LegendDot(color: AppColors.borderDark),
+              SizedBox(width: context.widthPct(1.5)),
+              Text(
+                'Unavailable',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(12),
+                ),
+              ),
             ],
           ),
         ),
@@ -182,14 +199,12 @@ class _LegendDot extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      width: ResponsiveHelper.w(10),
-      height: ResponsiveHelper.h(10),
+      width: 10,
+      height: 10,
       decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }
-
-
 
 class _TimelineBlock extends StatelessWidget {
   final _TimelineSlotData slot;
@@ -211,31 +226,34 @@ class _TimelineBlock extends StatelessWidget {
     String statusLabel;
 
     if (slot.isPast) {
-      bgColor = Color(0xFF333333); // Grey - past / unavailable
-      textColor = Colors.white54;
+      bgColor = AppColors.surface; // Past / unavailable
+      textColor = AppColors.muted;
       statusLabel = 'UNAVAILABLE';
     } else if (slot.isFree) {
-      bgColor = Color.fromARGB(255, 0, 180, 93); // Available - green
-      textColor = Colors.black;
+      bgColor = AppColors.accent; // Available - green
+      textColor = AppColors.background;
       statusLabel = 'AVAILABLE';
     } else {
-      bgColor = Color.fromARGB(255, 214, 1, 1); // Booked - red
-      textColor = Colors.white;
+      bgColor = AppColors.error; // Booked - red
+      textColor = AppColors.textPrimary;
       statusLabel = 'BOOKED';
     }
 
+    final blockWidth = context.widthPct(28).clamp(90.0, 130.0);
+    final blockHeight = context.heightPct(7.5).clamp(50.0, 70.0);
+
     return Container(
-      width: ResponsiveHelper.w(110),
-      height: ResponsiveHelper.h(64),
+      width: blockWidth,
+      height: blockHeight,
       padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.w(4),
-        vertical: ResponsiveHelper.h(2),
+        horizontal: context.widthPct(1),
+        vertical: context.heightPct(0.3),
       ),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.horizontal(
-          left: isFirst ? Radius.circular(ResponsiveHelper.w(12)) : Radius.zero,
-          right: isLast ? Radius.circular(ResponsiveHelper.w(12)) : Radius.zero,
+          left: isFirst ? Radius.circular(context.minDimensionPct(3)) : Radius.zero,
+          right: isLast ? Radius.circular(context.minDimensionPct(3)) : Radius.zero,
         ),
       ),
       child: Center(
@@ -248,29 +266,29 @@ class _TimelineBlock extends StatelessWidget {
               slot.timeRange,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: AppTypography.headlineSm.copyWith(
                 color: textColor,
-                fontSize: ResponsiveHelper.sp(10),
+                fontSize: context.responsiveFont(10),
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 2),
+            SizedBox(height: context.heightPct(0.3)),
 
             /// STATUS PILL
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.w(6),
-                vertical: ResponsiveHelper.h(1),
+                horizontal: context.widthPct(1.5),
+                vertical: context.heightPct(0.1),
               ),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                color: AppColors.background.withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
               ),
               child: Text(
                 statusLabel,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(9),
+                style: AppTypography.labelCaps10.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(9),
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.5,
                 ),
@@ -278,12 +296,12 @@ class _TimelineBlock extends StatelessWidget {
             ),
 
             if (slot.price > 0) ...[
-              SizedBox(height: 1),
+              SizedBox(height: context.heightPct(0.2)),
               Text(
                 '₹${slot.price.toInt()}',
-                style: TextStyle(
+                style: AppTypography.bodySm.copyWith(
                   color: textColor.withValues(alpha: 0.9),
-                  fontSize: ResponsiveHelper.sp(9),
+                  fontSize: context.responsiveFont(9),
                   fontWeight: FontWeight.w600,
                 ),
               ),

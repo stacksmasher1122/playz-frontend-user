@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CameraTopBar extends StatelessWidget {
@@ -8,15 +9,15 @@ class CameraTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Positioned(
-      top: ResponsiveHelper.h(40),
-      left: ResponsiveHelper.w(16),
+      top: context.heightPct(4),
+      left: context.widthPct(4),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.4),
           shape: BoxShape.circle,
         ),
         child: IconButton(
-          icon: Icon(Icons.close, color: Colors.white, size: 28),
+          icon: const Icon(Icons.close, color: AppColors.textPrimary, size: 28),
           onPressed: () => Navigator.pop(context),
         ),
       ),

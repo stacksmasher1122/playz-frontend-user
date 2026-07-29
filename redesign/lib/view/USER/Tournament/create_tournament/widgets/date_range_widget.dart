@@ -23,7 +23,6 @@ class DateRangeWidget extends StatefulWidget {
     return DateFormat('dd-MM-yyyy').format(date);
   }
 
-  
   @override
   State<DateRangeWidget> createState() => _DateRangeWidgetState();
 }
@@ -31,6 +30,8 @@ class DateRangeWidget extends StatefulWidget {
 class _DateRangeWidgetState extends State<DateRangeWidget> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Column(
       children: [
         Row(
@@ -39,24 +40,26 @@ class _DateRangeWidgetState extends State<DateRangeWidget> {
               child: Text(
                 "Start Date",
                 style: AppTypography.headlineSm.copyWith(
-                  color: AppColors.onPrimary,
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(15),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(width: ResponsiveHelper.w(16)),
+            SizedBox(width: context.widthPct(4)),
             Expanded(
               child: Text(
                 "End Date",
                 style: AppTypography.headlineSm.copyWith(
-                  color: AppColors.onPrimary,
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(15),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ],
         ),
-        SizedBox(height: ResponsiveHelper.h(8)),
+        SizedBox(height: context.heightPct(1)),
         Row(
           children: [
             Expanded(
@@ -67,7 +70,7 @@ class _DateRangeWidgetState extends State<DateRangeWidget> {
                 widget.startDate != null,
               ),
             ),
-            SizedBox(width: ResponsiveHelper.w(16)),
+            SizedBox(width: context.widthPct(4)),
             Expanded(
               child: _buildDateBox(
                 context,
@@ -86,25 +89,30 @@ class _DateRangeWidgetState extends State<DateRangeWidget> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: ResponsiveHelper.h(52),
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+        height: context.heightPct(6.5).clamp(48.0, 56.0),
+        padding: EdgeInsets.symmetric(horizontal: context.widthPct(3.5)),
         decoration: BoxDecoration(
           color: AppColors.card,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              text,
-              style: AppTypography.bodyMd.copyWith(
-                color: hasDate ? AppColors.onPrimary : AppColors.muted,
+            Expanded(
+              child: Text(
+                text,
+                style: AppTypography.bodyMd.copyWith(
+                  color: hasDate ? AppColors.textPrimary : AppColors.muted,
+                  fontSize: context.responsiveFont(13.5),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Icon(
               Icons.calendar_today_outlined,
-              color: AppColors.onPrimary,
-              size: ResponsiveHelper.w(18),
+              color: AppColors.textPrimary,
+              size: context.responsiveFont(18),
             ),
           ],
         ),

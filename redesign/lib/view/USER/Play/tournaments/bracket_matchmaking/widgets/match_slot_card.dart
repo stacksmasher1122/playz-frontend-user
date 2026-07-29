@@ -51,16 +51,18 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     final match = widget.match;
     final teamA = widget.teamA;
     final teamB = widget.teamB;
     final isOrganizer = widget.isOrganizer;
 
-    bool isBye = match.teamAId == null || match.teamBId == null;
+    final bool isBye = match.teamAId == null || match.teamBId == null;
 
     Color statusColor = AppColors.muted;
     String statusText = "Upcoming";
-    IconData statusIcon = Icons.access_time;
+    IconData statusIcon = Icons.access_time_rounded;
 
     final isTeamAWinner = match.winnerId != null && match.winnerId == match.teamAId;
     final isTeamBWinner = match.winnerId != null && match.winnerId == match.teamBId;
@@ -68,19 +70,19 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
 
     if (isBye) {
       statusText = "Auto-Advance";
-      statusIcon = Icons.fast_forward;
+      statusIcon = Icons.fast_forward_rounded;
     } else if (match.status == 'in_progress') {
-      statusColor = Colors.orange;
+      statusColor = AppColors.warning;
       statusText = "In Progress";
-      statusIcon = Icons.play_circle_fill;
+      statusIcon = Icons.play_circle_fill_rounded;
     } else if (isCompleted) {
       statusColor = AppColors.accent;
       statusText = "Completed";
-      statusIcon = Icons.emoji_events;
+      statusIcon = Icons.emoji_events_rounded;
     } else if (match.status == 'scheduled') {
-      statusColor = Colors.blueAccent;
+      statusColor = AppColors.infoBlue;
       statusText = "Scheduled";
-      statusIcon = Icons.calendar_today;
+      statusIcon = Icons.calendar_today_rounded;
     }
 
     final authUid = FirebaseAuth.instance.currentUser?.uid;
@@ -105,15 +107,15 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
     return GestureDetector(
       onTap: canTapCard ? widget.onTap : null,
       child: Container(
-        margin: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
-        padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+        margin: EdgeInsets.only(bottom: context.heightPct(1.5)),
+        padding: EdgeInsets.all(context.widthPct(3.5)),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
           border: Border.all(
             color: isCompleted
                 ? AppColors.accent
-                : (match.status == 'in_progress' ? Colors.orange : Colors.transparent),
+                : (match.status == 'in_progress' ? AppColors.warning : AppColors.borderDark),
             width: isCompleted ? 1.5 : 1.0,
           ),
         ),
@@ -133,35 +135,46 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
                             child: Text(
                               teamA,
                               style: AppTypography.bodyMd.copyWith(
-                                color: isTeamAWinner ? AppColors.accent : AppColors.onPrimary,
+                                color: isTeamAWinner ? AppColors.accent : AppColors.textPrimary,
                                 fontWeight: isTeamAWinner ? FontWeight.bold : FontWeight.normal,
+                                fontSize: context.responsiveFont(14),
                               ),
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           if (isTeamAWinner) ...[
-                            SizedBox(width: ResponsiveHelper.w(6)),
+                            SizedBox(width: context.widthPct(1.5)),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.widthPct(1.5),
+                                vertical: context.heightPct(0.3),
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.accent.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
                               ),
                               child: Text(
                                 "WINNER",
-                                style: TextStyle(
+                                style: AppTypography.labelCaps10.copyWith(
                                   color: AppColors.accent,
-                                  fontSize: 9,
+                                  fontSize: context.responsiveFont(9),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            )
-                          ]
+                            ),
+                          ],
                         ],
                       ),
-                      SizedBox(height: ResponsiveHelper.h(4)),
-                      Text("vs", style: AppTypography.labelCaps.copyWith(color: AppColors.muted)),
-                      SizedBox(height: ResponsiveHelper.h(4)),
+                      SizedBox(height: context.heightPct(0.5)),
+                      Text(
+                        "vs",
+                        style: AppTypography.labelCaps10.copyWith(
+                          color: AppColors.muted,
+                          fontSize: context.responsiveFont(11),
+                        ),
+                      ),
+                      SizedBox(height: context.heightPct(0.5)),
 
                       // Team B Row
                       Row(
@@ -171,75 +184,106 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
                             child: Text(
                               teamB,
                               style: AppTypography.bodyMd.copyWith(
-                                color: isTeamBWinner ? AppColors.accent : AppColors.onPrimary,
+                                color: isTeamBWinner ? AppColors.accent : AppColors.textPrimary,
                                 fontWeight: isTeamBWinner ? FontWeight.bold : FontWeight.normal,
+                                fontSize: context.responsiveFont(14),
                               ),
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           if (isTeamBWinner) ...[
-                            SizedBox(width: ResponsiveHelper.w(6)),
+                            SizedBox(width: context.widthPct(1.5)),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.widthPct(1.5),
+                                vertical: context.heightPct(0.3),
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.accent.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
                               ),
                               child: Text(
                                 "WINNER",
-                                style: TextStyle(
+                                style: AppTypography.labelCaps10.copyWith(
                                   color: AppColors.accent,
-                                  fontSize: 9,
+                                  fontSize: context.responsiveFont(9),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            )
-                          ]
+                            ),
+                          ],
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(12)),
+                SizedBox(width: context.widthPct(3)),
                 Container(
-                  width: ResponsiveHelper.w(90),
-                  padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4), vertical: ResponsiveHelper.h(8)),
+                  width: context.widthPct(24).clamp(80.0, 100.0),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.widthPct(1.5),
+                    vertical: context.heightPct(1),
+                  ),
                   decoration: BoxDecoration(
-                    color: AppColors.background,
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
                   ),
                   child: Column(
                     children: [
                       Icon(statusIcon, color: statusColor, size: 20),
-                      SizedBox(height: 4),
+                      SizedBox(height: context.heightPct(0.5)),
                       Text(
                         statusText,
                         textAlign: TextAlign.center,
-                        style: AppTypography.bodySm.copyWith(color: statusColor, fontSize: 10, fontWeight: FontWeight.bold),
+                        style: AppTypography.bodySm.copyWith(
+                          color: statusColor,
+                          fontSize: context.responsiveFont(10),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       if (match.status == 'in_progress')
                         Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
+                          padding: EdgeInsets.only(top: context.heightPct(0.5)),
                           child: Text(
                             canScore ? "Score Match" : "View Live",
-                            style: TextStyle(
-                              color: canScore ? Colors.orange : AppColors.accent,
-                              fontSize: 9,
+                            style: AppTypography.bodySm.copyWith(
+                              color: canScore ? AppColors.warning : AppColors.accent,
+                              fontSize: context.responsiveFont(9),
                               fontWeight: FontWeight.bold,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         )
                       else if (match.status == 'unscheduled' && canScore && !isBye)
                         Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
-                          child: Text("Start", style: TextStyle(color: AppColors.accent, fontSize: 9, fontWeight: FontWeight.bold)),
+                          padding: EdgeInsets.only(top: context.heightPct(0.5)),
+                          child: Text(
+                            "Start",
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.accent,
+                              fontSize: context.responsiveFont(9),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         )
                       else if (isCompleted)
                         Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
+                          padding: EdgeInsets.only(top: context.heightPct(0.5)),
                           child: Text(
                             "View Score",
-                            style: TextStyle(color: AppColors.accent, fontSize: 9, fontWeight: FontWeight.bold),
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.accent,
+                              fontSize: context.responsiveFont(9),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                     ],
@@ -248,10 +292,10 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
               ],
             ),
 
-             // Referee status badge or organizer management row
+            // Referee status badge or organizer management row
             if (!isBye)
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: EdgeInsets.only(top: context.heightPct(1)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -259,20 +303,38 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
                     if (isAcceptedReferee)
                       Row(
                         children: [
-                          Icon(Icons.check_circle, size: 14, color: AppColors.accent),
-                          SizedBox(width: 4),
+                          const Icon(Icons.check_circle_rounded, size: 14, color: AppColors.accent),
+                          SizedBox(width: context.widthPct(1.5)),
                           Expanded(
-                            child: Text("Referee: You (Assigned ✓)", style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.bold)),
+                            child: Text(
+                              "Referee: You (Assigned ✓)",
+                              style: AppTypography.bodySm.copyWith(
+                                color: AppColors.accent,
+                                fontSize: context.responsiveFont(10),
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       )
                     else if (isInvitedReferee)
                       Row(
                         children: [
-                          Icon(Icons.schedule_send, size: 14, color: Colors.orange),
-                          SizedBox(width: 4),
+                          const Icon(Icons.schedule_send_rounded, size: 14, color: AppColors.warning),
+                          SizedBox(width: context.widthPct(1.5)),
                           Expanded(
-                            child: Text("Referee: You (Invitation Sent ✓)", style: TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold)),
+                            child: Text(
+                              "Referee: You (Invitation Sent ✓)",
+                              style: AppTypography.bodySm.copyWith(
+                                color: AppColors.warning,
+                                fontSize: context.responsiveFont(10),
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       )
@@ -280,12 +342,12 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
                       Row(
                         children: [
                           Icon(
-                            match.referee!['status'] == 'accepted' ? Icons.check_circle : Icons.schedule_send,
+                            match.referee!['status'] == 'accepted' ? Icons.check_circle_rounded : Icons.schedule_send_rounded,
                             size: 14,
-                            color: match.referee!['status'] == 'accepted' ? AppColors.accent : Colors.orange,
+                            color: match.referee!['status'] == 'accepted' ? AppColors.accent : AppColors.warning,
                           ),
-                          SizedBox(width: 4),
-                          Flexible(
+                          SizedBox(width: context.widthPct(1.5)),
+                          Expanded(
                             child: Text(
                               () {
                                 final refName = (match.referee!['userName'] ?? '').toString();
@@ -299,11 +361,12 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
                                       : 'Invitation Sent ✓';
                                 }
                               }(),
-                              style: TextStyle(
-                                color: match.referee!['status'] == 'accepted' ? AppColors.accent : Colors.orange,
-                                fontSize: 10,
+                              style: AppTypography.bodySm.copyWith(
+                                color: match.referee!['status'] == 'accepted' ? AppColors.accent : AppColors.warning,
+                                fontSize: context.responsiveFont(10),
                                 fontWeight: FontWeight.w600,
                               ),
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -312,16 +375,24 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
                     else if (isOrganizer)
                       Row(
                         children: [
-                          Icon(Icons.person_add_alt_1, size: 14, color: AppColors.muted),
-                          SizedBox(width: 4),
-                          Text("No referee assigned", style: TextStyle(color: AppColors.muted, fontSize: 10)),
+                          const Icon(Icons.person_add_alt_1_rounded, size: 14, color: AppColors.muted),
+                          SizedBox(width: context.widthPct(1.5)),
+                          Text(
+                            "No referee assigned",
+                            style: AppTypography.bodySm.copyWith(
+                              color: AppColors.muted,
+                              fontSize: context.responsiveFont(10),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
 
                     // Organizer Referee Management Actions
                     if (isOrganizer && (match.status == 'unscheduled' || match.status == 'scheduled' || match.status == 'in_progress'))
                       Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
+                        padding: EdgeInsets.only(top: context.heightPct(0.5)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -329,29 +400,44 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
                             if (match.referee != null && match.referee!['status'] != 'revoked' && match.referee!['status'] != 'none')
                               TextButton.icon(
                                 style: TextButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: context.widthPct(1.5),
+                                    vertical: context.heightPct(0.3),
+                                  ),
                                   minimumSize: Size.zero,
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
-                                icon: Icon(Icons.person_remove, size: 12, color: Colors.redAccent),
+                                icon: const Icon(Icons.person_remove_rounded, size: 12, color: AppColors.error),
                                 onPressed: () async {
                                   final confirm = await Get.dialog<bool>(
                                     AlertDialog(
                                       backgroundColor: AppColors.surface,
-                                      title: Text("Revoke Referee?", style: TextStyle(color: AppColors.onPrimary)),
+                                      title: Text(
+                                        "Revoke Referee?",
+                                        style: AppTypography.headlineSm.copyWith(color: AppColors.textPrimary),
+                                      ),
                                       content: Text(
                                         "This will remove the current referee. You can assign a new one after.",
-                                        style: TextStyle(color: AppColors.muted),
+                                        style: AppTypography.bodySm.copyWith(color: AppColors.muted),
                                       ),
                                       actions: [
                                         TextButton(
                                           onPressed: () => Get.back(result: false),
-                                          child: Text("Cancel", style: TextStyle(color: AppColors.muted)),
+                                          child: Text(
+                                            "Cancel",
+                                            style: AppTypography.bodySm.copyWith(color: AppColors.muted),
+                                          ),
                                         ),
                                         ElevatedButton(
-                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                                          style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
                                           onPressed: () => Get.back(result: true),
-                                          child: Text("Revoke", style: TextStyle(color: Colors.white)),
+                                          child: Text(
+                                            "Revoke",
+                                            style: AppTypography.bodySm.copyWith(
+                                              color: AppColors.textPrimary,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -364,26 +450,45 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
                                           .collection('bracket')
                                           .doc(match.id)
                                           .update({'referee.status': 'revoked'});
-                                      Get.snackbar("Revoked", "Referee removed. You can now assign a new one.", backgroundColor: Colors.green, colorText: Colors.white);
+                                      Get.snackbar(
+                                        "Revoked",
+                                        "Referee removed. You can now assign a new one.",
+                                        backgroundColor: AppColors.card,
+                                        colorText: AppColors.textPrimary,
+                                      );
                                     } catch (e) {
-                                      Get.snackbar("Error", "Failed to revoke: $e", backgroundColor: Colors.red, colorText: Colors.white);
+                                      Get.snackbar(
+                                        "Error",
+                                        "Failed to revoke: $e",
+                                        backgroundColor: AppColors.card,
+                                        colorText: AppColors.error,
+                                      );
                                     }
                                   }
                                 },
-                                label: Text("Revoke", style: TextStyle(color: Colors.redAccent, fontSize: 10)),
+                                label: Text(
+                                  "Revoke",
+                                  style: AppTypography.bodySm.copyWith(
+                                    color: AppColors.error,
+                                    fontSize: context.responsiveFont(10),
+                                  ),
+                                ),
                               ),
-                            SizedBox(width: 8),
+                            SizedBox(width: context.widthPct(2)),
                             // Assign / Manage button
                             TextButton.icon(
                               style: TextButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: context.widthPct(1.5),
+                                  vertical: context.heightPct(0.3),
+                                ),
                                 minimumSize: Size.zero,
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               icon: Icon(
                                 (match.referee != null && match.referee!['status'] != 'revoked' && match.referee!['status'] != 'none')
-                                    ? Icons.manage_accounts
-                                    : Icons.person_add,
+                                    ? Icons.manage_accounts_rounded
+                                    : Icons.person_add_rounded,
                                 size: 12,
                                 color: AppColors.accent,
                               ),
@@ -404,7 +509,11 @@ class _MatchSlotCardState extends State<MatchSlotCard> {
                                 (match.referee != null && match.referee!['status'] != 'revoked' && match.referee!['status'] != 'none')
                                     ? "Manage Referee"
                                     : "Assign Referee",
-                                style: TextStyle(color: AppColors.accent, fontSize: 10, fontWeight: FontWeight.w600),
+                                style: AppTypography.bodySm.copyWith(
+                                  color: AppColors.accent,
+                                  fontSize: context.responsiveFont(10),
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           ],

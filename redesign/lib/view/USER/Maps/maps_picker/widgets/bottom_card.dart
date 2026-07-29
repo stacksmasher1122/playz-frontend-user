@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class MapPickerBottomCard extends StatelessWidget {
@@ -16,15 +16,20 @@ class MapPickerBottomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 10, 16, 20),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(1.2),
+        context.widthPct(4),
+        context.heightPct(2.5),
+      ),
       decoration: BoxDecoration(
-        color: kCard,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
+        color: AppColors.card,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(context.minDimensionPct(6))),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 20,
-            offset: Offset(0, -5),
+            offset: const Offset(0, -5),
           ),
         ],
       ),
@@ -33,12 +38,12 @@ class MapPickerBottomCard extends StatelessWidget {
         children: [
           // Drag handle
           Container(
-            width: ResponsiveHelper.w(40),
-            height: ResponsiveHelper.h(4),
-            margin: EdgeInsets.only(bottom: 16),
+            width: context.widthPct(10),
+            height: context.heightPct(0.5),
+            margin: EdgeInsets.only(bottom: context.heightPct(2)),
             decoration: BoxDecoration(
-              color: Colors.white24,
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+              color: AppColors.borderDark,
+              borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
             ),
           ),
 
@@ -46,19 +51,19 @@ class MapPickerBottomCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+                padding: EdgeInsets.all(context.widthPct(3)),
                 decoration: BoxDecoration(
-                  color: kSpotifyGreen.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                  color: AppColors.accent.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
                 ),
-                child: Icon(Icons.location_on, color: kSpotifyGreen),
+                child: const Icon(Icons.location_on, color: AppColors.accent),
               ),
-              SizedBox(width: 12),
+              SizedBox(width: context.widthPct(3)),
               Expanded(child: addressPreview),
             ],
           ),
 
-          SizedBox(height: 20),
+          SizedBox(height: context.heightPct(2.5)),
 
           // Confirm button with state logic
           confirmButton,

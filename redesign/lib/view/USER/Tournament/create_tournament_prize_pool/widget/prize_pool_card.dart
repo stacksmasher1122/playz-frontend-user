@@ -20,11 +20,13 @@ class PrizePoolCard extends StatefulWidget {
 class _PrizePoolCardState extends State<PrizePoolCard> {
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+      padding: EdgeInsets.all(context.widthPct(4)),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,15 +41,22 @@ class _PrizePoolCardState extends State<PrizePoolCard> {
                     Text(
                       "Prize Pool",
                       style: AppTypography.headlineSm.copyWith(
-                        color: AppColors.onPrimary,
+                        color: AppColors.textPrimary,
+                        fontSize: context.responsiveFont(15),
+                        fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: ResponsiveHelper.h(4)),
+                    SizedBox(height: context.heightPct(0.5)),
                     Text(
                       "Reward top performers",
                       style: AppTypography.bodySm.copyWith(
                         color: AppColors.muted,
+                        fontSize: context.responsiveFont(12.5),
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -63,9 +72,9 @@ class _PrizePoolCardState extends State<PrizePoolCard> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: ResponsiveHelper.h(16)),
-                  Divider(color: AppColors.outlineVariant, thickness: 1),
-                  SizedBox(height: ResponsiveHelper.h(16)),
+                  SizedBox(height: context.heightPct(1.8)),
+                  const Divider(color: AppColors.outlineVariant, thickness: 1),
+                  SizedBox(height: context.heightPct(1.8)),
                   ...widget.controller.prizeTiers.map((tier) {
                     return PrizeTierWidget(
                       key: ValueKey(tier.id),
@@ -74,22 +83,30 @@ class _PrizePoolCardState extends State<PrizePoolCard> {
                       onTitleChanged: tier.isDefault ? null : (newTitle) => widget.controller.updateCustomTierTitle(tier.id, newTitle),
                     );
                   }),
-                  SizedBox(height: ResponsiveHelper.h(12)),
+                  SizedBox(height: context.heightPct(1.2)),
                   TextButton.icon(
                     onPressed: widget.controller.addCustomTier,
-                    icon: Icon(Icons.add, color: AppColors.accent),
-                    label: Text(
-                      "Add Another Tier",
-                      style: AppTypography.bodyLg.copyWith(
-                        color: AppColors.accent,
-                        fontWeight: FontWeight.bold,
+                    icon: Icon(
+                      Icons.add_rounded,
+                      color: AppColors.accent,
+                      size: context.responsiveFont(20),
+                    ),
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        "Add Another Tier",
+                        style: AppTypography.bodyLg.copyWith(
+                          color: AppColors.accent,
+                          fontSize: context.responsiveFont(14),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     style: TextButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+                      padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
                       backgroundColor: AppColors.accent.withValues(alpha: 0.1),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),
                       ),
                     ),
                   ),

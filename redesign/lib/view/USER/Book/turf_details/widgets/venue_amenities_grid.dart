@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueAmenitiesGrid extends StatelessWidget {
@@ -56,42 +58,50 @@ class VenueAmenitiesGrid extends StatelessWidget {
     ResponsiveHelper.init(context);
 
     if (amenities.isEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
+    final cardWidth = (MediaQuery.of(context).size.width - context.widthPct(11)) / 2;
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Amenities',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(18),
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: context.responsiveFont(18),
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: context.heightPct(1.2)),
           Wrap(
-            spacing: 12,
-            runSpacing: 12,
+            spacing: context.widthPct(3),
+            runSpacing: context.heightPct(1.2),
             children: amenities.map((amenity) {
               return Container(
-                width: MediaQuery.of(context).size.width / 2 - 22,
-                padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+                width: cardWidth,
+                padding: EdgeInsets.all(context.widthPct(3)),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade900,
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                  color: AppColors.card,
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                  border: Border.all(color: AppColors.borderDark),
                 ),
                 child: Column(
                   children: [
-                    Icon(_getAmenityIcon(amenity), color: Colors.white),
-                    SizedBox(height: 6),
+                    Icon(_getAmenityIcon(amenity), color: AppColors.textPrimary),
+                    SizedBox(height: context.heightPct(0.6)),
                     Text(
                       amenity,
-                      style: TextStyle(color: Color(0xFFA7A7A7)),
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(12),
+                      ),
                       textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

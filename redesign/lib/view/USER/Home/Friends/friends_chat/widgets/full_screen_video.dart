@@ -48,16 +48,16 @@ class _FullScreenVideoState extends State<FullScreenVideo> {
     ResponsiveHelper.init(context);
     if (_chewieController == null || !_videoController.value.isInitialized) {
       return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.background,
         body: Center(child: CircularProgressIndicator(color: kGreen)),
       );
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.background,
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
       body: Center(
         child: Hero(

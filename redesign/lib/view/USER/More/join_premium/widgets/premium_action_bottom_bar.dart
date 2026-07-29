@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class PremiumActionBottomBar extends StatelessWidget {
@@ -19,10 +19,10 @@ class PremiumActionBottomBar extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.only(
-        left: ResponsiveHelper.w(16),
-        right: ResponsiveHelper.w(16),
-        top: ResponsiveHelper.h(12),
-        bottom: ResponsiveHelper.h(16),
+        left: context.widthPct(4),
+        right: context.widthPct(4),
+        top: context.heightPct(1.5),
+        bottom: context.heightPct(2),
       ),
       decoration: BoxDecoration(
         color: AppColors.background,
@@ -40,27 +40,31 @@ class PremiumActionBottomBar extends StatelessWidget {
           // Main CTA Button
           SizedBox(
             width: double.infinity,
-            height: ResponsiveHelper.h(52),
+            height: context.heightPct(6.2).clamp(48.0, 56.0),
             child: ElevatedButton(
               onPressed: onPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accent,
-                foregroundColor: Colors.black,
+                foregroundColor: AppColors.background,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                 ),
               ),
-              child: Text(
-                buttonText,
-                style: GoogleFonts.inter(
-                  fontSize: ResponsiveHelper.sp(16),
-                  fontWeight: FontWeight.bold,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  buttonText,
+                  style: AppTypography.headlineSm.copyWith(
+                    color: AppColors.background,
+                    fontSize: context.responsiveFont(16),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
           ),
-          SizedBox(height: ResponsiveHelper.h(12)),
+          SizedBox(height: context.heightPct(1.5)),
 
           // Footer links
           Row(
@@ -68,23 +72,26 @@ class PremiumActionBottomBar extends StatelessWidget {
             children: [
               Text(
                 'Restore Purchases',
-                style: GoogleFonts.inter(
+                style: AppTypography.bodySm.copyWith(
                   color: AppColors.muted,
-                  fontSize: ResponsiveHelper.sp(11),
+                  fontSize: context.responsiveFont(11),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.symmetric(horizontal: context.widthPct(2.5)),
                 child: Text(
                   '•',
-                  style: GoogleFonts.inter(color: AppColors.muted, fontSize: 11),
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.muted,
+                    fontSize: context.responsiveFont(11),
+                  ),
                 ),
               ),
               Text(
                 'Terms & Privacy',
-                style: GoogleFonts.inter(
+                style: AppTypography.bodySm.copyWith(
                   color: AppColors.muted,
-                  fontSize: ResponsiveHelper.sp(11),
+                  fontSize: context.responsiveFont(11),
                 ),
               ),
             ],

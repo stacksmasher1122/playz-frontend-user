@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/maps_controller.dart';
-import 'package:redesign/view/USER/Maps/maps_constants.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class GpsButton extends StatelessWidget {
@@ -18,30 +18,30 @@ class GpsButton extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: kCard,
+          color: AppColors.card,
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.white12),
+          border: Border.all(color: AppColors.borderDark),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.4),
               blurRadius: 10,
-              offset: Offset(0, 4),
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+        padding: EdgeInsets.all(context.widthPct(3.5)),
         child: Obx(() {
           if (mapsCtrl.isLoading.value) {
             return SizedBox(
-              width: ResponsiveHelper.w(24),
-              height: ResponsiveHelper.h(24),
-              child: CircularProgressIndicator(
+              width: context.widthPct(6),
+              height: context.widthPct(6),
+              child: const CircularProgressIndicator(
                 strokeWidth: 2,
-                color: kSpotifyGreen,
+                color: AppColors.accent,
               ),
             );
           }
-          return Icon(Icons.my_location, color: Colors.white);
+          return const Icon(Icons.my_location, color: AppColors.textPrimary);
         }),
       ),
     );
