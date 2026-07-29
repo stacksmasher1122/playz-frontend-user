@@ -27,10 +27,10 @@ class MemberCountSlider extends StatelessWidget {
             trackHeight: 4,
           ),
           child: Slider(
-            value: maxMembers,
+            value: maxMembers.clamp(5.0, 500.0),
             min: 5,
-            max: 50,
-            divisions: 45,
+            max: 500,
+            divisions: 495,
             onChanged: onChanged,
           ),
         ),
@@ -47,7 +47,7 @@ class MemberCountSlider extends StatelessWidget {
                 ),
               ),
               Text(
-                '50',
+                '500',
                 style: AppTypography.labelCaps10.copyWith(
                   color: AppColors.muted,
                   fontSize: context.responsiveFont(11),

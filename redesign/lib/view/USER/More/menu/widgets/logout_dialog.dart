@@ -85,7 +85,9 @@ class LogoutDialog extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accent,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(context.minDimensionPct(6)),
+                    borderRadius: BorderRadius.circular(
+                      context.minDimensionPct(6),
+                    ),
                   ),
                   elevation: 0,
                 ),

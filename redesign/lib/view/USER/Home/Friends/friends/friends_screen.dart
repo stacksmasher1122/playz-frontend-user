@@ -65,7 +65,7 @@ class _FriendsHubScreenState extends State<FriendsHubScreen> {
                 const SliverToBoxAdapter(child: MessagesListSection()),
                 const SliverToBoxAdapter(child: BuildSquadCTA()),
                 const SliverToBoxAdapter(child: SuggestedPlayersSection()),
-                SizedBox(height: context.heightPct(4)),
+                SliverToBoxAdapter(child: SizedBox(height: context.heightPct(4))),
               ],
             ),
 

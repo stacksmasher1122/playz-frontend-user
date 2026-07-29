@@ -57,7 +57,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _ctrl.initChat(widget.friendEmail);
 
     ever(_ctrl.messages, (_) {
-      _scrollToBottom();
+      _handleMessageListChange();
     });
   }
 
@@ -68,12 +68,27 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
+  void _handleMessageListChange() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      // In reverse ListView, 0.0 is the bottom (latest messages)
+      final isNearBottom = _scrollController.offset <= 150;
+      if (isNearBottom) {
+        _scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0.0,
-          duration: Duration(milliseconds: 250),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
         );
       }
@@ -124,15 +139,24 @@ class _ChatScreenState extends State<ChatScreen> {
                     }
 
                     return ListView.builder(
-                      key: PageStorageKey("chat_list"),
+                      key: const PageStorageKey("chat_list"),
                       controller: _scrollController,
-                      physics: BouncingScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       reverse: true,
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 10,
                       ),
                       itemCount: _ctrl.messages.length,
+                      findChildIndexCallback: (Key key) {
+                        if (key is ValueKey<String>) {
+                          final String id = key.value;
+                          final index =
+                              _ctrl.messages.indexWhere((m) => m.id == id);
+                          if (index != -1) return index;
+                        }
+                        return null;
+                      },
                       itemBuilder: (context, i) {
                         final msg = _ctrl.messages[i];
                         final isMe = msg.senderEmail == _ctrl.myEmail;
@@ -141,6 +165,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ).format(msg.timestamp);
 
                         return SwipeToReply(
+                          key: ValueKey(msg.id),
                           isMe: isMe,
                           onSwiped: () => _ctrl.setReplyTo(msg),
                           child: GestureDetector(

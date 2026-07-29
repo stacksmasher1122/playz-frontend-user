@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 
 class EventFestController extends GetxController {
   // Normal days event data list
@@ -24,80 +23,14 @@ class EventFestController extends GetxController {
     },
   ].obs;
 
-  // Festival event data map
+  // Festival event data map using local .lottie asset files
   final RxMap<String, RxMap<String, dynamic>> festivalEventData = {
-    'diwali': {
-      'enable': false,
-      'lottieUrl':
-          'https://lottie.host/18fcdfab-05a0-4164-aad9-e3a16c9c49fb/ws3tunGcTL.json',
-      'cards': <Map<String, String>>[
-        {
-          'image':
-              'https://img.freepik.com/free-photo/diwali-celebration-illustration_23-2151871785.jpg?semt=ais_hybrid&w=740&q=80',
-          'title': 'Happy Diwali!\nPlay Now',
-          'badge': 'FESTIVAL',
-          'buttonTitle': 'Join Diwali Fest',
-        },
-        {
-          'image':
-              'https://t4.ftcdn.net/jpg/16/90/15/83/360_F_1690158375_o7BFIUp7K8A7Apg5bZMV3ABBuW3fGIi4.jpg',
-          'title': 'Diwali Special\nMatches',
-          'badge': 'LIMITED TIME',
-          'buttonTitle': 'Explore More',
-        },
-      ],
-    }.obs,
-    'christmas': {
-      'enable': false,
-      'lottieUrl':
-          'https://lottie.host/248079e3-6652-4eaf-b588-83039515c208/xIoUez8MS3.json',
-      'lottieSpeed': 1.5,
-      'lottieEndProgress': 0.33,
-      'cards': <Map<String, String>>[
-        {
-          'image': 'https://images.unsplash.com/photo-1543589077-47d81606c1df',
-          'title': 'Merry\nChristmas',
-          'badge': 'FESTIVAL',
-          'buttonTitle': 'Christmas Cup',
-        },
-        {
-          'image':
-              'https://images.unsplash.com/photo-1512474932049-78ac69ede12c',
-          'title': 'Winter\nWonderland',
-          'badge': 'SPECIAL',
-          'buttonTitle': 'Join Tournament',
-        },
-      ],
-    }.obs,
-    'ipl': {
-      'enable': true,
-      'lottieUrl':
-          'https://lottie.host/b3836c41-49e3-4ad1-8c2a-e3f7772f39aa/RPZJEQQ1rL.json',
-      'lottieProgress': 0.2, // Starts from specified progress
-      'lottieSpeed': 1.4, // Playback speed multiplier
-      'cards': <Map<String, String>>[
-        {
-          'image':
-              'https://t3.ftcdn.net/jpg/09/04/45/28/360_F_904452820_k8HyrfkqGVzvfip05i31DRr9M8RtiuJ3.jpg',
-          'title': 'IPL Fever!\nGame On',
-          'badge': 'CRICKET',
-          'buttonTitle': 'Play Now',
-        },
-        {
-          'image':
-              'https://www.mxmindia.com/wp-content/uploads/2022/01/ipl-logo.jpg',
-          'title': 'Match Day\nMadness',
-          'badge': 'LEAGUE',
-          'buttonTitle': 'View Leaderboard',
-        },
-      ],
-    }.obs,
     'independence_day': {
-      'enable': false,
-      'lottieUrl':
-          'https://lottie.host/1e609bc8-c215-4a19-b54d-76da5947b7cd/pFnoaNUmvt.json',
-      'lottieSpeed': 1.5,
-      'lottieAlignment': 'bottom',
+      'enable': true,
+      'lottieAsset': 'assets/lottie/tfu_republic.lottie',
+      'lottieSpeed': 1.2,
+      'lottieProgress': 0.0,
+      'lottieEndProgress': 1.0,
       'cards': <Map<String, String>>[
         {
           'image':
@@ -117,10 +50,10 @@ class EventFestController extends GetxController {
     }.obs,
     'republic_day': {
       'enable': false,
-      'lottieUrl':
-          'https://lottie.host/1e609bc8-c215-4a19-b54d-76da5947b7cd/pFnoaNUmvt.json',
-      'lottieSpeed': 1.5,
-      'lottieAlignment': 'bottom',
+      'lottieAsset': 'assets/lottie/tfu_republic.lottie',
+      'lottieSpeed': 1.2,
+      'lottieProgress': 0.0,
+      'lottieEndProgress': 1.0,
       'cards': <Map<String, String>>[
         {
           'image':
@@ -138,12 +71,80 @@ class EventFestController extends GetxController {
         },
       ],
     }.obs,
+    'diwali': {
+      'enable': false,
+      'lottieAsset': 'assets/lottie/tfu_republic.lottie',
+      'lottieSpeed': 1.2,
+      'lottieProgress': 0.0,
+      'lottieEndProgress': 1.0,
+      'cards': <Map<String, String>>[
+        {
+          'image':
+              'https://img.freepik.com/free-photo/diwali-celebration-illustration_23-2151871785.jpg?semt=ais_hybrid&w=740&q=80',
+          'title': 'Happy Diwali!\nPlay Now',
+          'badge': 'FESTIVAL',
+          'buttonTitle': 'Join Diwali Fest',
+        },
+        {
+          'image':
+              'https://t4.ftcdn.net/jpg/16/90/15/83/360_F_1690158375_o7BFIUp7K8A7Apg5bZMV3ABBuW3fGIi4.jpg',
+          'title': 'Diwali Special\nMatches',
+          'badge': 'LIMITED TIME',
+          'buttonTitle': 'Explore More',
+        },
+      ],
+    }.obs,
+    'christmas': {
+      'enable': false,
+      'lottieAsset': 'assets/lottie/tfu_republic.lottie',
+      'lottieSpeed': 1.2,
+      'lottieProgress': 0.0,
+      'lottieEndProgress': 1.0,
+      'cards': <Map<String, String>>[
+        {
+          'image': 'https://images.unsplash.com/photo-1543589077-47d81606c1df',
+          'title': 'Merry\nChristmas',
+          'badge': 'FESTIVAL',
+          'buttonTitle': 'Christmas Cup',
+        },
+        {
+          'image':
+              'https://images.unsplash.com/photo-1512474932049-78ac69ede12c',
+          'title': 'Winter\nWonderland',
+          'badge': 'SPECIAL',
+          'buttonTitle': 'Join Tournament',
+        },
+      ],
+    }.obs,
+    'ipl': {
+      'enable': false,
+      'lottieAsset': 'assets/lottie/tfu_republic.lottie',
+      'lottieSpeed': 1.2,
+      'lottieProgress': 0.0,
+      'lottieEndProgress': 1.0,
+      'cards': <Map<String, String>>[
+        {
+          'image':
+              'https://t3.ftcdn.net/jpg/09/04/45/28/360_F_904452820_k8HyrfkqGVzvfip05i31DRr9M8RtiuJ3.jpg',
+          'title': 'IPL Fever!\nGame On',
+          'badge': 'CRICKET',
+          'buttonTitle': 'Play Now',
+        },
+        {
+          'image':
+              'https://www.mxmindia.com/wp-content/uploads/2022/01/ipl-logo.jpg',
+          'title': 'Match Day\nMadness',
+          'badge': 'LEAGUE',
+          'buttonTitle': 'View Leaderboard',
+        },
+      ],
+    }.obs,
     'yoga_day': {
       'enable': false,
-      'lottieUrl':
-          'https://lottie.host/2d1d261b-bbfe-401b-9bd8-eb352473cc31/NnNt8QVtA2.json',
-      'lottieSpeed': 1.5,
-      'lottieEndProgress': 0.75,
+      'lottieAsset': 'assets/lottie/tfu_republic.lottie',
+      'lottieSpeed': 1.2,
+      'lottieProgress': 0.0,
+      'lottieEndProgress': 1.0,
       'cards': <Map<String, String>>[
         {
           'image':
@@ -211,16 +212,6 @@ class EventFestController extends GetxController {
 
     if (enabledFestival.isNotEmpty) {
       shouldShowLottie.value = true;
-
-      // Preload lottie to prevent loading delay on home screen
-      final url = festivalEventData[enabledFestival]?['lottieUrl'];
-      if (url != null && url.toString().isNotEmpty) {
-        try {
-          await NetworkLottie(url).load();
-        } catch (e) {
-          // Ignore preloading errors
-        }
-      }
     }
   }
 

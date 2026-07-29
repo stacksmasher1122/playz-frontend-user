@@ -1,75 +1,176 @@
+import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+
+enum PlayerTier {
+  rookie,
+  rising,
+  prime,
+  elite,
+  legend,
+}
+
 class LeaderboardPlayerModel {
+  final String id;
   final int rank;
   final String name;
+  final String rawName;
   final int points;
   final String avatarUrl;
   final bool isCurrentUser;
+  final Map<String, int> sportXpMap;
 
   const LeaderboardPlayerModel({
-    required this.rank,
+    this.id = '',
+    this.rank = 0,
     required this.name,
-    required this.points,
+    this.rawName = '',
+    this.points = 0,
     required this.avatarUrl,
     this.isCurrentUser = false,
+    this.sportXpMap = const {},
   });
 
-  static List<LeaderboardPlayerModel> getSampleLeaderboard() {
-    return const [
-      LeaderboardPlayerModel(
-        rank: 1,
-        name: 'Marcus J.',
-        points: 3120,
-        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-      ),
-      LeaderboardPlayerModel(
-        rank: 2,
-        name: 'Sarah M.',
-        points: 2450,
-        avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150',
-      ),
-      LeaderboardPlayerModel(
-        rank: 3,
-        name: 'Elena R.',
-        points: 2100,
-        avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
-      ),
-      LeaderboardPlayerModel(
-        rank: 4,
-        name: 'Alex T.',
-        points: 1890,
-        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-      ),
-      LeaderboardPlayerModel(
-        rank: 5,
-        name: 'Jordan K.',
-        points: 1750,
-        avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-      ),
-      LeaderboardPlayerModel(
-        rank: 6,
-        name: 'David L.',
-        points: 1620,
-        avatarUrl: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150',
-      ),
-      LeaderboardPlayerModel(
-        rank: 7,
-        name: 'Chris P.',
-        points: 1500,
-        avatarUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150',
-      ),
-      LeaderboardPlayerModel(
-        rank: 8,
-        name: 'Maya V.',
-        points: 1410,
-        avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
-      ),
-      LeaderboardPlayerModel(
-        rank: 47,
-        name: 'You',
-        points: 840,
-        avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
-        isCurrentUser: true,
-      ),
-    ];
+  /// Total XP sum across all sports
+  int get totalXp {
+    if (sportXpMap.isEmpty) return points;
+    return sportXpMap.values.fold(0, (sum, val) => sum + val);
+  }
+
+  /// Calculates player tier based on current points/XP
+  PlayerTier get tier {
+    if (points >= 15000) return PlayerTier.legend;
+    if (points >= 6000) return PlayerTier.elite;
+    if (points >= 2000) return PlayerTier.prime;
+    if (points >= 500) return PlayerTier.rising;
+    return PlayerTier.rookie;
+  }
+
+  /// Tier label string
+  String get tierName {
+    switch (tier) {
+      case PlayerTier.legend:
+        return 'LEGEND';
+      case PlayerTier.elite:
+        return 'ELITE';
+      case PlayerTier.prime:
+        return 'PRIME';
+      case PlayerTier.rising:
+        return 'RISING';
+      case PlayerTier.rookie:
+        return 'ROOKIE';
+    }
+  }
+
+  /// Target Tier name string
+  String get targetTierName {
+    switch (tier) {
+      case PlayerTier.rookie:
+        return 'Rising';
+      case PlayerTier.rising:
+        return 'Prime';
+      case PlayerTier.prime:
+        return 'Elite';
+      case PlayerTier.elite:
+        return 'Legend';
+      case PlayerTier.legend:
+        return 'Legend Max';
+    }
+  }
+
+  /// Target points needed for next tier
+  int get targetPoints {
+    switch (tier) {
+      case PlayerTier.rookie:
+        return 500;
+      case PlayerTier.rising:
+        return 2000;
+      case PlayerTier.prime:
+        return 6000;
+      case PlayerTier.elite:
+        return 15000;
+      case PlayerTier.legend:
+        return points > 15000 ? points : 15000;
+    }
+  }
+
+  /// Progress bar ratio (0.0 to 1.0)
+  double get progressRatio {
+    int startPts = 0;
+    switch (tier) {
+      case PlayerTier.rookie:
+        startPts = 0;
+        break;
+      case PlayerTier.rising:
+        startPts = 500;
+        break;
+      case PlayerTier.prime:
+        startPts = 2000;
+        break;
+      case PlayerTier.elite:
+        startPts = 6000;
+        break;
+      case PlayerTier.legend:
+        return 1.0;
+    }
+
+    final target = targetPoints;
+    final range = target - startPts;
+    if (range <= 0) return 1.0;
+    final currentProgress = points - startPts;
+    return (currentProgress / range).clamp(0.0, 1.0);
+  }
+
+  /// Theme color corresponding to tier from AppColors
+  Color get tierColor {
+    switch (tier) {
+      case PlayerTier.rookie:
+        return AppColors.rookieSlate;
+      case PlayerTier.rising:
+        return AppColors.risingBlue;
+      case PlayerTier.prime:
+        return AppColors.primeTeal;
+      case PlayerTier.elite:
+        return AppColors.elitePurple;
+      case PlayerTier.legend:
+        return AppColors.legendGold;
+    }
+  }
+
+  /// Formats numbers to compact 'k' / 'm' strings (e.g. 1.2k, 1m)
+  static String formatNumber(num value) {
+    if (value >= 1000000) {
+      double v = value / 1000000.0;
+      return '${v % 1 == 0 ? v.toInt() : v.toStringAsFixed(1)}m';
+    } else if (value >= 1000) {
+      double v = value / 1000.0;
+      return '${v % 1 == 0 ? v.toInt() : v.toStringAsFixed(1)}k';
+    }
+    return value.toInt().toString();
+  }
+
+  String get formattedPoints => formatNumber(points);
+  String get formattedTargetPoints => formatNumber(targetPoints);
+  String get formattedRank => '#${formatNumber(rank)}';
+
+  LeaderboardPlayerModel copyWith({
+    String? id,
+    int? rank,
+    String? name,
+    String? rawName,
+    int? points,
+    String? avatarUrl,
+    bool? isCurrentUser,
+    Map<String, int>? sportXpMap,
+  }) {
+    return LeaderboardPlayerModel(
+      id: id ?? this.id,
+      rank: rank ?? this.rank,
+      name: name ?? this.name,
+      rawName: rawName ?? this.rawName,
+      points: points ?? this.points,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      isCurrentUser: isCurrentUser ?? this.isCurrentUser,
+      sportXpMap: sportXpMap ?? this.sportXpMap,
+    );
   }
 }

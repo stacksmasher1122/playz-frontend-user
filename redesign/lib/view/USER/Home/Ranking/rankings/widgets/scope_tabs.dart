@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_dimensions.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-Color kSurface = Color(0xFF0E0E0E);
-Color kMuted = Color(0xFFA7A7A7);
 
 class ScopeTabs extends StatelessWidget {
   final int selected;
@@ -17,36 +17,47 @@ class ScopeTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final tabs = ['Friends', 'Local', 'Global', 'Groups'];
+    final tabs = const ['Global', 'Friends', 'Groups'];
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
-      child: Row(
-        children: List.generate(tabs.length, (i) {
-          final active = selected == i;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => onChanged(i),
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(10)),
-                margin: EdgeInsets.only(right: i < tabs.length - 1 ? 8 : 0),
-                decoration: BoxDecoration(
-                  color: active ? kSurface : Colors.transparent,
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-                ),
-                child: Text(
-                  tabs[i],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: active ? Colors.white : kMuted,
-                    fontWeight: FontWeight.w600,
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(4),
+        vertical: context.heightPct(1),
+      ),
+      child: Container(
+        padding: EdgeInsets.all(context.widthPct(1)),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+          border: Border.all(color: AppColors.borderDark),
+        ),
+        child: Row(
+          children: List.generate(tabs.length, (i) {
+            final active = selected == i;
+            return Expanded(
+              child: GestureDetector(
+                onTap: () => onChanged(i),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: EdgeInsets.symmetric(vertical: context.heightPct(1.2)),
+                  decoration: BoxDecoration(
+                    color: active ? AppColors.accent : Colors.transparent,
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                  ),
+                  child: Text(
+                    tabs[i],
+                    textAlign: TextAlign.center,
+                    style: AppTypography.headlineSm.copyWith(
+                      color: active ? AppColors.background : AppColors.textSecondary,
+                      fontSize: context.responsiveFont(13),
+                      fontWeight: active ? FontWeight.bold : FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
     );
   }

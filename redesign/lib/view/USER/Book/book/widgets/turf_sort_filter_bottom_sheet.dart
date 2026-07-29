@@ -5,8 +5,23 @@ import 'package:redesign/controller/User_Controller/Booking_Controller/booking_c
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class TurfSortFilterBottomSheet extends StatelessWidget {
+class TurfSortFilterBottomSheet extends StatefulWidget {
   const TurfSortFilterBottomSheet({super.key});
+
+  @override
+  State<TurfSortFilterBottomSheet> createState() =>
+      _TurfSortFilterBottomSheetState();
+}
+
+class _TurfSortFilterBottomSheetState extends State<TurfSortFilterBottomSheet> {
+  final TextEditingController _sportSearchController = TextEditingController();
+  String _sportQuery = '';
+
+  @override
+  void dispose() {
+    _sportSearchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,181 +38,325 @@ class TurfSortFilterBottomSheet extends StatelessWidget {
         ),
       ),
       child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// HANDLE & HEADER
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.muted.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(2),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// HANDLE & HEADER
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.muted.withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: context.heightPct(1.8)),
+              SizedBox(height: context.heightPct(1.8)),
 
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Sort & Filter Turfs',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.headlineLgMobile.copyWith(
-                      color: AppColors.textPrimary,
-                      fontSize: context.responsiveFont(18),
-                      fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Sort & Filter Turfs',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.headlineLgMobile.copyWith(
+                        color: AppColors.textPrimary,
+                        fontSize: context.responsiveFont(18),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close, color: AppColors.textSecondary),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-            const Divider(color: AppColors.divider),
-            SizedBox(height: context.heightPct(1.2)),
-
-            /// SORT BY OPTIONS
-            Text(
-              'Sort By',
-              style: AppTypography.headlineSm.copyWith(
-                color: AppColors.accent,
-                fontSize: context.responsiveFont(14),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: context.heightPct(1)),
-
-            Obx(() {
-              final selected = bookingCtrl.sortOption.value;
-
-              return Wrap(
-                spacing: context.widthPct(2),
-                runSpacing: context.heightPct(1),
-                children: [
-                  _SortChip(
-                    label: 'Nearest',
-                    isSelected: selected == TurfSortOption.nearest,
-                    onTap: () => bookingCtrl.sortOption.value = TurfSortOption.nearest,
-                  ),
-                  _SortChip(
-                    label: 'Top Rated',
-                    isSelected: selected == TurfSortOption.topRated,
-                    onTap: () => bookingCtrl.sortOption.value = TurfSortOption.topRated,
-                  ),
-                  _SortChip(
-                    label: 'Price: Lowest First',
-                    isSelected: selected == TurfSortOption.priceAsc,
-                    onTap: () => bookingCtrl.sortOption.value = TurfSortOption.priceAsc,
-                  ),
-                  _SortChip(
-                    label: 'Price: Highest First',
-                    isSelected: selected == TurfSortOption.priceDesc,
-                    onTap: () => bookingCtrl.sortOption.value = TurfSortOption.priceDesc,
-                  ),
-                  _SortChip(
-                    label: 'Name: A to Z',
-                    isSelected: selected == TurfSortOption.nameAsc,
-                    onTap: () => bookingCtrl.sortOption.value = TurfSortOption.nameAsc,
+                  IconButton(
+                    icon: const Icon(Icons.close, color: AppColors.textSecondary),
+                    onPressed: () => Navigator.pop(context),
                   ),
                 ],
-              );
-            }),
-
-            SizedBox(height: context.heightPct(2.5)),
-
-            /// DISTANCE RADIUS SLIDER
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Search Radius',
-                  style: AppTypography.headlineSm.copyWith(
-                    color: AppColors.accent,
-                    fontSize: context.responsiveFont(14),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Obx(() => Text(
-                      '${bookingCtrl.distanceRadiusKm.value.toInt()} km',
-                      style: AppTypography.bodyMd.copyWith(
-                        color: AppColors.textPrimary,
-                        fontSize: context.responsiveFont(14),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )),
-              ],
-            ),
-            SizedBox(height: context.heightPct(0.5)),
-
-            Obx(() {
-              return SliderTheme(
-                data: SliderThemeData(
-                  activeTrackColor: AppColors.accent,
-                  inactiveTrackColor: AppColors.borderDark,
-                  thumbColor: AppColors.accent,
-                  overlayColor: AppColors.accent.withValues(alpha: 0.2),
-                  valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
-                  valueIndicatorColor: AppColors.accent,
-                  valueIndicatorTextStyle: const TextStyle(color: AppColors.background, fontWeight: FontWeight.bold),
-                ),
-                child: Slider(
-                  value: bookingCtrl.distanceRadiusKm.value,
-                  min: 1.0,
-                  max: 50.0,
-                  divisions: 49,
-                  label: '${bookingCtrl.distanceRadiusKm.value.toInt()} km',
-                  onChanged: (val) {
-                    bookingCtrl.distanceRadiusKm.value = val;
-                  },
-                ),
-              );
-            }),
-            Text(
-              'Showing turfs within ${bookingCtrl.distanceRadiusKm.value.toInt()} km around your location',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodyXs.copyWith(
-                color: AppColors.textSecondary,
-                fontSize: context.responsiveFont(11.5),
               ),
-            ),
+              const Divider(color: AppColors.divider),
+              SizedBox(height: context.heightPct(1.2)),
 
-            SizedBox(height: context.heightPct(2.5)),
-
-            /// APPLY BUTTON
-            SizedBox(
-              width: double.infinity,
-              height: buttonHeight,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
-                  foregroundColor: AppColors.background,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
-                  ),
+              /// FILTER BY SPORT (WITH SEARCH BAR & PILLS)
+              Text(
+                'Filter by Sport',
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.accent,
+                  fontSize: context.responsiveFont(14),
+                  fontWeight: FontWeight.bold,
                 ),
-                onPressed: () => Navigator.pop(context),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'Apply Filters',
+              ),
+              SizedBox(height: context.heightPct(1)),
+
+              /// SEARCH BAR FOR SPORTS
+              Container(
+                height: context.heightPct(5.5).clamp(40.0, 46.0),
+                padding: EdgeInsets.symmetric(horizontal: context.widthPct(3)),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.borderDark),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.search, size: 18, color: AppColors.muted),
+                    SizedBox(width: context.widthPct(2)),
+                    Expanded(
+                      child: TextField(
+                        controller: _sportSearchController,
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(13),
+                        ),
+                        onChanged: (val) {
+                          setState(() {
+                            _sportQuery = val;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search sport (e.g. Football, Cricket)...',
+                          hintStyle: AppTypography.bodySm.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(12),
+                          ),
+                          border: InputBorder.none,
+                          isDense: true,
+                        ),
+                      ),
+                    ),
+                    if (_sportQuery.isNotEmpty)
+                      GestureDetector(
+                        onTap: () {
+                          _sportSearchController.clear();
+                          setState(() {
+                            _sportQuery = '';
+                          });
+                        },
+                        child:
+                            const Icon(Icons.close, size: 16, color: AppColors.muted),
+                      ),
+                  ],
+                ),
+              ),
+              SizedBox(height: context.heightPct(1.2)),
+
+              /// DYNAMIC SEARCHABLE SPORT PILLS
+              Obx(() {
+                final allSportsList = <String>[
+                  'All Sports',
+                  'Football',
+                  'Cricket',
+                  'Badminton',
+                  'Basketball',
+                  'Tennis',
+                  'Pickleball',
+                  'Volleyball',
+                  'Table Tennis',
+                  'Squash',
+                  ...bookingCtrl.allTurfs.expand((t) => t.sports),
+                ].map((s) => s.trim()).where((s) => s.isNotEmpty).toSet().toList();
+
+                final filteredSports = allSportsList.where((sport) {
+                  if (_sportQuery.trim().isEmpty) return true;
+                  return sport
+                      .toLowerCase()
+                      .contains(_sportQuery.trim().toLowerCase());
+                }).toList();
+
+                final currentSelected = bookingCtrl.selectedSport.value;
+
+                if (filteredSports.isEmpty) {
+                  return Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: context.heightPct(1)),
+                    child: Text(
+                      'No sports matching "$_sportQuery"',
+                      style: AppTypography.bodyXs.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(12),
+                      ),
+                    ),
+                  );
+                }
+
+                return Container(
+                  constraints: BoxConstraints(maxHeight: context.heightPct(15)),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Wrap(
+                      spacing: context.widthPct(2),
+                      runSpacing: context.heightPct(1),
+                      children: filteredSports.map((sport) {
+                        final isSelected = (sport == 'All Sports' &&
+                                (currentSelected == null ||
+                                    currentSelected.isEmpty ||
+                                    currentSelected == 'All Sports')) ||
+                            currentSelected?.toLowerCase() ==
+                                sport.toLowerCase();
+
+                        return _SortChip(
+                          label: sport,
+                          isSelected: isSelected,
+                          onTap: () {
+                            bookingCtrl.filterTurfsBySport(sport);
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              }),
+
+              SizedBox(height: context.heightPct(2.5)),
+
+              /// SORT BY OPTIONS
+              Text(
+                'Sort By',
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.accent,
+                  fontSize: context.responsiveFont(14),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: context.heightPct(1)),
+
+              Obx(() {
+                final selected = bookingCtrl.sortOption.value;
+
+                return Wrap(
+                  spacing: context.widthPct(2),
+                  runSpacing: context.heightPct(1),
+                  children: [
+                    _SortChip(
+                      label: 'Nearest',
+                      isSelected: selected == TurfSortOption.nearest,
+                      onTap: () =>
+                          bookingCtrl.sortOption.value = TurfSortOption.nearest,
+                    ),
+                    _SortChip(
+                      label: 'Top Rated',
+                      isSelected: selected == TurfSortOption.topRated,
+                      onTap: () =>
+                          bookingCtrl.sortOption.value = TurfSortOption.topRated,
+                    ),
+                    _SortChip(
+                      label: 'Price: Lowest First',
+                      isSelected: selected == TurfSortOption.priceAsc,
+                      onTap: () =>
+                          bookingCtrl.sortOption.value = TurfSortOption.priceAsc,
+                    ),
+                    _SortChip(
+                      label: 'Price: Highest First',
+                      isSelected: selected == TurfSortOption.priceDesc,
+                      onTap: () =>
+                          bookingCtrl.sortOption.value = TurfSortOption.priceDesc,
+                    ),
+                    _SortChip(
+                      label: 'Name: A to Z',
+                      isSelected: selected == TurfSortOption.nameAsc,
+                      onTap: () =>
+                          bookingCtrl.sortOption.value = TurfSortOption.nameAsc,
+                    ),
+                  ],
+                );
+              }),
+
+              SizedBox(height: context.heightPct(2.5)),
+
+              /// DISTANCE RADIUS SLIDER
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Search Radius',
                     style: AppTypography.headlineSm.copyWith(
-                      color: AppColors.background,
+                      color: AppColors.accent,
+                      fontSize: context.responsiveFont(14),
                       fontWeight: FontWeight.bold,
-                      fontSize: context.responsiveFont(15),
+                    ),
+                  ),
+                  Obx(() => Text(
+                        '${bookingCtrl.distanceRadiusKm.value.toInt()} km',
+                        style: AppTypography.bodyMd.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: context.responsiveFont(14),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )),
+                ],
+              ),
+              SizedBox(height: context.heightPct(0.5)),
+
+              Obx(() {
+                return SliderTheme(
+                  data: SliderThemeData(
+                    activeTrackColor: AppColors.accent,
+                    inactiveTrackColor: AppColors.borderDark,
+                    thumbColor: AppColors.accent,
+                    overlayColor: AppColors.accent.withValues(alpha: 0.2),
+                    valueIndicatorShape:
+                        const PaddleSliderValueIndicatorShape(),
+                    valueIndicatorColor: AppColors.accent,
+                    valueIndicatorTextStyle: const TextStyle(
+                        color: AppColors.background,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  child: Slider(
+                    value: bookingCtrl.distanceRadiusKm.value,
+                    min: 1.0,
+                    max: 50.0,
+                    divisions: 49,
+                    label: '${bookingCtrl.distanceRadiusKm.value.toInt()} km',
+                    onChanged: (val) {
+                      bookingCtrl.distanceRadiusKm.value = val;
+                    },
+                  ),
+                );
+              }),
+              Text(
+                'Showing turfs within ${bookingCtrl.distanceRadiusKm.value.toInt()} km around your location',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodyXs.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: context.responsiveFont(11.5),
+                ),
+              ),
+
+              SizedBox(height: context.heightPct(2.5)),
+
+              /// APPLY BUTTON
+              SizedBox(
+                width: double.infinity,
+                height: buttonHeight,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: AppColors.background,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(context.minDimensionPct(3.5)),
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'Apply Filters',
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.background,
+                        fontWeight: FontWeight.bold,
+                        fontSize: context.responsiveFont(15),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

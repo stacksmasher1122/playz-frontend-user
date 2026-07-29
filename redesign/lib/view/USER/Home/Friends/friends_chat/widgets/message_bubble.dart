@@ -14,6 +14,7 @@ import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_mod
 import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/chat_controller.dart';
 import 'full_screen_image.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/view/USER/Home/widgets/chat_emoji_sheet.dart';
 
 const kGreen = AppColors.accent;
 const kSurface = AppColors.surface;
@@ -135,6 +136,23 @@ class MessageBubble extends StatelessWidget {
   Widget _buildContent(BuildContext context) {
     switch (msg.type) {
       case 'text':
+        final isEmojiOnly = isSingleEmoji(msg.content);
+
+        if (isEmojiOnly) {
+          return Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(8),
+              vertical: ResponsiveHelper.h(4),
+            ),
+            child: Text(
+              msg.content.trim(),
+              style: TextStyle(
+                fontSize: ResponsiveHelper.sp(48),
+              ),
+            ),
+          );
+        }
+
         return Container(
           padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
           decoration: BoxDecoration(

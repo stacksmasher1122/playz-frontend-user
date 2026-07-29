@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/friends_controller.dart';
 
 class SuggestedPlayersSection extends StatelessWidget {
   const SuggestedPlayersSection({super.key});
@@ -9,21 +12,53 @@ class SuggestedPlayersSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return Column(
-      children: const [
-        SectionHeader('Suggested Players', action: 'View Map'),
-        SuggestedPlayerCard(
-          name: 'Rahul S.',
-          level: 'Intermediate',
-          meta: '500m · Football',
-        ),
-        SuggestedPlayerCard(
-          name: 'Sneha K.',
-          level: 'Pro',
-          meta: '1.2km · Badminton',
-        ),
-      ],
-    );
+    final ctrl = Get.find<FriendsController>();
+
+    return Obx(() {
+      if (ctrl.isLoadingSuggested.value && ctrl.suggestedPlayers.isEmpty) {
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: context.heightPct(2)),
+          child: const Center(
+            child: CircularProgressIndicator(color: AppColors.accent),
+          ),
+        );
+      }
+
+      if (ctrl.suggestedPlayers.isEmpty) {
+        return const SizedBox.shrink();
+      }
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SectionHeader('Suggested Players'),
+          ...ctrl.suggestedPlayers.map((player) {
+            final name = (player['fullName'] ?? 'Player').toString();
+            final level = (player['level'] ?? 'Intermediate').toString();
+            final meta = (player['meta'] ?? 'Nearby').toString();
+            final pic = (player['profileImageUrl'] ?? '').toString();
+
+            return SuggestedPlayerCard(
+              name: name,
+              level: level,
+              meta: meta,
+              profilePicUrl: pic,
+              onAddPressed: () {
+                ctrl.sendFriendRequest(player);
+                Get.snackbar(
+                  'Request Sent',
+                  'Friend request sent to $name',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: AppColors.surface,
+                  colorText: AppColors.textPrimary,
+                  duration: const Duration(seconds: 2),
+                );
+              },
+            );
+          }),
+        ],
+      );
+    });
   }
 }
 
@@ -31,12 +66,16 @@ class SuggestedPlayerCard extends StatelessWidget {
   final String name;
   final String level;
   final String meta;
+  final String profilePicUrl;
+  final VoidCallback onAddPressed;
 
   const SuggestedPlayerCard({
     super.key,
     required this.name,
     required this.level,
     required this.meta,
+    this.profilePicUrl = '',
+    required this.onAddPressed,
   });
 
   @override
@@ -63,7 +102,12 @@ class SuggestedPlayerCard extends StatelessWidget {
             CircleAvatar(
               radius: avatarSize / 2,
               backgroundColor: AppColors.card,
-              child: const Icon(Icons.person, color: AppColors.muted),
+              backgroundImage: profilePicUrl.isNotEmpty
+                  ? CachedNetworkImageProvider(profilePicUrl)
+                  : null,
+              child: profilePicUrl.isEmpty
+                  ? const Icon(Icons.person, color: AppColors.muted)
+                  : null,
             ),
             SizedBox(width: context.widthPct(3)),
             Expanded(
@@ -102,8 +146,8 @@ class SuggestedPlayerCard extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.person_add_alt, color: AppColors.textPrimary),
-              onPressed: () {},
+              icon: const Icon(Icons.person_add_alt, color: AppColors.accent),
+              onPressed: onAddPressed,
             ),
           ],
         ),
@@ -119,7 +163,8 @@ class LevelBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final color = label == 'Pro' ? AppColors.accent : AppColors.muted;
+    final isPro = label.toLowerCase() == 'pro' || label.toLowerCase() == 'legend';
+    final color = isPro ? AppColors.accent : AppColors.muted;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: context.widthPct(2),

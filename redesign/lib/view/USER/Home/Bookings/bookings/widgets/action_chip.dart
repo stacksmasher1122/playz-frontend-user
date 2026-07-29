@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_dimensions.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -33,31 +34,36 @@ class ActionChipWidget extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
         onTap: onTap,
         child: Container(
           padding: EdgeInsets.symmetric(
-            horizontal: context.widthPct(3.5),
-            vertical: context.heightPct(1),
+            horizontal: context.widthPct(2.0).clamp(AppDimensions.xs, AppDimensions.sm),
+            vertical: context.heightPct(1.0).clamp(AppDimensions.xs, AppDimensions.sm),
           ),
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
             border: Border.all(color: borderColor, width: 1),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 16, color: contentColor),
-              SizedBox(width: context.widthPct(1.5)),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  label,
-                  style: AppTypography.headlineSm.copyWith(
-                    color: contentColor,
-                    fontSize: context.responsiveFont(13),
-                    fontWeight: FontWeight.w600,
+              Icon(icon, size: AppDimensions.iconSm, color: contentColor),
+              SizedBox(width: AppDimensions.xs),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.headlineSm.copyWith(
+                      color: contentColor,
+                      fontSize: context.responsiveFont(12),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),

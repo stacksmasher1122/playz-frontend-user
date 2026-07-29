@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_dimensions.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -16,7 +17,7 @@ class LeaderboardSportFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final sports = ['All', 'Cricket', 'Football', 'Tennis', 'Badminton'];
+    final sports = const ['All Sports', 'Football', 'Cricket', 'Badminton', 'Tennis'];
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -24,21 +25,23 @@ class LeaderboardSportFilter extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
       child: Row(
         children: sports.map((sport) {
-          final isSelected = sport == selectedSport;
+          final isSelected = sport == selectedSport ||
+              (selectedSport == 'All' && sport == 'All Sports');
+
           return Padding(
-            padding: EdgeInsets.only(right: context.widthPct(2.5)),
+            padding: EdgeInsets.only(right: context.widthPct(2)),
             child: InkWell(
               onTap: () => onSportChanged(sport),
-              borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.widthPct(4.5),
+                  horizontal: context.widthPct(4),
                   vertical: context.heightPct(1),
                 ),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.accent : Colors.transparent,
-                  borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+                  color: isSelected ? AppColors.accent : AppColors.card,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
                   border: Border.all(
                     color: isSelected ? AppColors.accent : AppColors.borderDark,
                     width: 1,

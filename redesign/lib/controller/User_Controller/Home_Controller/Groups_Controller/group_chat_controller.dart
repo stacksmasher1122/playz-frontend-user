@@ -62,11 +62,19 @@ class GroupChatController extends GetxController {
     myPic = await UserPreferences.getProfileImageUrl() ?? '';
     if (myEmail.isEmpty) return;
 
+    if (currentGroupId.value != groupId) {
+      messages.clear();
+      pendingMessages.clear();
+    }
     currentGroupId.value = groupId;
 
-    // Load fast from SQFlite
-    final localMsgs = await GroupsSqflite.getGroupMessages(groupId);
-    messages.assignAll(localMsgs);
+    // Load fast from SQFlite if empty
+    if (messages.isEmpty) {
+      final localMsgs = await GroupsSqflite.getGroupMessages(groupId);
+      if (messages.isEmpty && localMsgs.isNotEmpty) {
+        messages.assignAll(localMsgs);
+      }
+    }
 
     // Listen to live stream
     _listenToMessages();
@@ -136,6 +144,9 @@ class GroupChatController extends GetxController {
   void _listenToMessages() {
     if (currentGroupId.value.isEmpty) return;
     _msgSub?.cancel();
+
+    bool isInitial = true;
+
     _msgSub = _firestore
         .collection('Groups')
         .doc(currentGroupId.value)
@@ -143,21 +154,58 @@ class GroupChatController extends GetxController {
         .orderBy('timestamp', descending: true)
         .snapshots()
         .listen((snapshot) async {
-      final newMsgs = snapshot.docs
-          .where((doc) => doc.data()['type'] != 'system') // skip _init doc
-          .map((doc) {
-        return GroupChatMessageModel.fromMap(
-          doc.id,
-          currentGroupId.value,
-          doc.data(),
-        );
-      }).toList();
+      if (isInitial) {
+        final initialMsgs = snapshot.docs
+            .where((doc) => doc.data()['type'] != 'system')
+            .map((doc) => GroupChatMessageModel.fromMap(
+                  doc.id,
+                  currentGroupId.value,
+                  doc.data(),
+                ))
+            .toList();
+        messages.assignAll(initialMsgs);
+        isInitial = false;
+      } else {
+        // Incremental updates like WhatsApp: only add/update modified docs
+        for (final change in snapshot.docChanges) {
+          final doc = change.doc;
+          if (doc.data()?['type'] == 'system') continue;
 
-      messages.assignAll(newMsgs);
+          final msg = GroupChatMessageModel.fromMap(
+            doc.id,
+            currentGroupId.value,
+            doc.data()!,
+          );
+
+          if (change.type == DocumentChangeType.added) {
+            pendingMessages.removeWhere((p) => p.id == msg.id);
+
+            final existingIndex = messages.indexWhere((m) => m.id == msg.id);
+            if (existingIndex == -1) {
+              messages.insert(0, msg);
+            } else {
+              messages[existingIndex] = msg;
+            }
+          } else if (change.type == DocumentChangeType.modified) {
+            final index = messages.indexWhere((m) => m.id == msg.id);
+            if (index != -1) {
+              messages[index] = msg;
+            } else {
+              messages.insert(0, msg);
+            }
+          } else if (change.type == DocumentChangeType.removed) {
+            messages.removeWhere((m) => m.id == msg.id);
+          }
+        }
+      }
 
       // Sync to local DB in background
-      await GroupsSqflite.clearAndInsertGroupMessages(
-          currentGroupId.value, newMsgs);
+      final currentList = List<GroupChatMessageModel>.from(messages);
+      GroupsSqflite.clearAndInsertGroupMessages(
+              currentGroupId.value, currentList)
+          .catchError((e) {
+        debugPrint('🔴 [GroupChatController] SQFlite sync error: $e');
+      });
     }, onError: (e) {
       debugPrint('🔴 [GroupChatController] Sync error: $e');
     });

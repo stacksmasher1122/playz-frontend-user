@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_dimensions.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-
-Color kGreen = AppColors.accent;
-Color kSurface = Color(0xFF0E0E0E);
 
 class SportFilterRow extends StatelessWidget {
   final int selected;
@@ -18,26 +17,37 @@ class SportFilterRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final sports = ['All Sports', 'Cricket', 'Football', 'Badminton', 'Tennis'];
+    final sports = const ['All Sports', 'Football', 'Cricket', 'Badminton', 'Tennis'];
 
     return SizedBox(
-      height: ResponsiveHelper.h(48),
+      height: context.heightPct(5.5).clamp(42.0, 50.0),
       child: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
+        padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
         itemCount: sports.length,
-        separatorBuilder: (_, __) => SizedBox(width: 8),
+        separatorBuilder: (_, __) => SizedBox(width: context.widthPct(2)),
         itemBuilder: (_, i) {
           final active = selected == i;
           return ChoiceChip(
             selected: active,
-            label: Text(sports[i]),
-            selectedColor: kGreen.withValues(alpha: 0.2),
-            backgroundColor: kSurface,
-            labelStyle: TextStyle(
-              color: active ? kGreen : Colors.white,
-              fontWeight: FontWeight.w600,
+            label: Text(
+              sports[i],
+              style: AppTypography.bodySm.copyWith(
+                color: active ? AppColors.background : AppColors.textPrimary,
+                fontSize: context.responsiveFont(13),
+                fontWeight: active ? FontWeight.bold : FontWeight.w500,
+              ),
             ),
+            selectedColor: AppColors.accent,
+            backgroundColor: AppColors.card,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
+              side: BorderSide(
+                color: active ? AppColors.accent : AppColors.borderDark,
+              ),
+            ),
+            showCheckmark: false,
             onSelected: (_) => onChanged(i),
           );
         },

@@ -4,6 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Bookings/qr_in_bookings/qr_in_bookings_screen.dart';
 import 'action_chip.dart';
+import 'rate_review_bottom_sheet.dart';
 import 'status_badge.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -124,24 +125,49 @@ class CompletedBookingCard extends StatelessWidget {
               /// ACTION BUTTONS ROW
               Row(
                 children: [
-                  ActionChipWidget(
-                    Icons.directions_outlined,
-                    'Directions',
-                    onTap: _launchGoogleMaps,
-                    outlined: true,
+                  Expanded(
+                    child: ActionChipWidget(
+                      Icons.directions_outlined,
+                      'Directions',
+                      onTap: _launchGoogleMaps,
+                      outlined: true,
+                    ),
                   ),
                   SizedBox(width: context.widthPct(2)),
-                  ActionChipWidget(
-                    Icons.qr_code_2,
-                    'View Pass',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => BookingQrScreen(bookingData: bookingData),
-                        ),
-                      );
-                    },
-                    outlined: false,
+                  Expanded(
+                    child: ActionChipWidget(
+                      Icons.qr_code_2,
+                      'View Pass',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => BookingQrScreen(bookingData: bookingData),
+                          ),
+                        );
+                      },
+                      outlined: false,
+                    ),
+                  ),
+                  SizedBox(width: context.widthPct(2)),
+                  Expanded(
+                    child: ActionChipWidget(
+                      (bookingData?['isReviewed'] == true ||
+                              bookingData?['userRating'] != null ||
+                              bookingData?['rating'] != null)
+                          ? Icons.star_rounded
+                          : Icons.star_outline_rounded,
+                      'Rate',
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) =>
+                              RateReviewBottomSheet(bookingData: bookingData),
+                        );
+                      },
+                      outlined: true,
+                    ),
                   ),
                 ],
               ),

@@ -12,8 +12,10 @@ class FriendsController extends GetxController {
   final friends = <FriendModel>[].obs;
   final pendingRequests = <FriendRequestModel>[].obs;
   final searchResults = <Map<String, dynamic>>[].obs;
+  final suggestedPlayers = <Map<String, dynamic>>[].obs;
   final isLoading = false.obs;
   final isSearching = false.obs;
+  final isLoadingSuggested = false.obs;
 
   // Cache all users for client-side search
   List<Map<String, dynamic>> _allUsersCache = [];
@@ -64,11 +66,89 @@ class FriendsController extends GetxController {
       await Future.wait([
         _fetchFriendsFromFirestore(),
         _fetchRequestsFromFirestore(),
+        fetchSuggestedPlayers(),
       ]);
     } catch (e) {
       debugPrint('🔴 [FriendsController] Firestore fetch error: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // ═══════════════════════════════════
+  //  SUGGESTED PLAYERS LOGIC
+  // ═══════════════════════════════════
+
+  Future<void> fetchSuggestedPlayers() async {
+    if (_myEmail.isEmpty) return;
+    isLoadingSuggested.value = true;
+    try {
+      final snapshot = await _firestore.collection('User').limit(30).get();
+      final friendEmails =
+          friends.map((f) => f.email.toLowerCase().trim()).toSet();
+      final pendingEmails = pendingRequests
+          .map((r) => r.fromEmail.toLowerCase().trim())
+          .toSet();
+
+      final suggestions = <Map<String, dynamic>>[];
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final docId = doc.id.toLowerCase().trim();
+        final primaryEmail =
+            (data['primaryEmail'] ?? doc.id).toString().toLowerCase().trim();
+
+        // 1. Exclude current user
+        if (docId == _myEmail.toLowerCase().trim() ||
+            primaryEmail == _myEmail.toLowerCase().trim()) {
+          continue;
+        }
+
+        // 2. Exclude existing friends
+        if (friendEmails.contains(docId) ||
+            friendEmails.contains(primaryEmail)) {
+          continue;
+        }
+
+        // 3. Exclude pending requests
+        if (pendingEmails.contains(docId) ||
+            pendingEmails.contains(primaryEmail)) {
+          continue;
+        }
+
+        final fullName = (data['fullName'] ?? '').toString().trim();
+        final name = fullName.isNotEmpty
+            ? fullName
+            : (data['username'] ?? 'Player');
+
+        final rawTier = (data['tier'] ?? 'Intermediate').toString();
+        final level = rawTier.isNotEmpty
+            ? (rawTier[0].toUpperCase() + rawTier.substring(1).toLowerCase())
+            : 'Intermediate';
+
+        final sportsList = (data['favoriteSports'] as List<dynamic>?)
+            ?.map((s) => s.toString())
+            .toList() ?? [];
+        final sport = sportsList.isNotEmpty ? sportsList.first : 'Sports';
+        final meta = 'Nearby · $sport';
+
+        suggestions.add({
+          'docId': doc.id,
+          'primaryEmail': data['primaryEmail'] ?? doc.id,
+          'fullName': name,
+          'profileImageUrl': data['profileImageUrl'] ?? '',
+          'level': level,
+          'meta': meta,
+          'isPublicProfile': data['isPublicProfile'] ?? true,
+          'isOnline': data['isOnline'] ?? false,
+        });
+      }
+
+      suggestedPlayers.assignAll(suggestions.take(6).toList());
+    } catch (e) {
+      debugPrint('🔴 [FriendsController] Suggested players fetch error: $e');
+    } finally {
+      isLoadingSuggested.value = false;
     }
   }
 
@@ -172,6 +252,11 @@ class FriendsController extends GetxController {
     final isPublic = targetUser['isPublicProfile'] ?? true;
 
     if (targetEmail.isEmpty || targetEmail == _myEmail) return;
+
+    // Instantly remove from suggested list for responsive UI
+    suggestedPlayers.removeWhere((p) =>
+        (p['primaryEmail'] ?? p['docId']) == targetEmail ||
+        p['docId'] == targetEmail);
 
     // Get my profile data
     final myDoc = await _firestore.collection('User').doc(_myEmail).get();

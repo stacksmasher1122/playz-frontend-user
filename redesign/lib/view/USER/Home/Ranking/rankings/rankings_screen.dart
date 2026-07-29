@@ -1,59 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:redesign/controller/User_Controller/Ranking_Controller/ranking_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
-
-// Modular Widgets
-import 'widgets/rankings_app_bar.dart';
-import 'widgets/user_rank_card.dart';
-import 'widgets/scope_tabs.dart';
-import 'widgets/sport_filter_row.dart';
-import 'widgets/season_prize_card.dart';
-import 'widgets/quick_stats_row.dart';
-import 'widgets/league_sections.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-Color kBg = AppColors.background;
+import 'widgets/league_sections.dart';
+import 'widgets/rankings_app_bar.dart';
+import 'widgets/scope_tabs.dart';
+import 'widgets/sport_filter_row.dart';
+import 'widgets/user_rank_card.dart';
 
-class RankingsScreen extends StatefulWidget {
+class RankingsScreen extends StatelessWidget {
   const RankingsScreen({super.key});
-
-  @override
-  State<RankingsScreen> createState() => _RankingsScreenState();
-}
-
-class _RankingsScreenState extends State<RankingsScreen> {
-  int scopeIndex = 0;
-  int sportIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final controller = Get.isRegistered<RankingController>()
+        ? Get.find<RankingController>()
+        : Get.put(RankingController());
+
     return Scaffold(
-      backgroundColor: kBg,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         bottom: false,
-        child: CustomScrollView(
-           slivers: [
-            RankingsAppBar(),
-            SliverToBoxAdapter(child: UserRankCard()),
-            SliverToBoxAdapter(
-              child: ScopeTabs(
-                selected: scopeIndex,
-                onChanged: (i) => setState(() => scopeIndex = i),
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.accent),
+            );
+          }
+
+          final currentUser = controller.currentUserModel;
+          final scopeName = controller.scopes[controller.selectedScopeIndex.value];
+
+          return CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              const RankingsAppBar(),
+              SliverToBoxAdapter(
+                child: UserRankCard(
+                  userPlayer: currentUser,
+                  scopeName: scopeName,
+                ),
               ),
-            ),
-            SliverToBoxAdapter(
-              child: SportFilterRow(
-                selected: sportIndex,
-                onChanged: (i) => setState(() => sportIndex = i),
+              SliverToBoxAdapter(
+                child: ScopeTabs(
+                  selected: controller.selectedScopeIndex.value,
+                  onChanged: (index) => controller.setScope(index),
+                ),
               ),
-            ),
-            SliverToBoxAdapter(child: SeasonPrizeCard()),
-            SliverToBoxAdapter(child: QuickStatsRow()),
-            SliverToBoxAdapter(child: GoldLeagueSection()),
-            SliverToBoxAdapter(child: SilverLeagueSection()),
-            SliverPadding(padding: EdgeInsets.only(bottom: 40)),
-          ],
-        ),
+              SliverToBoxAdapter(
+                child: SportFilterRow(
+                  selected: controller.selectedSportIndex.value,
+                  onChanged: (index) => controller.setSport(index),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: DynamicLeagueSections(
+                  players: controller.filteredPlayers,
+                ),
+              ),
+              SliverPadding(
+                padding: EdgeInsets.only(bottom: context.heightPct(5)),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

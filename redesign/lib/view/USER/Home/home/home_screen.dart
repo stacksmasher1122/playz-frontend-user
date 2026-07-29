@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -10,10 +12,41 @@ import 'widgets/home_explore_by_sport.dart';
 import 'widgets/home_featured_events.dart';
 import 'widgets/home_hero_cta.dart';
 import 'widgets/home_official_app_info.dart';
-import 'widgets/home_popular_venues.dart';
+import 'widgets/home_previous_venues.dart';
 import 'widgets/home_quick_access_tiles.dart';
 import 'widgets/home_top_app_bar.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+
+/// Custom DotLottie decoder.
+/// - Picks the animation JSON from the animations/ folder (not manifest.json)
+/// - Provides embedded PNGs from the zip as MemoryImage providers,
+///   normalising the path to strip any leading slash (e.g. /images/ → images/).
+Future<LottieComposition?> decodeDotLottie(List<int> bytes) async {
+  return LottieComposition.decodeZip(
+    bytes,
+    filePicker: (files) {
+      return files.firstWhere(
+        (f) => f.name.endsWith('.json') && f.name != 'manifest.json',
+      );
+    },
+    imageProviderFactory: (asset) {
+      // asset.dirName is '/images/', asset.fileName is 'image_0.png'
+      // Strip leading slash so we can match against zip file names like 'images/image_0.png'
+      final dir = asset.dirName.replaceFirst(RegExp(r'^/'), '');
+      final target = '$dir${asset.fileName}'.toLowerCase();
+
+      final archive = ZipDecoder().decodeBytes(bytes);
+      final imageFile = archive.files.firstWhereOrNull(
+        (f) => f.name.toLowerCase() == target,
+      );
+
+      if (imageFile != null) {
+        return MemoryImage(Uint8List.fromList(imageFile.content as List<int>));
+      }
+      return null;
+    },
+  );
+}
 
 /* ============================================================
    USER HOME PAGE
@@ -36,17 +69,32 @@ class _UserHomePageState extends State<UserHomePage>
   final _controller = Get.find<UserProfileController>();
   final _eventFestController = Get.find<EventFestController>();
 
-  // Lottie Optimization: Store widget in variable to avoid reload on rebuild
+  // Lottie animation widget storage
   Widget? _festivalLottieWidget;
   late final AnimationController _lottieController;
+
+  // Fade-out controller
+  late final AnimationController _fadeController;
+  late final Animation<double> _fadeAnimation;
+  bool _isFadingOut = false;
 
   @override
   void initState() {
     super.initState();
     _lottieController = AnimationController(vsync: this);
+
+    // Fade-out over 600ms
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+
     _loadUserData();
 
-    // Check immediately in case the controller already set it to true
     if (_eventFestController.shouldShowLottie.value) {
       _preloadFestivalLottie();
     }
@@ -61,6 +109,7 @@ class _UserHomePageState extends State<UserHomePage>
   @override
   void dispose() {
     _lottieController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -69,70 +118,61 @@ class _UserHomePageState extends State<UserHomePage>
       final active = _eventFestController.activeFestival.value;
       final data = _eventFestController.festivalEventData[active];
 
-      final url = data?['lottieUrl'];
+      final assetPath = (data?['lottieAsset'] ?? 'assets/lottie/tfu_republic.lottie').toString();
       final double startingProgress =
           (data?['lottieProgress'] as num?)?.toDouble() ?? 0.0;
       final double endProgress =
           (data?['lottieEndProgress'] as num?)?.toDouble() ?? 1.0;
       final double speed = (data?['lottieSpeed'] as num?)?.toDouble() ?? 1.0;
-      final String alignmentStr =
-          data?['lottieAlignment']?.toString() ?? 'center';
 
-      AlignmentGeometry lottieAlignment = Alignment.center;
-      if (alignmentStr == 'bottom') {
-        lottieAlignment = Alignment.bottomCenter;
-      } else if (alignmentStr == 'top') {
-        lottieAlignment = Alignment.topCenter;
-      }
-
-      if (url != null) {
-        if (mounted) {
-          setState(() {
-            // Optimization: Wrap animation in RepaintBoundary
-            _festivalLottieWidget = RepaintBoundary(
-              // Usage of SizedBox.expand() instead of MediaQuery in initState context
-              child: SizedBox.expand(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    bottom: alignmentStr == 'bottom' ? 80.0 : 0.0,
-                  ),
-                  child: Lottie.network(
-                    url,
-                    controller: _lottieController,
-                    frameRate: FrameRate.max, // smoother playback
-                    fit: BoxFit.contain,
-                    alignment: lottieAlignment,
-                    onLoaded: (composition) {
-                      _lottieController.duration = Duration(
-                        microseconds:
-                            (composition.duration.inMicroseconds / speed)
-                                .round(),
-                      );
-                      // Wait for page transition to finish before playing
-                      Future.delayed(Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {
+          _isFadingOut = false;
+          // Bottom-aligned so monument bases touch the navigation bar top
+          _festivalLottieWidget = RepaintBoundary(
+            child: SizedBox.expand(
+              child: Lottie.asset(
+                assetPath,
+                decoder: assetPath.endsWith('.lottie') ? decodeDotLottie : null,
+                controller: _lottieController,
+                frameRate: FrameRate.max,
+                fit: BoxFit.contain,
+                alignment: Alignment.bottomCenter,
+                onLoaded: (composition) {
+                  _lottieController.duration = Duration(
+                    microseconds:
+                        (composition.duration.inMicroseconds / speed).round(),
+                  );
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    if (mounted) {
+                      _lottieController.value = startingProgress;
+                      _lottieController.animateTo(endProgress).then((_) {
                         if (mounted) {
-                          _lottieController.value = startingProgress;
-                          _lottieController.animateTo(endProgress).then((_) {
+                          _eventFestController.markLottieAsShown();
+                          // Trigger smooth fade-out
+                          setState(() => _isFadingOut = true);
+                          _fadeController.forward().then((_) {
                             if (mounted) {
-                              _eventFestController.markLottieAsShown();
                               setState(() {
                                 _festivalLottieWidget = null;
+                                _isFadingOut = false;
                               });
+                              _fadeController.reset();
                             }
                           });
                         }
                       });
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      debugPrint("Error loading lottie: $error");
-                      return SizedBox.shrink();
-                    },
-                  ),
-                ), // Closes Padding
-              ), // Closes SizedBox.expand
-            );
-          });
-        }
+                    }
+                  });
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  debugPrint("Error loading dotLottie asset: $error");
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+          );
+        });
       }
     }
   }
@@ -164,8 +204,7 @@ class _UserHomePageState extends State<UserHomePage>
                 SizedBox(height: context.heightPct(3)),
                 HomeQuickAccessTiles(),
                 SizedBox(height: context.heightPct(3)),
-                HomePopularVenues(),
-                SizedBox(height: context.heightPct(3)),
+                HomePreviousVenues(),
                 HomeExploreBySport(),
                 SizedBox(height: context.heightPct(3)),
                 HomeFeaturedEvents(),
@@ -173,10 +212,21 @@ class _UserHomePageState extends State<UserHomePage>
                 HomeOfficialAppInfo(),
               ],
             ),
-            // Optimization: Use animation only in hero/top section
+            // Startup festival Lottie — sits just above the bottom nav bar, fades out smoothly
             if (_festivalLottieWidget != null)
-              Positioned.fill(
-                child: IgnorePointer(child: _festivalLottieWidget!),
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: context.heightPct(9).clamp(64.0, 88.0),
+                child: IgnorePointer(
+                  child: _isFadingOut
+                      ? FadeTransition(
+                          opacity: ReverseAnimation(_fadeAnimation),
+                          child: _festivalLottieWidget!,
+                        )
+                      : _festivalLottieWidget!,
+                ),
               ),
           ],
         ),

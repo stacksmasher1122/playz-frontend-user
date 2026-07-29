@@ -14,6 +14,7 @@ import 'attachment_icon.dart';
 import 'media_preview_screen.dart';
 import 'create_poll_sheet.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/view/USER/Home/widgets/chat_emoji_sheet.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
@@ -34,10 +35,23 @@ class GroupsChatInputBar extends StatefulWidget {
 
 class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
   final TextEditingController _msgController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   bool _isTyping = false;
+  bool _showEmojiPicker = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus && _showEmojiPicker) {
+        setState(() => _showEmojiPicker = false);
+      }
+    });
+  }
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _msgController.dispose();
     super.dispose();
   }
@@ -45,108 +59,146 @@ class _GroupsChatInputBarState extends State<GroupsChatInputBar> {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return Container(
-      color: Colors.black.withValues(alpha: 0.6),
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFF1E1E1E),
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
-                ),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.emoji_emotions_outlined,
-                        color: Colors.white60,
+    return PopScope(
+      canPop: !_showEmojiPicker,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_showEmojiPicker) {
+          setState(() => _showEmojiPicker = false);
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            color: Colors.black.withValues(alpha: 0.6),
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: SafeArea(
+              top: false,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xFF1E1E1E),
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
                       ),
-                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              _showEmojiPicker
+                                  ? Icons.keyboard
+                                  : Icons.emoji_emotions_outlined,
+                              color: _showEmojiPicker ? _kGreen : Colors.white60,
+                            ),
+                            onPressed: () {
+                              if (_showEmojiPicker) {
+                                setState(() => _showEmojiPicker = false);
+                                FocusScope.of(context).requestFocus(_focusNode);
+                              } else {
+                                FocusScope.of(context).unfocus();
+                                setState(() => _showEmojiPicker = true);
+                              }
+                            },
+                          ),
+                          Expanded(
+                            child: TextField(
+                              focusNode: _focusNode,
+                              controller: _msgController,
+                              style: TextStyle(color: Colors.white),
+                              textCapitalization: TextCapitalization.sentences,
+                              minLines: 1,
+                              maxLines: 5,
+                              onTap: () {
+                                if (_showEmojiPicker) {
+                                  setState(() => _showEmojiPicker = false);
+                                }
+                              },
+                              onChanged: (val) {
+                                setState(() => _isTyping = val.trim().isNotEmpty);
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Type a message...",
+                                hintStyle: TextStyle(color: _kMuted, fontSize: 16),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.attach_file,
+                              color: Colors.white60,
+                            ),
+                            onPressed: () => _showAttachmentSheet(context),
+                          ),
+                          if (!_isTyping)
+                            IconButton(
+                              icon: Icon(
+                                Icons.camera_alt_outlined,
+                                color: Colors.white60,
+                              ),
+                              onPressed: _openCamera,
+                            ),
+                        ],
+                      ),
                     ),
-                    Expanded(
-                      child: TextField(
-                        controller: _msgController,
-                        style: TextStyle(color: Colors.white),
-                        textCapitalization: TextCapitalization.sentences,
-                        minLines: 1,
-                        maxLines: 5,
-                        onChanged: (val) {
-                          setState(() => _isTyping = val.trim().isNotEmpty);
-                        },
-                        decoration: InputDecoration(
-                          hintText: "Type a message...",
-                          hintStyle: TextStyle(color: _kMuted, fontSize: 16),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+                  ),
+                  SizedBox(width: 8),
+
+                  // Send/Mic Button
+                  GestureDetector(
+                    onTap: () {
+                      if (_isTyping) {
+                        widget.ctrl.sendText(_msgController.text);
+                        _msgController.clear();
+                        setState(() => _isTyping = false);
+                        widget.onScrollToBottom();
+                      }
+                    },
+                    onLongPressStart: (_) {
+                      if (!_isTyping) widget.ctrl.startRecording();
+                    },
+                    onLongPressEnd: (_) {
+                      if (!_isTyping) widget.ctrl.stopRecording();
+                    },
+                    child: Obx(() {
+                      final isRec = widget.ctrl.isRecording.value;
+                      return AnimatedContainer(
+                        duration: Duration(milliseconds: 200),
+                        height: isRec ? 56 : 48,
+                        width: isRec ? 56 : 48,
+                        decoration: BoxDecoration(
+                          color: _isTyping
+                              ? _kGreen
+                              : (isRec ? Colors.redAccent : _kGreen),
+                          shape: BoxShape.circle,
                         ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.attach_file,
-                        color: Colors.white60,
-                      ),
-                      onPressed: () => _showAttachmentSheet(context),
-                    ),
-                    if (!_isTyping)
-                      IconButton(
-                        icon: Icon(
-                          Icons.camera_alt_outlined,
-                          color: Colors.white60,
+                        child: Center(
+                          child: Icon(
+                            _isTyping ? Icons.send : (isRec ? Icons.stop : Icons.mic),
+                            color: isRec ? Colors.white : Colors.black,
+                            size: isRec ? 30 : 22,
+                          ),
                         ),
-                        onPressed: _openCamera,
-                      ),
-                  ],
-                ),
+                      );
+                    }),
+                  ),
+                ],
               ),
             ),
-            SizedBox(width: 8),
+          ),
 
-            // Send/Mic Button
-            GestureDetector(
-              onTap: () {
-                if (_isTyping) {
-                  widget.ctrl.sendText(_msgController.text);
-                  _msgController.clear();
-                  setState(() => _isTyping = false);
-                  widget.onScrollToBottom();
-                }
-              },
-              onLongPressStart: (_) {
-                if (!_isTyping) widget.ctrl.startRecording();
-              },
-              onLongPressEnd: (_) {
-                if (!_isTyping) widget.ctrl.stopRecording();
-              },
-              child: Obx(() {
-                final isRec = widget.ctrl.isRecording.value;
-                return AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  height: isRec ? 56 : 48,
-                  width: isRec ? 56 : 48,
-                  decoration: BoxDecoration(
-                    color: _isTyping
-                        ? _kGreen
-                        : (isRec ? Colors.redAccent : _kGreen),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      _isTyping ? Icons.send : (isRec ? Icons.stop : Icons.mic),
-                      color: isRec ? Colors.white : Colors.black,
-                      size: isRec ? 30 : 22,
-                    ),
-                  ),
-                );
-              }),
+          if (_showEmojiPicker)
+            ChatEmojiPickerPanel(
+              controller: _msgController,
+              onChanged: () =>
+                  setState(() => _isTyping = _msgController.text.trim().isNotEmpty),
+              onClose: () => setState(() => _showEmojiPicker = false),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

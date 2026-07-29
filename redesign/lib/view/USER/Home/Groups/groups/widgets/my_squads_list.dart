@@ -17,24 +17,6 @@ class MySquadsList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(
-            context.widthPct(4),
-            context.heightPct(2),
-            context.widthPct(4),
-            context.heightPct(1),
-          ),
-          child: Text(
-            'MY SQUADS',
-            style: AppTypography.labelCaps10.copyWith(
-              color: AppColors.textPrimary,
-              fontSize: context.responsiveFont(14),
-              fontWeight: FontWeight.w400,
-              letterSpacing: 1.2,
-            ),
-          ),
-        ),
-
         Obx(() {
           if (ctrl.isLoading.value && ctrl.myGroups.isEmpty) {
             return Padding(

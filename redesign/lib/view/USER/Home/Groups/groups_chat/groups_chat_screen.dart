@@ -43,7 +43,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     _ctrl.initGroupChat(widget.groupId);
 
     ever(_ctrl.messages, (_) {
-      _scrollToBottom();
+      _handleMessageListChange();
     });
   }
 
@@ -53,12 +53,27 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     super.dispose();
   }
 
+  void _handleMessageListChange() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      // In reverse ListView, 0.0 is the bottom (latest messages)
+      final isNearBottom = _scrollController.offset <= 150;
+      if (isNearBottom) {
+        _scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0.0,
-          duration: const Duration(milliseconds: 250),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
         );
       }
@@ -110,6 +125,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                       );
                     }
 
+                    final pendingCount = _ctrl.pendingMessages.length;
+
                     return ListView.builder(
                       key: const PageStorageKey("group_chat_list"),
                       controller: _scrollController,
@@ -119,19 +136,32 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                         horizontal: context.widthPct(3),
                         vertical: context.heightPct(1),
                       ),
-                      itemCount:
-                          _ctrl.pendingMessages.length + _ctrl.messages.length,
+                      itemCount: pendingCount + _ctrl.messages.length,
+                      findChildIndexCallback: (Key key) {
+                        if (key is ValueKey<String>) {
+                          final String id = key.value;
+                          final pIndex =
+                              _ctrl.pendingMessages.indexWhere((m) => m.id == id);
+                          if (pIndex != -1) return pIndex;
+
+                          final mIndex =
+                              _ctrl.messages.indexWhere((m) => m.id == id);
+                          if (mIndex != -1) return pendingCount + mIndex;
+                        }
+                        return null;
+                      },
                       itemBuilder: (context, i) {
-                        final isPending = i < _ctrl.pendingMessages.length;
+                        final isPending = i < pendingCount;
                         final msg = isPending
                             ? _ctrl.pendingMessages[i]
-                            : _ctrl.messages[i - _ctrl.pendingMessages.length];
+                            : _ctrl.messages[i - pendingCount];
                         final isMe = msg.senderEmail == _ctrl.myEmail;
                         final timeStr = DateFormat(
                           'HH:mm',
                         ).format(msg.timestamp);
 
                         return GroupsSwipeToReply(
+                          key: ValueKey(msg.id),
                           isMe: isMe,
                           onSwiped: () => _ctrl.setReplyTo(msg),
                           child: GestureDetector(

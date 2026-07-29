@@ -100,7 +100,10 @@ class PastBookingsWidget extends StatelessWidget {
               ),
               itemCount: pastDocs.length,
               itemBuilder: (context, index) {
-                final data = pastDocs[index].data() as Map<String, dynamic>;
+                final doc = pastDocs[index];
+                final data = Map<String, dynamic>.from(
+                    doc.data() as Map<String, dynamic>);
+                data['bookingId'] = doc.id;
                 return Padding(
                   padding: EdgeInsets.only(bottom: context.heightPct(1.5)),
                   child: CompletedBookingCard(bookingData: data),

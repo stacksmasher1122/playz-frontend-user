@@ -1,173 +1,223 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/model/User_Models/More_Models/leaderboard_model.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_dimensions.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-Color kGreen = AppColors.accent;
-Color kSurface = Color(0xFF0E0E0E);
-Color kMuted = Color(0xFFA7A7A7);
-Color kGold = Color(0xFFFFC107);
-Color kRed = Color(0xFFE53935);
+class DynamicLeagueSections extends StatelessWidget {
+  final List<LeaderboardPlayerModel> players;
 
-class GoldLeagueSection extends StatelessWidget {
-  const GoldLeagueSection({super.key});
+  const DynamicLeagueSections({super.key, required this.players});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    return _LeagueSection(
-      title: 'GOLD LEAGUE',
-      icon: Icons.emoji_events,
-      info: 'Top 10 players promote to Platinum League next week.',
-      rows: [
-        _RankRow(rank: 1, name: 'Rohan K.', pts: 2100, up: true),
-        _RankRow(rank: 2, name: 'Priya S.', pts: 1950),
-        _RankRow(rank: 3, name: 'Amit V.', pts: 1820, down: true),
-      ],
-    );
-  }
-}
 
-class SilverLeagueSection extends StatelessWidget {
-  const SilverLeagueSection({super.key});
+    // Group players by Tier
+    final Map<PlayerTier, List<LeaderboardPlayerModel>> tieredPlayers = {
+      PlayerTier.legend: [],
+      PlayerTier.elite: [],
+      PlayerTier.prime: [],
+      PlayerTier.rising: [],
+      PlayerTier.rookie: [],
+    };
 
-  @override
-  Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    return _LeagueSection(
-      title: 'SILVER LEAGUE',
-      icon: Icons.shield,
-      rows: [
-        _RankRow(rank: 41, name: 'Vikram S.', pts: 1255),
-        _RankRow(
-          rank: 42,
-          name: 'You',
-          pts: 1240,
-          highlight: true,
-          up: true,
+    for (final player in players) {
+      tieredPlayers[player.tier]?.add(player);
+    }
+
+    final activeTiers = PlayerTier.values.where((t) => (tieredPlayers[t] ?? []).isNotEmpty).toList();
+
+    if (activeTiers.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.all(context.widthPct(6)),
+        child: Center(
+          child: Text(
+            'No players found in this ranking scope.',
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: context.responsiveFont(13),
+            ),
+          ),
         ),
-        _RankRow(rank: 43, name: 'Neha M.', pts: 1230, down: true),
-      ],
+      );
+    }
+
+    return Column(
+      children: activeTiers.map((tier) {
+        final tierList = tieredPlayers[tier]!;
+        return _SingleLeagueSection(
+          tier: tier,
+          players: tierList,
+        );
+      }).toList(),
     );
   }
 }
 
-class _LeagueSection extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final String? info;
-  final List<Widget> rows;
+class _SingleLeagueSection extends StatelessWidget {
+  final PlayerTier tier;
+  final List<LeaderboardPlayerModel> players;
 
-  const _LeagueSection({
-    required this.title,
-    required this.icon,
-    this.info,
-    required this.rows,
+  const _SingleLeagueSection({
+    required this.tier,
+    required this.players,
   });
 
+  Color get _tierColor {
+    switch (tier) {
+      case PlayerTier.legend:
+        return AppColors.legendGold;
+      case PlayerTier.elite:
+        return AppColors.elitePurple;
+      case PlayerTier.prime:
+        return AppColors.primeTeal;
+      case PlayerTier.rising:
+        return AppColors.risingBlue;
+      case PlayerTier.rookie:
+        return AppColors.rookieSlate;
+    }
+  }
+
+  IconData get _tierIcon {
+    switch (tier) {
+      case PlayerTier.legend:
+        return Icons.stars;
+      case PlayerTier.elite:
+        return Icons.workspace_premium;
+      case PlayerTier.prime:
+        return Icons.emoji_events;
+      case PlayerTier.rising:
+        return Icons.trending_up;
+      case PlayerTier.rookie:
+        return Icons.shield_outlined;
+    }
+  }
+
+  String get _tierTitle => '${tier.name.toUpperCase()} LEAGUE';
+
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 18, 16, 0),
+      padding: EdgeInsets.fromLTRB(
+        context.widthPct(4),
+        context.heightPct(1.5),
+        context.widthPct(4),
+        context.heightPct(0.5),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// HEADER
+          /// SECTION HEADER
           Row(
             children: [
-              Icon(icon, color: kGold, size: 18),
-              SizedBox(width: 8),
+              Icon(_tierIcon, color: _tierColor, size: 20),
+              SizedBox(width: context.widthPct(2)),
               Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
+                _tierTitle,
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(14),
+                  fontWeight: FontWeight.bold,
                   letterSpacing: 0.6,
                 ),
               ),
-              Spacer(),
-              if (info != null)
-                Text(
-                  'View Rules',
-                  style: TextStyle(
-                    color: kMuted,
-                    fontSize: ResponsiveHelper.sp(12),
-                  ),
+              const Spacer(),
+              Text(
+                '${players.length} Players',
+                style: AppTypography.bodyXs.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: context.responsiveFont(11),
                 ),
+              ),
             ],
           ),
 
-          if (info != null) ...[
-            SizedBox(height: 8),
-            Container(
-              padding: EdgeInsets.all(ResponsiveHelper.w(12)),
-              decoration: BoxDecoration(
-                color: kSurface,
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-              ),
-              child: Text(
-                info!,
-                style: TextStyle(color: kMuted, fontSize: 12),
-              ),
-            ),
-          ],
+          SizedBox(height: context.heightPct(1)),
 
-          SizedBox(height: 8),
-          ...rows,
+          /// PLAYER ROWS
+          ...players.map((player) => _RankRowItem(player: player)),
         ],
       ),
     );
   }
 }
 
-class _RankRow extends StatelessWidget {
-  final int rank;
-  final String name;
-  final int pts;
-  final bool up;
-  final bool down;
-  final bool highlight;
+class _RankRowItem extends StatelessWidget {
+  final LeaderboardPlayerModel player;
 
-  const _RankRow({
-    required this.rank,
-    required this.name,
-    required this.pts,
-    this.up = false,
-    this.down = false,
-    this.highlight = false,
-  });
+  const _RankRowItem({required this.player});
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final isMe = player.isCurrentUser;
+    final avatarRadius = context.minDimensionPct(4.0).clamp(14.0, 18.0);
+
     return Container(
-      margin: EdgeInsets.only(top: 6),
-      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+      margin: EdgeInsets.only(bottom: context.heightPct(0.8)),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.widthPct(3.5),
+        vertical: context.heightPct(1.2),
+      ),
       decoration: BoxDecoration(
-        color: highlight ? kGreen.withValues(alpha: 0.12) : Colors.transparent,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+        color: isMe ? AppColors.accent.withValues(alpha: 0.15) : AppColors.card,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+        border: Border.all(
+          color: isMe ? AppColors.accent.withValues(alpha: 0.6) : AppColors.borderDark,
+          width: isMe ? 1.5 : 1,
+        ),
       ),
       child: Row(
         children: [
-          Text('$rank',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700)),
-          SizedBox(width: 12),
-          Expanded(
-            child: Text(name,
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w600)),
+          // Rank Number
+          SizedBox(
+            width: context.widthPct(8).clamp(26.0, 36.0),
+            child: Text(
+              player.formattedRank,
+              style: AppTypography.headlineSm.copyWith(
+                color: isMe ? AppColors.accent : AppColors.textPrimary,
+                fontSize: context.responsiveFont(13),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-          Text('$pts',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700)),
-          SizedBox(width: 6),
-          if (up)
-            Icon(Icons.arrow_upward, size: 16, color: kGreen),
-          if (down)
-            Icon(Icons.arrow_downward, size: 16, color: kRed),
+          SizedBox(width: context.widthPct(2)),
+
+          // Avatar Image
+          CircleAvatar(
+            radius: avatarRadius,
+            backgroundColor: AppColors.surface,
+            backgroundImage: NetworkImage(player.avatarUrl),
+          ),
+          SizedBox(width: context.widthPct(3)),
+
+          // Name
+          Expanded(
+            child: Text(
+              player.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.headlineSm.copyWith(
+                color: isMe ? AppColors.accent : AppColors.textPrimary,
+                fontSize: context.responsiveFont(13),
+                fontWeight: isMe ? FontWeight.bold : FontWeight.w600,
+              ),
+            ),
+          ),
+
+          // Points
+          Text(
+            '${player.formattedPoints} pts',
+            style: AppTypography.headlineSm.copyWith(
+              color: isMe ? AppColors.accent : AppColors.textPrimary,
+              fontSize: context.responsiveFont(13),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );

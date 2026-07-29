@@ -77,7 +77,9 @@ class RegisterController extends ChangeNotifier {
       final user = credential.user;
 
       if (user != null) {
-        final emailToUse = (user.email != null && user.email!.isNotEmpty) ? user.email! : email;
+        final emailToUse = (user.email != null && user.email!.isNotEmpty)
+            ? user.email!
+            : email;
         await UserPreferences.saveUserLogin(
           true,
           user.displayName ?? "User",

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/model/User_Models/More_Models/leaderboard_model.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_dimensions.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-import 'package:redesign/model/User_Models/More_Models/leaderboard_model.dart';
 
 class LeaderboardPodium extends StatelessWidget {
   final List<LeaderboardPlayerModel> top3;
@@ -13,11 +14,15 @@ class LeaderboardPodium extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
 
-    if (top3.length < 3) return const SizedBox.shrink();
+    if (top3.isEmpty) return const SizedBox.shrink();
 
     final rank1 = top3.firstWhere((p) => p.rank == 1, orElse: () => top3[0]);
-    final rank2 = top3.firstWhere((p) => p.rank == 2, orElse: () => top3[1]);
-    final rank3 = top3.firstWhere((p) => p.rank == 3, orElse: () => top3[2]);
+    final rank2 = top3.length > 1
+        ? top3.firstWhere((p) => p.rank == 2, orElse: () => top3[1])
+        : null;
+    final rank3 = top3.length > 2
+        ? top3.firstWhere((p) => p.rank == 3, orElse: () => top3[2])
+        : null;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
@@ -27,11 +32,13 @@ class LeaderboardPodium extends StatelessWidget {
         children: [
           // Rank 2 (Left)
           Expanded(
-            child: _PodiumColumn(
-              player: rank2,
-              podiumHeight: context.heightPct(9).clamp(60.0, 80.0),
-              isFirst: false,
-            ),
+            child: rank2 != null
+                ? _PodiumColumn(
+                    player: rank2,
+                    podiumHeight: context.heightPct(9).clamp(60.0, 80.0),
+                    isFirst: false,
+                  )
+                : const SizedBox.shrink(),
           ),
           SizedBox(width: context.widthPct(2.5)),
 
@@ -47,11 +54,13 @@ class LeaderboardPodium extends StatelessWidget {
 
           // Rank 3 (Right)
           Expanded(
-            child: _PodiumColumn(
-              player: rank3,
-              podiumHeight: context.heightPct(7).clamp(45.0, 60.0),
-              isFirst: false,
-            ),
+            child: rank3 != null
+                ? _PodiumColumn(
+                    player: rank3,
+                    podiumHeight: context.heightPct(7).clamp(45.0, 60.0),
+                    isFirst: false,
+                  )
+                : const SizedBox.shrink(),
           ),
         ],
       ),
@@ -88,7 +97,7 @@ class _PodiumColumn extends StatelessWidget {
               padding: EdgeInsets.all(isFirst ? 3.5 : 2.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isFirst ? AppColors.accent : Colors.white24,
+                color: isFirst ? AppColors.accent : AppColors.borderDark,
                 boxShadow: isFirst
                     ? [
                         BoxShadow(
@@ -144,15 +153,15 @@ class _PodiumColumn extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: AppTypography.headlineSm.copyWith(
             color: AppColors.textPrimary,
-            fontSize: context.responsiveFont(isFirst ? 14 : 12),
+            fontSize: context.responsiveFont(isFirst ? 13 : 12),
             fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(height: context.heightPct(0.3)),
 
-        // Points
+        // Points (formatted k/m)
         Text(
-          '${player.points.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} pts',
+          '${player.formattedPoints} pts',
           style: AppTypography.bodySm.copyWith(
             color: AppColors.accent,
             fontSize: context.responsiveFont(isFirst ? 12 : 10),
@@ -164,13 +173,13 @@ class _PodiumColumn extends StatelessWidget {
 
         SizedBox(height: context.heightPct(1.2)),
 
-        // Dark Gray Rounded Pedestal Block
+        // Pedestal Block
         Container(
           width: double.infinity,
           height: podiumHeight,
           decoration: BoxDecoration(
             color: AppColors.card,
-            borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
           ),
         ),
       ],

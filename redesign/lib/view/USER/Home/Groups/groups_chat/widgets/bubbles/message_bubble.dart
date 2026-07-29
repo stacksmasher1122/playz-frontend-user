@@ -12,6 +12,7 @@ import 'audio_bubble.dart';
 import 'location_bubble.dart';
 import 'poll_bubble.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/view/USER/Home/widgets/chat_emoji_sheet.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
@@ -160,6 +161,30 @@ class GroupMessageBubble extends StatelessWidget {
     switch (msg.type) {
       case 'text':
         final isFlagged = msg.status == 'flagged';
+        final isEmojiOnly = isSingleEmoji(msg.content);
+
+        if (isEmojiOnly) {
+          return Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.w(8),
+              vertical: ResponsiveHelper.h(4),
+            ),
+            decoration: isFlagged
+                ? BoxDecoration(
+                    color: Colors.redAccent.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                  )
+                : null,
+            child: Text(
+              msg.content.trim(),
+              style: TextStyle(
+                fontSize: ResponsiveHelper.sp(48),
+                fontStyle: isFlagged ? FontStyle.italic : FontStyle.normal,
+              ),
+            ),
+          );
+        }
+
         return Container(
           padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(12)),
           decoration: BoxDecoration(

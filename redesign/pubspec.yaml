@@ -36,6 +36,7 @@ dependencies:
   dotlottie_flutter: ^0.0.2
   flutter_cache_manager: ^3.4.1
   lottie: ^3.3.2
+  archive: ^4.0.9
   record: ^6.0.0
   path_provider: ^2.1.5
   uuid: ^4.6.0
@@ -65,6 +66,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/lottie/
     - .env
 
 flutter_launcher_icons:

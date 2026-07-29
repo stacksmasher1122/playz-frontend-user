@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:redesign/model/User_Models/More_Models/leaderboard_model.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_dimensions.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-import 'package:redesign/model/User_Models/More_Models/leaderboard_model.dart';
 
 class LeaderboardTile extends StatelessWidget {
   final LeaderboardPlayerModel player;
@@ -15,30 +16,31 @@ class LeaderboardTile extends StatelessWidget {
 
     final isUser = player.isCurrentUser;
     final avatarRadius = context.minDimensionPct(4.5).clamp(16.0, 22.0);
+    final tierColor = player.tierColor;
 
     return Container(
       margin: EdgeInsets.only(bottom: context.heightPct(1.2)),
       padding: EdgeInsets.symmetric(
-        horizontal: context.widthPct(4),
-        vertical: context.heightPct(1.5),
+        horizontal: context.widthPct(3.5),
+        vertical: context.heightPct(1.3),
       ),
       decoration: BoxDecoration(
         color: isUser ? AppColors.accent.withValues(alpha: 0.15) : AppColors.card,
-        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
         border: isUser
-            ? Border.all(color: AppColors.accent.withValues(alpha: 0.5), width: 1.5)
+            ? Border.all(color: AppColors.accent.withValues(alpha: 0.6), width: 1.5)
             : Border.all(color: AppColors.borderDark),
       ),
       child: Row(
         children: [
           // Rank Number
           SizedBox(
-            width: context.widthPct(7).clamp(24.0, 32.0),
+            width: context.widthPct(9).clamp(28.0, 38.0),
             child: Text(
-              '${player.rank}',
+              player.formattedRank,
               style: AppTypography.headlineSm.copyWith(
                 color: isUser ? AppColors.accent : AppColors.textPrimary,
-                fontSize: context.responsiveFont(14),
+                fontSize: context.responsiveFont(13),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -58,28 +60,43 @@ class LeaderboardTile extends StatelessWidget {
               backgroundImage: NetworkImage(player.avatarUrl),
             ),
           ),
-          SizedBox(width: context.widthPct(3.5)),
+          SizedBox(width: context.widthPct(3)),
 
-          // Name
+          // Name & Tier Pill
           Expanded(
-            child: Text(
-              player.name,
-              style: AppTypography.headlineSm.copyWith(
-                color: isUser ? AppColors.accent : AppColors.textPrimary,
-                fontSize: context.responsiveFont(14),
-                fontWeight: FontWeight.bold,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  player.name,
+                  style: AppTypography.headlineSm.copyWith(
+                    color: isUser ? AppColors.accent : AppColors.textPrimary,
+                    fontSize: context.responsiveFont(13),
+                    fontWeight: isUser ? FontWeight.bold : FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: context.heightPct(0.3)),
+                Text(
+                  player.tierName,
+                  style: AppTypography.labelCaps10.copyWith(
+                    color: tierColor,
+                    fontSize: context.responsiveFont(9),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
 
           // Points
           Text(
-            '${player.points.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} pts',
+            '${player.formattedPoints} pts',
             style: AppTypography.headlineSm.copyWith(
               color: isUser ? AppColors.accent : AppColors.textPrimary,
-              fontSize: context.responsiveFont(14),
+              fontSize: context.responsiveFont(13),
               fontWeight: FontWeight.bold,
             ),
           ),

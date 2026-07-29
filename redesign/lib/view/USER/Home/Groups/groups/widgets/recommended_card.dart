@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:redesign/model/User_Models/Home_Models/Groups_Model/groups_model.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class RecommendedCard extends StatelessWidget {
-  final String name;
-  final String members;
-  final String status;
-  final String imageUrl;
+  final GroupModel group;
+  final VoidCallback onJoin;
 
   const RecommendedCard({
     super.key,
-    required this.name,
-    required this.members,
-    required this.status,
-    required this.imageUrl,
+    required this.group,
+    required this.onJoin,
   });
 
   @override
@@ -35,21 +32,28 @@ class RecommendedCard extends StatelessWidget {
         child: Row(
           children: [
             ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                width: avatarRadius * 2,
-                height: avatarRadius * 2,
-                fit: BoxFit.cover,
-                placeholder: (_, __) => CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundColor: AppColors.surface,
-                ),
-                errorWidget: (_, __, ___) => CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundColor: AppColors.surface,
-                  child: const Icon(Icons.group, color: AppColors.muted),
-                ),
-              ),
+              child: group.imageUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: group.imageUrl,
+                      width: avatarRadius * 2,
+                      height: avatarRadius * 2,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => CircleAvatar(
+                        radius: avatarRadius,
+                        backgroundColor: AppColors.surface,
+                        child: const Icon(Icons.group, color: AppColors.muted),
+                      ),
+                      errorWidget: (_, __, ___) => CircleAvatar(
+                        radius: avatarRadius,
+                        backgroundColor: AppColors.surface,
+                        child: const Icon(Icons.group, color: AppColors.muted),
+                      ),
+                    )
+                  : CircleAvatar(
+                      radius: avatarRadius,
+                      backgroundColor: AppColors.surface,
+                      child: const Icon(Icons.group, color: AppColors.muted),
+                    ),
             ),
             SizedBox(width: context.widthPct(3.5)),
             Expanded(
@@ -57,7 +61,7 @@ class RecommendedCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    group.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.headlineSm.copyWith(
@@ -68,7 +72,7 @@ class RecommendedCard extends StatelessWidget {
                   ),
                   SizedBox(height: context.heightPct(0.4)),
                   Text(
-                    '$members • $status',
+                    '${group.members.length} MEMBERS • ${group.sport.toUpperCase()}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.labelCaps10.copyWith(
@@ -83,7 +87,7 @@ class RecommendedCard extends StatelessWidget {
             ),
             SizedBox(width: context.widthPct(2)),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: onJoin,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accent,
                 foregroundColor: AppColors.background,
@@ -97,7 +101,7 @@ class RecommendedCard extends StatelessWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  'JOIN',
+                  group.isPublic ? 'JOIN' : 'REQUEST',
                   style: AppTypography.bodySm.copyWith(
                     color: AppColors.background,
                     fontSize: context.responsiveFont(12),

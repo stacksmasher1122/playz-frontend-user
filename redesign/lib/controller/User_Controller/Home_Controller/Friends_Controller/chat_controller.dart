@@ -45,17 +45,25 @@ class ChatController extends GetxController {
   DateTime? _recordingStartTime;
 
   // Init is called explicitly when ChatScreen is opened
+  // Init is called explicitly when ChatScreen is opened
   Future<void> initChat(String friendEmailParam) async {
     myEmail = await UserPreferences.getDocId() ?? '';
     if (myEmail.isEmpty) return;
 
+    if (friendEmail.value != friendEmailParam) {
+      messages.clear();
+    }
     friendEmail.value = friendEmailParam;
     final sorted = [myEmail, friendEmail.value]..sort();
     dmDocId.value = sorted.join('_');
 
-    // Load fast from SQFlite
-    final localMsgs = await FriendsSqflite.getMessagesByDmId(dmDocId.value);
-    messages.assignAll(localMsgs);
+    // Load fast from SQFlite if empty
+    if (messages.isEmpty) {
+      final localMsgs = await FriendsSqflite.getMessagesByDmId(dmDocId.value);
+      if (messages.isEmpty && localMsgs.isNotEmpty) {
+        messages.assignAll(localMsgs);
+      }
+    }
 
     // Listen to live stream
     _listenToMessages();
@@ -71,9 +79,6 @@ class ChatController extends GetxController {
 
       if (response.file != null) {
         debugPrint('🟢 [Chat] Recovered lost media: ${response.file!.path}');
-        // We can't automatically send it because we don't know if the user
-        // was in the middle of a preview. However, we can at least log it
-        // or notify the UI. For now, let's just log.
       }
     } catch (e) {
       debugPrint('🔴 [Chat] Lost data recovery error: $e');
@@ -106,6 +111,9 @@ class ChatController extends GetxController {
   void _listenToMessages() {
     if (dmDocId.isEmpty) return;
     _msgSub?.cancel();
+
+    bool isInitial = true;
+
     _msgSub = _firestore
         .collection('Direct_Message')
         .doc(dmDocId.value)
@@ -113,34 +121,71 @@ class ChatController extends GetxController {
         .orderBy('timestamp', descending: true)
         .snapshots()
         .listen((snapshot) async {
-      final newMsgs = snapshot.docs.map((doc) {
-        return ChatMessageModel.fromMap(doc.id, doc.data());
-      }).toList();
+      if (isInitial) {
+        final initialMsgs = snapshot.docs.map((doc) {
+          return ChatMessageModel.fromMap(doc.id, doc.data());
+        }).toList();
+        messages.assignAll(initialMsgs);
+        isInitial = false;
+      } else {
+        // Incremental updates like WhatsApp: only add/update modified docs
+        for (final change in snapshot.docChanges) {
+          final doc = change.doc;
+          if (doc.data() == null) continue;
+          final msg = ChatMessageModel.fromMap(doc.id, doc.data()!);
 
-      messages.assignAll(newMsgs);
+          if (change.type == DocumentChangeType.added) {
+            final existingIndex = messages.indexWhere((m) => m.id == msg.id);
+            if (existingIndex == -1) {
+              messages.insert(0, msg);
+            } else {
+              messages[existingIndex] = msg;
+            }
+          } else if (change.type == DocumentChangeType.modified) {
+            final index = messages.indexWhere((m) => m.id == msg.id);
+            if (index != -1) {
+              messages[index] = msg;
+            } else {
+              messages.insert(0, msg);
+            }
+          } else if (change.type == DocumentChangeType.removed) {
+            messages.removeWhere((m) => m.id == msg.id);
+          }
+        }
+      }
 
-      // Identify unread messages from the friend to mark as read
-      final unreadFriendMsgs = newMsgs.where((m) =>
-          m.senderEmail != myEmail && !m.isRead).toList();
+      // Identify unread messages from friend to mark as read
+      final unreadFriendMsgs = snapshot.docs
+          .where((doc) {
+            final data = doc.data();
+            final sender = data['senderEmail'] ?? '';
+            final isRead = data['isRead'] ?? false;
+            return sender != myEmail && !isRead;
+          })
+          .map((doc) => doc.id)
+          .toList();
 
       if (unreadFriendMsgs.isNotEmpty) {
         final batch = _firestore.batch();
-        for (final m in unreadFriendMsgs) {
+        for (final msgId in unreadFriendMsgs) {
           final docRef = _firestore
               .collection('Direct_Message')
               .doc(dmDocId.value)
               .collection('Chats')
-              .doc(m.id);
+              .doc(msgId);
           batch.update(docRef, {'isRead': true});
         }
-        // Fire and forget batch update
         batch.commit().catchError((e) {
           debugPrint('🔴 [ChatController] Error marking messages as read: $e');
         });
       }
 
       // Sync to local DB in background
-      await FriendsSqflite.clearAndInsertMessages(dmDocId.value, newMsgs);
+      final currentList = List<ChatMessageModel>.from(messages);
+      FriendsSqflite.clearAndInsertMessages(dmDocId.value, currentList)
+          .catchError((e) {
+        debugPrint('🔴 [ChatController] SQFlite sync error: $e');
+      });
     }, onError: (e) {
       debugPrint('🔴 [ChatController] Sync error: $e');
     });

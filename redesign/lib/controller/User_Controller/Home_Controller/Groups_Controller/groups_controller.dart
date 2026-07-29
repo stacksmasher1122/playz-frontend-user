@@ -21,8 +21,10 @@ class GroupsController extends GetxController {
 
   // ── Reactive state ──
   final myGroups = <GroupModel>[].obs;
+  final recommendedGroups = <GroupModel>[].obs;
   final pendingGroupRequests = <GroupRequestModel>[].obs;
   final isLoading = false.obs;
+  final isLoadingRecommended = false.obs;
   final isCreating = false.obs;
 
   // ── Image picking state ──
@@ -51,8 +53,11 @@ class GroupsController extends GetxController {
     // 1) Load from SQFlite for instant display
     await _loadFromSqflite();
 
-    // 2) Fetch live data from Firestore
+    // 2) Fetch live user groups from Firestore
     await fetchMyGroups();
+
+    // 3) Fetch recommended groups
+    await fetchRecommendedGroups();
   }
 
   // ═══════════════════════════════════
@@ -69,7 +74,7 @@ class GroupsController extends GetxController {
   }
 
   // ═══════════════════════════════════
-  //  LIVE → FIRESTORE
+  //  LIVE → FIRESTORE MY GROUPS
   // ═══════════════════════════════════
 
   Future<void> fetchMyGroups() async {
@@ -92,8 +97,10 @@ class GroupsController extends GetxController {
       final List<GroupModel> liveGroups = [];
       for (final groupId in groupsMap.keys) {
         try {
-          final groupDoc =
-              await _firestore.collection('Groups').doc(groupId).get();
+          final groupDoc = await _firestore
+              .collection('Groups')
+              .doc(groupId)
+              .get();
           if (groupDoc.exists) {
             liveGroups.add(GroupModel.fromMap(groupDoc.data()!, groupDoc.id));
           }
@@ -108,6 +115,31 @@ class GroupsController extends GetxController {
       debugPrint('🔴 [GroupsController] Firestore fetch error: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // ═══════════════════════════════════
+  //  LIVE → RECOMMENDED GROUPS
+  // ═══════════════════════════════════
+
+  Future<void> fetchRecommendedGroups() async {
+    isLoadingRecommended.value = true;
+    try {
+      final snapshot = await _firestore.collection('Groups').limit(20).get();
+
+      final results = snapshot.docs
+          .map((doc) => GroupModel.fromMap(doc.data(), doc.id))
+          .where((g) => !g.members.containsKey(_myEmail))
+          .toList();
+
+      // Sort by member count descending
+      results.sort((a, b) => b.members.length.compareTo(a.members.length));
+
+      recommendedGroups.assignAll(results);
+    } catch (e) {
+      debugPrint('🔴 [GroupsController] Recommended fetch error: $e');
+    } finally {
+      isLoadingRecommended.value = false;
     }
   }
 
@@ -141,8 +173,12 @@ class GroupsController extends GetxController {
     required int maxMembers,
   }) async {
     if (name.trim().isEmpty) {
-      Get.snackbar('Error', 'Group name is required.',
-          backgroundColor: Colors.redAccent, colorText: Colors.white);
+      Get.snackbar(
+        'Error',
+        'Group name is required.',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
       return false;
     }
 
@@ -194,16 +230,14 @@ class GroupsController extends GetxController {
           .collection('chats')
           .doc('_init')
           .set({
-        'type': 'system',
-        'content': 'Group created',
-        'timestamp': Timestamp.fromDate(now),
-      });
+            'type': 'system',
+            'content': 'Group created',
+            'timestamp': Timestamp.fromDate(now),
+          });
 
       // 7) Update User/{docId} with group reference (nested map)
       await _firestore.collection('User').doc(_myEmail).set({
-        'groups': {
-          groupId: group.toUserGroupRef(),
-        },
+        'groups': {groupId: group.toUserGroupRef()},
       }, SetOptions(merge: true));
 
       // 8) Save to local SQFlite
@@ -218,16 +252,24 @@ class GroupsController extends GetxController {
 
       // Ensure full sync with Firestore in the background
       fetchMyGroups();
+      fetchRecommendedGroups();
 
-      Get.snackbar('Success', 'Group "$name" created!',
-          backgroundColor: const Color(0xFF1DB954),
-          colorText: Colors.black);
+      Get.snackbar(
+        'Success',
+        'Group "$name" created!',
+        backgroundColor: const Color(0xFF1DB954),
+        colorText: Colors.black,
+      );
 
       return true;
     } catch (e) {
       debugPrint('🔴 [GroupsController] Create group error: $e');
-      Get.snackbar('Error', 'Failed to create group. Please try again.',
-          backgroundColor: Colors.redAccent, colorText: Colors.white);
+      Get.snackbar(
+        'Error',
+        'Failed to create group. Please try again.',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
       return false;
     } finally {
       isCreating.value = false;
@@ -261,16 +303,18 @@ class GroupsController extends GetxController {
         .orderBy('timestamp', descending: true)
         .snapshots()
         .listen((snapshot) {
-      pendingGroupRequests.assignAll(
-        snapshot.docs.map((doc) => GroupRequestModel.fromMap(doc.data())).toList(),
-      );
-    });
+          pendingGroupRequests.assignAll(
+            snapshot.docs
+                .map((doc) => GroupRequestModel.fromMap(doc.data()))
+                .toList(),
+          );
+        });
   }
 
   Future<void> approveGroupRequest(GroupRequestModel req) async {
     try {
       final now = DateTime.now();
-      
+
       // 1) Update Group members map
       await _firestore.collection('Groups').doc(req.groupId).update({
         FieldPath(['members', req.senderEmail]): {
@@ -283,7 +327,10 @@ class GroupsController extends GetxController {
       });
 
       // 2) Update User's groups map
-      final groupDoc = await _firestore.collection('Groups').doc(req.groupId).get();
+      final groupDoc = await _firestore
+          .collection('Groups')
+          .doc(req.groupId)
+          .get();
       if (groupDoc.exists) {
         final groupData = groupDoc.data()!;
         final groupRef = {
@@ -294,9 +341,7 @@ class GroupsController extends GetxController {
         };
 
         await _firestore.collection('User').doc(req.senderEmail).set({
-          'groups': {
-            req.groupId: groupRef,
-          },
+          'groups': {req.groupId: groupRef},
         }, SetOptions(merge: true));
       }
 
@@ -307,7 +352,7 @@ class GroupsController extends GetxController {
           .collection('requests')
           .doc(req.senderEmail)
           .delete();
-          
+
       Get.snackbar('Success', 'User approved to join.');
     } catch (e) {
       debugPrint('🔴 [GroupsController] Approval error: $e');
@@ -353,17 +398,16 @@ class GroupsController extends GetxController {
 
     isSearching.value = true;
     try {
-      // Firestore doesn't support full-text search natively,
-      // so we fetch groups whose name starts with the query (case-sensitive prefix).
-      // For broader matching we fetch all groups and filter client-side.
       final snapshot = await _firestore.collection('Groups').get();
       final lowerQuery = query.toLowerCase();
 
       final results = snapshot.docs
           .map((doc) => GroupModel.fromMap(doc.data(), doc.id))
-          .where((g) =>
-              g.name.toLowerCase().contains(lowerQuery) &&
-              !myGroups.any((mine) => mine.groupId == g.groupId))
+          .where(
+            (g) =>
+                g.name.toLowerCase().contains(lowerQuery) &&
+                !myGroups.any((mine) => mine.groupId == g.groupId),
+          )
           .toList();
 
       searchResults.assignAll(results);
@@ -395,9 +439,7 @@ class GroupsController extends GetxController {
 
       // 2) Add group ref to User doc
       await _firestore.collection('User').doc(_myEmail).set({
-        'groups': {
-          group.groupId: group.toUserGroupRef(),
-        },
+        'groups': {group.groupId: group.toUserGroupRef()},
       }, SetOptions(merge: true));
 
       // 3) Update local state immediately
@@ -426,19 +468,27 @@ class GroupsController extends GetxController {
       myGroups.insert(0, joinedGroup);
       myGroups.refresh();
 
-      // 4) Remove from search results
+      // 4) Remove from search & recommended results
       searchResults.removeWhere((g) => g.groupId == group.groupId);
+      recommendedGroups.removeWhere((g) => g.groupId == group.groupId);
 
       // 5) Save locally
       await GroupsSqflite.insertGroup(joinedGroup);
 
-      Get.snackbar('Joined!', 'You are now a member of "${group.name}".',
-          backgroundColor: const Color(0xFF1DB954),
-          colorText: Colors.black);
+      Get.snackbar(
+        'Joined!',
+        'You are now a member of "${group.name}".',
+        backgroundColor: const Color(0xFF1DB954),
+        colorText: Colors.black,
+      );
     } catch (e) {
       debugPrint('🔴 [GroupsController] Join error: $e');
-      Get.snackbar('Error', 'Failed to join group.',
-          backgroundColor: Colors.redAccent, colorText: Colors.white);
+      Get.snackbar(
+        'Error',
+        'Failed to join group.',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -456,20 +506,27 @@ class GroupsController extends GetxController {
           .collection('requests')
           .doc(_myEmail)
           .set({
-        'senderEmail': _myEmail,
-        'senderName': _myName,
-        'senderPic': _myPic,
-        'groupId': group.groupId,
-        'timestamp': Timestamp.fromDate(now),
-      });
+            'senderEmail': _myEmail,
+            'senderName': _myName,
+            'senderPic': _myPic,
+            'groupId': group.groupId,
+            'timestamp': Timestamp.fromDate(now),
+          });
 
-      Get.snackbar('Request Sent', 'Your request to join "${group.name}" has been sent.',
-          backgroundColor: const Color(0xFF1DB954),
-          colorText: Colors.black);
+      Get.snackbar(
+        'Request Sent',
+        'Your request to join "${group.name}" has been sent.',
+        backgroundColor: const Color(0xFF1DB954),
+        colorText: Colors.black,
+      );
     } catch (e) {
       debugPrint('🔴 [GroupsController] Request error: $e');
-      Get.snackbar('Error', 'Failed to send request.',
-          backgroundColor: Colors.redAccent, colorText: Colors.white);
+      Get.snackbar(
+        'Error',
+        'Failed to send request.',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
@@ -24,10 +25,11 @@ class CreateGroupScreen extends StatefulWidget {
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
+  final TextEditingController _maxMembersController = TextEditingController();
   final _ctrl = Get.find<GroupsController>();
   int _descLength = 0;
 
-  String _selectedSport = 'Cricket';
+  String _selectedSport = '';
   final List<String> _sports = [
     'Cricket',
     'Football',
@@ -36,14 +38,32 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     'Badminton',
     'Hockey',
     'Volleyball',
+    'Table Tennis',
+    'Pickleball',
+    'Squash',
+    'Rugby',
+    'Swimming',
+    'Athletics',
+    'Golf',
+    'Baseball',
+    'Boxing',
+    'Wrestling',
+    'Kabaddi',
+    'Chess',
+    'Cycling',
+    'Pool / Billiards',
+    'Handball',
+    'Futsal',
+    'Padel',
   ];
 
   bool _isPublic = true;
-  double _maxMembers = 25;
+  double _maxMembers = 50;
 
   @override
   void initState() {
     super.initState();
+    _maxMembersController.text = _maxMembers.toInt().toString();
     _descController.addListener(() {
       if (mounted) {
         setState(() {
@@ -57,10 +77,21 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   void dispose() {
     _nameController.dispose();
     _descController.dispose();
+    _maxMembersController.dispose();
     super.dispose();
   }
 
   Future<void> _handleCreate() async {
+    if (_selectedSport.trim().isEmpty) {
+      Get.snackbar(
+        'Sport Required',
+        'Please select a sport for your group.',
+        backgroundColor: Colors.amber.shade900,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     final success = await _ctrl.createGroup(
       name: _nameController.text,
       description: _descController.text,
@@ -69,8 +100,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       maxMembers: _maxMembers.toInt(),
     );
 
-    if (success) {
-      Get.back();
+    if (success && mounted) {
+      Navigator.of(context).pop();
     }
   }
 
@@ -165,28 +196,57 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   ),
                   SizedBox(height: context.heightPct(2.5)),
 
-                  // Maximum Members
+                  // Maximum Members (Editable from Keyboard & Slider)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _buildSectionTitle(context, 'MAXIMUM MEMBERS'),
                       Container(
+                        width: context.widthPct(18).clamp(64.0, 84.0),
                         padding: EdgeInsets.symmetric(
-                          horizontal: context.widthPct(2.5),
-                          vertical: context.heightPct(0.5),
+                          horizontal: context.widthPct(2),
+                          vertical: context.heightPct(0.3),
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.surface,
-                          borderRadius: BorderRadius.circular(context.minDimensionPct(1.5)),
-                          border: Border.all(color: AppColors.borderDark),
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                          border: Border.all(color: AppColors.accent, width: 1.2),
                         ),
-                        child: Text(
-                          _maxMembers.toInt().toString(),
+                        child: TextField(
+                          controller: _maxMembersController,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(3),
+                          ],
                           style: AppTypography.headlineSm.copyWith(
                             color: AppColors.accent,
-                            fontSize: context.responsiveFont(13),
+                            fontSize: context.responsiveFont(14),
                             fontWeight: FontWeight.bold,
                           ),
+                          decoration: const InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(vertical: 4),
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (valStr) {
+                            final parsed = int.tryParse(valStr);
+                            if (parsed != null && parsed >= 5 && parsed <= 500) {
+                              setState(() {
+                                _maxMembers = parsed.toDouble();
+                              });
+                            }
+                          },
+                          onEditingComplete: () {
+                            final parsed = int.tryParse(_maxMembersController.text) ?? 50;
+                            final clamped = parsed.clamp(5, 500);
+                            setState(() {
+                              _maxMembers = clamped.toDouble();
+                              _maxMembersController.text = clamped.toString();
+                            });
+                            FocusScope.of(context).unfocus();
+                          },
                         ),
                       ),
                     ],
@@ -194,7 +254,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   SizedBox(height: context.heightPct(1)),
                   MemberCountSlider(
                     maxMembers: _maxMembers,
-                    onChanged: (val) => setState(() => _maxMembers = val),
+                    onChanged: (val) {
+                      setState(() {
+                        _maxMembers = val;
+                        _maxMembersController.text = val.toInt().toString();
+                      });
+                    },
                   ),
                   SizedBox(height: context.heightPct(4)),
 

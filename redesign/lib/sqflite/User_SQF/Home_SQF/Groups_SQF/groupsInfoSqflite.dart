@@ -83,7 +83,7 @@ class GroupsInfoSqflite {
         );
         for (var media in mediaList) {
           await txn.insert(
-            'groups_media', 
+            'groups_media',
             media.toSqfliteMap(),
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
@@ -97,11 +97,7 @@ class GroupsInfoSqflite {
   static Future<void> deleteMedia(String mediaId) async {
     try {
       final db = await database;
-      await db.delete(
-        'groups_media',
-        where: 'id = ?',
-        whereArgs: [mediaId],
-      );
+      await db.delete('groups_media', where: 'id = ?', whereArgs: [mediaId]);
     } catch (e) {
       debugPrint('🔴 [GroupsInfoSqflite] deleteMedia err: $e');
     }

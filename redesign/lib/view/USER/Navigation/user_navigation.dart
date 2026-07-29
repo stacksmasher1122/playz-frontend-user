@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -10,15 +11,24 @@ import 'package:redesign/view/USER/More/menu/more_screen.dart';
 import 'package:redesign/view/USER/Play/play/play_screen.dart';
 import 'package:redesign/view/USER/Trainer/trainer/trainer_screen.dart';
 
+class UserNavController extends GetxController {
+  final currentIndex = 0.obs;
+
+  void changeTab(int index) {
+    currentIndex.value = index;
+  }
+}
+
 class UserAppNavShell extends StatefulWidget {
-  const UserAppNavShell({super.key});
+  final int initialIndex;
+  const UserAppNavShell({super.key, this.initialIndex = 0});
 
   @override
   State<UserAppNavShell> createState() => _UserAppNavShellState();
 }
 
 class _UserAppNavShellState extends State<UserAppNavShell> {
-  int _currentIndex = 0;
+  late final UserNavController _navCtrl;
 
   final _pages = const [
     UserHomePage(),
@@ -28,9 +38,19 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
     MoreScreen(),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _navCtrl = Get.isRegistered<UserNavController>()
+        ? Get.find<UserNavController>()
+        : Get.put(UserNavController());
+    if (widget.initialIndex != 0) {
+      _navCtrl.changeTab(widget.initialIndex);
+    }
+  }
+
   void _onTap(int index) {
-    if (index == _currentIndex) return;
-    setState(() => _currentIndex = index);
+    _navCtrl.changeTab(index);
   }
 
   @override
@@ -40,59 +60,62 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
     final navBarHeight = context.heightPct(9).clamp(64.0, 88.0);
     final iconSize = context.minDimensionPct(6.5).clamp(22.0, 28.0);
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      extendBody: true,
-      body: IndexedStack(index: _currentIndex, children: _pages),
-      bottomNavigationBar: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: Container(
-            height: navBarHeight,
-            padding: EdgeInsets.only(
-              top: context.heightPct(0.7),
-              bottom: context.bottomInset,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.background.withValues(alpha: 0.7),
-              border: const Border(top: BorderSide(color: AppColors.divider)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children:
-                  [
-                    const _NavItem(
-                      filled: Icons.home,
-                      outlined: Icons.home_outlined,
-                      label: 'Home',
-                      index: 0,
-                    ),
-                    const _NavItem(
-                      filled: Icons.calendar_month,
-                      outlined: Icons.calendar_month_outlined,
-                      label: 'Book',
-                      index: 1,
-                    ),
-                    const _NavItem(
-                      filled: Icons.play_circle,
-                      outlined: Icons.play_circle_outline,
-                      label: 'Play',
-                      index: 2,
-                    ),
-                    const _NavItem(
-                      filled: Icons.supervisor_account_sharp,
-                      outlined: Icons.supervisor_account_outlined,
-                      label: 'Trainer',
-                      index: 3,
-                    ),
-                    const _NavItem(
-                      filled: Icons.menu,
-                      outlined: Icons.menu_outlined,
-                      label: 'More',
-                      index: 4,
-                    ),
-                  ].map((item) {
-                    final selected = item.index == _currentIndex;
+    return Obx(() {
+      final currentIndex = _navCtrl.currentIndex.value;
+
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        extendBody: true,
+        body: IndexedStack(index: currentIndex, children: _pages),
+        bottomNavigationBar: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(
+              height: navBarHeight,
+              padding: EdgeInsets.only(
+                top: context.heightPct(0.7),
+                bottom: context.bottomInset,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.background.withValues(alpha: 0.7),
+                border: const Border(top: BorderSide(color: AppColors.divider)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children:
+                    [
+                      const _NavItem(
+                        filled: Icons.home,
+                        outlined: Icons.home_outlined,
+                        label: 'Home',
+                        index: 0,
+                      ),
+                      const _NavItem(
+                        filled: Icons.calendar_month,
+                        outlined: Icons.calendar_month_outlined,
+                        label: 'Book',
+                        index: 1,
+                      ),
+                      const _NavItem(
+                        filled: Icons.play_circle,
+                        outlined: Icons.play_circle_outline,
+                        label: 'Play',
+                        index: 2,
+                      ),
+                      const _NavItem(
+                        filled: Icons.supervisor_account_sharp,
+                        outlined: Icons.supervisor_account_outlined,
+                        label: 'Trainer',
+                        index: 3,
+                      ),
+                      const _NavItem(
+                        filled: Icons.menu,
+                        outlined: Icons.menu_outlined,
+                        label: 'More',
+                        index: 4,
+                      ),
+                    ].map((item) {
+                      final selected = item.index == currentIndex;
 
                     return GestureDetector(
                       behavior: HitTestBehavior.opaque,
@@ -138,7 +161,8 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
         ),
       ),
     );
-  }
+  });
+}
 }
 
 /* ============================================================
