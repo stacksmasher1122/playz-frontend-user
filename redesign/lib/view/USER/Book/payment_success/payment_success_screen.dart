@@ -119,7 +119,6 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
                       ),
                     );
                   },
-                  onInviteFriends: () {},
                 ),
                 SizedBox(height: context.heightPct(2.5)),
 

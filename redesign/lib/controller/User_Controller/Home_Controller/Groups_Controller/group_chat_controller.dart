@@ -240,9 +240,17 @@ class GroupChatController extends GetxController {
 
   /// Whether the current user's messages should be moderated.
   bool _shouldModerate() {
-    if (!_moderateMembers.value) return false; // moderation is OFF entirely
+    final groupId = currentGroupId.value;
+
+    // 1) PlayZ Global groups (PLAYZ-GLOBAL & PLAYZ-{sport}): Moderation is ALWAYS ENABLED by default for all members & admins!
+    if (groupId.startsWith('PLAYZ-')) {
+      return true;
+    }
+
+    // 2) Personal user created groups: Controlled by Admin settings
+    if (!_moderateMembers.value) return false; // moderation is OFF
     if (_myRole == 'admin') return _moderateAdmins.value;
-    return true; // member and moderation is ON for members
+    return true; // member and moderation is ON
   }
 
   // ═══════════════════════════════════
@@ -265,8 +273,8 @@ class GroupChatController extends GetxController {
   /// Moderated text flow:
   /// 1. Show pending in UI
   /// 2. Enqueue in SQFlite
-  /// 3. Call Groq
-  /// 4. SAFE → send to Firestore | UNSAFE → send policy warning
+  /// 3. Call ModerationService (instant curse word pattern check + Groq AI)
+  /// 4. SAFE → send to Firestore | UNSAFE → auto-delete & send policy notice
   /// 5. Remove from pending
   Future<void> _sendTextWithModeration(String content) async {
     final pendingId = _uuid.v4();
@@ -310,7 +318,7 @@ class GroupChatController extends GetxController {
       replyToSender: pendingMsg.replyToSender,
     );
 
-    // Call Groq moderation
+    // Call ModerationService
     final result = await ModerationService.checkContent(content);
 
     // Determine what to send
@@ -321,8 +329,16 @@ class GroupChatController extends GetxController {
       finalStatus = 'sent';
     } else {
       finalContent =
-          '⚠️ This message was removed for violating community guidelines.';
+          '⚠️ This message was deleted for containing curse words/profanity.';
       finalStatus = 'flagged';
+
+      Get.snackbar(
+        'Message Auto-Deleted',
+        'Curse words and profanity are not allowed in moderated chats.',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
     }
 
     // Build the actual message and write to Firestore

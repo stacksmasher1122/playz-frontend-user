@@ -31,10 +31,6 @@ class MatchSlotsCard extends StatelessWidget {
     final progress = (currentPlayers / (maxPlayers > 0 ? maxPlayers : 1)).clamp(0.0, 1.0);
     final isFull = currentPlayers >= maxPlayers;
 
-    final double moneyProgress = targetAmount > 0
-        ? (collectedAmount / targetAmount).clamp(0.0, 1.0)
-        : progress;
-
     return Container(
       padding: EdgeInsets.all(context.widthPct(4.5)),
       decoration: BoxDecoration(
@@ -138,61 +134,7 @@ class MatchSlotsCard extends StatelessWidget {
             ],
           ),
 
-          /// GATHERED POLL MONEY SECTION (Shown if target amount exists)
-          if (targetAmount > 0) ...[
-            SizedBox(height: context.heightPct(2)),
-            const Divider(color: AppColors.borderDark, height: 1),
-            SizedBox(height: context.heightPct(1.8)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.account_balance_wallet_outlined, color: AppColors.accent, size: 16),
-                    SizedBox(width: context.widthPct(1.5)),
-                    Text(
-                      "Gathered Poll Funds",
-                      style: AppTypography.bodySm.copyWith(
-                        fontSize: context.responsiveFont(12),
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  "₹${collectedAmount.toInt()} / ₹${targetAmount.toInt()}",
-                  style: AppTypography.headlineSm.copyWith(
-                    fontSize: context.responsiveFont(14),
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.accent,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: context.heightPct(1)),
-            Stack(
-              children: [
-                Container(
-                  height: context.heightPct(0.8).clamp(5.0, 8.0),
-                  decoration: BoxDecoration(
-                    color: AppColors.textPrimary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
-                  ),
-                ),
-                FractionallySizedBox(
-                  widthFactor: moneyProgress,
-                  child: Container(
-                    height: context.heightPct(0.8).clamp(5.0, 8.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.accent,
-                      borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+
 
           /// BOOKED SLOTS ON TURF FOR THIS DATE (Displayed if any existing bookings exist)
           if (bookedSlotsForDate.isNotEmpty) ...[

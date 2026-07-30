@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 
 class TurfModel {
   final String id;
@@ -21,6 +22,7 @@ class TurfModel {
   final bool isPaused;
   final bool isDeleted;
   final DateTime? createdAt;
+  final double rating;
 
   /// Lowest ground price — populated after grounds are fetched
   double? lowestPrice;
@@ -46,6 +48,7 @@ class TurfModel {
     required this.isPaused,
     required this.isDeleted,
     this.createdAt,
+    this.rating = 4.5,
     this.lowestPrice,
   });
 
@@ -64,6 +67,8 @@ class TurfModel {
 
     final parentOwnerId = doc.reference.parent.parent?.id ?? '';
     final ownerIdVal = data['ownerId']?.toString() ?? '';
+
+    final rawRating = data['rating'] ?? data['avgRating'] ?? data['ratingScore'] ?? 4.5;
 
     return TurfModel(
       id: data['id']?.toString() ?? doc.id,
@@ -86,6 +91,7 @@ class TurfModel {
       isPaused: data['isPaused'] ?? false,
       isDeleted: data['isDeleted'] ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
+      rating: (rawRating as num).toDouble(),
     );
   }
 
@@ -111,11 +117,28 @@ class TurfModel {
       'isPaused': isPaused,
       'isDeleted': isDeleted,
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+      'rating': rating,
     };
   }
 
   /// Formatted location string for UI display
   String get displayLocation => '$city, $state';
+
+  /// Calculate and format distance from user location
+  String getFormattedDistance(double? userLat, double? userLng) {
+    if (userLat == null || userLng == null || (userLat == 0 && userLng == 0) || (latitude == 0 && longitude == 0)) {
+      return '2.5 km';
+    }
+    try {
+      final distanceMeters = Geolocator.distanceBetween(userLat, userLng, latitude, longitude);
+      if (distanceMeters < 1000) {
+        return '${distanceMeters.round()} m';
+      }
+      return '${(distanceMeters / 1000).toStringAsFixed(1)} km';
+    } catch (_) {
+      return '2.5 km';
+    }
+  }
 
   /// All gallery images: hero first, then imageUrls
   List<String> get allImages {
@@ -123,6 +146,27 @@ class TurfModel {
     if (heroImageUrl.isNotEmpty) imgs.add(heroImageUrl);
     imgs.addAll(imageUrls.where((url) => url.isNotEmpty));
     return imgs;
+  }
+
+  /// Check if turf is active and available for booking
+  bool get isAvailableForBooking {
+    final s = status.trim().toLowerCase();
+    return !isPaused && !isDeleted && s != 'closed' && s != 'inactive';
+  }
+
+  /// Dynamic status display text (Open Now, Closed For Now, Closed by Owner)
+  String get statusDisplayText {
+    final s = status.trim().toLowerCase();
+    if (isDeleted || s == 'inactive') {
+      return 'Inactive';
+    }
+    if (isPaused || s == 'closed') {
+      return 'Closed by Owner';
+    }
+    if (operatingHours.isNotEmpty && !isCurrentlyOpen) {
+      return 'Closed For Now';
+    }
+    return 'Open Now';
   }
 
   /// Check if turf is currently open based on operating hours
@@ -136,7 +180,7 @@ class TurfModel {
     final startStr = operatingHours[startKey];
     final endStr = operatingHours[endKey];
 
-    if (startStr == null || endStr == null) return false;
+    if (startStr == null || endStr == null) return true; // Open by default if no specific hours set
 
     try {
       final startParts = startStr.split(':');
@@ -146,7 +190,8 @@ class TurfModel {
       final nowMinutes = now.hour * 60 + now.minute;
       return nowMinutes >= startMinutes && nowMinutes <= endMinutes;
     } catch (_) {
-      return false;
+      return true;
     }
   }
 }
+

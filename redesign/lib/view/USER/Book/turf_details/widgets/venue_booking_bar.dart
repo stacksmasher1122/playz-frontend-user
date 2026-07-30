@@ -1,16 +1,19 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueBookingBar extends StatelessWidget {
   final double price;
+  final bool isActive;
   final VoidCallback onBookNow;
 
   const VenueBookingBar({
     super.key,
     required this.price,
+    required this.isActive,
     required this.onBookNow,
   });
 
@@ -53,23 +56,38 @@ class VenueBookingBar extends StatelessWidget {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
-                  foregroundColor: AppColors.background,
+                  backgroundColor: isActive ? AppColors.accent : AppColors.card,
+                  foregroundColor: isActive ? AppColors.background : AppColors.muted,
                   padding: EdgeInsets.symmetric(
                     horizontal: context.widthPct(6),
                     vertical: context.heightPct(1.5),
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(context.minDimensionPct(8)),
+                    side: isActive
+                        ? BorderSide.none
+                        : const BorderSide(color: AppColors.borderDark),
                   ),
                 ),
-                onPressed: onBookNow,
+                onPressed: () {
+                  if (!isActive) {
+                    Get.snackbar(
+                      'Turf Closed',
+                      'This turf is currently set closed by owner.',
+                      backgroundColor: Colors.redAccent,
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 3),
+                    );
+                    return;
+                  }
+                  onBookNow();
+                },
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    'Book Now',
+                    isActive ? 'Book Now' : 'Closed',
                     style: AppTypography.headlineSm.copyWith(
-                      color: AppColors.background,
+                      color: isActive ? AppColors.background : AppColors.muted,
                       fontSize: context.responsiveFont(14),
                       fontWeight: FontWeight.bold,
                     ),

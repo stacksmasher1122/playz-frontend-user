@@ -9,6 +9,7 @@ class MatchJoinBar extends StatelessWidget {
   final bool alreadyJoined;
   final bool isFull;
   final bool isSlotBooked;
+  final bool hasConflict;
   final double collectedAmount;
   final double targetAmount;
   final VoidCallback? onJoinPressed;
@@ -22,6 +23,7 @@ class MatchJoinBar extends StatelessWidget {
     this.alreadyJoined = false,
     this.isFull = false,
     this.isSlotBooked = false,
+    this.hasConflict = false,
     this.collectedAmount = 0.0,
     this.targetAmount = 0.0,
     this.onJoinPressed,
@@ -37,7 +39,58 @@ class MatchJoinBar extends StatelessWidget {
 
     Widget childWidget;
 
-    if (isHost) {
+    if (hasConflict) {
+      if (isHost) {
+        childWidget = ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.accent,
+            foregroundColor: AppColors.background,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+            ),
+            elevation: 4,
+          ),
+          onPressed: onHostChangeSlotPressed,
+          icon: const Icon(Icons.edit_calendar_rounded, size: 20),
+          label: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'Reschedule Match Slot ⚡',
+              style: AppTypography.headlineSm.copyWith(
+                fontSize: context.responsiveFont(15),
+                fontWeight: FontWeight.bold,
+                color: AppColors.background,
+              ),
+            ),
+          ),
+        );
+      } else {
+        childWidget = ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.orangeAccent.withValues(alpha: 0.2),
+            foregroundColor: Colors.orangeAccent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+              side: const BorderSide(color: Colors.orangeAccent),
+            ),
+            elevation: 0,
+          ),
+          onPressed: null,
+          icon: const Icon(Icons.warning_amber_rounded, color: Colors.orangeAccent, size: 18),
+          label: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'Slot Conflict - Host is Rescheduling ⚠️',
+              style: AppTypography.headlineSm.copyWith(
+                fontSize: context.responsiveFont(14),
+                fontWeight: FontWeight.bold,
+                color: Colors.orangeAccent,
+              ),
+            ),
+          ),
+        );
+      }
+    } else if (isHost) {
       if (!isSlotBooked && targetReached) {
         // Poll funds collected! Host can book slot or change slot if taken
         childWidget = Row(

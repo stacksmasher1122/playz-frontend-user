@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -67,7 +68,7 @@ class PricingSection extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.card,
             borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
-            border: Border.all(color: AppColors.borderDark),
+            border: Border.all(color: isFree ? AppColors.accent : AppColors.borderDark),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,7 +90,7 @@ class PricingSection extends StatelessWidget {
                     SizedBox(height: context.heightPct(0.3)),
                     Text(
                       isPlayZTurf
-                          ? 'Host pays full turf slot price upfront'
+                          ? 'Host pays full slot cost (₹${turfSlotCost.toInt()}) & locks slot instantly'
                           : 'No entry fee for participating players',
                       style: AppTypography.bodySm.copyWith(
                         color: AppColors.muted,
@@ -133,7 +134,7 @@ class PricingSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Split Turf Cost Equally (₹${equalSplitPrice.toInt()}/player)',
+                        'Split Turf Cost (₹${equalSplitPrice.toInt()}/player)',
                         style: AppTypography.headlineSm.copyWith(
                           color: AppColors.textPrimary,
                           fontWeight: FontWeight.bold,
@@ -144,7 +145,7 @@ class PricingSection extends StatelessWidget {
                       ),
                       SizedBox(height: context.heightPct(0.3)),
                       Text(
-                        'Divides total turf slot cost (₹${turfSlotCost.toInt()}) equally among $maxPlayers players',
+                        'Players join free. When poll is full, host pays total slot cost.',
                         style: AppTypography.bodySm.copyWith(
                           color: AppColors.muted,
                           fontSize: context.responsiveFont(11.5),
@@ -190,8 +191,42 @@ class PricingSection extends StatelessWidget {
                 borderSide: const BorderSide(color: AppColors.borderDark),
               ),
             ),
-            onChanged: onPriceChanged,
+            onChanged: (val) {
+              final double inputVal = double.tryParse(val) ?? 0.0;
+              if (isPlayZTurf && equalSplitPrice > 0 && inputVal > equalSplitPrice) {
+                final cappedPriceStr = equalSplitPrice.toInt().toString();
+                priceController.text = cappedPriceStr;
+                priceController.selection = TextSelection.fromPosition(
+                  TextPosition(offset: cappedPriceStr.length),
+                );
+                onPriceChanged(cappedPriceStr);
+                Get.snackbar(
+                  'Price Cap Enforced ⚠️',
+                  'Host cannot charge more than equal split price (₹${equalSplitPrice.toInt()}). You can set ₹${equalSplitPrice.toInt()} or lower.',
+                  backgroundColor: AppColors.card,
+                  colorText: AppColors.textPrimary,
+                  duration: const Duration(seconds: 3),
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              } else {
+                onPriceChanged(val);
+              }
+            },
           ),
+          if (isPlayZTurf && equalSplitPrice > 0) ...[
+            SizedBox(height: context.heightPct(0.6)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: context.widthPct(1)),
+              child: Text(
+                'Max price per player allowed is ₹${equalSplitPrice.toInt()} (equal split cap of ₹${turfSlotCost.toInt()} ÷ $maxPlayers players). Set lower prices if desired.',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.accent,
+                  fontSize: context.responsiveFont(11.5),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
         ],
 
         // HOST UPFRONT DEPOSIT BANNER (Shown for PlayZ Turfs)
@@ -213,7 +248,9 @@ class PricingSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Host Deposit Required: ₹${hostDepositAmount.toInt()}',
+                        isFree
+                            ? 'Instant Booking Payment: ₹${hostDepositAmount.toInt()}'
+                            : 'Host Deposit Required: ₹${hostDepositAmount.toInt()}',
                         style: AppTypography.headlineSm.copyWith(
                           color: AppColors.accent,
                           fontWeight: FontWeight.bold,
@@ -224,7 +261,9 @@ class PricingSection extends StatelessWidget {
                       ),
                       SizedBox(height: context.heightPct(0.3)),
                       Text(
-                        'You pay your share upfront to initialize the poll and reserve the slot.',
+                        isFree
+                            ? 'You pay full turf cost to instantly book the slot for your free match.'
+                            : 'You pay your deposit upfront to initialize the poll and reserve the slot.',
                         style: AppTypography.bodySm.copyWith(
                           color: AppColors.textSecondary,
                           fontSize: context.responsiveFont(11.5),

@@ -15,7 +15,7 @@ class TrendingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final cardHeight = context.heightPct(20).clamp(160.0, 190.0);
+    final cardHeight = context.heightPct(20.5).clamp(165.0, 185.0);
     final tileWidth = context.widthPct(38).clamp(140.0, 170.0);
 
     return SizedBox(

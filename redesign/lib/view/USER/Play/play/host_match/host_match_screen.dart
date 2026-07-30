@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -84,16 +86,16 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
   ];
 
   // ─── Form State ──────────────────────────────────────────────────────────
-  bool _isCompetitive = false; // Casual vs Competitive
+  bool _isCompetitive = false;
   int _maxPlayers = 10;
 
   // Pricing State
-  bool _isFree = false; // Toggle for free to join
-  bool _isSplitAndPay = false; // Toggle for equal split pay
-  double _pricePerPlayer = 100.0;
-  final TextEditingController _priceController = TextEditingController(text: '100');
+  bool _isFree = false;
+  bool _isSplitAndPay = false;
+  double _pricePerPlayer = 0.0;
+  final TextEditingController _priceController = TextEditingController();
 
-  // Date & Time (Clear null by default)
+  // Date & Time
   DateTime? _selectedDate;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
@@ -123,7 +125,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     'No spiked shoes',
   ];
 
-  // Equipment Options State (Mutually Exclusive: null, 'carry_own', 'provided')
+  // Equipment Options State
   String? _selectedEquipmentOption;
 
   bool _isSubmitting = false;
@@ -135,7 +137,6 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
 
-    // Fetch registered turfs
     _bookingController.fetchAllTurfs();
   }
 
@@ -148,6 +149,16 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     _customAddressController.dispose();
     _instructionsController.dispose();
     super.dispose();
+  }
+
+  void _syncPriceControllerWithDynamicSlotCost() {
+    if (_locationType == 'playz_turf' && _currentTurfSlotCost > 0) {
+      final double equalSplitCap = (_currentTurfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble();
+      if (_pricePerPlayer > equalSplitCap || _pricePerPlayer <= 0) {
+        _pricePerPlayer = equalSplitCap;
+        _priceController.text = equalSplitCap.toInt().toString();
+      }
+    }
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
@@ -164,14 +175,12 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     setState(() => _isSubmitting = false);
   }
 
-  // Helper to format TimeOfDay
   String _formatTimeOfDay(TimeOfDay tod) {
     final hour = tod.hourOfPeriod == 0 ? 12 : tod.hourOfPeriod;
     final period = tod.period == DayPeriod.am ? 'AM' : 'PM';
     return '$hour:00 $period';
   }
 
-  // Formatted range string e.g. "6:00 PM - 7:00 PM"
   String get _formattedTimeString {
     if (_startTime == null && _endTime == null) return '_ : _';
     if (_startTime != null && _endTime != null) {
@@ -183,7 +192,6 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     return '_ : _';
   }
 
-  // Calculate turf slot price based on selected duration and slot sheets
   double get _currentTurfSlotCost {
     if (_startTime == null || _endTime == null) {
       return _selectedGround?.defaultPrice ?? 0.0;
@@ -211,38 +219,24 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     return duration * (_selectedGround?.defaultPrice ?? 0.0);
   }
 
-  // Calculate required upfront deposit for host
   double _calculateHostDeposit() {
     if (_locationType != 'playz_turf') {
-      return _isFree ? 0.0 : _pricePerPlayer;
+      return 0.0;
     }
 
     final double turfCost = _currentTurfSlotCost;
     if (turfCost <= 0) return 0.0;
 
+    // Host pays ONLY if "Free to All" (0 rupees to join) is selected upfront!
     if (_isFree) {
-      // Host pays full turf slot price upfront to make match free to join for everyone
       return turfCost;
     }
 
-    if (_isSplitAndPay) {
-      // Split Equal Payments: Divide turf slot cost equally among total players
-      final double equalShare = turfCost / (_maxPlayers > 0 ? _maxPlayers : 1);
-      return equalShare.ceilToDouble();
-    }
-
-    // Custom price per player entered manually by host
-    final double othersContribution = (_maxPlayers > 1 ? _maxPlayers - 1 : 1) * _pricePerPlayer;
-    final double hostRemainingBalance = turfCost - othersContribution;
-
-    // Host pays the remaining balance (minimum host's own share)
-    if (hostRemainingBalance < _pricePerPlayer) {
-      return _pricePerPlayer;
-    }
-    return hostRemainingBalance.clamp(0.0, turfCost);
+    // For ALL OTHER matches (Split or Paid per player), NO UPFRONT HOST DEPOSIT!
+    // Host pays total slot cost ONLY when the poll becomes FULL!
+    return 0.0;
   }
 
-  // Time sheet picker for starting & ending slots (reused from Booking Details)
   Future<void> _pickTimeSheet({required bool isStart}) async {
     if (_locationType == 'playz_turf') {
       if (_selectedTurf == null || _selectedGround == null) {
@@ -276,9 +270,9 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
               } else {
                 _endTime = picked;
               }
+              _syncPriceControllerWithDynamicSlotCost();
             });
 
-            // Automatically open End Time Sheet after picking Start Time
             if (isStart) {
               Future.delayed(const Duration(milliseconds: 250), () {
                 if (mounted) {
@@ -290,7 +284,6 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
         ),
       );
     } else {
-      // CUSTOM LOCATION: Standard TimePicker
       final picked = await showTimePicker(
         context: context,
         initialTime: (isStart ? _startTime : _endTime) ?? const TimeOfDay(hour: 18, minute: 0),
@@ -303,6 +296,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
           } else {
             _endTime = picked;
           }
+          _syncPriceControllerWithDynamicSlotCost();
         });
       }
     }
@@ -378,15 +372,16 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
       return;
     }
 
-    // PRICE VALIDATION: Ensure price per player does not exceed total turf slot cost
     if (_locationType == 'playz_turf' && !_isFree && !_isSplitAndPay) {
       final double turfSlotCost = _currentTurfSlotCost;
-      if (turfSlotCost > 0 && _pricePerPlayer > turfSlotCost) {
+      final double equalSplitCap = (turfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble();
+      if (equalSplitCap > 0 && _pricePerPlayer > equalSplitCap) {
         Get.snackbar(
-          'Invalid Price Per Player',
-          'Price per player (₹${_pricePerPlayer.toInt()}) cannot exceed total turf slot price (₹${turfSlotCost.toInt()}).',
+          'Price Cap Exceeded ⚠️',
+          'Price per player (₹${_pricePerPlayer.toInt()}) cannot exceed equal split amount (₹${equalSplitCap.toInt()}). Host can set ₹${equalSplitCap.toInt()} or lower.',
           backgroundColor: AppColors.card,
           colorText: AppColors.textPrimary,
+          duration: const Duration(seconds: 4),
         );
         return;
       }
@@ -444,7 +439,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
       'key': razorpayKey,
       'amount': (amount * 100).toInt(),
       'name': _selectedTurf?.turfName ?? 'PlayZ Arena',
-      'description': 'Match Turf Booking Deposit',
+      'description': 'Match Turf Booking Payment',
       'prefill': {
         'contact': phone,
         'email': email,
@@ -462,25 +457,79 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
   Future<void> _createTurfBookingRecord(String dateStr, String timeStr) async {
     if (_selectedTurf == null || _selectedGround == null) return;
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      final userDocId = await UserPreferences.getDocId() ?? user?.email ?? user?.uid ?? 'unknown_user';
+      final bookingId = 'PLZ_MATCH_${DateTime.now().millisecondsSinceEpoch}';
+      final otp = (100000 + Random().nextInt(900000)).toString();
+
+      final String userName = (user?.displayName != null && user!.displayName!.isNotEmpty)
+          ? user.displayName!
+          : (_profileController.userName.isNotEmpty ? _profileController.userName : 'Host Player');
+
+      final userPhone = user?.phoneNumber ?? 'N/A';
+      final currentTimeStr = DateTime.now().toIso8601String();
+
+      final rawPayload = jsonEncode({
+        'bookingId': bookingId,
+        'otp': otp,
+        'userName': userName,
+        'userPhone': userPhone,
+        'userEmail': user?.email ?? '',
+        'turfId': _selectedTurf!.id,
+        'groundId': _selectedGround!.id,
+        'date': dateStr,
+        'timeSlot': timeStr,
+        'timestamp': currentTimeStr,
+      });
+
+      final encodedQrText = 'PZSEC_${base64Encode(utf8.encode(rawPayload))}';
+
       final bookingData = {
+        'id': bookingId,
+        'bookingId': bookingId,
+        'otp': otp,
+        'qrData': encodedQrText,
         'turfId': _selectedTurf!.id,
         'turfName': _selectedTurf!.turfName,
+        'turfAddress': _selectedTurf!.fullAddress,
+        'turfImage': _selectedTurf!.allImages.isNotEmpty ? _selectedTurf!.allImages.first : '',
         'groundId': _selectedGround!.id,
         'groundName': _selectedGround!.name,
         'date': dateStr,
+        'dateFormatted': dateStr,
+        'startTime': _startTime != null ? _formatTimeOfDay(_startTime!) : '',
+        'endTime': _endTime != null ? _formatTimeOfDay(_endTime!) : '',
+        'timeSlot': timeStr,
         'time': timeStr,
         'slotId': _selectedSlot?.id ?? '',
+        'amount': _currentTurfSlotCost.toInt(),
         'status': 'confirmed',
         'createdAt': FieldValue.serverTimestamp(),
         'bookingType': 'match_poll_free',
+        'userEmail': user?.email ?? '',
+        'userName': userName,
+        'userPhone': userPhone,
       };
-      await FirebaseFirestore.instance
+
+      final batch = FirebaseFirestore.instance.batch();
+
+      final ownerRef = FirebaseFirestore.instance
           .collection('owners')
           .doc(_selectedTurf!.ownerId)
           .collection('turfs')
           .doc(_selectedTurf!.id)
           .collection('bookings')
-          .add(bookingData);
+          .doc(bookingId);
+      batch.set(ownerRef, bookingData, SetOptions(merge: true));
+
+      final userRef = FirebaseFirestore.instance
+          .collection('User')
+          .doc(userDocId)
+          .collection('bookings')
+          .doc(bookingId);
+      batch.set(userRef, bookingData, SetOptions(merge: true));
+
+      await batch.commit();
     } catch (e) {
       debugPrint('Error creating turf booking record: $e');
     }
@@ -518,13 +567,14 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
 
     final double turfSlotCost = _locationType == 'playz_turf' ? _currentTurfSlotCost : 0.0;
     final double hostDeposit = _calculateHostDeposit();
+
+    final double equalSplitCap = (turfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble();
     final double pricePerPlayerFinal = _isFree
         ? 0.0
         : (_isSplitAndPay && turfSlotCost > 0
-            ? (turfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble()
-            : _pricePerPlayer);
+            ? equalSplitCap
+            : (_pricePerPlayer > equalSplitCap && equalSplitCap > 0 ? equalSplitCap : _pricePerPlayer));
 
-    // Turf slot is ONLY marked booked if host pays 100% of the turf slot cost upfront
     final bool isSlotBooked = (_locationType == 'playz_turf' && _isFree == true && hostDeposit >= turfSlotCost && turfSlotCost > 0);
 
     if (isSlotBooked) {
@@ -575,15 +625,15 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
         'Match Hosted! ⚽',
         isSlotBooked
             ? 'Your match poll is live and turf slot is BOOKED! ⚡'
-            : 'Your match poll is live! Turf slot will be booked once all player payments are gathered. ⏳',
+            : 'Your match poll is live! Players can join free, and turf slot will be booked once the poll fills up.',
         backgroundColor: AppColors.accent,
         colorText: AppColors.background,
         snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 4),
       );
     }
   }
 
-  // Calculate distance between user and turf
   String _calculateTurfDistance(TurfModel turf, int index) {
     final userLoc = _mapsController.currentLocation.value;
     if (userLoc != null && turf.latitude != 0.0 && turf.longitude != 0.0) {
@@ -600,101 +650,75 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     return defaultDistances[index % defaultDistances.length];
   }
 
-  void _fetchSlotsIfPossible() {
-    if (_selectedTurf != null && _selectedGround != null) {
-      final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate ?? DateTime.now());
-      _bookingController.fetchGroundSlots(
-        _selectedTurf!.ownerId,
-        _selectedTurf!.id,
-        _selectedGround!.id,
-        dateStr: dateStr,
-      );
-    }
+  Widget _buildSectionCard(BuildContext context, {required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(context.widthPct(4.5)),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        border: Border.all(color: AppColors.borderDark),
+      ),
+      child: child,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
 
-    final filteredSports = _allSports.where((sport) {
-      return sport.toLowerCase().contains(_sportSearchQuery.toLowerCase());
-    }).toList();
-
-    final double turfCost = _currentTurfSlotCost;
-    final double hostDeposit = _calculateHostDeposit();
+    final double calculatedHostDeposit = _calculateHostDeposit();
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: const BackButton(color: AppColors.textPrimary),
         title: Text(
           'Host a Match',
-          style: AppTypography.headlineSm.copyWith(
+          style: AppTypography.displayLg.copyWith(
             color: AppColors.textPrimary,
-            fontWeight: FontWeight.bold,
             fontSize: context.responsiveFont(18),
+            fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: true,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(context.widthPct(4)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 1. SPORTS SELECTION
-              SportSelectionSection(
+      body: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(
+          context.widthPct(4),
+          context.heightPct(1.5),
+          context.widthPct(4),
+          context.heightPct(5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 1. SPORT SELECTION SECTION
+            _buildSectionCard(
+              context,
+              child: SportSelectionSection(
                 searchController: _sportSearchController,
                 searchQuery: _sportSearchQuery,
                 selectedSport: _selectedSport,
                 popularSports: _popularSports,
-                filteredSports: filteredSports,
-                onSearchChanged: (val) => setState(() => _sportSearchQuery = val),
-                onSportSelected: (sport) => setState(() {
-                  _selectedSport = sport;
-                  _selectedTurf = null;
-                  _selectedGround = null;
-                  _selectedSlot = null;
-                  _selectedDate = null;
-                  _startTime = null;
-                  _endTime = null;
-                  if (sport != null) {
-                    _sportSearchController.clear();
-                    _sportSearchQuery = '';
-                  }
-                }),
-                onClearSearch: () {
+                filteredSports: _allSports
+                    .where((s) => s.toLowerCase().contains(_sportSearchQuery.toLowerCase()))
+                    .toList(),
+                onSearchChanged: (query) => setState(() => _sportSearchQuery = query),
+                onSportSelected: (sport) => setState(() => _selectedSport = sport),
+                onClearSearch: () => setState(() {
                   _sportSearchController.clear();
-                  setState(() => _sportSearchQuery = '');
-                },
+                  _sportSearchQuery = '';
+                }),
               ),
+            ),
+            SizedBox(height: context.heightPct(3.2)),
 
-              SizedBox(height: context.heightPct(2.5)),
-
-              // 2. MATCH MODE (CASUAL VS COMPETITIVE)
-              MatchModeSection(
-                isCompetitive: _isCompetitive,
-                onModeChanged: (val) => setState(() => _isCompetitive = val),
-              ),
-
-              SizedBox(height: context.heightPct(2.5)),
-
-              // 3. TOTAL PLAYERS COUNTER (+ / - CARD)
-              PlayerCounterSection(
-                maxPlayers: _maxPlayers,
-                onPlayersChanged: (val) => setState(() => _maxPlayers = val),
-              ),
-
-              SizedBox(height: context.heightPct(2.5)),
-
-              // 4. VENUE & GROUND LOCATION
-              VenueLocationSection(
+            // 2. VENUE & LOCATION TYPE SECTION
+            _buildSectionCard(
+              context,
+              child: VenueLocationSection(
                 locationType: _locationType,
                 selectedSport: _selectedSport,
                 turfSearchController: _turfSearchController,
@@ -704,28 +728,26 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 selectedSlot: _selectedSlot,
                 customAddressController: _customAddressController,
                 bookingController: _bookingController,
-                onLocationTypeChanged: (val) => setState(() {
-                  _locationType = val;
-                  _selectedTurf = null;
-                  _selectedGround = null;
-                  _selectedSlot = null;
-                  _selectedDate = null;
-                  _startTime = null;
-                  _endTime = null;
-                }),
-                onTurfSearchChanged: (val) => setState(() => _turfSearchQuery = val),
-                onClearTurfSearch: () {
-                  _turfSearchController.clear();
-                  setState(() => _turfSearchQuery = '');
+                onLocationTypeChanged: (type) {
+                  setState(() {
+                    _locationType = type;
+                    if (type == 'custom') {
+                      _selectedTurf = null;
+                      _selectedGround = null;
+                      _selectedSlot = null;
+                    }
+                  });
                 },
+                onTurfSearchChanged: (query) => setState(() => _turfSearchQuery = query),
+                onClearTurfSearch: () => setState(() {
+                  _turfSearchController.clear();
+                  _turfSearchQuery = '';
+                }),
                 onTurfSelected: (turf) {
                   setState(() {
                     _selectedTurf = turf;
                     _selectedGround = null;
                     _selectedSlot = null;
-                    _selectedDate = null;
-                    _startTime = null;
-                    _endTime = null;
                   });
                   _bookingController.fetchTurfGrounds(turf.ownerId, turf.id);
                 },
@@ -733,25 +755,27 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                   setState(() {
                     _selectedGround = ground;
                     _selectedSlot = null;
-                    _selectedDate = null;
-                    _startTime = null;
-                    _endTime = null;
+                    _syncPriceControllerWithDynamicSlotCost();
                   });
-                  _fetchSlotsIfPossible();
+                  if (_selectedTurf != null && ground != null && _selectedDate != null) {
+                    final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+                    _bookingController.fetchGroundSlots(_selectedTurf!.ownerId, _selectedTurf!.id, ground.id, dateStr: dateStr);
+                  }
                 },
-                onSlotSelected: (slot) {
-                  setState(() {
-                    _selectedSlot = slot;
-                  });
-                },
+                onSlotSelected: (slot) => setState(() {
+                  _selectedSlot = slot;
+                  _syncPriceControllerWithDynamicSlotCost();
+                }),
                 onOpenGoogleMapsPicker: _openGoogleMapsPicker,
                 calculateDistance: _calculateTurfDistance,
               ),
+            ),
+            SizedBox(height: context.heightPct(3.2)),
 
-              SizedBox(height: context.heightPct(2.5)),
-
-              // 5. MATCH SCHEDULE (DATE & TIME PICKED AFTER VENUE SELECTION)
-              ScheduleSection(
+            // 3. SCHEDULE SECTION (Date & Time Picker)
+            _buildSectionCard(
+              context,
+              child: ScheduleSection(
                 selectedDate: _selectedDate,
                 startTime: _startTime,
                 endTime: _endTime,
@@ -760,103 +784,153 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                     context: context,
                     initialDate: _selectedDate ?? DateTime.now(),
                     firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 30)),
+                    lastDate: DateTime.now().add(const Duration(days: 90)),
                   );
                   if (picked != null) {
-                    setState(() => _selectedDate = picked);
-                    _fetchSlotsIfPossible();
+                    setState(() {
+                      _selectedDate = picked;
+                      _syncPriceControllerWithDynamicSlotCost();
+                    });
+                    if (_locationType == 'playz_turf' && _selectedTurf != null && _selectedGround != null) {
+                      final dateStr = DateFormat('yyyy-MM-dd').format(picked);
+                      _bookingController.fetchGroundSlots(_selectedTurf!.ownerId, _selectedTurf!.id, _selectedGround!.id, dateStr: dateStr);
+                    }
                   }
                 },
                 onPickStartTime: () => _pickTimeSheet(isStart: true),
                 onPickEndTime: () => _pickTimeSheet(isStart: false),
               ),
+            ),
+            SizedBox(height: context.heightPct(3.2)),
 
-              SizedBox(height: context.heightPct(2.5)),
-
-              // 6. SPECIAL INSTRUCTIONS
-              SpecialInstructionsSection(
-                instructionsController: _instructionsController,
-                instructionPresets: _instructionPresets,
-                onPresetTapped: (preset) {
-                  final current = _instructionsController.text.trim();
-                  if (current.isEmpty) {
-                    _instructionsController.text = preset;
-                  } else if (!current.contains(preset)) {
-                    _instructionsController.text = '$current • $preset';
-                  }
+            // 4. PLAYER COUNTER SECTION
+            _buildSectionCard(
+              context,
+              child: PlayerCounterSection(
+                maxPlayers: _maxPlayers,
+                onPlayersChanged: (val) {
+                  setState(() {
+                    _maxPlayers = val;
+                    _syncPriceControllerWithDynamicSlotCost();
+                  });
                 },
               ),
+            ),
+            SizedBox(height: context.heightPct(3.2)),
 
-              SizedBox(height: context.heightPct(2.5)),
-
-              // 7. EQUIPMENT OPTIONS
-              EquipmentOptionsSection(
-                selectedOption: _selectedEquipmentOption,
-                onOptionSelected: (option) => setState(() => _selectedEquipmentOption = option),
-              ),
-
-              SizedBox(height: context.heightPct(2.5)),
-
-              // 8. PRICING & FEE (MOVED TO LAST POSITION BEFORE PUBLISH BUTTON)
-              PricingSection(
+            // 5. PRICING SECTION
+            _buildSectionCard(
+              context,
+              child: PricingSection(
                 isFree: _isFree,
                 isPlayZTurf: _locationType == 'playz_turf',
-                turfSlotCost: turfCost,
+                turfSlotCost: _currentTurfSlotCost,
                 maxPlayers: _maxPlayers,
                 isSplitAndPay: _isSplitAndPay,
                 priceController: _priceController,
-                onFreeToggled: (val) => setState(() {
-                  _isFree = val;
-                  if (val) _isSplitAndPay = false;
-                }),
-                onSplitAndPayToggled: (val) => setState(() {
-                  _isSplitAndPay = val;
-                  if (val) _isFree = false;
-                }),
-                onPriceChanged: (val) {
+                hostDepositAmount: calculatedHostDeposit,
+                onFreeToggled: (val) {
                   setState(() {
-                    _pricePerPlayer = double.tryParse(val) ?? 0.0;
+                    _isFree = val;
+                    if (val) _isSplitAndPay = false;
                   });
                 },
-                hostDepositAmount: hostDeposit,
+                onSplitAndPayToggled: (val) {
+                  setState(() {
+                    _isSplitAndPay = val;
+                    if (val) _isFree = false;
+                  });
+                },
+                onPriceChanged: (val) {
+                  final double inputVal = double.tryParse(val) ?? 0.0;
+                  final double equalSplitCap = (_locationType == 'playz_turf' && _currentTurfSlotCost > 0)
+                      ? (_currentTurfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble()
+                      : 0.0;
+
+                  if (equalSplitCap > 0 && inputVal > equalSplitCap) {
+                    setState(() => _pricePerPlayer = equalSplitCap);
+                  } else {
+                    setState(() => _pricePerPlayer = inputVal);
+                  }
+                },
               ),
+            ),
+            SizedBox(height: context.heightPct(3.2)),
 
-              SizedBox(height: context.heightPct(3.5)),
+            // 6. MATCH MODE SECTION (Casual vs Competitive)
+            _buildSectionCard(
+              context,
+              child: MatchModeSection(
+                isCompetitive: _isCompetitive,
+                onModeChanged: (val) => setState(() => _isCompetitive = val),
+              ),
+            ),
+            SizedBox(height: context.heightPct(3.2)),
 
-              // 9. PUBLISH MATCH BUTTON
-              SizedBox(
-                width: double.infinity,
-                height: context.heightPct(6).clamp(48.0, 56.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    foregroundColor: AppColors.background,
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
-                    ),
+            // 7. SPECIAL INSTRUCTIONS SECTION
+            _buildSectionCard(
+              context,
+              child: SpecialInstructionsSection(
+                instructionsController: _instructionsController,
+                instructionPresets: _instructionPresets,
+                onPresetTapped: (preset) {
+                  final currentText = _instructionsController.text.trim();
+                  if (currentText.isEmpty) {
+                    _instructionsController.text = preset;
+                  } else if (!currentText.contains(preset)) {
+                    _instructionsController.text = '$currentText, $preset';
+                  }
+                },
+              ),
+            ),
+            SizedBox(height: context.heightPct(3.2)),
+
+            // 8. EQUIPMENT OPTIONS SECTION
+            _buildSectionCard(
+              context,
+              child: EquipmentOptionsSection(
+                selectedOption: _selectedEquipmentOption,
+                onOptionSelected: (option) => setState(() => _selectedEquipmentOption = option),
+              ),
+            ),
+            SizedBox(height: context.heightPct(4)),
+
+            // SUBMIT BUTTON
+            SizedBox(
+              width: double.infinity,
+              height: context.heightPct(6).clamp(48.0, 56.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: AppColors.background,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                   ),
-                  onPressed: _isSubmitting ? null : _onHostMatchPressed,
-                  child: _isSubmitting
-                      ? const CircularProgressIndicator(color: AppColors.background)
-                      : FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            _locationType == 'playz_turf' && hostDeposit > 0
-                                ? 'Pay ₹${hostDeposit.toInt()} & Host Poll'
-                                : 'Publish Match Poll',
-                            style: AppTypography.headlineSm.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: context.responsiveFont(16),
-                              color: AppColors.background,
-                            ),
-                          ),
-                        ),
+                  elevation: 4,
                 ),
+                onPressed: _isSubmitting ? null : _onHostMatchPressed,
+                child: _isSubmitting
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          color: AppColors.background,
+                          strokeWidth: 2.5,
+                        ),
+                      )
+                    : Text(
+                        _locationType == 'playz_turf' && calculatedHostDeposit > 0
+                            ? (_isFree ? 'Pay Full Slot Cost & Book Now' : 'Pay Host Deposit (₹${calculatedHostDeposit.toInt()})')
+                            : 'Host Match Poll ⚡',
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.background,
+                          fontSize: context.responsiveFont(16),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
-              SizedBox(height: context.heightPct(2.5)),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

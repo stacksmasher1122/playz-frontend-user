@@ -48,24 +48,6 @@ class PaymentSummaryCard extends StatelessWidget {
                   fontSize: context.responsiveFont(16),
                 ),
               ),
-              SizedBox(width: context.widthPct(2)),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.widthPct(2),
-                  vertical: context.heightPct(0.5),
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFC107).withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
-                ),
-                child: Text(
-                  '+10 ZC',
-                  style: AppTypography.labelCaps10.copyWith(
-                    color: const Color(0xFFFFC107),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
             ],
           ),
         ],

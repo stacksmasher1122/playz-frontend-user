@@ -14,6 +14,8 @@ import 'widgets/profile_photo_picker.dart';
 import 'widgets/profile_setup_field.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
+import 'package:redesign/services/global_groups_service.dart';
+
 class ProfileSetupScreen extends StatefulWidget {
   final List<String> selectedSports;
   const ProfileSetupScreen({super.key, required this.selectedSports});
@@ -99,18 +101,18 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     } catch (e) {
       debugPrint("Pick image error: $e");
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to pick image")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Failed to pick image")));
       }
     }
   }
 
   Future<void> _completeSetup() async {
     if (_nameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Name is required")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Name is required")));
       return;
     }
 
@@ -122,7 +124,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         ? _phoneController.text.trim()
         : (currentUser?.phoneNumber ?? '');
 
-    final String docId = email.isNotEmpty ? email : (phone.isNotEmpty ? phone : (currentUser?.uid ?? ''));
+    final String docId = email.isNotEmpty
+        ? email
+        : (phone.isNotEmpty ? phone : (currentUser?.uid ?? ''));
 
     if (docId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -154,6 +158,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       await UserPreferences.setTrainer(false);
       await UserPreferences.setProfileComplete(true);
 
+      await GlobalGroupsService.checkAndJoinAllUserGroups(targetDocId: docId);
+
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
@@ -173,7 +179,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.textPrimary,
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -238,10 +248,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               ),
             ),
             SizedBox(height: context.heightPct(3)),
-            ProfilePhotoPicker(
-              imageFile: _imageFile,
-              onPickImage: _pickImage,
-            ),
+            ProfilePhotoPicker(imageFile: _imageFile, onPickImage: _pickImage),
             SizedBox(height: context.heightPct(3)),
             ProfileSetupField(
               label: 'FULL NAME',
@@ -275,7 +282,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               onTap: () async {
                 final date = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now().subtract(const Duration(days: 365 * 18)),
+                  initialDate: DateTime.now().subtract(
+                    const Duration(days: 365 * 18),
+                  ),
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
                   builder: (context, child) {
@@ -303,7 +312,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             SizedBox(height: context.heightPct(2)),
             ProfileSetupField(
               label: 'BIO',
-              hint: "Tell us about your favorite sports,\nteams, or what you're looking for...",
+              hint:
+                  "Tell us about your favorite sports,\nteams, or what you're looking for...",
               icon: Icons.description_rounded,
               controller: _bioController,
               maxLines: 3,
@@ -341,9 +351,16 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     onChanged: (value) {
                       final user = _controller.rxUser.value;
                       if (user != null) {
-                        _controller.setUser(user.copyWith(isPublicProfile: value));
+                        _controller.setUser(
+                          user.copyWith(isPublicProfile: value),
+                        );
                       } else {
-                        _controller.setUser(UserProfileModel(docId: 'temp', isPublicProfile: value));
+                        _controller.setUser(
+                          UserProfileModel(
+                            docId: 'temp',
+                            isPublicProfile: value,
+                          ),
+                        );
                       }
                     },
                     activeThumbColor: AppColors.background,
@@ -359,17 +376,22 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               width: double.infinity,
               height: context.heightPct(6).clamp(48.0, 56.0),
               child: ElevatedButton(
-                onPressed: () => _controller.isLoading.value ? null : _completeSetup(),
+                onPressed: () =>
+                    _controller.isLoading.value ? null : _completeSetup(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accent,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(context.minDimensionPct(7)),
+                    borderRadius: BorderRadius.circular(
+                      context.minDimensionPct(7),
+                    ),
                   ),
                   elevation: 0,
                 ),
                 child: Obx(
                   () => _controller.isLoading.value
-                      ? const CircularProgressIndicator(color: AppColors.background)
+                      ? const CircularProgressIndicator(
+                          color: AppColors.background,
+                        )
                       : FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(

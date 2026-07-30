@@ -12,11 +12,13 @@ import 'package:redesign/model/User_Models/Home_Models/Groups_Model/group_info_m
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Groups_SQF/groupsSqflite.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Groups_SQF/groupsInfoSqflite.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
+import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 
 class GroupInfoController extends GetxController {
   final _firestore = FirebaseFirestore.instance;
   final _picker = ImagePicker();
   final _storage = FirebaseStorage.instance;
+
   // ── State ──
   final Rxn<GroupModel> currentGroup = Rxn<GroupModel>();
   final mediaFiles = <GroupMediaModel>[].obs;
@@ -26,10 +28,12 @@ class GroupInfoController extends GetxController {
   final isAdmin = false.obs;
   final friendsList = <Map<String, dynamic>>[].obs;
 
-  // Real-time tracking listeners
+  // Real-time tracking listeners & workers
   StreamSubscription? _groupSub;
   StreamSubscription? _mediaSub;
   StreamSubscription? _friendsSub;
+  Worker? _groupWorker;
+  Worker? _friendsWorker;
 
   String myEmail = '';
   String myName = '';
@@ -41,6 +45,8 @@ class GroupInfoController extends GetxController {
     _groupSub?.cancel();
     _mediaSub?.cancel();
     _friendsSub?.cancel();
+    _groupWorker?.dispose();
+    _friendsWorker?.dispose();
     super.onClose();
   }
 
@@ -51,7 +57,7 @@ class GroupInfoController extends GetxController {
 
     if (myEmail.isEmpty) return;
 
-    // 1. Initial SQFlite load for fast UI render
+    // 1) Initial SQFlite load for fast UI render
     final localGroup = await GroupsSqflite.getGroupById(groupId);
     if (localGroup != null) {
       currentGroup.value = localGroup;
@@ -61,14 +67,16 @@ class GroupInfoController extends GetxController {
     final localMedia = await GroupsInfoSqflite.getGroupMedia(groupId);
     mediaFiles.assignAll(localMedia);
 
-    // 2. Start Live Data Stream
+    // 2) Start Live Data Stream
     _listenToGroupUpdates(groupId);
     _listenToMedia(groupId);
     _listenToFriends();
 
-    // 3. Make search reactive to group/friend changes
-    ever(currentGroup, (_) => _performLocalSearch(_lastSearchQuery));
-    ever(friendsList, (_) => _performLocalSearch(_lastSearchQuery));
+    // 3) Dispose previous workers and create fresh reactive search listeners
+    _groupWorker?.dispose();
+    _friendsWorker?.dispose();
+    _groupWorker = ever(currentGroup, (_) => _performLocalSearch(_lastSearchQuery));
+    _friendsWorker = ever(friendsList, (_) => _performLocalSearch(_lastSearchQuery));
   }
 
   void _checkAdmin(GroupModel group) {
@@ -76,21 +84,26 @@ class GroupInfoController extends GetxController {
       isAdmin.value = false;
       return;
     }
-    isAdmin.value = group.members[myEmail]['role'] == 'admin';
+    final role = group.members[myEmail]['role'];
+    isAdmin.value = (role == 'admin' || group.creator == myEmail);
   }
 
   void _listenToGroupUpdates(String groupId) {
     _groupSub?.cancel();
     _groupSub = _firestore.collection('Groups').doc(groupId).snapshots().listen(
       (doc) async {
-        if (!doc.exists) return; // Group deleted
-        final group = GroupModel.fromMap(doc.data()!, doc.id);
-        
-        // Cache update
-        await GroupsSqflite.insertGroup(group);
-        
-        currentGroup.value = group;
-        _checkAdmin(group);
+        if (!doc.exists || doc.data() == null) return; // Group deleted or empty
+        try {
+          final group = GroupModel.fromMap(doc.data()!, doc.id);
+          
+          // Cache update
+          await GroupsSqflite.insertGroup(group);
+          
+          currentGroup.value = group;
+          _checkAdmin(group);
+        } catch (e) {
+          debugPrint('🔴 [GroupInfoController] Group parse error: $e');
+        }
       },
       onError: (e) => debugPrint('🔴 [GroupInfoController] Group stream error: $e'),
     );
@@ -106,7 +119,9 @@ class GroupInfoController extends GetxController {
         .snapshots()
         .listen(
       (snapshot) async {
-        final newMedia = snapshot.docs.map((doc) => GroupMediaModel.fromMap(doc.id, groupId, doc.data())).toList();
+        final newMedia = snapshot.docs
+            .map((doc) => GroupMediaModel.fromMap(doc.id, groupId, doc.data()))
+            .toList();
         newMedia.sort((a, b) => b.timestamp.compareTo(a.timestamp));
         mediaFiles.assignAll(newMedia);
         await GroupsInfoSqflite.clearAndInsertGroupMedia(groupId, newMedia);
@@ -158,7 +173,7 @@ class GroupInfoController extends GetxController {
     _friendsSub?.cancel();
     _friendsSub = _firestore.collection('User').doc(myEmail).snapshots().listen(
       (doc) {
-        if (!doc.exists) return;
+        if (!doc.exists || doc.data() == null) return;
         final data = doc.data()!;
         final rawFriends = data['friends'] as List? ?? [];
         friendsList.assignAll(
@@ -173,7 +188,6 @@ class GroupInfoController extends GetxController {
   //  MEMBER MANAGEMENT
   // ═══════════════════════════════════════════════════════
 
-  // 1. Searching friends to add
   final searchResults = <Map<String, dynamic>>[].obs;
   
   void searchUsers(String query) {
@@ -190,7 +204,6 @@ class GroupInfoController extends GetxController {
     final lowerQuery = query.toLowerCase().trim();
     final memberEmails = currentGroup.value?.members.keys.toSet() ?? {};
 
-    // Filter from the local synchronized friendsList
     final filtered = friendsList.where((friend) {
       final email = (friend['email'] ?? '').toString();
       final name = (friend['fullName'] ?? email).toString().toLowerCase();
@@ -209,19 +222,32 @@ class GroupInfoController extends GetxController {
     try {
       final groupId = currentGroup.value!.groupId;
       final now = DateTime.now();
+      final memberName = userData['fullName'] ?? userData['Name'] ?? 'Unknown';
+      final memberPic = userData['profileImageUrl'] ?? '';
 
-      // 1) Add to group members map
+      final newMemberData = {
+        'name': memberName,
+        'imageUrl': memberPic,
+        'joinedAt': Timestamp.fromDate(now),
+        'role': 'member',
+        'lastSeenAt': Timestamp.fromDate(now),
+      };
+
+      // 1) Optimistically update local Group state
+      final updatedMembers = Map<String, dynamic>.from(currentGroup.value!.members);
+      updatedMembers[userEmail] = newMemberData;
+
+      final updatedGroup = GroupModel.fromMap(
+        {...currentGroup.value!.toMap(), 'members': updatedMembers},
+        groupId,
+      );
+      currentGroup.value = updatedGroup;
+
+      // 2) Write to Firestore
       await _firestore.collection('Groups').doc(groupId).update({
-        FieldPath(['members', userEmail]): {
-          'name': userData['fullName'] ?? userData['Name'] ?? 'Unknown',
-          'imageUrl': userData['profileImageUrl'] ?? '',
-          'joinedAt': Timestamp.fromDate(now),
-          'role': 'member',
-          'lastSeenAt': Timestamp.fromDate(now),
-        },
+        FieldPath(['members', userEmail]): newMemberData,
       });
 
-      // 2) Add group ref back to the added user's doc
       await _firestore.collection('User').doc(userEmail).set({
         'groups': {
           groupId: {
@@ -233,10 +259,9 @@ class GroupInfoController extends GetxController {
         },
       }, SetOptions(merge: true));
 
-      // Remove from visual search results
       searchResults.removeWhere((item) => item['email'] == userEmail);
 
-      Get.snackbar('Added', '${userData['Name']} added to the group',
+      Get.snackbar('Added', '$memberName added to group',
           backgroundColor: const Color(0xFF1DB954), colorText: Colors.black);
     } catch (e) {
       debugPrint('🔴 [GroupInfoController] Add member error: $e');
@@ -249,6 +274,14 @@ class GroupInfoController extends GetxController {
     try {
       final groupId = currentGroup.value!.groupId;
       
+      // Optimistic update
+      final updatedMembers = Map<String, dynamic>.from(currentGroup.value!.members);
+      updatedMembers.remove(memberEmail);
+      currentGroup.value = GroupModel.fromMap(
+        {...currentGroup.value!.toMap(), 'members': updatedMembers},
+        groupId,
+      );
+
       await _firestore.collection('Groups').doc(groupId).update({
         FieldPath(['members', memberEmail]): FieldValue.delete(),
       });
@@ -269,6 +302,19 @@ class GroupInfoController extends GetxController {
     if (!isAdmin.value || currentGroup.value == null) return;
     try {
       final groupId = currentGroup.value!.groupId;
+
+      // Optimistic update
+      final updatedMembers = Map<String, dynamic>.from(currentGroup.value!.members);
+      if (updatedMembers.containsKey(memberEmail)) {
+        updatedMembers[memberEmail] = {
+          ...Map<String, dynamic>.from(updatedMembers[memberEmail]),
+          'role': 'admin',
+        };
+      }
+      currentGroup.value = GroupModel.fromMap(
+        {...currentGroup.value!.toMap(), 'members': updatedMembers},
+        groupId,
+      );
       
       await _firestore.collection('Groups').doc(groupId).update({
         FieldPath(['members', memberEmail, 'role']): 'admin',
@@ -286,6 +332,19 @@ class GroupInfoController extends GetxController {
     if (!isAdmin.value || currentGroup.value == null) return;
     try {
       final groupId = currentGroup.value!.groupId;
+
+      // Optimistic update
+      final updatedMembers = Map<String, dynamic>.from(currentGroup.value!.members);
+      if (updatedMembers.containsKey(memberEmail)) {
+        updatedMembers[memberEmail] = {
+          ...Map<String, dynamic>.from(updatedMembers[memberEmail]),
+          'role': 'member',
+        };
+      }
+      currentGroup.value = GroupModel.fromMap(
+        {...currentGroup.value!.toMap(), 'members': updatedMembers},
+        groupId,
+      );
       
       await _firestore.collection('Groups').doc(groupId).update({
         FieldPath(['members', memberEmail, 'role']): 'member',
@@ -304,7 +363,16 @@ class GroupInfoController extends GetxController {
   // ═══════════════════════════════════════════════════════
 
   Future<void> toggleProfanityModerationMembers(bool value) async {
-    if (!isAdmin.value || currentGroup.value == null) return;
+    if (currentGroup.value == null) return;
+    if (!isAdmin.value) {
+      Get.snackbar(
+        'Permission Denied',
+        'Only group admins can change chat moderation settings.',
+        backgroundColor: Colors.orange,
+        colorText: Colors.black,
+      );
+      return;
+    }
     
     final oldGroup = currentGroup.value!;
     Map<String, dynamic> rawMap = oldGroup.toMap();
@@ -331,7 +399,16 @@ class GroupInfoController extends GetxController {
   }
 
   Future<void> toggleProfanityModerationAdmins(bool value) async {
-    if (!isAdmin.value || currentGroup.value == null) return;
+    if (currentGroup.value == null) return;
+    if (!isAdmin.value) {
+      Get.snackbar(
+        'Permission Denied',
+        'Only group admins can change chat moderation settings.',
+        backgroundColor: Colors.orange,
+        colorText: Colors.black,
+      );
+      return;
+    }
 
     final oldGroup = currentGroup.value!;
     Map<String, dynamic> rawMap = oldGroup.toMap();
@@ -353,52 +430,89 @@ class GroupInfoController extends GetxController {
   // ═══════════════════════════════════════════════════════
   //  LEAVE GROUP
   // ═══════════════════════════════════════════════════════
-  
+
   Future<void> leaveGroup() async {
     if (currentGroup.value == null) return;
+    final group = currentGroup.value!;
+    final groupId = group.groupId;
+
+    // PlayZ Global groups cannot be left
+    if (groupId.startsWith('PLAYZ-')) {
+      Get.snackbar(
+        'Notice',
+        'PlayZ Global community groups cannot be left.',
+        backgroundColor: Colors.orange,
+        colorText: Colors.black,
+      );
+      return;
+    }
+
     try {
-      final groupId = currentGroup.value!.groupId;
-      final group = currentGroup.value!;
-      
-      // If the user leaving is an admin, check if we should assign a new admin
+      // 1) Instantly update local state in GroupsController so UI updates immediately
+      if (Get.isRegistered<GroupsController>()) {
+        final groupsCtrl = Get.find<GroupsController>();
+        groupsCtrl.myGroups.removeWhere((g) => g.groupId == groupId);
+        groupsCtrl.myGroups.refresh();
+      }
+
+      // 2) Clear local SQFlite database
+      await GroupsSqflite.deleteGroup(groupId);
+      await GroupsSqflite.deleteGroupMessagesByGroupId(groupId);
+
+      // 3) Show immediate feedback & pop back out of chat/info flow
+      Get.snackbar(
+        'Left Group',
+        'You have left ${group.name}',
+        backgroundColor: const Color(0xFF1DB954),
+        colorText: Colors.black,
+      );
+
+      if (Get.isOverlaysOpen) {
+        Get.back();
+      }
+      Get.until((route) => route.isFirst || Get.currentRoute == '/home');
+
+      // 4) Perform Firestore network operations asynchronously in background
+      _performBackgroundLeave(group, groupId);
+    } catch (e) {
+      debugPrint('🔴 [GroupInfoController] Leave group error: $e');
+      Get.snackbar('Error', 'Failed to leave group.');
+    }
+  }
+
+  Future<void> _performBackgroundLeave(GroupModel group, String groupId) async {
+    try {
+      // If the user leaving is an admin, auto-assign a new admin if available
       if (isAdmin.value) {
         final otherMembers = group.members.keys.where((k) => k != myEmail).toList();
         final hasOtherAdmin = otherMembers.any((k) => group.members[k]['role'] == 'admin');
-        
+
         if (!hasOtherAdmin && otherMembers.isNotEmpty) {
-          // Auto assign the first available member to be the new admin
           final newAdminEmail = otherMembers.first;
           await _firestore.collection('Groups').doc(groupId).update({
             FieldPath(['members', newAdminEmail, 'role']): 'admin',
           });
-        } else if (!hasOtherAdmin && otherMembers.isEmpty) {
-          // If no one else is left, we can just delete the group or let it die
-          // For now, we'll just let the last person leave.
         }
       }
 
-      // 1) Remove self from members
+      // Remove self from group members map in Firestore
       await _firestore.collection('Groups').doc(groupId).update({
         FieldPath(['members', myEmail]): FieldValue.delete(),
       });
 
-      // 2) Remove from user's groups list
+      // Remove group reference from user doc in Firestore
       await _firestore.collection('User').doc(myEmail).update({
         FieldPath(['groups', groupId]): FieldValue.delete(),
       });
-      
-      // 3) Clear local state
-      await GroupsSqflite.deleteGroup(groupId);
-      await GroupsSqflite.deleteGroupMessagesByGroupId(groupId);
-      
-      Get.snackbar('Left Group', 'You have left ${currentGroup.value!.name}',
-          backgroundColor: Colors.amber, colorText: Colors.black);
-          
-      // Ensure we navigate out of the chat/info flow back to home wrapper or hub
-      Get.offAllNamed('/home'); // Assuming going back to root/home context
+
+      // Trigger full background sync in GroupsController
+      if (Get.isRegistered<GroupsController>()) {
+        final groupsCtrl = Get.find<GroupsController>();
+        await groupsCtrl.fetchMyGroups();
+        await groupsCtrl.fetchRecommendedGroups();
+      }
     } catch (e) {
-      debugPrint('🔴 [GroupInfoController] Leave group error: $e');
-      Get.snackbar('Error', 'Failed to leave group.');
+      debugPrint('🔴 [GroupInfoController] Background leave Firestore error: $e');
     }
   }
 }

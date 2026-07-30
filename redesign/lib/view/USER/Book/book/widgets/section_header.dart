@@ -12,30 +12,17 @@ class SectionHeader extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.headlineLgMobile.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: context.responsiveFont(18),
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Text(
-            'See all',
-            style: AppTypography.bodySm.copyWith(
-              color: AppColors.accent,
-              fontSize: context.responsiveFont(13),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
+      child: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppTypography.headlineLgMobile.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(18),
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
 }
+

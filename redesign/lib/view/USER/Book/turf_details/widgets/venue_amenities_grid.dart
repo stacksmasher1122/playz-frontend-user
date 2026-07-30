@@ -12,44 +12,48 @@ class VenueAmenitiesGrid extends StatelessWidget {
   });
 
   IconData _getAmenityIcon(String amenity) {
-    switch (amenity.toLowerCase()) {
+    switch (amenity.toLowerCase().trim()) {
       case 'parking':
-        return Icons.local_parking;
+        return Icons.local_parking_rounded;
       case 'drinking water':
-        return Icons.water_drop;
+      case 'water':
+        return Icons.water_drop_rounded;
       case 'change room':
-        return Icons.meeting_room;
+      case 'changing room':
+        return Icons.meeting_room_rounded;
       case 'equipment':
       case 'fitness center':
-        return Icons.fitness_center;
+      case 'gym':
+        return Icons.fitness_center_rounded;
       case 'wifi':
       case 'free wifi':
-        return Icons.wifi;
+        return Icons.wifi_rounded;
       case 'trainers':
-        return Icons.people;
+        return Icons.people_rounded;
       case 'lighting':
-        return Icons.lightbulb;
+      case 'floodlights':
+        return Icons.lightbulb_rounded;
       case 'washroom':
       case 'shower':
-        return Icons.shower;
+        return Icons.shower_rounded;
       case 'ac':
       case 'air conditioning':
-        return Icons.ac_unit;
+        return Icons.ac_unit_rounded;
       case 'first aid':
-        return Icons.medical_services;
+        return Icons.medical_services_rounded;
       case 'cctv':
       case 'security':
-        return Icons.videocam;
+        return Icons.videocam_rounded;
       case 'seating':
       case 'gallery':
-        return Icons.event_seat;
+        return Icons.event_seat_rounded;
       case 'cafeteria':
       case 'food':
-        return Icons.restaurant;
+        return Icons.restaurant_rounded;
       case 'locker':
-        return Icons.lock;
+        return Icons.lock_rounded;
       default:
-        return Icons.check_circle_outline;
+        return Icons.star_rounded;
     }
   }
 
@@ -57,11 +61,9 @@ class VenueAmenitiesGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
 
-    if (amenities.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final cardWidth = (MediaQuery.of(context).size.width - context.widthPct(11)) / 2;
+    final effectiveAmenities = amenities.isNotEmpty
+        ? amenities
+        : ['Parking', 'Drinking Water', 'Washroom', 'Floodlights', 'Seating Area', 'First Aid'];
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
@@ -77,31 +79,39 @@ class VenueAmenitiesGrid extends StatelessWidget {
             ),
           ),
           SizedBox(height: context.heightPct(1.2)),
+
+          /// SPOTIFY STYLE FILLED GREEN PILLS WITH COMPACT PADDING & PERFECT ALIGNMENT
           Wrap(
-            spacing: context.widthPct(3),
-            runSpacing: context.heightPct(1.2),
-            children: amenities.map((amenity) {
+            spacing: 8.0,
+            runSpacing: 8.0,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: effectiveAmenities.map((amenity) {
               return Container(
-                width: cardWidth,
-                padding: EdgeInsets.all(context.widthPct(3)),
-                decoration: BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
-                  border: Border.all(color: AppColors.borderDark),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
                 ),
-                child: Column(
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(_getAmenityIcon(amenity), color: AppColors.textPrimary),
-                    SizedBox(height: context.heightPct(0.6)),
+                    Icon(
+                      _getAmenityIcon(amenity),
+                      size: 16,
+                      color: AppColors.background,
+                    ),
+                    const SizedBox(width: 6),
                     Text(
                       amenity,
-                      style: AppTypography.bodySm.copyWith(
-                        color: AppColors.muted,
-                        fontSize: context.responsiveFont(12),
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.background,
+                        fontSize: context.responsiveFont(12.5),
+                        fontWeight: FontWeight.bold,
                       ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

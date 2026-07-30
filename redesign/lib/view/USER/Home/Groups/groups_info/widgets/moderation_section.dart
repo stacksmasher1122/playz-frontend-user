@@ -18,6 +18,8 @@ class ModerationSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final isGlobalGroup = group.groupId.startsWith('PLAYZ-');
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.card,
@@ -45,45 +47,26 @@ class ModerationSection extends StatelessWidget {
           ),
           SizedBox(height: context.heightPct(1.5)),
 
-          // ── Toggle: Profanity Filter for Members ──
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Profanity Filter (Members)",
-                      style: AppTypography.headlineSm.copyWith(
-                        color: AppColors.textPrimary,
-                        fontSize: context.responsiveFont(14),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: context.heightPct(0.3)),
-                    Text(
-                      "Block extreme profanity from members",
-                      style: AppTypography.bodySm.copyWith(
-                        color: AppColors.muted,
-                        fontSize: context.responsiveFont(11),
-                      ),
-                    ),
-                  ],
-                ),
+          if (isGlobalGroup) ...[
+            Text(
+              "Global Community Filter Active",
+              style: AppTypography.headlineSm.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: context.responsiveFont(14),
+                fontWeight: FontWeight.w600,
               ),
-              Switch.adaptive(
-                value: group.profanityModerationMembers,
-                activeTrackColor: AppColors.accent,
-                onChanged: (val) =>
-                    ctrl.toggleProfanityModerationMembers(val),
+            ),
+            SizedBox(height: context.heightPct(0.5)),
+            Text(
+              "Chat moderation & curse word auto-deletion is enabled by default for all members & admins in PlayZ global community groups.",
+              style: AppTypography.bodySm.copyWith(
+                color: AppColors.muted,
+                fontSize: context.responsiveFont(12),
+                height: 1.4,
               ),
-            ],
-          ),
-
-          // ── Toggle: Profanity Filter for Admins (only if Members is ON) ──
-          if (group.profanityModerationMembers) ...[
-            Divider(color: AppColors.borderDark, height: context.heightPct(3)),
+            ),
+          ] else ...[
+            // ── Toggle: Profanity Filter for Members ──
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -92,7 +75,7 @@ class ModerationSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Profanity Filter (Admins)",
+                        "Profanity Filter (Members)",
                         style: AppTypography.headlineSm.copyWith(
                           color: AppColors.textPrimary,
                           fontSize: context.responsiveFont(14),
@@ -101,7 +84,7 @@ class ModerationSection extends StatelessWidget {
                       ),
                       SizedBox(height: context.heightPct(0.3)),
                       Text(
-                        "Also moderate admin messages",
+                        "Auto-delete curse words & profanity in member messages",
                         style: AppTypography.bodySm.copyWith(
                           color: AppColors.muted,
                           fontSize: context.responsiveFont(11),
@@ -111,13 +94,52 @@ class ModerationSection extends StatelessWidget {
                   ),
                 ),
                 Switch.adaptive(
-                  value: group.profanityModerationAdmins,
+                  value: group.profanityModerationMembers,
                   activeTrackColor: AppColors.accent,
                   onChanged: (val) =>
-                      ctrl.toggleProfanityModerationAdmins(val),
+                      ctrl.toggleProfanityModerationMembers(val),
                 ),
               ],
             ),
+
+            // ── Toggle: Profanity Filter for Admins (Shown only after turning Members ON) ──
+            if (group.profanityModerationMembers) ...[
+              Divider(color: AppColors.borderDark, height: context.heightPct(3)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Profanity Filter (Admins)",
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(14),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: context.heightPct(0.3)),
+                        Text(
+                          "Also auto-delete curse words & profanity in admin messages",
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.muted,
+                            fontSize: context.responsiveFont(11),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Switch.adaptive(
+                    value: group.profanityModerationAdmins,
+                    activeTrackColor: AppColors.accent,
+                    onChanged: (val) =>
+                        ctrl.toggleProfanityModerationAdmins(val),
+                  ),
+                ],
+              ),
+            ],
           ],
         ],
       ),

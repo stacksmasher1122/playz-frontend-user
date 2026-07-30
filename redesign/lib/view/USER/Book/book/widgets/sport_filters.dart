@@ -24,18 +24,25 @@ class SportFilters extends StatelessWidget {
           .where((s) => s.isNotEmpty)
           .toSet();
 
+      const defaultSports = [
+        'Cricket',
+        'Football',
+        'Badminton',
+        'Basketball',
+        'Tennis',
+        'Volleyball',
+        'Pickleball',
+        'Table Tennis',
+      ];
+
+      final combinedSportsSet = <String>{
+        ...defaultSports,
+        ...turfSports,
+      };
+
       final sports = <String>[
         'All Sports',
-        ...turfSports.isNotEmpty
-            ? turfSports
-            : [
-                'Football',
-                'Cricket',
-                'Badminton',
-                'Basketball',
-                'Tennis',
-                'Pickleball',
-              ],
+        ...combinedSportsSet,
       ];
 
       final currentSelected = bookingController.selectedSport.value;

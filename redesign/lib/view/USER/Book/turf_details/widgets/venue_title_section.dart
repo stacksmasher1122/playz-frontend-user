@@ -1,23 +1,55 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class VenueTitleSection extends StatelessWidget {
+  final String turfId;
   final String turfName;
   final String location;
   final bool isOpen;
+  final String statusText;
+  final double rating;
 
   const VenueTitleSection({
     super.key,
+    required this.turfId,
     required this.turfName,
     required this.location,
     required this.isOpen,
+    required this.statusText,
+    this.rating = 4.5,
   });
+
+  Future<int> _fetchReviewCount() async {
+    final db = FirebaseFirestore.instance;
+    try {
+      final snap1 = await db.collection('Turf').doc(turfId).collection('reviews').get();
+      if (snap1.docs.isNotEmpty) return snap1.docs.length;
+
+      final groupSnap = await db.collectionGroup('reviews').get();
+      int count = 0;
+      for (final doc in groupSnap.docs) {
+        final parentId = doc.reference.parent.parent?.id;
+        final docTurfId = doc.data()['turfId']?.toString() ?? '';
+        if (parentId == turfId || docTurfId == turfId) count++;
+      }
+      if (count > 0) return count;
+
+      final snap3 = await db.collection('turfs').doc(turfId).collection('reviews').get();
+      if (snap3.docs.isNotEmpty) return snap3.docs.length;
+    } catch (e) {
+      debugPrint('🔴 [VenueTitleSection] Count fetch error: $e');
+    }
+    return 0;
+  }
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final displayRating = rating > 0 ? rating.toStringAsFixed(1) : '0.0';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -54,31 +86,23 @@ class VenueTitleSection extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.widthPct(3),
-                        vertical: context.heightPct(0.6),
-                      ),
-                      backgroundColor: isOpen
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.widthPct(3),
+                      vertical: context.heightPct(0.6),
+                    ),
+                    decoration: BoxDecoration(
+                      color: isOpen
                           ? AppColors.accent.withValues(alpha: 0.15)
                           : AppColors.error.withValues(alpha: 0.15),
-                      foregroundColor: isOpen ? AppColors.accent : AppColors.error,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
-                      ),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                     ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        isOpen ? 'Open Now' : 'Closed',
-                        style: AppTypography.headlineSm.copyWith(
-                          fontSize: context.responsiveFont(12),
-                          fontWeight: FontWeight.w600,
-                          color: isOpen ? AppColors.accent : AppColors.error,
-                        ),
+                    child: Text(
+                      statusText,
+                      style: AppTypography.headlineSm.copyWith(
+                        fontSize: context.responsiveFont(12),
+                        fontWeight: FontWeight.w600,
+                        color: isOpen ? AppColors.accent : AppColors.error,
                       ),
                     ),
                   ),
@@ -90,7 +114,7 @@ class VenueTitleSection extends StatelessWidget {
 
         SizedBox(height: context.heightPct(1)),
 
-        /// RATING ROW
+        /// REAL RATING ROW & DYNAMIC REVIEW COUNT
         Padding(
           padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
           child: Row(
@@ -101,13 +125,13 @@ class VenueTitleSection extends StatelessWidget {
                   (index) => Icon(
                     Icons.star,
                     size: 16,
-                    color: index < 4 ? Colors.amber : AppColors.muted,
+                    color: index < rating.floor() ? Colors.amber : AppColors.muted,
                   ),
                 ),
               ),
               SizedBox(width: context.widthPct(2)),
               Text(
-                '5.0',
+                displayRating,
                 style: AppTypography.headlineSm.copyWith(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.bold,
@@ -115,12 +139,18 @@ class VenueTitleSection extends StatelessWidget {
                 ),
               ),
               SizedBox(width: context.widthPct(1.5)),
-              Text(
-                '(128 Reviews)',
-                style: AppTypography.bodySm.copyWith(
-                  color: AppColors.muted,
-                  fontSize: context.responsiveFont(13),
-                ),
+              FutureBuilder<int>(
+                future: _fetchReviewCount(),
+                builder: (context, snapshot) {
+                  final count = snapshot.data ?? 0;
+                  return Text(
+                    '($count ${count == 1 ? 'Review' : 'Reviews'})',
+                    style: AppTypography.bodySm.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(13),
+                    ),
+                  );
+                },
               ),
             ],
           ),

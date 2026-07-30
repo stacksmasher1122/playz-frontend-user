@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:redesign/model/User_Models/Booking_Models/turf_model.dart';
 import 'package:redesign/model/User_Models/Booking_Models/ground_model.dart';
 import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
+import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/utils/slot_overlap_helper.dart';
 
 enum TurfSortOption {
@@ -35,21 +36,70 @@ class BookingController extends GetxController {
   final searchQuery = ''.obs;
   final sortOption = TurfSortOption.nearest.obs;
   final distanceRadiusKm = 50.0.obs;
+  final favoriteTurfIds = <String>{}.obs;
+  final isFavoritesOnly = false.obs;
 
   // ── Lifecycle ───────────────────────────────────────────────
   @override
   void onInit() {
     super.onInit();
+    fetchFavoriteTurfs();
     fetchAllTurfs();
 
-    everAll([searchQuery, sortOption, distanceRadiusKm, selectedSport], (_) {
+    everAll([searchQuery, sortOption, distanceRadiusKm, selectedSport, isFavoritesOnly, favoriteTurfIds], (_) {
       applyFilters();
     });
   }
 
+  // ── Favorites Logic & Firestore Sync ────────────────────────
+  Future<void> fetchFavoriteTurfs() async {
+    try {
+      final docId = await UserPreferences.getDocId();
+      if (docId == null || docId.isEmpty) return;
+
+      final doc = await _firestore.collection('User').doc(docId).get();
+      if (doc.exists && doc.data() != null) {
+        final data = doc.data()!;
+        final favs = List<String>.from(data['favoriteTurfs'] ?? []);
+        favoriteTurfIds.value = favs.toSet();
+      }
+    } catch (e) {
+      debugPrint('🔴 [BookingController] fetchFavoriteTurfs error: $e');
+    }
+  }
+
+  Future<void> toggleFavoriteTurf(String turfId) async {
+    final updated = Set<String>.from(favoriteTurfIds);
+    if (updated.contains(turfId)) {
+      updated.remove(turfId);
+    } else {
+      updated.add(turfId);
+    }
+    favoriteTurfIds.value = updated;
+    applyFilters();
+
+    try {
+      final docId = await UserPreferences.getDocId();
+      if (docId != null && docId.isNotEmpty) {
+        await _firestore.collection('User').doc(docId).set({
+          'favoriteTurfs': updated.toList(),
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      debugPrint('🔴 [BookingController] toggleFavoriteTurf Firestore error: $e');
+    }
+  }
+
+  bool isTurfFavorite(String turfId) => favoriteTurfIds.contains(turfId);
+
   // ── Apply Filters & Sorting ──────────────────────────────────
   void applyFilters() {
     List<TurfModel> result = List.from(allTurfs);
+
+    // 0. Favorites Filter
+    if (isFavoritesOnly.value) {
+      result = result.where((turf) => favoriteTurfIds.contains(turf.id)).toList();
+    }
 
     // 1. Search Query Filter
     final query = searchQuery.value.trim().toLowerCase();
@@ -81,7 +131,7 @@ class BookingController extends GetxController {
         result.sort((a, b) => (b.lowestPrice ?? 0.0).compareTo(a.lowestPrice ?? 0.0));
         break;
       case TurfSortOption.topRated:
-        result.sort((a, b) => (b.isVerified ? 1 : 0).compareTo(a.isVerified ? 1 : 0));
+        result.sort((a, b) => b.rating.compareTo(a.rating));
         break;
       case TurfSortOption.nameAsc:
         result.sort((a, b) => a.turfName.compareTo(b.turfName));

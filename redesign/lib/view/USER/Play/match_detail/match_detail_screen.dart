@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +16,7 @@ import 'package:redesign/controller/User_Controller/Booking_Controller/booking_c
 import 'package:redesign/controller/user_profile_controller.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/view/USER/Book/booking_details/widgets/slot_matrix_bottom_sheet.dart';
+import 'package:redesign/utils/slot_overlap_helper.dart';
 
 import 'widgets/match_detail_hero.dart';
 import 'widgets/match_slots_card.dart';
@@ -82,79 +84,163 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
   List<String> _bookedSlotsForDate = [];
   bool _isProcessing = false;
   Function(String? paymentId)? _pendingPaymentAction;
+  StreamSubscription<QuerySnapshot>? _bookingsSub;
 
-  @override
+  bool _hasConflictLocal = false;  @override
   void initState() {
     super.initState();
+    debugPrint('🏁 [MatchDetailScreen] initState started for match: ${widget.gameData?.id}');
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _loadCurrentUserId();
-    _fetchBookedSlotsForMatchDate();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        debugPrint('🎨 [MatchDetailScreen] Post-frame callback executing initial fetches...');
+        _fetchBookedSlotsForMatchDate();
+        _listenToRealtimeSlotConflicts();
+      }
+    });
   }
 
-  Future<void> _fetchBookedSlotsForMatchDate() async {
+  void _listenToRealtimeSlotConflicts() {
     final gameData = widget.gameData;
-    if (gameData == null || gameData.turfId == null || gameData.groundId == null) return;
+    if (gameData == null || gameData.turfId == null || gameData.turfId!.isEmpty) {
+      debugPrint('ℹ️ [MatchDetailScreen] Skipping realtime conflict listener — missing gameData or turfId.');
+      return;
+    }
 
     final parts = gameData.time.split(',');
     final dateStr = gameData.date.isNotEmpty ? gameData.date : parts.first.trim();
     if (dateStr.isEmpty) return;
 
+    final ownerId = gameData.ownerId.isNotEmpty ? gameData.ownerId : 'owner_${gameData.turfId}';
+
+    _bookingsSub?.cancel();
+    try {
+      debugPrint('📡 [MatchDetailScreen] Setting up realtime listener on owners/$ownerId/turfs/${gameData.turfId}/bookings for date: $dateStr');
+      _bookingsSub = FirebaseFirestore.instance
+          .collection('owners')
+          .doc(ownerId)
+          .collection('turfs')
+          .doc(gameData.turfId!)
+          .collection('bookings')
+          .where('date', isEqualTo: dateStr)
+          .snapshots()
+          .listen((snapshot) {
+        debugPrint('🔔 [MatchDetailScreen] Realtime turf bookings snapshot updated (${snapshot.docs.length} docs). Re-evaluating conflicts...');
+        _fetchBookedSlotsForMatchDate();
+      }, onError: (err) {
+        debugPrint('⚠️ [MatchDetailScreen] Realtime turf bookings listener error: $err');
+      });
+    } catch (e) {
+      debugPrint('⚠️ [MatchDetailScreen] Realtime turf bookings setup error: $e');
+    }
+  }
+
+  Future<void> _fetchBookedSlotsForMatchDate() async {
+    final gameData = widget.gameData;
+    if (gameData == null) {
+      debugPrint('ℹ️ [MatchDetailScreen] _fetchBookedSlotsForMatchDate skipped — gameData is null');
+      return;
+    }
+
+    final parts = gameData.time.split(',');
+    final dateStr = gameData.date.isNotEmpty ? gameData.date : parts.first.trim();
+    if (dateStr.isEmpty) return;
+
+    debugPrint('🔍 [MatchDetailScreen] Fetching booked slots for date: $dateStr, turfId: ${gameData.turfId}, ownerId: ${gameData.ownerId}');
+
     try {
       final List<String> bookedList = [];
+      final ownerId = gameData.ownerId.isNotEmpty ? gameData.ownerId : 'owner_${gameData.turfId}';
 
-      final groupSnap = await FirebaseFirestore.instance
-          .collectionGroup('bookings')
-          .where('date', isEqualTo: dateStr)
-          .get();
+      // 1. Direct query on owners/{ownerId}/turfs/{turfId}/bookings with serverAndCache fallback
+      if (gameData.turfId != null && gameData.turfId!.isNotEmpty) {
+        try {
+          final ownerSnap = await FirebaseFirestore.instance
+              .collection('owners')
+              .doc(ownerId)
+              .collection('turfs')
+              .doc(gameData.turfId!)
+              .collection('bookings')
+              .where('date', isEqualTo: dateStr)
+              .get(const GetOptions(source: Source.serverAndCache));
 
-      for (var doc in groupSnap.docs) {
-        final data = doc.data();
-        final status = (data['status'] ?? '').toString().toLowerCase();
-        if (status == 'cancelled') continue;
+          for (var doc in ownerSnap.docs) {
+            final data = doc.data();
+            final status = (data['status'] ?? '').toString().toLowerCase();
+            if (status == 'cancelled') continue;
 
-        final bTurfId = (data['turfId'] ?? '').toString();
-        if (bTurfId.isNotEmpty && bTurfId != gameData.turfId!) continue;
+            final bGroundId = (data['groundId'] ?? '').toString();
+            if (gameData.groundId != null && gameData.groundId!.isNotEmpty && bGroundId.isNotEmpty && bGroundId != gameData.groundId!) {
+              continue;
+            }
 
-        final bGroundId = (data['groundId'] ?? '').toString();
-        if (bGroundId.isNotEmpty && bGroundId != gameData.groundId!) continue;
-
-        final timeStr = (data['time'] ?? data['timeSlot'] ?? '${data['startTime']} - ${data['endTime']}').toString();
-        if (timeStr.isNotEmpty && !bookedList.contains(timeStr)) {
-          bookedList.add(timeStr);
+            final timeStr = (data['time'] ?? data['timeSlot'] ?? '${data['startTime']} - ${data['endTime']}').toString();
+            if (timeStr.isNotEmpty && !bookedList.contains(timeStr)) {
+              bookedList.add(timeStr);
+            }
+          }
+          debugPrint('✅ [MatchDetailScreen] Found ${bookedList.length} booked slots from turf owner bookings.');
+        } catch (e) {
+          debugPrint('⚠️ [MatchDetailScreen] Turf bookings query error: $e');
         }
       }
 
-      final matchSnap = await FirebaseFirestore.instance
-          .collection('matches')
-          .where('turfId', isEqualTo: gameData.turfId!)
-          .where('groundId', isEqualTo: gameData.groundId!)
-          .where('date', isEqualTo: dateStr)
-          .where('isSlotBooked', isEqualTo: true)
-          .get();
+      // 2. Query booked match polls on same turf
+      if (gameData.turfId != null && gameData.turfId!.isNotEmpty) {
+        try {
+          final matchSnap = await FirebaseFirestore.instance
+              .collection('matches')
+              .where('turfId', isEqualTo: gameData.turfId!)
+              .where('date', isEqualTo: dateStr)
+              .where('isSlotBooked', isEqualTo: true)
+              .get(const GetOptions(source: Source.serverAndCache));
 
-      for (var doc in matchSnap.docs) {
-        if (doc.id == gameData.id) continue;
-        final data = doc.data();
-        final timeStr = (data['time'] ?? '').toString();
-        if (timeStr.isNotEmpty && !bookedList.contains(timeStr)) {
-          bookedList.add(timeStr);
+          for (var doc in matchSnap.docs) {
+            if (doc.id == gameData.id) continue;
+            final data = doc.data();
+            final timeStr = (data['time'] ?? '').toString();
+            if (timeStr.isNotEmpty && !bookedList.contains(timeStr)) {
+              bookedList.add(timeStr);
+            }
+          }
+        } catch (_) {}
+      }
+
+      // 3. Overlap check
+      bool isConflictDetected = false;
+      if (!gameData.isSlotBooked && gameData.time.isNotEmpty) {
+        final pollInterval = SlotOverlapHelper.parseTimeRange(gameData.time);
+        if (pollInterval != null) {
+          for (final bookedTimeStr in bookedList) {
+            final bookedInterval = SlotOverlapHelper.parseTimeRange(bookedTimeStr);
+            if (bookedInterval != null && pollInterval.overlapsWith(bookedInterval)) {
+              isConflictDetected = true;
+              debugPrint('⚠️ [MatchDetailScreen] Slot conflict detected! Poll time (${gameData.time}) overlaps with booked time ($bookedTimeStr)');
+              break;
+            }
+          }
         }
       }
 
       if (mounted) {
         setState(() {
           _bookedSlotsForDate = bookedList;
+          _hasConflictLocal = isConflictDetected;
         });
+        debugPrint('🎨 [MatchDetailScreen] Local state updated cleanly: hasConflictLocal=$_hasConflictLocal, bookedSlotsCount=${bookedList.length}');
       }
     } catch (e) {
-      debugPrint('⚠️ Error fetching booked slots for match date: $e');
+      debugPrint('🔴 [MatchDetailScreen] Error fetching booked slots for match date: $e');
     }
   }
 
   @override
   void dispose() {
+    _bookingsSub?.cancel();
     _razorpay.clear();
     super.dispose();
   }
@@ -190,19 +276,60 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
     if (mounted) setState(() => _isProcessing = false);
   }
 
-  void _onJoinPressed() {
+  void _onJoinPressed() async {
     if (_isProcessing) return;
 
     final gameData = widget.gameData;
     if (gameData == null) return;
 
-    final double priceVal = gameData.priceNum.toDouble();
-    _pendingPaymentAction = (payId) => _processJoinPoll(paymentId: payId);
+    final hostName = gameData.hostName.isNotEmpty ? gameData.hostName : 'Host Player';
+    final priceStr = gameData.price.isNotEmpty ? gameData.price : '₹${gameData.priceNum}';
 
-    if (priceVal > 0) {
-      _openRazorpay(priceVal);
-    } else {
-      _processJoinPoll();
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+        ),
+        title: Text(
+          'Join Match Poll ⚽',
+          style: AppTypography.headlineSm.copyWith(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.bold,
+            fontSize: context.responsiveFont(16),
+          ),
+        ),
+        content: Text(
+          'You are joining this match poll on PlayZ! Please note that you do not need to pay now, but you must pay your share ($priceStr) directly to the match host ($hostName).',
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.textSecondary,
+            fontSize: context.responsiveFont(14),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.muted)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accent,
+              foregroundColor: AppColors.background,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+              ),
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Confirm & Join Poll'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      setState(() => _isProcessing = true);
+      await _processJoinPoll();
     }
   }
 
@@ -353,14 +480,12 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
             },
             onSlotSelected: (pickedStart) {
               Navigator.pop(sheetContext); // Close Start Time Sheet
-              final parentContext = context;
 
               // STEP 2: Open End Time Bottom Sheet
               Future.delayed(const Duration(milliseconds: 200), () {
                 if (!mounted) return;
                 showModalBottomSheet(
-                  // ignore: use_build_context_synchronously
-                  context: parentContext,
+                  context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
                   builder: (endSheetContext) => SlotMatrixBottomSheet(
@@ -369,18 +494,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                     selectedTime: null,
                     selectedDate: currentSelectedDate,
                     slots: _bookingController.slots,
-                    onSlotSelected: (pickedEnd) async {
+                    onSlotSelected: (pickedEnd) {
                       Navigator.pop(endSheetContext); // Close End Time Sheet
-
-                      await Future.delayed(const Duration(milliseconds: 300));
-                      if (!mounted) return;
-
-                      final startStr = '${pickedStart.hourOfPeriod == 0 ? 12 : pickedStart.hourOfPeriod}:00 ${pickedStart.period == DayPeriod.am ? 'AM' : 'PM'}';
-                      final endStr = '${pickedEnd.hourOfPeriod == 0 ? 12 : pickedEnd.hourOfPeriod}:00 ${pickedEnd.period == DayPeriod.am ? 'AM' : 'PM'}';
-                      final newTimeRangeStr = '$startStr - $endStr';
-                      final formattedDate = DateFormat('yyyy-MM-dd').format(currentSelectedDate);
-
-                      if (mounted) setState(() => _isProcessing = true);
 
                       // Calculate cost of newly selected slot(s)
                       double newSlotTotalCost = 0.0;
@@ -398,12 +513,16 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
 
                       final double originalTurfCost = gameData.turfSlotCost > 0 ? gameData.turfSlotCost : gameData.targetAmount;
                       if (newSlotTotalCost <= 0) {
-                        newSlotTotalCost = originalTurfCost;
+                        newSlotTotalCost = originalTurfCost > 0 ? originalTurfCost : 800.0;
                       }
 
-                      final double overheadPrice = newSlotTotalCost - originalTurfCost;
+                      final startStr = '${pickedStart.hourOfPeriod == 0 ? 12 : pickedStart.hourOfPeriod}:00 ${pickedStart.period == DayPeriod.am ? 'AM' : 'PM'}';
+                      final endStr = '${pickedEnd.hourOfPeriod == 0 ? 12 : pickedEnd.hourOfPeriod}:00 ${pickedEnd.period == DayPeriod.am ? 'AM' : 'PM'}';
+                      final newTimeRangeStr = '$startStr - $endStr';
+                      final formattedDate = DateFormat('yyyy-MM-dd').format(currentSelectedDate);
 
-                      Future<void> executeSlotChange() async {
+                      Future<void> executeSlotChange(String? payId) async {
+                        if (mounted) setState(() => _isProcessing = true);
                         await _matchController.changeMatchSlotByHost(
                           matchId: gameData.id,
                           ownerId: targetOwnerId,
@@ -413,6 +532,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                           newDateStr: formattedDate,
                           newTimeStr: newTimeRangeStr,
                           newTurfCost: newSlotTotalCost,
+                          paymentId: payId,
                         );
 
                         await _fetchBookedSlotsForMatchDate();
@@ -420,10 +540,11 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                         if (mounted) setState(() => _isProcessing = false);
                       }
 
-                      if (overheadPrice > 0) {
-                        // Confirm overhead payment with host
+                      // Safely launch dialog and payment after sheet transition finishes
+                      WidgetsBinding.instance.addPostFrameCallback((_) async {
+                        if (!mounted) return;
+
                         final bool? confirmPayment = await showDialog<bool>(
-                          // ignore: use_build_context_synchronously
                           context: context,
                           builder: (ctx) => AlertDialog(
                             backgroundColor: AppColors.surface,
@@ -431,7 +552,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                               borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
                             ),
                             title: Text(
-                              'Slot Price Overhead 💳',
+                              'Reschedule Slot Payment 💳',
                               style: AppTypography.headlineSm.copyWith(
                                 color: AppColors.textPrimary,
                                 fontWeight: FontWeight.bold,
@@ -439,8 +560,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                               ),
                             ),
                             content: Text(
-                              'The newly selected time slot ($newTimeRangeStr) costs ₹${newSlotTotalCost.toInt()} (original: ₹${originalTurfCost.toInt()}).\n\n'
-                              'You need to pay the remaining overhead balance of ₹${overheadPrice.toInt()} to book this slot.',
+                              'The newly selected slot ($newTimeRangeStr on $formattedDate) costs ₹${newSlotTotalCost.toInt()}.\n\n'
+                              'As host, you will pay the full slot price of ₹${newSlotTotalCost.toInt()} to book this slot and reactivate your poll.',
                               style: AppTypography.bodySm.copyWith(
                                 color: AppColors.textSecondary,
                                 fontSize: context.responsiveFont(14),
@@ -467,7 +588,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                                 ),
                                 onPressed: () => Navigator.pop(ctx, true),
                                 child: Text(
-                                  'Pay Overhead & Book',
+                                  'Pay ₹${newSlotTotalCost.toInt()} & Book Slot',
                                   style: AppTypography.headlineSm.copyWith(
                                     color: AppColors.background,
                                     fontWeight: FontWeight.bold,
@@ -479,16 +600,11 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                           ),
                         );
 
-                        if (confirmPayment != true) {
-                          if (mounted) setState(() => _isProcessing = false);
-                          return;
-                        }
+                        if (confirmPayment != true) return;
 
-                        _pendingPaymentAction = (payId) => executeSlotChange();
-                        _openRazorpay(overheadPrice);
-                      } else {
-                        await executeSlotChange();
-                      }
+                        _pendingPaymentAction = (payId) => executeSlotChange(payId);
+                        _openRazorpay(newSlotTotalCost);
+                      });
                     },
                   ),
                 );
@@ -528,7 +644,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
     final double collectedAmount = liveData?.collectedAmount ?? 0.0;
     final double targetAmount = liveData?.targetAmount ?? 0.0;
     final bool isSlotBooked = liveData?.isSlotBooked ?? false;
-    final bool hasConflict = liveData?.hasConflict ?? false;
+    final bool hasConflict = _hasConflictLocal || (liveData?.hasConflict ?? false);
 
     // Host & Player Join Checks (Host is ALWAYS included, players join only ONCE)
     final bool isHost = _currentUserId.isNotEmpty && _currentUserId == activeHostId;
@@ -538,6 +654,11 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
     final String venueName = activeAddress.contains('-')
         ? activeAddress.split('-').first.trim()
         : activeAddress;
+
+    debugPrint('📊 [MatchPollScreen] Building Poll Detail View:');
+    debugPrint('   matchId: $matchId, sport: $activeSport, time: $activeTime');
+    debugPrint('   isHost: $isHost, currentPlayers: $activeCurrentPlayers/$activeMaxPlayers');
+    debugPrint('   isSlotBooked: $isSlotBooked, hasConflict: $hasConflict (local=$_hasConflictLocal)');
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -551,6 +672,59 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                 sport: activeSport,
                 type: activeType,
                 time: activeTime,
+                isHost: isHost,
+                isSlotBooked: isSlotBooked,
+                onDeletePressed: () async {
+                  final bool? confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      backgroundColor: AppColors.surface,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                      ),
+                      title: Text(
+                        'Delete Match Poll? 🗑️',
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: context.responsiveFont(16),
+                        ),
+                      ),
+                      content: Text(
+                        'Are you sure you want to cancel and delete this match poll before it gets full?',
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.textSecondary,
+                          fontSize: context.responsiveFont(14),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          child: const Text('Cancel', style: TextStyle(color: AppColors.muted)),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.error,
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: () => Navigator.pop(ctx, true),
+                          child: const Text('Delete Poll'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (confirm == true && matchId.isNotEmpty) {
+                    final success = await _matchController.deleteMatchPoll(matchId);
+                    if (success && mounted) {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else {
+                        Get.back();
+                      }
+                    }
+                  }
+                },
               ),
               SliverToBoxAdapter(
                 child: Padding(
@@ -566,28 +740,65 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
                       if (hasConflict) ...[
                         Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(context.widthPct(3.5)),
+                          padding: EdgeInsets.all(context.widthPct(4)),
                           decoration: BoxDecoration(
                             color: Colors.orangeAccent.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
-                            border: Border.all(color: Colors.orangeAccent),
+                            borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                            border: Border.all(color: Colors.orangeAccent, width: 1.8),
                           ),
-                          child: Row(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(Icons.warning_amber_rounded, color: Colors.orangeAccent, size: 24),
-                              SizedBox(width: context.widthPct(2.5)),
-                              Expanded(
-                                child: Text(
-                                  isHost
-                                      ? 'Slot Conflict Detected: The original slot was booked by another user during the poll. Tap below to pick a new slot or date.'
-                                      : 'Slot Conflict Detected: The host is selecting an available slot for this match poll.',
-                                  style: AppTypography.bodySm.copyWith(
-                                    color: AppColors.textPrimary,
-                                    fontSize: context.responsiveFont(12),
-                                    fontWeight: FontWeight.w600,
+                              Row(
+                                children: [
+                                  const Icon(Icons.warning_amber_rounded, color: Colors.orangeAccent, size: 26),
+                                  SizedBox(width: context.widthPct(2.5)),
+                                  Text(
+                                    '⚠️ Slot Conflict Detected!',
+                                    style: AppTypography.headlineSm.copyWith(
+                                      color: Colors.orangeAccent,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: context.responsiveFont(15),
+                                    ),
                                   ),
+                                ],
+                              ),
+                              SizedBox(height: context.heightPct(1)),
+                              Text(
+                                isHost
+                                    ? 'The targeted slot on this turf was acquired by another user during your poll! Please reschedule to a new available slot or date.'
+                                    : 'The targeted slot was booked by another user. The host can select a new available time slot for this match poll.',
+                                style: AppTypography.bodySm.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontSize: context.responsiveFont(13),
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
+                              if (isHost) ...[
+                                SizedBox(height: context.heightPct(1.5)),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.accent,
+                                      foregroundColor: AppColors.background,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                                      ),
+                                    ),
+                                    onPressed: _onHostChangeSlotPressed,
+                                    icon: const Icon(Icons.edit_calendar_rounded, size: 18),
+                                    label: Text(
+                                      'Change Date & Time Slot',
+                                      style: AppTypography.headlineSm.copyWith(
+                                        color: AppColors.background,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: context.responsiveFont(13.5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ),
@@ -657,6 +868,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
             alreadyJoined: alreadyJoined,
             isFull: isFull,
             isSlotBooked: isSlotBooked,
+            hasConflict: hasConflict,
             collectedAmount: collectedAmount,
             targetAmount: targetAmount,
             onJoinPressed: _onJoinPressed,

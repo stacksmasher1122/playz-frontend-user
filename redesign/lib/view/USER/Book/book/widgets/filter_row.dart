@@ -11,6 +11,7 @@ class FilterRow extends StatelessWidget {
 
   final List<Map<String, dynamic>> filters = const [
     {'label': 'Filters', 'option': null},
+    {'label': 'Favorites', 'option': null},
     {'label': 'Nearest', 'option': TurfSortOption.nearest},
     {'label': 'Top Rated', 'option': TurfSortOption.topRated},
     {'label': 'Low Price', 'option': TurfSortOption.priceAsc},
@@ -27,6 +28,7 @@ class FilterRow extends StatelessWidget {
       height: rowHeight,
       child: Obx(() {
         final currentOption = bookingController.sortOption.value;
+        final isFavoritesOnly = bookingController.isFavoritesOnly.value;
 
         return ListView.separated(
           scrollDirection: Axis.horizontal,
@@ -38,12 +40,17 @@ class FilterRow extends StatelessWidget {
             final String label = item['label'];
             final TurfSortOption? option = item['option'];
 
-            final bool isSelected = option != null && currentOption == option;
+            final bool isFavoritesPill = label == 'Favorites';
+            final bool isSelected = isFavoritesPill
+                ? isFavoritesOnly
+                : (!isFavoritesOnly && option != null && currentOption == option);
 
             return InkWell(
               borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
               onTap: () {
-                if (index == 0) {
+                if (isFavoritesPill) {
+                  bookingController.isFavoritesOnly.value = !isFavoritesOnly;
+                } else if (index == 0) {
                   // Open Filter Bottom Sheet
                   showModalBottomSheet(
                     context: context,
@@ -52,6 +59,7 @@ class FilterRow extends StatelessWidget {
                     builder: (ctx) => const TurfSortFilterBottomSheet(),
                   );
                 } else if (option != null) {
+                  bookingController.isFavoritesOnly.value = false;
                   bookingController.sortOption.value = option;
                 }
               },
@@ -66,15 +74,28 @@ class FilterRow extends StatelessWidget {
                   color: isSelected ? AppColors.accent : AppColors.surface,
                   borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                 ),
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.headlineSm.copyWith(
-                    fontSize: context.responsiveFont(12),
-                    fontWeight: FontWeight.w600,
-                    color: isSelected ? AppColors.background : AppColors.textPrimary,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (isFavoritesPill) ...[
+                      Icon(
+                        isSelected ? Icons.favorite : Icons.favorite_border,
+                        size: context.responsiveFont(14),
+                        color: isSelected ? AppColors.background : AppColors.accent,
+                      ),
+                      SizedBox(width: context.widthPct(1.2)),
+                    ],
+                    Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.headlineSm.copyWith(
+                        fontSize: context.responsiveFont(12),
+                        fontWeight: FontWeight.w600,
+                        color: isSelected ? AppColors.background : AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -84,3 +105,4 @@ class FilterRow extends StatelessWidget {
     );
   }
 }
+

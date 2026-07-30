@@ -8,6 +8,9 @@ class MatchDetailHero extends StatefulWidget {
   final String? sport;
   final String? type;
   final String? time;
+  final bool isHost;
+  final bool isSlotBooked;
+  final VoidCallback? onDeletePressed;
 
   const MatchDetailHero({
     super.key,
@@ -15,6 +18,9 @@ class MatchDetailHero extends StatefulWidget {
     this.sport = 'Football',
     this.type = 'Casual',
     this.time = 'Today, 18:00',
+    this.isHost = false,
+    this.isSlotBooked = false,
+    this.onDeletePressed,
   });
 
   @override
@@ -67,6 +73,17 @@ class _MatchDetailHeroState extends State<MatchDetailHero> {
         ),
       ),
       actions: [
+        if (widget.isHost && !widget.isSlotBooked && widget.onDeletePressed != null) ...[
+          CircleAvatar(
+            backgroundColor: AppColors.background.withValues(alpha: 0.5),
+            child: IconButton(
+              icon: const Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
+              onPressed: widget.onDeletePressed,
+              tooltip: 'Delete Match Poll',
+            ),
+          ),
+          SizedBox(width: context.widthPct(2)),
+        ],
         CircleAvatar(
           backgroundColor: AppColors.background.withValues(alpha: 0.5),
           child: IconButton(

@@ -34,37 +34,93 @@ class AvailableTurfsList extends StatelessWidget {
         // Empty state
         if (_controller.filteredTurfs.isEmpty) {
           final query = _controller.searchQuery.value.trim();
+          final isFavoritesOnly = _controller.isFavoritesOnly.value;
+          final selectedSport = _controller.selectedSport.value;
+
+          String title = 'No turfs found';
+          String subtitle = 'Try changing your search query or filters';
+
+          if (isFavoritesOnly) {
+            title = 'No favorite turfs added yet';
+            subtitle = 'Tap the ❤ icon on any turf to add it to your favorites';
+          } else if (query.isNotEmpty) {
+            title = 'No turfs matching "$query"';
+            subtitle = 'Try changing your search query or filters';
+          } else if (selectedSport != null &&
+              selectedSport.isNotEmpty &&
+              selectedSport != 'All Sports') {
+            title = 'No turfs available for $selectedSport';
+            subtitle = 'Try selecting another sport or clearing your filter';
+          }
+
           return Center(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: context.heightPct(5)),
               child: Column(
                 children: [
-                  const Icon(
-                    Icons.sports_outlined,
-                    color: AppColors.muted,
+                  Icon(
+                    isFavoritesOnly ? Icons.favorite_border : Icons.sports_outlined,
+                    color: isFavoritesOnly ? AppColors.accent : AppColors.muted,
                     size: 48,
                   ),
                   SizedBox(height: context.heightPct(1.5)),
                   Text(
-                    query.isNotEmpty ? 'No turfs matching "$query"' : 'No turfs found',
+                    title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.headlineSm.copyWith(
-                      color: AppColors.muted,
+                      color: AppColors.textPrimary,
                       fontSize: context.responsiveFont(16),
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   SizedBox(height: context.heightPct(0.5)),
                   Text(
-                    'Try changing your search query or filters',
-                    maxLines: 1,
+                    subtitle,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.bodySm.copyWith(
-                      color: AppColors.muted.withValues(alpha: 0.6),
+                      color: AppColors.muted,
                       fontSize: context.responsiveFont(13),
                     ),
                   ),
+                  if ((selectedSport != null &&
+                          selectedSport.isNotEmpty &&
+                          selectedSport != 'All Sports') ||
+                      query.isNotEmpty ||
+                      isFavoritesOnly) ...[
+                    SizedBox(height: context.heightPct(2.2)),
+                    ElevatedButton(
+                      onPressed: () {
+                        _controller.isFavoritesOnly.value = false;
+                        _controller.searchQuery.value = '';
+                        _controller.filterTurfsBySport('All Sports');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.accent,
+                        foregroundColor: AppColors.background,
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.widthPct(6),
+                          vertical: context.heightPct(1.4),
+                        ),
+                        shape: const StadiumBorder(),
+                      ),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Explore Other Sports',
+                          style: AppTypography.bodySm.copyWith(
+                            color: AppColors.background,
+                            fontSize: context.responsiveFont(13),
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

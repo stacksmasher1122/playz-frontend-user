@@ -13,19 +13,17 @@ import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
-
 import 'package:redesign/utils/slot_overlap_helper.dart';
 
-import 'widgets/addon_card.dart';
 import 'widgets/availability_timeline.dart';
 import 'widgets/booking_dropdowns.dart';
 import 'widgets/booking_summary.dart';
 import 'widgets/booking_time_pickers.dart';
 import 'widgets/confirmation_bottom_bar.dart';
 import 'widgets/date_selector.dart';
-import 'widgets/solo_queue_options.dart';
 import 'widgets/sport_selector.dart';
 import 'widgets/slot_matrix_bottom_sheet.dart';
+import 'widgets/venue_policy_box.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ConfirmSlotScreen extends StatefulWidget {
@@ -42,19 +40,12 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
 
-  final Set<String> _selectedAddons = {'Equipment Rental'};
-  int players = 4;
-  double radius = 10;
-  bool bringOwnEquipment = false;
-  bool splitAndPay = false;
   final ValueNotifier<bool> _isBottomBarVisible = ValueNotifier(true);
   late final ScrollController _timelineController;
 
   DateTime? selectedDate;
   String? selectedGround;
   String? selectedSize;
-  bool soloQueue = false;
-
   String? selectedSport;
 
   /// Dynamic options from the controller
@@ -139,7 +130,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
     if (!_timelineController.hasClients) return;
 
     final now = DateTime.now();
-    final currentHour = now.hour; // Whole number hour (e.g. 17 for 5:19 PM)
+    final currentHour = now.hour;
 
     int index = -1;
     if (_bookingController.slots.isNotEmpty) {
@@ -218,26 +209,11 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
             ),
           );
         }),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: context.widthPct(4)),
-            child: Center(
-              child: Text(
-                'Step 2/3',
-                style: AppTypography.labelCaps10.copyWith(
-                  color: AppColors.muted,
-                  fontSize: context.responsiveFont(12),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
           if (notification.depth != 0) return false;
 
-          // ALWAYS show Pay button when near/at the end of the scrollable page
           if (notification.metrics.extentAfter < 60) {
             if (!_isBottomBarVisible.value) {
               _isBottomBarVisible.value = true;
@@ -317,45 +293,11 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
                 onPickStartTime: () => _pickTime(isStart: true),
                 onPickEndTime: () => _pickTime(isStart: false),
               ),
-              SizedBox(height: context.heightPct(3)),
+              SizedBox(height: context.heightPct(2.5)),
 
-              const _SectionTitle(text: 'Add-ons & Equipment'),
-              SizedBox(height: context.heightPct(0.6)),
-              AddonCard(
-                title: 'Pro Match Ball',
-                price: '+ ₹200',
-                isSelected: _selectedAddons.contains('Pro Match Ball'),
-                onTap: () => _toggleAddon('Pro Match Ball'),
-              ),
-              AddonCard(
-                title: 'Extra Bibs (Set of 10)',
-                price: '+ ₹150',
-                isSelected: _selectedAddons.contains('Extra Bibs (Set of 10)'),
-                onTap: () => _toggleAddon('Extra Bibs (Set of 10)'),
-              ),
-              AddonCard(
-                title: 'Referee Service',
-                price: '+ ₹300',
-                isSelected: _selectedAddons.contains('Referee Service'),
-                onTap: () => _toggleAddon('Referee Service'),
-              ),
-              SizedBox(height: context.heightPct(3)),
-
-              SoloQueueOptions(
-                soloQueue: soloQueue,
-                players: players,
-                radius: radius,
-                splitAndPay: splitAndPay,
-                bringOwnEquipment: bringOwnEquipment,
-                baseSlotPrice: _totalAmount > 0 ? _totalAmount.toInt() : 1000,
-                onSoloQueueChanged: (v) => setState(() => soloQueue = v),
-                onPlayersChanged: (v) => setState(() => players = v),
-                onRadiusChanged: (v) => setState(() => radius = v),
-                onSplitAndPayChanged: (v) => setState(() => splitAndPay = v),
-                onBringOwnEquipmentChanged: (v) =>
-                    setState(() => bringOwnEquipment = v),
-              ),
-              SizedBox(height: context.heightPct(3.5)),
+              /// VENUE POLICY CARD DIRECTLY ABOVE LAST BILL
+              const VenuePolicyBox(),
+              SizedBox(height: context.heightPct(2.5)),
 
               Obx(() => BookingSummary(
                 slotPrice: _bookingController.selectedGround.value?.defaultPrice ?? 0,
@@ -389,16 +331,6 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
         ),
       ),
     );
-  }
-
-  void _toggleAddon(String title) {
-    setState(() {
-      if (_selectedAddons.contains(title)) {
-        _selectedAddons.remove(title);
-      } else {
-        _selectedAddons.add(title);
-      }
-    });
   }
 
   void _onPayPressed() => _openRazorpay();
@@ -496,7 +428,6 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
     final startTimeStr = _formatTimeOfDay(_startTime!);
     final endTimeStr = _formatTimeOfDay(_endTime!);
 
-    // Raw payload containing credentials and booking identifiers
     final rawPayload = jsonEncode({
       'bookingId': bookingId,
       'otp': otp,
@@ -510,7 +441,6 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
       'timestamp': currentTimeStr,
     });
 
-    // Base64 Obfuscated QR Data Payload to hide secret credentials from raw scanners
     final encodedQrText = 'PZSEC_${base64Encode(utf8.encode(rawPayload))}';
 
     final bookingMap = {
@@ -678,7 +608,6 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
               }
             });
 
-            // Automatically open End Time Sheet after picking Start Time
             if (isStart) {
               Future.delayed(const Duration(milliseconds: 250), () {
                 if (mounted) {

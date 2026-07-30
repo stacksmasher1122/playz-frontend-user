@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/view/USER/Play/play/play_models.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
@@ -50,23 +53,39 @@ class MatchController extends GetxController {
 
     _matchesSub = _firestore
         .collection('matches')
-        .orderBy('createdAt', descending: true)
         .snapshots()
-        .listen((snapshot) {
-      final docs = snapshot.docs.map((doc) => GameData.fromFirestore(doc)).toList();
-      allMatches.value = docs;
-      isLoading.value = false;
-    }, onError: (err) {
-      debugPrint('⚠️ Error fetching matches: $err');
-      isLoading.value = false;
-    });
+        .listen(
+          (snapshot) {
+            final docs = snapshot.docs
+                .map((doc) => GameData.fromFirestore(doc))
+                .toList();
+            docs.sort((a, b) {
+              final dateA = a.createdAt ?? DateTime.now();
+              final dateB = b.createdAt ?? DateTime.now();
+              return dateB.compareTo(dateA);
+            });
+            allMatches.value = docs;
+            isLoading.value = false;
+            debugPrint('📥 [MatchController] Fetched ${docs.length} matches from Firestore.');
+          },
+          onError: (err) {
+            debugPrint('⚠️ Error fetching matches: $err');
+            isLoading.value = false;
+          },
+        );
   }
 
   /// Distance calculation using Haversine Formula (returns km)
-  double _calculateDistanceKm(double lat1, double lon1, double lat2, double lon2) {
+  double _calculateDistanceKm(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
     if (lat1 == 0 || lon1 == 0 || lat2 == 0 || lon2 == 0) return 1.0;
     const p = 0.017453292519943295; // Math.PI / 180
-    final a = 0.5 -
+    final a =
+        0.5 -
         cos((lat2 - lat1) * p) / 2 +
         cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
     return 12742 * asin(sqrt(a)); // 2 * R; R = 6371 km
@@ -74,7 +93,9 @@ class MatchController extends GetxController {
 
   /// Computed filtered and sorted match list
   List<GameData> get filteredMatches {
-    final mapsCtrl = Get.isRegistered<MapsController>() ? Get.find<MapsController>() : null;
+    final mapsCtrl = Get.isRegistered<MapsController>()
+        ? Get.find<MapsController>()
+        : null;
     final userLat = mapsCtrl?.currentLocation.value?.lat ?? 0.0;
     final userLng = mapsCtrl?.currentLocation.value?.lng ?? 0.0;
 
@@ -83,7 +104,9 @@ class MatchController extends GetxController {
     // 1. Sport Filter
     if (selectedSport.value != 'All' && selectedSport.value.isNotEmpty) {
       result = result
-          .where((m) => m.sport.toLowerCase() == selectedSport.value.toLowerCase())
+          .where(
+            (m) => m.sport.toLowerCase() == selectedSport.value.toLowerCase(),
+          )
           .toList();
     }
 
@@ -120,7 +143,12 @@ class MatchController extends GetxController {
     if (userLat != 0.0 && userLng != 0.0) {
       result = result.where((m) {
         if (m.latitude == 0.0 || m.longitude == 0.0) return true;
-        final dist = _calculateDistanceKm(userLat, userLng, m.latitude, m.longitude);
+        final dist = _calculateDistanceKm(
+          userLat,
+          userLng,
+          m.latitude,
+          m.longitude,
+        );
         return dist <= distanceRadiusKm.value;
       }).toList();
     }
@@ -191,7 +219,9 @@ class MatchController extends GetxController {
       if (!docSnap.exists) return false;
 
       final data = docSnap.data()!;
-      final List<dynamic> playerIds = List<dynamic>.from(data['playerIds'] ?? []);
+      final List<dynamic> playerIds = List<dynamic>.from(
+        data['playerIds'] ?? [],
+      );
 
       // Prevent duplicate joins
       if (playerIds.contains(userId)) {
@@ -205,9 +235,11 @@ class MatchController extends GetxController {
       }
 
       final int currentPlayers = (data['currentPlayers'] ?? 1) + 1;
-      final double collectedAmount = ((data['collectedAmount'] ?? 0.0) as num).toDouble() + pricePaid;
+      final double collectedAmount =
+          ((data['collectedAmount'] ?? 0.0) as num).toDouble() + pricePaid;
       final int maxPlayers = (data['maxPlayers'] as num?)?.toInt() ?? 10;
-      final double targetAmount = ((data['targetAmount'] ?? 0.0) as num).toDouble();
+      final double targetAmount = ((data['targetAmount'] ?? 0.0) as num)
+          .toDouble();
       final bool isAlreadySlotBooked = data['isSlotBooked'] == true;
       final String locationType = (data['locationType'] ?? 'custom').toString();
 
@@ -220,9 +252,13 @@ class MatchController extends GetxController {
       });
 
       // Auto-book check if all players joined & paid for PlayZ Turfs
-      final bool isPollComplete = (currentPlayers >= maxPlayers) || (targetAmount > 0 && collectedAmount >= targetAmount);
+      final bool isPollComplete =
+          (currentPlayers >= maxPlayers) ||
+          (targetAmount > 0 && collectedAmount >= targetAmount);
 
-      if (locationType == 'playz_turf' && isPollComplete && !isAlreadySlotBooked) {
+      if (locationType == 'playz_turf' &&
+          isPollComplete &&
+          !isAlreadySlotBooked) {
         final turfId = (data['turfId'] ?? '').toString();
         final groundId = (data['groundId'] ?? '').toString();
         final ownerId = (data['ownerId'] ?? '').toString();
@@ -234,18 +270,21 @@ class MatchController extends GetxController {
         final timeOnly = parts.length > 1 ? parts.last.trim() : timeStr;
 
         if (turfId.isNotEmpty && groundId.isNotEmpty && dateStr.isNotEmpty) {
-          final isOverlapping = await SlotOverlapHelper.isSlotOverlappingInFirestore(
-            ownerId: ownerId,
-            turfId: turfId,
-            groundId: groundId,
-            dateStr: dateStr,
-            newTimeRangeStr: timeOnly,
-            currentMatchId: matchId,
-          );
+          final isOverlapping =
+              await SlotOverlapHelper.isSlotOverlappingInFirestore(
+                ownerId: ownerId,
+                turfId: turfId,
+                groundId: groundId,
+                dateStr: dateStr,
+                newTimeRangeStr: timeOnly,
+                currentMatchId: matchId,
+              );
 
           if (!isOverlapping) {
             // NO CONFLICT: Auto-book slot in Firestore immediately
-            final String finalOwnerId = ownerId.isNotEmpty ? ownerId : 'owner_$turfId';
+            final String finalOwnerId = ownerId.isNotEmpty
+                ? ownerId
+                : 'owner_$turfId';
             await _firestore
                 .collection('owners')
                 .doc(finalOwnerId)
@@ -253,21 +292,18 @@ class MatchController extends GetxController {
                 .doc(turfId)
                 .collection('bookings')
                 .add({
-              'turfId': turfId,
-              'groundId': groundId,
-              'groundName': 'Main Ground',
-              'date': dateStr,
-              'time': timeOnly,
-              'slotId': slotId,
-              'status': 'confirmed',
-              'createdAt': FieldValue.serverTimestamp(),
-              'bookingType': 'match_poll_auto_booked',
-            });
+                  'turfId': turfId,
+                  'groundId': groundId,
+                  'groundName': 'Main Ground',
+                  'date': dateStr,
+                  'time': timeOnly,
+                  'slotId': slotId,
+                  'status': 'confirmed',
+                  'createdAt': FieldValue.serverTimestamp(),
+                  'bookingType': 'match_poll_auto_booked',
+                });
 
-            await docRef.update({
-              'isSlotBooked': true,
-              'hasConflict': false,
-            });
+            await docRef.update({'isSlotBooked': true, 'hasConflict': false});
 
             Get.snackbar(
               'Poll Full & Slot Booked! ⚡',
@@ -279,9 +315,7 @@ class MatchController extends GetxController {
             );
           } else {
             // CONFLICT DETECTED: Slot was booked by someone else
-            await docRef.update({
-              'hasConflict': true,
-            });
+            await docRef.update({'hasConflict': true});
 
             Get.snackbar(
               'Poll Full — Slot Conflict! ⚠️',
@@ -324,14 +358,15 @@ class MatchController extends GetxController {
     try {
       // 1. Check for overlapping slot booking in Firestore
       //    Pass currentMatchId so this poll doesn't self-block
-      final isOverlapping = await SlotOverlapHelper.isSlotOverlappingInFirestore(
-        ownerId: ownerId,
-        turfId: turfId,
-        groundId: groundId,
-        dateStr: dateStr,
-        newTimeRangeStr: timeStr,
-        currentMatchId: matchId,
-      );
+      final isOverlapping =
+          await SlotOverlapHelper.isSlotOverlappingInFirestore(
+            ownerId: ownerId,
+            turfId: turfId,
+            groundId: groundId,
+            dateStr: dateStr,
+            newTimeRangeStr: timeStr,
+            currentMatchId: matchId,
+          );
 
       if (isOverlapping) {
         await _firestore.collection('matches').doc(matchId).update({
@@ -356,16 +391,16 @@ class MatchController extends GetxController {
           .doc(turfId)
           .collection('bookings')
           .add({
-        'turfId': turfId,
-        'groundId': groundId,
-        'groundName': groundName,
-        'date': dateStr,
-        'time': timeStr,
-        'slotId': slotId,
-        'status': 'confirmed',
-        'createdAt': FieldValue.serverTimestamp(),
-        'bookingType': 'match_poll_gathered_full',
-      });
+            'turfId': turfId,
+            'groundId': groundId,
+            'groundName': groundName,
+            'date': dateStr,
+            'time': timeStr,
+            'slotId': slotId,
+            'status': 'confirmed',
+            'createdAt': FieldValue.serverTimestamp(),
+            'bookingType': 'match_poll_gathered_full',
+          });
 
       // 3. Mark match poll as slot booked & conflict resolved
       await _firestore.collection('matches').doc(matchId).update({
@@ -399,18 +434,26 @@ class MatchController extends GetxController {
     required String newTimeStr,
     String newSlotId = '',
     double? newTurfCost,
+    String? paymentId,
   }) async {
     try {
-      // 1. Check for overlapping slot booking in Firestore
-      //    Pass currentMatchId so this poll doesn't self-block
-      final isOverlapping = await SlotOverlapHelper.isSlotOverlappingInFirestore(
-        ownerId: ownerId,
-        turfId: turfId,
-        groundId: groundId,
-        dateStr: newDateStr,
-        newTimeRangeStr: newTimeStr,
-        currentMatchId: matchId,
-      );
+      final user = FirebaseAuth.instance.currentUser;
+      final userDocId =
+          await UserPreferences.getDocId() ??
+          user?.email ??
+          user?.uid ??
+          'unknown_user';
+
+      // 1. Check for overlapping bookings on the new slot
+      final isOverlapping =
+          await SlotOverlapHelper.isSlotOverlappingInFirestore(
+            ownerId: ownerId,
+            turfId: turfId,
+            groundId: groundId,
+            dateStr: newDateStr,
+            newTimeRangeStr: newTimeStr,
+            currentMatchId: matchId,
+          );
 
       if (isOverlapping) {
         Get.snackbar(
@@ -423,24 +466,62 @@ class MatchController extends GetxController {
         return false;
       }
 
-      // 2. Add booking record under turf owner with new date/time
-      await _firestore
+      final bookingId =
+          'PLZ_RESCHEDULE_${DateTime.now().millisecondsSinceEpoch}';
+      final otp = (100000 + Random().nextInt(900000)).toString();
+
+      final rawPayload = jsonEncode({
+        'bookingId': bookingId,
+        'otp': otp,
+        'turfId': turfId,
+        'groundId': groundId,
+        'date': newDateStr,
+        'timeSlot': newTimeStr,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+
+      final encodedQrText = 'PZSEC_${base64Encode(utf8.encode(rawPayload))}';
+
+      final bookingData = {
+        'id': bookingId,
+        'bookingId': bookingId,
+        'otp': otp,
+        'qrData': encodedQrText,
+        'turfId': turfId,
+        'groundId': groundId,
+        'groundName': groundName,
+        'date': newDateStr,
+        'timeSlot': newTimeStr,
+        'time': newTimeStr,
+        'slotId': newSlotId,
+        'status': 'confirmed',
+        'createdAt': FieldValue.serverTimestamp(),
+        'bookingType': 'match_poll_rescheduled',
+        'paymentId':
+            paymentId ?? 'DEV_PASS_${DateTime.now().millisecondsSinceEpoch}',
+        'amount': (newTurfCost ?? 0.0).toInt(),
+        'userEmail': user?.email ?? '',
+        'userName': user?.displayName ?? 'Host Player',
+        'userPhone': user?.phoneNumber ?? 'N/A',
+      };
+
+      final batch = _firestore.batch();
+
+      final ownerRef = _firestore
           .collection('owners')
           .doc(ownerId)
           .collection('turfs')
           .doc(turfId)
           .collection('bookings')
-          .add({
-        'turfId': turfId,
-        'groundId': groundId,
-        'groundName': groundName,
-        'date': newDateStr,
-        'time': newTimeStr,
-        'slotId': newSlotId,
-        'status': 'confirmed',
-        'createdAt': FieldValue.serverTimestamp(),
-        'bookingType': 'match_poll_gathered_full',
-      });
+          .doc(bookingId);
+      batch.set(ownerRef, bookingData, SetOptions(merge: true));
+
+      final userRef = _firestore
+          .collection('User')
+          .doc(userDocId)
+          .collection('bookings')
+          .doc(bookingId);
+      batch.set(userRef, bookingData, SetOptions(merge: true));
 
       // 3. Update match poll document
       final updateData = <String, dynamic>{
@@ -453,13 +534,17 @@ class MatchController extends GetxController {
 
       if (newTurfCost != null && newTurfCost > 0) {
         updateData['turfSlotCost'] = newTurfCost;
+        updateData['targetAmount'] = newTurfCost;
       }
 
-      await _firestore.collection('matches').doc(matchId).update(updateData);
+      final matchRef = _firestore.collection('matches').doc(matchId);
+      batch.update(matchRef, updateData);
+
+      await batch.commit();
 
       Get.snackbar(
-        'Slot Updated & Booked! ⚽',
-        'New time slot $newDateStr, $newTimeStr has been booked!',
+        'Slot Rescheduled & Booked! ⚽',
+        'New time slot $newDateStr ($newTimeStr) has been booked!',
         backgroundColor: AppColors.accent,
         colorText: Colors.black,
         snackPosition: SnackPosition.BOTTOM,
@@ -468,6 +553,31 @@ class MatchController extends GetxController {
       return true;
     } catch (e) {
       debugPrint('🔴 Error updating match slot: $e');
+      return false;
+    }
+  }
+
+  /// Delete a match poll before it gets full (Host only)
+  Future<bool> deleteMatchPoll(String matchId) async {
+    try {
+      await _firestore.collection('matches').doc(matchId).delete();
+      Get.snackbar(
+        'Match Poll Deleted',
+        'Your match poll has been deleted.',
+        backgroundColor: AppColors.card,
+        colorText: AppColors.textPrimary,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return true;
+    } catch (e) {
+      debugPrint('🔴 Error deleting match poll: $e');
+      Get.snackbar(
+        'Delete Failed',
+        'Could not delete match poll: $e',
+        backgroundColor: AppColors.card,
+        colorText: AppColors.textPrimary,
+        snackPosition: SnackPosition.BOTTOM,
+      );
       return false;
     }
   }

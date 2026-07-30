@@ -151,7 +151,7 @@ class _RateReviewBottomSheetState extends State<RateReviewBottomSheet> {
           .toString();
       final reviewText = _reviewController.text.trim();
 
-      // 1. Check for existing review doc to avoid creating duplicates when editing
+      // 1. Check for existing review doc to avoid creating duplicates
       DocumentReference reviewRef;
       if (bookingId.isNotEmpty && userId.isNotEmpty) {
         final existingQuery = await FirebaseFirestore.instance
@@ -178,13 +178,20 @@ class _RateReviewBottomSheetState extends State<RateReviewBottomSheet> {
         'turfName': turfName,
         'userId': userId,
         'userName': userName,
+        'userPic': userPic,
         'userProfilePic': userPic,
+        'imageUrl': userPic,
         'rating': _rating,
+        'stars': _rating,
         'reviewText': reviewText,
+        'comment': reviewText,
+        'review': reviewText,
+        'timestamp': FieldValue.serverTimestamp(),
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
+      // Write to global Turf_Reviews collection
       await reviewRef.set(reviewData, SetOptions(merge: true));
 
       // 2. Update Booking Document in User's bookings collection
@@ -203,22 +210,25 @@ class _RateReviewBottomSheetState extends State<RateReviewBottomSheet> {
         }, SetOptions(merge: true));
       }
 
-      // 3. Write to Turf Owner's subcollection if ownerId & turfId exist
-      if (ownerId.isNotEmpty && turfId.isNotEmpty) {
+      // 3. Save review directly to Turf subcollection: Turf/{turfId}/reviews
+      if (turfId.isNotEmpty) {
         await FirebaseFirestore.instance
-            .collection('owners')
-            .doc(ownerId)
+            .collection('Turf')
+            .doc(turfId)
+            .collection('reviews')
+            .doc(reviewRef.id)
+            .set(reviewData, SetOptions(merge: true));
+
+        await FirebaseFirestore.instance
             .collection('turfs')
             .doc(turfId)
             .collection('reviews')
             .doc(reviewRef.id)
             .set(reviewData, SetOptions(merge: true));
 
-        // 4. Update average rating on owner's turf doc
+        // Recalculate average rating & total reviews count for Turf
         final reviewsSnap = await FirebaseFirestore.instance
-            .collection('owners')
-            .doc(ownerId)
-            .collection('turfs')
+            .collection('Turf')
             .doc(turfId)
             .collection('reviews')
             .get();
@@ -233,14 +243,60 @@ class _RateReviewBottomSheetState extends State<RateReviewBottomSheet> {
           final avg = double.parse((totalRating / count).toStringAsFixed(1));
 
           await FirebaseFirestore.instance
+              .collection('Turf')
+              .doc(turfId)
+              .set({
+            'rating': avg,
+            'totalReviews': count,
+          }, SetOptions(merge: true));
+
+          await FirebaseFirestore.instance
+              .collection('turfs')
+              .doc(turfId)
+              .set({
+            'rating': avg,
+            'totalReviews': count,
+          }, SetOptions(merge: true));
+        }
+      }
+
+      // 4. Save review to Turf Owner's subcollection if ownerId exists
+      if (ownerId.isNotEmpty && turfId.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('owners')
+            .doc(ownerId)
+            .collection('turfs')
+            .doc(turfId)
+            .collection('reviews')
+            .doc(reviewRef.id)
+            .set(reviewData, SetOptions(merge: true));
+
+        final ownerReviewsSnap = await FirebaseFirestore.instance
+            .collection('owners')
+            .doc(ownerId)
+            .collection('turfs')
+            .doc(turfId)
+            .collection('reviews')
+            .get();
+
+        if (ownerReviewsSnap.docs.isNotEmpty) {
+          final totalRating = ownerReviewsSnap.docs.fold<double>(
+              0.0,
+              (acc, doc) =>
+                  acc +
+                  ((doc.data()['rating'] as num?)?.toDouble() ?? 0.0));
+          final count = ownerReviewsSnap.docs.length;
+          final avg = double.parse((totalRating / count).toStringAsFixed(1));
+
+          await FirebaseFirestore.instance
               .collection('owners')
               .doc(ownerId)
               .collection('turfs')
               .doc(turfId)
-              .update({
+              .set({
             'rating': avg,
             'totalReviews': count,
-          });
+          }, SetOptions(merge: true));
         }
       }
 
@@ -478,7 +534,6 @@ class _InteractiveStarRatingState extends State<InteractiveStarRating> {
   void _updateRatingFromOffset(Offset localOffset, double totalWidth) {
     if (totalWidth <= 0) return;
     final double raw = (localOffset.dx / totalWidth) * 5.0;
-    // Snap strictly to whole numbers (1 to 5)
     final double snapped = raw.ceil().clamp(1, 5).toDouble();
 
     if (snapped != _currentRating) {

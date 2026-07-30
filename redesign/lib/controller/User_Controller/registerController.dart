@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../shared_preferences/userPreferences.dart';
 import '../../model/User_Models/registerModel.dart';
+import '../../services/global_groups_service.dart';
 
 class RegisterController extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -45,6 +46,10 @@ class RegisterController extends ChangeNotifier {
       await UserPreferences.saveUserLogin(true, user.name, user.email);
       await UserPreferences.saveDocId(user.email);
 
+      await GlobalGroupsService.checkAndJoinAllUserGroups(
+        targetDocId: user.email,
+      );
+
       setLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
@@ -86,6 +91,9 @@ class RegisterController extends ChangeNotifier {
           emailToUse,
         );
         await UserPreferences.saveDocId(emailToUse);
+        await GlobalGroupsService.checkAndJoinAllUserGroups(
+          targetDocId: emailToUse,
+        );
       }
 
       setLoading(false);
@@ -140,6 +148,9 @@ class RegisterController extends ChangeNotifier {
         );
         if (emailToUse.isNotEmpty) {
           await UserPreferences.saveDocId(emailToUse);
+          await GlobalGroupsService.checkAndJoinAllUserGroups(
+            targetDocId: emailToUse,
+          );
         }
 
         setLoading(false);

@@ -11,9 +11,9 @@ class BookingReminders extends StatelessWidget {
     ResponsiveHelper.init(context);
     final reminders = [
       'Arrive 15 minutes early',
-      'Wear non-marking shoes',
+      'Wear non-marking shoes / rubber studs',
       'Show QR code at reception',
-      'Cancellations up to 2 hours prior',
+      'Full refund if cancelled at least 5 days prior to booking date. No refund thereafter.',
     ];
 
     return Column(
@@ -32,8 +32,12 @@ class BookingReminders extends StatelessWidget {
           (e) => Padding(
             padding: EdgeInsets.only(bottom: context.heightPct(0.8)),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.circle, size: 6, color: AppColors.accent),
+                Padding(
+                  padding: EdgeInsets.only(top: context.heightPct(0.6)),
+                  child: const Icon(Icons.circle, size: 6, color: AppColors.accent),
+                ),
                 SizedBox(width: context.widthPct(2.5)),
                 Expanded(
                   child: Text(
@@ -41,6 +45,7 @@ class BookingReminders extends StatelessWidget {
                     style: AppTypography.bodySm.copyWith(
                       color: AppColors.muted,
                       fontSize: context.responsiveFont(13),
+                      height: 1.3,
                     ),
                   ),
                 ),

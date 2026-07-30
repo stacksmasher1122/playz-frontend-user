@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:redesign/model/User_Models/Home_Models/Groups_Model/groups_model
 import 'package:redesign/model/User_Models/Home_Models/Groups_Model/group_request_model.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Groups_SQF/groupsSqflite.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
-import 'dart:async';
+import 'package:redesign/services/global_groups_service.dart';
 
 class GroupsController extends GetxController {
   final _firestore = FirebaseFirestore.instance;
@@ -50,14 +51,20 @@ class GroupsController extends GetxController {
     _myPic = await UserPreferences.getProfileImageUrl() ?? '';
     if (_myEmail.isEmpty) return;
 
-    // 1) Load from SQFlite for instant display
+    // 1) Load from local SQFlite database for instant display
     await _loadFromSqflite();
 
-    // 2) Fetch live user groups from Firestore
-    await fetchMyGroups();
+    // 2) Ensure user is joined to PLAYZ-GLOBAL & favorite PLAYZ-{sport} groups in background
+    try {
+      await GlobalGroupsService.checkAndJoinAllUserGroups(
+        targetDocId: _myEmail,
+      );
+    } catch (e) {
+      debugPrint('🔴 [GroupsController] Global groups check error: $e');
+    }
 
-    // 3) Fetch recommended groups
-    await fetchRecommendedGroups();
+    // 3) Fetch live user groups & recommended groups from Firestore in parallel
+    await Future.wait([fetchMyGroups(), fetchRecommendedGroups()]);
   }
 
   // ═══════════════════════════════════
@@ -74,7 +81,7 @@ class GroupsController extends GetxController {
   }
 
   // ═══════════════════════════════════
-  //  LIVE → FIRESTORE MY GROUPS
+  //  LIVE → FIRESTORE MY GROUPS (PARALLEL FETCH)
   // ═══════════════════════════════════
 
   Future<void> fetchMyGroups() async {
@@ -82,7 +89,7 @@ class GroupsController extends GetxController {
     isLoading.value = true;
     try {
       final userDoc = await _firestore.collection('User').doc(_myEmail).get();
-      if (!userDoc.exists) return;
+      if (!userDoc.exists || userDoc.data() == null) return;
 
       final data = userDoc.data()!;
       final groupsMap = Map<String, dynamic>.from(data['groups'] ?? {});
@@ -93,19 +100,20 @@ class GroupsController extends GetxController {
         return;
       }
 
-      // Fetch full group details for each group ID
+      // Fetch full group details in parallel for fast response
+      final groupFutures = groupsMap.keys.map(
+        (groupId) => _firestore.collection('Groups').doc(groupId).get(),
+      );
+      final groupDocs = await Future.wait(groupFutures);
+
       final List<GroupModel> liveGroups = [];
-      for (final groupId in groupsMap.keys) {
-        try {
-          final groupDoc = await _firestore
-              .collection('Groups')
-              .doc(groupId)
-              .get();
-          if (groupDoc.exists) {
+      for (final groupDoc in groupDocs) {
+        if (groupDoc.exists && groupDoc.data() != null) {
+          try {
             liveGroups.add(GroupModel.fromMap(groupDoc.data()!, groupDoc.id));
+          } catch (e) {
+            debugPrint('🔴 [GroupsController] Parse group error: $e');
           }
-        } catch (e) {
-          debugPrint('🔴 [GroupsController] Fetch group $groupId error: $e');
         }
       }
 
@@ -331,7 +339,7 @@ class GroupsController extends GetxController {
           .collection('Groups')
           .doc(req.groupId)
           .get();
-      if (groupDoc.exists) {
+      if (groupDoc.exists && groupDoc.data() != null) {
         final groupData = groupDoc.data()!;
         final groupRef = {
           'groupId': req.groupId,

@@ -29,7 +29,6 @@ class ConfirmationVenueCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
-        border: Border.all(color: AppColors.borderDark),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,8 +127,6 @@ class ConfirmationVenueCard extends StatelessWidget {
                 _infoRow(context, 'Date', dateFormatted),
                 _infoRow(context, 'Time', timeSlot),
                 _infoRow(context, 'Location', location),
-                SizedBox(height: context.heightPct(1)),
-                _weatherCard(context),
                 SizedBox(height: context.heightPct(1.5)),
                 _qrBlock(context),
               ],
@@ -171,34 +168,6 @@ class ConfirmationVenueCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _weatherCard(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
-      child: Container(
-        padding: EdgeInsets.all(context.widthPct(3)),
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.wb_sunny, color: Color(0xFFFFC107)),
-            SizedBox(width: context.widthPct(2)),
-            Expanded(
-              child: Text(
-                '24°C • Good match conditions',
-                style: AppTypography.bodySm.copyWith(
-                  color: AppColors.textPrimary,
-                  fontSize: context.responsiveFont(13),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
