@@ -399,6 +399,20 @@ class RegisterTeamController extends GetxController {
         transaction.update(tournamentRef, {'teamCount': FieldValue.increment(1)});
       });
 
+      // Save/update gameStats for registered players in Firebase
+      for (final player in selectedPlayers) {
+        if (player.userId.isNotEmpty) {
+          await FirebaseFirestore.instance.collection('User').doc(player.userId).set({
+            'gameStats': {
+              'totalGamesPlayed': FieldValue.increment(1),
+              'totalTournaments': FieldValue.increment(1),
+              'xpPoints': FieldValue.increment(150),
+              'lastUpdated': FieldValue.serverTimestamp(),
+            }
+          }, SetOptions(merge: true));
+        }
+      }
+
       debugPrint('✅ [TeamRegistration] Team $teamId successfully registered for tournament $tournamentId!');
 
       Get.snackbar(

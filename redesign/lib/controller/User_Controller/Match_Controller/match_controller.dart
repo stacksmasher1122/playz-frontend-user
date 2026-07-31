@@ -193,6 +193,19 @@ class MatchController extends GetxController {
       matchMap['id'] = docRef.id;
       matchMap['createdAt'] = FieldValue.serverTimestamp();
       await docRef.set(matchMap);
+
+      final hostId = matchMap['hostId'] as String?;
+      if (hostId != null && hostId.isNotEmpty) {
+        await _firestore.collection('User').doc(hostId).set({
+          'gameStats': {
+            'totalGamesPlayed': FieldValue.increment(1),
+            'totalHosted': FieldValue.increment(1),
+            'xpPoints': FieldValue.increment(100),
+            'lastUpdated': FieldValue.serverTimestamp(),
+          }
+        }, SetOptions(merge: true));
+      }
+
       return true;
     } catch (e) {
       debugPrint('🔴 Error creating match: $e');
@@ -250,6 +263,15 @@ class MatchController extends GetxController {
         'currentPlayers': currentPlayers,
         'collectedAmount': collectedAmount,
       });
+
+      // Update user stats in Firebase
+      await _firestore.collection('User').doc(userId).set({
+        'gameStats': {
+          'totalGamesPlayed': FieldValue.increment(1),
+          'xpPoints': FieldValue.increment(100),
+          'lastUpdated': FieldValue.serverTimestamp(),
+        }
+      }, SetOptions(merge: true));
 
       // Auto-book check if all players joined & paid for PlayZ Turfs
       final bool isPollComplete =
@@ -574,6 +596,56 @@ class MatchController extends GetxController {
       Get.snackbar(
         'Delete Failed',
         'Could not delete match poll: $e',
+        backgroundColor: AppColors.card,
+        colorText: AppColors.textPrimary,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return false;
+    }
+  }
+
+  /// Delete match entry from history (Host deletes match doc, player leaves match or removes record)
+  Future<bool> deleteMatchFromHistory(String matchId, String userDocId) async {
+    try {
+      final docRef = _firestore.collection('matches').doc(matchId);
+      final docSnap = await docRef.get();
+
+      if (docSnap.exists) {
+        final data = docSnap.data();
+        final hostId = data?['hostId'] as String?;
+        final List<dynamic> playerIds = List<dynamic>.from(data?['playerIds'] ?? []);
+
+        if (hostId == userDocId || playerIds.length <= 1) {
+          // User is host or sole player: delete entire match document from Firestore
+          await docRef.delete();
+        } else {
+          // User is participant: remove user ID from playerIds in Firestore
+          await docRef.update({
+            'playerIds': FieldValue.arrayRemove([userDocId]),
+          });
+        }
+      }
+
+      // Remove locally from allMatches list
+      allMatches.removeWhere((m) => m.id == matchId);
+      allMatches.refresh();
+
+      // Update user stats in Firebase
+      if (userDocId.isNotEmpty) {
+        await _firestore.collection('User').doc(userDocId).set({
+          'gameStats': {
+            'totalGamesPlayed': FieldValue.increment(-1),
+            'lastUpdated': FieldValue.serverTimestamp(),
+          }
+        }, SetOptions(merge: true));
+      }
+
+      return true;
+    } catch (e) {
+      debugPrint('🔴 [MatchController] Error deleting match history: $e');
+      Get.snackbar(
+        'Delete Failed',
+        'Could not delete match entry: $e',
         backgroundColor: AppColors.card,
         colorText: AppColors.textPrimary,
         snackPosition: SnackPosition.BOTTOM,
