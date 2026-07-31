@@ -127,6 +127,61 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
                     final pendingCount = _ctrl.pendingMessages.length;
 
+                    // 1. Build chronological list of all messages (0 = oldest, N-1 = newest)
+                    final List<GroupChatMessageModel> chronologicalList = [
+                      ..._ctrl.pendingMessages,
+                      ..._ctrl.messages,
+                    ];
+                    chronologicalList.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+                    // 2. Pre-calculate WhatsApp grouping rules and date tags for every message
+                    final Map<String, bool> headerMap = {};
+                    final Map<String, bool> consecutiveNextMap = {};
+                    final Map<String, String?> dateTagMap = {};
+
+                    for (int k = 0; k < chronologicalList.length; k++) {
+                      final current = chronologicalList[k];
+
+                      bool showHeader = true;
+                      bool consecutiveNext = false;
+                      String? dateTag;
+
+                      if (k == 0) {
+                        showHeader = true;
+                        dateTag = _formatDateTag(current.timestamp);
+                      } else {
+                        final prev = chronologicalList[k - 1];
+                        final dayChanged = _isDifferentDay(current.timestamp, prev.timestamp);
+
+                        if (dayChanged) {
+                          showHeader = true;
+                          dateTag = _formatDateTag(current.timestamp);
+                        } else if (prev.senderEmail == current.senderEmail) {
+                          final timeGap = current.timestamp.difference(prev.timestamp).abs();
+                          if (timeGap.inMinutes < 5) {
+                            showHeader = false;
+                          }
+                        }
+                      }
+
+                      if (k + 1 < chronologicalList.length) {
+                        final next = chronologicalList[k + 1];
+                        if (next.senderEmail == current.senderEmail) {
+                          final dayChangedWithNext = _isDifferentDay(next.timestamp, current.timestamp);
+                          if (!dayChangedWithNext) {
+                            final timeGap = next.timestamp.difference(current.timestamp).abs();
+                            if (timeGap.inMinutes < 5) {
+                              consecutiveNext = true;
+                            }
+                          }
+                        }
+                      }
+
+                      headerMap[current.id] = showHeader;
+                      consecutiveNextMap[current.id] = consecutiveNext;
+                      dateTagMap[current.id] = dateTag;
+                    }
+
                     return ListView.builder(
                       key: const PageStorageKey("group_chat_list"),
                       controller: _scrollController,
@@ -160,7 +215,11 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                           'HH:mm',
                         ).format(msg.timestamp);
 
-                        return GroupsSwipeToReply(
+                        final showSenderHeader = headerMap[msg.id] ?? true;
+                        final isConsecutiveWithNext = consecutiveNextMap[msg.id] ?? false;
+                        final dateTag = dateTagMap[msg.id];
+
+                        final bubbleWidget = GroupsSwipeToReply(
                           key: ValueKey(msg.id),
                           isMe: isMe,
                           onSwiped: () => _ctrl.setReplyTo(msg),
@@ -173,9 +232,23 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                               isMe: isMe,
                               timeStr: timeStr,
                               ctrl: _ctrl,
+                              showSenderHeader: showSenderHeader,
+                              isConsecutive: isConsecutiveWithNext,
                             ),
                           ),
                         );
+
+                        if (dateTag != null) {
+                          return Column(
+                            key: ValueKey("date_wrapper_${msg.id}"),
+                            children: [
+                              _buildDateTagWidget(context, dateTag),
+                              bubbleWidget,
+                            ],
+                          );
+                        }
+
+                        return bubbleWidget;
                       },
                     );
                   }),
@@ -460,6 +533,66 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ── Date Tag Helpers ──
+
+  bool _isDifferentDay(DateTime date1, DateTime date2) {
+    return date1.year != date2.year ||
+        date1.month != date2.month ||
+        date1.day != date2.day;
+  }
+
+  String _formatDateTag(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final msgDate = DateTime(date.year, date.month, date.day);
+
+    final dateStr = DateFormat('d MMMM yyyy').format(date);
+
+    if (msgDate == today) {
+      return 'Today, $dateStr';
+    } else if (msgDate == yesterday) {
+      return 'Yesterday, $dateStr';
+    } else {
+      final dayName = DateFormat('EEEE').format(date);
+      return '$dayName, $dateStr';
+    }
+  }
+
+  Widget _buildDateTagWidget(BuildContext context, String label) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
+        padding: EdgeInsets.symmetric(
+          horizontal: context.widthPct(4),
+          vertical: context.heightPct(0.6),
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.card.withValues(alpha: 0.9),
+          borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+          border: Border.all(color: AppColors.borderDark.withValues(alpha: 0.8)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Text(
+          label,
+          style: AppTypography.bodySm.copyWith(
+            color: AppColors.textSecondary,
+            fontSize: context.responsiveFont(12),
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.2,
+          ),
+        ),
       ),
     );
   }

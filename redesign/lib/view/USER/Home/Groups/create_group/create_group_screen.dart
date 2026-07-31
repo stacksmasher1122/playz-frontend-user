@@ -5,6 +5,10 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 
+import 'package:redesign/model/maps_model.dart';
+import 'package:redesign/controller/maps_controller.dart';
+import 'package:redesign/view/USER/Maps/maps_picker/maps_picker_screen.dart';
+
 // Internal Widgets
 import 'widgets/group_image_picker.dart';
 import 'widgets/create_group_text_field.dart';
@@ -13,6 +17,7 @@ import 'widgets/privacy_selector.dart';
 import 'widgets/member_count_slider.dart';
 import 'widgets/create_group_submit_button.dart';
 import 'widgets/create_group_overlay.dart';
+import 'widgets/group_location_picker_card.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CreateGroupScreen extends StatefulWidget {
@@ -28,6 +33,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final TextEditingController _maxMembersController = TextEditingController();
   final _ctrl = Get.find<GroupsController>();
   int _descLength = 0;
+  LocationData? _selectedLocation;
 
   String _selectedSport = '';
   final List<String> _sports = [
@@ -81,6 +87,21 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     super.dispose();
   }
 
+  Future<void> _pickLocation() async {
+    final result = await Navigator.push<LocationData>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const MapPickerScreen(isSelectOnly: true),
+      ),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _selectedLocation = result;
+      });
+    }
+  }
+
   Future<void> _handleCreate() async {
     if (_selectedSport.trim().isEmpty) {
       Get.snackbar(
@@ -92,12 +113,22 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       return;
     }
 
+    LocationData? finalLoc = _selectedLocation;
+    if (finalLoc == null && Get.isRegistered<MapsController>()) {
+      finalLoc = Get.find<MapsController>().currentLocation.value;
+    }
+
     final success = await _ctrl.createGroup(
       name: _nameController.text,
       description: _descController.text,
       sport: _selectedSport,
       isPublic: _isPublic,
       maxMembers: _maxMembers.toInt(),
+      locality: finalLoc?.subLocality ?? '',
+      city: finalLoc?.city ?? '',
+      address: finalLoc?.fullAddress ?? '',
+      latitude: finalLoc?.lat,
+      longitude: finalLoc?.lng,
     );
 
     if (success && mounted) {
@@ -184,6 +215,18 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     selectedSport: _selectedSport,
                     onSportSelected: (sport) =>
                         setState(() => _selectedSport = sport),
+                  ),
+                  SizedBox(height: context.heightPct(2.5)),
+
+                  // Group Locality / Location
+                  _buildSectionTitle(context, 'GROUP LOCALITY / LOCATION'),
+                  SizedBox(height: context.heightPct(1.2)),
+                  GroupLocationPickerCard(
+                    selectedLocation: _selectedLocation ??
+                        (Get.isRegistered<MapsController>()
+                            ? Get.find<MapsController>().currentLocation.value
+                            : null),
+                    onTapSelect: _pickLocation,
                   ),
                   SizedBox(height: context.heightPct(2.5)),
 

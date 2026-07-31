@@ -12,7 +12,7 @@ class GroupsSqflite {
     final dbPath = await getDatabasesPath();
     _db = await openDatabase(
       p.join(dbPath, 'groups.db'),
-      version: 3,
+      version: 4,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE groups (
@@ -27,7 +27,12 @@ class GroupsSqflite {
             members TEXT,
             createdAt INTEGER,
             profanityModerationMembers INTEGER DEFAULT 0,
-            profanityModerationAdmins INTEGER DEFAULT 0
+            profanityModerationAdmins INTEGER DEFAULT 0,
+            locality TEXT DEFAULT '',
+            city TEXT DEFAULT '',
+            address TEXT DEFAULT '',
+            latitude REAL,
+            longitude REAL
           )
         ''');
         await db.execute('''
@@ -82,9 +87,30 @@ class GroupsSqflite {
             // In case columns already exist or altering fails, ignore to prevent bricking
           }
         }
+        if (oldVersion < 4) {
+          await _migrateV4(db);
+        }
       },
     );
     return _db!;
+  }
+
+  static Future<void> _migrateV4(Database db) async {
+    try {
+      await db.execute('ALTER TABLE groups ADD COLUMN locality TEXT DEFAULT \'\';');
+    } catch (_) {}
+    try {
+      await db.execute('ALTER TABLE groups ADD COLUMN city TEXT DEFAULT \'\';');
+    } catch (_) {}
+    try {
+      await db.execute('ALTER TABLE groups ADD COLUMN address TEXT DEFAULT \'\';');
+    } catch (_) {}
+    try {
+      await db.execute('ALTER TABLE groups ADD COLUMN latitude REAL;');
+    } catch (_) {}
+    try {
+      await db.execute('ALTER TABLE groups ADD COLUMN longitude REAL;');
+    } catch (_) {}
   }
 
   // ═══════════════════════════════════
@@ -93,11 +119,20 @@ class GroupsSqflite {
 
   static Future<void> insertGroup(GroupModel group) async {
     final db = await database;
-    await db.insert(
-      'groups',
-      group.toSqfliteMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    try {
+      await db.insert(
+        'groups',
+        group.toSqfliteMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } catch (e) {
+      await _migrateV4(db);
+      await db.insert(
+        'groups',
+        group.toSqfliteMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
   }
 
   static Future<List<GroupModel>> getAllGroups() async {

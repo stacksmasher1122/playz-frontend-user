@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ import 'package:redesign/model/User_Models/Home_Models/Groups_Model/group_reques
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Groups_SQF/groupsSqflite.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/services/global_groups_service.dart';
+import 'package:redesign/controller/maps_controller.dart';
 
 class GroupsController extends GetxController {
   final _firestore = FirebaseFirestore.instance;
@@ -24,20 +26,19 @@ class GroupsController extends GetxController {
   final myGroups = <GroupModel>[].obs;
   final recommendedGroups = <GroupModel>[].obs;
   final pendingGroupRequests = <GroupRequestModel>[].obs;
+
   final isLoading = false.obs;
   final isLoadingRecommended = false.obs;
   final isCreating = false.obs;
+  final pickedImage = Rxn<File>();
 
-  // ── Image picking state ──
-  final Rxn<File> pickedImage = Rxn<File>();
+  StreamSubscription? _requestsSub;
 
   String _myEmail = '';
   String _myName = '';
   String _myPic = '';
 
   String get myEmail => _myEmail;
-
-  StreamSubscription? _requestsSub;
 
   @override
   void onInit() {
@@ -130,20 +131,149 @@ class GroupsController extends GetxController {
   //  LIVE → RECOMMENDED GROUPS
   // ═══════════════════════════════════
 
+  // ── Haversine Distance Helper (in km) ──
+  double _calculateDistanceKm(double lat1, double lon1, double lat2, double lon2) {
+    const p = 0.017453292519943295;
+    final a = 0.5 -
+        math.cos((lat2 - lat1) * p) / 2 +
+        math.cos(lat1 * p) *
+            math.cos(lat2 * p) *
+            (1 - math.cos((lon2 - lon1) * p)) /
+            2;
+    return 12742 * math.asin(math.sqrt(a));
+  }
+
+  // ═══════════════════════════════════
+  //  LIVE → RECOMMENDED GROUPS
+  // ═══════════════════════════════════
+
   Future<void> fetchRecommendedGroups() async {
     isLoadingRecommended.value = true;
     try {
-      final snapshot = await _firestore.collection('Groups').limit(20).get();
-
-      final results = snapshot.docs
+      // 1) Fetch all public & official groups from Firestore
+      final snapshot = await _firestore.collection('Groups').get();
+      final allGroups = snapshot.docs
           .map((doc) => GroupModel.fromMap(doc.data(), doc.id))
-          .where((g) => !g.members.containsKey(_myEmail))
           .toList();
 
-      // Sort by member count descending
-      results.sort((a, b) => b.members.length.compareTo(a.members.length));
+      // 2) Fetch user's left groups history from Firestore User doc
+      List<String> leftGroups = [];
+      if (_myEmail.isNotEmpty) {
+        final userDoc = await _firestore.collection('User').doc(_myEmail).get();
+        final rawLeft = userDoc.data()?['leftGroups'];
+        if (rawLeft is List) {
+          leftGroups = rawLeft.map((e) => e.toString()).toList();
+        }
+      }
 
-      recommendedGroups.assignAll(results);
+      // 3) Separate official PlayZ global groups vs normal groups
+      final officialPlayzGroups = allGroups.where((g) => g.isPlayZGlobalGroup).toList();
+
+      // Check if user is currently part of or was part of ALL official PlayZ groups
+      final unjoinedOfficialGroups = officialPlayzGroups.where((g) {
+        final isCurrentMember = g.members.containsKey(_myEmail);
+        final wasMember = leftGroups.contains(g.groupId);
+        return !isCurrentMember && !wasMember;
+      }).toList();
+
+      final List<GroupModel> recommendedList = [];
+
+      if (unjoinedOfficialGroups.isNotEmpty) {
+        // ── CASE 1: User has NOT been part of all official PlayZ groups ──
+        // Show the other 2-3 PlayZ official groups
+        recommendedList.addAll(unjoinedOfficialGroups.take(3));
+      } else {
+        // ── CASE 2: User IS part of all or WAS part of all official PlayZ groups ──
+        // Rule: 1 group will be PlayZ, and other 2 will be from user's favorite sports within 100km!
+
+        // A) 1 Official PlayZ Group (primary global group, e.g. PLAYZ-GLOBAL)
+        final playzOfficial = officialPlayzGroups.firstWhereOrNull(
+              (g) => g.groupId.toUpperCase() == 'PLAYZ-GLOBAL',
+            ) ??
+            (officialPlayzGroups.isNotEmpty ? officialPlayzGroups.first : null);
+
+        if (playzOfficial != null) {
+          recommendedList.add(playzOfficial);
+        }
+
+        // B) Fetch user's favorite sports
+        final userFavorites = await UserPreferences.getFavoriteSports();
+        final safeFavorites = userFavorites.isNotEmpty
+            ? userFavorites
+            : ['Cricket', 'Football', 'Badminton'];
+
+        final mostPlayedSport = safeFavorites.first;
+
+        // C) Get user location for 100 km radius filter
+        final mapsCtrl = Get.isRegistered<MapsController>()
+            ? Get.find<MapsController>()
+            : null;
+        final userLoc = mapsCtrl?.currentLocation.value;
+        final double? userLat = userLoc?.lat;
+        final double? userLng = userLoc?.lng;
+
+        // D) Candidates for non-global groups where user is not currently a member
+        final candidateGroups = allGroups.where((g) {
+          if (g.isPlayZGlobalGroup) return false;
+          if (g.members.containsKey(_myEmail)) return false;
+          return true;
+        }).toList();
+
+        // E) Filter candidates within 100 kms of user's location
+        final nearCandidates = candidateGroups.where((g) {
+          if (userLat != null && userLng != null && g.latitude != null && g.longitude != null) {
+            final distKm = _calculateDistanceKm(userLat, userLng, g.latitude!, g.longitude!);
+            return distKm <= 100.0;
+          }
+          if (userLoc != null && userLoc.city.isNotEmpty && g.city.isNotEmpty) {
+            return g.city.toLowerCase() == userLoc.city.toLowerCase();
+          }
+          return true; // Fallback if no lat/lng set
+        }).toList();
+
+        // F) Pick 1 group for the sport user plays most (within 100 km)
+        GroupModel? mostPlayedGroup = nearCandidates.firstWhereOrNull(
+          (g) => g.sport.toLowerCase() == mostPlayedSport.toLowerCase(),
+        );
+
+        // Fallback to candidate groups of most played sport if no location match
+        mostPlayedGroup ??= candidateGroups.firstWhereOrNull(
+          (g) => g.sport.toLowerCase() == mostPlayedSport.toLowerCase(),
+        );
+
+        if (mostPlayedGroup != null) {
+          recommendedList.add(mostPlayedGroup);
+        }
+
+        // G) Pick 1 group for another favorite sport (within 100 km)
+        final otherFavoriteSports = safeFavorites
+            .where((s) => s.toLowerCase() != mostPlayedSport.toLowerCase())
+            .toList();
+
+        GroupModel? secondFavoriteGroup;
+        for (final sport in otherFavoriteSports) {
+          secondFavoriteGroup = nearCandidates.firstWhereOrNull(
+            (g) => g.sport.toLowerCase() == sport.toLowerCase() && !recommendedList.contains(g),
+          );
+          if (secondFavoriteGroup != null) break;
+        }
+
+        // Fallback to candidate groups if near candidates has no match
+        if (secondFavoriteGroup == null) {
+          for (final sport in safeFavorites) {
+            secondFavoriteGroup = candidateGroups.firstWhereOrNull(
+              (g) => g.sport.toLowerCase() == sport.toLowerCase() && !recommendedList.contains(g),
+            );
+            if (secondFavoriteGroup != null) break;
+          }
+        }
+
+        if (secondFavoriteGroup != null) {
+          recommendedList.add(secondFavoriteGroup);
+        }
+      }
+
+      recommendedGroups.assignAll(recommendedList);
     } catch (e) {
       debugPrint('🔴 [GroupsController] Recommended fetch error: $e');
     } finally {
@@ -179,6 +309,11 @@ class GroupsController extends GetxController {
     required String sport,
     required bool isPublic,
     required int maxMembers,
+    String locality = '',
+    String city = '',
+    String address = '',
+    double? latitude,
+    double? longitude,
   }) async {
     if (name.trim().isEmpty) {
       Get.snackbar(
@@ -226,6 +361,11 @@ class GroupsController extends GetxController {
         creator: _myEmail,
         members: members,
         createdAt: now,
+        locality: locality.trim(),
+        city: city.trim(),
+        address: address.trim(),
+        latitude: latitude,
+        longitude: longitude,
       );
 
       // 5) Save to Firestore: Groups/{groupId}
@@ -535,6 +675,70 @@ class GroupsController extends GetxController {
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
       );
+    }
+  }
+
+  Future<bool> updateGroupLocation({
+    required String groupId,
+    required String locality,
+    required String city,
+    required String address,
+    double? latitude,
+    double? longitude,
+  }) async {
+    try {
+      final locData = {
+        'locality': locality.trim(),
+        'city': city.trim(),
+        'address': address.trim(),
+        'latitude': latitude,
+        'longitude': longitude,
+      };
+
+      // 1) Update Firestore Groups/{groupId}
+      await _firestore.collection('Groups').doc(groupId).update(locData);
+
+      // 2) Update Firestore User/{myEmail} nested group ref
+      await _firestore.collection('User').doc(_myEmail).set({
+        'groups': {
+          groupId: locData,
+        },
+      }, SetOptions(merge: true));
+
+      // 3) Update local reactive list
+      final index = myGroups.indexWhere((g) => g.groupId == groupId);
+      if (index != -1) {
+        final existing = myGroups[index];
+        final updatedGroup = GroupModel(
+          groupId: existing.groupId,
+          name: existing.name,
+          description: existing.description,
+          sport: existing.sport,
+          isPublic: existing.isPublic,
+          maxMembers: existing.maxMembers,
+          imageUrl: existing.imageUrl,
+          creator: existing.creator,
+          members: existing.members,
+          createdAt: existing.createdAt,
+          profanityModerationMembers: existing.profanityModerationMembers,
+          profanityModerationAdmins: existing.profanityModerationAdmins,
+          locality: locality.trim(),
+          city: city.trim(),
+          address: address.trim(),
+          latitude: latitude,
+          longitude: longitude,
+        );
+        myGroups[index] = updatedGroup;
+        myGroups.refresh();
+
+        // 4) Update local SQFlite DB
+        await GroupsSqflite.insertGroup(updatedGroup);
+      }
+
+      return true;
+    } catch (e) {
+      debugPrint('🔴 [GroupsController] updateGroupLocation error: $e');
+      return false;
     }
   }
 

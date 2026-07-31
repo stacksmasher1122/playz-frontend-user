@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Book/book/book_screen.dart';
 import 'package:redesign/view/USER/Home/home/home_screen.dart';
 import 'package:redesign/view/USER/More/menu/more_screen.dart';
@@ -53,6 +54,11 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
     if (widget.initialIndex != 0) {
       _navCtrl.changeTab(widget.initialIndex);
     }
+
+    final mapsCtrl = Get.isRegistered<MapsController>()
+        ? Get.find<MapsController>()
+        : Get.put(MapsController(), permanent: true);
+    mapsCtrl.autoDetectLocationOnStartup();
   }
 
   void _onTap(int index) {

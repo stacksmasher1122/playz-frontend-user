@@ -31,44 +31,80 @@ class RecommendedCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            ClipOval(
-              child: group.imageUrl.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: group.imageUrl,
-                      width: avatarRadius * 2,
-                      height: avatarRadius * 2,
-                      fit: BoxFit.cover,
-                      placeholder: (_, __) => CircleAvatar(
-                        radius: avatarRadius,
-                        backgroundColor: AppColors.surface,
-                        child: const Icon(Icons.group, color: AppColors.muted),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                ClipOval(
+                  child: group.imageUrl.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: group.imageUrl,
+                          width: avatarRadius * 2,
+                          height: avatarRadius * 2,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => CircleAvatar(
+                            radius: avatarRadius,
+                            backgroundColor: AppColors.surface,
+                            child: const Icon(Icons.group, color: AppColors.muted),
+                          ),
+                          errorWidget: (_, __, ___) => CircleAvatar(
+                            radius: avatarRadius,
+                            backgroundColor: AppColors.surface,
+                            child: const Icon(Icons.group, color: AppColors.muted),
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: avatarRadius,
+                          backgroundColor: AppColors.surface,
+                          child: const Icon(Icons.group, color: AppColors.muted),
+                        ),
+                ),
+                if (group.isPlayZGlobalGroup)
+                  Positioned(
+                    bottom: -2,
+                    right: -2,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: AppColors.background,
+                        shape: BoxShape.circle,
                       ),
-                      errorWidget: (_, __, ___) => CircleAvatar(
-                        radius: avatarRadius,
-                        backgroundColor: AppColors.surface,
-                        child: const Icon(Icons.group, color: AppColors.muted),
+                      padding: const EdgeInsets.all(1.5),
+                      child: const Icon(
+                        Icons.verified_rounded,
+                        color: Color(0xFF1DB954),
+                        size: 16,
                       ),
-                    )
-                  : CircleAvatar(
-                      radius: avatarRadius,
-                      backgroundColor: AppColors.surface,
-                      child: const Icon(Icons.group, color: AppColors.muted),
                     ),
+                  ),
+              ],
             ),
             SizedBox(width: context.widthPct(3.5)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    group.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.headlineSm.copyWith(
-                      color: AppColors.textPrimary,
-                      fontSize: context.responsiveFont(15),
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          group.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.headlineSm.copyWith(
+                            color: AppColors.textPrimary,
+                            fontSize: context.responsiveFont(15),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      if (group.isPlayZGlobalGroup) ...[
+                        SizedBox(width: context.widthPct(1)),
+                        const Icon(
+                          Icons.verified_rounded,
+                          color: Color(0xFF1DB954),
+                          size: 15,
+                        ),
+                      ],
+                    ],
                   ),
                   SizedBox(height: context.heightPct(0.4)),
                   Text(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geocoding/geocoding.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
+import 'package:redesign/controller/User_Controller/Booking_Controller/booking_controller.dart';
 import 'package:redesign/model/maps_model.dart';
 import 'package:redesign/shared_preferences/maps_preferences.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
@@ -67,44 +69,56 @@ class MapsController extends GetxController {
     labeledLocations.value = await MapsPreferences.getLabeledLocations();
     
     // Automatically fetch latest location on startup and save it
-    _silentlyFetchLatestLocation();
+    autoDetectLocationOnStartup();
   }
 
-  Future<void> _silentlyFetchLatestLocation() async {
+  /// Automatically requests permission if needed and fetches live user location on startup.
+  Future<void> autoDetectLocationOnStartup() async {
     try {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) return;
-
-      final permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-        return; // Don't request permission automatically here to avoid spamming the user
+      if (!serviceEnabled) {
+        debugPrint('⚠️ [MapsController] Location service disabled on startup.');
+        return;
       }
 
-      // Quick fallback to last known to avoid 15s timeout indoors on fresh launch
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+        debugPrint('⚠️ [MapsController] Location permission denied on startup.');
+        return;
+      }
+
+      // Quick check: last known position first for instant UI response
       Position? position = await Geolocator.getLastKnownPosition();
-      
-      if (position == null || DateTime.now().difference(position.timestamp) > const Duration(minutes: 10)) {
+
+      if (position == null || DateTime.now().difference(position.timestamp) > const Duration(minutes: 5)) {
         position = await Geolocator.getCurrentPosition(
           locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.medium, // faster lock indoors
-            timeLimit: Duration(seconds: 15),
+            accuracy: LocationAccuracy.medium,
+            timeLimit: Duration(seconds: 10),
           ),
         );
       }
 
       await reverseGeocode(position.latitude, position.longitude, isCurrentLocation: true);
-      
-      // Explicitly force GetX to refresh the observables so the UI is guaranteed to rebuild
+
+      // Force GetX to refresh observables
       currentLocation.refresh();
       displayCity.refresh();
       displayLocality.refresh();
       displayLandmark.refresh();
       displayAddress.refresh();
-      
-      // Also fetch nearby places so the suggestions are fresh
+
       fetchNearbyPlaces(position.latitude, position.longitude);
+
+      if (Get.isRegistered<BookingController>()) {
+        Get.find<BookingController>().applyFilters();
+      }
     } catch (e) {
-      // Silently fail if we can't fetch it in the background
+      debugPrint('⚠️ [MapsController] autoDetectLocationOnStartup error: $e');
     }
   }
 

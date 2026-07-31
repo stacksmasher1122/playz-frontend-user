@@ -38,7 +38,7 @@ class ActionChipWidget extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: EdgeInsets.symmetric(
-            horizontal: context.widthPct(2.0).clamp(AppDimensions.xs, AppDimensions.sm),
+            horizontal: (label.isEmpty ? context.widthPct(3.2) : context.widthPct(2.5)).clamp(AppDimensions.xs, AppDimensions.md),
             vertical: context.heightPct(1.0).clamp(AppDimensions.xs, AppDimensions.sm),
           ),
           decoration: BoxDecoration(
@@ -51,22 +51,24 @@ class ActionChipWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: AppDimensions.iconSm, color: contentColor),
-              SizedBox(width: AppDimensions.xs),
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.headlineSm.copyWith(
-                      color: contentColor,
-                      fontSize: context.responsiveFont(12),
-                      fontWeight: FontWeight.w600,
+              if (label.isNotEmpty) ...[
+                SizedBox(width: AppDimensions.xs),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.headlineSm.copyWith(
+                        color: contentColor,
+                        fontSize: context.responsiveFont(12),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
         ),

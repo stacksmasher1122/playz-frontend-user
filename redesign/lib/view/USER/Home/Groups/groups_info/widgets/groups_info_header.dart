@@ -60,6 +60,24 @@ class GroupsInfoHeader extends StatelessWidget {
                     ? const Icon(Icons.groups, size: 60, color: AppColors.muted)
                     : null,
               ),
+              if (group.isPlayZGlobalGroup)
+                Positioned(
+                  bottom: 4,
+                  right: 4,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.background, width: 3),
+                    ),
+                    padding: const EdgeInsets.all(2),
+                    child: const Icon(
+                      Icons.verified_rounded,
+                      color: Color(0xFF1DB954),
+                      size: 26,
+                    ),
+                  ),
+                ),
               if (ctrl.isAdmin.value)
                 Positioned(
                   bottom: 0,
@@ -85,17 +103,33 @@ class GroupsInfoHeader extends StatelessWidget {
           ),
         ),
         SizedBox(height: context.heightPct(2)),
-        Text(
-          group.name,
-          style: AppTypography.displayLg.copyWith(
-            color: AppColors.textPrimary,
-            fontSize: context.responsiveFont(26),
-            fontWeight: FontWeight.w900,
-            letterSpacing: -0.5,
-          ),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                group.name,
+                style: AppTypography.displayLg.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: context.responsiveFont(26),
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (group.isPlayZGlobalGroup) ...[
+              SizedBox(width: context.widthPct(1.5)),
+              const Icon(
+                Icons.verified_rounded,
+                color: Color(0xFF1DB954),
+                size: 24,
+              ),
+            ],
+          ],
         ),
         SizedBox(height: context.heightPct(0.5)),
         Text(
@@ -124,10 +158,44 @@ class GroupsInfoHeader extends StatelessWidget {
           "CREATED BY $creatorName IN $createdDate",
           style: AppTypography.labelCaps10.copyWith(
             color: AppColors.muted,
-            fontSize: context.responsiveFont(10),
+            fontSize: context.responsiveFont(11),
+            fontWeight: FontWeight.bold,
             letterSpacing: 1.0,
           ),
         ),
+        if (!group.isPlayZGlobalGroup && group.locality.isNotEmpty) ...[
+          SizedBox(height: context.heightPct(1)),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.widthPct(3),
+              vertical: context.heightPct(0.5),
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.accent.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+              border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.location_on,
+                  color: AppColors.accent,
+                  size: 14,
+                ),
+                SizedBox(width: context.widthPct(1)),
+                Text(
+                  '${group.locality}${group.city.isNotEmpty ? ', ${group.city}' : ''}',
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.accent,
+                    fontSize: context.responsiveFont(12),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }

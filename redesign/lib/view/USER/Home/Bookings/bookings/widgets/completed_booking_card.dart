@@ -125,28 +125,24 @@ class CompletedBookingCard extends StatelessWidget {
               /// ACTION BUTTONS ROW
               Row(
                 children: [
-                  Expanded(
-                    child: ActionChipWidget(
-                      Icons.directions_outlined,
-                      'Directions',
-                      onTap: _launchGoogleMaps,
-                      outlined: true,
-                    ),
+                  ActionChipWidget(
+                    Icons.location_on_outlined,
+                    '',
+                    onTap: _launchGoogleMaps,
+                    outlined: true,
                   ),
                   SizedBox(width: context.widthPct(2)),
-                  Expanded(
-                    child: ActionChipWidget(
-                      Icons.qr_code_2,
-                      'View Pass',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => BookingQrScreen(bookingData: bookingData),
-                          ),
-                        );
-                      },
-                      outlined: false,
-                    ),
+                  ActionChipWidget(
+                    Icons.qr_code_2,
+                    'QR Code',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => BookingQrScreen(bookingData: bookingData),
+                        ),
+                      );
+                    },
+                    outlined: false,
                   ),
                   SizedBox(width: context.widthPct(2)),
                   Expanded(

@@ -14,6 +14,11 @@ class GroupModel {
   final DateTime createdAt;
   final bool profanityModerationMembers;
   final bool profanityModerationAdmins;
+  final String locality;
+  final String city;
+  final String address;
+  final double? latitude;
+  final double? longitude;
 
   GroupModel({
     required this.groupId,
@@ -28,6 +33,11 @@ class GroupModel {
     required this.createdAt,
     this.profanityModerationMembers = false,
     this.profanityModerationAdmins = false,
+    this.locality = '',
+    this.city = '',
+    this.address = '',
+    this.latitude,
+    this.longitude,
   });
 
   // ── Convert to Map for Firestore ──
@@ -45,6 +55,11 @@ class GroupModel {
       'createdAt': Timestamp.fromDate(createdAt),
       'profanityModerationMembers': profanityModerationMembers,
       'profanityModerationAdmins': profanityModerationAdmins,
+      'locality': locality,
+      'city': city,
+      'address': address,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 
@@ -110,6 +125,11 @@ class GroupModel {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'profanityModerationMembers': profanityModerationMembers ? 1 : 0,
       'profanityModerationAdmins': profanityModerationAdmins ? 1 : 0,
+      'locality': locality,
+      'city': city,
+      'address': address,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 
@@ -120,7 +140,39 @@ class GroupModel {
       'name': name,
       'description': description,
       'imageUrl': imageUrl,
+      'creator': creator,
+      'locality': locality,
+      'city': city,
+      'address': address,
+      'latitude': latitude,
+      'longitude': longitude,
     };
+  }
+
+  /// Returns true ONLY if the group was created by the system AND is an official PLAYZ global group.
+  /// Manually created groups starting with 'PLAYZ-' will return false because creator != 'system'.
+  bool get isPlayZGlobalGroup {
+    return isOfficialGlobal(
+      creator: creator,
+      groupId: groupId,
+      groupName: name,
+    );
+  }
+
+  /// Static helper to check if a group is an official PlayZ Global Group.
+  static bool isOfficialGlobal({
+    required String creator,
+    required String groupId,
+    required String groupName,
+  }) {
+    final cleanCreator = creator.trim().toLowerCase();
+    final cleanId = groupId.trim().toUpperCase();
+    final cleanName = groupName.trim().toUpperCase();
+
+    final isSystem = cleanCreator == 'system';
+    final hasPlayzPrefix = cleanId.startsWith('PLAYZ-') || cleanName.startsWith('PLAYZ-');
+
+    return isSystem && hasPlayzPrefix;
   }
 
   // ── Create from Firestore ──
@@ -138,6 +190,11 @@ class GroupModel {
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       profanityModerationMembers: map['profanityModerationMembers'] ?? false,
       profanityModerationAdmins: map['profanityModerationAdmins'] ?? false,
+      locality: map['locality'] ?? '',
+      city: map['city'] ?? '',
+      address: map['address'] ?? '',
+      latitude: (map['latitude'] as num?)?.toDouble(),
+      longitude: (map['longitude'] as num?)?.toDouble(),
     );
   }
 
@@ -167,6 +224,11 @@ class GroupModel {
       ),
       profanityModerationMembers: (map['profanityModerationMembers'] ?? 0) == 1,
       profanityModerationAdmins: (map['profanityModerationAdmins'] ?? 0) == 1,
+      locality: map['locality'] ?? '',
+      city: map['city'] ?? '',
+      address: map['address'] ?? '',
+      latitude: (map['latitude'] as num?)?.toDouble(),
+      longitude: (map['longitude'] as num?)?.toDouble(),
     );
   }
 }

@@ -155,6 +155,8 @@ class GlobalGroupsService {
       String userPic = await UserPreferences.getProfileImageUrl() ?? '';
       List<String> favoriteSports = ['Cricket', 'Football', 'Badminton'];
 
+      List<String> leftGroups = [];
+
       if (userSnap.exists && userSnap.data() != null) {
         final data = userSnap.data()!;
         if (data['name'] != null && (data['name'] as String).isNotEmpty) {
@@ -166,22 +168,32 @@ class GlobalGroupsService {
         if (data['favoriteSports'] != null) {
           favoriteSports = List<String>.from(data['favoriteSports']);
         }
+        if (data['leftGroups'] != null) {
+          leftGroups = List<String>.from(data['leftGroups']);
+        }
       }
 
-      // 1) Ensure PLAYZ-GLOBAL
-      await ensureJoinedGlobalGroup(
-        userDocId: docId,
-        userName: userName,
-        userPic: userPic,
-      );
+      // 1) Ensure PLAYZ-GLOBAL (unless explicitly left)
+      if (!leftGroups.contains('PLAYZ-GLOBAL')) {
+        await ensureJoinedGlobalGroup(
+          userDocId: docId,
+          userName: userName,
+          userPic: userPic,
+        );
+      }
 
-      // 2) Sync PLAYZ-{sport_name} groups
-      await syncUserSportGroups(
-        userDocId: docId,
-        userName: userName,
-        userPic: userPic,
-        favoriteSports: favoriteSports,
-      );
+      // 2) Sync PLAYZ-{sport_name} groups (skipping any in leftGroups)
+      final sportsToSync = favoriteSports
+          .where((s) => !leftGroups.contains('PLAYZ-${s.trim()}'))
+          .toList();
+      if (sportsToSync.isNotEmpty) {
+        await syncUserSportGroups(
+          userDocId: docId,
+          userName: userName,
+          userPic: userPic,
+          favoriteSports: sportsToSync,
+        );
+      }
     } catch (e) {
       debugPrint('🔴 [GlobalGroupsService] checkAndJoinAllUserGroups error: $e');
     }

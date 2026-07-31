@@ -23,6 +23,8 @@ class GroupMessageBubble extends StatelessWidget {
   final bool isMe;
   final String timeStr;
   final GroupChatController ctrl;
+  final bool showSenderHeader;
+  final bool isConsecutive;
 
   const GroupMessageBubble({
     super.key,
@@ -30,6 +32,8 @@ class GroupMessageBubble extends StatelessWidget {
     required this.isMe,
     required this.timeStr,
     required this.ctrl,
+    this.showSenderHeader = true,
+    this.isConsecutive = false,
   });
 
   @override
@@ -38,7 +42,7 @@ class GroupMessageBubble extends StatelessWidget {
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.only(bottom: 12),
+        margin: EdgeInsets.only(bottom: isConsecutive ? 3 : 10),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
@@ -47,10 +51,10 @@ class GroupMessageBubble extends StatelessWidget {
               ? CrossAxisAlignment.end
               : CrossAxisAlignment.start,
           children: [
-            // ── Sender name (only for other people's messages) ──
-            if (!isMe)
+            // ── Sender name & profile pic (only on earliest message of a consecutive series for other senders) ──
+            if (!isMe && showSenderHeader)
               Padding(
-                padding: EdgeInsets.only(left: ResponsiveHelper.w(4), bottom: 2),
+                padding: EdgeInsets.only(left: ResponsiveHelper.w(4), bottom: 3, top: 4),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

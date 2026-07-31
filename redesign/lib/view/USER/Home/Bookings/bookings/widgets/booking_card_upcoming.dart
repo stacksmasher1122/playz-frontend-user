@@ -320,6 +320,7 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
                 Wrap(
                   spacing: context.widthPct(2.5),
                   runSpacing: context.heightPct(1),
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     ActionChipWidget(
                       hasActiveMatch ? Icons.play_circle_fill : Icons.sports_score,
@@ -333,8 +334,8 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
                       },
                     ),
                     ActionChipWidget(
-                      Icons.qr_code,
-                      'View QR Code',
+                      Icons.qr_code_2,
+                      'QR Code',
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -344,8 +345,8 @@ class _BookingCardUpcomingState extends State<BookingCardUpcoming> {
                       },
                     ),
                     ActionChipWidget(
-                      Icons.directions,
-                      'Directions',
+                      Icons.location_on,
+                      '',
                       onTap: _launchGoogleMaps,
                     ),
                   ],

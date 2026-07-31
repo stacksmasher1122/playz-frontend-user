@@ -187,36 +187,58 @@ class _SearchResultTileState extends State<_SearchResultTile> {
       child: Row(
         children: [
           // ── Avatar ──
-          group.imageUrl.isNotEmpty
-              ? ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: group.imageUrl,
-                    width: avatarRadius * 2,
-                    height: avatarRadius * 2,
-                    fit: BoxFit.cover,
-                    placeholder: (_, __) => CircleAvatar(
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              group.imageUrl.isNotEmpty
+                  ? ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: group.imageUrl,
+                        width: avatarRadius * 2,
+                        height: avatarRadius * 2,
+                        fit: BoxFit.cover,
+                        placeholder: (_, __) => CircleAvatar(
+                          radius: avatarRadius,
+                          backgroundColor: AppColors.surface,
+                        ),
+                        errorWidget: (_, __, ___) => CircleAvatar(
+                          radius: avatarRadius,
+                          backgroundColor: AppColors.surface,
+                          child: const Icon(Icons.group, color: AppColors.muted, size: 20),
+                        ),
+                      ),
+                    )
+                  : CircleAvatar(
                       radius: avatarRadius,
                       backgroundColor: AppColors.surface,
+                      child: Text(
+                        group.name.isNotEmpty ? group.name[0].toUpperCase() : 'G',
+                        style: AppTypography.headlineSm.copyWith(
+                          color: AppColors.accent,
+                          fontSize: context.responsiveFont(18),
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                     ),
-                    errorWidget: (_, __, ___) => CircleAvatar(
-                      radius: avatarRadius,
-                      backgroundColor: AppColors.surface,
-                      child: const Icon(Icons.group, color: AppColors.muted, size: 20),
+              if (group.isPlayZGlobalGroup)
+                Positioned(
+                  bottom: -2,
+                  right: -2,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.background,
+                      shape: BoxShape.circle,
                     ),
-                  ),
-                )
-              : CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundColor: AppColors.surface,
-                  child: Text(
-                    group.name.isNotEmpty ? group.name[0].toUpperCase() : 'G',
-                    style: AppTypography.headlineSm.copyWith(
-                      color: AppColors.accent,
-                      fontSize: context.responsiveFont(18),
-                      fontWeight: FontWeight.w800,
+                    padding: const EdgeInsets.all(1.5),
+                    child: const Icon(
+                      Icons.verified_rounded,
+                      color: Color(0xFF1DB954),
+                      size: 16,
                     ),
                   ),
                 ),
+            ],
+          ),
           SizedBox(width: context.widthPct(3)),
 
           // ── Info ──
@@ -238,6 +260,14 @@ class _SearchResultTileState extends State<_SearchResultTile> {
                         ),
                       ),
                     ),
+                    if (group.isPlayZGlobalGroup) ...[
+                      SizedBox(width: context.widthPct(1)),
+                      const Icon(
+                        Icons.verified_rounded,
+                        color: Color(0xFF1DB954),
+                        size: 15,
+                      ),
+                    ],
                     if (!group.isPublic) ...[
                       SizedBox(width: context.widthPct(1)),
                       const Icon(

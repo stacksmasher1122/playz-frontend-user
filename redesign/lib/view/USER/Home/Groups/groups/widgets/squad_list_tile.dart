@@ -151,32 +151,54 @@ class SquadListTile extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    // Group Avatar
-                    group.imageUrl.isNotEmpty
-                        ? ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: group.imageUrl,
-                              width: avatarRadius * 2,
-                              height: avatarRadius * 2,
-                              fit: BoxFit.cover,
-                              placeholder: (_, __) => _buildShimmerCircle(context, avatarRadius),
-                              errorWidget: (_, __, ___) => _buildDefaultAvatar(context, avatarRadius),
-                            ),
-                          )
-                        : CircleAvatar(
-                            radius: avatarRadius,
-                            backgroundColor: AppColors.surface,
-                            child: Text(
-                              group.name.isNotEmpty
-                                  ? group.name[0].toUpperCase()
-                                  : 'G',
-                              style: AppTypography.headlineSm.copyWith(
-                                color: AppColors.accent,
-                                fontSize: context.responsiveFont(22),
-                                fontWeight: FontWeight.w800,
+                    // Group Avatar with Verified Green Stamp Tick for Official Global Groups
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        group.imageUrl.isNotEmpty
+                            ? ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: group.imageUrl,
+                                  width: avatarRadius * 2,
+                                  height: avatarRadius * 2,
+                                  fit: BoxFit.cover,
+                                  placeholder: (_, __) => _buildShimmerCircle(context, avatarRadius),
+                                  errorWidget: (_, __, ___) => _buildDefaultAvatar(context, avatarRadius),
+                                ),
+                              )
+                            : CircleAvatar(
+                                radius: avatarRadius,
+                                backgroundColor: AppColors.surface,
+                                child: Text(
+                                  group.name.isNotEmpty
+                                      ? group.name[0].toUpperCase()
+                                      : 'G',
+                                  style: AppTypography.headlineSm.copyWith(
+                                    color: AppColors.accent,
+                                    fontSize: context.responsiveFont(22),
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
+                        if (group.isPlayZGlobalGroup)
+                          Positioned(
+                            bottom: -2,
+                            right: -2,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: AppColors.background,
+                                shape: BoxShape.circle,
+                              ),
+                              padding: const EdgeInsets.all(1.5),
+                              child: const Icon(
+                                Icons.verified_rounded,
+                                color: Color(0xFF1DB954),
+                                size: 18,
                               ),
                             ),
                           ),
+                      ],
+                    ),
                     SizedBox(width: context.widthPct(4)),
                     Expanded(
                       child: Column(
@@ -200,11 +222,20 @@ class SquadListTile extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: context.widthPct(1)),
-                                    Text(
-                                      _sportEmoji(group.sport),
-                                      style: TextStyle(fontSize: context.responsiveFont(14)),
-                                    ),
+                                    if (group.isPlayZGlobalGroup) ...[
+                                      SizedBox(width: context.widthPct(1)),
+                                      const Icon(
+                                        Icons.verified_rounded,
+                                        color: Color(0xFF1DB954),
+                                        size: 16,
+                                      ),
+                                    ] else ...[
+                                      SizedBox(width: context.widthPct(1)),
+                                      Text(
+                                        _sportEmoji(group.sport),
+                                        style: TextStyle(fontSize: context.responsiveFont(14)),
+                                      ),
+                                    ],
                                   ],
                                 ),
                               ),

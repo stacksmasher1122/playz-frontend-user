@@ -52,13 +52,6 @@ class QrSection extends StatelessWidget {
                 color: AppColors.card,
                 borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
                 border: Border.all(color: AppColors.borderDark),
-                boxShadow: [
-                  BoxShadow(
-                    color: glowColor.withValues(alpha: 0.35),
-                    blurRadius: 12,
-                    spreadRadius: 2,
-                  ),
-                ],
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(context.minDimensionPct(2.5)),

@@ -436,17 +436,6 @@ class GroupInfoController extends GetxController {
     final group = currentGroup.value!;
     final groupId = group.groupId;
 
-    // PlayZ Global groups cannot be left
-    if (groupId.startsWith('PLAYZ-')) {
-      Get.snackbar(
-        'Notice',
-        'PlayZ Global community groups cannot be left.',
-        backgroundColor: Colors.orange,
-        colorText: Colors.black,
-      );
-      return;
-    }
-
     try {
       // 1) Instantly update local state in GroupsController so UI updates immediately
       if (Get.isRegistered<GroupsController>()) {
@@ -470,7 +459,18 @@ class GroupInfoController extends GetxController {
       if (Get.isOverlaysOpen) {
         Get.back();
       }
-      Get.until((route) => route.isFirst || Get.currentRoute == '/home');
+      if (Get.context != null) {
+        Navigator.of(Get.context!).popUntil((route) {
+          return route.isFirst ||
+              route.settings.name == 'GroupsScreen' ||
+              route.settings.name == '/groups';
+        });
+      } else {
+        Get.until((route) =>
+            route.isFirst ||
+            route.settings.name == 'GroupsScreen' ||
+            route.settings.name == '/groups');
+      }
 
       // 4) Perform Firestore network operations asynchronously in background
       _performBackgroundLeave(group, groupId);
@@ -500,9 +500,10 @@ class GroupInfoController extends GetxController {
         FieldPath(['members', myEmail]): FieldValue.delete(),
       });
 
-      // Remove group reference from user doc in Firestore
+      // Remove group reference from user doc and record left group in leftGroups array
       await _firestore.collection('User').doc(myEmail).update({
         FieldPath(['groups', groupId]): FieldValue.delete(),
+        'leftGroups': FieldValue.arrayUnion([groupId]),
       });
 
       // Trigger full background sync in GroupsController
