@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 
 import '../../../model/User_Models/Tournament_Model/bracket_model.dart';
 import '../../../model/User_Models/Tournament_Model/tournament_team_model.dart';
@@ -129,6 +130,9 @@ class BracketController extends GetxController {
 
     if (confirm == true) {
       try {
+        // Guarantee bracket is freshly generated for all registered teams before starting
+        await generateBracketDraft(forceGenerate: true);
+
         await FirebaseFirestore.instance
             .collection('tournaments')
             .doc(tournamentId)
@@ -150,6 +154,7 @@ class BracketController extends GetxController {
           "Failed to start tournament: $e",
           backgroundColor: Colors.red,
           colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
         );
       }
     }
@@ -173,12 +178,26 @@ class BracketController extends GetxController {
         .collection('bracket')
         .get();
 
-    // Only auto-generate if bracket does not exist in Firestore yet
-    if (oldMatches.docs.isNotEmpty && !forceShuffle && !forceGenerate) {
+    if (teams.length < 2) return;
+
+    int expectedMatches = 0;
+    if (matchType == 'knockout') {
+      int nextPowerOf2 = pow(2, (log(teams.length) / log(2)).ceil()).toInt();
+      expectedMatches = nextPowerOf2 - 1;
+    }
+
+    final bool matchCountMismatch = matchType == 'knockout' && oldMatches.docs.length != expectedMatches;
+    final bool hasStartedMatches = oldMatches.docs.any((d) => d.data()['status'] == 'in_progress' || d.data()['status'] == 'completed');
+
+    // Auto-regenerate if bracket does not exist, or if team count changed
+    if (oldMatches.docs.isNotEmpty && !forceShuffle && !forceGenerate && !matchCountMismatch) {
       return;
     }
 
-    if (teams.length < 2) return;
+    // Do not wipe if matches have actually started unless explicitly forced
+    if (hasStartedMatches && !forceGenerate && !forceShuffle) {
+      return;
+    }
 
     List<TournamentTeamModel> teamList = List.from(teams);
     if (forceShuffle) {
@@ -267,7 +286,6 @@ class BracketController extends GetxController {
         String nextSlot = (i % 2 == 0) ? 'A' : 'B';
         assert(nextSlot == 'A' || nextSlot == 'B', "nextMatchSlot must be 'A' or 'B'");
 
-        // Recreate the match with nextMatchId and nextMatchSlot
         currentRoundMatches[i] = BracketMatchModel(
           id: currentRoundMatches[i].id,
           round: currentRoundMatches[i].round,
@@ -298,17 +316,37 @@ class BracketController extends GetxController {
       );
     }
 
-    // Fill byes
+    // Fill byes and auto-advance bye winners to round 2
     for (int i = standardMatches; i < standardMatches + byes; i++) {
+      final byeTeamId = teamList[teamIdx++].id;
       round1[i] = BracketMatchModel(
         id: round1[i].id,
         round: round1[i].round,
-        teamAId: teamList[teamIdx++].id,
+        teamAId: byeTeamId,
         teamBId: null, // Bye
-        status: round1[i].status,
+        status: 'completed',
+        winnerId: byeTeamId,
         nextMatchId: round1[i].nextMatchId,
         nextMatchSlot: round1[i].nextMatchSlot,
       );
+
+      if (round1[i].nextMatchId != null && round1[i].nextMatchSlot != null && bracketRounds.containsKey(2)) {
+        final nextId = round1[i].nextMatchId!;
+        final nextSlot = round1[i].nextMatchSlot!;
+        int targetIdx = bracketRounds[2]!.indexWhere((m) => m.id == nextId);
+        if (targetIdx != -1) {
+          final targetMatch = bracketRounds[2]![targetIdx];
+          bracketRounds[2]![targetIdx] = BracketMatchModel(
+            id: targetMatch.id,
+            round: targetMatch.round,
+            teamAId: nextSlot == 'A' ? byeTeamId : targetMatch.teamAId,
+            teamBId: nextSlot == 'B' ? byeTeamId : targetMatch.teamBId,
+            status: targetMatch.status,
+            nextMatchId: targetMatch.nextMatchId,
+            nextMatchSlot: targetMatch.nextMatchSlot,
+          );
+        }
+      }
     }
 
     // Flatten all matches
@@ -399,23 +437,41 @@ class BracketController extends GetxController {
   }
 
   void shuffleBracket() {
+    if (isTournamentStarted || tournamentStatus.value == 'in_progress') {
+      Get.snackbar(
+        "Action Locked",
+        "Matches cannot be shuffled after the tournament has started.",
+        backgroundColor: AppColors.card,
+        colorText: AppColors.textPrimary,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
     Get.dialog(
       AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: const Text("Shuffle Bracket?", style: TextStyle(color: Colors.white)),
-        content: const Text("This will re-randomize team placements. Are you sure?", style: TextStyle(color: Colors.white70)),
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const Icon(Icons.shuffle_rounded, color: AppColors.accent, size: 24),
+            const SizedBox(width: 8),
+            Text("Shuffle Bracket?", style: AppTypography.headlineSm.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Text("This will re-randomize team placements. Are you sure?", style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text("Cancel"),
+            child: Text("Cancel", style: AppTypography.bodySm.copyWith(color: AppColors.muted)),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
             onPressed: () {
               Get.back();
               generateBracketDraft(forceShuffle: true);
             },
-            child: const Text("Shuffle"),
+            child: Text("Shuffle", style: AppTypography.headlineSm.copyWith(color: AppColors.background, fontWeight: FontWeight.bold)),
           ),
         ],
       )

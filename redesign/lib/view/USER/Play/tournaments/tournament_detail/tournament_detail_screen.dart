@@ -34,7 +34,19 @@ class TournamentDetailScreen extends StatefulWidget {
 class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
 
   bool get isOrganizer => widget.data['organizerId'] == widget.currentUserId;
-  bool get isOpen => widget.data['status'] == 'registration_open';
+  bool get isOpen {
+    final status = (widget.data['status'] ?? '').toString();
+    if (status != 'registration_open') return false;
+
+    final now = DateTime.now();
+    final Timestamp? start = widget.data['startDate'];
+    final Timestamp? end = widget.data['endDate'];
+
+    if (start != null && now.isAfter(start.toDate())) return false;
+    if (end != null && now.isAfter(end.toDate())) return false;
+
+    return true;
+  }
   bool get isInProgress => widget.data['status'] == 'in_progress';
 
   bool userHasRegisteredTeam = false;

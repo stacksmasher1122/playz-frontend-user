@@ -16,7 +16,8 @@ import '../tournaments/tournaments_list_screen.dart';
 import 'widgets/game_diary_section.dart';
 
 class GameDiaryScreen extends StatefulWidget {
-  const GameDiaryScreen({super.key});
+  final int initialTabIndex;
+  const GameDiaryScreen({super.key, this.initialTabIndex = 0});
 
   @override
   State<GameDiaryScreen> createState() => _GameDiaryScreenState();
@@ -29,7 +30,11 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: widget.initialTabIndex.clamp(0, 2),
+    );
     _loadUserData();
   }
 

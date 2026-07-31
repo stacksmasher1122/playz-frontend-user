@@ -28,10 +28,14 @@ class BracketMatchmakingScreen extends StatefulWidget {
 
 class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
   late BracketController controller;
+  late PageController _pageController;
+  int _selectedRoundIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: 0);
+
     // Use the existing bracket controller if it's there
     if (Get.isRegistered<BracketController>(tag: widget.tournamentId)) {
       controller = Get.find<BracketController>(tag: widget.tournamentId);
@@ -41,6 +45,12 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
         tag: widget.tournamentId,
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   String _getTeamName(String? id) {
@@ -60,6 +70,35 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
       }
     }
     return name;
+  }
+
+  String _getRoundDisplayLabel(String key, int index, int totalRounds, int matchCount) {
+    if (!key.startsWith('Round')) {
+      return key;
+    }
+
+    if (totalRounds >= 4) {
+      if (index == totalRounds - 1) return "Final";
+      if (index == totalRounds - 2) return "Semi Final";
+      if (index == totalRounds - 3) return "Quarter Final";
+      if (index == totalRounds - 4) return "Round of 16";
+    } else if (totalRounds == 3) {
+      if (index == 2) return "Final";
+      if (index == 1) return "Semi Final";
+      if (index == 0) return "Quarter Final";
+    } else if (totalRounds == 2) {
+      if (index == 1) return "Final";
+      if (index == 0) return "Semi Final";
+    } else if (totalRounds == 1) {
+      return "Final";
+    }
+
+    if (matchCount == 1) return "Final";
+    if (matchCount == 2) return "Semi Final";
+    if (matchCount == 4) return "Quarter Final";
+    if (matchCount == 8) return "Round of 16";
+
+    return "Round ${index + 1}";
   }
 
   Future<void> _handleMatchTap(BracketMatchModel match) async {
@@ -239,15 +278,12 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
         // Filter out unplayed placeholder matches (both teams null/TBD) when tournament is done
         final displayMatches = allMatchesCompleted
             ? controller.matches.where((m) {
-                // Keep: completed matches, bye matches, or matches that actually had teams assigned
                 return m.status == 'completed' ||
-                    (m.teamAId != null && m.teamBId == null) || // bye
-                    (m.teamAId == null && m.teamBId != null) || // bye
-                    (m.teamAId != null && m.teamBId != null);   // real match
+                    (m.teamAId != null && m.teamBId == null) ||
+                    (m.teamAId == null && m.teamBId != null) ||
+                    (m.teamAId != null && m.teamBId != null);
               }).where((m) {
-                // Additionally hide unscheduled matches that never got both teams
                 if (m.status == 'unscheduled' && (m.teamAId == null || m.teamBId == null)) {
-                  // This is a future-round placeholder that was never filled
                   return false;
                 }
                 return true;
@@ -278,7 +314,7 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
           });
         }
 
-        // Determine the final round label (e.g. "Final" for last round in knockout)
+        // Determine final round key
         String? finalRoundKey;
         if (sortedKeys.isNotEmpty) {
           final lastKey = sortedKeys.last;
@@ -287,7 +323,7 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
           }
         }
 
-        // Find the tournament champion (winner of the final match)
+        // Find the tournament champion
         String? championName;
         if (allMatchesCompleted && finalRoundKey != null) {
           final finalMatch = grouped[finalRoundKey]!.first;
@@ -298,8 +334,14 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
 
         final bool showStartBanner = !controller.isTournamentStarted && !allMatchesCompleted;
 
+        // Ensure current page index is valid
+        if (_selectedRoundIndex >= sortedKeys.length) {
+          _selectedRoundIndex = (sortedKeys.length - 1).clamp(0, 99);
+        }
+
         return Column(
           children: [
+            // Start Tournament Banner for Organizer
             if (showStartBanner)
               Container(
                 margin: EdgeInsets.all(context.widthPct(4)),
@@ -330,121 +372,215 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
                     ),
                     if (widget.isOrganizer) ...[
                       SizedBox(height: context.heightPct(1.5)),
-                      SizedBox(
-                        width: double.infinity,
-                        height: context.heightPct(5).clamp(42.0, 50.0),
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.accent,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
-                            ),
-                          ),
-                          icon: const Icon(Icons.play_circle_fill_rounded, color: AppColors.background),
-                          label: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              "START TOURNAMENT",
-                              style: AppTypography.headlineSm.copyWith(
-                                color: AppColors.background,
-                                fontWeight: FontWeight.bold,
-                                fontSize: context.responsiveFont(14),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: context.heightPct(5).clamp(42.0, 50.0),
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.accent,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.play_circle_fill_rounded, color: AppColors.background),
+                                label: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    "START TOURNAMENT",
+                                    style: AppTypography.headlineSm.copyWith(
+                                      color: AppColors.background,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: context.responsiveFont(14),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () => controller.startTournament(context),
                               ),
                             ),
                           ),
-                          onPressed: () => controller.startTournament(context),
-                        ),
+                          SizedBox(width: context.widthPct(2)),
+                          SizedBox(
+                            height: context.heightPct(5).clamp(42.0, 50.0),
+                            child: OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(color: AppColors.accent, width: 1.2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                                ),
+                              ),
+                              icon: const Icon(Icons.shuffle_rounded, color: AppColors.accent, size: 18),
+                              label: Text(
+                                "Shuffle",
+                                style: AppTypography.headlineSm.copyWith(
+                                  color: AppColors.accent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: context.responsiveFont(13),
+                                ),
+                              ),
+                              onPressed: () => controller.shuffleBracket(),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ],
                 ),
               ),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
-                itemCount: sortedKeys.length + (allMatchesCompleted ? 1 : 0),
-                itemBuilder: (context, index) {
-                  // Show completion banner at the top
-                  if (allMatchesCompleted && index == 0) {
-                    return Container(
-                      margin: EdgeInsets.only(bottom: context.heightPct(2)),
-                      padding: EdgeInsets.all(context.widthPct(4)),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.accent.withValues(alpha: 0.15),
-                            AppColors.accent.withValues(alpha: 0.05),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
-                        border: Border.all(color: AppColors.accent.withValues(alpha: 0.5)),
+
+            // Tournament Complete Banner
+            if (allMatchesCompleted)
+              Container(
+                margin: EdgeInsets.all(context.widthPct(4)),
+                padding: EdgeInsets.all(context.widthPct(4)),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.accent.withValues(alpha: 0.15),
+                      AppColors.accent.withValues(alpha: 0.05),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                  border: Border.all(color: AppColors.accent.withValues(alpha: 0.5)),
+                ),
+                child: Column(
+                  children: [
+                    const Icon(Icons.emoji_events_rounded, color: AppColors.accent, size: 36),
+                    SizedBox(height: context.heightPct(1)),
+                    Text(
+                      "Tournament Complete",
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.accent,
+                        fontSize: context.responsiveFont(16),
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: Column(
-                        children: [
-                          const Icon(Icons.emoji_events_rounded, color: AppColors.accent, size: 36),
-                          SizedBox(height: context.heightPct(1)),
-                          Text(
-                            "Tournament Complete",
-                            style: AppTypography.headlineSm.copyWith(
-                              color: AppColors.accent,
-                              fontSize: context.responsiveFont(16),
-                              fontWeight: FontWeight.bold,
+                    ),
+                    if (championName != null) ...[
+                      SizedBox(height: context.heightPct(0.5)),
+                      Text(
+                        "Champion: $championName",
+                        style: AppTypography.bodyLg.copyWith(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: context.responsiveFont(14),
+                        ),
+                      ),
+                    ],
+                    SizedBox(height: context.heightPct(1)),
+                    Text(
+                      "All ${realMatches.length} matches completed",
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.muted,
+                        fontSize: context.responsiveFont(12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            // Horizontally Scrollable Round Selection Pills Bar (Reference UI style)
+            if (sortedKeys.isNotEmpty)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.widthPct(4),
+                  vertical: context.heightPct(1),
+                ),
+                child: Row(
+                  children: List.generate(sortedKeys.length, (idx) {
+                    final isSelected = idx == _selectedRoundIndex;
+                    final key = sortedKeys[idx];
+                    final matches = grouped[key]!;
+                    final label = _getRoundDisplayLabel(key, idx, sortedKeys.length, matches.length);
+
+                    return Padding(
+                      padding: EdgeInsets.only(right: context.widthPct(2.5)),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+                          onTap: () {
+                            setState(() => _selectedRoundIndex = idx);
+                            if (_pageController.hasClients) {
+                              _pageController.animateToPage(
+                                idx,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.widthPct(4),
+                              vertical: context.heightPct(1.2),
                             ),
-                          ),
-                          if (championName != null) ...[
-                            SizedBox(height: context.heightPct(0.5)),
-                            Text(
-                              "Champion: $championName",
-                              style: AppTypography.bodyLg.copyWith(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: context.responsiveFont(14),
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.accent : AppColors.surface,
+                              borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+                              border: Border.all(
+                                color: isSelected ? AppColors.accent : AppColors.borderDark,
+                                width: 1.2,
+                              ),
+                              boxShadow: isSelected ? [
+                                BoxShadow(
+                                  color: AppColors.accent.withValues(alpha: 0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ] : [],
+                            ),
+                            child: Text(
+                              label,
+                              style: AppTypography.headlineSm.copyWith(
+                                color: isSelected ? AppColors.background : AppColors.textPrimary,
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                                fontSize: context.responsiveFont(13),
                               ),
                             ),
-                          ],
-                          SizedBox(height: context.heightPct(1)),
-                          Text(
-                            "All ${realMatches.length} matches completed",
-                            style: AppTypography.bodySm.copyWith(
-                              color: AppColors.muted,
-                              fontSize: context.responsiveFont(12),
-                            ),
                           ),
-                        ],
+                        ),
                       ),
                     );
-                  }
+                  }),
+                ),
+              ),
 
-                  final adjustedIndex = allMatchesCompleted ? index - 1 : index;
-                  String key = sortedKeys[adjustedIndex];
-                  List<BracketMatchModel> matches = grouped[key]!;
+            SizedBox(height: context.heightPct(1)),
 
-                  // Rename the final round for display
-                  String displayKey = key;
-                  if (key == finalRoundKey) {
-                    displayKey = "Final";
-                  } else if (sortedKeys.length > 2 && key == sortedKeys[sortedKeys.length - 2]) {
-                    if (key.startsWith('Round') && matches.length <= 2) {
-                      displayKey = "Semi-Final";
-                    }
-                  }
+            // Round-by-Round Sliding PageView
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (pageIndex) {
+                  setState(() {
+                    _selectedRoundIndex = pageIndex;
+                  });
+                },
+                itemCount: sortedKeys.length,
+                itemBuilder: (context, roundIndex) {
+                  final key = sortedKeys[roundIndex];
+                  final matches = grouped[key]!;
+                  final displayLabel = _getRoundDisplayLabel(key, roundIndex, sortedKeys.length, matches.length);
 
-                  // Compute round completion summary
                   final completedInRound = matches.where((m) => m.status == 'completed').length;
                   final totalInRound = matches.where((m) => m.teamAId != null && m.teamBId != null).length;
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  return ListView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: context.heightPct(1.5)),
+                        padding: EdgeInsets.symmetric(vertical: context.heightPct(1)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              displayKey,
-                              style: AppTypography.bodyLg.copyWith(
+                              displayLabel,
+                              style: AppTypography.headlineSm.copyWith(
                                 color: AppColors.accent,
                                 fontWeight: FontWeight.bold,
                                 fontSize: context.responsiveFont(15),
@@ -455,7 +591,8 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
                                 "$completedInRound/$totalInRound played",
                                 style: AppTypography.bodySm.copyWith(
                                   color: AppColors.muted,
-                                  fontSize: context.responsiveFont(11),
+                                  fontSize: context.responsiveFont(12),
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                           ],

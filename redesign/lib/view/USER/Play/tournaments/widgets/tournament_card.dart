@@ -165,6 +165,34 @@ class TournamentCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                    )
+                  else if (start != null && DateTime.now().isAfter(start.toDate()))
+                    Container(
+                      margin: EdgeInsets.only(right: context.widthPct(2)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.widthPct(2),
+                        vertical: context.heightPct(0.5),
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.muted.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(context.minDimensionPct(2)),
+                        border: Border.all(color: AppColors.muted.withValues(alpha: 0.6)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.lock_rounded, color: AppColors.muted, size: 12),
+                          SizedBox(width: context.widthPct(1)),
+                          Text(
+                            "REG. CLOSED",
+                            style: AppTypography.labelCaps10.copyWith(
+                              color: AppColors.muted,
+                              fontWeight: FontWeight.bold,
+                              fontSize: context.responsiveFont(10),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   Container(
                     padding: EdgeInsets.symmetric(

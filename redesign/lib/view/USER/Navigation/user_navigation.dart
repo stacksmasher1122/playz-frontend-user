@@ -21,7 +21,12 @@ class UserNavController extends GetxController {
 
 class UserAppNavShell extends StatefulWidget {
   final int initialIndex;
-  const UserAppNavShell({super.key, this.initialIndex = 0});
+  final int playInitialTab;
+  const UserAppNavShell({
+    super.key,
+    this.initialIndex = 0,
+    this.playInitialTab = 0,
+  });
 
   @override
   State<UserAppNavShell> createState() => _UserAppNavShellState();
@@ -30,17 +35,18 @@ class UserAppNavShell extends StatefulWidget {
 class _UserAppNavShellState extends State<UserAppNavShell> {
   late final UserNavController _navCtrl;
 
-  final _pages = const [
-    UserHomePage(),
-    BookTurfScreen(),
-    GameDiaryScreen(),
-    TrainerDiscoveryScreen(),
-    MoreScreen(),
-  ];
+  late final List<Widget> _pages;
 
   @override
   void initState() {
     super.initState();
+    _pages = [
+      const UserHomePage(),
+      const BookTurfScreen(),
+      GameDiaryScreen(initialTabIndex: widget.playInitialTab),
+      const TrainerDiscoveryScreen(),
+      const MoreScreen(),
+    ];
     _navCtrl = Get.isRegistered<UserNavController>()
         ? Get.find<UserNavController>()
         : Get.put(UserNavController());

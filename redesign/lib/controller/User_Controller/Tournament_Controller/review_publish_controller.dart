@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
+import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 
 import '../../../shared_preferences/userPreferences.dart';
 import 'create_tournament_controller.dart';
@@ -162,8 +163,8 @@ class ReviewPublishController extends GetxController {
         duration: const Duration(seconds: 3),
       );
 
-      // Navigate to detail screen (stub for now until Step 6 is done)
-      // Get.offAll(() => TournamentDetailScreen(tournamentId: tournamentId));
+      // Navigate to Play -> Tournament section directly
+      Get.offAll(() => const UserAppNavShell(initialIndex: 2, playInitialTab: 1));
 
     } catch (e) {
       Get.snackbar(

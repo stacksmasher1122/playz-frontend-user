@@ -153,8 +153,11 @@ class _WinnersSectionState extends State<WinnersSection> {
           return const SizedBox.shrink();
         }
 
-        final List<dynamic> customWinners = tournamentData['customTierWinners'] as List<dynamic>? ?? [];
         final isCompleted = status == 'completed';
+        final List<dynamic> customWinners = tournamentData['customTierWinners'] as List<dynamic>? ?? [];
+        final prizePool = tournamentData['prizePool'] ?? widget.data['prizePool'] ?? {};
+        final List<dynamic> prizeTiers = prizePool['tiers'] as List<dynamic>? ?? [];
+        final customTiers = prizeTiers.where((t) => (t['type'] ?? '') == 'custom').toList();
 
         return Container(
           padding: EdgeInsets.all(context.widthPct(4)),
@@ -249,7 +252,11 @@ class _WinnersSectionState extends State<WinnersSection> {
 
               // Render Rank Tiers via Live Leaderboard
               StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).collection('leaderboard').snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection('tournaments')
+                    .doc(widget.tournamentId)
+                    .collection('leaderboard')
+                    .snapshots(),
                 builder: (context, lbSnapshot) {
                   if (lbSnapshot.hasError || !lbSnapshot.hasData || lbSnapshot.data!.docs.isEmpty) {
                     return Padding(
@@ -284,99 +291,89 @@ class _WinnersSectionState extends State<WinnersSection> {
                     return matchesPlayedB.compareTo(matchesPlayedA);
                   });
 
+                  int parseRank(dynamic tier) {
+                    if (tier is! Map) return 1;
+                    final raw = tier['rankPosition'] ?? tier['rank'];
+                    if (raw is num) return raw.toInt();
+                    if (raw != null) return int.tryParse(raw.toString()) ?? 1;
+                    return 1;
+                  }
+
                   final rankTiers = prizeTiers.where((t) => (t['type'] ?? '') == 'rank').toList();
-                  final displayTiers = rankTiers.isNotEmpty ? rankTiers : [
-                    {'rank': 1, 'title': isCompleted ? '1st Place Winner' : 'Current Leader'},
-                    if (entries.length > 1) {'rank': 2, 'title': '2nd Place'},
-                    if (entries.length > 2) {'rank': 3, 'title': '3rd Place'},
-                  ];
+                  rankTiers.sort((a, b) => parseRank(a).compareTo(parseRank(b)));
 
-                  return Column(
-                    children: displayTiers.map((tier) {
-                      int rank = 1;
-                      if (tier['rank'] is int) {
-                        rank = tier['rank'];
-                      } else if (tier['rank'] != null) {
-                        rank = int.tryParse(tier['rank'].toString()) ?? 1;
+                  final displayTiers = rankTiers.isNotEmpty
+                      ? rankTiers
+                      : [
+                          {'rankPosition': 1, 'title': isCompleted ? '1st Place Winner' : 'Current Leader'},
+                          if (entries.length > 1) {'rankPosition': 2, 'title': '2nd Place'},
+                          if (entries.length > 2) {'rankPosition': 3, 'title': '3rd Place'},
+                        ];
+
+                  return StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('tournaments')
+                        .doc(widget.tournamentId)
+                        .collection('teams')
+                        .snapshots(),
+                    builder: (context, teamSnapshot) {
+                      Map<String, Map<String, dynamic>> teamMap = {};
+                      if (teamSnapshot.hasData) {
+                        for (var doc in teamSnapshot.data!.docs) {
+                          teamMap[doc.id] = doc.data() as Map<String, dynamic>;
+                        }
                       }
 
-                      final String title = (tier['title'] ?? 'Rank $rank').toString();
+                      return Column(
+                        children: displayTiers.map((tier) {
+                          final int rank = parseRank(tier);
+                          final String title = (tier['title'] ?? 'Rank $rank').toString();
 
-                      String winnerTeamId = "TBD";
-                      if (rank > 0 && rank <= entries.length) {
-                        var entry = entries[rank - 1];
-                        winnerTeamId = (entry['id'] ?? "TBD").toString();
-                      }
+                          String winnerTeamId = "TBD";
+                          if (rank > 0 && rank <= entries.length) {
+                            var entry = entries[rank - 1];
+                            winnerTeamId = (entry['id'] ?? entry['teamId'] ?? "TBD").toString();
+                          }
 
-                      if (winnerTeamId == "TBD") {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: context.heightPct(1.2)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  title,
-                                  style: AppTypography.bodyMd.copyWith(
-                                    color: AppColors.muted,
-                                    fontSize: context.responsiveFont(13),
+                          String displayName = "TBD";
+                          if (winnerTeamId != "TBD") {
+                            final teamData = teamMap[winnerTeamId];
+                            displayName = (teamData?['name'] ?? teamData?['teamName'] ?? winnerTeamId).toString();
+                          }
+
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: context.heightPct(1.2)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    title,
+                                    style: AppTypography.bodyMd.copyWith(
+                                      color: AppColors.muted,
+                                      fontSize: context.responsiveFont(13),
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                              Text(
-                                "TBD",
-                                style: AppTypography.bodyMd.copyWith(
-                                  color: AppColors.muted,
-                                  fontSize: context.responsiveFont(13),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: context.heightPct(1.2)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                title,
-                                style: AppTypography.bodyMd.copyWith(
-                                  color: AppColors.muted,
-                                  fontSize: context.responsiveFont(13),
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            FutureBuilder<DocumentSnapshot>(
-                              future: FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).collection('teams').doc(winnerTeamId).get(),
-                              builder: (context, teamSnapshot) {
-                                String displayName = winnerTeamId;
-                                if (teamSnapshot.hasData && teamSnapshot.data?.data() != null) {
-                                  final tData = teamSnapshot.data!.data() as Map<String, dynamic>;
-                                  displayName = (tData['name'] ?? tData['teamName'] ?? winnerTeamId).toString();
-                                }
-                                return Text(
+                                SizedBox(width: context.widthPct(2)),
+                                Text(
                                   displayName,
                                   style: AppTypography.bodyLg.copyWith(
-                                    color: AppColors.accent,
-                                    fontWeight: FontWeight.bold,
+                                    color: displayName == "TBD" ? AppColors.muted : AppColors.accent,
+                                    fontWeight: displayName == "TBD" ? FontWeight.normal : FontWeight.bold,
                                     fontSize: context.responsiveFont(14),
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                );
-                              },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          );
+                        }).toList(),
                       );
-                    }).toList(),
+                    },
                   );
                 },
               ),

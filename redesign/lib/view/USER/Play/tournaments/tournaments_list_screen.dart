@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
+import 'package:redesign/view/USER/Home/scoreboard_screen/widgets/create_tournament_card.dart';
+import 'package:redesign/view/USER/Tournament/create_tournament/create_tournament_screen.dart';
 import 'widgets/tournament_card.dart';
 
 class TournamentsListScreen extends StatefulWidget {
@@ -65,16 +68,30 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
         }
 
         var docs = snapshot.data?.docs ?? [];
+        final now = DateTime.now();
 
-        // Client-side filtering check for safety (includes public or own tournaments)
+        // 1. Client-side filtering check for safety (includes public or own tournaments)
         docs = docs.where((doc) {
           final data = doc.data() as Map<String, dynamic>;
           final access = data['access'] as String?;
           final organizerId = data['organizerId'] as String?;
-          return access == 'public' || organizerId == currentUserId;
+          final isOrganizerOrPublic = access == 'public' || organizerId == currentUserId;
+          if (!isOrganizerOrPublic) return false;
+
+          // 2. Hide past tournaments 2 days after end date
+          final Timestamp? endTs = data['endDate'] ?? data['startDate'];
+          if (endTs != null) {
+            final endDate = endTs.toDate();
+            final expiryCutoff = endDate.add(const Duration(days: 2));
+            if (now.isAfter(expiryCutoff)) {
+              // Hide past tournament because 2 days have passed since end date
+              return false;
+            }
+          }
+          return true;
         }).toList();
 
-        // Client-side sorting by startDate
+        // 3. Client-side sorting by startDate
         docs.sort((a, b) {
           final dataA = a.data() as Map<String, dynamic>;
           final dataB = b.data() as Map<String, dynamic>;
@@ -86,24 +103,40 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
           return dateA.compareTo(dateB);
         });
 
-        if (docs.isEmpty) {
-          return Center(
-            child: Text(
-              "No upcoming tournaments found.",
-              style: AppTypography.bodyLg.copyWith(
-                color: AppColors.muted,
-                fontSize: context.responsiveFont(14),
-              ),
-            ),
-          );
-        }
-
         return ListView.builder(
           padding: EdgeInsets.all(context.widthPct(4)),
-          itemCount: docs.length,
+          itemCount: docs.length + 1, // +1 for CreateTournamentCard at top
           itemBuilder: (context, index) {
-            final data = docs[index].data() as Map<String, dynamic>;
-            final id = docs[index].id;
+            // First item: Create Tournament Card
+            if (index == 0) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: context.heightPct(2)),
+                child: CreateTournamentCard(
+                  onTap: () {
+                    Get.to(() => const CreateTournamentScreen());
+                  },
+                ),
+              );
+            }
+
+            final docIndex = index - 1;
+            if (docs.isEmpty) {
+              return Padding(
+                padding: EdgeInsets.only(top: context.heightPct(4)),
+                child: Center(
+                  child: Text(
+                    "No active or upcoming tournaments found.",
+                    style: AppTypography.bodyLg.copyWith(
+                      color: AppColors.muted,
+                      fontSize: context.responsiveFont(14),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            final data = docs[docIndex].data() as Map<String, dynamic>;
+            final id = docs[docIndex].id;
             return TournamentCard(
               tournamentId: id,
               data: data,

@@ -84,7 +84,7 @@ class TeamsSection extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (isOpen && (!userHasRegisteredTeam || isOrganizer) && !isFull)
+                      if ((isOrganizer || (isOpen && !userHasRegisteredTeam)) && !isFull && (data['status'] != 'completed'))
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.accent,
@@ -107,7 +107,7 @@ class TeamsSection extends StatelessWidget {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              "Register Team",
+                              isOrganizer && !isOpen ? "Register Team (Manual)" : "Register Team",
                               style: AppTypography.labelCaps10.copyWith(
                                 color: AppColors.background,
                                 fontWeight: FontWeight.bold,
@@ -116,9 +116,8 @@ class TeamsSection extends StatelessWidget {
                             ),
                           ),
                         ),
-                      if (isOpen && (!userHasRegisteredTeam || isOrganizer) && !isFull && isOrganizer && teamCount >= 2)
+                      if (isOrganizer && teamCount >= 2 && (data['status'] != 'completed' && data['status'] != 'in_progress')) ...[
                         SizedBox(width: context.widthPct(2)),
-                      if (isOrganizer && isOpen && teamCount >= 2)
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.warning,
@@ -144,6 +143,7 @@ class TeamsSection extends StatelessWidget {
                             ),
                           ),
                         ),
+                      ],
                     ],
                   ),
                 ],
