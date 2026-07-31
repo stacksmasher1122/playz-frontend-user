@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -8,7 +9,7 @@ import '../../services/global_groups_service.dart';
 class RegisterController extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Use explicit configuration
+  /// Explicit configuration for Google Sign-In
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   bool _isGoogleSignInInitialized = false;
 
@@ -17,10 +18,14 @@ class RegisterController extends ChangeNotifier {
 
   Future<void> _initGoogleSignIn() async {
     if (!_isGoogleSignInInitialized) {
-      await _googleSignIn.initialize(
-        serverClientId:
-            '417431238048-hr28olg4hk5qgcv6e1tat9bntoqkfa80.apps.googleusercontent.com',
-      );
+      try {
+        await _googleSignIn.initialize(
+          serverClientId:
+              '417431238048-hr28olg4hk5qgcv6e1tat9bntoqkfa80.apps.googleusercontent.com',
+        );
+      } catch (e) {
+        debugPrint('⚠️ GoogleSignIn initialize warning: $e');
+      }
       _isGoogleSignInInitialized = true;
     }
   }
@@ -46,25 +51,27 @@ class RegisterController extends ChangeNotifier {
       await UserPreferences.saveUserLogin(true, user.name, user.email);
       await UserPreferences.saveDocId(user.email);
 
-      await GlobalGroupsService.checkAndJoinAllUserGroups(
-        targetDocId: user.email,
+      // Run background group check asynchronously so login UI is not blocked
+      unawaited(
+        GlobalGroupsService.checkAndJoinAllUserGroups(
+          targetDocId: user.email,
+        ),
       );
 
-      setLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
       debugPrint(
         '🔴 [RegisterController] FirebaseAuthException: ${e.code} - ${e.message}',
       );
       errorMessage = e.message ?? "An error occurred during registration";
-      setLoading(false);
       return false;
     } catch (e, stackTrace) {
       debugPrint('🔴 [RegisterController] registerWithEmail error: $e');
       debugPrint('🔴 StackTrace: $stackTrace');
       errorMessage = e.toString();
-      setLoading(false);
       return false;
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -91,26 +98,29 @@ class RegisterController extends ChangeNotifier {
           emailToUse,
         );
         await UserPreferences.saveDocId(emailToUse);
-        await GlobalGroupsService.checkAndJoinAllUserGroups(
-          targetDocId: emailToUse,
+
+        // Run background group check asynchronously so login UI is not blocked
+        unawaited(
+          GlobalGroupsService.checkAndJoinAllUserGroups(
+            targetDocId: emailToUse,
+          ),
         );
       }
 
-      setLoading(false);
       return true;
     } on FirebaseAuthException catch (e) {
       debugPrint(
         '🔴 [RegisterController] FirebaseAuthException: ${e.code} - ${e.message}',
       );
       errorMessage = e.message ?? "An error occurred during login";
-      setLoading(false);
       return false;
     } catch (e, stackTrace) {
       debugPrint('🔴 [RegisterController] loginWithEmail error: $e');
       debugPrint('🔴 StackTrace: $stackTrace');
       errorMessage = e.toString();
-      setLoading(false);
       return false;
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -120,15 +130,29 @@ class RegisterController extends ChangeNotifier {
       setLoading(true);
       errorMessage = null;
 
+      // 1. Force clear any cached Google/Firebase session so Google issues a fresh ID Token
+      try {
+        await _googleSignIn.disconnect();
+      } catch (_) {}
+      try {
+        await _auth.signOut();
+      } catch (_) {}
+
       await _initGoogleSignIn();
 
-      /// Start Google authentication
+      // 2. Request fresh Google authentication
       final GoogleSignInAccount account = await _googleSignIn.authenticate();
 
-      /// Get ID token (synchronous getter in v7.2)
+      /// Get fresh Google authentication tokens
       final GoogleSignInAuthentication googleAuth = account.authentication;
 
-      /// Firebase credential (ID TOKEN ONLY)
+      if (googleAuth.idToken == null || googleAuth.idToken!.isEmpty) {
+        debugPrint('🔴 [RegisterController] No Google ID token received.');
+        errorMessage = 'Failed to retrieve authentication token from Google.';
+        return false;
+      }
+
+      /// 3. Pass fresh ID token immediately to Firebase Credential
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
@@ -148,30 +172,37 @@ class RegisterController extends ChangeNotifier {
         );
         if (emailToUse.isNotEmpty) {
           await UserPreferences.saveDocId(emailToUse);
-          await GlobalGroupsService.checkAndJoinAllUserGroups(
-            targetDocId: emailToUse,
+          unawaited(
+            GlobalGroupsService.checkAndJoinAllUserGroups(
+              targetDocId: emailToUse,
+            ),
           );
         }
 
-        setLoading(false);
         return true;
       }
 
-      setLoading(false);
       return false;
     } catch (e, stackTrace) {
       debugPrint('🔴 [RegisterController] loginWithGoogle error: $e');
       debugPrint('🔴 StackTrace: $stackTrace');
       errorMessage = e.toString();
-      setLoading(false);
       return false;
+    } finally {
+      setLoading(false);
     }
   }
 
   /// SIGN OUT
   Future<void> signOut() async {
-    await _auth.signOut();
-    await _googleSignIn.disconnect();
+    try {
+      await _auth.signOut();
+      await _googleSignIn.disconnect();
+    } catch (e) {
+      debugPrint('⚠️ [RegisterController] SignOut warning: $e');
+    }
     await UserPreferences.clearUser();
   }
 }
+
+

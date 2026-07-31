@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "417431238048-suo8o441urdvsenv2c0ockkdbdnd6ede.apps.googleusercontent.com",
+          "client_id": "417431238048-s7ci0j8tcni7ft68i8p3guflm1fnbi2d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.playz_owner_frontend",
-            "certificate_hash": "eb4c00c9bb1073fdb83cb3d924b57d581297c75f"
+            "certificate_hash": "a31b6f67705a2c0a25d85cffbff81506c302aaaa"
           }
         },
         {
@@ -51,11 +51,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "417431238048-suo8o441urdvsenv2c0ockkdbdnd6ede.apps.googleusercontent.com",
+          "client_id": "417431238048-20begl3mno23ju0e680uliiop38khedt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.redesign",
-            "certificate_hash": "f5d48bac6ac87ee42eb547630dfd45c0d48d4be1"
+            "certificate_hash": "a31b6f67705a2c0a25d85cffbff81506c302aaaa"
           }
         },
         {

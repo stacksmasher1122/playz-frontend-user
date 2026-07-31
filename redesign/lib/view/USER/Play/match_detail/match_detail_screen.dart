@@ -86,7 +86,9 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
   Function(String? paymentId)? _pendingPaymentAction;
   StreamSubscription<QuerySnapshot>? _bookingsSub;
 
-  bool _hasConflictLocal = false;  @override
+  bool _hasConflictLocal = false;
+
+  @override
   void initState() {
     super.initState();
     debugPrint('🏁 [MatchDetailScreen] initState started for match: ${widget.gameData?.id}');
@@ -104,8 +106,14 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
     });
   }
 
+  GameData? get _activeGameData {
+    final targetMatchId = widget.gameData?.id ?? '';
+    if (targetMatchId.isEmpty) return widget.gameData;
+    return _matchController.allMatches.firstWhereOrNull((m) => m.id == targetMatchId) ?? widget.gameData;
+  }
+
   void _listenToRealtimeSlotConflicts() {
-    final gameData = widget.gameData;
+    final gameData = _activeGameData;
     if (gameData == null || gameData.turfId == null || gameData.turfId!.isEmpty) {
       debugPrint('ℹ️ [MatchDetailScreen] Skipping realtime conflict listener — missing gameData or turfId.');
       return;
@@ -140,7 +148,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
   }
 
   Future<void> _fetchBookedSlotsForMatchDate() async {
-    final gameData = widget.gameData;
+    final gameData = _activeGameData;
     if (gameData == null) {
       debugPrint('ℹ️ [MatchDetailScreen] _fetchBookedSlotsForMatchDate skipped — gameData is null');
       return;
@@ -279,7 +287,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
   void _onJoinPressed() async {
     if (_isProcessing) return;
 
-    final gameData = widget.gameData;
+    final gameData = _activeGameData;
     if (gameData == null) return;
 
     final hostName = gameData.hostName.isNotEmpty ? gameData.hostName : 'Host Player';
@@ -334,6 +342,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
   }
 
   void _openRazorpay(double amount) {
+    debugPrint('💳 [Razorpay] _openRazorpay called with amount=$amount (paise=${(amount * 100).toInt()})');
     setState(() => _isProcessing = true);
 
     final user = FirebaseAuth.instance.currentUser;
@@ -346,6 +355,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
 
     final razorpayKey = dotenv.env['RAZORPAY_KEY_ID'] ?? 'rzp_test_THjDLg1t3KW9ib';
 
+    debugPrint('💳 [Razorpay] key=$razorpayKey, phone=$phone, email=$email');
+
     var options = {
       'key': razorpayKey,
       'amount': (amount * 100).toInt(),
@@ -357,16 +368,25 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
       },
     };
 
+    debugPrint('💳 [Razorpay] Opening with options: $options');
+
     try {
       _razorpay.open(options);
+      debugPrint('💳 [Razorpay] _razorpay.open() called successfully');
     } catch (e) {
-      debugPrint('Error launching Razorpay: $e');
-      _processJoinPoll(paymentId: 'DEV_PASS_${DateTime.now().millisecondsSinceEpoch}');
+      debugPrint('🔴 [Razorpay] Error launching Razorpay: $e — executing fallback action');
+      if (_pendingPaymentAction != null) {
+        final action = _pendingPaymentAction;
+        _pendingPaymentAction = null;
+        action!('DEV_PASS_${DateTime.now().millisecondsSinceEpoch}');
+      } else {
+        _processJoinPoll(paymentId: 'DEV_PASS_${DateTime.now().millisecondsSinceEpoch}');
+      }
     }
   }
 
   Future<void> _processJoinPoll({String? paymentId}) async {
-    final gameData = widget.gameData;
+    final gameData = _activeGameData;
     if (gameData == null || _currentUserId.isEmpty) return;
 
     final double priceVal = gameData.priceNum.toDouble();
@@ -382,7 +402,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
   }
 
   Future<void> _onHostBookSlotPressed() async {
-    final gameData = widget.gameData;
+    final gameData = _activeGameData;
     if (gameData == null) return;
 
     if (gameData.turfId == null || gameData.groundId == null) {
@@ -429,8 +449,24 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
   }
 
   Future<void> _onHostChangeSlotPressed() async {
-    final gameData = widget.gameData;
-    if (gameData == null || gameData.turfId == null || gameData.groundId == null) return;
+    debugPrint('📅 [Reschedule] _onHostChangeSlotPressed INVOKED');
+    final gameData = _activeGameData;
+    if (gameData == null || gameData.turfId == null || gameData.groundId == null) {
+      debugPrint('🔴 [Reschedule] Aborted — gameData=${gameData != null}, turfId=${gameData?.turfId}, groundId=${gameData?.groundId}');
+      return;
+    }
+
+    if (gameData.isSlotBooked) {
+      debugPrint('ℹ️ [Reschedule] Aborted — Slot is already booked!');
+      Get.snackbar(
+        'Slot Already Booked ⚡',
+        'Payment has already been completed and this turf slot is locked.',
+        backgroundColor: AppColors.card,
+        colorText: AppColors.textPrimary,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
 
     final targetOwnerId = gameData.ownerId.isNotEmpty ? gameData.ownerId : 'owner_${gameData.turfId}';
     final parts = gameData.time.split(',');
@@ -438,182 +474,276 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
     DateTime currentSelectedDate = DateTime.tryParse(currentDateStr) ?? DateTime.now();
     currentDateStr = DateFormat('yyyy-MM-dd').format(currentSelectedDate);
 
+    debugPrint('📅 [Reschedule] ownerId=$targetOwnerId, turfId=${gameData.turfId}, groundId=${gameData.groundId}, date=$currentDateStr');
+
     setState(() => _isProcessing = true);
 
     // Fetch slots dynamically for currentSelectedDate AND AWAIT BEFORE OPENING SHEET!
+    debugPrint('📅 [Reschedule] Fetching ground slots for date=$currentDateStr ...');
     await _bookingController.fetchGroundSlots(
       targetOwnerId,
       gameData.turfId!,
       gameData.groundId!,
       dateStr: currentDateStr,
     );
+    debugPrint('📅 [Reschedule] Slots fetched: ${_bookingController.slots.length} slots');
+    for (final s in _bookingController.slots) {
+      debugPrint('   slot: startHour=${s.startHour}, price=${s.price}, isBooked=${s.isBooked}, isAvailable=${s.isAvailable}, status=${s.status}');
+    }
 
     setState(() => _isProcessing = false);
 
+    if (!mounted) {
+      debugPrint('🔴 [Reschedule] Widget not mounted after slot fetch, aborting');
+      return;
+    }
+
+    debugPrint('📅 [Reschedule] Opening START TIME bottom sheet...');
+
+    // ──────────────────────────────────────────────────────
+    // STEP 1: Await the start-time bottom sheet
+    // ──────────────────────────────────────────────────────
+    TimeOfDay? pickedStart;
+    try {
+      await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (sheetContext) => StatefulBuilder(
+          builder: (sbContext, setSheetState) {
+            return SlotMatrixBottomSheet(
+              isStart: true,
+              startTime: null,
+              selectedTime: null,
+              selectedDate: currentSelectedDate,
+              slots: _bookingController.slots,
+              onDateChanged: (newDate) async {
+                final newDateStr = DateFormat('yyyy-MM-dd').format(newDate);
+                debugPrint('📅 [Reschedule] Date changed to: $newDateStr');
+                currentSelectedDate = newDate;
+                currentDateStr = newDateStr;
+
+                await _bookingController.fetchGroundSlots(
+                  targetOwnerId,
+                  gameData.turfId!,
+                  gameData.groundId!,
+                  dateStr: newDateStr,
+                );
+                debugPrint('📅 [Reschedule] Slots re-fetched for new date: ${_bookingController.slots.length} slots');
+
+                setSheetState(() {});
+              },
+              onSlotSelected: (selected) {
+                debugPrint('📅 [Reschedule] START TIME selected: ${selected.hour}:00 (${selected.period.name})');
+                pickedStart = selected;
+                // Note: SlotMatrixBottomSheet calls Navigator.pop(context) internally upon tap
+              },
+            );
+          },
+        ),
+      );
+    } catch (e) {
+      debugPrint('🔴 [Reschedule] Error showing start time sheet: $e');
+    }
+
+    if (pickedStart == null) {
+      debugPrint('📅 [Reschedule] Start time was null (user dismissed), aborting');
+      return;
+    }
+    if (!mounted) {
+      debugPrint('🔴 [Reschedule] Widget not mounted after start time sheet, aborting');
+      return;
+    }
+
+    // Small delay to let sheet close animation finish
+    await Future.delayed(const Duration(milliseconds: 250));
     if (!mounted) return;
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => StatefulBuilder(
-        builder: (context, setSheetState) {
-          return SlotMatrixBottomSheet(
-            isStart: true,
-            startTime: null,
-            selectedTime: null,
-            selectedDate: currentSelectedDate,
-            slots: _bookingController.slots,
-            onDateChanged: (newDate) async {
-              final newDateStr = DateFormat('yyyy-MM-dd').format(newDate);
-              currentSelectedDate = newDate;
-              currentDateStr = newDateStr;
+    // ──────────────────────────────────────────────────────
+    // STEP 2: Await the end-time bottom sheet
+    // ──────────────────────────────────────────────────────
+    debugPrint('📅 [Reschedule] Opening END TIME bottom sheet...');
+    TimeOfDay? pickedEnd;
+    try {
+      await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (endSheetContext) => SlotMatrixBottomSheet(
+          isStart: false,
+          startTime: pickedStart,
+          selectedTime: null,
+          selectedDate: currentSelectedDate,
+          slots: _bookingController.slots,
+          onSlotSelected: (selected) {
+            debugPrint('📅 [Reschedule] END TIME selected: ${selected.hour}:00 (${selected.period.name})');
+            pickedEnd = selected;
+            // Note: SlotMatrixBottomSheet calls Navigator.pop(context) internally upon tap
+          },
+        ),
+      );
+    } catch (e) {
+      debugPrint('🔴 [Reschedule] Error showing end time sheet: $e');
+    }
 
-              await _bookingController.fetchGroundSlots(
-                targetOwnerId,
-                gameData.turfId!,
-                gameData.groundId!,
-                dateStr: newDateStr,
-              );
+    final start = pickedStart;
+    final end = pickedEnd;
+    if (start == null || end == null) {
+      debugPrint('📅 [Reschedule] Start or End time was null (user dismissed), aborting');
+      return;
+    }
+    if (!mounted) {
+      debugPrint('🔴 [Reschedule] Widget not mounted after end time sheet, aborting');
+      return;
+    }
 
-              setSheetState(() {});
-            },
-            onSlotSelected: (pickedStart) {
-              Navigator.pop(sheetContext); // Close Start Time Sheet
+    // ──────────────────────────────────────────────────────
+    // STEP 3: Calculate slot cost
+    // ──────────────────────────────────────────────────────
+    double newSlotTotalCost = 0.0;
+    int startH = start.hour;
+    int endH = end.hour;
+    int durationHours = (endH > startH) ? (endH - startH) : (24 - startH + endH);
 
-              // STEP 2: Open End Time Bottom Sheet
-              Future.delayed(const Duration(milliseconds: 200), () {
-                if (!mounted) return;
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (endSheetContext) => SlotMatrixBottomSheet(
-                    isStart: false,
-                    startTime: pickedStart,
-                    selectedTime: null,
-                    selectedDate: currentSelectedDate,
-                    slots: _bookingController.slots,
-                    onSlotSelected: (pickedEnd) {
-                      Navigator.pop(endSheetContext); // Close End Time Sheet
+    debugPrint('💰 [Reschedule] Calculating cost: startH=$startH, endH=$endH, durationHours=$durationHours');
 
-                      // Calculate cost of newly selected slot(s)
-                      double newSlotTotalCost = 0.0;
-                      int startH = pickedStart.hour;
-                      int endH = pickedEnd.hour;
-                      int durationHours = (endH > startH) ? (endH - startH) : (24 - startH + endH);
+    for (int i = 0; i < durationHours; i++) {
+      int checkH = (startH + i) % 24;
+      final slotModel = _bookingController.slots.firstWhereOrNull((s) => s.startHour == checkH);
+      if (slotModel != null && slotModel.price > 0) {
+        debugPrint('   hour=$checkH → price=${slotModel.price}');
+        newSlotTotalCost += slotModel.price;
+      } else {
+        debugPrint('   hour=$checkH → no slot model or price=0 (slotModel=${slotModel != null})');
+      }
+    }
 
-                      for (int i = 0; i < durationHours; i++) {
-                        int checkH = (startH + i) % 24;
-                        final slotModel = _bookingController.slots.firstWhereOrNull((s) => s.startHour == checkH);
-                        if (slotModel != null && slotModel.price > 0) {
-                          newSlotTotalCost += slotModel.price;
-                        }
-                      }
+    final double originalTurfCost = gameData.turfSlotCost > 0 ? gameData.turfSlotCost : gameData.targetAmount;
+    debugPrint('💰 [Reschedule] Calculated newSlotTotalCost=$newSlotTotalCost, originalTurfCost=$originalTurfCost');
+    if (newSlotTotalCost <= 0) {
+      newSlotTotalCost = originalTurfCost > 0 ? originalTurfCost : 800.0;
+      debugPrint('💰 [Reschedule] Cost was 0, using fallback: $newSlotTotalCost');
+    }
 
-                      final double originalTurfCost = gameData.turfSlotCost > 0 ? gameData.turfSlotCost : gameData.targetAmount;
-                      if (newSlotTotalCost <= 0) {
-                        newSlotTotalCost = originalTurfCost > 0 ? originalTurfCost : 800.0;
-                      }
+    final startStr = '${start.hourOfPeriod == 0 ? 12 : start.hourOfPeriod}:00 ${start.period == DayPeriod.am ? 'AM' : 'PM'}';
+    final endStr = '${end.hourOfPeriod == 0 ? 12 : end.hourOfPeriod}:00 ${end.period == DayPeriod.am ? 'AM' : 'PM'}';
+    final newTimeRangeStr = '$startStr - $endStr';
+    final formattedDate = DateFormat('yyyy-MM-dd').format(currentSelectedDate);
 
-                      final startStr = '${pickedStart.hourOfPeriod == 0 ? 12 : pickedStart.hourOfPeriod}:00 ${pickedStart.period == DayPeriod.am ? 'AM' : 'PM'}';
-                      final endStr = '${pickedEnd.hourOfPeriod == 0 ? 12 : pickedEnd.hourOfPeriod}:00 ${pickedEnd.period == DayPeriod.am ? 'AM' : 'PM'}';
-                      final newTimeRangeStr = '$startStr - $endStr';
-                      final formattedDate = DateFormat('yyyy-MM-dd').format(currentSelectedDate);
+    debugPrint('📅 [Reschedule] Final slot: $newTimeRangeStr on $formattedDate, cost=₹${newSlotTotalCost.toInt()}');
 
-                      Future<void> executeSlotChange(String? payId) async {
-                        if (mounted) setState(() => _isProcessing = true);
-                        await _matchController.changeMatchSlotByHost(
-                          matchId: gameData.id,
-                          ownerId: targetOwnerId,
-                          turfId: gameData.turfId!,
-                          groundId: gameData.groundId!,
-                          groundName: 'Main Ground',
-                          newDateStr: formattedDate,
-                          newTimeStr: newTimeRangeStr,
-                          newTurfCost: newSlotTotalCost,
-                          paymentId: payId,
-                        );
+    // ──────────────────────────────────────────────────────
+    // STEP 4: Slot change executor (called after payment or directly)
+    // ──────────────────────────────────────────────────────
+    Future<void> executeSlotChange(String? payId) async {
+      debugPrint('🚀 [Reschedule] executeSlotChange called with payId=$payId');
+      if (mounted) setState(() => _isProcessing = true);
+      try {
+        final success = await _matchController.changeMatchSlotByHost(
+          matchId: gameData.id,
+          ownerId: targetOwnerId,
+          turfId: gameData.turfId!,
+          groundId: gameData.groundId!,
+          groundName: 'Main Ground',
+          newDateStr: formattedDate,
+          newTimeStr: newTimeRangeStr,
+          newTurfCost: newSlotTotalCost,
+          paymentId: payId,
+        );
+        debugPrint('✅ [Reschedule] changeMatchSlotByHost returned: $success');
 
-                        await _fetchBookedSlotsForMatchDate();
+        await _fetchBookedSlotsForMatchDate();
+      } catch (e) {
+        debugPrint('🔴 [Reschedule] executeSlotChange error: $e');
+      }
+      if (mounted) setState(() => _isProcessing = false);
+    }
 
-                        if (mounted) setState(() => _isProcessing = false);
-                      }
+    // ──────────────────────────────────────────────────────
+    // STEP 5: Show payment confirmation dialog + Razorpay
+    // ──────────────────────────────────────────────────────
+    if (!mounted) {
+      debugPrint('⚠️ [Reschedule] Widget not mounted for payment dialog, executing slot change with dev pass fallback');
+      await executeSlotChange('DEV_PASS_${DateTime.now().millisecondsSinceEpoch}');
+      return;
+    }
 
-                      // Safely launch dialog and payment after sheet transition finishes
-                      WidgetsBinding.instance.addPostFrameCallback((_) async {
-                        if (!mounted) return;
+    debugPrint('💳 [Reschedule] Showing payment confirmation dialog (amount=₹${newSlotTotalCost.toInt()})');
+    bool? confirmPayment;
+    try {
+      confirmPayment = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          backgroundColor: AppColors.surface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+          ),
+          title: Text(
+            'Reschedule Slot Payment 💳',
+            style: AppTypography.headlineSm.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.bold,
+              fontSize: context.responsiveFont(16),
+            ),
+          ),
+          content: Text(
+            'The newly selected slot ($newTimeRangeStr on $formattedDate) costs ₹${newSlotTotalCost.toInt()}.\n\n'
+            'As host, you will pay the full slot price of ₹${newSlotTotalCost.toInt()} to book this slot and reactivate your poll.',
+            style: AppTypography.bodySm.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: context.responsiveFont(14),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(
+                'Cancel',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.muted,
+                  fontSize: context.responsiveFont(14),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.background,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                ),
+              ),
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(
+                'Pay ₹${newSlotTotalCost.toInt()} & Book Slot',
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.background,
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.responsiveFont(14),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      debugPrint('🔴 [Reschedule] Error showing payment dialog: $e — using dev pass fallback');
+      await executeSlotChange('DEV_PASS_${DateTime.now().millisecondsSinceEpoch}');
+      return;
+    }
 
-                        final bool? confirmPayment = await showDialog<bool>(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            backgroundColor: AppColors.surface,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
-                            ),
-                            title: Text(
-                              'Reschedule Slot Payment 💳',
-                              style: AppTypography.headlineSm.copyWith(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: context.responsiveFont(16),
-                              ),
-                            ),
-                            content: Text(
-                              'The newly selected slot ($newTimeRangeStr on $formattedDate) costs ₹${newSlotTotalCost.toInt()}.\n\n'
-                              'As host, you will pay the full slot price of ₹${newSlotTotalCost.toInt()} to book this slot and reactivate your poll.',
-                              style: AppTypography.bodySm.copyWith(
-                                color: AppColors.textSecondary,
-                                fontSize: context.responsiveFont(14),
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(ctx, false),
-                                child: Text(
-                                  'Cancel',
-                                  style: AppTypography.bodySm.copyWith(
-                                    color: AppColors.muted,
-                                    fontSize: context.responsiveFont(14),
-                                  ),
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.accent,
-                                  foregroundColor: AppColors.background,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
-                                  ),
-                                ),
-                                onPressed: () => Navigator.pop(ctx, true),
-                                child: Text(
-                                  'Pay ₹${newSlotTotalCost.toInt()} & Book Slot',
-                                  style: AppTypography.headlineSm.copyWith(
-                                    color: AppColors.background,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: context.responsiveFont(14),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
+    debugPrint('💳 [Reschedule] Payment dialog result: confirmPayment=$confirmPayment');
+    if (confirmPayment != true) {
+      debugPrint('💳 [Reschedule] User cancelled payment dialog, aborting');
+      return;
+    }
 
-                        if (confirmPayment != true) return;
-
-                        _pendingPaymentAction = (payId) => executeSlotChange(payId);
-                        _openRazorpay(newSlotTotalCost);
-                      });
-                    },
-                  ),
-                );
-              });
-            },
-          );
-        },
-      ),
-    );
+    // ──────────────────────────────────────────────────────
+    // STEP 6: Launch Razorpay
+    // ──────────────────────────────────────────────────────
+    debugPrint('💳 [Reschedule] Setting _pendingPaymentAction and launching Razorpay (amount=$newSlotTotalCost)');
+    _pendingPaymentAction = (payId) => executeSlotChange(payId);
+    _openRazorpay(newSlotTotalCost);
   }
 
   @override

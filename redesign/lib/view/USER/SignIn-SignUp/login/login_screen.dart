@@ -147,72 +147,96 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
 
-    bool success = await _controller.loginWithEmail(
-      _emailController.text.trim(),
-      _passwordController.text,
-    );
+    try {
+      bool success = await _controller.loginWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    if (success) {
-      final docId = _emailController.text.trim();
-      final exists = await _checkAndFetchUserDoc(docId);
       if (!mounted) return;
-      if (exists) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const UserAppNavShell()),
-        );
+
+      if (success) {
+        final docId = _emailController.text.trim();
+        final exists = await _checkAndFetchUserDoc(docId);
+        if (!mounted) return;
+        if (exists) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const UserAppNavShell()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
+          );
+        }
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_controller.errorMessage ?? "Login failed")),
         );
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_controller.errorMessage ?? "Login failed")),
-      );
+    } catch (e) {
+      debugPrint('🔴 [_handleLogin] Error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Login error: ${e.toString()}")),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
   Future<void> _handleGoogleLogin() async {
     setState(() => _isLoading = true);
-    bool success = await _controller.loginWithGoogle();
+    try {
+      bool success = await _controller.loginWithGoogle();
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    if (success) {
-      final user = FirebaseAuth.instance.currentUser;
-      final docId = user?.email ?? '';
-      if (docId.isEmpty) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
-        );
-        return;
-      }
-      final exists = await _checkAndFetchUserDoc(docId);
       if (!mounted) return;
-      if (exists) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const UserAppNavShell()),
-        );
+
+      if (success) {
+        final user = FirebaseAuth.instance.currentUser;
+        final docId = user?.email ?? '';
+        if (docId.isEmpty) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
+          );
+          return;
+        }
+        final exists = await _checkAndFetchUserDoc(docId);
+        if (!mounted) return;
+        if (exists) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const UserAppNavShell()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
+          );
+        }
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const FavoriteSportsScreen()),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_controller.errorMessage ?? "Google Sign-In failed"),
+          ),
         );
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_controller.errorMessage ?? "Google Sign-In failed"),
-        ),
-      );
+    } catch (e) {
+      debugPrint('🔴 [_handleGoogleLogin] Error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Google login error: ${e.toString()}")),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -221,7 +245,8 @@ class _LoginScreenState extends State<LoginScreen> {
       final docSnapshot = await FirebaseFirestore.instance
           .collection('User')
           .doc(docId)
-          .get();
+          .get()
+          .timeout(const Duration(seconds: 5));
       if (docSnapshot.exists) {
         final data = docSnapshot.data()!;
         final bool isComplete = (data['isProfileComplete'] ?? false) == true;

@@ -160,27 +160,46 @@ class MatchJoinBar extends StatelessWidget {
           ),
         );
       } else {
-        childWidget = ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.card,
-            foregroundColor: AppColors.muted,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
-            ),
-            elevation: 0,
-          ),
-          onPressed: null,
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              'You are the Host (Included in Poll)',
-              style: AppTypography.headlineSm.copyWith(
-                fontSize: context.responsiveFont(14),
-                fontWeight: FontWeight.w600,
-                color: AppColors.muted,
+        childWidget = Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.card,
+                  foregroundColor: AppColors.muted,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+                  ),
+                  elevation: 0,
+                ),
+                onPressed: null,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'You are the Host (Included in Poll)',
+                    style: AppTypography.headlineSm.copyWith(
+                      fontSize: context.responsiveFont(14),
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.muted,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+            SizedBox(width: context.widthPct(2.5)),
+            IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor: AppColors.card,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                  side: const BorderSide(color: AppColors.borderDark),
+                ),
+              ),
+              onPressed: onHostChangeSlotPressed,
+              icon: const Icon(Icons.edit_calendar_rounded, color: AppColors.textPrimary),
+              tooltip: 'Change Date or Time Slot',
+            ),
+          ],
         );
       }
     } else if (alreadyJoined) {
