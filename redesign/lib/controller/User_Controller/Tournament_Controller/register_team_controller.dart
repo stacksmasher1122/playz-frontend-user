@@ -12,6 +12,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../../model/User_Models/Tournament_Model/tournament_team_model.dart';
 import '../../../services/user_search_service.dart';
+import '../../../services/xp_reward_service.dart';
 
 class RegisterTeamController extends GetxController {
   final String tournamentId;
@@ -399,19 +400,25 @@ class RegisterTeamController extends GetxController {
         transaction.update(tournamentRef, {'teamCount': FieldValue.increment(1)});
       });
 
-      // Save/update gameStats for registered players in Firebase
+      // Save/update gameStats & award 100 XP for each participant in that specific sport
       for (final player in selectedPlayers) {
         if (player.userId.isNotEmpty) {
           await FirebaseFirestore.instance.collection('User').doc(player.userId).set({
             'gameStats': {
               'totalGamesPlayed': FieldValue.increment(1),
               'totalTournaments': FieldValue.increment(1),
-              'xpPoints': FieldValue.increment(150),
               'lastUpdated': FieldValue.serverTimestamp(),
             }
           }, SetOptions(merge: true));
         }
       }
+
+      final playerIds = selectedPlayers.map((p) => p.userId).where((id) => id.isNotEmpty).toList();
+      await XpRewardService.awardTournamentParticipantXp(
+        playerIds: playerIds,
+        sport: sport,
+        xpAmount: 100,
+      );
 
       debugPrint('✅ [TeamRegistration] Team $teamId successfully registered for tournament $tournamentId!');
 

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/services/xp_reward_service.dart';
 
 class WinnersSection extends StatefulWidget {
   final String tournamentId;
@@ -126,6 +127,20 @@ class _WinnersSectionState extends State<WinnersSection> {
           .collection('tournaments')
           .doc(widget.tournamentId)
           .update({'customTierWinners': currentWinners});
+
+      // Award XP for 1st Place (200 XP) or 2nd Place (100 XP)
+      final sportStr = (tourneyDoc.data()?['sport'] ?? widget.data['sport'] ?? 'Football').toString();
+      final pId = (selectedPlayer['userId'] ?? '').toString();
+      if (pId.isNotEmpty) {
+        final titleLower = tierTitle.toLowerCase();
+        final is1st = titleLower.contains('1st') || titleLower.contains('winner') || titleLower.contains('champion');
+        final xpPoints = is1st ? 200 : 100;
+        await XpRewardService.awardBookingXp(
+          userDocId: pId,
+          sport: sportStr,
+          xpAmount: xpPoints,
+        );
+      }
 
       Get.snackbar(
         "Success",

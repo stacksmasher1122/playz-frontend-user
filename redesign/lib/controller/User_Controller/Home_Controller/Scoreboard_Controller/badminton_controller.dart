@@ -12,6 +12,7 @@ import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/badmintonSqfli
 import 'package:redesign/score_engine/badmintonMatchEngine/badminton_match_engine.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/badminton_scoreboard_screen.dart';
+import 'package:redesign/services/xp_reward_service.dart';
 
 class BadmintonController extends GetxController {
   // Setup Parameters
@@ -717,9 +718,21 @@ class BadmintonController extends GetxController {
       if (allCompleted) {
         final tRef = FirebaseFirestore.instance.collection('tournaments').doc(tournamentId.value);
         batch.update(tRef, {'status': 'completed'});
-      }
+        await batch.commit();
 
-      await batch.commit();
+        final runnerUpTeamId = winningTeamId == teamAId ? teamBId : teamAId;
+        final tDoc = await tRef.get();
+        final sportStr = (tDoc.data()?['sport'] ?? 'Badminton').toString();
+
+        await XpRewardService.awardTournamentRankingsXp(
+          tournamentId: tournamentId.value,
+          winnerTeamId: winningTeamId,
+          runnerUpTeamId: runnerUpTeamId,
+          sport: sportStr,
+        );
+      } else {
+        await batch.commit();
+      }
 
       // Navigate back to Bracket & Matchmaking screen
       // Pop all intermediate screens (rules, confirmation, scoreboard)

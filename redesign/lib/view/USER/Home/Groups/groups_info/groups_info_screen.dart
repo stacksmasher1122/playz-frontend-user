@@ -12,6 +12,7 @@ import 'widgets/group_members_section.dart';
 import 'widgets/moderation_section.dart';
 import 'widgets/footer_actions.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/common/app_back_button.dart';
 
 class GroupsInfoScreen extends StatefulWidget {
   final String groupId;
@@ -44,9 +45,9 @@ class _GroupsInfoScreenState extends State<GroupsInfoScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
-          onPressed: () => Navigator.pop(context),
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: AppBackButton(),
         ),
         title: Text(
           "SQUAD",

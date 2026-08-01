@@ -13,6 +13,7 @@ class AppSettingsController extends GetxController {
   void onInit() {
     super.onInit();
     _loadUserFavoriteSports();
+    _loadUserLanguage();
   }
 
   Future<void> _loadUserFavoriteSports() async {
@@ -38,13 +39,46 @@ class AppSettingsController extends GetxController {
     }
   }
 
+  Future<void> _loadUserLanguage() async {
+    try {
+      final docId = await UserPreferences.getDocId() ?? '';
+      String savedLang = await UserPreferences.getPreferredLanguage();
+
+      if (docId.isNotEmpty) {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('User')
+            .doc(docId)
+            .get();
+        if (userDoc.exists && userDoc.data() != null) {
+          final data = userDoc.data()!;
+          if (data['preferredLanguage'] != null) {
+            savedLang = data['preferredLanguage'].toString();
+          }
+        }
+      }
+
+      if (savedLang.isNotEmpty) {
+        final matched = availableLanguages.firstWhere(
+          (l) => l.toLowerCase() == savedLang.toLowerCase() ||
+                 l.toLowerCase().startsWith(savedLang.toLowerCase()),
+          orElse: () => savedLang,
+        );
+        settings.value = settings.value.copyWith(selectedLanguage: matched);
+      }
+    } catch (e) {
+      debugPrint('🔴 [AppSettingsController] Load language error: $e');
+    }
+  }
+
   final availableLanguages = const [
-    'English (US)',
+    'English',
     'Hindi (हिंदी)',
-    'Spanish (Español)',
-    'French (Français)',
-    'German (Deutsch)',
-    'Japanese (日本語)',
+    'Marathi (मराठी)',
+    'Tamil (தமிழ்)',
+    'Telugu (తెలుగు)',
+    'Kannada (ಕನ್ನಡ)',
+    'Gujarati (ગુજરાતી)',
+    'Bengali (বাংলা)',
   ];
 
   final allSports = const [
@@ -64,8 +98,24 @@ class AppSettingsController extends GetxController {
     'Boxing',
   ];
 
-  void setLanguage(String lang) {
+  Future<void> setLanguage(String lang) async {
     settings.value = settings.value.copyWith(selectedLanguage: lang);
+
+    // Save to SharedPreferences
+    await UserPreferences.setPreferredLanguage(lang);
+
+    // Save to Firestore
+    try {
+      final docId = await UserPreferences.getDocId() ?? '';
+      if (docId.isNotEmpty) {
+        await FirebaseFirestore.instance.collection('User').doc(docId).set({
+          'preferredLanguage': lang,
+          'lastLanguageUpdated': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      debugPrint('🔴 [AppSettingsController] Sync language error: $e');
+    }
   }
 
   Future<void> toggleFavoriteSport(String sport) async {

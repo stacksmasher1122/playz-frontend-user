@@ -13,6 +13,7 @@ class UserPreferences {
   static const String _keyDocId = 'docId';
   static const String _keyIsPublicProfile = 'isPublicProfile';
   static const String _keyIsTrainer = 'isTrainer';
+  static const String _keyPreferredLanguage = 'preferredLanguage';
 
   static Future<void> saveUserLogin(
     bool isLoggedIn,
@@ -150,5 +151,16 @@ class UserPreferences {
   static Future<bool> getIsTrainer() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_keyIsTrainer) ?? false;
+  }
+
+  // Preferred Language
+  static Future<void> setPreferredLanguage(String lang) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyPreferredLanguage, lang);
+  }
+
+  static Future<String> getPreferredLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyPreferredLanguage) ?? 'English';
   }
 }

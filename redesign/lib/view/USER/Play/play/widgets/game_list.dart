@@ -41,7 +41,11 @@ class GameList extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const Icon(Icons.sports_soccer_outlined, size: 48, color: AppColors.muted),
+              const Icon(
+                Icons.sports_soccer_outlined,
+                size: 48,
+                color: AppColors.muted,
+              ),
               SizedBox(height: context.heightPct(1.5)),
               Text(
                 'No Matches Found',
@@ -70,7 +74,9 @@ class GameList extends StatelessWidget {
                   backgroundColor: AppColors.accent,
                   foregroundColor: AppColors.background,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+                    borderRadius: BorderRadius.circular(
+                      context.minDimensionPct(3.5),
+                    ),
                   ),
                 ),
                 onPressed: () {
@@ -170,13 +176,17 @@ class GameCard extends StatelessWidget {
         return '${km.toStringAsFixed(1)} km away';
       }
     }
-    return data.distance.contains('away') ? data.distance : '${data.distance} away';
+    return data.distance.contains('away')
+        ? data.distance
+        : '${data.distance} away';
   }
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final progress = (data.currentPlayers / (data.maxPlayers > 0 ? data.maxPlayers : 1)).clamp(0.0, 1.0);
+    final progress =
+        (data.currentPlayers / (data.maxPlayers > 0 ? data.maxPlayers : 1))
+            .clamp(0.0, 1.0);
     final calculatedDistance = _getCalculatedDistance();
     final avatarRadius = context.minDimensionPct(5.5).clamp(18.0, 24.0);
 
@@ -330,7 +340,9 @@ class GameCard extends StatelessWidget {
                     color: data.isFull
                         ? AppColors.error.withValues(alpha: 0.15)
                         : AppColors.accent.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(context.minDimensionPct(5)),
+                    borderRadius: BorderRadius.circular(
+                      context.minDimensionPct(5),
+                    ),
                     border: Border.all(
                       color: data.isFull
                           ? AppColors.error.withValues(alpha: 0.4)
@@ -348,7 +360,9 @@ class GameCard extends StatelessWidget {
                       Text(
                         '${data.currentPlayers}/${data.maxPlayers}',
                         style: AppTypography.bodySm.copyWith(
-                          color: data.isFull ? AppColors.error : AppColors.accent,
+                          color: data.isFull
+                              ? AppColors.error
+                              : AppColors.accent,
                           fontSize: context.responsiveFont(13),
                           fontWeight: FontWeight.bold,
                         ),
@@ -379,7 +393,9 @@ class GameCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                       boxShadow: [
                         BoxShadow(
-                          color: (data.isFull ? AppColors.error : AppColors.accent).withValues(alpha: 0.4),
+                          color:
+                              (data.isFull ? AppColors.error : AppColors.accent)
+                                  .withValues(alpha: 0.4),
                           blurRadius: 4,
                         ),
                       ],

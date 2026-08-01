@@ -11,6 +11,8 @@ import 'widgets/language_selector_sheet.dart';
 import 'widgets/favorite_sports_sheet.dart';
 import 'widgets/app_tutorial_modal.dart';
 
+import 'package:redesign/common/app_back_button.dart';
+
 class AppSettingsScreen extends StatelessWidget {
   const AppSettingsScreen({super.key});
 
@@ -26,9 +28,9 @@ class AppSettingsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
-          onPressed: () => Navigator.pop(context),
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: AppBackButton(),
         ),
         title: Text(
           'App Settings',

@@ -14,6 +14,7 @@ import 'widgets/end_of_results.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import '../tournaments/tournaments_list_screen.dart';
 import 'widgets/game_diary_section.dart';
+import 'package:redesign/controller/User_Controller/Match_Controller/match_controller.dart';
 
 class GameDiaryScreen extends StatefulWidget {
   final int initialTabIndex;
@@ -94,7 +95,15 @@ class _GameDiaryScreenState extends State<GameDiaryScreen> with SingleTickerProv
                       const PlayActionRow(),
                       SizedBox(height: context.heightPct(1.5)),
                       const GameList(),
-                      const EndOfResults(),
+                      Obx(() {
+                        final matchCtrl = Get.isRegistered<MatchController>()
+                            ? Get.find<MatchController>()
+                            : Get.put(MatchController());
+                        if (matchCtrl.isLoading.value || matchCtrl.filteredMatches.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return const EndOfResults();
+                      }),
                     ],
                   ),
                   // Tournaments

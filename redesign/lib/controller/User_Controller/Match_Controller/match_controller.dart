@@ -10,6 +10,7 @@ import 'package:redesign/view/USER/Play/play/play_models.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/utils/slot_overlap_helper.dart';
+import 'package:redesign/services/xp_reward_service.dart';
 
 enum MatchSortOption {
   timeAsc,
@@ -264,19 +265,28 @@ class MatchController extends GetxController {
         'collectedAmount': collectedAmount,
       });
 
-      // Update user stats in Firebase
-      await _firestore.collection('User').doc(userId).set({
-        'gameStats': {
-          'totalGamesPlayed': FieldValue.increment(1),
-          'xpPoints': FieldValue.increment(100),
-          'lastUpdated': FieldValue.serverTimestamp(),
-        }
-      }, SetOptions(merge: true));
+      final matchSport = (data['sport'] ?? 'Football').toString();
+
+      // Award +50 XP for joining match poll (stored in per-sport & missions/rewards counters)
+      await XpRewardService.awardBookingXp(
+        userDocId: userId,
+        sport: matchSport,
+        xpAmount: 50,
+      );
 
       // Auto-book check if all players joined & paid for PlayZ Turfs
       final bool isPollComplete =
           (currentPlayers >= maxPlayers) ||
           (targetAmount > 0 && collectedAmount >= targetAmount);
+
+      if (isPollComplete) {
+        // Award +50 XP to all poll members upon successful poll completion & payment
+        await XpRewardService.awardPollCompletionXp(
+          playerIds: playerIds.map((e) => e.toString()).toList(),
+          sport: matchSport,
+          xpAmount: 50,
+        );
+      }
 
       if (locationType == 'playz_turf' &&
           isPollComplete &&
@@ -429,6 +439,19 @@ class MatchController extends GetxController {
         'isSlotBooked': true,
         'hasConflict': false,
       });
+
+      // 4. Award +50 XP to all players in the poll
+      final matchDoc = await _firestore.collection('matches').doc(matchId).get();
+      if (matchDoc.exists) {
+        final matchData = matchDoc.data()!;
+        final players = List<String>.from(matchData['playerIds'] ?? []);
+        final matchSport = (matchData['sport'] ?? 'Football').toString();
+        await XpRewardService.awardPollCompletionXp(
+          playerIds: players,
+          sport: matchSport,
+          xpAmount: 50,
+        );
+      }
 
       Get.snackbar(
         'Slot Booked! ⚡',

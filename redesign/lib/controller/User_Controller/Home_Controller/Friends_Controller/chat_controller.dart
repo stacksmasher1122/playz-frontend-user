@@ -423,6 +423,18 @@ class ChatController extends GetxController {
         'content': newContent.trim(),
         'isEdited': true,
       });
+
+      // Also update local SQFLite
+      final db = await FriendsSqflite.database;
+      await db.update(
+        'chat_messages',
+        {
+          'content': newContent.trim(),
+          'isEdited': 1,
+        },
+        where: 'id = ?',
+        whereArgs: [messageId],
+      );
     } catch (e) {
       debugPrint('🔴 [Chat] Edit message error: $e');
       Get.snackbar('Error', 'Failed to edit message');

@@ -16,6 +16,8 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 import 'package:redesign/services/global_groups_service.dart';
 
+import 'package:redesign/common/app_back_button.dart';
+
 class ProfileSetupScreen extends StatefulWidget {
   final List<String> selectedSports;
   const ProfileSetupScreen({super.key, required this.selectedSports});
@@ -178,18 +180,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: AppColors.textPrimary,
-            size: 20,
-          ),
-          onPressed: () => Navigator.pop(context),
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: AppBackButton(),
         ),
         title: Column(
           children: [
             Text(
-              'STEP 2 OF 2',
+              'STEP 3 OF 3',
               style: AppTypography.labelCaps10.copyWith(
                 color: AppColors.muted,
                 fontSize: context.responsiveFont(11),
@@ -203,7 +201,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               children: [
                 Container(
                   height: context.heightPct(0.4).clamp(3.0, 4.0),
-                  width: context.widthPct(8),
+                  width: context.widthPct(7),
                   decoration: BoxDecoration(
                     color: AppColors.accent,
                     borderRadius: BorderRadius.circular(2),
@@ -212,7 +210,16 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 SizedBox(width: context.widthPct(1)),
                 Container(
                   height: context.heightPct(0.4).clamp(3.0, 4.0),
-                  width: context.widthPct(8),
+                  width: context.widthPct(7),
+                  decoration: BoxDecoration(
+                    color: AppColors.accent,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                SizedBox(width: context.widthPct(1)),
+                Container(
+                  height: context.heightPct(0.4).clamp(3.0, 4.0),
+                  width: context.widthPct(7),
                   decoration: BoxDecoration(
                     color: AppColors.accent,
                     borderRadius: BorderRadius.circular(2),

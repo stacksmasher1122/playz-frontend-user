@@ -78,12 +78,24 @@ class MessagesListSection extends StatelessWidget {
                   vertical: context.heightPct(3),
                 ),
                 child: Center(
-                  child: Text(
-                    'No friends yet. Search and add players!',
-                    style: AppTypography.bodySm.copyWith(
-                      color: AppColors.muted,
-                      fontSize: context.responsiveFont(14),
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.people_outline_rounded,
+                        size: context.minDimensionPct(18).clamp(64.0, 80.0),
+                        color: AppColors.muted.withValues(alpha: 0.5),
+                      ),
+                      SizedBox(height: context.heightPct(1.5)),
+                      Text(
+                        'No friends yet. Search and add players!',
+                        textAlign: TextAlign.center,
+                        style: AppTypography.bodySm.copyWith(
+                          color: AppColors.muted,
+                          fontSize: context.responsiveFont(14),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );

@@ -4,6 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Friends_SQF/friendsSqflite.dart';
+import 'package:redesign/sqflite/User_SQF/Home_SQF/Groups_SQF/groupsSqflite.dart';
 import 'package:redesign/view/USER/SignIn-SignUp/login/login_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -75,6 +76,7 @@ class LogoutDialog extends StatelessWidget {
                   await FirebaseAuth.instance.signOut();
                   await UserPreferences.clearUser();
                   await FriendsSqflite.clearAll();
+                  await GroupsSqflite.clearAll();
                   if (!context.mounted) return;
                   Navigator.pushAndRemoveUntil(
                     context,

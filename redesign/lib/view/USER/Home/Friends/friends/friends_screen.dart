@@ -8,7 +8,6 @@ import 'widgets/friends_app_bar.dart';
 import 'widgets/search_bar.dart';
 import 'widgets/search_results_list.dart';
 import 'widgets/online_now_section.dart';
-import 'widgets/build_squad_cta.dart';
 import 'widgets/suggested_players_section.dart';
 import 'widgets/messages_list_section.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -63,7 +62,6 @@ class _FriendsHubScreenState extends State<FriendsHubScreen> {
                 ),
                 const SliverToBoxAdapter(child: OnlineNowSection()),
                 const SliverToBoxAdapter(child: MessagesListSection()),
-                const SliverToBoxAdapter(child: BuildSquadCTA()),
                 const SliverToBoxAdapter(child: SuggestedPlayersSection()),
                 SliverToBoxAdapter(child: SizedBox(height: context.heightPct(4))),
               ],

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Friends_SQF/friendsSqflite.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
+import 'package:redesign/services/xp_reward_service.dart';
 
 class FriendsController extends GetxController {
   final _firestore = FirebaseFirestore.instance;
@@ -83,7 +84,17 @@ class FriendsController extends GetxController {
     if (_myEmail.isEmpty) return;
     isLoadingSuggested.value = true;
     try {
-      final snapshot = await _firestore.collection('User').limit(30).get();
+      // 1. Fetch current user's profile to compare sports & level
+      final myDoc = await _firestore.collection('User').doc(_myEmail).get();
+      final myData = myDoc.data() ?? {};
+      final mySports = (myData['favoriteSports'] as List<dynamic>?)
+              ?.map((s) => s.toString().trim().toLowerCase())
+              .toSet() ??
+          {};
+      final myTier = (myData['tier'] ?? 'Bronze').toString().trim().toLowerCase();
+      final myXp = (myData['xpPoints'] as num?)?.toInt() ?? 100;
+
+      final snapshot = await _firestore.collection('User').limit(40).get();
       final friendEmails =
           friends.map((f) => f.email.toLowerCase().trim()).toSet();
       final pendingEmails = pendingRequests
@@ -121,16 +132,38 @@ class FriendsController extends GetxController {
             ? fullName
             : (data['username'] ?? 'Player');
 
-        final rawTier = (data['tier'] ?? 'Intermediate').toString();
+        final rawTier = (data['tier'] ?? 'Bronze').toString().trim();
         final level = rawTier.isNotEmpty
             ? (rawTier[0].toUpperCase() + rawTier.substring(1).toLowerCase())
-            : 'Intermediate';
+            : 'Bronze';
 
-        final sportsList = (data['favoriteSports'] as List<dynamic>?)
-            ?.map((s) => s.toString())
-            .toList() ?? [];
-        final sport = sportsList.isNotEmpty ? sportsList.first : 'Sports';
-        final meta = 'Nearby · $sport';
+        final candidateSports = (data['favoriteSports'] as List<dynamic>?)
+                ?.map((s) => s.toString().trim())
+                .toList() ??
+            [];
+
+        // Calculate sports overlap & level proximity
+        final matchingSports = candidateSports
+            .where((s) => mySports.contains(s.toLowerCase()))
+            .toList();
+
+        int score = 0;
+        score += matchingSports.length * 10;
+        if (rawTier.toLowerCase() == myTier) {
+          score += 5;
+        }
+        final candidateXp = (data['xpPoints'] as num?)?.toInt() ?? 100;
+        final xpDiff = (candidateXp - myXp).abs();
+        if (xpDiff < 300) score += 3;
+
+        String meta = 'Plays ${candidateSports.isNotEmpty ? candidateSports.first : 'Sports'}';
+        if (matchingSports.isNotEmpty) {
+          meta = '${matchingSports.length} Sport${matchingSports.length > 1 ? 's' : ''} in Common';
+        } else if (rawTier.toLowerCase() == myTier) {
+          meta = 'Same Level ($level)';
+        } else if (candidateSports.isNotEmpty) {
+          meta = '$level · ${candidateSports.first}';
+        }
 
         suggestions.add({
           'docId': doc.id,
@@ -139,12 +172,18 @@ class FriendsController extends GetxController {
           'profileImageUrl': data['profileImageUrl'] ?? '',
           'level': level,
           'meta': meta,
+          'matchingSports': matchingSports,
+          'score': score,
           'isPublicProfile': data['isPublicProfile'] ?? true,
           'isOnline': data['isOnline'] ?? false,
         });
       }
 
-      suggestedPlayers.assignAll(suggestions.take(6).toList());
+      // Sort by highest match score
+      suggestions.sort((a, b) => (b['score'] as int).compareTo(a['score'] as int));
+
+      // Take top 3 to 4 most matching real players
+      suggestedPlayers.assignAll(suggestions.take(4).toList());
     } catch (e) {
       debugPrint('🔴 [FriendsController] Suggested players fetch error: $e');
     } finally {
@@ -438,6 +477,18 @@ class FriendsController extends GetxController {
     await _firestore.collection('User').doc(targetEmail).update({
       'friends': FieldValue.arrayUnion([theirFriendEntry.toMap()]),
     });
+
+    // Award +2 XP to both users for adding a new friend
+    await XpRewardService.awardBookingXp(
+      userDocId: _myEmail,
+      sport: 'general',
+      xpAmount: 2,
+    );
+    await XpRewardService.awardBookingXp(
+      userDocId: targetEmail,
+      sport: 'general',
+      xpAmount: 2,
+    );
   }
 
   /// Creates DM doc with alphabetical email concat as ID

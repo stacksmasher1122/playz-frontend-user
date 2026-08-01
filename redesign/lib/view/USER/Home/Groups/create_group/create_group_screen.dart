@@ -9,6 +9,9 @@ import 'package:redesign/model/maps_model.dart';
 import 'package:redesign/controller/maps_controller.dart';
 import 'package:redesign/view/USER/Maps/maps_picker/maps_picker_screen.dart';
 
+import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/common/app_back_button.dart';
+
 // Internal Widgets
 import 'widgets/group_image_picker.dart';
 import 'widgets/create_group_text_field.dart';
@@ -144,9 +147,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
-          onPressed: () => Navigator.pop(context),
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: AppBackButton(),
         ),
         title: Text(
           'Create Group',

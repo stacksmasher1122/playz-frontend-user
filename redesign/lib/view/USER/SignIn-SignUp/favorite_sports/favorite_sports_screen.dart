@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-import '../profile_setup/profile_setup_screen.dart';
+import '../language_selection/language_selection_screen.dart';
+import 'package:redesign/common/app_back_button.dart';
 
 import 'widgets/favorite_sports_header.dart';
 import 'widgets/sports_selection_grid.dart';
@@ -54,7 +55,7 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => ProfileSetupScreen(selectedSports: _selectedSports.toList()),
+        builder: (_) => LanguageSelectionScreen(selectedSports: _selectedSports.toList()),
       ),
     );
   }
@@ -69,14 +70,14 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 20),
-          onPressed: () => Navigator.pop(context),
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: AppBackButton(),
         ),
         title: Column(
           children: [
             Text(
-              'STEP 1 OF 2',
+              'STEP 1 OF 3',
               style: AppTypography.labelCaps10.copyWith(
                 color: AppColors.muted,
                 fontSize: context.responsiveFont(11),
@@ -90,7 +91,7 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
               children: [
                 Container(
                   height: context.heightPct(0.4).clamp(3.0, 4.0),
-                  width: context.widthPct(8),
+                  width: context.widthPct(7),
                   decoration: BoxDecoration(
                     color: AppColors.accent,
                     borderRadius: BorderRadius.circular(2),
@@ -99,7 +100,16 @@ class _FavoriteSportsScreenState extends State<FavoriteSportsScreen> {
                 SizedBox(width: context.widthPct(1)),
                 Container(
                   height: context.heightPct(0.4).clamp(3.0, 4.0),
-                  width: context.widthPct(8),
+                  width: context.widthPct(7),
+                  decoration: BoxDecoration(
+                    color: AppColors.borderDark,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                SizedBox(width: context.widthPct(1)),
+                Container(
+                  height: context.heightPct(0.4).clamp(3.0, 4.0),
+                  width: context.widthPct(7),
                   decoration: BoxDecoration(
                     color: AppColors.borderDark,
                     borderRadius: BorderRadius.circular(2),

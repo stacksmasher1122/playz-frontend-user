@@ -698,6 +698,22 @@ class GroupChatController extends GetxController {
       }
 
       await chatRef.update(updates);
+
+      // Also update local SQFLite database
+      final db = await GroupsSqflite.database;
+      final sqfUpdates = <String, dynamic>{
+        'content': finalContent,
+        'isEdited': 1,
+      };
+      if (finalStatus == 'flagged') {
+        sqfUpdates['status'] = 'flagged';
+      }
+      await db.update(
+        'group_chat_messages',
+        sqfUpdates,
+        where: 'id = ?',
+        whereArgs: [messageId],
+      );
     } catch (e) {
       debugPrint('🔴 [GroupChat] Edit message error: $e');
       Get.snackbar('Error', 'Failed to edit message');

@@ -4,6 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Groups_Controller/groups_controller.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/common/app_back_button.dart';
 
 class GroupRequestsAppBar extends StatelessWidget {
   const GroupRequestsAppBar({super.key});
@@ -15,22 +16,15 @@ class GroupRequestsAppBar extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        context.widthPct(1),
+        context.widthPct(4),
         context.heightPct(1),
         context.widthPct(4),
         0,
       ),
       child: Row(
         children: [
-          IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: AppColors.accent,
-              size: 26,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          SizedBox(width: context.widthPct(1)),
+          const AppBackButton(),
+          SizedBox(width: context.widthPct(3)),
           Expanded(
             child: Text(
               'Group Requests',

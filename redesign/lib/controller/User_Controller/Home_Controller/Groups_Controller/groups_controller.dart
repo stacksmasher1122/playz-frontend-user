@@ -15,6 +15,7 @@ import 'package:redesign/sqflite/User_SQF/Home_SQF/Groups_SQF/groupsSqflite.dart
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/services/global_groups_service.dart';
 import 'package:redesign/controller/maps_controller.dart';
+import 'package:redesign/services/xp_reward_service.dart';
 
 class GroupsController extends GetxController {
   final _firestore = FirebaseFirestore.instance;
@@ -402,6 +403,13 @@ class GroupsController extends GetxController {
       fetchMyGroups();
       fetchRecommendedGroups();
 
+      // Award +5 XP for creating a group
+      await XpRewardService.awardBookingXp(
+        userDocId: _myEmail,
+        sport: sport,
+        xpAmount: 5,
+      );
+
       Get.snackbar(
         'Success',
         'Group "$name" created!',
@@ -500,6 +508,14 @@ class GroupsController extends GetxController {
           .collection('requests')
           .doc(req.senderEmail)
           .delete();
+
+      // Award +5 XP to the user for joining the group
+      final groupSport = (groupDoc?.data()?['sport'] ?? 'Global').toString();
+      await XpRewardService.awardBookingXp(
+        userDocId: req.senderEmail,
+        sport: groupSport,
+        xpAmount: 5,
+      );
 
       Get.snackbar('Success', 'User approved to join.');
     } catch (e) {
@@ -622,6 +638,13 @@ class GroupsController extends GetxController {
 
       // 5) Save locally
       await GroupsSqflite.insertGroup(joinedGroup);
+
+      // Award +5 XP for joining a public group
+      await XpRewardService.awardBookingXp(
+        userDocId: _myEmail,
+        sport: group.sport,
+        xpAmount: 5,
+      );
 
       Get.snackbar(
         'Joined!',

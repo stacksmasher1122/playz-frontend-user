@@ -7,6 +7,7 @@ import 'package:redesign/view/USER/Home/Groups/groups_info/groups_info_screen.da
 import 'package:redesign/view/USER/Home/Groups/group_request/group_request_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/Home_Models/Groups_Model/groups_model.dart';
+import 'package:redesign/common/app_back_button.dart';
 
 const _kGreen = AppColors.accent;
 const _kMuted = Colors.white38;
@@ -45,19 +46,15 @@ class GroupsChatAppBar extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      decoration: const BoxDecoration(
         color: AppColors.background,
         border: Border(bottom: BorderSide(color: Colors.white10)),
       ),
       child: Row(
         children: [
-          IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          const AppBackButton(),
+          const SizedBox(width: 8),
           Expanded(
             child: GestureDetector(
               onTap: () {

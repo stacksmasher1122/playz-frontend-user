@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Type;
 
 class UserProfileModel {
   final String docId;
@@ -16,6 +16,8 @@ class UserProfileModel {
   final bool isTrainer;
   final String tier;
   final int xpPoints;
+  final int missionsRewardsXp;
+  final Map<String, int> sportsXp;
   final int zCoins;
   final String subscriptionStatus; // 'FREE', 'Z PREMIUM'
   final String referralCode;
@@ -38,6 +40,8 @@ class UserProfileModel {
     this.isTrainer = false,
     this.tier = 'ROOKIE',
     this.xpPoints = 100,
+    this.missionsRewardsXp = 0,
+    this.sportsXp = const {},
     this.zCoins = 200,
     this.subscriptionStatus = 'FREE',
     this.referralCode = '',
@@ -51,12 +55,24 @@ class UserProfileModel {
     return '@player';
   }
 
+  /// Helper to get XP points for a specific sport (e.g. "Cricket" or "cricket")
+  int getSportXp(String sport) {
+    final key = sport.trim().toLowerCase().replaceAll(' ', '_');
+    return sportsXp[key] ?? 0;
+  }
+
   factory UserProfileModel.fromMap(String id, Map<String, dynamic> map) {
     final name = (map['fullName'] ?? '').toString();
     final uname = (map['username'] ?? '').toString();
     final defaultUname = uname.isNotEmpty
         ? uname
         : (name.isNotEmpty ? '@${name.toLowerCase().replaceAll(' ', '')}' : '@player');
+
+    final rawSportsXp = map['sportsXp'] as Map<String, dynamic>? ?? {};
+    final sportsXpMap = <String, int>{};
+    rawSportsXp.forEach((key, val) {
+      if (val is num) sportsXpMap[key] = val.toInt();
+    });
 
     return UserProfileModel(
       docId: id,
@@ -74,6 +90,8 @@ class UserProfileModel {
       isTrainer: map['isTrainer'] ?? false,
       tier: (map['tier'] ?? 'ROOKIE').toString().toUpperCase(),
       xpPoints: (map['xpPoints'] as num?)?.toInt() ?? 100,
+      missionsRewardsXp: (map['missionsRewardsXp'] as num?)?.toInt() ?? 0,
+      sportsXp: sportsXpMap,
       zCoins: (map['zCoins'] as num?)?.toInt() ?? 200,
       subscriptionStatus: (map['subscriptionStatus'] ?? 'FREE').toString().toUpperCase(),
       referralCode: map['referralCode'] ?? '',
@@ -98,6 +116,8 @@ class UserProfileModel {
       'isTrainer': isTrainer,
       'tier': tier,
       'xpPoints': xpPoints,
+      'missionsRewardsXp': missionsRewardsXp,
+      'sportsXp': sportsXp,
       'zCoins': zCoins,
       'subscriptionStatus': subscriptionStatus,
       'referralCode': referralCode,
@@ -122,6 +142,8 @@ class UserProfileModel {
     bool? isTrainer,
     String? tier,
     int? xpPoints,
+    int? missionsRewardsXp,
+    Map<String, int>? sportsXp,
     int? zCoins,
     String? subscriptionStatus,
     String? referralCode,
@@ -142,6 +164,8 @@ class UserProfileModel {
       isTrainer: isTrainer ?? this.isTrainer,
       tier: tier ?? this.tier,
       xpPoints: xpPoints ?? this.xpPoints,
+      missionsRewardsXp: missionsRewardsXp ?? this.missionsRewardsXp,
+      sportsXp: sportsXp ?? this.sportsXp,
       zCoins: zCoins ?? this.zCoins,
       subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
       referralCode: referralCode ?? this.referralCode,

@@ -4,6 +4,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/view/USER/Home/Groups/create_group/create_group_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/common/app_back_button.dart';
 
 class GroupsAppBar extends StatelessWidget {
   const GroupsAppBar({super.key});
@@ -35,6 +36,10 @@ class GroupsAppBar extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    /// COMMON ROUNDED BACK BUTTON
+                    const AppBackButton(),
+                    SizedBox(width: context.widthPct(3)),
+
                     /// TEXT
                     Expanded(
                       child: Column(

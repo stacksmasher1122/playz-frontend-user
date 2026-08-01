@@ -14,6 +14,7 @@ import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/utils/slot_overlap_helper.dart';
+import 'package:redesign/services/xp_reward_service.dart';
 
 import 'widgets/availability_timeline.dart';
 import 'widgets/booking_dropdowns.dart';
@@ -501,6 +502,13 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
       }
 
       await batch.commit();
+
+      // Award +50 XP for successful slot booking (stored in per-sport & missions/rewards counters)
+      await XpRewardService.awardBookingXp(
+        userDocId: userDocId,
+        sport: selectedSport ?? '',
+        xpAmount: 50,
+      );
 
       Get.snackbar(
         'Booking Confirmed! 🎉',

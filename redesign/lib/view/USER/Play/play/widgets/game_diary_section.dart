@@ -30,7 +30,10 @@ class GameDiaryWidget extends StatelessWidget {
 
         return StreamBuilder<DocumentSnapshot>(
           stream: docId.isNotEmpty
-              ? FirebaseFirestore.instance.collection('User').doc(docId).snapshots()
+              ? FirebaseFirestore.instance
+                    .collection('User')
+                    .doc(docId)
+                    .snapshots()
               : null,
           builder: (context, userSnap) {
             final userData = userSnap.data?.data() as Map<String, dynamic>?;
@@ -51,16 +54,25 @@ class GameDiaryWidget extends StatelessWidget {
                 return m.hostId == docId || m.playerIds.contains(docId);
               }).toList();
 
-              final computedHosted = diaryMatches.where((m) => m.hostId == docId).length;
+              final computedHosted = diaryMatches
+                  .where((m) => m.hostId == docId)
+                  .length;
               final computedTotal = diaryMatches.length;
 
-              final fbTotal = (statsMap?['totalGamesPlayed'] as num?)?.toInt() ?? 0;
+              final fbTotal =
+                  (statsMap?['totalGamesPlayed'] as num?)?.toInt() ?? 0;
               final fbHosted = (statsMap?['totalHosted'] as num?)?.toInt() ?? 0;
               final fbXp = (statsMap?['xpPoints'] as num?)?.toInt() ?? 0;
 
-              final displayTotal = computedTotal > fbTotal ? computedTotal : fbTotal;
-              final displayHosted = computedHosted > fbHosted ? computedHosted : fbHosted;
-              final displayXp = (computedTotal * 100) > fbXp ? (computedTotal * 100) : fbXp;
+              final displayTotal = computedTotal > fbTotal
+                  ? computedTotal
+                  : fbTotal;
+              final displayHosted = computedHosted > fbHosted
+                  ? computedHosted
+                  : fbHosted;
+              final displayXp = (computedTotal * 100) > fbXp
+                  ? (computedTotal * 100)
+                  : fbXp;
 
               return ListView(
                 padding: EdgeInsets.symmetric(
@@ -72,18 +84,42 @@ class GameDiaryWidget extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(context.widthPct(4)),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                      borderRadius: BorderRadius.circular(
+                        context.minDimensionPct(4),
+                      ),
                       gradient: AppColors.darkSurfaceOverlay,
-                      border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
+                      border: Border.all(
+                        color: AppColors.accent.withValues(alpha: 0.2),
+                      ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _StatItem(label: 'Total Games', value: '$displayTotal', icon: Icons.sports_score),
-                        Container(height: context.heightPct(4), width: 1, color: AppColors.divider),
-                        _StatItem(label: 'Hosted', value: '$displayHosted', icon: Icons.add_task),
-                        Container(height: context.heightPct(4), width: 1, color: AppColors.divider),
-                        _StatItem(label: 'XP Earned', value: '$displayXp', icon: Icons.stars),
+                        _StatItem(
+                          label: 'Total Games',
+                          value: '$displayTotal',
+                          icon: Icons.sports_score,
+                        ),
+                        Container(
+                          height: context.heightPct(4),
+                          width: 1,
+                          color: AppColors.divider,
+                        ),
+                        _StatItem(
+                          label: 'Hosted',
+                          value: '$displayHosted',
+                          icon: Icons.add_task,
+                        ),
+                        Container(
+                          height: context.heightPct(4),
+                          width: 1,
+                          color: AppColors.divider,
+                        ),
+                        _StatItem(
+                          label: 'XP Earned',
+                          value: '$displayXp',
+                          icon: Icons.stars,
+                        ),
                       ],
                     ),
                   ),
@@ -118,10 +154,16 @@ class GameDiaryWidget extends StatelessWidget {
 
                   if (diaryMatches.isEmpty) ...[
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: context.heightPct(4)),
+                      padding: EdgeInsets.symmetric(
+                        vertical: context.heightPct(4),
+                      ),
                       child: Column(
                         children: [
-                          const Icon(Icons.history_toggle_off, size: 56, color: AppColors.muted),
+                          const Icon(
+                            Icons.history_toggle_off,
+                            size: 56,
+                            color: AppColors.muted,
+                          ),
                           SizedBox(height: context.heightPct(1.5)),
                           Text(
                             'No Participated Games Yet',
@@ -150,12 +192,16 @@ class GameDiaryWidget extends StatelessWidget {
                               backgroundColor: AppColors.accent,
                               foregroundColor: AppColors.background,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                                borderRadius: BorderRadius.circular(
+                                  context.minDimensionPct(3),
+                                ),
                               ),
                             ),
                             onPressed: () {
                               Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => const HostMatchScreen()),
+                                MaterialPageRoute(
+                                  builder: (_) => const HostMatchScreen(),
+                                ),
                               );
                             },
                             icon: const Icon(Icons.add),
@@ -181,23 +227,34 @@ class GameDiaryWidget extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final match = diaryMatches[index];
                         return Padding(
-                          padding: EdgeInsets.only(bottom: context.heightPct(1.2)),
+                          padding: EdgeInsets.only(
+                            bottom: context.heightPct(1.2),
+                          ),
                           child: Dismissible(
                             key: Key('diary_${match.id}_$index'),
                             direction: DismissDirection.endToStart,
                             background: Container(
                               alignment: Alignment.centerRight,
-                              padding: EdgeInsets.symmetric(horizontal: context.widthPct(5)),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.widthPct(5),
+                              ),
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
-                                  colors: [Color(0xFFFF3B30), Color(0xFFB00020)],
+                                  colors: [
+                                    Color(0xFFFF3B30),
+                                    Color(0xFFB00020),
+                                  ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                 ),
-                                borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+                                borderRadius: BorderRadius.circular(
+                                  context.minDimensionPct(3.5),
+                                ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFFFF3B30).withValues(alpha: 0.35),
+                                    color: const Color(
+                                      0xFFFF3B30,
+                                    ).withValues(alpha: 0.35),
                                     blurRadius: 8,
                                     offset: const Offset(0, 3),
                                   ),
@@ -207,9 +264,13 @@ class GameDiaryWidget extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.all(context.widthPct(2.2)),
+                                    padding: EdgeInsets.all(
+                                      context.widthPct(2.2),
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.2),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.2,
+                                      ),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(
