@@ -444,6 +444,12 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
     final encodedQrText = 'PZSEC_${base64Encode(utf8.encode(rawPayload))}';
 
+    final effectiveSport = (selectedSport != null && selectedSport!.trim().isNotEmpty)
+        ? selectedSport!.trim()
+        : (_bookingController.turfSports.isNotEmpty
+            ? _bookingController.turfSports.first
+            : 'Cricket');
+
     final bookingMap = {
       'id': bookingId,
       'bookingId': bookingId,
@@ -460,7 +466,7 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
       'turfImage': (turf?.allImages.isNotEmpty == true) ? turf!.allImages.first : 'https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a',
       'groundId': groundId,
       'groundName': ground?.name ?? selectedGround ?? 'Ground 1',
-      'sport': selectedSport ?? '',
+      'sport': effectiveSport,
       'date': dateStr,
       'dateFormatted': dateFormatted,
       'startTime': startTimeStr,
@@ -503,10 +509,10 @@ class _ConfirmSlotScreenState extends State<ConfirmSlotScreen> {
 
       await batch.commit();
 
-      // Award +50 XP for successful slot booking (stored in per-sport & missions/rewards counters)
+      // Award +50 XP for successful slot booking to the specific sport counter
       await XpRewardService.awardBookingXp(
         userDocId: userDocId,
-        sport: selectedSport ?? '',
+        sport: effectiveSport,
         xpAmount: 50,
       );
 

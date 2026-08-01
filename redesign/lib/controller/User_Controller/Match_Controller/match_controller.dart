@@ -67,7 +67,9 @@ class MatchController extends GetxController {
             });
             allMatches.value = docs;
             isLoading.value = false;
-            debugPrint('📥 [MatchController] Fetched ${docs.length} matches from Firestore.');
+            debugPrint(
+              '📥 [MatchController] Fetched ${docs.length} matches from Firestore.',
+            );
           },
           onError: (err) {
             debugPrint('⚠️ Error fetching matches: $err');
@@ -203,7 +205,7 @@ class MatchController extends GetxController {
             'totalHosted': FieldValue.increment(1),
             'xpPoints': FieldValue.increment(100),
             'lastUpdated': FieldValue.serverTimestamp(),
-          }
+          },
         }, SetOptions(merge: true));
       }
 
@@ -317,23 +319,81 @@ class MatchController extends GetxController {
             final String finalOwnerId = ownerId.isNotEmpty
                 ? ownerId
                 : 'owner_$turfId';
-            await _firestore
+
+            final bookingId = 'PLZ_MATCH_${DateTime.now().millisecondsSinceEpoch}';
+            final otp = (100000 + Random().nextInt(900000)).toString();
+            final hostDocId = (data['hostId'] ?? data['createdBy'] ?? data['userDocId'] ?? '').toString();
+
+            final rawPayload = jsonEncode({
+              'bookingId': bookingId,
+              'otp': otp,
+              'turfId': turfId,
+              'groundId': groundId,
+              'date': dateStr,
+              'timeSlot': timeOnly,
+              'timestamp': DateTime.now().toIso8601String(),
+            });
+            final encodedQrText = 'PZSEC_${base64Encode(utf8.encode(rawPayload))}';
+
+            final bookingMap = {
+              'id': bookingId,
+              'bookingId': bookingId,
+              'otp': otp,
+              'qrData': encodedQrText,
+              'userId': hostDocId,
+              'ownerId': finalOwnerId,
+              'turfId': turfId,
+              'turfName': data['turfName'] ?? data['venue'] ?? 'Booked Turf',
+              'turfAddress': data['address'] ?? data['locality'] ?? '',
+              'groundId': groundId,
+              'groundName': 'Main Ground',
+              'sport': data['sport'] ?? 'Football',
+              'date': dateStr,
+              'dateFormatted': dateStr,
+              'time': timeOnly,
+              'timeSlot': timeOnly,
+              'slotId': slotId,
+              'status': 'upcoming',
+              'bookingType': 'Match Poll Booking',
+              'createdAt': FieldValue.serverTimestamp(),
+            };
+
+            final batch = _firestore.batch();
+            final ownerTurfRef = _firestore
                 .collection('owners')
                 .doc(finalOwnerId)
                 .collection('turfs')
                 .doc(turfId)
                 .collection('bookings')
-                .add({
-                  'turfId': turfId,
-                  'groundId': groundId,
-                  'groundName': 'Main Ground',
-                  'date': dateStr,
-                  'time': timeOnly,
-                  'slotId': slotId,
-                  'status': 'confirmed',
-                  'createdAt': FieldValue.serverTimestamp(),
-                  'bookingType': 'match_poll_auto_booked',
-                });
+                .doc(bookingId);
+            batch.set(ownerTurfRef, bookingMap, SetOptions(merge: true));
+
+            final ownerRef = _firestore
+                .collection('owners')
+                .doc(finalOwnerId)
+                .collection('bookings')
+                .doc(bookingId);
+            batch.set(ownerRef, bookingMap, SetOptions(merge: true));
+
+            if (hostDocId.isNotEmpty) {
+              final userBookingRef = _firestore
+                  .collection('User')
+                  .doc(hostDocId)
+                  .collection('bookings')
+                  .doc(bookingId);
+              batch.set(userBookingRef, bookingMap, SetOptions(merge: true));
+            }
+            await batch.commit();
+
+            final players = List<String>.from(data['playerIds'] ?? []);
+            final matchSport = (data['sport'] ?? 'Football').toString();
+            if (players.isNotEmpty) {
+              await XpRewardService.awardPollCompletionXp(
+                playerIds: players,
+                sport: matchSport,
+                xpAmount: 50,
+              );
+            }
 
             await docRef.update({'isSlotBooked': true, 'hasConflict': false});
 
@@ -415,24 +475,81 @@ class MatchController extends GetxController {
         return false;
       }
 
-      // 2. Add booking record under turf owner
-      await _firestore
+      // 2. Add booking record under turf owner & under host User collection
+      final bookingId = 'PLZ_MATCH_${DateTime.now().millisecondsSinceEpoch}';
+      final otp = (100000 + Random().nextInt(900000)).toString();
+
+      final matchDoc = await _firestore.collection('matches').doc(matchId).get();
+      final matchData = matchDoc.exists ? (matchDoc.data() ?? {}) : {};
+
+      final hostUserId = (matchData['hostId'] ?? matchData['createdBy'] ?? matchData['userDocId'] ?? '').toString();
+      final hostEmail = (matchData['hostEmail'] ?? '').toString();
+      final targetUserDocId = hostUserId.isNotEmpty ? hostUserId : (hostEmail.isNotEmpty ? hostEmail : null);
+
+      final rawPayload = jsonEncode({
+        'bookingId': bookingId,
+        'otp': otp,
+        'turfId': turfId,
+        'groundId': groundId,
+        'date': dateStr,
+        'timeSlot': timeStr,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+      final encodedQrText = 'PZSEC_${base64Encode(utf8.encode(rawPayload))}';
+
+      final bookingMap = {
+        'id': bookingId,
+        'bookingId': bookingId,
+        'otp': otp,
+        'qrData': encodedQrText,
+        'userId': targetUserDocId ?? '',
+        'ownerId': ownerId,
+        'turfId': turfId,
+        'turfName': matchData['turfName'] ?? matchData['venue'] ?? 'Booked Turf',
+        'turfAddress': matchData['address'] ?? matchData['locality'] ?? '',
+        'groundId': groundId,
+        'groundName': groundName,
+        'sport': matchData['sport'] ?? 'Football',
+        'date': dateStr,
+        'dateFormatted': dateStr,
+        'time': timeStr,
+        'timeSlot': timeStr,
+        'slotId': slotId,
+        'amount': (matchData['priceNum'] as num?)?.toInt() ?? 0,
+        'status': 'upcoming',
+        'bookingType': 'Match Poll Booking',
+        'matchId': matchId,
+        'createdAt': FieldValue.serverTimestamp(),
+      };
+
+      final batch = _firestore.batch();
+
+      final ownerTurfRef = _firestore
           .collection('owners')
           .doc(ownerId)
           .collection('turfs')
           .doc(turfId)
           .collection('bookings')
-          .add({
-            'turfId': turfId,
-            'groundId': groundId,
-            'groundName': groundName,
-            'date': dateStr,
-            'time': timeStr,
-            'slotId': slotId,
-            'status': 'confirmed',
-            'createdAt': FieldValue.serverTimestamp(),
-            'bookingType': 'match_poll_gathered_full',
-          });
+          .doc(bookingId);
+      batch.set(ownerTurfRef, bookingMap, SetOptions(merge: true));
+
+      final ownerRef = _firestore
+          .collection('owners')
+          .doc(ownerId)
+          .collection('bookings')
+          .doc(bookingId);
+      batch.set(ownerRef, bookingMap, SetOptions(merge: true));
+
+      if (targetUserDocId != null && targetUserDocId.isNotEmpty) {
+        final userBookingRef = _firestore
+            .collection('User')
+            .doc(targetUserDocId)
+            .collection('bookings')
+            .doc(bookingId);
+        batch.set(userBookingRef, bookingMap, SetOptions(merge: true));
+      }
+
+      await batch.commit();
 
       // 3. Mark match poll as slot booked & conflict resolved
       await _firestore.collection('matches').doc(matchId).update({
@@ -441,9 +558,7 @@ class MatchController extends GetxController {
       });
 
       // 4. Award +50 XP to all players in the poll
-      final matchDoc = await _firestore.collection('matches').doc(matchId).get();
-      if (matchDoc.exists) {
-        final matchData = matchDoc.data()!;
+      if (matchDoc.exists && matchData.isNotEmpty) {
         final players = List<String>.from(matchData['playerIds'] ?? []);
         final matchSport = (matchData['sport'] ?? 'Football').toString();
         await XpRewardService.awardPollCompletionXp(
@@ -636,7 +751,9 @@ class MatchController extends GetxController {
       if (docSnap.exists) {
         final data = docSnap.data();
         final hostId = data?['hostId'] as String?;
-        final List<dynamic> playerIds = List<dynamic>.from(data?['playerIds'] ?? []);
+        final List<dynamic> playerIds = List<dynamic>.from(
+          data?['playerIds'] ?? [],
+        );
 
         if (hostId == userDocId || playerIds.length <= 1) {
           // User is host or sole player: delete entire match document from Firestore
@@ -659,7 +776,7 @@ class MatchController extends GetxController {
           'gameStats': {
             'totalGamesPlayed': FieldValue.increment(-1),
             'lastUpdated': FieldValue.serverTimestamp(),
-          }
+          },
         }, SetOptions(merge: true));
       }
 

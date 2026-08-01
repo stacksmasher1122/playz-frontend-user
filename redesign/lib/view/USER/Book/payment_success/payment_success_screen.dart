@@ -41,8 +41,16 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
     super.dispose();
   }
 
-  void _navigateToHome() {
-    Get.offAll(() => const UserAppNavShell());
+  void _navigateToBook() {
+    if (Get.isRegistered<UserNavController>()) {
+      Get.find<UserNavController>().changeTab(1);
+    }
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (_) => const UserAppNavShell(initialIndex: 1),
+      ),
+      (route) => false,
+    );
   }
 
   @override
@@ -55,7 +63,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          _navigateToHome();
+          _navigateToBook();
         }
       },
       child: Scaffold(
@@ -65,7 +73,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
-            onPressed: _navigateToHome,
+            onPressed: _navigateToBook,
           ),
         ),
         body: SafeArea(

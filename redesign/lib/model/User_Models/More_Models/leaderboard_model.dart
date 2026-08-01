@@ -18,6 +18,7 @@ class LeaderboardPlayerModel {
   final String avatarUrl;
   final bool isCurrentUser;
   final Map<String, int> sportXpMap;
+  final int missionsRewardsXp;
 
   const LeaderboardPlayerModel({
     this.id = '',
@@ -28,20 +29,23 @@ class LeaderboardPlayerModel {
     required this.avatarUrl,
     this.isCurrentUser = false,
     this.sportXpMap = const {},
+    this.missionsRewardsXp = 0,
   });
 
-  /// Total XP sum across all sports
-  int get totalXp {
-    if (sportXpMap.isEmpty) return points;
-    return sportXpMap.values.fold(0, (sum, val) => sum + val);
+  /// Total overall XP = Max of stored overall xpPoints or sum of per-sport XPs + Special Missions
+  int get totalOverallXp {
+    int sportsSum = sportXpMap.values.fold(0, (sum, val) => sum + val);
+    int totalFromSports = sportsSum + missionsRewardsXp;
+    return points > totalFromSports ? points : totalFromSports;
   }
 
-  /// Calculates player tier based on current points/XP
+  /// Calculates player tier based on total overall XP
   PlayerTier get tier {
-    if (points >= 15000) return PlayerTier.legend;
-    if (points >= 6000) return PlayerTier.elite;
-    if (points >= 2000) return PlayerTier.prime;
-    if (points >= 500) return PlayerTier.rising;
+    final p = totalOverallXp;
+    if (p >= 15000) return PlayerTier.legend;
+    if (p >= 6000) return PlayerTier.elite;
+    if (p >= 2000) return PlayerTier.prime;
+    if (p >= 500) return PlayerTier.rising;
     return PlayerTier.rookie;
   }
 
@@ -79,6 +83,7 @@ class LeaderboardPlayerModel {
 
   /// Target points needed for next tier
   int get targetPoints {
+    final p = totalOverallXp;
     switch (tier) {
       case PlayerTier.rookie:
         return 500;
@@ -89,7 +94,7 @@ class LeaderboardPlayerModel {
       case PlayerTier.elite:
         return 15000;
       case PlayerTier.legend:
-        return points > 15000 ? points : 15000;
+        return p > 15000 ? p : 15000;
     }
   }
 
@@ -116,7 +121,7 @@ class LeaderboardPlayerModel {
     final target = targetPoints;
     final range = target - startPts;
     if (range <= 0) return 1.0;
-    final currentProgress = points - startPts;
+    final currentProgress = totalOverallXp - startPts;
     return (currentProgress / range).clamp(0.0, 1.0);
   }
 
@@ -161,6 +166,7 @@ class LeaderboardPlayerModel {
     String? avatarUrl,
     bool? isCurrentUser,
     Map<String, int>? sportXpMap,
+    int? missionsRewardsXp,
   }) {
     return LeaderboardPlayerModel(
       id: id ?? this.id,
@@ -171,6 +177,7 @@ class LeaderboardPlayerModel {
       avatarUrl: avatarUrl ?? this.avatarUrl,
       isCurrentUser: isCurrentUser ?? this.isCurrentUser,
       sportXpMap: sportXpMap ?? this.sportXpMap,
+      missionsRewardsXp: missionsRewardsXp ?? this.missionsRewardsXp,
     );
   }
 }

@@ -57,7 +57,7 @@ class RankingsScreen extends StatelessWidget {
                 ),
               ),
               SliverToBoxAdapter(
-                child: DynamicLeagueSections(
+                child: LeagueSections(
                   players: controller.filteredPlayers,
                 ),
               ),

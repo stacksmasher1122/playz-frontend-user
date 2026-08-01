@@ -159,7 +159,8 @@ class InstagramStyleSuggestedCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    errorWidget: (_, __, ___) => _buildPlaceholderAvatar(avatarSize),
+                    errorWidget: (_, __, ___) =>
+                        _buildPlaceholderAvatar(avatarSize),
                   )
                 : _buildPlaceholderAvatar(avatarSize),
           ),
@@ -192,7 +193,7 @@ class InstagramStyleSuggestedCard extends StatelessWidget {
             ],
           ),
 
-          // Bottom Action Button
+          // Bottom Action Button (Add Friend / Follow)
           SizedBox(
             width: double.infinity,
             height: context.heightPct(4.2).clamp(32.0, 36.0),

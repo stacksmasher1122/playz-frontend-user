@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:redesign/model/User_Models/More_Models/leaderboard_model.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_dimensions.dart';
@@ -108,11 +109,7 @@ class _PodiumColumn extends StatelessWidget {
                       ]
                     : null,
               ),
-              child: CircleAvatar(
-                radius: avatarRadius,
-                backgroundColor: AppColors.card,
-                backgroundImage: NetworkImage(player.avatarUrl),
-              ),
+              child: _buildAvatar(player.avatarUrl, avatarRadius),
             ),
 
             // Rank Badge Number Circle at bottom
@@ -183,6 +180,75 @@ class _PodiumColumn extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  bool _isValidHttpUrl(String? url) {
+    if (url == null || url.trim().isEmpty) return false;
+    final clean = url.trim();
+    if (!clean.startsWith('http://') && !clean.startsWith('https://')) return false;
+    try {
+      final uri = Uri.parse(clean);
+      return uri.host.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Widget _buildAvatar(String url, double radius) {
+    if (!_isValidHttpUrl(url)) {
+      return _buildGreyProfileAvatarImage(radius);
+    }
+    return CachedNetworkImage(
+      imageUrl: url.trim(),
+      imageBuilder: (context, imageProvider) => CircleAvatar(
+        radius: radius,
+        backgroundImage: imageProvider,
+      ),
+      placeholder: (_, __) => _buildGreyProfileAvatarImage(radius),
+      errorWidget: (_, __, ___) => _buildGreyProfileAvatarImage(radius),
+    );
+  }
+
+  Widget _buildGreyProfileAvatarImage(double radius) {
+    return Container(
+      width: radius * 2,
+      height: radius * 2,
+      decoration: const BoxDecoration(
+        color: Color(0xFF2C2C2E),
+        shape: BoxShape.circle,
+      ),
+      child: ClipOval(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+              top: radius * 0.35,
+              child: Container(
+                width: radius * 0.72,
+                height: radius * 0.72,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF7C7C80),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: -radius * 0.15,
+              child: Container(
+                width: radius * 1.35,
+                height: radius * 0.9,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF7C7C80),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(50),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

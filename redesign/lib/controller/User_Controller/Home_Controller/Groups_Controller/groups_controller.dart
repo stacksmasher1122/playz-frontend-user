@@ -403,10 +403,10 @@ class GroupsController extends GetxController {
       fetchMyGroups();
       fetchRecommendedGroups();
 
-      // Award +5 XP for creating a group
-      await XpRewardService.awardBookingXp(
+      // Award +5 XP for creating a group (once per unique groupId)
+      await XpRewardService.awardGroupXpOnce(
         userDocId: _myEmail,
-        sport: sport,
+        groupId: groupId,
         xpAmount: 5,
       );
 
@@ -509,11 +509,10 @@ class GroupsController extends GetxController {
           .doc(req.senderEmail)
           .delete();
 
-      // Award +5 XP to the user for joining the group
-      final groupSport = (groupDoc?.data()?['sport'] ?? 'Global').toString();
-      await XpRewardService.awardBookingXp(
+      // Award +5 XP to the user for joining the group (once per unique groupId)
+      await XpRewardService.awardGroupXpOnce(
         userDocId: req.senderEmail,
-        sport: groupSport,
+        groupId: req.groupId,
         xpAmount: 5,
       );
 
@@ -639,10 +638,10 @@ class GroupsController extends GetxController {
       // 5) Save locally
       await GroupsSqflite.insertGroup(joinedGroup);
 
-      // Award +5 XP for joining a public group
-      await XpRewardService.awardBookingXp(
+      // Award +5 XP for joining a public group (once per unique groupId)
+      await XpRewardService.awardGroupXpOnce(
         userDocId: _myEmail,
-        sport: group.sport,
+        groupId: group.groupId,
         xpAmount: 5,
       );
 

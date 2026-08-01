@@ -129,7 +129,7 @@ class CompletedBookingCard extends StatelessWidget {
                     Icons.location_on_outlined,
                     '',
                     onTap: _launchGoogleMaps,
-                    outlined: true,
+                    outlined: false,
                   ),
                   SizedBox(width: context.widthPct(2)),
                   ActionChipWidget(
@@ -162,7 +162,7 @@ class CompletedBookingCard extends StatelessWidget {
                               RateReviewBottomSheet(bookingData: bookingData),
                         );
                       },
-                      outlined: true,
+                      outlined: false,
                     ),
                   ),
                 ],

@@ -478,15 +478,15 @@ class FriendsController extends GetxController {
       'friends': FieldValue.arrayUnion([theirFriendEntry.toMap()]),
     });
 
-    // Award +2 XP to both users for adding a new friend
-    await XpRewardService.awardBookingXp(
+    // Award +2 XP to both users for adding a new friend (once per unique friend user ID)
+    await XpRewardService.awardFriendXpOnce(
       userDocId: _myEmail,
-      sport: 'general',
+      friendUserId: targetEmail,
       xpAmount: 2,
     );
-    await XpRewardService.awardBookingXp(
+    await XpRewardService.awardFriendXpOnce(
       userDocId: targetEmail,
-      sport: 'general',
+      friendUserId: _myEmail,
       xpAmount: 2,
     );
   }

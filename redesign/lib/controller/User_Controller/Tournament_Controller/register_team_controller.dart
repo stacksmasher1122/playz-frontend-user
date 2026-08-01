@@ -32,14 +32,17 @@ class RegisterTeamController extends GetxController {
   final RxString teamLogoPath = "".obs;
 
   // Players & Search
-  final RxList<TournamentPlayerModel> selectedPlayers = <TournamentPlayerModel>[].obs;
-  final RxList<Map<String, dynamic>> searchResults = <Map<String, dynamic>>[].obs;
+  final RxList<TournamentPlayerModel> selectedPlayers =
+      <TournamentPlayerModel>[].obs;
+  final RxList<Map<String, dynamic>> searchResults =
+      <Map<String, dynamic>>[].obs;
   final TextEditingController searchController = TextEditingController();
   final RxBool isSearching = false.obs;
 
   // State
   final RxBool isRegistering = false.obs;
-  final RxInt currentStep = 1.obs; // 1: Basics, 2: Players & Roles, 3: Payment/Confirm
+  final RxInt currentStep =
+      1.obs; // 1: Basics, 2: Players & Roles, 3: Payment/Confirm
 
   // Derived tournament format data
   late final String sport;
@@ -71,12 +74,17 @@ class RegisterTeamController extends GetxController {
     _parseDataMap(tournamentData);
 
     try {
-      final doc = await FirebaseFirestore.instance.collection('tournaments').doc(tournamentId).get();
+      final doc = await FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId)
+          .get();
       if (doc.exists && doc.data() != null) {
         _parseDataMap(doc.data()!);
       }
     } catch (e) {
-      debugPrint("🔴 [TeamRegistration] Error fetching fresh tournament data: $e");
+      debugPrint(
+        "🔴 [TeamRegistration] Error fetching fresh tournament data: $e",
+      );
     }
   }
 
@@ -93,14 +101,41 @@ class RegisterTeamController extends GetxController {
 
   void _setAvailableRoles() {
     if (sport == 'Cricket') {
-      availableRoles = {'Batter': 'Batter', 'Bowler': 'Bowler', 'All-rounder': 'All-rounder', 'Wicketkeeper': 'Wicketkeeper', 'Captain': 'Captain'};
+      availableRoles = {
+        'Batter': 'Batter',
+        'Bowler': 'Bowler',
+        'All-rounder': 'All-rounder',
+        'Wicketkeeper': 'Wicketkeeper',
+        'Captain': 'Captain',
+      };
     } else if (sport == 'Football') {
-      availableRoles = {'Goalkeeper': 'Goalkeeper', 'Defender': 'Defender', 'Midfielder': 'Midfielder', 'Forward': 'Forward', 'Captain': 'Captain'};
+      availableRoles = {
+        'Goalkeeper': 'Goalkeeper',
+        'Defender': 'Defender',
+        'Midfielder': 'Midfielder',
+        'Forward': 'Forward',
+        'Captain': 'Captain',
+      };
     } else if (sport == 'Volleyball') {
-      availableRoles = {'Setter': 'Setter', 'Libero': 'Libero', 'Attacker': 'Attacker', 'Blocker': 'Blocker', 'Captain': 'Captain'};
+      availableRoles = {
+        'Setter': 'Setter',
+        'Libero': 'Libero',
+        'Attacker': 'Attacker',
+        'Blocker': 'Blocker',
+        'Captain': 'Captain',
+      };
     } else if (sport == 'Basketball') {
-      availableRoles = {'Point Guard': 'Point Guard', 'Shooting Guard': 'Shooting Guard', 'Small Forward': 'Small Forward', 'Power Forward': 'Power Forward', 'Center': 'Center', 'Captain': 'Captain'};
-    } else if (sport == 'Badminton' || sport == 'Tennis' || sport == 'Table Tennis') {
+      availableRoles = {
+        'Point Guard': 'Point Guard',
+        'Shooting Guard': 'Shooting Guard',
+        'Small Forward': 'Small Forward',
+        'Power Forward': 'Power Forward',
+        'Center': 'Center',
+        'Captain': 'Captain',
+      };
+    } else if (sport == 'Badminton' ||
+        sport == 'Tennis' ||
+        sport == 'Table Tennis') {
       availableRoles = {'Player': 'Player', 'Captain': 'Captain'};
     } else {
       availableRoles = {'Player': 'Player', 'Captain': 'Captain'};
@@ -111,11 +146,18 @@ class RegisterTeamController extends GetxController {
     try {
       if (selectedPlayers.any((p) => p.userId == currentUserId)) return;
       if (selectedPlayers.length >= teamSize) {
-        Get.snackbar("Team Full", "You have reached the maximum team size of $teamSize.", snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          "Team Full",
+          "You have reached the maximum team size of $teamSize.",
+          snackPosition: SnackPosition.BOTTOM,
+        );
         return;
       }
 
-      final userDoc = await FirebaseFirestore.instance.collection('User').doc(currentUserId).get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('User')
+          .doc(currentUserId)
+          .get();
       if (userDoc.exists) {
         final data = userDoc.data()!;
         final rawName = data['fullName'] ?? data['primaryEmail'] ?? 'User';
@@ -127,7 +169,7 @@ class RegisterTeamController extends GetxController {
             name: rawName,
             profileImageUrl: photo,
             sportRole: availableRoles.keys.first,
-          )
+          ),
         );
 
         if (teamNameController.text.trim().isEmpty) {
@@ -168,8 +210,12 @@ class RegisterTeamController extends GetxController {
         query,
         currentUserId: currentUserId,
       );
-      searchResults.value = results.where((u) => u['userId'] != currentUserId).toList();
-      debugPrint("🔍 [TeamRegistration] Found ${searchResults.length} player search results.");
+      searchResults.value = results
+          .where((u) => u['userId'] != currentUserId)
+          .toList();
+      debugPrint(
+        "🔍 [TeamRegistration] Found ${searchResults.length} player search results.",
+      );
     } catch (e) {
       debugPrint("🔴 [TeamRegistration] Error searching users: $e");
     } finally {
@@ -180,14 +226,24 @@ class RegisterTeamController extends GetxController {
   Future<void> searchPlayers(String query) => searchUser(query);
 
   void addPlayerFromSearch(Map<String, dynamic> playerData) {
-    debugPrint("➕ [TeamRegistration] Adding player from search: ${playerData['name'] ?? playerData['fullName']} (id: ${playerData['userId']})");
+    debugPrint(
+      "➕ [TeamRegistration] Adding player from search: ${playerData['name'] ?? playerData['fullName']} (id: ${playerData['userId']})",
+    );
     if (selectedPlayers.any((p) => p.userId == playerData['userId'])) {
-      Get.snackbar("Already Added", "This player is already in your team.", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        "Already Added",
+        "This player is already in your team.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
       return;
     }
 
     if (selectedPlayers.length >= teamSize) {
-      Get.snackbar("Team Full", "You have reached the maximum team size of $teamSize.", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        "Team Full",
+        "You have reached the maximum team size of $teamSize.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
       return;
     }
 
@@ -197,13 +253,14 @@ class RegisterTeamController extends GetxController {
         name: playerData['fullName'] ?? playerData['name'] ?? 'Player',
         profileImageUrl: playerData['profileImageUrl'] ?? '',
         sportRole: availableRoles.keys.first,
-      )
+      ),
     );
 
     searchResults.removeWhere((p) => p['userId'] == playerData['userId']);
   }
 
-  void addPlayer(Map<String, dynamic> playerData) => addPlayerFromSearch(playerData);
+  void addPlayer(Map<String, dynamic> playerData) =>
+      addPlayerFromSearch(playerData);
 
   void removePlayer(String userId) {
     selectedPlayers.removeWhere((p) => p.userId == userId);
@@ -225,13 +282,21 @@ class RegisterTeamController extends GetxController {
   void nextStep() {
     if (currentStep.value == 1) {
       if (selectedPlayers.isEmpty) {
-        Get.snackbar("Validation Error", "Please add at least one player.", snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          "Validation Error",
+          "Please add at least one player.",
+          snackPosition: SnackPosition.BOTTOM,
+        );
         return;
       }
       currentStep.value = 2;
     } else if (currentStep.value == 2) {
       if (teamNameController.text.trim().isEmpty) {
-        Get.snackbar("Validation Error", "Please enter a team/player name.", snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          "Validation Error",
+          "Please enter a team/player name.",
+          snackPosition: SnackPosition.BOTTOM,
+        );
         return;
       }
       currentStep.value = 3;
@@ -246,7 +311,9 @@ class RegisterTeamController extends GetxController {
 
   Future<void> submitRegistration() async {
     if (isFree) {
-      debugPrint("💳 [TeamRegistration] Tournament is free entry. Submitting directly.");
+      debugPrint(
+        "💳 [TeamRegistration] Tournament is free entry. Submitting directly.",
+      );
       await _writeTeamToFirestore('free', null);
     } else {
       _startRazorpayPayment();
@@ -256,7 +323,9 @@ class RegisterTeamController extends GetxController {
   void _startRazorpayPayment() {
     final double feeVal = entryFeeAmount.toDouble();
     if (feeVal <= 0) {
-      debugPrint('ℹ️ [TeamRegistration] Entry fee is 0 ($feeVal), writing team as free entry.');
+      debugPrint(
+        'ℹ️ [TeamRegistration] Entry fee is 0 ($feeVal), writing team as free entry.',
+      );
       _writeTeamToFirestore('free', null);
       return;
     }
@@ -271,7 +340,8 @@ class RegisterTeamController extends GetxController {
         ? user.email!
         : 'player@playz.com';
 
-    final razorpayKey = dotenv.env['RAZORPAY_KEY_ID'] ?? 'rzp_test_THjDLg1t3KW9ib';
+    final razorpayKey =
+        dotenv.env['RAZORPAY_KEY_ID'] ?? 'rzp_test_THjDLg1t3KW9ib';
 
     debugPrint('💳 [TeamRegistration] _startRazorpayPayment invoked:');
     debugPrint('   tournamentId: $tournamentId');
@@ -285,20 +355,17 @@ class RegisterTeamController extends GetxController {
       'amount': amountInPaise,
       'name': tournamentData['name'] ?? 'PlayZ Tournament',
       'description': 'Team Registration Fee',
-      'prefill': {
-        'contact': phone,
-        'email': email,
-      },
-      'theme': {
-        'color': '#1DB954'
-      }
+      'prefill': {'contact': phone, 'email': email},
+      'theme': {'color': '#1DB954'},
     };
 
     debugPrint('💳 [TeamRegistration] Opening Razorpay with options: $options');
 
     try {
       _razorpay.open(options);
-      debugPrint('💳 [TeamRegistration] _razorpay.open() invoked successfully.');
+      debugPrint(
+        '💳 [TeamRegistration] _razorpay.open() invoked successfully.',
+      );
     } catch (e, stack) {
       debugPrint('🔴 [TeamRegistration] Exception launching Razorpay: $e');
       debugPrint('🔴 [TeamRegistration] StackTrace: $stack');
@@ -311,7 +378,10 @@ class RegisterTeamController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
 
-      _writeTeamToFirestore('paid_dev_fallback', 'DEV_PASS_${DateTime.now().millisecondsSinceEpoch}');
+      _writeTeamToFirestore(
+        'paid_dev_fallback',
+        'DEV_PASS_${DateTime.now().millisecondsSinceEpoch}',
+      );
     }
   }
 
@@ -346,20 +416,33 @@ class RegisterTeamController extends GetxController {
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    debugPrint('💳 [TeamRegistration] Razorpay External Wallet Selected: ${response.walletName}');
-    Get.snackbar("External Wallet Selected", "${response.walletName}", snackPosition: SnackPosition.BOTTOM);
+    debugPrint(
+      '💳 [TeamRegistration] Razorpay External Wallet Selected: ${response.walletName}',
+    );
+    Get.snackbar(
+      "External Wallet Selected",
+      "${response.walletName}",
+      snackPosition: SnackPosition.BOTTOM,
+    );
   }
 
-  Future<void> _writeTeamToFirestore(String paymentStatus, String? paymentId) async {
+  Future<void> _writeTeamToFirestore(
+    String paymentStatus,
+    String? paymentId,
+  ) async {
     isRegistering.value = true;
-    debugPrint('🚀 [TeamRegistration] Writing team to Firestore (paymentStatus=$paymentStatus, paymentId=$paymentId)...');
+    debugPrint(
+      '🚀 [TeamRegistration] Writing team to Firestore (paymentStatus=$paymentStatus, paymentId=$paymentId)...',
+    );
     try {
       final teamId = const Uuid().v4();
       String logoUrl = "";
 
       // Upload Logo
       if (teamLogoPath.value.isNotEmpty) {
-        debugPrint('📷 [TeamRegistration] Uploading team logo from path: ${teamLogoPath.value}');
+        debugPrint(
+          '📷 [TeamRegistration] Uploading team logo from path: ${teamLogoPath.value}',
+        );
         final File imageFile = File(teamLogoPath.value);
         final compressedImage = await FlutterImageCompress.compressWithFile(
           imageFile.absolute.path,
@@ -369,8 +452,13 @@ class RegisterTeamController extends GetxController {
         );
 
         if (compressedImage != null) {
-          final ref = FirebaseStorage.instance.ref().child('tournament_teams/$teamId.jpg');
-          final uploadTask = await ref.putData(compressedImage, SettableMetadata(contentType: 'image/jpeg'));
+          final ref = FirebaseStorage.instance.ref().child(
+            'tournament_teams/$teamId.jpg',
+          );
+          final uploadTask = await ref.putData(
+            compressedImage,
+            SettableMetadata(contentType: 'image/jpeg'),
+          );
           logoUrl = await uploadTask.ref.getDownloadURL();
           debugPrint('📷 [TeamRegistration] Logo uploaded: $logoUrl');
         }
@@ -392,35 +480,50 @@ class RegisterTeamController extends GetxController {
           .collection('teams')
           .doc(teamId);
 
-      final tournamentRef = FirebaseFirestore.instance.collection('tournaments').doc(tournamentId);
+      final tournamentRef = FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId);
 
       // Run as transaction to update teamCount safely
       await FirebaseFirestore.instance.runTransaction((transaction) async {
-        transaction.set(docRef, team.toMap()..addAll({'registeredAt': FieldValue.serverTimestamp()}));
-        transaction.update(tournamentRef, {'teamCount': FieldValue.increment(1)});
+        transaction.set(
+          docRef,
+          team.toMap()..addAll({'registeredAt': FieldValue.serverTimestamp()}),
+        );
+        transaction.update(tournamentRef, {
+          'teamCount': FieldValue.increment(1),
+        });
       });
 
       // Save/update gameStats & award 100 XP for each participant in that specific sport
       for (final player in selectedPlayers) {
         if (player.userId.isNotEmpty) {
-          await FirebaseFirestore.instance.collection('User').doc(player.userId).set({
-            'gameStats': {
-              'totalGamesPlayed': FieldValue.increment(1),
-              'totalTournaments': FieldValue.increment(1),
-              'lastUpdated': FieldValue.serverTimestamp(),
-            }
-          }, SetOptions(merge: true));
+          await FirebaseFirestore.instance
+              .collection('User')
+              .doc(player.userId)
+              .set({
+                'gameStats': {
+                  'totalGamesPlayed': FieldValue.increment(1),
+                  'totalTournaments': FieldValue.increment(1),
+                  'lastUpdated': FieldValue.serverTimestamp(),
+                },
+              }, SetOptions(merge: true));
         }
       }
 
-      final playerIds = selectedPlayers.map((p) => p.userId).where((id) => id.isNotEmpty).toList();
+      final playerIds = selectedPlayers
+          .map((p) => p.userId)
+          .where((id) => id.isNotEmpty)
+          .toList();
       await XpRewardService.awardTournamentParticipantXp(
         playerIds: playerIds,
         sport: sport,
         xpAmount: 100,
       );
 
-      debugPrint('✅ [TeamRegistration] Team $teamId successfully registered for tournament $tournamentId!');
+      debugPrint(
+        '✅ [TeamRegistration] Team $teamId successfully registered for tournament $tournamentId!',
+      );
 
       Get.snackbar(
         "Registration Complete!",
@@ -432,7 +535,6 @@ class RegisterTeamController extends GetxController {
 
       // Navigate back to Tournament Detail screen
       Get.back();
-
     } catch (e, stack) {
       debugPrint('🔴 [TeamRegistration] Error writing team to Firestore: $e');
       debugPrint('🔴 [TeamRegistration] StackTrace: $stack');

@@ -21,6 +21,7 @@ import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/model/User_Models/Booking_Models/turf_model.dart';
 import 'package:redesign/model/User_Models/Booking_Models/ground_model.dart';
 import 'package:redesign/model/User_Models/Booking_Models/slot_model.dart';
+import 'package:redesign/services/xp_reward_service.dart';
 import 'package:redesign/view/USER/Maps/maps_picker/maps_picker_screen.dart';
 import 'package:redesign/model/maps_model.dart';
 import 'package:redesign/view/USER/Book/booking_details/widgets/slot_matrix_bottom_sheet.dart';
@@ -111,7 +112,8 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
   SlotModel? _selectedSlot;
 
   // Custom Location & Google Maps Picker State
-  final TextEditingController _customAddressController = TextEditingController();
+  final TextEditingController _customAddressController =
+      TextEditingController();
   double _customLat = 18.5204;
   double _customLng = 73.8567;
 
@@ -153,7 +155,9 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
 
   void _syncPriceControllerWithDynamicSlotCost() {
     if (_locationType == 'playz_turf' && _currentTurfSlotCost > 0) {
-      final double equalSplitCap = (_currentTurfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble();
+      final double equalSplitCap =
+          (_currentTurfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1))
+              .ceilToDouble();
       if (_pricePerPlayer > equalSplitCap || _pricePerPlayer <= 0) {
         _pricePerPlayer = equalSplitCap;
         _priceController.text = equalSplitCap.toInt().toString();
@@ -263,10 +267,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
             setState(() {
               if (isStart) {
                 _startTime = picked;
-                _endTime = TimeOfDay(
-                  hour: (picked.hour + 1) % 24,
-                  minute: 0,
-                );
+                _endTime = TimeOfDay(hour: (picked.hour + 1) % 24, minute: 0);
               } else {
                 _endTime = picked;
               }
@@ -286,13 +287,18 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     } else {
       final picked = await showTimePicker(
         context: context,
-        initialTime: (isStart ? _startTime : _endTime) ?? const TimeOfDay(hour: 18, minute: 0),
+        initialTime:
+            (isStart ? _startTime : _endTime) ??
+            const TimeOfDay(hour: 18, minute: 0),
       );
       if (picked != null) {
         setState(() {
           if (isStart) {
             _startTime = picked;
-            _endTime = TimeOfDay(hour: (picked.hour + 1) % 24, minute: picked.minute);
+            _endTime = TimeOfDay(
+              hour: (picked.hour + 1) % 24,
+              minute: picked.minute,
+            );
           } else {
             _endTime = picked;
           }
@@ -332,7 +338,8 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
       return;
     }
 
-    if (_locationType == 'custom' && _customAddressController.text.trim().isEmpty) {
+    if (_locationType == 'custom' &&
+        _customAddressController.text.trim().isEmpty) {
       Get.snackbar(
         'Missing Location',
         'Please enter an address or select a location on Google Maps.',
@@ -374,7 +381,8 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
 
     if (_locationType == 'playz_turf' && !_isFree && !_isSplitAndPay) {
       final double turfSlotCost = _currentTurfSlotCost;
-      final double equalSplitCap = (turfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble();
+      final double equalSplitCap =
+          (turfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble();
       if (equalSplitCap > 0 && _pricePerPlayer > equalSplitCap) {
         Get.snackbar(
           'Price Cap Exceeded ⚠️',
@@ -387,17 +395,23 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
       }
     }
 
-    if (_locationType == 'playz_turf' && _selectedTurf != null && _selectedGround != null && _selectedDate != null && _startTime != null && _endTime != null) {
+    if (_locationType == 'playz_turf' &&
+        _selectedTurf != null &&
+        _selectedGround != null &&
+        _selectedDate != null &&
+        _startTime != null &&
+        _endTime != null) {
       final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate!);
       final timeRangeStr = _formattedTimeString;
 
-      final isOverlapping = await SlotOverlapHelper.isSlotOverlappingInFirestore(
-        ownerId: _selectedTurf!.ownerId,
-        turfId: _selectedTurf!.id,
-        groundId: _selectedGround!.id,
-        dateStr: dateStr,
-        newTimeRangeStr: timeRangeStr,
-      );
+      final isOverlapping =
+          await SlotOverlapHelper.isSlotOverlappingInFirestore(
+            ownerId: _selectedTurf!.ownerId,
+            turfId: _selectedTurf!.id,
+            groundId: _selectedGround!.id,
+            dateStr: dateStr,
+            newTimeRangeStr: timeRangeStr,
+          );
 
       if (isOverlapping) {
         Get.snackbar(
@@ -426,45 +440,53 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     setState(() => _isSubmitting = true);
 
     final user = FirebaseAuth.instance.currentUser;
-    final phone = (_profileController.rxUser.value?.secondaryPhone.isNotEmpty ?? false)
+    final phone =
+        (_profileController.rxUser.value?.secondaryPhone.isNotEmpty ?? false)
         ? _profileController.rxUser.value!.secondaryPhone
         : (user?.phoneNumber ?? '9876543210');
     final email = _profileController.userEmail.isNotEmpty
         ? _profileController.userEmail
         : user?.email ?? 'player@playz.com';
 
-    final razorpayKey = dotenv.env['RAZORPAY_KEY_ID'] ?? 'rzp_test_THjDLg1t3KW9ib';
+    final razorpayKey =
+        dotenv.env['RAZORPAY_KEY_ID'] ?? 'rzp_test_THjDLg1t3KW9ib';
 
     var options = {
       'key': razorpayKey,
       'amount': (amount * 100).toInt(),
       'name': _selectedTurf?.turfName ?? 'PlayZ Arena',
       'description': 'Match Turf Booking Payment',
-      'prefill': {
-        'contact': phone,
-        'email': email,
-      },
+      'prefill': {'contact': phone, 'email': email},
     };
 
     try {
       _razorpay.open(options);
     } catch (e) {
       debugPrint('Error launching Razorpay: $e');
-      _submitMatchPoll(paymentId: 'DEV_PASS_${DateTime.now().millisecondsSinceEpoch}');
+      _submitMatchPoll(
+        paymentId: 'DEV_PASS_${DateTime.now().millisecondsSinceEpoch}',
+      );
     }
   }
 
-  Future<void> _createTurfBookingRecord(String dateStr, String timeStr) async {
+  Future<void> _createTurfBookingRecord(String dateStr, String timeStr, {String? paymentId}) async {
     if (_selectedTurf == null || _selectedGround == null) return;
     try {
       final user = FirebaseAuth.instance.currentUser;
-      final userDocId = await UserPreferences.getDocId() ?? user?.email ?? user?.uid ?? 'unknown_user';
+      final userDocId =
+          await UserPreferences.getDocId() ??
+          user?.email ??
+          user?.uid ??
+          'unknown_user';
       final bookingId = 'PLZ_MATCH_${DateTime.now().millisecondsSinceEpoch}';
       final otp = (100000 + Random().nextInt(900000)).toString();
 
-      final String userName = (user?.displayName != null && user!.displayName!.isNotEmpty)
+      final String userName =
+          (user?.displayName != null && user!.displayName!.isNotEmpty)
           ? user.displayName!
-          : (_profileController.userName.isNotEmpty ? _profileController.userName : 'Host Player');
+          : (_profileController.userName.isNotEmpty
+                ? _profileController.userName
+                : 'Host Player');
 
       final userPhone = user?.phoneNumber ?? 'N/A';
       final currentTimeStr = DateTime.now().toIso8601String();
@@ -483,41 +505,55 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
       });
 
       final encodedQrText = 'PZSEC_${base64Encode(utf8.encode(rawPayload))}';
+      final dateFormattedStr = _selectedDate != null ? DateFormat('dd MMM, yyyy').format(_selectedDate!) : dateStr;
 
       final bookingData = {
         'id': bookingId,
         'bookingId': bookingId,
         'otp': otp,
         'qrData': encodedQrText,
+        'userId': userDocId,
+        'userEmail': user?.email ?? '',
+        'userName': userName,
+        'userPhone': userPhone,
+        'ownerId': _selectedTurf!.ownerId,
         'turfId': _selectedTurf!.id,
         'turfName': _selectedTurf!.turfName,
         'turfAddress': _selectedTurf!.fullAddress,
-        'turfImage': _selectedTurf!.allImages.isNotEmpty ? _selectedTurf!.allImages.first : '',
+        'turfImage': _selectedTurf!.allImages.isNotEmpty
+            ? _selectedTurf!.allImages.first
+            : '',
         'groundId': _selectedGround!.id,
         'groundName': _selectedGround!.name,
+        'sport': _selectedSport ?? 'Football',
         'date': dateStr,
-        'dateFormatted': dateStr,
+        'dateFormatted': dateFormattedStr,
         'startTime': _startTime != null ? _formatTimeOfDay(_startTime!) : '',
         'endTime': _endTime != null ? _formatTimeOfDay(_endTime!) : '',
         'timeSlot': timeStr,
         'time': timeStr,
         'slotId': _selectedSlot?.id ?? '',
         'amount': _currentTurfSlotCost.toInt(),
-        'status': 'confirmed',
+        'paymentId': paymentId ?? '',
+        'status': 'upcoming',
+        'bookingType': 'Match Poll Booking',
         'createdAt': FieldValue.serverTimestamp(),
-        'bookingType': 'match_poll_free',
-        'userEmail': user?.email ?? '',
-        'userName': userName,
-        'userPhone': userPhone,
       };
 
       final batch = FirebaseFirestore.instance.batch();
 
-      final ownerRef = FirebaseFirestore.instance
+      final ownerTurfRef = FirebaseFirestore.instance
           .collection('owners')
           .doc(_selectedTurf!.ownerId)
           .collection('turfs')
           .doc(_selectedTurf!.id)
+          .collection('bookings')
+          .doc(bookingId);
+      batch.set(ownerTurfRef, bookingData, SetOptions(merge: true));
+
+      final ownerRef = FirebaseFirestore.instance
+          .collection('owners')
+          .doc(_selectedTurf!.ownerId)
           .collection('bookings')
           .doc(bookingId);
       batch.set(ownerRef, bookingData, SetOptions(merge: true));
@@ -530,6 +566,18 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
       batch.set(userRef, bookingData, SetOptions(merge: true));
 
       await batch.commit();
+
+      final effectiveSport = (_selectedSport != null && _selectedSport!.trim().isNotEmpty)
+          ? _selectedSport!.trim()
+          : (_bookingController.turfSports.isNotEmpty
+              ? _bookingController.turfSports.first
+              : 'General');
+
+      await XpRewardService.awardBookingXp(
+        userDocId: userDocId,
+        sport: effectiveSport,
+        xpAmount: 50,
+      );
     } catch (e) {
       debugPrint('Error creating turf booking record: $e');
     }
@@ -539,7 +587,8 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     setState(() => _isSubmitting = true);
 
     final user = FirebaseAuth.instance.currentUser;
-    final docId = await UserPreferences.getDocId() ?? user?.uid ?? 'unknown_user';
+    final docId =
+        await UserPreferences.getDocId() ?? user?.uid ?? 'unknown_user';
     final hostName = _profileController.userName.isNotEmpty
         ? _profileController.userName
         : user?.displayName ?? 'Host Player';
@@ -554,31 +603,47 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
         ? '${_selectedTurf?.turfName ?? ''} - ${_selectedGround?.name ?? ''}, ${_selectedTurf?.city ?? ''}'
         : _customAddressController.text.trim();
 
-    final double groundLat = _locationType == 'playz_turf' ? (_selectedTurf?.latitude ?? 0.0) : _customLat;
-    final double groundLng = _locationType == 'playz_turf' ? (_selectedTurf?.longitude ?? 0.0) : _customLng;
+    final double groundLat = _locationType == 'playz_turf'
+        ? (_selectedTurf?.latitude ?? 0.0)
+        : _customLat;
+    final double groundLng = _locationType == 'playz_turf'
+        ? (_selectedTurf?.longitude ?? 0.0)
+        : _customLng;
 
     String calculatedDist = '1.2 km away';
     final userLoc = _mapsController.currentLocation.value;
     if (userLoc != null && groundLat != 0.0 && groundLng != 0.0) {
-      final distM = Geolocator.distanceBetween(userLoc.lat, userLoc.lng, groundLat, groundLng);
+      final distM = Geolocator.distanceBetween(
+        userLoc.lat,
+        userLoc.lng,
+        groundLat,
+        groundLng,
+      );
       final km = distM / 1000.0;
       calculatedDist = '${km.toStringAsFixed(1)} km away';
     }
 
-    final double turfSlotCost = _locationType == 'playz_turf' ? _currentTurfSlotCost : 0.0;
+    final double turfSlotCost = _locationType == 'playz_turf'
+        ? _currentTurfSlotCost
+        : 0.0;
     final double hostDeposit = _calculateHostDeposit();
 
-    final double equalSplitCap = (turfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble();
+    final double equalSplitCap =
+        (turfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble();
     final double pricePerPlayerFinal = _isFree
         ? 0.0
         : (_isSplitAndPay && turfSlotCost > 0
-            ? equalSplitCap
-            : (_pricePerPlayer > equalSplitCap && equalSplitCap > 0 ? equalSplitCap : _pricePerPlayer));
+              ? equalSplitCap
+              : (_pricePerPlayer > equalSplitCap && equalSplitCap > 0
+                    ? equalSplitCap
+                    : _pricePerPlayer));
 
-    final bool isSlotBooked = (_locationType == 'playz_turf' && _isFree == true && hostDeposit >= turfSlotCost && turfSlotCost > 0);
+    final bool isSlotBooked =
+        (_locationType == 'playz_turf' &&
+        (paymentId != null || hostDeposit >= turfSlotCost || _isFree == true));
 
-    if (isSlotBooked) {
-      await _createTurfBookingRecord(dateStr, timeStr);
+    if (_locationType == 'playz_turf' && isSlotBooked) {
+      await _createTurfBookingRecord(dateStr, timeStr, paymentId: paymentId);
     }
 
     final matchMap = {
@@ -646,7 +711,12 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
       final km = distanceInMeters / 1000.0;
       return '${km.toStringAsFixed(1)} km away';
     }
-    final defaultDistances = ['1.2 km away', '2.4 km away', '3.8 km away', '4.5 km away'];
+    final defaultDistances = [
+      '1.2 km away',
+      '2.4 km away',
+      '3.8 km away',
+      '4.5 km away',
+    ];
     return defaultDistances[index % defaultDistances.length];
   }
 
@@ -703,10 +773,16 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 selectedSport: _selectedSport,
                 popularSports: _popularSports,
                 filteredSports: _allSports
-                    .where((s) => s.toLowerCase().contains(_sportSearchQuery.toLowerCase()))
+                    .where(
+                      (s) => s.toLowerCase().contains(
+                        _sportSearchQuery.toLowerCase(),
+                      ),
+                    )
                     .toList(),
-                onSearchChanged: (query) => setState(() => _sportSearchQuery = query),
-                onSportSelected: (sport) => setState(() => _selectedSport = sport),
+                onSearchChanged: (query) =>
+                    setState(() => _sportSearchQuery = query),
+                onSportSelected: (sport) =>
+                    setState(() => _selectedSport = sport),
                 onClearSearch: () => setState(() {
                   _sportSearchController.clear();
                   _sportSearchQuery = '';
@@ -738,7 +814,8 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                     }
                   });
                 },
-                onTurfSearchChanged: (query) => setState(() => _turfSearchQuery = query),
+                onTurfSearchChanged: (query) =>
+                    setState(() => _turfSearchQuery = query),
                 onClearTurfSearch: () => setState(() {
                   _turfSearchController.clear();
                   _turfSearchQuery = '';
@@ -757,9 +834,18 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                     _selectedSlot = null;
                     _syncPriceControllerWithDynamicSlotCost();
                   });
-                  if (_selectedTurf != null && ground != null && _selectedDate != null) {
-                    final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate!);
-                    _bookingController.fetchGroundSlots(_selectedTurf!.ownerId, _selectedTurf!.id, ground.id, dateStr: dateStr);
+                  if (_selectedTurf != null &&
+                      ground != null &&
+                      _selectedDate != null) {
+                    final dateStr = DateFormat(
+                      'yyyy-MM-dd',
+                    ).format(_selectedDate!);
+                    _bookingController.fetchGroundSlots(
+                      _selectedTurf!.ownerId,
+                      _selectedTurf!.id,
+                      ground.id,
+                      dateStr: dateStr,
+                    );
                   }
                 },
                 onSlotSelected: (slot) => setState(() {
@@ -791,9 +877,16 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                       _selectedDate = picked;
                       _syncPriceControllerWithDynamicSlotCost();
                     });
-                    if (_locationType == 'playz_turf' && _selectedTurf != null && _selectedGround != null) {
+                    if (_locationType == 'playz_turf' &&
+                        _selectedTurf != null &&
+                        _selectedGround != null) {
                       final dateStr = DateFormat('yyyy-MM-dd').format(picked);
-                      _bookingController.fetchGroundSlots(_selectedTurf!.ownerId, _selectedTurf!.id, _selectedGround!.id, dateStr: dateStr);
+                      _bookingController.fetchGroundSlots(
+                        _selectedTurf!.ownerId,
+                        _selectedTurf!.id,
+                        _selectedGround!.id,
+                        dateStr: dateStr,
+                      );
                     }
                   }
                 },
@@ -843,8 +936,12 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                 },
                 onPriceChanged: (val) {
                   final double inputVal = double.tryParse(val) ?? 0.0;
-                  final double equalSplitCap = (_locationType == 'playz_turf' && _currentTurfSlotCost > 0)
-                      ? (_currentTurfSlotCost / (_maxPlayers > 0 ? _maxPlayers : 1)).ceilToDouble()
+                  final double equalSplitCap =
+                      (_locationType == 'playz_turf' &&
+                          _currentTurfSlotCost > 0)
+                      ? (_currentTurfSlotCost /
+                                (_maxPlayers > 0 ? _maxPlayers : 1))
+                            .ceilToDouble()
                       : 0.0;
 
                   if (equalSplitCap > 0 && inputVal > equalSplitCap) {
@@ -890,7 +987,8 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
               context,
               child: EquipmentOptionsSection(
                 selectedOption: _selectedEquipmentOption,
-                onOptionSelected: (option) => setState(() => _selectedEquipmentOption = option),
+                onOptionSelected: (option) =>
+                    setState(() => _selectedEquipmentOption = option),
               ),
             ),
             SizedBox(height: context.heightPct(4)),
@@ -904,7 +1002,9 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                   backgroundColor: AppColors.accent,
                   foregroundColor: AppColors.background,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
+                    borderRadius: BorderRadius.circular(
+                      context.minDimensionPct(4),
+                    ),
                   ),
                   elevation: 4,
                 ),
@@ -919,8 +1019,11 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
                         ),
                       )
                     : Text(
-                        _locationType == 'playz_turf' && calculatedHostDeposit > 0
-                            ? (_isFree ? 'Pay Full Slot Cost & Book Now' : 'Pay Host Deposit (₹${calculatedHostDeposit.toInt()})')
+                        _locationType == 'playz_turf' &&
+                                calculatedHostDeposit > 0
+                            ? (_isFree
+                                  ? 'Pay Full Slot Cost & Book Now'
+                                  : 'Pay Host Deposit (₹${calculatedHostDeposit.toInt()})')
                             : 'Host Match Poll ⚡',
                         style: AppTypography.headlineSm.copyWith(
                           color: AppColors.background,

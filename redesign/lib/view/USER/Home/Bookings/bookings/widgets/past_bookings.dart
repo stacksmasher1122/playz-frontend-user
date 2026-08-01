@@ -14,15 +14,29 @@ class PastBookingsWidget extends StatelessWidget {
   bool _isPast(Map<String, dynamic> data) {
     final status = (data['status'] ?? '').toString().toLowerCase();
     if (status == 'completed' || status == 'expired') return true;
-    if (status == 'cancelled' || status == 'rejected' || status == 'refunded') return false;
+    if (status == 'cancelled' || status == 'rejected' || status == 'refunded')
+      return false;
 
-    final dateStr = (data['dateFormatted'] ?? data['date'] ?? data['bookingDate'] ?? '').toString();
-    final timeSlotStr = (data['timeSlot'] ?? data['slotTime'] ?? data['slot'] ?? data['time'] ?? '').toString();
+    final dateStr =
+        (data['dateFormatted'] ?? data['date'] ?? data['bookingDate'] ?? '')
+            .toString();
+    final timeSlotStr =
+        (data['timeSlot'] ??
+                data['slotTime'] ??
+                data['slot'] ??
+                data['time'] ??
+                '')
+            .toString();
 
-    final timeParsed = ScoreboardBookingValidator.parseSlotWindow(dateStr, timeSlotStr);
+    final timeParsed = ScoreboardBookingValidator.parseSlotWindow(
+      dateStr,
+      timeSlotStr,
+    );
     if (timeParsed != null) {
       final slotEnd = timeParsed.$2;
-      final slotEndWithBuffer = slotEnd.add(const Duration(minutes: ScoreboardBookingValidator.bufferMinutes));
+      final slotEndWithBuffer = slotEnd.add(
+        const Duration(minutes: ScoreboardBookingValidator.bufferMinutes),
+      );
       if (DateTime.now().isAfter(slotEndWithBuffer)) {
         return true;
       }
@@ -71,7 +85,9 @@ class PastBookingsWidget extends StatelessWidget {
               return Center(
                 child: Padding(
                   padding: EdgeInsets.all(context.widthPct(8)),
-                  child: const CircularProgressIndicator(color: AppColors.accent),
+                  child: const CircularProgressIndicator(
+                    color: AppColors.accent,
+                  ),
                 ),
               );
             }
@@ -102,7 +118,8 @@ class PastBookingsWidget extends StatelessWidget {
               itemBuilder: (context, index) {
                 final doc = pastDocs[index];
                 final data = Map<String, dynamic>.from(
-                    doc.data() as Map<String, dynamic>);
+                  doc.data() as Map<String, dynamic>,
+                );
                 data['bookingId'] = doc.id;
                 return Padding(
                   padding: EdgeInsets.only(bottom: context.heightPct(1.5)),

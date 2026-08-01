@@ -17,7 +17,21 @@ class LeaderboardSportFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final sports = const ['All Sports', 'Football', 'Cricket', 'Badminton', 'Tennis'];
+    final sports = const [
+      'All Sports',
+      'Football',
+      'Cricket',
+      'Badminton',
+      'Tennis',
+      'Basketball',
+      'Volleyball',
+      'Table Tennis',
+      'Swimming',
+      'Cycling',
+      'Boxing',
+      'Baseball',
+      'Rugby',
+    ];
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
