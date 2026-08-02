@@ -39,6 +39,7 @@ class MatchConfig {
   final String format; // T20, ODI, Test
   final String battingTeamName;
   final String bowlingTeamName;
+  final bool allowSubstitutes;
 
   const MatchConfig({
     this.maxOvers = 20,
@@ -47,6 +48,7 @@ class MatchConfig {
     this.format = 'T20',
     this.battingTeamName = 'Batting Team',
     this.bowlingTeamName = 'Bowling Team',
+    this.allowSubstitutes = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -56,6 +58,7 @@ class MatchConfig {
         'format': format,
         'battingTeamName': battingTeamName,
         'bowlingTeamName': bowlingTeamName,
+        'allowSubstitutes': allowSubstitutes,
       };
 
   MatchConfig copyWith({
@@ -65,6 +68,7 @@ class MatchConfig {
     String? format,
     String? battingTeamName,
     String? bowlingTeamName,
+    bool? allowSubstitutes,
   }) {
     return MatchConfig(
       maxOvers: maxOvers ?? this.maxOvers,
@@ -73,6 +77,7 @@ class MatchConfig {
       format: format ?? this.format,
       battingTeamName: battingTeamName ?? this.battingTeamName,
       bowlingTeamName: bowlingTeamName ?? this.bowlingTeamName,
+      allowSubstitutes: allowSubstitutes ?? this.allowSubstitutes,
     );
   }
 
@@ -83,6 +88,7 @@ class MatchConfig {
         format: json['format'] ?? 'T20',
         battingTeamName: json['battingTeamName'] ?? 'Batting Team',
         bowlingTeamName: json['bowlingTeamName'] ?? 'Bowling Team',
+        allowSubstitutes: json['allowSubstitutes'] ?? false,
       );
 }
 
@@ -434,6 +440,7 @@ class MatchState {
   final Player? striker;
   final Player? nonStriker;
   final Player? currentBowler;
+  final Player? previousBowler;
 
   final List<BallEvent> ballHistory;
   final List<BallEvent> currentOverBalls;
@@ -457,6 +464,7 @@ class MatchState {
     this.striker,
     this.nonStriker,
     this.currentBowler,
+    this.previousBowler,
     required this.ballHistory,
     required this.currentOverBalls,
     this.partnership,
@@ -479,6 +487,7 @@ class MatchState {
     Player? striker,
     Player? nonStriker,
     Player? currentBowler,
+    Player? previousBowler,
     List<BallEvent>? ballHistory,
     List<BallEvent>? currentOverBalls,
     Partnership? partnership,
@@ -500,6 +509,7 @@ class MatchState {
       striker: striker ?? this.striker,
       nonStriker: nonStriker ?? this.nonStriker,
       currentBowler: currentBowler ?? this.currentBowler,
+      previousBowler: previousBowler ?? this.previousBowler,
       ballHistory: ballHistory ?? this.ballHistory,
       currentOverBalls: currentOverBalls ?? this.currentOverBalls,
       partnership: partnership ?? this.partnership,
@@ -523,6 +533,7 @@ class MatchState {
         'striker': striker?.toJson(),
         'nonStriker': nonStriker?.toJson(),
         'currentBowler': currentBowler?.toJson(),
+        'previousBowler': previousBowler?.toJson(),
         'ballHistory': ballHistory.map((e) => e.toJson()).toList(),
         'currentOverBalls': currentOverBalls.map((e) => e.toJson()).toList(),
         'partnership': partnership?.toJson(),
@@ -545,6 +556,7 @@ class MatchState {
         striker: json['striker'] != null ? Player.fromJson(json['striker']) : null,
         nonStriker: json['nonStriker'] != null ? Player.fromJson(json['nonStriker']) : null,
         currentBowler: json['currentBowler'] != null ? Player.fromJson(json['currentBowler']) : null,
+        previousBowler: json['previousBowler'] != null ? Player.fromJson(json['previousBowler']) : null,
         ballHistory: List<BallEvent>.from((json['ballHistory'] ?? []).map((x) => BallEvent.fromJson(x))),
         currentOverBalls: List<BallEvent>.from((json['currentOverBalls'] ?? []).map((x) => BallEvent.fromJson(x))),
         partnership: json['partnership'] != null ? Partnership.fromJson(json['partnership']) : null,

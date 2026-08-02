@@ -31,20 +31,29 @@ class MatchEngine {
 
   MatchState get state => _state;
   bool get canUndo => _history.isNotEmpty;
+  int get undoCount => _history.length;
 
   void _saveSnapshot() {
     _history.add(MatchState.fromJson(_state.toJson()));
   }
 
-  void undo() {
+  bool undo() {
     if (_history.isNotEmpty) {
       _state = _history.removeLast();
+      return true;
     }
+    return false;
   }
 
   void restoreState(Map<String, dynamic> json) {
     _state = MatchState.fromJson(json);
     _history.clear();
+  }
+
+  /// Updates the engine state from JSON WITHOUT clearing undo history.
+  /// Use this for non-destructive state patches (e.g., injecting commentary).
+  void patchState(Map<String, dynamic> json) {
+    _state = MatchState.fromJson(json);
   }
 
   Map<String, dynamic> generateScorecard() {
@@ -157,6 +166,7 @@ class MatchEngine {
 
     _state = _state.copyWith(
       bowlingTeam: newBowling,
+      previousBowler: _state.currentBowler,
       currentBowler: newBowling.firstWhere((p) => p.name == newBowlerName),
     );
   }
@@ -191,6 +201,25 @@ class MatchEngine {
       battingTeam: updatedBatting,
       striker: newStriker,
       nonStriker: newNonStriker,
+    );
+  }
+
+  // Dedicated retire bowler method that preserves undo history
+  void retireBowler(String replacementBowlerName) {
+    _saveSnapshot();
+    final updatedBowling = _state.bowlingTeam.map((p) {
+      if (p.name == _state.currentBowler?.name) {
+        return p.copyWith(status: PlayerStatus.retiredHurt);
+      }
+      if (p.name == replacementBowlerName) {
+        return p.copyWith(hasBowled: true);
+      }
+      return p;
+    }).toList();
+
+    _state = _state.copyWith(
+      bowlingTeam: updatedBowling,
+      currentBowler: updatedBowling.firstWhere((p) => p.name == replacementBowlerName),
     );
   }
 
@@ -315,7 +344,7 @@ class MatchEngine {
     int wicketsToAdd = 0;
     for (var w in event.wickets) {
        // Free Hit Immunity
-       if (_state.isFreeHit && [DismissalType.bowled, DismissalType.caught, DismissalType.lbw, DismissalType.stumped].contains(w.type)) {
+       if (_state.isFreeHit && [DismissalType.bowled, DismissalType.caught, DismissalType.lbw, DismissalType.stumped, DismissalType.hitWicket].contains(w.type)) {
          continue; 
        }
 
@@ -548,6 +577,7 @@ class MatchEngine {
   }
 
   void startSuperOver() {
+     _history.clear();
      _state = MatchState(
        totalRuns: 0,
        wickets: 0,
@@ -567,6 +597,7 @@ class MatchEngine {
   }
 
   void startSecondInnings() {
+     _history.clear();
      int target = _state.totalRuns + 1;
      _state = MatchState(
        totalRuns: 0,

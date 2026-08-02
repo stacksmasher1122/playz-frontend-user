@@ -6,21 +6,35 @@ class MatchContextCard extends StatelessWidget {
   final double winProbability;
   final int partnershipRuns;
   final int partnershipBalls;
+  final double currentRunRate;
   final double requiredRunRate;
+  final int inningsNumber;
 
   const MatchContextCard({
     super.key,
     required this.winProbability,
     required this.partnershipRuns,
     required this.partnershipBalls,
+    required this.currentRunRate,
     required this.requiredRunRate,
+    required this.inningsNumber,
   });
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final isSecondInnings = inningsNumber == 2;
+    final rateLabel = isSecondInnings ? 'RRR' : 'CRR';
+    final rateValue = isSecondInnings
+        ? requiredRunRate.toStringAsFixed(2)
+        : currentRunRate.toStringAsFixed(2);
+    final rateColor = isSecondInnings ? AppColors.warning : AppColors.accent;
+
     return Container(
-      margin: EdgeInsets.all(ResponsiveHelper.w(16)),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16),
+        vertical: ResponsiveHelper.h(6),
+      ),
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -39,17 +53,16 @@ class MatchContextCard extends StatelessWidget {
             child: _contextItem(
               'PARTNERSHIP',
               '$partnershipRuns ($partnershipBalls)',
-              Colors.white,
+              AppColors.textPrimary,
             ),
           ),
-          if (requiredRunRate > 0)
-            Expanded(
-              child: _contextItem(
-                'RRR',
-                requiredRunRate.toStringAsFixed(2),
-                AppColors.warning,
-              ),
+          Expanded(
+            child: _contextItem(
+              rateLabel,
+              rateValue,
+              rateColor,
             ),
+          ),
         ],
       ),
     );
@@ -67,7 +80,7 @@ class MatchContextCard extends StatelessWidget {
             letterSpacing: 0.5,
           ),
         ),
-        SizedBox(height: 4),
+        SizedBox(height: ResponsiveHelper.h(8)),
         Text(
           value,
           style: TextStyle(

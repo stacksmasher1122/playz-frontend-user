@@ -27,18 +27,18 @@ class BowlerSelectSheet extends StatelessWidget {
           Text(
             'Select Bowler',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontSize: ResponsiveHelper.sp(18),
               fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: ResponsiveHelper.h(8)),
           ...bowlers.map(
             (b) => ListTile(
-              title: Text(b.name, style: TextStyle(color: Colors.white)),
+              title: Text(b.name, style: TextStyle(color: AppColors.textPrimary)),
               subtitle: Text(
                 '${b.oversBowledDisplay} ov - ${b.runsConceded} runs - ${b.wicketsTaken} wkt',
-                style: TextStyle(color: AppColors.muted, fontSize: 12),
+                style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(12)),
               ),
               trailing: b.name == currentBowler?.name
                   ? Icon(Icons.check_circle, color: AppColors.accent)

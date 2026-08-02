@@ -45,6 +45,9 @@ class CricketController extends GetxController {
   var isEngineReady = false.obs;
   // Observable wrapper for the state so UI can dynamically rebuild
   var liveState = Rxn<MatchState>();
+  // Single-use match-end and innings-break undo guards
+  var hasMatchEndUndoBeenUsed = false.obs;
+  var hasInningsBreakUndoBeenUsed = false.obs;
 
   @override
   void onInit() {
@@ -297,6 +300,8 @@ class CricketController extends GetxController {
       ),
     );
     liveState.value = engine.state;
+    hasMatchEndUndoBeenUsed.value = false;
+    hasInningsBreakUndoBeenUsed.value = false;
     isEngineReady.value = true;
   }
 
@@ -408,8 +413,8 @@ class CricketController extends GetxController {
       final updatedHistory = List<BallEvent>.from(engine.state.ballHistory);
       updatedHistory[updatedHistory.length - 1] = updatedBall;
 
-      // Ownership of state is handled by engine, but we can restore an updated snapshot
-      engine.restoreState(
+      // Use patchState to update commentary without wiping in-memory undo history
+      engine.patchState(
         engine.state.copyWith(ballHistory: updatedHistory).toJson(),
       );
     }
@@ -473,6 +478,16 @@ class CricketController extends GetxController {
 
   void changeBowler(String newBowlerName) {
     engine.changeBowler(newBowlerName);
+    updateEngineState();
+  }
+
+  void retireBowler(String replacementBowlerName) {
+    engine.retireBowler(replacementBowlerName);
+    updateEngineState();
+  }
+
+  void retireBatter(String playerName, PlayerStatus status) {
+    engine.retireBatter(playerName, status);
     updateEngineState();
   }
 

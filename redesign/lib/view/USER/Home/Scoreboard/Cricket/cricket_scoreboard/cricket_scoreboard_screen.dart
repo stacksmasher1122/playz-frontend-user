@@ -19,6 +19,7 @@ import 'widgets/setup_wizard_card.dart';
 import 'widgets/bowler_select_sheet.dart';
 import 'widgets/extras_modal.dart';
 import 'widgets/wicket_wizard_sheet.dart';
+import 'widgets/match_break_timer_sheet.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class CricketScoreboardScreen extends StatefulWidget {
@@ -47,6 +48,19 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
   Player? get striker => s.striker;
   Player? get nonStriker => s.nonStriker;
   Player? get currentBowler => s.currentBowler;
+  Player? get previousBowler {
+    if (s.previousBowler != null && s.previousBowler!.name != currentBowler?.name) {
+      return s.previousBowler;
+    }
+    final currentName = currentBowler?.name;
+    for (final ball in ballHistory.reversed) {
+      if (ball.bowlerName != null && ball.bowlerName != currentName) {
+        final found = bowlingTeam.where((p) => p.name == ball.bowlerName).firstOrNull;
+        if (found != null) return found;
+      }
+    }
+    return null;
+  }
 
   List<BallEvent> get ballHistory => s.ballHistory;
   List<BallEvent> get currentOverBalls => s.currentOverBalls;
@@ -168,40 +182,184 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
   }
 
   void _undo() {
+    if (!controller.engine.canUndo) return;
+
     controller.undoEvent();
+
+    if (balls == 0 &&
+        overs > 0 &&
+        matchStatus.startsWith('LIVE_') &&
+        currentOverBalls.isEmpty) {
+      Future.microtask(() => _showBowlerChangeDialog());
+    }
   }
 
   // Workflows & Dialogs
   void _showInningsBreakDialog() {
     int target = totalRuns + 1;
+    int timeLeft = 60;
+    Timer? countdownTimer;
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: Text('Innings Break!', style: TextStyle(color: Colors.white)),
-        content: Text(
-          'Target is $target',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              controller.startSecondInnings();
-            },
-            child: Text(
-              'Prepare 2nd Innings',
-              style: TextStyle(color: AppColors.accent),
-            ),
-          ),
-        ],
-      ),
-    );
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            countdownTimer ??= Timer.periodic(const Duration(seconds: 1), (
+              timer,
+            ) {
+              if (timeLeft > 0) {
+                if (mounted) {
+                  setState(() {
+                    timeLeft--;
+                  });
+                }
+              } else {
+                timer.cancel();
+                if (Navigator.canPop(dialogContext)) {
+                  Navigator.pop(dialogContext);
+                }
+                controller.startSecondInnings();
+              }
+            });
+
+            final bool canUndoInningsBreak =
+                !controller.hasInningsBreakUndoBeenUsed.value &&
+                controller.engine.canUndo;
+
+            final String formattedTime =
+                '00:${timeLeft.toString().padLeft(2, '0')}';
+
+            return AlertDialog(
+              backgroundColor: AppColors.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                children: [
+                  const Icon(Icons.pause_circle_outline_rounded, color: AppColors.accent),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Innings Break',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '1st Innings Ended: ${s.matchConfig.battingTeamName} scored $totalRuns/$wickets',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: ResponsiveHelper.sp(14),
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Target for ${s.matchConfig.bowlingTeamName} is $target runs',
+                    style: TextStyle(
+                      color: AppColors.accent,
+                      fontSize: ResponsiveHelper.sp(16),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.timer_outlined, color: AppColors.muted, size: 18),
+                        const SizedBox(width: 6),
+                        Text(
+                          '2nd Innings starts in $formattedTime',
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!canUndoInningsBreak && controller.hasInningsBreakUndoBeenUsed.value) ...[
+                    const SizedBox(height: 12),
+                    const Text(
+                      'Innings-break undo already used (1/1)',
+                      style: TextStyle(color: AppColors.muted, fontSize: 11, fontStyle: FontStyle.italic),
+                    ),
+                  ],
+                ],
+              ),
+              actionsAlignment: MainAxisAlignment.spaceBetween,
+              actions: [
+                if (canUndoInningsBreak)
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error.withValues(alpha: 0.2),
+                      foregroundColor: AppColors.error,
+                      elevation: 0,
+                      side: const BorderSide(color: AppColors.error, width: 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      controller.hasInningsBreakUndoBeenUsed.value = true;
+                      countdownTimer?.cancel();
+                      Navigator.pop(dialogContext);
+                      _undo();
+                      Get.snackbar(
+                        'Undone',
+                        'Last ball undone. You can now correct the 1st innings final delivery.',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: AppColors.surface,
+                        colorText: Colors.white,
+                      );
+                    },
+                    icon: const Icon(Icons.undo_rounded, size: 18),
+                    label: const Text(
+                      'UNDO LAST BALL',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                else
+                  const SizedBox.shrink(),
+                TextButton(
+                  onPressed: () {
+                    countdownTimer?.cancel();
+                    Navigator.pop(dialogContext);
+                    controller.startSecondInnings();
+                  },
+                  child: const Text(
+                    'START 2ND INNINGS',
+                    style: TextStyle(
+                      color: AppColors.accent,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) {
+      countdownTimer?.cancel();
+    });
   }
 
   void _endMatch() {
-    int timeLeft = 10;
+    int timeLeft = 60;
     Timer? countdownTimer;
 
     showDialog(
@@ -228,11 +386,27 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
               }
             });
 
+            final bool canUndoMatchEnd =
+                !controller.hasMatchEndUndoBeenUsed.value &&
+                controller.engine.canUndo;
+
+            final String formattedTime =
+                '00:${timeLeft.toString().padLeft(2, '0')}';
+
             return AlertDialog(
               backgroundColor: AppColors.surface,
-              title: const Text(
-                'Match Completed',
-                style: TextStyle(color: Colors.white),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                children: [
+                  const Icon(Icons.emoji_events_rounded, color: AppColors.coinsGold),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Match Completed',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -247,13 +421,71 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    'Returning to scoreboards in $timeLeft seconds...',
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.timer_outlined, color: AppColors.muted, size: 18),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Finalizing in $formattedTime',
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  if (!canUndoMatchEnd && controller.hasMatchEndUndoBeenUsed.value) ...[
+                    const SizedBox(height: 12),
+                    const Text(
+                      'Match-end undo already used (1/1)',
+                      style: TextStyle(color: AppColors.muted, fontSize: 11, fontStyle: FontStyle.italic),
+                    ),
+                  ],
                 ],
               ),
+              actionsAlignment: MainAxisAlignment.spaceBetween,
               actions: [
+                if (canUndoMatchEnd)
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error.withValues(alpha: 0.2),
+                      foregroundColor: AppColors.error,
+                      elevation: 0,
+                      side: const BorderSide(color: AppColors.error, width: 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      controller.hasMatchEndUndoBeenUsed.value = true;
+                      countdownTimer?.cancel();
+                      Navigator.pop(dialogContext);
+                      _undo();
+                      Get.snackbar(
+                        'Undone',
+                        'Last ball undone. You can now re-enter or correct the delivery.',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: AppColors.surface,
+                        colorText: Colors.white,
+                      );
+                    },
+                    icon: const Icon(Icons.undo_rounded, size: 18),
+                    label: const Text(
+                      'UNDO LAST BALL',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                else
+                  const SizedBox.shrink(),
                 TextButton(
                   onPressed: () {
                     countdownTimer?.cancel();
@@ -261,9 +493,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
                     Get.offAll(() => const ScoreboardHubScreen());
                   },
                   child: const Text(
-                    'OK',
+                    'FINISH NOW',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.accent,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -350,6 +582,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
         bowlingTeam: bowlingTeam,
         striker: striker,
         nonStriker: nonStriker,
+        isFreeHit: controller.liveState.value?.isFreeHit ?? false,
         onComplete: (type, fielder, newBatter, onStrike, outPlayer, crossed) {
           Navigator.pop(ctx);
           _addWicket(
@@ -363,6 +596,34 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
         },
       ),
     );
+  }
+
+  void _showRetireBowlerDialog() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
+        ),
+      ),
+      builder: (ctx) => BowlerSelectSheet(
+        bowlers: bowlingTeam,
+        currentBowler: currentBowler,
+        onSelect: (b) {
+          _retireBowler(b);
+          Navigator.pop(ctx);
+        },
+      ),
+    );
+  }
+
+  void _retireBowler(Player newBowler) {
+    try {
+      controller.retireBowler(newBowler.name);
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
   }
 
   void _showReferralDialog() {
@@ -400,36 +661,16 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
   }
 
   void _showBreakDialog() {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: Text('Match Break', style: TextStyle(color: Colors.white)),
-        content: Text(
-          'Select break type:',
-          style: TextStyle(color: AppColors.muted),
+      backgroundColor: AppColors.surface,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
         ),
-        actions: [
-          _breakBtn(ctx, 'DRINKS', AppColors.accent),
-          _breakBtn(ctx, 'RAIN', AppColors.warning),
-          _breakBtn(ctx, 'TEA/LUNCH', Colors.white),
-        ],
       ),
-    );
-  }
-
-  Widget _breakBtn(BuildContext ctx, String label, Color color) {
-    return TextButton(
-      onPressed: () {
-        Navigator.pop(ctx);
-        Get.snackbar(
-          'Match Paused',
-          'Match interrupted by $label',
-          backgroundColor: color.withValues(alpha: 0.2),
-          colorText: color,
-        );
-      },
-      child: Text(label, style: TextStyle(color: color)),
+      builder: (ctx) => const MatchBreakTimerSheet(),
     );
   }
 
@@ -456,7 +697,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: ResponsiveHelper.h(16)),
             if (striker != null) _retireTile(ctx, striker!),
             if (nonStriker != null) _retireTile(ctx, nonStriker!),
           ],
@@ -466,31 +707,57 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
   }
 
   Widget _retireTile(BuildContext ctx, Player p) {
+    final allowSub = s.matchConfig.allowSubstitutes;
     return ListTile(
-      title: Text(p.name, style: TextStyle(color: Colors.white)),
+      title: Text(p.name, style: TextStyle(color: AppColors.textPrimary)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               Navigator.pop(ctx);
               _retireBatter(p, true);
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.warning.withValues(alpha: 0.2),
+              foregroundColor: AppColors.warning,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+              ),
+            ),
             child: Text(
-              'HURT',
-              style: TextStyle(color: AppColors.warning, fontSize: 12),
+              'RETIRE HURT',
+              style: TextStyle(
+                color: AppColors.warning,
+                fontSize: ResponsiveHelper.sp(11),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _retireBatter(p, false);
-            },
-            child: Text(
-              'OUT',
-              style: TextStyle(color: AppColors.error, fontSize: 12),
+          if (allowSub) ...[
+            SizedBox(width: ResponsiveHelper.w(8)),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                _retireBatter(p, true);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accent.withValues(alpha: 0.2),
+                foregroundColor: AppColors.accent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                ),
+              ),
+              child: Text(
+                'SUBSTITUTE',
+                style: TextStyle(
+                  color: AppColors.accent,
+                  fontSize: ResponsiveHelper.sp(11),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -621,7 +888,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
                     winProbability: winProbability,
                     partnershipRuns: partnershipRuns,
                     partnershipBalls: partnershipBalls,
+                    currentRunRate: currentRunRate,
                     requiredRunRate: requiredRunRate,
+                    inningsNumber: inningsNumber,
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -629,6 +898,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
                     striker: striker,
                     nonStriker: nonStriker,
                     currentBowler: currentBowler,
+                    previousBowler: previousBowler,
                     currentOverBalls: currentOverBalls,
                     currentRunRate: currentRunRate,
                     partnershipRuns: partnershipRuns,
@@ -644,22 +914,36 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
                     onUndo: _undo,
                     onWicket: _showWicketWizard,
                     onExtras: _showExtrasModal,
-                    onNormalRun: (runs) => _addRuns(runs),
+                    canUndo: controller.engine.canUndo,
                   ),
                 ),
                 SliverToBoxAdapter(
                   child: AdvancedActionsGrid(
                     striker: striker,
                     nonStriker: nonStriker,
-                    onChangeBowler: _showBowlerChangeDialog,
+                    onRetireBowler: _showRetireBowlerDialog,
                     onVideoRefer: _showReferralDialog,
                     onRetireBatter: _showRetireBatterDialog,
                     onMatchBreak: _showBreakDialog,
+                    allowSubstitutes: s.matchConfig.allowSubstitutes,
                   ),
                 ),
                 SliverToBoxAdapter(child: SizedBox(height: 32)),
               ],
             ),
+          );
+        }),
+        bottomNavigationBar: Obx(() {
+          if (!controller.isEngineReady.value ||
+              controller.liveState.value == null) {
+            return const SizedBox.shrink();
+          }
+          if (matchStatus == 'INITIALIZING' ||
+              (matchStatus == 'LIVE_INNINGS_2' && striker == null)) {
+            return const SizedBox.shrink();
+          }
+          return ScoringNumberRow(
+            onNormalRun: (runs) => _addRuns(runs),
           );
         }),
       ),

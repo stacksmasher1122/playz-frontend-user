@@ -41,6 +41,7 @@ class ScoreboardHubItem {
   final String title;
   final String subtitle;
   final DateTime lastUpdatedAt;
+  final DateTime? createdAt;
   final dynamic rawModel;
 
   const ScoreboardHubItem({
@@ -51,6 +52,7 @@ class ScoreboardHubItem {
     required this.title,
     required this.subtitle,
     required this.lastUpdatedAt,
+    this.createdAt,
     this.rawModel,
   });
 
@@ -171,6 +173,7 @@ class ScoreboardRecoveryManager {
               title: '$teamA vs $teamB',
               subtitle: sub,
               lastUpdatedAt: m.lastUpdatedAt,
+              createdAt: m.createdAt,
               rawModel: m,
             ),
           );
@@ -210,6 +213,7 @@ class ScoreboardRecoveryManager {
               title: '$teamA vs $teamB',
               subtitle: sub,
               lastUpdatedAt: updatedDate,
+              createdAt: b.createdAt ?? updatedDate,
               rawModel: b,
             ),
           );
@@ -259,6 +263,7 @@ class ScoreboardRecoveryManager {
                 title: '$teamA vs $teamB',
                 subtitle: sub,
                 lastUpdatedAt: m.lastUpdatedAt,
+                createdAt: m.createdAt,
                 rawModel: m, // Passed to ScorecardDetailSheet
               ),
             );

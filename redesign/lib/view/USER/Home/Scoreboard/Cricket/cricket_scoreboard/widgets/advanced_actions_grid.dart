@@ -6,24 +6,28 @@ import 'package:redesign/theme/responsive_helper.dart';
 class AdvancedActionsGrid extends StatelessWidget {
   final Player? striker;
   final Player? nonStriker;
-  final VoidCallback onChangeBowler;
+  final VoidCallback onRetireBowler;
   final VoidCallback onVideoRefer;
   final VoidCallback onRetireBatter;
   final VoidCallback onMatchBreak;
+  final bool allowSubstitutes;
 
   const AdvancedActionsGrid({
     super.key,
     required this.striker,
     required this.nonStriker,
-    required this.onChangeBowler,
+    required this.onRetireBowler,
     required this.onVideoRefer,
     required this.onRetireBatter,
     required this.onMatchBreak,
+    this.allowSubstitutes = false,
   });
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+    final retireSub = allowSubstitutes ? 'Hurt / Substitute' : 'Injured / Hurt';
+
     return Container(
       margin: EdgeInsets.all(ResponsiveHelper.w(16)),
       child: Column(
@@ -31,11 +35,12 @@ class AdvancedActionsGrid extends StatelessWidget {
           Row(
             children: [
               _advBtn(
-                Icons.swap_horiz,
-                'Change Bowler',
-                'End of over',
-                onChangeBowler,
+                Icons.person_off_outlined,
+                'Retire Bowler',
+                retireSub,
+                onRetireBowler,
               ),
+              SizedBox(width: ResponsiveHelper.w(8)),
               _advBtn(
                 Icons.videocam,
                 'Video Refer',
@@ -44,15 +49,15 @@ class AdvancedActionsGrid extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          SizedBox(height: ResponsiveHelper.h(8)),
           Row(
             children: [
-              _advBtn(Icons.person_off, 'Retire Batter', 'Hurt / Out', () {
+              _advBtn(Icons.person_off, 'Retire Batter', retireSub, () {
                 if (striker != null || nonStriker != null) {
                   onRetireBatter();
                 }
               }),
-              SizedBox(width: 12),
+              SizedBox(width: ResponsiveHelper.w(8)),
               _advBtn(
                 Icons.pause_circle_outline,
                 'Match Break',
@@ -84,7 +89,7 @@ class AdvancedActionsGrid extends StatelessWidget {
           child: Row(
             children: [
               Icon(icon, color: AppColors.muted, size: 22),
-              SizedBox(width: 12),
+              SizedBox(width: ResponsiveHelper.w(8)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,14 +97,14 @@ class AdvancedActionsGrid extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.textPrimary,
                         fontSize: ResponsiveHelper.sp(13),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       subtitle,
-                      style: TextStyle(color: AppColors.muted, fontSize: 11),
+                      style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(12)),
                     ),
                   ],
                 ),

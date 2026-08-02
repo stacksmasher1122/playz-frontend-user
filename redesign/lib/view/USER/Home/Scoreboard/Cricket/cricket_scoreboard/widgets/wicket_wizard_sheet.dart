@@ -8,6 +8,7 @@ class WicketWizardSheet extends StatefulWidget {
   final List<Player> bowlingTeam;
   final Player? striker;
   final Player? nonStriker;
+  final bool isFreeHit;
   final Function(DismissalType, String?, Player?, bool, String?, bool)
   onComplete;
 
@@ -17,6 +18,7 @@ class WicketWizardSheet extends StatefulWidget {
     required this.bowlingTeam,
     required this.striker,
     required this.nonStriker,
+    this.isFreeHit = false,
     required this.onComplete,
   });
 
@@ -42,6 +44,18 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
       )
       .toList();
 
+  List<DismissalType> get availableDismissals {
+    if (widget.isFreeHit) {
+      return [
+        DismissalType.runOut,
+        DismissalType.obstructingField,
+        DismissalType.hitBallTwice,
+        DismissalType.handledBall,
+      ];
+    }
+    return DismissalType.values.toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
@@ -61,7 +75,7 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
               Text(
                 'Wicket Wizard',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                   fontSize: ResponsiveHelper.sp(18),
                   fontWeight: FontWeight.w700,
                 ),
@@ -70,7 +84,7 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
               Text('Step ${step + 1}/4', style: TextStyle(color: AppColors.muted)),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: ResponsiveHelper.h(8)),
           if (step == 0) _dismissalStep(),
           if (step == 1) _fielderStep(),
           if (step == 2) _newBatterStep(),
@@ -85,14 +99,19 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'How was the batter dismissed?',
-          style: TextStyle(color: AppColors.muted),
+          widget.isFreeHit
+              ? '⚡ FREE HIT ACTIVE — Only non-bowler dismissals apply:'
+              : 'How was the batter dismissed?',
+          style: TextStyle(
+            color: widget.isFreeHit ? AppColors.coinsGold : AppColors.muted,
+            fontWeight: widget.isFreeHit ? FontWeight.w600 : FontWeight.normal,
+          ),
         ),
-        SizedBox(height: 12),
+        SizedBox(height: ResponsiveHelper.h(8)),
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: DismissalType.values.map((t) {
+          children: availableDismissals.map((t) {
             final sel = dismissalType == t;
             return GestureDetector(
               onTap: () => setState(() {
@@ -109,13 +128,13 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: sel ? AppColors.error.withValues(alpha: 0.2) : Colors.white10,
+                  color: sel ? AppColors.error.withValues(alpha: 0.2) : AppColors.textPrimary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
                   border: sel ? Border.all(color: AppColors.error) : null,
                 ),
                 child: Text(
                   t.name.toUpperCase(),
-                  style: TextStyle(color: sel ? AppColors.error : Colors.white),
+                  style: TextStyle(color: sel ? AppColors.error : AppColors.textPrimary),
                 ),
               ),
             );
@@ -146,7 +165,7 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Select fielder', style: TextStyle(color: AppColors.muted)),
-        SizedBox(height: 12),
+        SizedBox(height: ResponsiveHelper.h(8)),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -167,13 +186,13 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: sel ? Colors.blue.withValues(alpha: 0.2) : Colors.white10,
+                  color: sel ? AppColors.infoBlue.withValues(alpha: 0.2) : AppColors.textPrimary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
                 ),
                 child: Text(
                   p.name,
                   style: TextStyle(
-                    color: sel ? Colors.blue : Colors.white,
+                    color: sel ? AppColors.infoBlue : AppColors.textPrimary,
                     fontSize: ResponsiveHelper.sp(13),
                   ),
                 ),
@@ -190,10 +209,10 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Select new batter', style: TextStyle(color: AppColors.muted)),
-        SizedBox(height: 12),
+        SizedBox(height: ResponsiveHelper.h(8)),
         ...availableBatters.map(
           (p) => ListTile(
-            title: Text(p.name, style: TextStyle(color: Colors.white)),
+            title: Text(p.name, style: TextStyle(color: AppColors.textPrimary)),
             trailing: newBatter?.name == p.name
                 ? Icon(Icons.check_circle, color: AppColors.accent)
                 : null,
@@ -208,7 +227,6 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
   }
 
   Widget _confirmStep() {
-    // Resolve the actual batter name based on outPlayer selection
     final outBatterName = outPlayer == 'striker'
         ? (widget.striker?.name ?? 'Striker')
         : (widget.nonStriker?.name ?? 'Non-Striker');
@@ -231,9 +249,9 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
             'New Batter: ${newBatter!.name}',
             style: TextStyle(color: AppColors.muted),
           ),
-        SizedBox(height: 16),
+        SizedBox(height: ResponsiveHelper.h(8)),
         if (dismissalType == DismissalType.runOut) ...[
-          SizedBox(height: 16),
+          SizedBox(height: ResponsiveHelper.h(8)),
           Row(
             children: [
               Text('Who is out?', style: TextStyle(color: AppColors.muted)),
@@ -243,7 +261,7 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
                 selected: outPlayer == 'striker',
                 onSelected: (val) => setState(() => outPlayer = 'striker'),
               ),
-              SizedBox(width: 8),
+              SizedBox(width: ResponsiveHelper.w(8)),
               ChoiceChip(
                 label: Text('Non-Striker'),
                 selected: outPlayer == 'nonStriker',
@@ -251,7 +269,7 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          SizedBox(height: ResponsiveHelper.h(8)),
           Row(
             children: [
               Text('Did batters cross?', style: TextStyle(color: AppColors.muted)),
@@ -265,13 +283,13 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
             ],
           ),
         ],
-        SizedBox(height: 16),
+        SizedBox(height: ResponsiveHelper.h(8)),
         if (newBatter != null)
           Row(
             children: [
               Text(
                 'New batter on strike?',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.textPrimary),
               ),
               Spacer(),
               Switch(
@@ -282,7 +300,7 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
               ),
             ],
           ),
-        SizedBox(height: 20),
+        SizedBox(height: ResponsiveHelper.h(8)),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -304,7 +322,7 @@ class _WicketWizardSheetState extends State<WicketWizardSheet> {
             child: Text(
               'CONFIRM WICKET',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 fontWeight: FontWeight.w700,
               ),
             ),

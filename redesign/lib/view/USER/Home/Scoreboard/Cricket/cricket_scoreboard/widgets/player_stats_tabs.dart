@@ -7,6 +7,7 @@ class PlayerStatsTabs extends StatefulWidget {
   final Player? striker;
   final Player? nonStriker;
   final Player? currentBowler;
+  final Player? previousBowler;
   final List<BallEvent> currentOverBalls;
   final double currentRunRate;
   final int partnershipRuns;
@@ -18,6 +19,7 @@ class PlayerStatsTabs extends StatefulWidget {
     required this.striker,
     required this.nonStriker,
     required this.currentBowler,
+    this.previousBowler,
     required this.currentOverBalls,
     required this.currentRunRate,
     required this.partnershipRuns,
@@ -31,6 +33,11 @@ class PlayerStatsTabs extends StatefulWidget {
 
 class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
   int statsTabIndex = 0;
+
+  String _truncate(String name) {
+    if (name.length <= 8) return name;
+    return '${name.substring(0, 8)}…';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +54,10 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
             children: [
               _statsTab('Batting', 0),
               _statsTab('Bowling', 1),
-              _statsTab('Comm', 2),
             ],
           ),
           if (statsTabIndex == 0) _buildBattingStats(),
           if (statsTabIndex == 1) _buildBowlingStats(),
-          if (statsTabIndex == 2) _buildCommentary(),
         ],
       ),
     );
@@ -66,7 +71,7 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
           decoration: BoxDecoration(
-            color: selected ? Colors.white10 : Colors.transparent,
+            color: selected ? AppColors.textPrimary.withValues(alpha: 0.1) : Colors.transparent,
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(ResponsiveHelper.w(18)),
             ),
@@ -75,7 +80,7 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
           child: Text(
             title,
             style: TextStyle(
-              color: selected ? Colors.white : AppColors.muted,
+              color: selected ? AppColors.textPrimary : AppColors.muted,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -90,34 +95,50 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'BATTERS',
-            style: TextStyle(
-              color: AppColors.muted,
-              fontSize: ResponsiveHelper.sp(11),
-              fontWeight: FontWeight.w600,
+          // Column Headers
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+            child: Row(
+              children: [
+                SizedBox(width: ResponsiveHelper.w(20)),
+                Expanded(
+                  child: Text(
+                    'Batter',
+                    style: TextStyle(
+                      color: AppColors.muted,
+                      fontSize: ResponsiveHelper.sp(10),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                _headerCell('R', 32),
+                _headerCell('B', 32),
+                _headerCell('4s', 28),
+                _headerCell('6s', 28),
+                _headerCell('SR', 44),
+              ],
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: ResponsiveHelper.h(4)),
           if (widget.striker != null)
             _batterRow(widget.striker!, isStriker: true),
-          SizedBox(height: 8),
+          SizedBox(height: ResponsiveHelper.h(6)),
           if (widget.nonStriker != null)
             _batterRow(widget.nonStriker!, isStriker: false),
-          SizedBox(height: 12),
+          SizedBox(height: ResponsiveHelper.h(12)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Extras: ${widget.currentOverBalls.where((b) => b.isExtra).fold(0, (sum, b) => sum + b.extraRuns)}',
-                style: TextStyle(color: AppColors.muted, fontSize: 12),
+                style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(12)),
               ),
               Text(
                 'Partnership: ${widget.partnershipRuns} (${widget.partnershipBalls})',
-                style: TextStyle(color: AppColors.muted, fontSize: 12),
+                style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(12)),
               ),
               Text(
-                'Run Rate: ${widget.currentRunRate.toStringAsFixed(2)}',
+                'RR: ${widget.currentRunRate.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: AppColors.accent,
                   fontSize: ResponsiveHelper.sp(12),
@@ -131,66 +152,95 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
     );
   }
 
+  Widget _headerCell(String label, double width) {
+    return SizedBox(
+      width: ResponsiveHelper.w(width),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: AppColors.muted,
+          fontSize: ResponsiveHelper.sp(10),
+          fontWeight: FontWeight.w600,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
   Widget _batterRow(Player p, {required bool isStriker}) {
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(8),
+        vertical: ResponsiveHelper.h(10),
+      ),
       decoration: BoxDecoration(
         color: isStriker
             ? AppColors.accent.withValues(alpha: 0.1)
             : Colors.transparent,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
         border: isStriker
             ? Border.all(color: AppColors.accent.withValues(alpha: 0.3))
             : null,
       ),
       child: Row(
         children: [
-          if (isStriker)
-            Icon(Icons.star, color: AppColors.accent, size: 16)
-          else
-            SizedBox(width: 16),
-          SizedBox(width: 8),
+          SizedBox(
+            width: ResponsiveHelper.w(20),
+            child: isStriker
+                ? Icon(Icons.star, color: AppColors.accent, size: ResponsiveHelper.sp(14))
+                : const SizedBox.shrink(),
+          ),
           Expanded(
             child: Text(
-              p.name,
+              _truncate(p.name),
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 fontWeight: FontWeight.w600,
+                fontSize: ResponsiveHelper.sp(13),
               ),
             ),
           ),
           SizedBox(
-            width: ResponsiveHelper.w(40),
+            width: ResponsiveHelper.w(32),
             child: Text(
               '${p.runs}',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 fontWeight: FontWeight.w700,
+                fontSize: ResponsiveHelper.sp(13),
               ),
               textAlign: TextAlign.center,
             ),
           ),
           SizedBox(
-            width: ResponsiveHelper.w(40),
+            width: ResponsiveHelper.w(32),
             child: Text(
               '${p.ballsFaced}',
-              style: TextStyle(color: AppColors.muted),
+              style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(12)),
               textAlign: TextAlign.center,
             ),
           ),
           SizedBox(
-            width: ResponsiveHelper.w(32),
+            width: ResponsiveHelper.w(28),
             child: Text(
               '${p.fours}',
-              style: TextStyle(color: AppColors.muted),
+              style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(12)),
               textAlign: TextAlign.center,
             ),
           ),
           SizedBox(
-            width: ResponsiveHelper.w(32),
+            width: ResponsiveHelper.w(28),
             child: Text(
               '${p.sixes}',
-              style: TextStyle(color: AppColors.muted),
+              style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(12)),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            width: ResponsiveHelper.w(44),
+            child: Text(
+              p.strikeRate.toStringAsFixed(1),
+              style: TextStyle(color: AppColors.coinsGold, fontSize: ResponsiveHelper.sp(11), fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
             ),
           ),
@@ -205,161 +255,122 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'BOWLERS',
-            style: TextStyle(
-              color: AppColors.muted,
-              fontSize: ResponsiveHelper.sp(11),
-              fontWeight: FontWeight.w600,
+          // Column Headers
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8), vertical: ResponsiveHelper.h(4)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Bowler',
+                    style: TextStyle(
+                      color: AppColors.muted,
+                      fontSize: ResponsiveHelper.sp(10),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                _headerCell('O', 32),
+                _headerCell('M', 28),
+                _headerCell('R', 32),
+                _headerCell('W', 28),
+                _headerCell('Econ', 44),
+              ],
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: ResponsiveHelper.h(4)),
           if (widget.currentBowler != null)
             _bowlerRow(widget.currentBowler!, isCurrent: true),
+          if (widget.previousBowler != null) ...[
+            SizedBox(height: ResponsiveHelper.h(6)),
+            _bowlerRow(widget.previousBowler!, isCurrent: false),
+          ],
         ],
       ),
     );
   }
 
-  Widget _bowlerRow(Player p, {required bool isCurrent}) {
+  Widget _bowlerRow(Player p, {bool isCurrent = true}) {
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(8),
+        vertical: ResponsiveHelper.h(10),
+      ),
       decoration: BoxDecoration(
         color: isCurrent
             ? AppColors.accent.withValues(alpha: 0.1)
             : Colors.transparent,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+        border: isCurrent
+            ? Border.all(color: AppColors.accent.withValues(alpha: 0.3))
+            : null,
       ),
       child: Row(
         children: [
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      p.name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    if (isCurrent)
-                      Container(
-                        margin: EdgeInsets.only(left: 8),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.accent,
-                          borderRadius: BorderRadius.circular(
-                            ResponsiveHelper.w(4),
-                          ),
-                        ),
-                        child: Text(
-                          'CURRENT',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: ResponsiveHelper.sp(9),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                SizedBox(height: 4),
-                Text(
-                  '${p.oversBowledDisplay} ov  ·  ${p.maidens} M  ·  ${p.runsConceded} R  ·  ${p.wicketsTaken} W',
-                  style: TextStyle(color: AppColors.muted, fontSize: 12),
-                ),
-              ],
+            child: Text(
+              _truncate(p.name),
+              style: TextStyle(
+                color: isCurrent ? AppColors.textPrimary : AppColors.textSecondary,
+                fontWeight: isCurrent ? FontWeight.w600 : FontWeight.normal,
+                fontSize: ResponsiveHelper.sp(13),
+              ),
             ),
           ),
-          Text('Econ: ', style: TextStyle(color: Colors.white70, fontSize: 12)),
-          Text(
-            p.economy.toStringAsFixed(1),
-            style: TextStyle(color: Colors.amber, fontWeight: FontWeight.w600),
+          SizedBox(
+            width: ResponsiveHelper.w(32),
+            child: Text(
+              p.oversBowledDisplay,
+              style: TextStyle(
+                color: isCurrent ? AppColors.textPrimary : AppColors.muted,
+                fontWeight: isCurrent ? FontWeight.w600 : FontWeight.normal,
+                fontSize: ResponsiveHelper.sp(12),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            width: ResponsiveHelper.w(28),
+            child: Text(
+              '${p.maidens}',
+              style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(12)),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            width: ResponsiveHelper.w(32),
+            child: Text(
+              '${p.runsConceded}',
+              style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(12)),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            width: ResponsiveHelper.w(28),
+            child: Text(
+              '${p.wicketsTaken}',
+              style: TextStyle(
+                color: isCurrent ? AppColors.textPrimary : AppColors.muted,
+                fontWeight: isCurrent ? FontWeight.w700 : FontWeight.normal,
+                fontSize: ResponsiveHelper.sp(12),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            width: ResponsiveHelper.w(44),
+            child: Text(
+              p.economy.toStringAsFixed(1),
+              style: TextStyle(
+                color: isCurrent ? AppColors.coinsGold : AppColors.muted,
+                fontSize: ResponsiveHelper.sp(11),
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildCommentary() {
-    final reversedHistory = widget.ballHistory.reversed.toList();
-    if (reversedHistory.isEmpty) {
-      return Padding(
-        padding: EdgeInsets.all(ResponsiveHelper.w(24)),
-        child: Center(
-          child: Text(
-            'Waiting for first ball...',
-            style: TextStyle(color: AppColors.muted),
-          ),
-        ),
-      );
-    }
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: reversedHistory.length,
-      itemBuilder: (ctx, i) {
-        final ball = reversedHistory[i];
-        return Container(
-          padding: EdgeInsets.all(ResponsiveHelper.w(12)),
-          margin: EdgeInsets.symmetric(
-            horizontal: ResponsiveHelper.w(16),
-            vertical: ResponsiveHelper.h(4),
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: ResponsiveHelper.w(40),
-                height: ResponsiveHelper.h(40),
-                decoration: BoxDecoration(
-                  color: ball.displayColor.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  ball.displayText,
-                  style: TextStyle(
-                    color: ball.displayColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: ResponsiveHelper.sp(12),
-                  ),
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ov ${ball.overNumber}.${ball.ballNumber}',
-                      style: TextStyle(color: AppColors.muted, fontSize: 11),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      ball.commentary,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: ResponsiveHelper.sp(13),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

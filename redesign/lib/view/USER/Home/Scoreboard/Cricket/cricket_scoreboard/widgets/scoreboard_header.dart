@@ -41,17 +41,11 @@ class ScoreboardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     String teamCode = 'BAT';
-    String teamName = 'Batting Team';
-    String oppName = 'Bowling Team';
 
     if (controller.currentMatch.value != null) {
-      if (inningsNumber == 1) {
-        teamName = controller.currentMatch.value!.battingFirstTeam;
-        oppName = controller.currentMatch.value!.bowlingFirstTeam;
-      } else {
-        teamName = controller.currentMatch.value!.bowlingFirstTeam;
-        oppName = controller.currentMatch.value!.battingFirstTeam;
-      }
+      final String teamName = inningsNumber == 1
+          ? controller.currentMatch.value!.battingFirstTeam
+          : controller.currentMatch.value!.bowlingFirstTeam;
       teamCode = teamName.length >= 3
           ? teamName.substring(0, 3).toUpperCase()
           : teamName.toUpperCase();
@@ -68,27 +62,8 @@ class ScoreboardHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              _teamLogo(teamCode, Colors.blue),
-              SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      teamName,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: ResponsiveHelper.sp(18),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Text(
-                      'vs $oppName · ${inningsNumber == 1 ? "1st" : "2nd"} Innings',
-                      style: TextStyle(color: AppColors.muted, fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
+              _teamLogo(teamCode, AppColors.infoBlue),
+              Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -97,11 +72,11 @@ class ScoreboardHeader extends StatelessWidget {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           '$totalRuns',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: AppColors.textPrimary,
                             fontSize: ResponsiveHelper.sp(42),
                             fontWeight: FontWeight.w800,
                             height: ResponsiveHelper.h(1),
@@ -110,7 +85,10 @@ class ScoreboardHeader extends StatelessWidget {
                       ),
                       Text(
                         ' /$wickets',
-                        style: TextStyle(color: AppColors.muted, fontSize: 24),
+                        style: TextStyle(
+                          color: AppColors.muted,
+                          fontSize: ResponsiveHelper.sp(14),
+                        ),
                       ),
                     ],
                   ),
@@ -119,8 +97,8 @@ class ScoreboardHeader extends StatelessWidget {
                     children: [
                       Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
+                          horizontal: ResponsiveHelper.w(6),
+                          vertical: ResponsiveHelper.h(2),
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.accent.withValues(alpha: 0.2),
@@ -135,10 +113,13 @@ class ScoreboardHeader extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: 8),
+                      SizedBox(width: ResponsiveHelper.w(8)),
                       Text(
                         'P$inningsNumber  $oversDisplay Overs',
-                        style: TextStyle(color: AppColors.muted, fontSize: 12),
+                        style: TextStyle(
+                          color: AppColors.muted,
+                          fontSize: ResponsiveHelper.sp(12),
+                        ),
                       ),
                     ],
                   ),
@@ -146,40 +127,35 @@ class ScoreboardHeader extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _statBadge('CRR ${currentRunRate.toStringAsFixed(2)}'),
-              if (targetScore != null)
-                _projBadge('Proj: $projectedScore - ${projectedScore + 12}')
-              else
-                _projBadge('Proj: $projectedScore'),
-              _statBadge(
-                'Avg ${(totalRuns / (wickets == 0 ? 1 : wickets)).round()}',
-              ),
-            ],
-          ),
           if (targetScore != null) ...[
-            SizedBox(height: 12),
+            SizedBox(height: ResponsiveHelper.h(12)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Target: $targetScore',
-                  style: TextStyle(color: AppColors.muted, fontSize: 13),
+                  style: TextStyle(
+                    color: AppColors.muted,
+                    fontSize: ResponsiveHelper.sp(12),
+                  ),
                 ),
                 Text(
                   'Need ${targetScore! - totalRuns} off ${(controller.engine.maxOvers - overs) * 6 - balls} balls',
-                  style: TextStyle(color: Colors.amber, fontSize: 13),
+                  style: TextStyle(
+                    color: AppColors.coinsGold,
+                    fontSize: ResponsiveHelper.sp(12),
+                  ),
                 ),
               ],
             ),
           ],
           if (matchStatus == 'MATCH_COMPLETED') ...[
-            SizedBox(height: 12),
+            SizedBox(height: ResponsiveHelper.h(8)),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(8)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(16),
+                vertical: ResponsiveHelper.h(8),
+              ),
               decoration: BoxDecoration(
                 color: AppColors.accent.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
@@ -194,26 +170,32 @@ class ScoreboardHeader extends StatelessWidget {
             ),
           ],
           if (isFreeHit) ...[
-            SizedBox(height: 8),
+            SizedBox(height: ResponsiveHelper.h(8)),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(8)),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(12),
+                vertical: ResponsiveHelper.h(8),
+              ),
               decoration: BoxDecoration(
-                color: Colors.amber.withValues(alpha: 0.15),
+                color: AppColors.coinsGold.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
-                border: Border.all(color: Colors.amber, width: 1.2),
+                border: Border.all(color: AppColors.coinsGold, width: 1.2),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.shield_rounded, color: Colors.amber, size: 16),
-                  SizedBox(width: 8),
-                  Text(
-                    'FREE HIT — only Run Out & non-bowling dismissals apply',
-                    style: TextStyle(
-                      color: Colors.amber,
-                      fontSize: ResponsiveHelper.sp(12),
-                      fontWeight: FontWeight.w600,
+                  Icon(Icons.shield_rounded, color: AppColors.coinsGold, size: 16),
+                  SizedBox(width: ResponsiveHelper.w(8)),
+                  Expanded(
+                    child: Text(
+                      'FREE HIT — only Run Out & non-bowling dismissals apply',
+                      style: TextStyle(
+                        color: AppColors.coinsGold,
+                        fontSize: ResponsiveHelper.sp(12),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
@@ -227,51 +209,20 @@ class ScoreboardHeader extends StatelessWidget {
 
   Widget _teamLogo(String code, Color color) {
     return Container(
-      width: ResponsiveHelper.w(48),
-      height: ResponsiveHelper.h(48),
+      width: ResponsiveHelper.w(52),
+      height: ResponsiveHelper.h(52),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.2),
         shape: BoxShape.circle,
+        border: Border.all(color: color.withValues(alpha: 0.5), width: 1.5),
       ),
       alignment: Alignment.center,
       child: Text(
         code,
         style: TextStyle(
           color: color,
-          fontWeight: FontWeight.w700,
-          fontSize: ResponsiveHelper.sp(14),
-        ),
-      ),
-    );
-  }
-
-  Widget _statBadge(String text) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10), vertical: ResponsiveHelper.h(4)),
-      decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(color: Colors.white70, fontSize: 12),
-      ),
-    );
-  }
-
-  Widget _projBadge(String text) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12), vertical: ResponsiveHelper.h(4)),
-      decoration: BoxDecoration(
-        color: AppColors.accent.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: AppColors.accent,
-          fontSize: ResponsiveHelper.sp(12),
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w800,
+          fontSize: ResponsiveHelper.sp(16),
         ),
       ),
     );

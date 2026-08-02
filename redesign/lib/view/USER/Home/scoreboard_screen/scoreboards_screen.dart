@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/services/scoreboard_recovery_manager.dart';
 
@@ -288,6 +289,15 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
     );
   }
 
+  String _formatMatchDate(DateTime? dt) {
+    if (dt == null) return '02 Aug 2026';
+    try {
+      return DateFormat('dd MMM yyyy').format(dt);
+    } catch (_) {
+      return '02 Aug 2026';
+    }
+  }
+
   Widget _buildScoreboardHubCard(ScoreboardHubItem item) {
     Color badgeBg;
     Color badgeBorder;
@@ -313,6 +323,8 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
       badgeIcon = Icons.pending_actions;
     }
 
+    final String displayDate = _formatMatchDate(item.createdAt ?? item.lastUpdatedAt);
+
     return Container(
       margin: EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -330,7 +342,7 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header Row: Status Badge & Sport Icon
+              // Header Row: Status Badge & Sport Icon with Date
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -363,7 +375,7 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
                       Icon(
                         item.sport == 'Cricket' ? Icons.sports_cricket : Icons.sports_tennis,
                         color: AppColors.muted,
-                        size: 18,
+                        size: 16,
                       ),
                       const SizedBox(width: 4),
                       Text(
@@ -394,7 +406,7 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          item.subtitle,
+                          '${item.subtitle} • $displayDate',
                           style: GoogleFonts.inter(
                             color: Colors.white70,
                             fontSize: ResponsiveHelper.sp(12),

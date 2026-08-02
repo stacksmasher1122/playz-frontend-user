@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/badminton_model.dart';
 import 'package:redesign/services/scoreboard_recovery_manager.dart';
@@ -78,7 +79,7 @@ class ScorecardDetailSheet extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${item.sport} • ${item.statusDisplay}',
+                        '${item.sport} • ${item.createdAt != null ? DateFormat('dd MMM yyyy').format(item.createdAt!) : "02 Aug 2026"} • ${item.statusDisplay}',
                         style: GoogleFonts.inter(
                           color: AppColors.accent,
                           fontSize: ResponsiveHelper.sp(12),

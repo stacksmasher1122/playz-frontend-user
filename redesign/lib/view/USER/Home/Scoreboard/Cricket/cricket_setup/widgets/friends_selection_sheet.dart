@@ -6,7 +6,6 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/badminton_controller.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/friends_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';
-import '../cricket_setup_screen.dart';
 
 class FriendsSelectionSheet extends StatelessWidget {
   final CricketController controller;

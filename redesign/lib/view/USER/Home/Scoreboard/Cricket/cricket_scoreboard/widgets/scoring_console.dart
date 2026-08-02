@@ -6,71 +6,55 @@ class ScoringConsole extends StatelessWidget {
   final VoidCallback onUndo;
   final VoidCallback onWicket;
   final VoidCallback onExtras;
-  final Function(int) onNormalRun;
+  final bool canUndo;
 
   const ScoringConsole({
     super.key,
     required this.onUndo,
     required this.onWicket,
     required this.onExtras,
-    required this.onNormalRun,
+    this.canUndo = true,
   });
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(16)),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(ResponsiveHelper.w(32)),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.4),
-            blurRadius: 20,
-            offset: Offset(0, -5),
-          ),
-        ],
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16),
+        vertical: ResponsiveHelper.h(12),
       ),
       child: SafeArea(
         top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        bottom: false,
+        child: Row(
           children: [
-            Row(
-              children: [
-                _actionButton(
-                  'UNDO',
-                  Icons.undo_rounded,
-                  Colors.white24,
-                  onUndo,
-                ),
-                SizedBox(width: 12),
-                _actionButton(
-                  'WICKET',
-                  Icons.close_rounded,
-                  AppColors.error.withValues(alpha: 0.2),
-                  onWicket,
-                  textColor: AppColors.error,
-                ),
-                SizedBox(width: 12),
-                _actionButton(
-                  'EXTRAS',
-                  Icons.add_circle_outline_rounded,
-                  Colors.amber.withValues(alpha: 0.2),
-                  onExtras,
-                  textColor: Colors.amber,
-                ),
-              ],
+            _actionButton(
+              'UNDO',
+              Icons.undo_rounded,
+              canUndo
+                  ? AppColors.textPrimary.withValues(alpha: 0.24)
+                  : AppColors.textPrimary.withValues(alpha: 0.08),
+              canUndo ? onUndo : () {},
+              textColor: canUndo
+                  ? AppColors.textPrimary
+                  : AppColors.muted.withValues(alpha: 0.4),
             ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [0, 1, 2, 3, 4, 6].map((runs) {
-                return _runButton(runs, () => onNormalRun(runs));
-              }).toList(),
+            SizedBox(width: ResponsiveHelper.w(8)),
+            _actionButton(
+              'WICKET',
+              Icons.close_rounded,
+              AppColors.error.withValues(alpha: 0.2),
+              onWicket,
+              textColor: AppColors.error,
+            ),
+            SizedBox(width: ResponsiveHelper.w(8)),
+            _actionButton(
+              'EXTRAS',
+              Icons.add_circle_outline_rounded,
+              AppColors.coinsGold.withValues(alpha: 0.2),
+              onExtras,
+              textColor: AppColors.coinsGold,
             ),
           ],
         ),
@@ -83,7 +67,7 @@ class ScoringConsole extends StatelessWidget {
     IconData icon,
     Color bg,
     VoidCallback onTap, {
-    Color textColor = Colors.white,
+    Color textColor = AppColors.textPrimary,
   }) {
     return Expanded(
       child: GestureDetector(
@@ -97,7 +81,7 @@ class ScoringConsole extends StatelessWidget {
           child: Column(
             children: [
               Icon(icon, color: textColor, size: 20),
-              SizedBox(height: 4),
+              SizedBox(height: ResponsiveHelper.h(8)),
               Text(
                 label,
                 style: TextStyle(
@@ -113,6 +97,44 @@ class ScoringConsole extends StatelessWidget {
       ),
     );
   }
+}
+
+class ScoringNumberRow extends StatelessWidget {
+  final Function(int) onNormalRun;
+
+  const ScoringNumberRow({super.key, required this.onNormalRun});
+
+  @override
+  Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        ResponsiveHelper.w(16),
+        ResponsiveHelper.h(12),
+        ResponsiveHelper.w(16),
+        ResponsiveHelper.h(12) + MediaQuery.of(context).padding.bottom,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(32)),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.background.withValues(alpha: 0.4),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [0, 1, 2, 3, 4, 6].map((runs) {
+          return _runButton(runs, () => onNormalRun(runs));
+        }).toList(),
+      ),
+    );
+  }
 
   Widget _runButton(int runs, VoidCallback onTap) {
     final isBound = runs == 4 || runs == 6;
@@ -122,7 +144,9 @@ class ScoringConsole extends StatelessWidget {
         width: ResponsiveHelper.w(52),
         height: ResponsiveHelper.h(52),
         decoration: BoxDecoration(
-          color: isBound ? AppColors.accent : Colors.white10,
+          color: isBound
+              ? AppColors.accent
+              : AppColors.textPrimary.withValues(alpha: 0.1),
           shape: BoxShape.circle,
           boxShadow: isBound
               ? [
@@ -138,7 +162,7 @@ class ScoringConsole extends StatelessWidget {
         child: Text(
           '$runs',
           style: TextStyle(
-            color: isBound ? Colors.black : Colors.white,
+            color: isBound ? AppColors.background : AppColors.textPrimary,
             fontSize: ResponsiveHelper.sp(20),
             fontWeight: FontWeight.w800,
           ),
