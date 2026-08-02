@@ -168,4 +168,67 @@ class CricketStatsDetailModel {
       ],
     );
   }
+
+  // C5: Factory to build model from real Firestore 'cricketStats' data
+  // stored in the User document.
+  factory CricketStatsDetailModel.fromFirestore(Map<String, dynamic> stats) {
+    final int totalRuns = (stats['totalRuns'] ?? 0) as int;
+    final int totalBallsFaced = (stats['totalBallsFaced'] ?? 0) as int;
+    final int totalMatches = (stats['totalMatches'] ?? 0) as int;
+    final int totalWickets = (stats['totalWickets'] ?? 0) as int;
+    final int totalBallsBowled = (stats['totalBallsBowled'] ?? 0) as int;
+    final int totalRunsConceded = (stats['totalRunsConceded'] ?? 0) as int;
+    final int totalFours = (stats['totalFours'] ?? 0) as int;
+    final int totalSixes = (stats['totalSixes'] ?? 0) as int;
+    final int totalMaidens = (stats['totalMaidens'] ?? 0) as int;
+
+    final double sr = totalBallsFaced > 0 ? (totalRuns / totalBallsFaced) * 100 : 0.0;
+    final double avg = totalMatches > 0 ? totalRuns / totalMatches : 0.0;
+    final double avgPerMatch = totalMatches > 0 ? totalRuns / totalMatches : 0.0;
+    final double boundaryPct = totalRuns > 0
+        ? ((totalFours * 4 + totalSixes * 6) / totalRuns * 100)
+        : 0.0;
+    final int totalOvers = totalBallsBowled ~/ 6;
+    final double econ = totalOvers > 0 ? totalRunsConceded / totalOvers : 0.0;
+    final double bowlAvg = totalWickets > 0 ? totalRunsConceded / totalWickets : 0.0;
+    final double bowlSR = totalWickets > 0 ? totalBallsBowled / totalWickets : 0.0;
+
+    return CricketStatsDetailModel(
+      playerRole: stats['playerRole'] ?? 'All-Rounder',
+      totalMatches: totalMatches,
+      tierName: stats['tierName'] ?? 'UNRANKED',
+      runs: totalRuns,
+      avg: avg,
+      strikeRate: sr,
+      ballsFaced: totalBallsFaced,
+      boundaryPct: boundaryPct,
+      avgRunsPerMatch: avgPerMatch,
+      highestScore: (stats['highestScore'] ?? '0').toString(),
+      innings: stats['innings'] ?? totalMatches,
+      notOuts: stats['notOuts'] ?? 0,
+      ducks: stats['ducks'] ?? 0,
+      hundreds: stats['hundreds'] ?? 0,
+      seventyFivesPlus: stats['seventyFivesPlus'] ?? 0,
+      fifties: stats['fifties'] ?? 0,
+      thirtiesPlus: stats['thirtiesPlus'] ?? 0,
+      fours: totalFours,
+      sixes: totalSixes,
+      t20MatchesPct: stats['t20MatchesPct'] ?? 100,
+      wickets: totalWickets,
+      bestBowling: (stats['bestBowling'] ?? '0/0').toString(),
+      economy: econ,
+      bowlingAvg: bowlAvg,
+      bowlingStrikeRate: bowlSR,
+      overs: totalOvers,
+      maidens: totalMaidens,
+      dotPct: stats['dotPct']?.toDouble() ?? 0.0,
+      runsGiven: totalRunsConceded,
+      catches: stats['catches'] ?? 0,
+      runOuts: stats['runOuts'] ?? 0,
+      playerOfMatchCount: stats['playerOfMatchCount'] ?? 0,
+      winPercentage: (stats['winPercentage'] ?? 0.0).toDouble(),
+      rating: (stats['rating'] ?? 0.0).toDouble(),
+      recentMatches: const [], // Recent matches loaded separately from match history
+    );
+  }
 }

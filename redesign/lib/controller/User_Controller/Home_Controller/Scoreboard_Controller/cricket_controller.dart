@@ -156,6 +156,8 @@ class CricketController extends GetxController {
     return List.generate(squadLimit.value, (i) => 'Player ${i + 1}');
   }
 
+  // E5: Validate that both rosters have enough players to field a cricket match
+  // (minimum 2 batters per team + 1 bowler) before proceeding to toss.
   void goToToss() {
     if (homeTeamName.value.trim().isEmpty ||
         awayTeamName.value.trim().isEmpty) {
@@ -163,6 +165,18 @@ class CricketController extends GetxController {
         'Validation',
         'Please enter names for both teams',
         snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+    final homeNames = getTeamPlayerNames(true);
+    final awayNames = getTeamPlayerNames(false);
+    if (homeNames.length < 2 || awayNames.length < 2) {
+      Get.snackbar(
+        'Not Enough Players',
+        'Each team needs at least 2 players to start a match.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color(0xFF2A2A2A),
+        colorText: Colors.white,
       );
       return;
     }
@@ -278,6 +292,8 @@ class CricketController extends GetxController {
         maxOversPerBowler: match.overs <= 5 ? 1 : (match.overs ~/ 5),
         isFormalRules: isFormalRules.value,
         format: match.overs <= 10 ? 'T10' : (match.overs <= 20 ? 'T20' : 'ODI'),
+        battingTeamName: match.battingFirstTeam,
+        bowlingTeamName: match.bowlingFirstTeam,
       ),
     );
     liveState.value = engine.state;
@@ -476,15 +492,34 @@ class CricketController extends GetxController {
 
   void startSecondInnings() {
     engine.startSecondInnings();
+    // C1: Update the model's currentBattingTeam/currentBowlingTeam so the
+    // Firestore document reflects the correct teams for the second innings.
+    if (currentMatch.value != null) {
+      currentMatch.value = currentMatch.value!.copyWith(
+        currentBattingTeam: currentMatch.value!.bowlingFirstTeam,
+        currentBowlingTeam: currentMatch.value!.battingFirstTeam,
+      );
+    }
+    updateEngineState();
+  }
+
+  // A3: Declare the current innings early.
+  void declareInnings() {
+    engine.declareInnings();
+    updateEngineState();
+  }
+
+  // A3: Abandon match with no result.
+  void abandonMatch() {
+    engine.abandonMatch();
     updateEngineState();
   }
 
   Future<void> _syncToDatabaseAsync(MatchState state) async {
     if (currentMatchId.value.isEmpty || currentMatch.value == null) return;
 
-    final lastEvent = state.ballHistory.isNotEmpty
-        ? state.ballHistory.last
-        : null;
+    final isNewlyCompleted = state.matchStatus == 'MATCH_COMPLETED' &&
+        currentMatch.value?.status != 'completed';
 
     Map<String, dynamic> sc = Map<String, dynamic>.from(
       currentMatch.value!.scorecard,
@@ -534,7 +569,7 @@ class CricketController extends GetxController {
           ? state.balls
           : currentMatch.value!.innings2Balls,
       matchResult: state.matchStatus == 'MATCH_COMPLETED'
-          ? 'Match Finished'
+          ? (state.matchResult?.isNotEmpty == true ? state.matchResult! : 'Match Finished')
           : '',
       scorecard: sc,
       inningsArray: inningsArr,
@@ -545,24 +580,94 @@ class CricketController extends GetxController {
 
     currentMatch.value = updated;
 
-    // OFFLINE FIRST: local db first
+    // OFFLINE FIRST: local db gets full match state + per-ball data
     await CricketSqflite.instance.updateMatch(updated);
 
+    // FIREBASE SYNC: Do NOT save per-ball data in Firebase (save only overall summary)
     try {
       final docRef = FirebaseFirestore.instance
           .collection('matches')
           .doc(updated.matchId);
-      await docRef.update(updated.toJson());
 
-      // Event-based sync to subcollection (scale proof)
-      if (lastEvent != null) {
-        await docRef
-            .collection('balls')
-            .doc(lastEvent.id)
-            .set(lastEvent.toJson());
-      }
+      await docRef.set(updated.toFirebaseJson(), SetOptions(merge: true));
     } catch (e) {
       debugPrint("Firestore sync error: $e");
+    }
+
+    // ON MATCH COMPLETION: Update cumulative lifetime stats of all players in User collection
+    if (isNewlyCompleted) {
+      await _updateAllPlayersLifetimeStats(state);
+    }
+  }
+
+  Future<void> _updateAllPlayersLifetimeStats(MatchState state) async {
+    final Map<String, Player> playerMap = {};
+
+    for (final p in state.battingTeam) {
+      playerMap[p.name] = p;
+    }
+    for (final p in state.bowlingTeam) {
+      if (playerMap.containsKey(p.name)) {
+        final existing = playerMap[p.name]!;
+        playerMap[p.name] = existing.copyWith(
+          ballsBowled: p.ballsBowled,
+          maidens: p.maidens,
+          runsConceded: p.runsConceded,
+          wicketsTaken: p.wicketsTaken,
+          dotBalls: p.dotBalls,
+        );
+      } else {
+        playerMap[p.name] = p;
+      }
+    }
+
+    for (final entry in playerMap.entries) {
+      final p = entry.value;
+      if (p.runs == 0 && p.ballsFaced == 0 && p.ballsBowled == 0 && p.wicketsTaken == 0) {
+        continue;
+      }
+
+      try {
+        // Find matching User in Firestore
+        final query = await FirebaseFirestore.instance
+            .collection('User')
+            .where('fullName', isEqualTo: p.name)
+            .limit(1)
+            .get();
+
+        String? userDocId;
+        if (query.docs.isNotEmpty) {
+          userDocId = query.docs.first.id;
+        } else {
+          final currentUser = FirebaseAuth.instance.currentUser;
+          if (currentUser != null &&
+              (currentUser.displayName == p.name || currentUser.email == p.name)) {
+            userDocId = currentUser.uid;
+          }
+        }
+
+        if (userDocId != null && userDocId.isNotEmpty) {
+          final updates = {
+            'cricketStats.totalRuns': FieldValue.increment(p.runs),
+            'cricketStats.totalFours': FieldValue.increment(p.fours),
+            'cricketStats.totalSixes': FieldValue.increment(p.sixes),
+            'cricketStats.totalBallsFaced': FieldValue.increment(p.ballsFaced),
+            'cricketStats.totalBallsBowled': FieldValue.increment(p.ballsBowled),
+            'cricketStats.totalWickets': FieldValue.increment(p.wicketsTaken),
+            'cricketStats.totalMaidens': FieldValue.increment(p.maidens),
+            'cricketStats.totalRunsConceded': FieldValue.increment(p.runsConceded),
+            'cricketStats.totalMatches': FieldValue.increment(1),
+            'cricketStats.lastMatchDate': FieldValue.serverTimestamp(),
+          };
+
+          await FirebaseFirestore.instance.collection('User').doc(userDocId).set(
+            updates,
+            SetOptions(merge: true),
+          );
+        }
+      } catch (e) {
+        debugPrint("Error updating player lifetime stats for ${p.name}: $e");
+      }
     }
   }
 }

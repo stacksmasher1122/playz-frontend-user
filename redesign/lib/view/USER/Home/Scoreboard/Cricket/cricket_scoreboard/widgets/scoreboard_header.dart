@@ -209,7 +209,7 @@ class ScoreboardHeader extends StatelessWidget {
                   Icon(Icons.shield_rounded, color: Colors.amber, size: 16),
                   SizedBox(width: 8),
                   Text(
-                    'FREE HIT — batter cannot be dismissed (except Run Out)',
+                    'FREE HIT — only Run Out & non-bowling dismissals apply',
                     style: TextStyle(
                       color: Colors.amber,
                       fontSize: ResponsiveHelper.sp(12),

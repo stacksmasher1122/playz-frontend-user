@@ -136,6 +136,9 @@ CREATE TABLE matches (
     return result.map((json) => CricketMatchModel.fromMap(json)).toList();
   }
 
+  // D3: Full-row rewrite on every ball. This is a deliberate simplicity
+  // trade-off — the full state is always consistent in SQFlite.
+  // For performance on lower-end devices, this runs asynchronously.
   Future<int> updateMatch(CricketMatchModel match) async {
     final db = await instance.database;
 
@@ -144,17 +147,6 @@ CREATE TABLE matches (
       match.toMap(),
       where: 'matchId = ?',
       whereArgs: [match.matchId],
-    );
-  }
-
-  /// Quick scorecard update without rebuilding the full model
-  Future<int> updateMatchScorecard(String matchId, Map<String, dynamic> updates) async {
-    final db = await instance.database;
-    return db.update(
-      'matches',
-      updates,
-      where: 'matchId = ?',
-      whereArgs: [matchId],
     );
   }
 

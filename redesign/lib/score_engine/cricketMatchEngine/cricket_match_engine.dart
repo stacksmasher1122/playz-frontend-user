@@ -68,9 +68,32 @@ class MatchEngine {
         "maidens": p.maidens,
       }).toList(),
       "extras": _state.ballHistory.where((b) => b.isExtra).fold(0, (sum, b) => sum + b.extraRuns),
-      "fallOfWickets": [], // Natively parsed later UI level
+      // E3: Derive fall-of-wickets from ballHistory instead of leaving it empty.
+      "fallOfWickets": _computeFallOfWickets(),
       "result": _state.matchStatus == 'MATCH_COMPLETED' ? "completed" : "in_progress",
     };
+  }
+
+  // E3: Compute fall-of-wickets from ball history.
+  // Filters wicket events and records the team score and over at each dismissal.
+  List<Map<String, dynamic>> _computeFallOfWickets() {
+    int wicketCount = 0;
+    int runningTotal = 0;
+    final List<Map<String, dynamic>> fow = [];
+
+    for (final ball in _state.ballHistory) {
+      runningTotal += ball.totalRuns;
+      if (ball.isWicket) {
+        wicketCount++;
+        fow.add({
+          'wicket': wicketCount,
+          'runs': runningTotal,
+          'over': '${ball.overNumber}.${ball.ballNumber}',
+          'player': ball.batterOutName ?? '',
+        });
+      }
+    }
+    return fow;
   }
 
   void startInnings({required String strikerName, required String nonStrikerName, required String bowlerName}) {
@@ -106,12 +129,20 @@ class MatchEngine {
   }
 
   void changeBowler(String newBowlerName) {
-    if (_state.currentBowler?.name == newBowlerName) {
+    final int bowlingSquadSize = _state.bowlingTeam.length;
+    final bool isSmallSquad = bowlingSquadSize <= 2;
+
+    // E1: Skip consecutive-over restriction for small squads (<=2 bowlers)
+    // where enforcing it would deadlock the match.
+    if (!isSmallSquad && _state.currentBowler?.name == newBowlerName) {
       throw Exception('Bowler cannot bowl consecutive overs');
     }
     
     final bowler = _state.bowlingTeam.firstWhere((p) => p.name == newBowlerName);
-    if (bowler.ballsBowled >= _state.matchConfig.maxOversPerBowler * 6) {
+
+    // E1: Skip bowler quota restriction for small squads where enforcing it
+    // would leave no eligible bowler for remaining overs.
+    if (!isSmallSquad && bowler.ballsBowled >= _state.matchConfig.maxOversPerBowler * 6) {
        throw Exception('Bowler has completed their quota of ${_state.matchConfig.maxOversPerBowler} overs');
     }
 
@@ -138,10 +169,68 @@ class MatchEngine {
     return _state.bowlingTeam.map((p) => p.name == updatedPlayer.name ? updatedPlayer : p).toList();
   }
 
+  // B4: Dedicated retire method that preserves undo history.
+  // Unlike restoreState(), this saves a snapshot first so undo still works.
+  void retireBatter(String playerName, PlayerStatus status) {
+    _saveSnapshot();
+    final updatedBatting = _state.battingTeam
+        .map((p) => p.name == playerName ? p.copyWith(status: status) : p)
+        .toList();
+
+    // Update striker/nonStriker references if the retired player is one of them
+    Player? newStriker = _state.striker;
+    Player? newNonStriker = _state.nonStriker;
+    if (_state.striker?.name == playerName) {
+      newStriker = updatedBatting.firstWhere((p) => p.name == playerName);
+    }
+    if (_state.nonStriker?.name == playerName) {
+      newNonStriker = updatedBatting.firstWhere((p) => p.name == playerName);
+    }
+
+    _state = _state.copyWith(
+      battingTeam: updatedBatting,
+      striker: newStriker,
+      nonStriker: newNonStriker,
+    );
+  }
+
+  // A3: Declare innings — manually end the current innings early.
+  void declareInnings() {
+    _saveSnapshot();
+    if (_state.inningsNumber == 1) {
+      _state = _state.copyWith(matchStatus: 'INNINGS_BREAK');
+    } else {
+      // In 2nd innings, declaration means match is complete
+      _state = _state.copyWith(
+        matchStatus: 'MATCH_COMPLETED',
+        matchResult: _state.targetScore != null && _state.totalRuns >= _state.targetScore!
+            ? 'Batting team won'
+            : 'Bowling team won by declaration',
+      );
+    }
+  }
+
+  // A3: Abandon match — end match with no result.
+  void abandonMatch() {
+    _saveSnapshot();
+    _state = _state.copyWith(
+      matchStatus: 'MATCH_COMPLETED',
+      matchResult: 'Match Abandoned — No Result',
+    );
+  }
+
   // -------------------------------------------------------------
   // EVENT REDUCER
   // -------------------------------------------------------------
   void dispatch(MatchEvent event) {
+    // B5: Engine-level validation — only process events during live innings.
+    // This prevents scoring when matchStatus is MATCH_COMPLETED, INNINGS_BREAK,
+    // INITIALIZING, or any non-live state.
+    final status = _state.matchStatus;
+    if (!status.startsWith('LIVE_')) {
+      return; // Silently ignore dispatches in non-live states
+    }
+
     _saveSnapshot();
 
     if (event is DeliveryEvent) {
@@ -175,7 +264,13 @@ class MatchEngine {
     int extraRunsPenalty = 0;
     
     // Evaluate runs
-    if (event.extra == ExtraType.wide || event.extra == ExtraType.noBall) {
+    if (event.extra == ExtraType.wide) {
+      // B2: Wide runs are always extras — never credited to the batter.
+      // All R + 1 goes to extraRunsPenalty/team total.
+      extraRunsPenalty = 1 + totalPhysicalRunsOffBat + overthrowRuns;
+      totalPhysicalRunsOffBat = 0;
+      overthrowRuns = 0;
+    } else if (event.extra == ExtraType.noBall) {
       extraRunsPenalty = 1;
     } else if (event.extra == ExtraType.bye || event.extra == ExtraType.legBye) {
       extraRunsPenalty = totalPhysicalRunsOffBat + overthrowRuns;
@@ -186,6 +281,7 @@ class MatchEngine {
       totalPhysicalRunsOffBat = 0;
     }
 
+    // B2: For wides, runAccumulatorForBatter is forced to 0.
     int runAccumulatorForBatter = totalPhysicalRunsOffBat + overthrowRuns;
     int runAccumulatorForBowler = totalPhysicalRunsOffBat + overthrowRuns + extraRunsPenalty;
 
@@ -196,6 +292,7 @@ class MatchEngine {
     }
 
     // Apply Striker metrics
+    // B2: On a wide, totalPhysicalRunsOffBat is already 0 so no batter credit.
     newStriker = newStriker.copyWith(
       ballsFaced: consumesBall ? newStriker.ballsFaced + 1 : newStriker.ballsFaced,
       runs: newStriker.runs + runAccumulatorForBatter,
@@ -266,6 +363,14 @@ class MatchEngine {
     }
     updateInBowlingList(newBowler);
 
+    // B1: Only re-evaluate isFreeHit when the delivery consumed a ball.
+    // On an illegal delivery (wide or another no-ball), leave isFreeHit
+    // as it already is — a no-ball re-arms it to true; a wide leaves it
+    // untouched so the batter still gets their free-hit legal delivery.
+    final bool newFreeHit = consumesBall
+        ? false  // Legal delivery consumed — free hit is used up
+        : (event.extra == ExtraType.noBall ? true : _state.isFreeHit);
+
     _state = _state.copyWith(
        striker: newStriker,
        nonStriker: nonStriker,
@@ -275,7 +380,7 @@ class MatchEngine {
        totalRuns: _state.totalRuns + runAccumulatorForBatter + extraRunsPenalty,
        wickets: _state.wickets + wicketsToAdd,
        balls: _state.balls + (consumesBall ? 1 : 0),
-       isFreeHit: event.extra == ExtraType.noBall ? true : false,
+       isFreeHit: newFreeHit,
     );
 
 
@@ -334,8 +439,11 @@ class MatchEngine {
       nonStrikerName: nonStriker.name,
       bowlerName: newBowler.name,
       isLegalDelivery: consumesBall,
+      // B3: Keep first wicket in legacy fields for backward compatibility,
+      // but also store full list of all wickets on this delivery.
       dismissalType: event.wickets.isNotEmpty ? event.wickets.first.type : null,
       batterOutName: event.wickets.isNotEmpty ? event.wickets.first.outPlayerName : null,
+      wicketsList: event.wickets,
     );
 
     _state = _state.copyWith(
@@ -349,12 +457,20 @@ class MatchEngine {
     _checkMatchEnd();
   }
 
+  // B7: Format-aware match phase thresholds derived from maxOvers.
+  // Powerplay = first ~30% of overs, Death = last ~25%, Middle = remainder.
   void _updateMatchPhase() {
-     int currentOver = _state.overs;
+     final int currentOver = _state.overs;
+     final int totalOvers = _state.matchConfig.maxOvers;
+     
+     // Derive thresholds proportionally
+     final int powerplayEnd = (totalOvers * 0.30).ceil().clamp(1, totalOvers);
+     final int deathStart = (totalOvers * 0.75).floor().clamp(powerplayEnd, totalOvers);
+
      String newPhase = 'MIDDLE';
-     if (currentOver < 6) {
+     if (currentOver < powerplayEnd) {
        newPhase = 'POWERPLAY';
-     } else if (currentOver >= 15) {
+     } else if (currentOver >= deathStart) {
        newPhase = 'DEATH';
      }
      if (_state.currentPhase != newPhase) {
@@ -397,27 +513,35 @@ class MatchEngine {
     _rotateStrikeInternally();
   }
 
+  // A1: teamSize is explicitly the number of players in the batting squad
+  // (i.e. squadLimit — the playing XI size), NOT including substitutes.
+  // maxWickets is derived from this: formal rules = teamSize - 1 (standard
+  // cricket all-out at 10 wickets for 11 players), Last Man Standing = teamSize.
+  int get maxWickets {
+    final bool isFormal = _state.matchConfig.isFormalRules;
+    final int teamSize = _state.battingTeam.length; // squadLimit players
+    return isFormal ? (teamSize - 1) : teamSize;
+  }
+
   void _checkMatchEnd() {
-    bool isFormal = _state.matchConfig.isFormalRules;
-    int teamSize = _state.battingTeam.length;
-    int maxWickets = isFormal ? (teamSize - 1) : teamSize;
+    final int mw = maxWickets;
 
     if (_state.inningsNumber == 1) {
-       if (_state.wickets >= maxWickets || (_state.overs >= _state.matchConfig.maxOvers && _state.balls == 0)) {
+       if (_state.wickets >= mw || (_state.overs >= _state.matchConfig.maxOvers && _state.balls == 0)) {
            _state = _state.copyWith(matchStatus: 'INNINGS_BREAK');
        }
     } else if (_state.inningsNumber == 2) {
        bool targetReached = (_state.targetScore != null && _state.totalRuns >= _state.targetScore!);
-       bool allOut = (_state.wickets >= maxWickets);
+       bool allOut = (_state.wickets >= mw);
        bool oversFinished = (_state.overs >= _state.matchConfig.maxOvers && _state.balls == 0);
 
        if (targetReached) {
-           _state = _state.copyWith(matchStatus: 'MATCH_COMPLETED', matchResult: '${_state.battingTeam[0].name} won');
+           _state = _state.copyWith(matchStatus: 'MATCH_COMPLETED', matchResult: '${_state.matchConfig.battingTeamName} won');
        } else if (allOut || oversFinished) {
            if (_state.targetScore != null && _state.totalRuns == _state.targetScore! - 1) {
                _state = _state.copyWith(matchStatus: 'TIE', matchResult: 'Match Tied! Super Over?');
            } else {
-               _state = _state.copyWith(matchStatus: 'MATCH_COMPLETED', matchResult: '${_state.bowlingTeam[0].name} won');
+               _state = _state.copyWith(matchStatus: 'MATCH_COMPLETED', matchResult: '${_state.matchConfig.bowlingTeamName} won');
            }
        }
     }
@@ -435,7 +559,10 @@ class MatchEngine {
        bowlingTeam: _state.bowlingTeam.map((p) => p.copyWith(ballsBowled: 0, runsConceded: 0, wicketsTaken: 0)).toList(), 
        ballHistory: [],
        currentOverBalls: [],
-       matchConfig: _state.matchConfig.copyWith(maxOvers: 1), // 1 over only
+       matchConfig: _state.matchConfig.copyWith(
+         maxOvers: 1, // 1 over only
+         // Team names don't inherently swap for a Super Over, depends on rules, but keeping them same for now.
+       ), 
      );
   }
 
@@ -453,7 +580,10 @@ class MatchEngine {
        bowlingTeam: _state.battingTeam, 
        ballHistory: [],
        currentOverBalls: [],
-       matchConfig: _state.matchConfig,
+       matchConfig: _state.matchConfig.copyWith(
+         battingTeamName: _state.matchConfig.bowlingTeamName,
+         bowlingTeamName: _state.matchConfig.battingTeamName,
+       ),
      );
   }
 }

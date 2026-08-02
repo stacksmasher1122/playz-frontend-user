@@ -296,6 +296,18 @@ class CricketMatchModel {
     };
   }
 
+  Map<String, dynamic> toFirebaseJson() {
+    final map = toJson();
+    // Save per-ball data ONLY in SQFlite, NOT in Firebase
+    map.remove('ballEvents');
+    if (map['engineState'] is Map) {
+      final engineMap = Map<String, dynamic>.from(map['engineState']);
+      engineMap.remove('ballHistory');
+      map['engineState'] = engineMap;
+    }
+    return map;
+  }
+
   factory CricketMatchModel.fromJson(Map<String, dynamic> json) {
     return CricketMatchModel(
       matchId: json['matchId'] ?? '',

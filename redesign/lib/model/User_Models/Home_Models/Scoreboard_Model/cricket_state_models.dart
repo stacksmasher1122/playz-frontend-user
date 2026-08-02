@@ -37,12 +37,16 @@ class MatchConfig {
   final int maxOversPerBowler;
   final bool isFormalRules;
   final String format; // T20, ODI, Test
+  final String battingTeamName;
+  final String bowlingTeamName;
 
   const MatchConfig({
     this.maxOvers = 20,
     this.maxOversPerBowler = 4,
     this.isFormalRules = true,
     this.format = 'T20',
+    this.battingTeamName = 'Batting Team',
+    this.bowlingTeamName = 'Bowling Team',
   });
 
   Map<String, dynamic> toJson() => {
@@ -50,6 +54,8 @@ class MatchConfig {
         'maxOversPerBowler': maxOversPerBowler,
         'isFormalRules': isFormalRules,
         'format': format,
+        'battingTeamName': battingTeamName,
+        'bowlingTeamName': bowlingTeamName,
       };
 
   MatchConfig copyWith({
@@ -57,12 +63,16 @@ class MatchConfig {
     int? maxOversPerBowler,
     bool? isFormalRules,
     String? format,
+    String? battingTeamName,
+    String? bowlingTeamName,
   }) {
     return MatchConfig(
       maxOvers: maxOvers ?? this.maxOvers,
       maxOversPerBowler: maxOversPerBowler ?? this.maxOversPerBowler,
       isFormalRules: isFormalRules ?? this.isFormalRules,
       format: format ?? this.format,
+      battingTeamName: battingTeamName ?? this.battingTeamName,
+      bowlingTeamName: bowlingTeamName ?? this.bowlingTeamName,
     );
   }
 
@@ -71,6 +81,8 @@ class MatchConfig {
         maxOversPerBowler: json['maxOversPerBowler'] ?? 4,
         isFormalRules: json['isFormalRules'] ?? true,
         format: json['format'] ?? 'T20',
+        battingTeamName: json['battingTeamName'] ?? 'Batting Team',
+        bowlingTeamName: json['bowlingTeamName'] ?? 'Bowling Team',
       );
 }
 
@@ -240,6 +252,8 @@ class BallEvent {
   final int ballNumber;
   final bool isLegalDelivery;
   final String commentary;
+  // B3: Supports multiple dismissals on a single delivery (e.g. two run-outs).
+  final List<WicketDetails> wicketsList;
 
   const BallEvent({
     required this.id,
@@ -257,6 +271,7 @@ class BallEvent {
     required this.ballNumber,
     this.isLegalDelivery = true,
     this.commentary = '',
+    this.wicketsList = const [],  // B3: Multi-wicket support
   });
 
   BallEvent copyWith({
@@ -275,6 +290,7 @@ class BallEvent {
     int? ballNumber,
     bool? isLegalDelivery,
     String? commentary,
+    List<WicketDetails>? wicketsList,
   }) {
     return BallEvent(
       id: id ?? this.id,
@@ -292,6 +308,7 @@ class BallEvent {
       ballNumber: ballNumber ?? this.ballNumber,
       isLegalDelivery: isLegalDelivery ?? this.isLegalDelivery,
       commentary: commentary ?? this.commentary,
+      wicketsList: wicketsList ?? this.wicketsList,
     );
   }
 
@@ -334,6 +351,7 @@ class BallEvent {
         'ballNumber': ballNumber,
         'isLegalDelivery': isLegalDelivery,
         'commentary': commentary,
+        'wicketsList': wicketsList.map((w) => w.toJson()).toList(),
       };
 
   factory BallEvent.fromJson(Map<String, dynamic> json) => BallEvent(
@@ -352,6 +370,9 @@ class BallEvent {
         ballNumber: json['ballNumber'] ?? 0,
         isLegalDelivery: json['isLegalDelivery'] ?? true,
         commentary: json['commentary'] ?? '',
+        wicketsList: json['wicketsList'] != null
+            ? List<WicketDetails>.from((json['wicketsList'] as List).map((w) => WicketDetails.fromJson(w)))
+            : const [],
       );
 }
 

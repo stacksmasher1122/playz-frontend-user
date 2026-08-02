@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_state_models.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_scoreboard/widgets/advanced_actions_grid.dart';
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
+import 'package:redesign/view/USER/Home/scoreboard_screen/scoreboards_screen.dart';
 
 // Internal Imports
 import 'widgets/scoreboard_header.dart';
@@ -12,7 +15,6 @@ import 'widgets/match_context_card.dart';
 import 'widgets/player_stats_tabs.dart';
 import 'widgets/ball_timeline.dart';
 import 'widgets/scoring_console.dart';
-import 'widgets/advanced_actions_grid.dart';
 import 'widgets/setup_wizard_card.dart';
 import 'widgets/bowler_select_sheet.dart';
 import 'widgets/extras_modal.dart';
@@ -77,7 +79,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
   double get winProbability {
     if (targetScore == null) return 0.5;
     final progress = totalRuns / targetScore!;
-    return (progress * 0.8 + (1 - wickets / 10) * 0.2).clamp(0.0, 1.0);
+    // E2: Use the match's actual maxWickets instead of hardcoded 10.
+    final mw = controller.engine.maxWickets;
+    return (progress * 0.8 + (1 - wickets / mw) * 0.2).clamp(0.0, 1.0);
   }
 
   // Scoring Logic
@@ -100,12 +104,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       return;
     }
     final status = isHurt ? PlayerStatus.retiredHurt : PlayerStatus.retiredOut;
-    final updatedBat = s.battingTeam
-        .map((b) => b.name == p.name ? b.copyWith(status: status) : b)
-        .toList();
-    controller.engine.restoreState(
-      s.copyWith(battingTeam: updatedBat).toJson(),
-    );
+    // B4: Use the engine's dedicated retireBatter() method which preserves
+    // undo history, instead of restoreState() which wipes it.
+    controller.engine.retireBatter(p.name, status);
     controller.updateEngineState();
     Get.snackbar(
       'Retired',
@@ -178,10 +179,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       barrierDismissible: false,
       builder: (_) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: Text(
-          'Innings Break!',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text('Innings Break!', style: TextStyle(color: Colors.white)),
         content: Text(
           'Target is $target',
           style: TextStyle(color: Colors.white70),
@@ -203,39 +201,81 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
   }
 
   void _endMatch() {
+    int timeLeft = 10;
+    Timer? countdownTimer;
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: Text(
-          'Match Completed',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: Text(
-          matchResult,
-          style: TextStyle(
-            color: AppColors.accent,
-            fontSize: ResponsiveHelper.sp(18),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              'Finish',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            countdownTimer ??= Timer.periodic(const Duration(seconds: 1), (
+              timer,
+            ) {
+              if (timeLeft > 0) {
+                if (mounted) {
+                  setState(() {
+                    timeLeft--;
+                  });
+                }
+              } else {
+                timer.cancel();
+                if (Navigator.canPop(dialogContext)) {
+                  Navigator.pop(dialogContext);
+                }
+                Get.offAll(() => const ScoreboardHubScreen());
+              }
+            });
+
+            return AlertDialog(
+              backgroundColor: AppColors.surface,
+              title: const Text(
+                'Match Completed',
+                style: TextStyle(color: Colors.white),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    matchResult,
+                    style: TextStyle(
+                      color: AppColors.accent,
+                      fontSize: ResponsiveHelper.sp(18),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Returning to scoreboards in $timeLeft seconds...',
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    countdownTimer?.cancel();
+                    Navigator.pop(dialogContext);
+                    Get.offAll(() => const ScoreboardHubScreen());
+                  },
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) {
+      countdownTimer?.cancel();
+    });
   }
 
   String get currentPhase => s.currentPhase;
@@ -262,7 +302,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       context: context,
       backgroundColor: AppColors.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
+        ),
       ),
       builder: (ctx) => BowlerSelectSheet(
         bowlers: bowlingTeam,
@@ -280,7 +322,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       context: context,
       backgroundColor: AppColors.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
+        ),
       ),
       builder: (ctx) => ExtrasModal(
         onSelect: (type, runs) {
@@ -297,7 +341,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       backgroundColor: AppColors.surface,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
+        ),
       ),
       builder: (ctx) => WicketWizardSheet(
         battingTeam: battingTeam,
@@ -324,10 +370,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: Text(
-          'Video Referral',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text('Video Referral', style: TextStyle(color: Colors.white)),
         content: Text(
           'Send this decision to the third umpire?',
           style: TextStyle(color: AppColors.muted),
@@ -395,7 +438,9 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       context: context,
       backgroundColor: AppColors.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
+        ),
       ),
       builder: (ctx) => Padding(
         padding: EdgeInsets.all(ResponsiveHelper.w(20)),
@@ -499,12 +544,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
                 borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
               ),
             ),
-            child: Text(
-              'EXIT',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: Text('EXIT', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -520,7 +560,7 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         final shouldPop = await _showExitConfirmationDialog();
-        if (shouldPop && mounted) {
+        if (shouldPop && context.mounted) {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => UserAppNavShell()),
@@ -533,16 +573,21 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
         body: Obx(() {
           if (!controller.isEngineReady.value ||
               controller.liveState.value == null) {
-            return Center(child: CircularProgressIndicator(color: AppColors.accent));
+            return Center(
+              child: CircularProgressIndicator(color: AppColors.accent),
+            );
           }
 
           if (matchStatus == 'INITIALIZING' ||
               (matchStatus == 'LIVE_INNINGS_2' && striker == null)) {
-            return Center(
-              child: SetupWizardCard(
-                controller: controller,
-                battingTeam: battingTeam,
-                bowlingTeam: bowlingTeam,
+            return SafeArea(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: SetupWizardCard(
+                  controller: controller,
+                  battingTeam: battingTeam,
+                  bowlingTeam: bowlingTeam,
+                ),
               ),
             );
           }

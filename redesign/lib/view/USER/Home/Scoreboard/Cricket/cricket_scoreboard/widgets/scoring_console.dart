@@ -23,7 +23,9 @@ class ScoringConsole extends StatelessWidget {
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(32))),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(32)),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.4),

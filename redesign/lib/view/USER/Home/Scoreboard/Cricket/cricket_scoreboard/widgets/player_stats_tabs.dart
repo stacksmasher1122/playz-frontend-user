@@ -67,7 +67,9 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
           padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
           decoration: BoxDecoration(
             color: selected ? Colors.white10 : Colors.transparent,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(18))),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(ResponsiveHelper.w(18)),
+            ),
           ),
           alignment: Alignment.center,
           child: Text(
@@ -97,9 +99,11 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
             ),
           ),
           SizedBox(height: 8),
-          if (widget.striker != null) _batterRow(widget.striker!, isStriker: true),
+          if (widget.striker != null)
+            _batterRow(widget.striker!, isStriker: true),
           SizedBox(height: 8),
-          if (widget.nonStriker != null) _batterRow(widget.nonStriker!, isStriker: false),
+          if (widget.nonStriker != null)
+            _batterRow(widget.nonStriker!, isStriker: false),
           SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,9 +135,13 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(12)),
       decoration: BoxDecoration(
-        color: isStriker ? AppColors.accent.withValues(alpha: 0.1) : Colors.transparent,
+        color: isStriker
+            ? AppColors.accent.withValues(alpha: 0.1)
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-        border: isStriker ? Border.all(color: AppColors.accent.withValues(alpha: 0.3)) : null,
+        border: isStriker
+            ? Border.all(color: AppColors.accent.withValues(alpha: 0.3))
+            : null,
       ),
       child: Row(
         children: [
@@ -217,7 +225,9 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(12)),
       decoration: BoxDecoration(
-        color: isCurrent ? AppColors.accent.withValues(alpha: 0.1) : Colors.transparent,
+        color: isCurrent
+            ? AppColors.accent.withValues(alpha: 0.1)
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       ),
       child: Row(
@@ -244,7 +254,9 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.accent,
-                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
+                          borderRadius: BorderRadius.circular(
+                            ResponsiveHelper.w(4),
+                          ),
                         ),
                         child: Text(
                           'CURRENT',
@@ -265,10 +277,7 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
               ],
             ),
           ),
-          Text(
-            'Econ: ',
-            style: TextStyle(color: Colors.white70, fontSize: 12),
-          ),
+          Text('Econ: ', style: TextStyle(color: Colors.white70, fontSize: 12)),
           Text(
             p.economy.toStringAsFixed(1),
             style: TextStyle(color: Colors.amber, fontWeight: FontWeight.w600),
@@ -299,7 +308,10 @@ class _PlayerStatsTabsState extends State<PlayerStatsTabs> {
         final ball = reversedHistory[i];
         return Container(
           padding: EdgeInsets.all(ResponsiveHelper.w(12)),
-          margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16), vertical: ResponsiveHelper.h(4)),
+          margin: EdgeInsets.symmetric(
+            horizontal: ResponsiveHelper.w(16),
+            vertical: ResponsiveHelper.h(4),
+          ),
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
