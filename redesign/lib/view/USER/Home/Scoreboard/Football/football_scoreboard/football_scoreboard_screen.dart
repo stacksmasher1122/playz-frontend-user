@@ -37,9 +37,24 @@ class _FootballScoreboardScreenState extends State<FootballScoreboardScreen> {
   FootballController get controller => Get.find<FootballController>();
 
   @override
+  void initState() {
+    super.initState();
+    controller.engine.addListener(_onEngineStateChanged);
+  }
+
+  @override
   void dispose() {
+    controller.engine.removeListener(_onEngineStateChanged);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onEngineStateChanged() {
+    if (controller.engine.state.phase == MatchPhase.fullTime) {
+      if (mounted && Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+    }
   }
 
   @override

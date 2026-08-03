@@ -261,6 +261,11 @@ class ScorecardDetailSheet extends StatelessWidget {
     );
   }
 
+  String _truncate8(String str) {
+    if (str.length <= 8) return str;
+    return str.substring(0, 8);
+  }
+
   Widget _buildCricketBattingTable(List battingList) {
     if (battingList.isEmpty) {
       return Container(
@@ -295,7 +300,8 @@ class ScorecardDetailSheet extends StatelessWidget {
           ],
           rows: battingList.map((item) {
             final map = item as Map<String, dynamic>;
-            final String name = map['name'] ?? map['batterName'] ?? 'Player';
+            final String rawName = map['name'] ?? map['batterName'] ?? 'Player';
+            final String name = _truncate8(rawName);
             final int r = map['runs'] ?? map['r'] ?? 0;
             final int b = map['ballsFaced'] ?? map['balls'] ?? map['b'] ?? 0;
             final int f4 = map['fours'] ?? map['4s'] ?? 0;
@@ -358,7 +364,8 @@ class ScorecardDetailSheet extends StatelessWidget {
           ],
           rows: bowlingList.map((item) {
             final map = item as Map<String, dynamic>;
-            final String name = map['name'] ?? map['bowlerName'] ?? 'Bowler';
+            final String rawName = map['name'] ?? map['bowlerName'] ?? 'Bowler';
+            final String name = _truncate8(rawName);
             final int balls = map['ballsBowled'] ?? map['balls'] ?? 0;
             final int maidens = map['maidens'] ?? map['m'] ?? 0;
             final int runs = map['runsConceded'] ?? map['runs'] ?? map['r'] ?? 0;
@@ -392,8 +399,12 @@ class ScorecardDetailSheet extends StatelessWidget {
 
   // ════════════════════ BADMINTON TABLES ════════════════════
   Widget _buildBadmintonTable(BadmintonMatchModel badminton) {
-    final teamA = badminton.teamAPlayers.isNotEmpty ? badminton.teamAPlayers.join(', ') : 'Team A';
-    final teamB = badminton.teamBPlayers.isNotEmpty ? badminton.teamBPlayers.join(', ') : 'Team B';
+    final teamA = badminton.teamAPlayers.isNotEmpty
+        ? badminton.teamAPlayers.map(_truncate8).join(', ')
+        : 'Team A';
+    final teamB = badminton.teamBPlayers.isNotEmpty
+        ? badminton.teamBPlayers.map(_truncate8).join(', ')
+        : 'Team B';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

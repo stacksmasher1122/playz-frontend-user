@@ -87,11 +87,18 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
 
             final String formattedTime =
                 '00:${timeLeft.toString().padLeft(2, '0')}';
-            final matchResultText = controller.currentMatch.value?.matchResult.isNotEmpty == true
-                ? controller.currentMatch.value!.matchResult
-                : (controller.liveState.value?.matchWinner == PlayerSide.sideA
-                    ? 'SIDE A WINS'
-                    : 'SIDE B WINS');
+            final String rawResult = controller.currentMatch.value?.matchResult ?? '';
+            String matchResultText = '';
+            if (rawResult.isNotEmpty) {
+              matchResultText = rawResult
+                  .split(' ')
+                  .map((token) => token.contains('@') ? _cleanPlayerName(token) : token)
+                  .join(' ');
+            } else if (controller.liveState.value != null) {
+              matchResultText = _getWinnerTextText(controller.liveState.value!);
+            } else {
+              matchResultText = 'MATCH COMPLETED';
+            }
 
             return AlertDialog(
               backgroundColor: AppColors.surface,
@@ -459,7 +466,7 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      state.matchWinner == PlayerSide.sideA ? 'SIDE A WINS' : 'SIDE B WINS',
+                                      _getWinnerTextText(state),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: ResponsiveHelper.sp(16),
@@ -559,5 +566,29 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
         }),
       ),
     );
+  }
+
+  String _getWinnerTextText(BadmintonMatchState state) {
+    final winner = state.matchWinner;
+    final players = winner == PlayerSide.sideA ? state.teamA : state.teamB;
+    if (players.isNotEmpty) {
+      final names = players.map((p) => _cleanPlayerName(p.name)).join(' & ');
+      return '$names WINS';
+    }
+    return winner == PlayerSide.sideA ? 'SIDE A WINS' : 'SIDE B WINS';
+  }
+
+  String _cleanPlayerName(String raw) {
+    String cleaned = raw;
+    if (raw.contains('@')) {
+      final part = raw.split('@').first;
+      final formatted = part
+          .split(RegExp(r'[._\-]'))
+          .map((s) => s.isEmpty ? '' : '${s[0].toUpperCase()}${s.substring(1)}')
+          .join(' ');
+      cleaned = formatted.isNotEmpty ? formatted : part;
+    }
+    if (cleaned.length <= 8) return cleaned;
+    return cleaned.substring(0, 8);
   }
 }

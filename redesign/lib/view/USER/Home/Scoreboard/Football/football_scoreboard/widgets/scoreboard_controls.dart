@@ -195,6 +195,9 @@ class ScoreboardControls extends StatelessWidget {
             onPressed: () {
               Navigator.pop(ctx);
               controller.endPhase();
+              if (controller.engine.state.phase == MatchPhase.fullTime && Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
             },
             child: Text(
               "ADVANCE",
@@ -241,6 +244,9 @@ class ScoreboardControls extends StatelessWidget {
             onPressed: () {
               Navigator.pop(ctx);
               controller.endMatch();
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
             },
             child: Text(
               "END MATCH",

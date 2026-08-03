@@ -13,7 +13,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/badminton_model.dart';
-import 'package:redesign/model/football/football_model.dart';
 
 class RecoverableMatchItem {
   final String matchId;
@@ -194,7 +193,7 @@ class ScoreboardRecoveryManager {
               sport: 'Cricket',
               matchType: matchType,
               status: isCompleted ? 'completed' : 'incomplete',
-              title: '$teamA vs $teamB',
+              title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
               subtitle: sub,
               lastUpdatedAt: m.lastUpdatedAt,
               createdAt: m.createdAt,
@@ -230,10 +229,10 @@ class ScoreboardRecoveryManager {
               sport: 'Badminton',
               matchType: matchType,
               status: isCompleted ? 'completed' : 'incomplete',
-              title: '$teamA vs $teamB',
+              title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
               subtitle: sub,
               lastUpdatedAt: updatedDate,
-              createdAt: b.createdAt ?? updatedDate,
+              createdAt: b.createdAt,
               rawModel: b,
             ),
           );
@@ -264,7 +263,7 @@ class ScoreboardRecoveryManager {
               sport: 'Football',
               matchType: matchType,
               status: isCompleted ? 'completed' : 'incomplete',
-              title: '$teamA vs $teamB',
+              title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
               subtitle: sub,
               lastUpdatedAt: f.lastUpdatedAt,
               createdAt: f.createdAt,
@@ -309,7 +308,7 @@ class ScoreboardRecoveryManager {
                 sport: 'Cricket',
                 matchType: matchType,
                 status: 'completed',
-                title: '$teamA vs $teamB',
+                title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
                 subtitle: sub,
                 lastUpdatedAt: m.lastUpdatedAt,
                 createdAt: m.createdAt,
@@ -330,7 +329,7 @@ class ScoreboardRecoveryManager {
                 sport: 'Badminton',
                 matchType: matchType,
                 status: 'completed',
-                title: '$teamA vs $teamB',
+                title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
                 subtitle: sub,
                 lastUpdatedAt: updatedDate,
                 rawModel: b,
@@ -369,16 +368,22 @@ class ScoreboardRecoveryManager {
     return rawList.map(_cleanPlayerName).join(', ');
   }
 
+  static String _truncate8(String str) {
+    if (str.length <= 8) return str;
+    return str.substring(0, 8);
+  }
+
   static String _cleanPlayerName(String raw) {
+    String cleaned = raw;
     if (raw.contains('@')) {
       final part = raw.split('@').first;
       final formatted = part
           .split(RegExp(r'[._\-]'))
           .map((s) => s.isEmpty ? '' : '${s[0].toUpperCase()}${s.substring(1)}')
           .join(' ');
-      return formatted.isNotEmpty ? formatted : part;
+      cleaned = formatted.isNotEmpty ? formatted : part;
     }
-    return raw;
+    return _truncate8(cleaned);
   }
 
   static Future<void> resumeMatch(BuildContext context, RecoverableMatchItem item) async {

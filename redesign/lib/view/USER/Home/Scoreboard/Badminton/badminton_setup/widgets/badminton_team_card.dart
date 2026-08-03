@@ -110,9 +110,9 @@ class BadmintonTeamCard extends StatelessWidget {
                       fontSize: ResponsiveHelper.sp(12),
                     ),
                     label: Text(
-                      friend.fullName.isNotEmpty
-                          ? friend.fullName
-                          : friend.email,
+                      _cleanPlayerName(
+                        friend.fullName.isNotEmpty ? friend.fullName : friend.email,
+                      ),
                     ),
                     deleteIcon: Icon(
                       Icons.close,
@@ -148,5 +148,19 @@ class BadmintonTeamCard extends StatelessWidget {
         return BadmintonFriendsSelectionSheet(controller: controller, isSideA: isSideA);
       },
     );
+  }
+
+  String _cleanPlayerName(String raw) {
+    String cleaned = raw;
+    if (raw.contains('@')) {
+      final part = raw.split('@').first;
+      final formatted = part
+          .split(RegExp(r'[._\-]'))
+          .map((s) => s.isEmpty ? '' : '${s[0].toUpperCase()}${s.substring(1)}')
+          .join(' ');
+      cleaned = formatted.isNotEmpty ? formatted : part;
+    }
+    if (cleaned.length <= 8) return cleaned;
+    return cleaned.substring(0, 8);
   }
 }
