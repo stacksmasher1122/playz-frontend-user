@@ -7,8 +7,8 @@ import 'halves_selector_widget.dart';
 import 'toggle_option_widget.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class RulesConfigurationCard extends StatelessWidget {
-  const RulesConfigurationCard({super.key});
+class MatchDurationCard extends StatelessWidget {
+  const MatchDurationCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,9 @@ class RulesConfigurationCard extends StatelessWidget {
       ),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
       decoration: BoxDecoration(
-        color: Color(0xFF121212).withValues(alpha: 0.5),
+        color: Color(0xFF1E1E1E),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: Color(0xFF1E1E1E)),
+        border: Border.all(color: Color(0xFF2A2A2A)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,11 +34,11 @@ class RulesConfigurationCard extends StatelessWidget {
               Container(
                 width: ResponsiveHelper.w(4),
                 height: ResponsiveHelper.h(16),
-                color: AppColors.accent, // Lime Green
+                color: AppColors.accent,
               ),
               SizedBox(width: 8),
               Text(
-                'RULES CONFIGURATION',
+                'MATCH DURATION',
                 style: TextStyle(
                   color: AppColors.accent,
                   fontSize: ResponsiveHelper.sp(12),
@@ -48,45 +48,150 @@ class RulesConfigurationCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 24),
+          SizedBox(height: 20),
           Obx(() {
             return DurationSliderWidget(
               duration: controller.duration.value,
               onChanged: controller.updateDuration,
             );
           }),
-          SizedBox(height: 16),
-          Divider(color: Color(0xFF1E1E1E)),
-          SizedBox(height: 16),
-          Obx(() {
-            return HalvesSelectorWidget(
-              halves: controller.halves.value,
-              onIncrease: controller.increaseHalves,
-              onDecrease: controller.decreaseHalves,
-            );
-          }),
-          SizedBox(height: 16),
-          Divider(color: Color(0xFF1E1E1E)),
-          SizedBox(height: 8),
-          Obx(() {
-            return Column(
+        ],
+      ),
+    );
+  }
+}
+
+class RulesConfigurationCard extends StatelessWidget {
+  const RulesConfigurationCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+    final controller = Get.find<FootballCreateMatchController>();
+
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(8.0),
+      ),
+      child: Column(
+        children: [
+          // Pro Rules Switch Header Card
+          Container(
+            decoration: BoxDecoration(
+              color: Color(0xFF1E1E1E),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+              border: Border.all(color: Color(0xFF2A2A2A)),
+            ),
+            padding: EdgeInsets.all(ResponsiveHelper.w(16)),
+            child: Row(
               children: [
-                ToggleOptionWidget(
-                  label: 'Extra Time Allowed',
-                  value: controller.extraTime.value,
-                  onChanged: (val) => controller.toggleExtraTime(),
+                Container(
+                  padding: EdgeInsets.all(ResponsiveHelper.w(10)),
+                  decoration: BoxDecoration(
+                    color: AppColors.accent.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                  ),
+                  child: Icon(
+                    Icons.gavel,
+                    color: AppColors.accent,
+                    size: 22,
+                  ),
                 ),
-                ToggleOptionWidget(
-                  label: 'Penalty Shootout',
-                  value: controller.penaltyShootout.value,
-                  onChanged: (val) => controller.togglePenaltyShootout(),
+                SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'ALLOW PRO RULES',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: ResponsiveHelper.sp(15),
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'Customize halves & extra time',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: ResponsiveHelper.sp(12),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                ToggleOptionWidget(
-                  label: 'VAR Simulation',
-                  value: controller.varSimulation.value,
-                  onChanged: (val) => controller.toggleVAR(),
+                Obx(
+                  () => Switch(
+                    value: controller.allowProRules.value,
+                    onChanged: controller.toggleProRules,
+                    activeThumbColor: AppColors.accent,
+                    activeTrackColor: AppColors.accent.withValues(alpha: 0.4),
+                    inactiveThumbColor: Colors.grey,
+                    inactiveTrackColor: Color(0xFF2C2C2C),
+                  ),
                 ),
               ],
+            ),
+          ),
+
+          // Advanced Rules Settings (Revealed only when Allow Pro Rules is ON)
+          Obx(() {
+            if (!controller.allowProRules.value) return const SizedBox.shrink();
+
+            return Container(
+              margin: EdgeInsets.only(top: ResponsiveHelper.h(12)),
+              padding: EdgeInsets.all(ResponsiveHelper.w(20)),
+              decoration: BoxDecoration(
+                color: Color(0xFF121212).withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+                border: Border.all(color: Color(0xFF1E1E1E)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: ResponsiveHelper.w(4),
+                        height: ResponsiveHelper.h(16),
+                        color: AppColors.accent,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'PRO RULES CONFIGURATION',
+                        style: TextStyle(
+                          color: AppColors.accent,
+                          fontSize: ResponsiveHelper.sp(12),
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  HalvesSelectorWidget(
+                    halves: controller.halves.value,
+                    onIncrease: controller.increaseHalves,
+                    onDecrease: controller.decreaseHalves,
+                  ),
+                  SizedBox(height: 16),
+                  Divider(color: Color(0xFF1E1E1E)),
+                  SizedBox(height: 8),
+                  ToggleOptionWidget(
+                    label: 'Extra Time Allowed',
+                    value: controller.extraTime.value,
+                    onChanged: (val) => controller.toggleExtraTime(),
+                  ),
+                  ToggleOptionWidget(
+                    label: 'Penalty Shootout',
+                    value: controller.penaltyShootout.value,
+                    onChanged: (val) => controller.togglePenaltyShootout(),
+                  ),
+                ],
+              ),
             );
           }),
         ],

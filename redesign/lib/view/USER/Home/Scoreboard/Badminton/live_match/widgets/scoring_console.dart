@@ -127,8 +127,10 @@ class ScoringConsole extends StatelessWidget {
             if (showProControls)
               ProfessionalMatchControls(
                 onLet: () {
-                  // Quick confirm let
-                  controller?.addPointWithType(PlayerSide.sideA, 'let'); // Side doesn't matter for let
+                  controller?.addPointWithType(PlayerSide.sideA, 'let');
+                },
+                onServiceFault: () {
+                  controller?.addPointWithType(PlayerSide.sideA, 'service_fault');
                 },
                 onConduct: () => _showConductSheet(context),
                 onTimeout: () {
@@ -186,22 +188,26 @@ class ScoringConsole extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12), horizontal: ResponsiveHelper.w(4)),
           decoration: BoxDecoration(
             color: bg,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: textColor, size: 20),
-              SizedBox(height: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: ResponsiveHelper.sp(10),
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
+              Icon(icon, color: textColor, size: ResponsiveHelper.sp(20)),
+              SizedBox(height: ResponsiveHelper.h(4)),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: ResponsiveHelper.sp(10),
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
             ],
@@ -221,20 +227,23 @@ class ScoringConsole extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
+          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14), horizontal: ResponsiveHelper.w(4)),
           decoration: BoxDecoration(
             color: bg,
             borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
             border: Border.all(color: textColor.withValues(alpha: 0.5), width: 1),
           ),
           alignment: Alignment.center,
-          child: Text(
-            label,
-            style: TextStyle(
-              color: textColor,
-              fontSize: ResponsiveHelper.sp(14),
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.0,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: textColor,
+                fontSize: ResponsiveHelper.sp(13),
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.8,
+              ),
             ),
           ),
         ),

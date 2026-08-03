@@ -129,7 +129,7 @@ class BadmintonSetupScreen extends StatelessWidget {
           padding: EdgeInsets.all(ResponsiveHelper.w(20.0)),
           child: Obx(
             () => ElevatedButton(
-              onPressed: controller.isLoading.value ? null : () => controller.createAndStartMatch(),
+              onPressed: controller.isLoading.value ? null : () => controller.goToToss(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accent,
                 disabledBackgroundColor: AppColors.surface,

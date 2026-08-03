@@ -223,6 +223,104 @@ class MatchEngine {
     );
   }
 
+  // Select incoming batter after a batter retires
+  void selectIncomingBatter({required String oldBatterName, required String newBatterName}) {
+    _saveSnapshot();
+    
+    List<Player> updatedBatting = _state.battingTeam.map((p) {
+      if (p.name == newBatterName) {
+        return p.copyWith(status: PlayerStatus.batter);
+      }
+      return p;
+    }).toList();
+
+    if (!updatedBatting.any((p) => p.name == newBatterName)) {
+      updatedBatting.add(Player(name: newBatterName, status: PlayerStatus.batter));
+    }
+
+    final newPlayer = updatedBatting.firstWhere((p) => p.name == newBatterName);
+    Player? newStriker = _state.striker;
+    Player? newNonStriker = _state.nonStriker;
+
+    if (_state.striker?.name == oldBatterName || _state.striker?.status != PlayerStatus.batter) {
+      newStriker = newPlayer;
+    } else if (_state.nonStriker?.name == oldBatterName || _state.nonStriker?.status != PlayerStatus.batter) {
+      newNonStriker = newPlayer;
+    }
+
+    _state = _state.copyWith(
+      battingTeam: updatedBatting,
+      striker: newStriker,
+      nonStriker: newNonStriker,
+      partnership: (newStriker != null && newNonStriker != null)
+          ? Partnership(batsman1: newStriker, batsman2: newNonStriker)
+          : _state.partnership,
+    );
+  }
+
+  // Substitute a batter with a bench player
+  void substituteBatter({required String oldBatterName, required String newBatterName}) {
+    _saveSnapshot();
+    
+    List<Player> updatedBatting = _state.battingTeam.map((p) {
+      if (p.name == oldBatterName) {
+        return p.copyWith(status: PlayerStatus.retiredHurt);
+      }
+      if (p.name == newBatterName) {
+        return p.copyWith(status: PlayerStatus.batter);
+      }
+      return p;
+    }).toList();
+
+    if (!updatedBatting.any((p) => p.name == newBatterName)) {
+      updatedBatting.add(Player(name: newBatterName, status: PlayerStatus.batter));
+    }
+
+    final subPlayer = updatedBatting.firstWhere((p) => p.name == newBatterName);
+    Player? newStriker = _state.striker;
+    Player? newNonStriker = _state.nonStriker;
+
+    if (_state.striker?.name == oldBatterName) {
+      newStriker = subPlayer;
+    }
+    if (_state.nonStriker?.name == oldBatterName) {
+      newNonStriker = subPlayer;
+    }
+
+    _state = _state.copyWith(
+      battingTeam: updatedBatting,
+      striker: newStriker,
+      nonStriker: newNonStriker,
+      partnership: (newStriker != null && newNonStriker != null)
+          ? Partnership(batsman1: newStriker, batsman2: newNonStriker)
+          : _state.partnership,
+    );
+  }
+
+  // Substitute a bowler with a bench player
+  void substituteBowler({required String oldBowlerName, required String newBowlerName}) {
+    _saveSnapshot();
+    
+    List<Player> updatedBowling = _state.bowlingTeam.map((p) {
+      if (p.name == oldBowlerName) {
+        return p.copyWith(status: PlayerStatus.retiredHurt);
+      }
+      if (p.name == newBowlerName) {
+        return p.copyWith(hasBowled: true);
+      }
+      return p;
+    }).toList();
+
+    if (!updatedBowling.any((p) => p.name == newBowlerName)) {
+      updatedBowling.add(Player(name: newBowlerName, hasBowled: true));
+    }
+
+    _state = _state.copyWith(
+      bowlingTeam: updatedBowling,
+      currentBowler: updatedBowling.firstWhere((p) => p.name == newBowlerName),
+    );
+  }
+
   // A3: Declare innings — manually end the current innings early.
   void declareInnings() {
     _saveSnapshot();

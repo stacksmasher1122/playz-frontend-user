@@ -30,7 +30,8 @@ class PointTypeSelector extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                _buildOption("Service Fault", "service_fault"),
+                _buildOption("Smash Winner", "smash"),
+                _buildOption("Net Winner", "net_winner"),
                 _buildOption("Out", "out"),
                 _buildOption("Net Touch", "net_touch"),
                 _buildOption("Double Hit", "double_hit"),

@@ -173,6 +173,7 @@ class BadmintonMatchState {
   // Interval/Ends state
   final bool hasIntervalOccurred;
   final bool hasEndsChangedDecider;
+  final bool endsSwapped;
 
   // Match overall status
   final MatchStatus status;
@@ -192,6 +193,7 @@ class BadmintonMatchState {
     this.serviceCourt = ServiceCourt.right,
     this.hasIntervalOccurred = false,
     this.hasEndsChangedDecider = false,
+    this.endsSwapped = false,
     this.status = MatchStatus.notStarted,
     this.matchWinner,
   });
@@ -210,6 +212,7 @@ class BadmintonMatchState {
         'serviceCourt': serviceCourt.index,
         'hasIntervalOccurred': hasIntervalOccurred,
         'hasEndsChangedDecider': hasEndsChangedDecider,
+        'endsSwapped': endsSwapped,
         'status': status.index,
         'matchWinner': matchWinner?.index,
       };
@@ -229,6 +232,7 @@ class BadmintonMatchState {
       serviceCourt: ServiceCourt.values[json['serviceCourt'] ?? 1],
       hasIntervalOccurred: json['hasIntervalOccurred'] ?? false,
       hasEndsChangedDecider: json['hasEndsChangedDecider'] ?? false,
+      endsSwapped: json['endsSwapped'] ?? false,
       status: MatchStatus.values[json['status'] ?? 0],
       matchWinner: json['matchWinner'] != null ? PlayerSide.values[json['matchWinner']] : null,
     );
@@ -248,6 +252,7 @@ class BadmintonMatchState {
     ServiceCourt? serviceCourt,
     bool? hasIntervalOccurred,
     bool? hasEndsChangedDecider,
+    bool? endsSwapped,
     MatchStatus? status,
     PlayerSide? matchWinner,
   }) {
@@ -265,6 +270,7 @@ class BadmintonMatchState {
       serviceCourt: serviceCourt ?? this.serviceCourt,
       hasIntervalOccurred: hasIntervalOccurred ?? this.hasIntervalOccurred,
       hasEndsChangedDecider: hasEndsChangedDecider ?? this.hasEndsChangedDecider,
+      endsSwapped: endsSwapped ?? this.endsSwapped,
       status: status ?? this.status,
       matchWinner: matchWinner ?? this.matchWinner,
     );

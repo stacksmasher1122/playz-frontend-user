@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
@@ -18,6 +19,294 @@ class BadmintonScoreboardScreen extends StatefulWidget {
 
 class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
   final BadmintonController controller = Get.find<BadmintonController>();
+  Worker? _stateWorker;
+  bool _isMatchEndFlowActive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _stateWorker = ever(controller.liveState, (state) {
+      if (state?.status == MatchStatus.completed &&
+          !_isMatchEndFlowActive &&
+          mounted &&
+          !controller.isReadOnly.value) {
+        _triggerMatchCompletionFlow();
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (controller.liveState.value?.status == MatchStatus.completed &&
+          !_isMatchEndFlowActive &&
+          mounted &&
+          !controller.isReadOnly.value) {
+        _triggerMatchCompletionFlow();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _stateWorker?.dispose();
+    super.dispose();
+  }
+
+  void _triggerMatchCompletionFlow() {
+    _isMatchEndFlowActive = true;
+    _showOneMinuteUndoDialog();
+  }
+
+  void _showOneMinuteUndoDialog() {
+    int timeLeft = 60;
+    Timer? countdownTimer;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (ctx, setState) {
+            countdownTimer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
+              if (timeLeft > 0) {
+                if (mounted) {
+                  setState(() {
+                    timeLeft--;
+                  });
+                }
+              } else {
+                timer.cancel();
+                if (Navigator.canPop(dialogContext)) {
+                  Navigator.pop(dialogContext);
+                }
+                _showTwentySecondCompletionCountdown();
+              }
+            });
+
+            final bool canUndoMatchEnd =
+                !controller.hasMatchEndUndoBeenUsed.value &&
+                controller.engine.canUndo;
+
+            final String formattedTime =
+                '00:${timeLeft.toString().padLeft(2, '0')}';
+            final matchResultText = controller.currentMatch.value?.matchResult.isNotEmpty == true
+                ? controller.currentMatch.value!.matchResult
+                : (controller.liveState.value?.matchWinner == PlayerSide.sideA
+                    ? 'SIDE A WINS'
+                    : 'SIDE B WINS');
+
+            return AlertDialog(
+              backgroundColor: AppColors.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+              ),
+              title: Row(
+                children: const [
+                  Icon(Icons.emoji_events_rounded, color: AppColors.coinsGold),
+                  SizedBox(width: 8),
+                  Text(
+                    'Match Completed',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    matchResultText,
+                    style: TextStyle(
+                      color: AppColors.accent,
+                      fontSize: ResponsiveHelper.sp(18),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.timer_outlined, color: AppColors.muted, size: 18),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Finalizing in $formattedTime',
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: ResponsiveHelper.sp(14),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!canUndoMatchEnd && controller.hasMatchEndUndoBeenUsed.value) ...[
+                    const SizedBox(height: 12),
+                    const Text(
+                      'Match-end undo already used (1/1)',
+                      style: TextStyle(color: Colors.grey, fontSize: 11, fontStyle: FontStyle.italic),
+                    ),
+                  ],
+                ],
+              ),
+              actionsAlignment: MainAxisAlignment.spaceBetween,
+              actions: [
+                if (canUndoMatchEnd)
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error.withValues(alpha: 0.2),
+                      foregroundColor: AppColors.error,
+                      elevation: 0,
+                      side: const BorderSide(color: AppColors.error, width: 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      controller.hasMatchEndUndoBeenUsed.value = true;
+                      countdownTimer?.cancel();
+                      Navigator.pop(dialogContext);
+                      _isMatchEndFlowActive = false;
+                      controller.undoLastEvent();
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Last point undone. Match resumed.'),
+                            backgroundColor: AppColors.surface,
+                          ),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.undo_rounded, size: 18),
+                    label: const Text(
+                      'UNDO LAST POINT',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                else
+                  const SizedBox.shrink(),
+                TextButton(
+                  onPressed: () {
+                    countdownTimer?.cancel();
+                    Navigator.pop(dialogContext);
+                    _showTwentySecondCompletionCountdown();
+                  },
+                  child: const Text(
+                    'FINISH NOW',
+                    style: TextStyle(
+                      color: AppColors.accent,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) {
+      countdownTimer?.cancel();
+    });
+  }
+
+  void _showTwentySecondCompletionCountdown() {
+    int timeLeft = 20;
+    Timer? countdownTimer;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (ctx, setState) {
+            countdownTimer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
+              if (timeLeft > 0) {
+                if (mounted) {
+                  setState(() {
+                    timeLeft--;
+                  });
+                }
+              } else {
+                timer.cancel();
+                if (Navigator.canPop(dialogContext)) {
+                  Navigator.pop(dialogContext);
+                }
+                _finalizeMatchAndNavigateHome();
+              }
+            });
+
+            final String formattedTime = '00:${timeLeft.toString().padLeft(2, '0')}';
+
+            return AlertDialog(
+              backgroundColor: AppColors.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: const Row(
+                children: [
+                  Icon(Icons.check_circle_outline, color: AppColors.accent),
+                  SizedBox(width: 8),
+                  Text(
+                    'Declaring Match Complete',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Match will be declared complete in $formattedTime',
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  LinearProgressIndicator(
+                    value: timeLeft / 20.0,
+                    backgroundColor: AppColors.background,
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    countdownTimer?.cancel();
+                    Navigator.pop(dialogContext);
+                    _finalizeMatchAndNavigateHome();
+                  },
+                  child: const Text(
+                    'FINISH IMMEDIATELY',
+                    style: TextStyle(
+                      color: AppColors.accent,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) {
+      countdownTimer?.cancel();
+    });
+  }
+
+  void _finalizeMatchAndNavigateHome() {
+    if (controller.tournamentId.isNotEmpty && !controller.isReadOnly.value) {
+      controller.endTournamentMatch(context);
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => UserAppNavShell()),
+        (route) => false,
+      );
+    }
+  }
 
   Future<bool> _showExitConfirmationDialog() async {
     final result = await showDialog<bool>(
@@ -125,11 +414,11 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
           centerTitle: true,
         ),
         body: Obx(() {
-          if (!controller.isEngineReady.value || controller.liveState.value == null) {
+          final state = controller.liveState.value;
+          if (!controller.isEngineReady.value || state == null) {
             return Center(child: CircularProgressIndicator(color: AppColors.accent));
           }
 
-          final state = controller.liveState.value!;
           final isCompleted = state.status == MatchStatus.completed;
 
           return SafeArea(
@@ -186,7 +475,7 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
                                             padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(24), vertical: ResponsiveHelper.h(12)),
                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ResponsiveHelper.w(8))),
                                           ),
-                                          onPressed: () => controller.endTournamentMatch(),
+                                          onPressed: () => controller.endTournamentMatch(context),
                                           child: Text(
                                             "SAVE & END MATCH",
                                             style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold),

@@ -58,46 +58,12 @@ class FootballCreateMatchController extends GetxController {
     referee.value = query;
   }
 
-  void selectMatchFormat(String format) {
-    selectedFormat.value = format;
-    if (format == '11v11') {
-      maxAllowedPlayers.value = 11;
-    } else if (format == '7v7') {
-      maxAllowedPlayers.value = 7;
-    } else if (format == '5v5') {
-      maxAllowedPlayers.value = 5;
-    }
-  }
-
-  void updateDuration(double val) {
-    duration.value = val;
-  }
-
-  void increaseHalves() {
-    if (halves.value < 4) halves.value++;
-  }
-
-  void decreaseHalves() {
-    if (halves.value > 1) halves.value--;
-  }
-
-  void toggleExtraTime() {
-    extraTime.value = !extraTime.value;
-  }
-
-  void togglePenaltyShootout() {
-    penaltyShootout.value = !penaltyShootout.value;
-  }
-
-  void toggleVAR() {
-    varSimulation.value = !varSimulation.value;
-  }
-  
-  // Format settings
-  final RxString selectedFormat = '11v11'.obs;
-  final RxDouble duration = 45.0.obs; // Half duration
+  // Format & Rules Rx state
   final RxInt maxAllowedPlayers = 11.obs;
+  final RxBool subsEnabled = true.obs;
   final RxInt maxSubs = 5.obs;
+  final RxBool allowProRules = false.obs;
+  final RxDouble duration = 45.0.obs; // Half duration
   final RxBool extraTime = false.obs;
   final RxBool penaltyShootout = false.obs;
 
@@ -112,6 +78,60 @@ class FootballCreateMatchController extends GetxController {
   final RxList<FriendModel> awayTeamRoster = <FriendModel>[].obs;
 
   final Rx<FriendModel?> currentUserFriendModel = Rx<FriendModel?>(null);
+
+  void selectMatchFormat(String format) {
+    if (format == '11v11') {
+      maxAllowedPlayers.value = 11;
+    } else if (format == '7v7') {
+      maxAllowedPlayers.value = 7;
+    } else if (format == '5v5') {
+      maxAllowedPlayers.value = 5;
+    }
+  }
+
+  void incrementSquadLimit() {
+    if (maxAllowedPlayers.value < 11) maxAllowedPlayers.value++;
+  }
+
+  void decrementSquadLimit() {
+    if (maxAllowedPlayers.value > 1) maxAllowedPlayers.value--;
+  }
+
+  void toggleSubs(bool val) {
+    subsEnabled.value = val;
+  }
+
+  void incrementSubs() {
+    if (maxSubs.value < 11) maxSubs.value++;
+  }
+
+  void decrementSubs() {
+    if (maxSubs.value > 0) maxSubs.value--;
+  }
+
+  void toggleProRules(bool val) {
+    allowProRules.value = val;
+  }
+
+  void updateDuration(double val) {
+    duration.value = val;
+  }
+
+  void increaseHalves() {
+    if (halves.value < 2) halves.value++;
+  }
+
+  void decreaseHalves() {
+    if (halves.value > 1) halves.value--;
+  }
+
+  void toggleExtraTime() {
+    extraTime.value = !extraTime.value;
+  }
+
+  void togglePenaltyShootout() {
+    penaltyShootout.value = !penaltyShootout.value;
+  }
 
   @override
   void onInit() {
@@ -142,7 +162,6 @@ class FootballCreateMatchController extends GetxController {
   }
 
   void updateFormat(String format, int players) {
-    selectedFormat.value = format;
     maxAllowedPlayers.value = players;
   }
 
@@ -194,7 +213,7 @@ class FootballCreateMatchController extends GetxController {
     Get.snackbar('Success', 'Template saved successfully.');
   }
 
-  Future<void> createMatchAndStart() async {
+  Future<void> createMatchAndStart([BuildContext? context]) async {
     if (!validateForm()) return;
 
     isLoading.value = true;
@@ -221,10 +240,11 @@ class FootballCreateMatchController extends GetxController {
         homeTeamPlayers: homeTeamPlayers,
         awayTeamPlayers: awayTeamPlayers,
         config: {
+          'allowProRules': allowProRules.value,
           'halfDurationMinutes': duration.value.toInt(),
-          'extraTimeEnabled': extraTime.value,
-          'penaltiesEnabled': penaltyShootout.value,
-          'maxSubs': maxSubs.value,
+          'extraTimeEnabled': allowProRules.value ? extraTime.value : false,
+          'penaltiesEnabled': allowProRules.value ? penaltyShootout.value : false,
+          'maxSubs': subsEnabled.value ? maxSubs.value : 0,
         },
         status: 'pending',
         engineState: engineState,
@@ -239,15 +259,24 @@ class FootballCreateMatchController extends GetxController {
       await FirebaseFirestore.instance.collection('matches').doc(matchId).set(newMatch.toJson());
 
       // Prepare Controller
-      final mainController = Get.put(FootballController());
-      mainController.currentMatchId.value = matchId;
-      mainController.engine.loadState(engineState);
+      final mainController = Get.isRegistered<FootballController>()
+          ? Get.find<FootballController>()
+          : Get.put(FootballController());
+          
+      mainController.restoreFootballMatchFromSqflite(newMatch);
 
-      // Navigate to Live Scoreboard directly (Bypassing lineup for now to mirror badminton parity)
-      Get.offAll(() => FootballScoreboardScreen());
+      // Navigate to Live Scoreboard directly via Navigator
+      if (context != null && context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => FootballScoreboardScreen()),
+        );
+      } else {
+        Get.offAll(() => FootballScoreboardScreen());
+      }
 
     } catch(e) {
-      Get.snackbar('Error', 'Failed to create match: \$e');
+      Get.snackbar('Error', 'Failed to create match: $e');
     } finally {
       isLoading.value = false;
     }

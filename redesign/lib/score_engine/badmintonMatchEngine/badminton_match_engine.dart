@@ -18,6 +18,11 @@ class ConductEvent extends BadmintonEvent {
   ConductEvent({required this.side, required this.conductType});
 }
 
+class RetireEvent extends BadmintonEvent {
+  final PlayerSide retiringSide;
+  RetireEvent({required this.retiringSide});
+}
+
 class BadmintonMatchEngine {
   BadmintonMatchState _state;
   final List<BadmintonMatchState> _history = [];
@@ -45,12 +50,35 @@ class BadmintonMatchEngine {
     }
   }
 
+  void startMedicalTimeout() {
+    _saveSnapshot();
+    _state = _state.copyWith(status: MatchStatus.timeout);
+  }
+
+  void resumeFromTimeout() {
+    _saveSnapshot();
+    _state = _state.copyWith(status: MatchStatus.inProgress);
+  }
+
+  void retireMatch(PlayerSide retiringSide) {
+    _saveSnapshot();
+    _state = _state.copyWith(
+      status: MatchStatus.completed,
+      matchWinner: retiringSide == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA,
+    );
+  }
+
   void dispatch(BadmintonEvent event) {
     _saveSnapshot();
     if (event is PointEvent) {
-      if (event.pointType == 'let' || event.pointType == 'service_fault') {
-        // A8 Fix: service_fault must not award a point (similar to let)
-        // Let and service_fault do not change score, just logs (which controller will handle)
+      if (event.pointType == 'let') {
+        // Let = replay, no score change
+      } else if (event.pointType == 'service_fault') {
+        // B4 Fix: Service fault = point to receiving side
+        final receivingSide = _state.servingSide == PlayerSide.sideA
+            ? PlayerSide.sideB
+            : PlayerSide.sideA;
+        _handlePoint(receivingSide);
       } else {
         _handlePoint(event.side);
       }
@@ -60,6 +88,11 @@ class BadmintonMatchEngine {
       _handleSwapEnds();
     } else if (event is ConductEvent) {
       _handleConduct(event);
+    } else if (event is RetireEvent) {
+      _state = _state.copyWith(
+        status: MatchStatus.completed,
+        matchWinner: event.retiringSide == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA,
+      );
     }
   }
 
@@ -92,28 +125,44 @@ class BadmintonMatchEngine {
     int newServerIndexA = _state.serverIndexA;
     int newServerIndexB = _state.serverIndexB;
 
+    bool isDoubles = _state.teamA.length == 2;
+
     if (winningSide == PlayerSide.sideA) {
       newScoreA++;
       if (_state.servingSide != PlayerSide.sideA) {
         newServingSide = PlayerSide.sideA;
-        // In doubles, if we win back service, server index doesn't change from last time we served.
-        // It simply goes to the player in the right court for the new score.
-        // But for simplicity of logic here, we just use the new score to determine court.
-      } else {
-        // We were serving and won the point.
-        // In doubles, partners swap courts, but the same player continues to serve.
-        // Server index stays the same.
+      } else if (isDoubles) {
+        // B5 Fix: Serving side won point in doubles → partners swap courts (serverIndex toggles)
+        newServerIndexA = (_state.serverIndexA + 1) % 2;
       }
     } else {
       newScoreB++;
       if (_state.servingSide != PlayerSide.sideB) {
         newServingSide = PlayerSide.sideB;
+      } else if (isDoubles) {
+        // B5 Fix: Serving side won point in doubles → partners swap courts
+        newServerIndexB = (_state.serverIndexB + 1) % 2;
       }
     }
 
     // Determine Service Court based on score
     int relevantScore = (newServingSide == PlayerSide.sideA) ? newScoreA : newScoreB;
     ServiceCourt newCourt = (relevantScore % 2 == 0) ? ServiceCourt.right : ServiceCourt.left;
+
+    bool hasEndsChangedDecider = _state.hasEndsChangedDecider;
+    bool endsSwapped = _state.endsSwapped;
+
+    // B8 Fix: Check for mid-deciding-game 11-point swap
+    if (_state.config.endsChangeEnabled && !_state.hasEndsChangedDecider) {
+      final isDecidingGame = _state.currentGameIndex == (_state.config.gamesToWin * 2 - 2);
+      if (isDecidingGame) {
+        int swapThreshold = (_state.config.pointsToWin / 2).ceil();
+        if (newScoreA == swapThreshold || newScoreB == swapThreshold) {
+          hasEndsChangedDecider = true;
+          endsSwapped = !endsSwapped;
+        }
+      }
+    }
 
     _state = _state.copyWith(
       currentScoreA: newScoreA,
@@ -122,6 +171,8 @@ class BadmintonMatchEngine {
       serverIndexA: newServerIndexA,
       serverIndexB: newServerIndexB,
       serviceCourt: newCourt,
+      hasEndsChangedDecider: hasEndsChangedDecider,
+      endsSwapped: endsSwapped,
       status: currentStatus,
     );
 
@@ -129,7 +180,6 @@ class BadmintonMatchEngine {
     if (_state.config.intervalsEnabled && !_state.hasIntervalOccurred) {
       int intervalThreshold = (_state.config.pointsToWin / 2).ceil();
       if (_state.currentScoreA == intervalThreshold || _state.currentScoreB == intervalThreshold) {
-        // Emit interval or just mark it
         _state = _state.copyWith(hasIntervalOccurred: true);
       }
     }
@@ -139,11 +189,14 @@ class BadmintonMatchEngine {
   }
 
   void _handleInterval() {
-    // Currently purely marker, ui handles timer
+    // Purely marker, ui handles timer
   }
 
   void _handleSwapEnds() {
-     _state = _state.copyWith(hasEndsChangedDecider: true);
+    _state = _state.copyWith(
+      hasEndsChangedDecider: true,
+      endsSwapped: !_state.endsSwapped,
+    );
   }
 
   void _checkGameEnd() {
@@ -190,13 +243,15 @@ class BadmintonMatchEngine {
 
       // If match not over, prep next game
       if (_state.status != MatchStatus.completed) {
-         _state = _state.copyWith(
-           currentGameIndex: _state.currentGameIndex + 1,
-           games: [..._state.games, BadmintonGame()],
-           // Winner of prev game serves first
-           servingSide: gameA ? PlayerSide.sideA : PlayerSide.sideB,
-           serviceCourt: ServiceCourt.right,
-         );
+        bool newEndsSwapped = _state.config.endsChangeEnabled ? !_state.endsSwapped : _state.endsSwapped;
+        _state = _state.copyWith(
+          currentGameIndex: _state.currentGameIndex + 1,
+          games: [..._state.games, BadmintonGame()],
+          // Winner of prev game serves first
+          servingSide: gameA ? PlayerSide.sideA : PlayerSide.sideB,
+          serviceCourt: ServiceCourt.right,
+          endsSwapped: newEndsSwapped,
+        );
       }
     }
   }

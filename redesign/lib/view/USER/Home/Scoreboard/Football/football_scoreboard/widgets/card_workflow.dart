@@ -31,6 +31,7 @@ class _CardWorkflowState extends State<CardWorkflow> {
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(ResponsiveHelper.w(24)),
         ),
+        border: Border.all(color: Color(0xFF2C2C2C), width: 1.5),
       ),
       child: Column(
         children: [
@@ -90,15 +91,35 @@ class _CardWorkflowState extends State<CardWorkflow> {
           step = 1;
         }),
         child: Container(
-          color: Colors.transparent,
+          margin: EdgeInsets.all(ResponsiveHelper.w(16)),
+          padding: EdgeInsets.symmetric(
+            vertical: ResponsiveHelper.h(24),
+            horizontal: ResponsiveHelper.w(12),
+          ),
+          decoration: BoxDecoration(
+            color: Color(0xFF1E1E1E),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+            border: Border.all(
+              color: AppColors.accent.withValues(alpha: 0.6),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accent.withValues(alpha: 0.1),
+                blurRadius: 12,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
           child: Center(
             child: Text(
               team.name,
               style: TextStyle(
-                color: AppColors.onPrimary,
-                fontSize: ResponsiveHelper.sp(20),
+                color: Colors.white,
+                fontSize: ResponsiveHelper.sp(18),
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),
@@ -111,7 +132,7 @@ class _CardWorkflowState extends State<CardWorkflow> {
         ? widget.engine.state.homeTeam
         : widget.engine.state.awayTeam;
     List<MatchPlayer> pitchPlayers = team.squad
-        .where((p) => p.isOnPitch)
+        .where((p) => p.isOnPitch && !p.isSentOff)
         .toList();
 
     return Column(
@@ -134,7 +155,7 @@ class _CardWorkflowState extends State<CardWorkflow> {
                   style: TextStyle(color: AppColors.onPrimary),
                 ),
                 trailing: Text(
-                  "#\${p.number}",
+                  "#${p.number}",
                   style: TextStyle(color: AppColors.muted),
                 ),
                 onTap: () => setState(() {

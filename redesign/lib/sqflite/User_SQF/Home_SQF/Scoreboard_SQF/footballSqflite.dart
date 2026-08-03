@@ -24,7 +24,12 @@ class FootballSqflite {
       path,
       version: 1,
       onCreate: _createDB,
+      onUpgrade: _onUpgrade,
     );
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    // Migration stub for future schema upgrades
   }
 
   Future _createDB(Database db, int version) async {
@@ -52,6 +57,15 @@ CREATE TABLE football_matches (
   bracketMatchId $textNullable
   )
 ''');
+  }
+
+  Future<void> deleteMatch(String matchId) async {
+    final db = await instance.database;
+    await db.delete(
+      'football_matches',
+      where: 'id = ?',
+      whereArgs: [matchId],
+    );
   }
 
   Future<void> createMatch(FootballMatchModel match) async {

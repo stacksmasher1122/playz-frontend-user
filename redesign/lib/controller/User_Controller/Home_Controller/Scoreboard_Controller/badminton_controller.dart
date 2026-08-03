@@ -12,6 +12,7 @@ import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/badmintonSqfli
 import 'package:redesign/score_engine/badmintonMatchEngine/badminton_match_engine.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/badminton_scoreboard_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
 import 'package:redesign/services/xp_reward_service.dart';
 
 class BadmintonController extends GetxController {
@@ -43,6 +44,7 @@ class BadmintonController extends GetxController {
   var tournamentId = ''.obs;
   var bracketMatchId = ''.obs;
   var isReadOnly = false.obs;
+  var hasMatchEndUndoBeenUsed = false.obs;
 
   // Real-time engine
   late BadmintonMatchEngine engine;
@@ -143,7 +145,44 @@ class BadmintonController extends GetxController {
     playersList.remove(player.email);
   }
 
-  Future<void> createAndStartMatch() async {
+  void goToToss([BuildContext? context]) {
+    if (teamARoster.isEmpty || teamBRoster.isEmpty) {
+      Get.snackbar('Error', 'Both sides need at least 1 player');
+      return;
+    }
+
+    final teamAName = teamARoster.first.fullName.isNotEmpty
+        ? teamARoster.first.fullName
+        : 'Side A';
+    final teamBName = teamBRoster.first.fullName.isNotEmpty
+        ? teamBRoster.first.fullName
+        : 'Side B';
+
+    final navContext = context ?? Get.context;
+    if (navContext != null) {
+      Navigator.push(
+        navContext,
+        MaterialPageRoute(
+          builder: (context) => CoinFlipScreen(
+            teamAName: teamAName,
+            teamBName: teamBName,
+            sport: 'badminton',
+            onTossComplete: (tossWinner, tossDecision) async {
+              final isWinnerA = tossWinner == teamAName;
+              final servingSide = (isWinnerA && tossDecision == 'serve') ||
+                      (!isWinnerA && tossDecision == 'receive')
+                  ? PlayerSide.sideA
+                  : PlayerSide.sideB;
+
+              await createAndStartMatch(navContext, initialServingSide: servingSide);
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> createAndStartMatch(BuildContext? context, {PlayerSide initialServingSide = PlayerSide.sideA}) async {
     if (teamARoster.isEmpty || teamBRoster.isEmpty) {
       Get.snackbar('Error', 'Both sides need at least 1 player');
       return;
@@ -170,13 +209,19 @@ class BadmintonController extends GetxController {
         config: config,
         teamA: teamARoster.map((f) => BadmintonPlayer(name: f.fullName.isNotEmpty ? f.fullName : f.email)).toList(),
         teamB: teamBRoster.map((f) => BadmintonPlayer(name: f.fullName.isNotEmpty ? f.fullName : f.email)).toList(),
+        servingSide: initialServingSide,
       );
+
+      final allPlayersList = <String>[...teamAPlayers, ...teamBPlayers];
+      if (user?.uid != null && !allPlayersList.contains(user!.uid)) {
+        allPlayersList.add(user.uid);
+      }
 
       final newMatch = BadmintonMatchModel(
         matchId: matchId,
         createdBy: user?.uid ?? 'unknown',
         sport: 'badminton',
-        allPlayers: [...teamAPlayers, ...teamBPlayers],
+        allPlayers: allPlayersList,
         teamAPlayers: teamAPlayers.toList(),
         teamBPlayers: teamBPlayers.toList(),
         maxAllowedPlayers: maxAllowedPlayers.value,
@@ -207,7 +252,13 @@ class BadmintonController extends GetxController {
       currentMatch.value = newMatch;
       _initEngineFromState(initialState);
 
-      Get.to(() => BadmintonScoreboardScreen());
+      final navContext = context ?? Get.context;
+      if (navContext != null) {
+        Navigator.push(
+          navContext,
+          MaterialPageRoute(builder: (context) => const BadmintonScoreboardScreen()),
+        );
+      }
 
     } catch (e) {
       Get.snackbar('Error', 'Failed to start match: $e');
@@ -222,6 +273,7 @@ class BadmintonController extends GetxController {
     required List<FriendModel> teamA,
     required List<FriendModel> teamB,
     required Map<String, dynamic> sportRules,
+    BuildContext? context,
   }) async {
     try {
       isLoading.value = true;
@@ -308,7 +360,13 @@ class BadmintonController extends GetxController {
       currentMatch.value = newMatch;
       _initEngineFromState(initialState);
 
-      Get.to(() => BadmintonScoreboardScreen());
+      final navContext = context ?? Get.context;
+      if (navContext != null) {
+        Navigator.push(
+          navContext,
+          MaterialPageRoute(builder: (context) => const BadmintonScoreboardScreen()),
+        );
+      }
 
     } catch (e) {
       Get.snackbar('Error', 'Failed to start tournament match: $e');
@@ -352,6 +410,7 @@ class BadmintonController extends GetxController {
     required String bMatchId,
     required String matchId,
     bool readOnly = false,
+    BuildContext? context,
   }) async {
     try {
       isLoading.value = true;
@@ -379,7 +438,13 @@ class BadmintonController extends GetxController {
       final incomingState = BadmintonMatchState.fromJson(matchData['engineState']);
       _initEngineFromState(incomingState);
 
-      Get.to(() => BadmintonScoreboardScreen());
+      final navContext = context ?? Get.context;
+      if (navContext != null) {
+        Navigator.push(
+          navContext,
+          MaterialPageRoute(builder: (context) => const BadmintonScoreboardScreen()),
+        );
+      }
     } catch (e) {
       Get.snackbar("Error", "Failed to resume match: $e");
     } finally {
@@ -391,12 +456,14 @@ class BadmintonController extends GetxController {
     required String tId,
     required String bMatchId,
     required String matchId,
+    BuildContext? context,
   }) async {
     await resumeTournamentMatch(
       tId: tId,
       bMatchId: bMatchId,
       matchId: matchId,
       readOnly: true,
+      context: context,
     );
   }
 
@@ -405,6 +472,7 @@ class BadmintonController extends GetxController {
   void _initEngineFromState(BadmintonMatchState state) {
     engine = BadmintonMatchEngine(state);
     liveState.value = engine.state;
+    hasMatchEndUndoBeenUsed.value = false;
     isEngineReady.value = true;
     _listenToMatchUpdates();
   }
@@ -419,15 +487,48 @@ class BadmintonController extends GetxController {
         .listen((doc) {
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
-        if (data['engineState'] != null) {
-          final incomingState = BadmintonMatchState.fromJson(data['engineState']);
-          // Only update UI if this is a remote update, not our own local sync loop mirroring back
-          // Simplistic check: just replace engine state. In a real app we'd check timestamps/author
-           engine = BadmintonMatchEngine(incomingState);
-           liveState.value = engine.state;
+        final m = BadmintonMatchModel.fromJson(data);
+
+        // Self-write guard: only restore from remote updates
+        if (currentMatch.value == null ||
+            (m.lastUpdatedAt != null &&
+                m.lastUpdatedAt!.isAfter(currentMatch.value!.lastUpdatedAt ?? DateTime(2000)))) {
+          currentMatch.value = m;
+
+          // Only overwrite engine state if the update came from a DIFFERENT device
+          if (data['engineState'] != null &&
+              FirebaseAuth.instance.currentUser?.uid != m.createdBy) {
+            engine = BadmintonMatchEngine(
+              BadmintonMatchState.fromJson(data['engineState']),
+            );
+            liveState.value = engine.state;
+          }
         }
       }
     });
+  }
+
+  String _buildMatchResult(BadmintonMatchState state) {
+    if (state.status != MatchStatus.completed || state.matchWinner == null) {
+      return '';
+    }
+
+    final winnerLabel = state.matchWinner == PlayerSide.sideA
+        ? (state.teamA.isNotEmpty ? state.teamA.first.name : 'Side A')
+        : (state.teamB.isNotEmpty ? state.teamB.first.name : 'Side B');
+
+    final gamesWonA = state.games
+        .where((g) => g.isCompleted && g.winner == PlayerSide.sideA)
+        .length;
+    final gamesWonB = state.games
+        .where((g) => g.isCompleted && g.winner == PlayerSide.sideB)
+        .length;
+
+    final gameScore = state.matchWinner == PlayerSide.sideA
+        ? '$gamesWonA-$gamesWonB'
+        : '$gamesWonB-$gamesWonA';
+
+    return '$winnerLabel won $gameScore';
   }
 
   Future<void> _syncToDatabaseAsync(String? pointType, PlayerSide? winningSide) async {
@@ -437,6 +538,12 @@ class BadmintonController extends GetxController {
     try {
       final updatedEngineState = engine.state.toJson();
       final now = DateTime.now();
+      final resultString = engine.state.status == MatchStatus.completed
+          ? _buildMatchResult(engine.state)
+          : (currentMatch.value?.matchResult ?? '');
+
+      bool isNewlyCompleted = engine.state.status == MatchStatus.completed &&
+          currentMatch.value?.status != 'Completed';
 
       // Update local SQLite
       final matchModel = currentMatch.value;
@@ -450,8 +557,8 @@ class BadmintonController extends GetxController {
           teamBPlayers: matchModel.teamBPlayers,
           maxAllowedPlayers: matchModel.maxAllowedPlayers,
           isFriendlyRules: matchModel.isFriendlyRules,
-          tournamentId: matchModel.tournamentId, // A10 Fix: carry tournament context
-          bracketMatchId: matchModel.bracketMatchId, // A10 Fix: carry bracket context
+          tournamentId: matchModel.tournamentId,
+          bracketMatchId: matchModel.bracketMatchId,
           pointsToWin: matchModel.pointsToWin,
           maxPointCap: matchModel.maxPointCap,
           winByTwo: matchModel.winByTwo,
@@ -462,7 +569,7 @@ class BadmintonController extends GetxController {
           createdAt: matchModel.createdAt,
           engineState: updatedEngineState,
           lastUpdatedAt: now,
-          matchResult: matchModel.matchResult,
+          matchResult: resultString,
           pointLog: matchModel.pointLog,
         );
         currentMatch.value = updatedMatch;
@@ -475,6 +582,7 @@ class BadmintonController extends GetxController {
       await docRef.update({
         'engineState': updatedEngineState,
         'status': engine.state.status == MatchStatus.completed ? 'Completed' : 'In Progress',
+        'matchResult': resultString,
         'lastUpdatedAt': now.toIso8601String(),
       });
 
@@ -490,8 +598,63 @@ class BadmintonController extends GetxController {
         });
       }
 
+      // ON MATCH COMPLETION: Update cumulative lifetime stats of all players in User collection
+      if (isNewlyCompleted) {
+        await _updateAllPlayersBadmintonStats(engine.state);
+      }
+
     } catch (e) {
       debugPrint("Sync Error: $e");
+    }
+  }
+
+  Future<void> _updateAllPlayersBadmintonStats(BadmintonMatchState state) async {
+    if (state.status != MatchStatus.completed) return;
+
+    final allEmails = [...teamAPlayers, ...teamBPlayers];
+
+    for (final email in allEmails) {
+      try {
+        final query = await FirebaseFirestore.instance
+            .collection('User')
+            .where('email', isEqualTo: email)
+            .limit(1)
+            .get();
+
+        if (query.docs.isEmpty) continue;
+        final userDocId = query.docs.first.id;
+
+        final isTeamA = teamAPlayers.contains(email);
+        final isWinner = (isTeamA && state.matchWinner == PlayerSide.sideA) ||
+            (!isTeamA && state.matchWinner == PlayerSide.sideB);
+
+        int pointsWon = 0;
+        for (final game in state.games.where((g) => g.isCompleted)) {
+          pointsWon += isTeamA ? game.scoreA : game.scoreB;
+        }
+
+        int gamesWon = state.games
+            .where((g) => g.isCompleted &&
+                g.winner == (isTeamA ? PlayerSide.sideA : PlayerSide.sideB))
+            .length;
+
+        final updates = {
+          'badmintonStats.totalMatches': FieldValue.increment(1),
+          'badmintonStats.totalWins': FieldValue.increment(isWinner ? 1 : 0),
+          'badmintonStats.totalLosses': FieldValue.increment(isWinner ? 0 : 1),
+          'badmintonStats.totalPointsWon': FieldValue.increment(pointsWon),
+          'badmintonStats.totalGamesWon': FieldValue.increment(gamesWon),
+          'badmintonStats.lastMatchDate': FieldValue.serverTimestamp(),
+        };
+
+        await FirebaseFirestore.instance
+            .collection('User')
+            .doc(userDocId)
+            .set(updates, SetOptions(merge: true));
+
+      } catch (e) {
+        debugPrint("Error updating badminton stats for $email: $e");
+      }
     }
   }
 
@@ -516,14 +679,10 @@ class BadmintonController extends GetxController {
   void tagLastPoint(String pointType) {
     if (currentMatchId.isEmpty) return;
 
-    // In a full implementation, we'd fetch the most recent log document
-    // and update its 'pointType' field.
-    // For simplicity in this demo structure, we just write a standalone
-    // meta-event log using _syncToDatabaseAsync.
     _syncToDatabaseAsync(pointType, null);
   }
 
-  // A11 Fix: Medical timeout functionality
+  // A11 Fix: Medical timeout functionality (preserves undo history)
   var medicalTimeoutSeconds = 180.obs;
   Timer? _timeoutTimer;
 
@@ -531,17 +690,7 @@ class BadmintonController extends GetxController {
     if (!isEngineReady.value) return;
     if (liveState.value?.status == MatchStatus.completed) return;
 
-    // Check timeout usage (conceptually per side, but this is a simple implementation)
-    // You could add timeout usage tracking in BadmintonMatchModel.
-
-    // Change engine status to timeout (requires modifying the state directly or dispatching an event,
-    // for simplicity we update the model status which will reflect in _syncToDatabaseAsync)
-    // A better approach is to add a TimeoutEvent to the engine. We'll do a simple state override here since
-    // the engine handles MatchStatus enum directly.
-
-    // We update engine state directly
-    final currentState = engine.state;
-    engine = BadmintonMatchEngine(currentState.copyWith(status: MatchStatus.timeout));
+    engine.startMedicalTimeout();
     liveState.value = engine.state;
     _syncToDatabaseAsync('timeout_start', null);
 
@@ -551,7 +700,7 @@ class BadmintonController extends GetxController {
       if (medicalTimeoutSeconds.value > 0) {
         medicalTimeoutSeconds.value--;
       } else {
-        resumeMedicalTimeout(); // Auto-resume if hits 0, or just let them resume manually
+        resumeMedicalTimeout();
       }
     });
   }
@@ -560,11 +709,19 @@ class BadmintonController extends GetxController {
     _timeoutTimer?.cancel();
     if (!isEngineReady.value) return;
     if (liveState.value?.status == MatchStatus.timeout) {
-      final currentState = engine.state;
-      engine = BadmintonMatchEngine(currentState.copyWith(status: MatchStatus.inProgress));
+      engine.resumeFromTimeout();
       liveState.value = engine.state;
       _syncToDatabaseAsync('timeout_end', null);
     }
+  }
+
+  void retireMatch(PlayerSide retiringSide) {
+    if (!isEngineReady.value) return;
+    if (liveState.value?.status == MatchStatus.completed) return;
+
+    engine.retireMatch(retiringSide);
+    liveState.value = engine.state;
+    _syncToDatabaseAsync('retire', retiringSide == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA);
   }
 
   @override
@@ -603,7 +760,7 @@ class BadmintonController extends GetxController {
     _syncToDatabaseAsync(null, null);
   }
 
-  Future<void> endTournamentMatch() async {
+  Future<void> endTournamentMatch([BuildContext? context]) async {
     if (tournamentId.isEmpty || bracketMatchId.isEmpty || !isEngineReady.value) return;
 
     final state = engine.state;
@@ -735,13 +892,15 @@ class BadmintonController extends GetxController {
       }
 
       // Navigate back to Bracket & Matchmaking screen
-      // Pop all intermediate screens (rules, confirmation, scoreboard)
-      Get.until((route) {
-        final routeName = route.settings.name ?? '';
-        return routeName.contains('BracketMatchmaking') ||
-               routeName.contains('TournamentDetail') ||
-               route.isFirst;
-      });
+      final navContext = context ?? Get.context;
+      if (navContext != null) {
+        Navigator.popUntil(navContext, (route) {
+          final routeName = route.settings.name ?? '';
+          return routeName.contains('BracketMatchmaking') ||
+                 routeName.contains('TournamentDetail') ||
+                 route.isFirst;
+        });
+      }
 
     } catch (e) {
       Get.snackbar('Error', 'Failed to save tournament result: $e');

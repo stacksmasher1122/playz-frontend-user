@@ -113,21 +113,18 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
     if (matchStatus == 'MATCH_COMPLETED') _endMatch();
   }
 
-  void _retireBatter(Player p, bool isHurt) {
+  void _retireBatter(Player p, PlayerStatus status) {
     if (matchStatus != 'LIVE_INNINGS_1' && matchStatus != 'LIVE_INNINGS_2') {
       return;
     }
-    final status = isHurt ? PlayerStatus.retiredHurt : PlayerStatus.retiredOut;
-    // B4: Use the engine's dedicated retireBatter() method which preserves
-    // undo history, instead of restoreState() which wipes it.
     controller.engine.retireBatter(p.name, status);
     controller.updateEngineState();
     Get.snackbar(
-      'Retired',
-      '${p.name} retired ${isHurt ? "hurt" : "out"}',
+      'Batter Retired',
+      '${p.name} retired ${status == PlayerStatus.retiredHurt ? "hurt" : "out"}',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.surface,
-      colorText: Colors.white70,
+      colorText: Colors.white,
     );
   }
 
@@ -599,6 +596,166 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
   }
 
   void _showRetireBowlerDialog() {
+    final allowSub = s.matchConfig.allowSubstitutes;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
+        ),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.w(20)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Retire / Substitute Bowler',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: ResponsiveHelper.sp(18),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white70),
+                  onPressed: () => Navigator.pop(ctx),
+                ),
+              ],
+            ),
+            SizedBox(height: ResponsiveHelper.h(12)),
+            if (currentBowler != null)
+              Container(
+                padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          currentBowler!.name,
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: ResponsiveHelper.sp(15),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${currentBowler!.oversBowledDisplay} ov • ${currentBowler!.runsConceded}r • ${currentBowler!.wicketsTaken}w',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: ResponsiveHelper.sp(12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: ResponsiveHelper.h(12)),
+                    Wrap(
+                      spacing: ResponsiveHelper.w(8),
+                      runSpacing: ResponsiveHelper.h(8),
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.pop(ctx);
+                            _showBowlerReplacementSheet(currentBowler!);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.warning.withValues(alpha: 0.2),
+                            foregroundColor: AppColors.warning,
+                            elevation: 0,
+                            side: const BorderSide(color: AppColors.warning, width: 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                            ),
+                          ),
+                          icon: const Icon(Icons.healing, size: 14),
+                          label: Text(
+                            'RETIRE HURT',
+                            style: TextStyle(
+                              fontSize: ResponsiveHelper.sp(11),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.pop(ctx);
+                            _showBowlerReplacementSheet(currentBowler!);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.error.withValues(alpha: 0.2),
+                            foregroundColor: AppColors.error,
+                            elevation: 0,
+                            side: const BorderSide(color: AppColors.error, width: 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                            ),
+                          ),
+                          icon: const Icon(Icons.no_accounts, size: 14),
+                          label: Text(
+                            'RETIRE OUT',
+                            style: TextStyle(
+                              fontSize: ResponsiveHelper.sp(11),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        if (allowSub)
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.pop(ctx);
+                              _showBowlerSubstitutionDialog(currentBowler!.name);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.accent.withValues(alpha: 0.2),
+                              foregroundColor: AppColors.accent,
+                              elevation: 0,
+                              side: const BorderSide(color: AppColors.accent, width: 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                              ),
+                            ),
+                            icon: const Icon(Icons.swap_horiz, size: 14),
+                            label: Text(
+                              'SUBSTITUTE',
+                              style: TextStyle(
+                                fontSize: ResponsiveHelper.sp(11),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  'No active bowler assigned.',
+                  style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(14)),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showBowlerReplacementSheet(Player retiredBowler) {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surface,
@@ -608,12 +765,70 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
         ),
       ),
       builder: (ctx) => BowlerSelectSheet(
-        bowlers: bowlingTeam,
+        bowlers: bowlingTeam.where((b) => b.name != retiredBowler.name).toList(),
         currentBowler: currentBowler,
-        onSelect: (b) {
-          _retireBowler(b);
+        onSelect: (newBowler) {
+          _retireBowler(newBowler);
           Navigator.pop(ctx);
         },
+      ),
+    );
+  }
+
+  void _showBowlerSubstitutionDialog(String oldBowlerName) {
+    final availableSubs = bowlingTeam.where((b) => b.name != oldBowlerName).toList();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
+        ),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.w(20)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Select Substitute Bowler for $oldBowlerName',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: ResponsiveHelper.sp(16),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: ResponsiveHelper.h(8)),
+            if (availableSubs.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Text('No available bowlers for substitution.', style: TextStyle(color: AppColors.muted)),
+              )
+            else
+              ...availableSubs.map(
+                (sub) => ListTile(
+                  title: Text(sub.name, style: const TextStyle(color: Colors.white)),
+                  subtitle: Text('${sub.oversBowledDisplay} ov • ${sub.runsConceded}r • ${sub.wicketsTaken}w', style: const TextStyle(color: AppColors.muted, fontSize: 11)),
+                  trailing: const Icon(Icons.swap_horiz, color: AppColors.accent),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    controller.substituteBowler(
+                      oldBowlerName: oldBowlerName,
+                      newBowlerName: sub.name,
+                    );
+                    Get.snackbar(
+                      'Substituted',
+                      '${sub.name} came in as substitute bowler for $oldBowlerName',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: AppColors.surface,
+                      colorText: Colors.white,
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -678,6 +893,215 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surface,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
+        ),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.w(20)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Retire / Substitute Batter',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: ResponsiveHelper.sp(18),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white70),
+                  onPressed: () => Navigator.pop(ctx),
+                ),
+              ],
+            ),
+            SizedBox(height: ResponsiveHelper.h(12)),
+            if (striker != null) _retireBatterTile(ctx, striker!, isStriker: true),
+            if (nonStriker != null) _retireBatterTile(ctx, nonStriker!, isStriker: false),
+            if (striker == null && nonStriker == null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  'No active batters at the crease.',
+                  style: TextStyle(color: AppColors.muted, fontSize: ResponsiveHelper.sp(14)),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _retireBatterTile(BuildContext ctx, Player p, {required bool isStriker}) {
+    final allowSub = s.matchConfig.allowSubstitutes;
+    return Container(
+      margin: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(14)),
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                p.name,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: ResponsiveHelper.sp(15),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: isStriker
+                      ? AppColors.accent.withValues(alpha: 0.2)
+                      : Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  isStriker ? 'STRIKER' : 'NON-STRIKER',
+                  style: TextStyle(
+                    color: isStriker ? AppColors.accent : Colors.white70,
+                    fontSize: ResponsiveHelper.sp(10),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '${p.runs} (${p.ballsFaced})',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: ResponsiveHelper.sp(13),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: ResponsiveHelper.h(12)),
+          Wrap(
+            spacing: ResponsiveHelper.w(8),
+            runSpacing: ResponsiveHelper.h(8),
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _handleRetireBatterAction(p, PlayerStatus.retiredHurt);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.warning.withValues(alpha: 0.2),
+                  foregroundColor: AppColors.warning,
+                  elevation: 0,
+                  side: const BorderSide(color: AppColors.warning, width: 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                  ),
+                ),
+                icon: const Icon(Icons.healing, size: 14),
+                label: Text(
+                  'RETIRE HURT',
+                  style: TextStyle(
+                    fontSize: ResponsiveHelper.sp(11),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _handleRetireBatterAction(p, PlayerStatus.retiredOut);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.error.withValues(alpha: 0.2),
+                  foregroundColor: AppColors.error,
+                  elevation: 0,
+                  side: const BorderSide(color: AppColors.error, width: 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                  ),
+                ),
+                icon: const Icon(Icons.no_accounts, size: 14),
+                label: Text(
+                  'RETIRE OUT',
+                  style: TextStyle(
+                    fontSize: ResponsiveHelper.sp(11),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              if (allowSub)
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    _showBatterSubstitutionDialog(p.name);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent.withValues(alpha: 0.2),
+                    foregroundColor: AppColors.accent,
+                    elevation: 0,
+                    side: const BorderSide(color: AppColors.accent, width: 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+                    ),
+                  ),
+                  icon: const Icon(Icons.swap_horiz, size: 14),
+                  label: Text(
+                    'SUBSTITUTE',
+                    style: TextStyle(
+                      fontSize: ResponsiveHelper.sp(11),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleRetireBatterAction(Player p, PlayerStatus status) {
+    _retireBatter(p, status);
+
+    final dnbPlayers = battingTeam
+        .where(
+          (x) =>
+              !x.hasBatted &&
+              x.name != striker?.name &&
+              x.name != nonStriker?.name &&
+              x.status != PlayerStatus.out &&
+              x.status != PlayerStatus.retiredHurt &&
+              x.status != PlayerStatus.retiredOut,
+        )
+        .toList();
+    if (dnbPlayers.isNotEmpty) {
+      _showIncomingBatterSelectionSheet(
+        oldBatterName: p.name,
+        dnbPlayers: dnbPlayers,
+      );
+    }
+  }
+
+  void _showIncomingBatterSelectionSheet({
+    required String oldBatterName,
+    required List<Player> dnbPlayers,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(ResponsiveHelper.w(18)),
@@ -690,75 +1114,103 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Retire Batter',
+              'Select Next Batter',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: ResponsiveHelper.sp(18),
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: ResponsiveHelper.h(16)),
-            if (striker != null) _retireTile(ctx, striker!),
-            if (nonStriker != null) _retireTile(ctx, nonStriker!),
+            SizedBox(height: ResponsiveHelper.h(8)),
+            ...dnbPlayers.map(
+              (player) => ListTile(
+                title: Text(
+                  player.name,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.accent,
+                ),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  controller.selectIncomingBatter(
+                    oldBatterName: oldBatterName,
+                    newBatterName: player.name,
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _retireTile(BuildContext ctx, Player p) {
-    final allowSub = s.matchConfig.allowSubstitutes;
-    return ListTile(
-      title: Text(p.name, style: TextStyle(color: AppColors.textPrimary)),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _retireBatter(p, true);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.warning.withValues(alpha: 0.2),
-              foregroundColor: AppColors.warning,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
-              ),
-            ),
-            child: Text(
-              'RETIRE HURT',
+  void _showBatterSubstitutionDialog(String oldBatterName) {
+    final dnbPlayers = battingTeam
+        .where(
+          (x) =>
+              !x.hasBatted &&
+              x.name != striker?.name &&
+              x.name != nonStriker?.name &&
+              x.status != PlayerStatus.out &&
+              x.status != PlayerStatus.retiredHurt &&
+              x.status != PlayerStatus.retiredOut,
+        )
+        .toList();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(18)),
+        ),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.all(ResponsiveHelper.w(20)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Select Substitute Batter for $oldBatterName',
               style: TextStyle(
-                color: AppColors.warning,
-                fontSize: ResponsiveHelper.sp(11),
+                color: Colors.white,
+                fontSize: ResponsiveHelper.sp(16),
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          if (allowSub) ...[
-            SizedBox(width: ResponsiveHelper.w(8)),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                _retireBatter(p, true);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accent.withValues(alpha: 0.2),
-                foregroundColor: AppColors.accent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+            SizedBox(height: ResponsiveHelper.h(8)),
+            if (dnbPlayers.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Text('No available bench players for substitution.', style: TextStyle(color: AppColors.muted)),
+              )
+            else
+              ...dnbPlayers.map(
+                (sub) => ListTile(
+                  title: Text(sub.name, style: const TextStyle(color: Colors.white)),
+                  subtitle: const Text('Bench Player', style: TextStyle(color: AppColors.muted, fontSize: 11)),
+                  trailing: const Icon(Icons.swap_horiz, color: AppColors.accent),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    controller.substituteBatter(
+                      oldBatterName: oldBatterName,
+                      newBatterName: sub.name,
+                    );
+                    Get.snackbar(
+                      'Substituted',
+                      '${sub.name} came in as substitute for $oldBatterName',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: AppColors.surface,
+                      colorText: Colors.white,
+                    );
+                  },
                 ),
               ),
-              child: Text(
-                'SUBSTITUTE',
-                style: TextStyle(
-                  color: AppColors.accent,
-                  fontSize: ResponsiveHelper.sp(11),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
           ],
-        ],
+        ),
       ),
     );
   }

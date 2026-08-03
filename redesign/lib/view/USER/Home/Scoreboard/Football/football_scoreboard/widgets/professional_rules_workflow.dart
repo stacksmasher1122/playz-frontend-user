@@ -188,7 +188,7 @@ class _ProfessionalRulesWorkflowState extends State<ProfessionalRulesWorkflow> {
                   style: TextStyle(color: AppColors.onPrimary),
                 ),
                 trailing: Text(
-                  "#\${p.number}",
+                  "#${p.number}",
                   style: TextStyle(color: AppColors.muted),
                 ),
                 onTap: () => _confirm(p),

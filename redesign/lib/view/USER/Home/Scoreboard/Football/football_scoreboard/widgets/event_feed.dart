@@ -86,7 +86,7 @@ class EventFeed extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "\${event.displayMinute}'\${event.addedMinute > 0 ? '+\${event.addedMinute}' : ''}",
+                      "${event.displayMinute}'${event.addedMinute > 0 ? '+${event.addedMinute}' : ''}",
                       style: TextStyle(
                         color: AppColors.muted,
                         fontSize: ResponsiveHelper.sp(12),

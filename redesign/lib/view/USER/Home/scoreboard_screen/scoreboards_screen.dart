@@ -398,6 +398,8 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
                       children: [
                         Text(
                           item.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: ResponsiveHelper.sp(15),
@@ -407,6 +409,8 @@ class _ScoreboardHubScreenState extends State<ScoreboardHubScreen> {
                         SizedBox(height: 4),
                         Text(
                           '${item.subtitle} • $displayDate',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
                             color: Colors.white70,
                             fontSize: ResponsiveHelper.sp(12),

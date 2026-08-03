@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_create_match_controller.dart';
 import 'widgets/football_create_match_appbar.dart';
-import 'widgets/general_information_card.dart';
 import 'widgets/team_selection_card.dart';
-import 'widgets/logistics_card.dart';
 import 'widgets/match_format_card.dart';
 import 'widgets/rules_configuration_card.dart';
 import 'widgets/bottom_action_widget.dart';
@@ -68,14 +66,12 @@ class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> w
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeaderSection(),
-                GeneralInformationCard(),
-                TeamSelectionCard(),
-                LogisticsCard(),
                 MatchFormatCard(),
+                MatchDurationCard(),
+                TeamSelectionCard(),
                 RulesConfigurationCard(),
                 BottomActionWidget(
-                  onCreate: () => controller.createMatchAndStart(),
-                  onSaveTemplate: controller.saveAsTemplate,
+                  onCreate: () => controller.createMatchAndStart(context),
                 ),
                 SizedBox(height: ResponsiveHelper.h(24)),
               ],

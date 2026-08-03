@@ -43,10 +43,15 @@ class ScoreboardHeader extends StatelessWidget {
   }
 
   Widget _buildClock() {
+    int totalSec = engine.state.seconds;
+    int min = totalSec ~/ 60;
+    int sec = totalSec % 60;
+    String minStr = min.toString().padLeft(2, '0');
+    String secStr = sec.toString().padLeft(2, '0');
     int added = engine.state.addedSeconds;
-    String timeStr = "\$min:\$s";
+    String timeStr = "$minStr:$secStr";
     if (added > 0) {
-      timeStr += "+\${(added ~/ 60) + 1}";
+      timeStr += "+${(added ~/ 60) + 1}";
     }
 
     return Column(
@@ -55,7 +60,7 @@ class ScoreboardHeader extends StatelessWidget {
           timeStr,
           style: TextStyle(
             color: AppColors.accent,
-            fontSize: ResponsiveHelper.sp(28),
+            fontSize: ResponsiveHelper.sp(26),
             fontWeight: FontWeight.bold,
             fontFamily: 'JetBrains Mono',
           ),
@@ -148,48 +153,52 @@ class ScoreboardHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: 4),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              if (align == CrossAxisAlignment.end &&
-                  engine.state.phase == MatchPhase.penalties)
-                Padding(
-                  padding: EdgeInsets.only(right: 8.0, bottom: 8.0),
-                  child: Text(
-                    "(\$penScore)",
-                    style: TextStyle(
-                      color: Colors.cyanAccent,
-                      fontSize: ResponsiveHelper.sp(20),
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'JetBrains Mono',
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: align == CrossAxisAlignment.start ? Alignment.centerLeft : Alignment.centerRight,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                if (align == CrossAxisAlignment.end &&
+                    engine.state.phase == MatchPhase.penalties)
+                  Padding(
+                    padding: EdgeInsets.only(right: 6.0, bottom: 6.0),
+                    child: Text(
+                      "($penScore)",
+                      style: TextStyle(
+                        color: Colors.cyanAccent,
+                        fontSize: ResponsiveHelper.sp(18),
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'JetBrains Mono',
+                      ),
                     ),
                   ),
-                ),
-              Text(
-                "\$score",
-                style: TextStyle(
-                  color: AppColors.onPrimary,
-                  fontSize: ResponsiveHelper.sp(48),
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'JetBrains Mono',
-                ),
-              ),
-              if (align == CrossAxisAlignment.start &&
-                  engine.state.phase == MatchPhase.penalties)
-                Padding(
-                  padding: EdgeInsets.only(left: 8.0, bottom: 8.0),
-                  child: Text(
-                    "(\$penScore)",
-                    style: TextStyle(
-                      color: Colors.cyanAccent,
-                      fontSize: ResponsiveHelper.sp(20),
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'JetBrains Mono',
-                    ),
+                Text(
+                  "$score",
+                  style: TextStyle(
+                    color: AppColors.onPrimary,
+                    fontSize: ResponsiveHelper.sp(44),
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'JetBrains Mono',
                   ),
                 ),
-            ],
+                if (align == CrossAxisAlignment.start &&
+                    engine.state.phase == MatchPhase.penalties)
+                  Padding(
+                    padding: EdgeInsets.only(left: 6.0, bottom: 6.0),
+                    child: Text(
+                      "($penScore)",
+                      style: TextStyle(
+                        color: Colors.cyanAccent,
+                        fontSize: ResponsiveHelper.sp(18),
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'JetBrains Mono',
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),

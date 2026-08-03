@@ -69,7 +69,10 @@ CREATE TABLE badminton_matches (
   engineState $textNullable,
   lastUpdatedAt $textNullable,
   matchResult $textType,
-  pointLog $textType
+  pointLog $textType,
+  bookingId $textNullable,
+  matchType TEXT DEFAULT "NORMAL",
+  isRecoverable INTEGER DEFAULT 1
   )
 ''');
   }

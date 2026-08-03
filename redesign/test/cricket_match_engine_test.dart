@@ -348,5 +348,74 @@ void main() {
       expect(matchEngine.state.matchStatus, equals('MATCH_COMPLETED'));
       expect(matchEngine.state.totalRuns, equals(4));
     });
+
+    test('20. Retire batter (retiredOut) and selectIncomingBatter can be undone', () {
+      final engineTest = MatchEngine(
+        maxOvers: 20,
+        battingTeam: battingTeam,
+        bowlingTeam: bowlingTeam,
+      );
+      engineTest.startInnings(
+        strikerName: 'Batter 1',
+        nonStrikerName: 'Batter 2',
+        bowlerName: 'Bowler 1',
+      );
+
+      engineTest.retireBatter('Batter 1', PlayerStatus.retiredOut);
+      expect(engineTest.state.striker?.status, equals(PlayerStatus.retiredOut));
+
+      engineTest.selectIncomingBatter(oldBatterName: 'Batter 1', newBatterName: 'Batter 3');
+      expect(engineTest.state.striker?.name, equals('Batter 3'));
+
+      // Undo selectIncomingBatter
+      engineTest.undo();
+      expect(engineTest.state.striker?.name, equals('Batter 1'));
+      expect(engineTest.state.striker?.status, equals(PlayerStatus.retiredOut));
+
+      // Undo retireBatter
+      engineTest.undo();
+      expect(engineTest.state.striker?.name, equals('Batter 1'));
+      expect(engineTest.state.striker?.status, equals(PlayerStatus.batter));
+    });
+
+    test('21. Substitute batter and undo restores original batter at crease', () {
+      final engineTest = MatchEngine(
+        maxOvers: 20,
+        battingTeam: battingTeam,
+        bowlingTeam: bowlingTeam,
+        matchConfig: const MatchConfig(allowSubstitutes: true),
+      );
+      engineTest.startInnings(
+        strikerName: 'Batter 1',
+        nonStrikerName: 'Batter 2',
+        bowlerName: 'Bowler 1',
+      );
+
+      engineTest.substituteBatter(oldBatterName: 'Batter 2', newBatterName: 'Batter 4');
+      expect(engineTest.state.nonStriker?.name, equals('Batter 4'));
+
+      engineTest.undo();
+      expect(engineTest.state.nonStriker?.name, equals('Batter 2'));
+    });
+
+    test('22. Substitute bowler and undo restores original bowler', () {
+      final engineTest = MatchEngine(
+        maxOvers: 20,
+        battingTeam: battingTeam,
+        bowlingTeam: bowlingTeam,
+        matchConfig: const MatchConfig(allowSubstitutes: true),
+      );
+      engineTest.startInnings(
+        strikerName: 'Batter 1',
+        nonStrikerName: 'Batter 2',
+        bowlerName: 'Bowler 1',
+      );
+
+      engineTest.substituteBowler(oldBowlerName: 'Bowler 1', newBowlerName: 'Bowler 2');
+      expect(engineTest.state.currentBowler?.name, equals('Bowler 2'));
+
+      engineTest.undo();
+      expect(engineTest.state.currentBowler?.name, equals('Bowler 1'));
+    });
   });
 }

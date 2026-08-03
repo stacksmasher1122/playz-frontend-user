@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/cricketSqflite.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/badmintonSqflite.dart';
+import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/footballSqflite.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/badminton_controller.dart';
+import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_controller.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_scoreboard/cricket_scoreboard_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/badminton_scoreboard_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Football/football_scoreboard/football_scoreboard_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/badminton_scoreboard_screen.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/badminton_model.dart';
+import 'package:redesign/model/football/football_model.dart';
 
 class RecoverableMatchItem {
   final String matchId;
@@ -133,14 +137,35 @@ class ScoreboardRecoveryManager {
       }
     } catch (_) {}
 
+    // 3. Check Football Matches from SQFlite
+    try {
+      final footballMatches = await FootballSqflite.instance.getAllMatches();
+      for (final f in footballMatches) {
+        if (f.status.toLowerCase() != 'completed') {
+          final isSlot = f.id.startsWith('SLOT_');
+          final teamA = f.engineState.homeTeam.name.isNotEmpty ? f.engineState.homeTeam.name : 'Home';
+          final teamB = f.engineState.awayTeam.name.isNotEmpty ? f.engineState.awayTeam.name : 'Away';
+
+          list.add(
+            RecoverableMatchItem(
+              matchId: f.id,
+              sport: 'Football',
+              matchType: isSlot ? 'SLOT_DEDICATED' : 'NORMAL',
+              title: '$teamA vs $teamB',
+              subtitle: 'Football • ${f.config['halfDurationMinutes'] ?? 45}m • ${f.status}',
+              lastUpdatedAt: f.lastUpdatedAt,
+              rawModel: f,
+            ),
+          );
+        }
+      }
+    } catch (_) {}
+
     list.sort((a, b) => b.lastUpdatedAt.compareTo(a.lastUpdatedAt));
     return list;
   }
 
-  /// Scoreboards displayed below Create Scoreboard Hero Card:
-  /// - Completed Manual
-  /// - Completed Booked Slot
-  /// - Incomplete Manual
+  /// Scoreboards displayed below Create Scoreboard Hero Card
   static Future<List<ScoreboardHubItem>> getHubScoreboardMatches() async {
     final List<ScoreboardHubItem> list = [];
 
@@ -152,11 +177,10 @@ class ScoreboardRecoveryManager {
         final isCompleted = m.status.toLowerCase() == 'completed' || m.matchResult.isNotEmpty;
         final matchType = isSlot ? 'SLOT_DEDICATED' : 'NORMAL';
 
-        // Filter: Completed Booked, Completed Manual, or Incomplete Manual
         if (isCompleted || (!isCompleted && !isSlot)) {
           final teamA = m.homeTeamName.isNotEmpty ? m.homeTeamName : 'Team Red';
           final teamB = m.awayTeamName.isNotEmpty ? m.awayTeamName : 'Team Blue';
-          
+
           String sub = 'Cricket • ${m.overs} Overs';
           if (isCompleted && m.matchResult.isNotEmpty) {
             sub = m.matchResult;
@@ -189,15 +213,11 @@ class ScoreboardRecoveryManager {
         final isCompleted = b.status.toLowerCase() == 'completed' || b.matchResult.isNotEmpty;
         final matchType = isSlot ? 'SLOT_DEDICATED' : 'NORMAL';
 
-        // Filter: Completed Booked, Completed Manual, or Incomplete Manual
         if (isCompleted || (!isCompleted && !isSlot)) {
-          final teamA = b.teamAPlayers.isNotEmpty ? b.teamAPlayers.join(', ') : 'Team A';
-          final teamB = b.teamBPlayers.isNotEmpty ? b.teamBPlayers.join(', ') : 'Team B';
+          final teamA = _formatBadmintonTeamNames(b, true);
+          final teamB = _formatBadmintonTeamNames(b, false);
 
-          DateTime updatedDate = DateTime.now();
-          if (b.lastUpdatedAt != null) {
-            updatedDate = b.lastUpdatedAt!;
-          }
+          DateTime updatedDate = b.lastUpdatedAt ?? DateTime.now();
 
           String sub = 'Badminton • Best of ${b.gamesToWin * 2 - 1}';
           if (isCompleted && b.matchResult.isNotEmpty) {
@@ -221,7 +241,41 @@ class ScoreboardRecoveryManager {
       }
     } catch (_) {}
 
-    // 3. Fetch from Firestore for participating teammates (completed matches)
+    // 3. Football Matches from SQFlite
+    try {
+      final footballMatches = await FootballSqflite.instance.getAllMatches();
+      for (final f in footballMatches) {
+        final isSlot = f.id.startsWith('SLOT_');
+        final isCompleted = f.status.toLowerCase() == 'completed' || f.matchResult.isNotEmpty;
+        final matchType = isSlot ? 'SLOT_DEDICATED' : 'NORMAL';
+
+        if (isCompleted || (!isCompleted && !isSlot)) {
+          final teamA = f.engineState.homeTeam.name.isNotEmpty ? f.engineState.homeTeam.name : 'Home';
+          final teamB = f.engineState.awayTeam.name.isNotEmpty ? f.engineState.awayTeam.name : 'Away';
+
+          String sub = 'Football • ${f.config['halfDurationMinutes'] ?? 45}m';
+          if (isCompleted && f.matchResult.isNotEmpty) {
+            sub = f.matchResult;
+          }
+
+          list.add(
+            ScoreboardHubItem(
+              matchId: f.id,
+              sport: 'Football',
+              matchType: matchType,
+              status: isCompleted ? 'completed' : 'incomplete',
+              title: '$teamA vs $teamB',
+              subtitle: sub,
+              lastUpdatedAt: f.lastUpdatedAt,
+              createdAt: f.createdAt,
+              rawModel: f,
+            ),
+          );
+        }
+      }
+    } catch (_) {}
+
+    // 4. Fetch from Firestore for participating teammates (completed matches)
     try {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid != null) {
@@ -234,25 +288,20 @@ class ScoreboardRecoveryManager {
         for (final doc in querySnapshot.docs) {
           final data = doc.data();
           final matchId = doc.id;
-          
-          // Avoid duplicates (already added from SQLite if user was creator)
+
           if (list.any((item) => item.matchId == matchId)) {
-             continue;
+            continue;
           }
 
           final isSlot = matchId.startsWith('SLOT_');
           final matchType = isSlot ? 'SLOT_DEDICATED' : 'NORMAL';
 
           if (data.containsKey('homeTeamName')) {
-            // Cricket Match
             final m = CricketMatchModel.fromJson(data);
             final teamA = m.homeTeamName.isNotEmpty ? m.homeTeamName : 'Team Red';
             final teamB = m.awayTeamName.isNotEmpty ? m.awayTeamName : 'Team Blue';
-            
-            String sub = 'Cricket • ${m.overs} Overs';
-            if (m.matchResult.isNotEmpty) {
-              sub = m.matchResult;
-            }
+
+            String sub = m.matchResult.isNotEmpty ? m.matchResult : 'Cricket • ${m.overs} Overs';
 
             list.add(
               ScoreboardHubItem(
@@ -264,24 +313,16 @@ class ScoreboardRecoveryManager {
                 subtitle: sub,
                 lastUpdatedAt: m.lastUpdatedAt,
                 createdAt: m.createdAt,
-                rawModel: m, // Passed to ScorecardDetailSheet
+                rawModel: m,
               ),
             );
           } else if (data.containsKey('teamAPlayers')) {
-            // Badminton Match
             final b = BadmintonMatchModel.fromJson(data);
-            final teamA = b.teamAPlayers.isNotEmpty ? b.teamAPlayers.join(', ') : 'Team A';
-            final teamB = b.teamBPlayers.isNotEmpty ? b.teamBPlayers.join(', ') : 'Team B';
+            final teamA = _formatBadmintonTeamNames(b, true);
+            final teamB = _formatBadmintonTeamNames(b, false);
 
-            DateTime updatedDate = DateTime.now();
-            if (b.lastUpdatedAt != null) {
-              updatedDate = b.lastUpdatedAt!;
-            }
-
-            String sub = 'Badminton • Best of ${b.gamesToWin * 2 - 1}';
-            if (b.matchResult.isNotEmpty) {
-              sub = b.matchResult;
-            }
+            DateTime updatedDate = b.lastUpdatedAt ?? DateTime.now();
+            String sub = b.matchResult.isNotEmpty ? b.matchResult : 'Badminton';
 
             list.add(
               ScoreboardHubItem(
@@ -304,6 +345,40 @@ class ScoreboardRecoveryManager {
 
     list.sort((a, b) => b.lastUpdatedAt.compareTo(a.lastUpdatedAt));
     return list;
+  }
+
+  static String _formatBadmintonTeamNames(BadmintonMatchModel b, bool isTeamA) {
+    if (b.engineState != null) {
+      try {
+        final teamKey = isTeamA ? 'teamA' : 'teamB';
+        final playersList = b.engineState![teamKey] as List?;
+        if (playersList != null && playersList.isNotEmpty) {
+          final names = playersList
+              .map((p) => p is Map ? (p['name'] ?? '').toString() : '')
+              .where((n) => n.isNotEmpty)
+              .toList();
+          if (names.isNotEmpty) {
+            return names.map(_cleanPlayerName).join(', ');
+          }
+        }
+      } catch (_) {}
+    }
+
+    final rawList = isTeamA ? b.teamAPlayers : b.teamBPlayers;
+    if (rawList.isEmpty) return isTeamA ? 'Side A' : 'Side B';
+    return rawList.map(_cleanPlayerName).join(', ');
+  }
+
+  static String _cleanPlayerName(String raw) {
+    if (raw.contains('@')) {
+      final part = raw.split('@').first;
+      final formatted = part
+          .split(RegExp(r'[._\-]'))
+          .map((s) => s.isEmpty ? '' : '${s[0].toUpperCase()}${s.substring(1)}')
+          .join(' ');
+      return formatted.isNotEmpty ? formatted : part;
+    }
+    return raw;
   }
 
   static Future<void> resumeMatch(BuildContext context, RecoverableMatchItem item) async {
@@ -337,6 +412,21 @@ class ScoreboardRecoveryManager {
           );
         }
       }
+    } else if (item.sport == 'Football') {
+      final controller = Get.isRegistered<FootballController>()
+          ? Get.find<FootballController>()
+          : Get.put(FootballController());
+
+      final matchData = await FootballSqflite.instance.getMatch(item.matchId);
+      if (matchData != null) {
+        controller.restoreFootballMatchFromSqflite(matchData);
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => FootballScoreboardScreen()),
+          );
+        }
+      }
     }
   }
 
@@ -345,6 +435,8 @@ class ScoreboardRecoveryManager {
       await CricketSqflite.instance.deleteMatch(item.matchId);
     } else if (item.sport == 'Badminton') {
       await BadmintonSqflite.instance.deleteMatch(item.matchId);
+    } else if (item.sport == 'Football') {
+      await FootballSqflite.instance.deleteMatch(item.matchId);
     }
   }
 }

@@ -101,7 +101,10 @@ CREATE TABLE matches (
   currentBattingTeam $textType,
   currentBowlingTeam $textType,
   matchResult $textType,
-  ballEvents $textType
+  ballEvents $textType,
+  bookingId $textType,
+  matchType $textType DEFAULT "NORMAL",
+  isRecoverable $integerType DEFAULT 1
 )
 ''');
   }

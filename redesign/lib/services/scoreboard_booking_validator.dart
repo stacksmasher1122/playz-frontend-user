@@ -16,7 +16,7 @@ class BookingValidationResult {
 }
 
 class ScoreboardBookingValidator {
-  static const List<String> supportedSports = ['Cricket', 'Badminton'];
+  static const List<String> supportedSports = ['Cricket', 'Badminton', 'Football'];
   static const int earlyAccessMinutes = 20;
   static const int bufferMinutes = 20;
 
@@ -49,7 +49,7 @@ class ScoreboardBookingValidator {
         isAllowed: false,
         sportName: rawSport.isEmpty ? 'This Sport' : rawSport,
         message:
-            'Scoreboard is currently ready only for Cricket and Badminton. Scoreboards for $rawSport will be available soon!',
+            'Scoreboard is currently ready for Cricket, Badminton, and Football. Scoreboards for $rawSport will be available soon!',
       );
     }
 

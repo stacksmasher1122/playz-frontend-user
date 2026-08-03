@@ -5,12 +5,14 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 class ProfessionalMatchControls extends StatelessWidget {
   final VoidCallback onLet;
+  final VoidCallback onServiceFault;
   final VoidCallback onConduct;
   final VoidCallback onTimeout;
 
   const ProfessionalMatchControls({
     super.key,
     required this.onLet,
+    required this.onServiceFault,
     required this.onConduct,
     required this.onTimeout,
   });
@@ -19,15 +21,21 @@ class ProfessionalMatchControls extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: ResponsiveHelper.h(12)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildControlButton(Icons.replay, "Let", onLet),
-          SizedBox(width: ResponsiveHelper.w(16)),
-          _buildControlButton(Icons.gavel, "Conduct", onConduct),
-          SizedBox(width: ResponsiveHelper.w(16)),
-          _buildControlButton(Icons.medical_services, "Timeout", onTimeout),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildControlButton(Icons.replay, "Let", onLet),
+            SizedBox(width: ResponsiveHelper.w(8)),
+            _buildControlButton(Icons.block, "S.Fault", onServiceFault),
+            SizedBox(width: ResponsiveHelper.w(8)),
+            _buildControlButton(Icons.gavel, "Conduct", onConduct),
+            SizedBox(width: ResponsiveHelper.w(8)),
+            _buildControlButton(Icons.medical_services, "Timeout", onTimeout),
+          ],
+        ),
       ),
     );
   }

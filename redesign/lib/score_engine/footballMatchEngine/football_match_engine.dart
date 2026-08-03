@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 
 enum MatchPhase { preMatch, firstHalf, halfTime, secondHalf, extraTimeFirst, extraTimeHalf, extraTimeSecond, penalties, fullTime }
 enum TeamSide { home, away }
-enum EventType { whistle, goal, yellowCard, redCard, substitution, offside, freeKick, penaltyGoal, penaltyMiss, generic }
+enum EventType { whistle, goal, ownGoal, yellowCard, redCard, substitution, offside, freeKick, penaltyGoal, penaltyMiss, generic }
 
 class MatchPlayer {
   String id;
@@ -175,6 +175,10 @@ class FootballMatchState {
   int awayScore = 0;
   late MatchTeam homeTeam;
   late MatchTeam awayTeam;
+  TeamSide? kickoffTeam;
+  bool endsSwapped = false;
+  String matchResult = '';
+  bool allowProRules = false;
 
   Map<String, dynamic> toJson() => {
         'seconds': seconds,
@@ -186,6 +190,10 @@ class FootballMatchState {
         'awayScore': awayScore,
         'homeTeam': homeTeam.toJson(),
         'awayTeam': awayTeam.toJson(),
+        'kickoffTeam': kickoffTeam?.name,
+        'endsSwapped': endsSwapped,
+        'matchResult': matchResult,
+        'allowProRules': allowProRules,
       };
 
   factory FootballMatchState.fromJson(Map<String, dynamic> json) {
@@ -197,6 +205,12 @@ class FootballMatchState {
     state.events = (json['events'] as List?)?.map((e) => MatchEvent.fromJson(e)).toList() ?? [];
     state.homeScore = json['homeScore'] ?? 0;
     state.awayScore = json['awayScore'] ?? 0;
+    state.endsSwapped = json['endsSwapped'] ?? false;
+    state.matchResult = json['matchResult'] ?? '';
+    state.allowProRules = json['allowProRules'] ?? false;
+    if (json['kickoffTeam'] != null) {
+      state.kickoffTeam = TeamSide.values.firstWhere((e) => e.name == json['kickoffTeam'], orElse: () => TeamSide.home);
+    }
     if (json['homeTeam'] != null) state.homeTeam = MatchTeam.fromJson(json['homeTeam']);
     if (json['awayTeam'] != null) state.awayTeam = MatchTeam.fromJson(json['awayTeam']);
     return state;
@@ -210,6 +224,7 @@ class MatchEngine extends ChangeNotifier {
   bool extraTimeEnabled;
   bool penaltiesEnabled;
   int maxSubs;
+  bool allowProRules;
   Timer? _timer;
 
   // Undo stack implementation
@@ -221,12 +236,38 @@ class MatchEngine extends ChangeNotifier {
     this.extraTimeEnabled = false,
     this.penaltiesEnabled = false,
     this.maxSubs = 5,
+    this.allowProRules = false,
   });
 
+  void startMatch() {
+    if (state.phase == MatchPhase.preMatch) {
+      endPhase();
+    }
+  }
+
+  void endMatch() {
+    _saveSnapshot();
+    _stopTimer();
+    state.phase = MatchPhase.fullTime;
+    _generateMatchResult();
+    notifyListeners();
+  }
+
   void loadState(FootballMatchState newState) {
+    _history.clear();
     state = newState;
     notifyListeners();
   }
+
+  bool _isPlayActive() {
+    return state.isRunning &&
+        state.phase != MatchPhase.preMatch &&
+        state.phase != MatchPhase.halfTime &&
+        state.phase != MatchPhase.extraTimeHalf &&
+        state.phase != MatchPhase.fullTime;
+  }
+
+  bool get isPlayActive => _isPlayActive();
 
   void _saveSnapshot() {
     _history.add(jsonEncode(state.toJson()));
@@ -234,8 +275,16 @@ class MatchEngine extends ChangeNotifier {
 
   void undo() {
     if (_history.isEmpty) return;
+    final bool currentRunning = state.isRunning;
+    _timer?.cancel();
     String previousStateStr = _history.removeLast();
     state = FootballMatchState.fromJson(jsonDecode(previousStateStr));
+    state.isRunning = currentRunning;
+    if (state.isRunning) {
+      _startTimerLoop();
+    } else {
+      _stopTimer();
+    }
     notifyListeners();
   }
 
@@ -263,6 +312,12 @@ class MatchEngine extends ChangeNotifier {
     }
 
     state.isRunning = true;
+    _startTimerLoop();
+    notifyListeners();
+  }
+
+  void _startTimerLoop() {
+    _timer?.cancel();
     _timer = Timer.periodic(Duration(seconds: 1), (_) {
       if (state.phase == MatchPhase.firstHalf && state.seconds >= halfDuration * 60) {
         state.addedSeconds++;
@@ -277,7 +332,6 @@ class MatchEngine extends ChangeNotifier {
       }
       notifyListeners();
     });
-    notifyListeners();
   }
 
   void _stopTimer() {
@@ -296,10 +350,12 @@ class MatchEngine extends ChangeNotifier {
         next = MatchPhase.firstHalf;
         state.seconds = 0;
         state.addedSeconds = 0;
+        state.isRunning = true;
         _log(EventType.whistle, null, "Match Started", "Kick Off");
         break;
       case MatchPhase.firstHalf:
         next = MatchPhase.halfTime;
+        state.endsSwapped = !state.endsSwapped;
         _log(EventType.whistle, null, "Half Time", "End of First Half");
         break;
       case MatchPhase.halfTime:
@@ -324,6 +380,7 @@ class MatchEngine extends ChangeNotifier {
         break;
       case MatchPhase.extraTimeFirst:
         next = MatchPhase.extraTimeHalf;
+        state.endsSwapped = !state.endsSwapped;
         _log(EventType.whistle, null, "ET Half Time", "End of ET First Half");
         break;
       case MatchPhase.extraTimeHalf:
@@ -349,10 +406,28 @@ class MatchEngine extends ChangeNotifier {
         break;
     }
     state.phase = next;
+
+    if (next == MatchPhase.fullTime) {
+      _generateMatchResult();
+    }
+
     notifyListeners();
   }
 
+  void _generateMatchResult() {
+    final String hName = state.homeTeam.name.isNotEmpty ? state.homeTeam.name : 'Home';
+    final String aName = state.awayTeam.name.isNotEmpty ? state.awayTeam.name : 'Away';
+    if (state.homeTeam.penaltiesScored > 0 || state.awayTeam.penaltiesScored > 0) {
+      state.matchResult = "$hName ${state.homeScore} – ${state.awayScore} $aName (${state.homeTeam.penaltiesScored}-${state.awayTeam.penaltiesScored} PK)";
+    } else if (state.seconds > halfDuration * 2 * 60) {
+      state.matchResult = "$hName ${state.homeScore} – ${state.awayScore} $aName (AET)";
+    } else {
+      state.matchResult = "$hName ${state.homeScore} – ${state.awayScore} $aName";
+    }
+  }
+
   void processGoal(TeamSide side, MatchPlayer? scorer, MatchPlayer? assist) {
+    if (!_isPlayActive() || (scorer != null && scorer.isSentOff)) return;
     _saveSnapshot();
     if (side == TeamSide.home) {
       state.homeScore++;
@@ -368,90 +443,135 @@ class MatchEngine extends ChangeNotifier {
       EventType.goal,
       side,
       "GOAL!",
-      "\${scorer?.name ?? 'Unknown'} (\${assist != null ? 'ast. \${assist.name}' : 'Solo'})",
+      "${scorer?.name ?? 'Unknown'} (${assist != null ? 'ast. ${assist.name}' : 'Solo'})",
       icon: Icons.sports_soccer,
-      color: Colors.green, // Fallback, replaced in UI
+      color: Colors.green,
       playerId: scorer?.id,
       assistId: assist?.id,
     );
-    HapticFeedback.heavyImpact();
+    try {
+      HapticFeedback.heavyImpact();
+    } catch (_) {}
+    notifyListeners();
+  }
+
+  void processOwnGoal(TeamSide teamWhoConceded, MatchPlayer ownGoalScorer) {
+    if (!_isPlayActive() || ownGoalScorer.isSentOff) return;
+    _saveSnapshot();
+    if (teamWhoConceded == TeamSide.home) {
+      state.awayScore++;
+    } else {
+      state.homeScore++;
+    }
+
+    _log(
+      EventType.ownGoal,
+      teamWhoConceded,
+      "OWN GOAL",
+      "${ownGoalScorer.name} (o.g.)",
+      icon: Icons.sports_soccer,
+      color: Colors.redAccent,
+      playerId: ownGoalScorer.id,
+    );
+    try {
+      HapticFeedback.heavyImpact();
+    } catch (_) {}
     notifyListeners();
   }
 
   void processPenalty(TeamSide side, MatchPlayer? taker, bool scored) {
-      _saveSnapshot();
+    if (!_isPlayActive() && state.phase != MatchPhase.penalties) return;
+
+    // 2.1 Rule Fix: In-Match Penalty vs Shootout
+    if (state.phase != MatchPhase.penalties) {
+      // Normal / Extra-time penalty during play
       if (scored) {
-          if (side == TeamSide.home) {
-              state.homeTeam.penaltiesScored++;
-          } else {
-              state.awayTeam.penaltiesScored++;
-          }
-          _log(EventType.penaltyGoal, side, "Penalty Scored", "\${taker?.name ?? 'Unknown'}", icon: Icons.sports_soccer, color: Colors.green, playerId: taker?.id);
+        processGoal(side, taker, null);
       } else {
-          if (side == TeamSide.home) {
-              state.homeTeam.penaltiesMissed++;
-          } else {
-              state.awayTeam.penaltiesMissed++;
-          }
-          _log(EventType.penaltyMiss, side, "Penalty Missed", "\${taker?.name ?? 'Unknown'}", icon: Icons.close, color: Colors.red, playerId: taker?.id);
+        _saveSnapshot();
+        _log(EventType.penaltyMiss, side, "Penalty Missed", "${taker?.name ?? 'Unknown'}", icon: Icons.close, color: Colors.red, playerId: taker?.id);
+        notifyListeners();
       }
+      return;
+    }
 
-      // Auto-determine shootout winner based on Standard 5 kicks logic
-      int homeScored = state.homeTeam.penaltiesScored;
-      int homeMissed = state.homeTeam.penaltiesMissed;
-      int awayScored = state.awayTeam.penaltiesScored;
-      int awayMissed = state.awayTeam.penaltiesMissed;
-
-      int homeKicksTaken = homeScored + homeMissed;
-      int awayKicksTaken = awayScored + awayMissed;
-
-      int homeKicksRemaining = 5 - homeKicksTaken;
-      if (homeKicksRemaining < 0) homeKicksRemaining = 0;
-      int awayKicksRemaining = 5 - awayKicksTaken;
-      if (awayKicksRemaining < 0) awayKicksRemaining = 0;
-
-      bool suddenDeath = homeKicksTaken >= 5 && awayKicksTaken >= 5;
-
-      bool matchOver = false;
-      if (!suddenDeath) {
-          if (homeScored > awayScored + awayKicksRemaining) {
-              matchOver = true;
-          } else if (awayScored > homeScored + homeKicksRemaining) {
-              matchOver = true;
-          }
+    // Shootout Phase
+    _saveSnapshot();
+    if (scored) {
+      if (side == TeamSide.home) {
+        state.homeTeam.penaltiesScored++;
       } else {
-          if (homeKicksTaken == awayKicksTaken) {
-              if (homeScored != awayScored) {
-                  matchOver = true;
-              }
-          }
+        state.awayTeam.penaltiesScored++;
       }
-
-      if (matchOver) {
-          endPhase();
+      _log(EventType.penaltyGoal, side, "Penalty Scored", "${taker?.name ?? 'Unknown'}", icon: Icons.sports_soccer, color: Colors.green, playerId: taker?.id);
+    } else {
+      if (side == TeamSide.home) {
+        state.homeTeam.penaltiesMissed++;
       } else {
-          notifyListeners();
+        state.awayTeam.penaltiesMissed++;
       }
+      _log(EventType.penaltyMiss, side, "Penalty Missed", "${taker?.name ?? 'Unknown'}", icon: Icons.close, color: Colors.red, playerId: taker?.id);
+    }
+
+    // Auto-determine shootout winner based on Standard 5 kicks logic
+    int homeScored = state.homeTeam.penaltiesScored;
+    int homeMissed = state.homeTeam.penaltiesMissed;
+    int awayScored = state.awayTeam.penaltiesScored;
+    int awayMissed = state.awayTeam.penaltiesMissed;
+
+    int homeKicksTaken = homeScored + homeMissed;
+    int awayKicksTaken = awayScored + awayMissed;
+
+    int homeKicksRemaining = 5 - homeKicksTaken;
+    if (homeKicksRemaining < 0) homeKicksRemaining = 0;
+    int awayKicksRemaining = 5 - awayKicksTaken;
+    if (awayKicksRemaining < 0) awayKicksRemaining = 0;
+
+    bool suddenDeath = homeKicksTaken >= 5 && awayKicksTaken >= 5;
+
+    bool matchOver = false;
+    if (!suddenDeath) {
+      if (homeScored > awayScored + awayKicksRemaining) {
+        matchOver = true;
+      } else if (awayScored > homeScored + homeKicksRemaining) {
+        matchOver = true;
+      }
+    } else {
+      if (homeKicksTaken == awayKicksTaken) {
+        if (homeScored != awayScored) {
+          matchOver = true;
+        }
+      }
+    }
+
+    if (matchOver) {
+      endPhase();
+    } else {
+      notifyListeners();
+    }
   }
 
   void processOffside(TeamSide side, MatchPlayer? player) {
-      _saveSnapshot();
-      _log(EventType.offside, side, "Offside", "\${player?.name ?? 'Unknown'}", icon: Icons.flag, color: Colors.orange, playerId: player?.id);
-      notifyListeners();
+    if (!_isPlayActive()) return;
+    _saveSnapshot();
+    _log(EventType.offside, side, "Offside", "${player?.name ?? 'Unknown'}", icon: Icons.flag, color: Colors.orange, playerId: player?.id);
+    notifyListeners();
   }
 
   void processFreeKick(TeamSide side, MatchPlayer? player) {
-      _saveSnapshot();
-      _log(EventType.freeKick, side, "Free Kick", "\${player?.name ?? 'Unknown'}", icon: Icons.sports_kabaddi, color: Colors.blue, playerId: player?.id);
-      notifyListeners();
+    if (!_isPlayActive()) return;
+    _saveSnapshot();
+    _log(EventType.freeKick, side, "Free Kick", "${player?.name ?? 'Unknown'}", icon: Icons.sports_kabaddi, color: Colors.blue, playerId: player?.id);
+    notifyListeners();
   }
 
   void processCard(TeamSide side, MatchPlayer player, EventType type, String reason) {
+    if (!_isPlayActive() || player.isSentOff) return;
     _saveSnapshot();
     if (type == EventType.yellowCard) {
       player.yellowCards++;
       if (player.yellowCards >= 2) {
-        _log(EventType.yellowCard, side, "2nd Yellow Card", "\${player.name} (Sent Off)", color: Colors.amber, playerId: player.id);
+        _log(EventType.yellowCard, side, "2nd Yellow Card", "${player.name} (Sent Off)", color: Colors.amber, playerId: player.id);
         _executeRedCard(side, player, "Second Booking");
       } else {
         _log(EventType.yellowCard, side, "Yellow Card", player.name, color: Colors.amber, playerId: player.id);
@@ -466,17 +586,20 @@ class MatchEngine extends ChangeNotifier {
     player.redCards++;
     player.isSentOff = true;
     player.isOnPitch = false;
-    _log(EventType.redCard, side, "Red Card", "\${player.name} - \$reason", color: Colors.red, playerId: player.id);
-    HapticFeedback.heavyImpact();
+    _log(EventType.redCard, side, "Red Card", "${player.name} - $reason", color: Colors.red, playerId: player.id);
+    try {
+      HapticFeedback.heavyImpact();
+    } catch (_) {}
   }
 
   bool processSubstitution(TeamSide side, MatchPlayer subOut, MatchPlayer subIn) {
+    if (!_isPlayActive() || !subOut.isOnPitch || subIn.isSentOff || subIn.isSubstitutedOut) return false;
     _saveSnapshot();
     final team = side == TeamSide.home ? state.homeTeam : state.awayTeam;
 
     if (team.substitutionsUsed >= maxSubs) {
-        _history.removeLast(); // Revert snapshot if failed
-        return false;
+      _history.removeLast(); // Revert snapshot if failed
+      return false;
     }
 
     subOut.isOnPitch = false;
@@ -489,7 +612,7 @@ class MatchEngine extends ChangeNotifier {
       EventType.substitution,
       side,
       "Substitution",
-      "IN: \${subIn.name}\nOUT: \${subOut.name}",
+      "IN: ${subIn.name}\nOUT: ${subOut.name}",
       icon: Icons.compare_arrows,
       color: Colors.blue,
       subInId: subIn.id,

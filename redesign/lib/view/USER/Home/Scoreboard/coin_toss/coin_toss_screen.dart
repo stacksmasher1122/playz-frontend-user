@@ -18,7 +18,18 @@ import 'package:redesign/theme/responsive_helper.dart';
 enum CoinState { idle, anticipating, tossing, landed }
 
 class CoinFlipScreen extends StatefulWidget {
-  const CoinFlipScreen({super.key});
+  final String? teamAName;
+  final String? teamBName;
+  final String sport;
+  final Future<void> Function(String tossWinner, String tossDecision)? onTossComplete;
+
+  const CoinFlipScreen({
+    super.key,
+    this.teamAName,
+    this.teamBName,
+    this.sport = 'cricket',
+    this.onTossComplete,
+  });
 
   @override
   State<CoinFlipScreen> createState() => _CoinFlipScreenState();
@@ -71,15 +82,26 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
   void initState() {
     super.initState();
 
-    final cCtrl = Get.find<CricketController>();
     final random = Random();
     bool isHomeCalling = random.nextBool();
-    if (isHomeCalling) {
-      callerTeamName = cCtrl.homeTeamName.value;
-      otherTeamName = cCtrl.awayTeamName.value;
+
+    if (widget.teamAName != null && widget.teamBName != null) {
+      if (isHomeCalling) {
+        callerTeamName = widget.teamAName!;
+        otherTeamName = widget.teamBName!;
+      } else {
+        callerTeamName = widget.teamBName!;
+        otherTeamName = widget.teamAName!;
+      }
     } else {
-      callerTeamName = cCtrl.awayTeamName.value;
-      otherTeamName = cCtrl.homeTeamName.value;
+      final cCtrl = Get.find<CricketController>();
+      if (isHomeCalling) {
+        callerTeamName = cCtrl.homeTeamName.value;
+        otherTeamName = cCtrl.awayTeamName.value;
+      } else {
+        callerTeamName = cCtrl.awayTeamName.value;
+        otherTeamName = cCtrl.homeTeamName.value;
+      }
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -495,18 +517,21 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                       child: ElevatedButton(
                         onPressed: () async {
                           Navigator.pop(ctx);
-                          final cCtrl = Get.find<CricketController>();
                           try {
-                            await cCtrl.finalizeMatchAndStart(winner, 'bat');
-                            if (mounted) {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CricketScoreboardScreen(),
-                                ),
-                                (route) => false,
-                              );
+                            if (widget.onTossComplete != null) {
+                              await widget.onTossComplete!(winner, widget.sport == 'badminton' ? 'serve' : 'bat');
+                            } else {
+                              final cCtrl = Get.find<CricketController>();
+                              await cCtrl.finalizeMatchAndStart(winner, 'bat');
+                              if (mounted) {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CricketScoreboardScreen(),
+                                  ),
+                                  (route) => false,
+                                );
+                              }
                             }
                           } catch (e) {
                             if (mounted) {
@@ -528,7 +553,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                           ),
                         ),
                         child: Text(
-                          'BAT',
+                          widget.sport == 'badminton' ? 'SERVE' : 'BAT',
                           style: TextStyle(
                             fontSize: ResponsiveHelper.sp(18),
                             fontWeight: FontWeight.bold,
@@ -541,18 +566,21 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                       child: ElevatedButton(
                         onPressed: () async {
                           Navigator.pop(ctx);
-                          final cCtrl = Get.find<CricketController>();
                           try {
-                            await cCtrl.finalizeMatchAndStart(winner, 'bowl');
-                            if (mounted) {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CricketScoreboardScreen(),
-                                ),
-                                (route) => false,
-                              );
+                            if (widget.onTossComplete != null) {
+                              await widget.onTossComplete!(winner, widget.sport == 'badminton' ? 'receive' : 'bowl');
+                            } else {
+                              final cCtrl = Get.find<CricketController>();
+                              await cCtrl.finalizeMatchAndStart(winner, 'bowl');
+                              if (mounted) {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CricketScoreboardScreen(),
+                                  ),
+                                  (route) => false,
+                                );
+                              }
                             }
                           } catch (e) {
                             if (mounted) {
@@ -574,7 +602,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                           ),
                         ),
                         child: Text(
-                          'BOWL',
+                          widget.sport == 'badminton' ? 'RECEIVE' : 'BOWL',
                           style: TextStyle(
                             fontSize: ResponsiveHelper.sp(18),
                             fontWeight: FontWeight.bold,

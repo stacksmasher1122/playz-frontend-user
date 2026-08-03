@@ -25,15 +25,24 @@ class ScoreboardControls extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     final controller = Get.find<FootballController>();
-    bool run = engine.state.isRunning;
+    final bool run = engine.state.isRunning;
+    final bool isPreMatch = engine.state.phase == MatchPhase.preMatch;
+    final bool showRules = engine.allowProRules;
+
     return Container(
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
-      color: AppColors.outlineVariant,
+      decoration: BoxDecoration(
+        color: Color(0xFF161616),
+        border: Border(
+          top: BorderSide(color: Color(0xFF2A2A2A), width: 1.0),
+        ),
+      ),
       child: SafeArea(
         top: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Action Buttons Row (GOAL, CARD, SUB, [RULES])
             Row(
               children: [
                 _buildBigBtn(
@@ -41,64 +50,110 @@ class ScoreboardControls extends StatelessWidget {
                   AppColors.success,
                   Icons.sports_soccer,
                   showGoalModal,
+                  isEnabled: engine.isPlayActive,
                 ),
-                SizedBox(width: 12),
+                SizedBox(width: ResponsiveHelper.w(8)),
                 _buildBigBtn(
                   "CARD",
                   AppColors.warning,
                   Icons.style,
                   showCardModal,
+                  isEnabled: engine.isPlayActive,
                 ),
-                SizedBox(width: 12),
+                SizedBox(width: ResponsiveHelper.w(8)),
                 _buildBigBtn(
                   "SUB",
                   AppColors.accent,
                   Icons.compare_arrows,
                   showSubModal,
+                  isEnabled: engine.isPlayActive,
                 ),
-                SizedBox(width: 12),
-                _buildBigBtn(
-                  "RULES",
-                  Colors.deepPurple,
-                  Icons.gavel,
-                  showRulesModal,
-                ),
+                if (showRules) ...[
+                  SizedBox(width: ResponsiveHelper.w(8)),
+                  _buildBigBtn(
+                    "RULES",
+                    Color(0xFF7E57C2),
+                    Icons.gavel,
+                    showRulesModal,
+                    isEnabled: true,
+                  ),
+                ],
               ],
             ),
-            SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildAuxBtn(
-                    run ? "PAUSE" : "RESUME",
-                    run ? Icons.pause : Icons.play_arrow,
-                    () => controller.toggleTimer(),
-                    isActive: run,
+            SizedBox(height: ResponsiveHelper.h(12)),
+
+            // Control Bar Row
+            if (isPreMatch)
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: _buildAuxBtn(
+                      "START MATCH",
+                      Icons.play_arrow,
+                      () {
+                        if (engine.state.phase == MatchPhase.preMatch) {
+                          engine.startMatch();
+                        }
+                        controller.toggleTimer();
+                      },
+                      isActive: true,
+                    ),
                   ),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: _buildAuxBtn(
-                    "NEXT PHASE",
-                    Icons.skip_next,
-                    () => _confirmPhaseAdvance(context, controller),
+                  if (engine.canUndo) ...[
+                    SizedBox(width: ResponsiveHelper.w(8)),
+                    Expanded(
+                      flex: 1,
+                      child: _buildAuxBtn(
+                        "UNDO",
+                        Icons.undo,
+                        () => controller.undo(),
+                        isActive: true,
+                      ),
+                    ),
+                  ],
+                ],
+              )
+            else
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildAuxBtn(
+                      run ? "PAUSE" : "RESUME",
+                      run ? Icons.pause : Icons.play_arrow,
+                      () => controller.toggleTimer(),
+                      isActive: run,
+                    ),
                   ),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: _buildAuxBtn(
-                    "UNDO",
-                    Icons.undo,
-                    engine.canUndo
-                        ? () {
-                            controller.undo();
-                          }
-                        : () {},
-                    isActive: engine.canUndo,
+                  SizedBox(width: ResponsiveHelper.w(8)),
+                  if (showRules)
+                    Expanded(
+                      child: _buildAuxBtn(
+                        "NEXT PHASE",
+                        Icons.skip_next,
+                        () => _confirmPhaseAdvance(context, controller),
+                      ),
+                    )
+                  else
+                    Expanded(
+                      child: _buildAuxBtn(
+                        "END MATCH",
+                        Icons.stop_circle,
+                        () => _confirmEndMatch(context, controller),
+                        isDanger: true,
+                      ),
+                    ),
+                  SizedBox(width: ResponsiveHelper.w(8)),
+                  Expanded(
+                    child: _buildAuxBtn(
+                      "UNDO",
+                      Icons.undo,
+                      engine.canUndo ? () => controller.undo() : () {},
+                      isActive: engine.canUndo,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
       ),
@@ -112,29 +167,84 @@ class ScoreboardControls extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Color(0xFF1E1E1E),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+          side: BorderSide(color: Color(0xFF2C2C2C)),
+        ),
         title: Text(
           "Advance Phase?",
-          style: TextStyle(color: AppColors.onPrimary),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         content: Text(
           "Are you sure you want to end the current phase?",
-          style: TextStyle(color: AppColors.muted),
+          style: TextStyle(color: Colors.grey),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text("CANCEL", style: TextStyle(color: AppColors.muted)),
+            child: Text("CANCEL", style: TextStyle(color: Colors.grey)),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+              ),
+            ),
             onPressed: () {
               Navigator.pop(ctx);
               controller.endPhase();
             },
             child: Text(
               "ADVANCE",
-              style: TextStyle(color: AppColors.background),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmEndMatch(
+    BuildContext context,
+    FootballController controller,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Color(0xFF1E1E1E),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+          side: BorderSide(color: Color(0xFF2C2C2C)),
+        ),
+        title: Text(
+          "End Match?",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        content: Text(
+          "Are you sure you want to complete and end this match?",
+          style: TextStyle(color: Colors.grey),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text("CANCEL", style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.error,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
+              ),
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              controller.endMatch();
+            },
+            child: Text(
+              "END MATCH",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -146,30 +256,55 @@ class ScoreboardControls extends StatelessWidget {
     String label,
     Color color,
     IconData icon,
-    VoidCallback onTap,
-  ) {
+    VoidCallback onTap, {
+    bool isEnabled = true,
+  }) {
+    final effectiveColor = isEnabled ? color : color.withValues(alpha: 0.35);
+
     return Expanded(
       child: Material(
-        color: color,
+        color: effectiveColor,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         child: InkWell(
-          onTap: onTap,
+          onTap: isEnabled
+              ? onTap
+              : () {
+                  Get.snackbar(
+                    "Match Not Active",
+                    "Please start or resume the match timer to score.",
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Color(0xFF222222),
+                    colorText: Colors.amberAccent,
+                    margin: EdgeInsets.all(ResponsiveHelper.w(12)),
+                    duration: Duration(seconds: 2),
+                  );
+                },
           borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
-            child: Column(
-              children: [
-                Icon(icon, color: AppColors.background, size: 28),
-                SizedBox(height: 4),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: AppColors.background,
-                    fontWeight: FontWeight.bold,
-                    fontSize: ResponsiveHelper.sp(12),
+            padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
+            alignment: Alignment.center,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    color: isEnabled ? Colors.black : Colors.black45,
+                    size: 24,
                   ),
-                ),
-              ],
+                  SizedBox(height: 2),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: isEnabled ? Colors.black : Colors.black45,
+                      fontWeight: FontWeight.w900,
+                      fontSize: ResponsiveHelper.sp(11),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -182,32 +317,57 @@ class ScoreboardControls extends StatelessWidget {
     IconData icon,
     VoidCallback onTap, {
     bool isActive = false,
+    bool isDanger = false,
   }) {
+    Color bg = Color(0xFF222222);
+    Color fg = Colors.grey;
+
+    if (isActive) {
+      bg = AppColors.accent;
+      fg = Colors.black;
+    } else if (isDanger) {
+      bg = AppColors.error.withValues(alpha: 0.2);
+      fg = AppColors.error;
+    }
+
     return Material(
-      color: isActive ? AppColors.accent : AppColors.surface,
+      color: bg,
       borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: isActive ? AppColors.background : AppColors.muted,
-                size: 18,
-              ),
-              SizedBox(width: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  color: isActive ? AppColors.background : AppColors.muted,
-                  fontWeight: FontWeight.bold,
+          padding: EdgeInsets.symmetric(
+            vertical: ResponsiveHelper.h(12),
+            horizontal: ResponsiveHelper.w(8),
+          ),
+          alignment: Alignment.center,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  color: fg,
+                  size: 18,
                 ),
-              ),
-            ],
+                SizedBox(width: ResponsiveHelper.w(6)),
+                Flexible(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: fg,
+                      fontWeight: FontWeight.bold,
+                      fontSize: ResponsiveHelper.sp(12),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

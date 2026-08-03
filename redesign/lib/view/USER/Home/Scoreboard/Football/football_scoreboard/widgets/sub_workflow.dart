@@ -137,7 +137,7 @@ class _SubWorkflowState extends State<SubWorkflow> {
                   style: TextStyle(color: AppColors.onPrimary),
                 ),
                 trailing: Text(
-                  "#\${p.number}",
+                  "#${p.number}",
                   style: TextStyle(color: AppColors.muted),
                 ),
                 onTap: () => setState(() {

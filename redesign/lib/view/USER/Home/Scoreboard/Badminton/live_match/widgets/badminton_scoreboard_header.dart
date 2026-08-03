@@ -70,30 +70,34 @@ class BadmintonScoreboardHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _TeamColumn(
-                teamName: 'SIDE A',
-                color: AppColors.error,
-                gamesWon: gamesWonA,
-                score: scoreA,
-                isServing: state.servingSide == PlayerSide.sideA,
+              Expanded(
+                child: _TeamColumn(
+                  teamName: 'SIDE A',
+                  color: AppColors.error,
+                  gamesWon: gamesWonA,
+                  score: scoreA,
+                  isServing: state.servingSide == PlayerSide.sideA,
+                ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+                padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12)),
                 child: Text(
                   '-',
                   style: TextStyle(
                     color: Colors.white24,
-                    fontSize: ResponsiveHelper.sp(40),
+                    fontSize: ResponsiveHelper.sp(36),
                     fontWeight: FontWeight.w300,
                   ),
                 ),
               ),
-              _TeamColumn(
-                teamName: 'SIDE B',
-                color: AppColors.primary,
-                gamesWon: gamesWonB,
-                score: scoreB,
-                isServing: state.servingSide == PlayerSide.sideB,
+              Expanded(
+                child: _TeamColumn(
+                  teamName: 'SIDE B',
+                  color: AppColors.primary,
+                  gamesWon: gamesWonB,
+                  score: scoreB,
+                  isServing: state.servingSide == PlayerSide.sideB,
+                ),
               ),
             ],
           ),
@@ -169,14 +173,17 @@ class _TeamColumn extends StatelessWidget {
         Container(
           width: ResponsiveHelper.w(80),
           alignment: Alignment.center,
-          child: Text(
-            '$score',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ResponsiveHelper.sp(64),
-              fontWeight: FontWeight.w900,
-              fontFamily: 'JetBrains Mono',
-              height: 1.0,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '$score',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: ResponsiveHelper.sp(64),
+                fontWeight: FontWeight.w900,
+                fontFamily: 'JetBrains Mono',
+                height: 1.0,
+              ),
             ),
           ),
         ),

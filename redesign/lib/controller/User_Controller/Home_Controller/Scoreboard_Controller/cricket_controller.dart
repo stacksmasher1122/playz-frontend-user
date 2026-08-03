@@ -491,6 +491,21 @@ class CricketController extends GetxController {
     updateEngineState();
   }
 
+  void selectIncomingBatter({required String oldBatterName, required String newBatterName}) {
+    engine.selectIncomingBatter(oldBatterName: oldBatterName, newBatterName: newBatterName);
+    updateEngineState();
+  }
+
+  void substituteBatter({required String oldBatterName, required String newBatterName}) {
+    engine.substituteBatter(oldBatterName: oldBatterName, newBatterName: newBatterName);
+    updateEngineState();
+  }
+
+  void substituteBowler({required String oldBowlerName, required String newBowlerName}) {
+    engine.substituteBowler(oldBowlerName: oldBowlerName, newBowlerName: newBowlerName);
+    updateEngineState();
+  }
+
   void undoEvent() {
     if (engine.canUndo) {
       engine.undo();

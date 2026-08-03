@@ -13,29 +13,19 @@ class FootballCreateMatchAppbar extends StatelessWidget
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.menu, color: Colors.white),
-        onPressed: () {},
+        icon: Icon(Icons.arrow_back, color: AppColors.accent),
+        onPressed: () => Navigator.pop(context),
       ),
       title: Text(
-        'PRO SCOUT LIVE',
+        'MATCH ARENA',
         style: TextStyle(
           color: AppColors.accent, // Lime Green
-          fontSize: ResponsiveHelper.sp(14),
+          fontSize: ResponsiveHelper.sp(16),
           fontWeight: FontWeight.w900,
           letterSpacing: 1.5,
         ),
       ),
-      centerTitle: true,
-      actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 16.0),
-          child: CircleAvatar(
-            radius: 16,
-            backgroundColor: Color(0xFF1E1E1E),
-            child: Icon(Icons.person, color: Colors.white, size: 20),
-          ),
-        ),
-      ],
+      centerTitle: false,
       flexibleSpace: Container(
         decoration: BoxDecoration(color: Color(0xFF121212)),
       ),
