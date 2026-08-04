@@ -7,7 +7,9 @@ class AppColors {
 
   // ─── Brand & Primary Accents ───────────────────────────────────────────────
   /// Core Spotify Green (0xFF1DB954) - The primary & core brand color.
+  /// Core Spotify Green / Primary Green (0xFF56F174 / 0xFF1DB954).
   static const Color spotifyGreen = Color(0xFF1DB954);
+  static const Color primaryGreen = Color(0xFF56F174);
   static const Color primary = Color(0xFF1DB954);
   static const Color accent = Color(0xFF1DB954);
   static const Color onPrimary = Color(0xFFFFFFFF);
@@ -24,6 +26,7 @@ class AppColors {
 
   /// Standard Elevated Dark Card Container (0xFF1E1E1E) - used across modal sheets, dialogs, and feature cards.
   static const Color card = Color(0xFF1E1E1E);
+  static const Color cardSurface = Color(0xFF1E1E1E);
   static const Color cardDark = Color(0xFF1A1A1A);
   static const Color surfaceElevated = Color(0xFF181818);
 
@@ -35,6 +38,8 @@ class AppColors {
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textSecondary = Color(0xFFB3B3B3);
   static const Color muted = Color(0xFFB3B3B3);
+  static const Color mutedText = Color(0xFFA0A0A0);
+
 
   // ─── Borders, Dividers & Outlines ──────────────────────────────────────────
   static const Color divider = Color(0xFF2C2C2C);

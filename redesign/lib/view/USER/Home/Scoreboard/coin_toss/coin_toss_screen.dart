@@ -519,7 +519,13 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                           Navigator.pop(ctx);
                           try {
                             if (widget.onTossComplete != null) {
-                              await widget.onTossComplete!(winner, widget.sport == 'badminton' ? 'serve' : 'bat');
+                              await widget.onTossComplete!(
+                                  winner,
+                                  (widget.sport == 'badminton' ||
+                                          widget.sport == 'tennis' ||
+                                          widget.sport == 'table_tennis')
+                                      ? 'serve'
+                                      : 'bat');
                             } else {
                               final cCtrl = Get.find<CricketController>();
                               await cCtrl.finalizeMatchAndStart(winner, 'bat');
@@ -553,7 +559,11 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                           ),
                         ),
                         child: Text(
-                          widget.sport == 'badminton' ? 'SERVE' : 'BAT',
+                          (widget.sport == 'badminton' ||
+                                  widget.sport == 'tennis' ||
+                                  widget.sport == 'table_tennis')
+                              ? 'SERVE'
+                              : 'BAT',
                           style: TextStyle(
                             fontSize: ResponsiveHelper.sp(18),
                             fontWeight: FontWeight.bold,
@@ -568,7 +578,13 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                           Navigator.pop(ctx);
                           try {
                             if (widget.onTossComplete != null) {
-                              await widget.onTossComplete!(winner, widget.sport == 'badminton' ? 'receive' : 'bowl');
+                              await widget.onTossComplete!(
+                                  winner,
+                                  (widget.sport == 'badminton' ||
+                                          widget.sport == 'tennis' ||
+                                          widget.sport == 'table_tennis')
+                                      ? 'receive'
+                                      : 'bowl');
                             } else {
                               final cCtrl = Get.find<CricketController>();
                               await cCtrl.finalizeMatchAndStart(winner, 'bowl');
@@ -602,7 +618,11 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
                           ),
                         ),
                         child: Text(
-                          widget.sport == 'badminton' ? 'RECEIVE' : 'BOWL',
+                          (widget.sport == 'badminton' ||
+                                  widget.sport == 'tennis' ||
+                                  widget.sport == 'table_tennis')
+                              ? 'RECEIVE'
+                              : 'BOWL',
                           style: TextStyle(
                             fontSize: ResponsiveHelper.sp(18),
                             fontWeight: FontWeight.bold,

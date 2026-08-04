@@ -3,7 +3,8 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Badminton/badminton_setup/badminton_setup_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_setup/cricket_setup_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Football/create_match/football_create_match_screen.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Tennis/setup_match/setup_match_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Tennis/tennis_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Table_Tennis/table_tennis_setup_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/scored/pickleball_initialize_match_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/volleyball_initialize_match_screen.dart';
 // Widgets
@@ -95,7 +96,7 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           'Tennis',
           Icons.sports_tennis,
           onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => SetupMatchScreen()),
+            MaterialPageRoute(builder: (_) => TennisSetupScreen()),
           ),
         ),
         SportItem(
@@ -110,7 +111,11 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
         SportItem(
           'Table Tennis',
           Icons.sports_tennis,
-          onTap: () => _openSetup('Table Tennis'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => TableTennisSetupScreen(),
+            ),
+          ),
         ),
         SportItem(
           'Squash',
@@ -182,6 +187,13 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
     if (sport == 'Football') {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => FootballCreateMatchScreen()),
+      );
+      return;
+    }
+
+    if (sport == 'Table Tennis') {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => TableTennisSetupScreen()),
       );
       return;
     }

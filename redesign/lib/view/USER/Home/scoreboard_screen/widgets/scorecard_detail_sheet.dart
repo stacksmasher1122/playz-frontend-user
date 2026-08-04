@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/badminton_model.dart';
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Tennis/tennis_model.dart';
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Table_Tennis/table_tennis_model.dart';
 import 'package:redesign/services/scoreboard_recovery_manager.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
@@ -116,6 +118,10 @@ class ScorecardDetailSheet extends StatelessWidget {
       return _buildCricketTable(item.rawModel as CricketMatchModel);
     } else if (item.rawModel is BadmintonMatchModel) {
       return _buildBadmintonTable(item.rawModel as BadmintonMatchModel);
+    } else if (item.rawModel is TennisMatchModel) {
+      return _buildTennisTable(item.rawModel as TennisMatchModel);
+    } else if (item.rawModel is TableTennisMatchModel) {
+      return _buildTableTennisTable(item.rawModel as TableTennisMatchModel);
     }
 
     // Generic display fallback
@@ -473,6 +479,192 @@ class ScorecardDetailSheet extends StatelessWidget {
                     DataCell(Text(teamB, style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
                     DataCell(Text(badminton.status, style: GoogleFonts.inter(color: AppColors.accent, fontSize: 12))),
                     DataCell(Text('Best of ${badminton.gamesToWin * 2 - 1}', style: GoogleFonts.inter(color: Colors.white70, fontSize: 11))),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ════════════════════ TENNIS TABLES ════════════════════
+  Widget _buildTennisTable(TennisMatchModel tennis) {
+    final teamA = tennis.homeTeamName.isNotEmpty ? _truncate8(tennis.homeTeamName) : 'Player A';
+    final teamB = tennis.awayTeamName.isNotEmpty ? _truncate8(tennis.awayTeamName) : 'Player B';
+    final formatStr = tennis.config['setsFormat']?.toString() ?? 'Best of 3';
+
+    String scoreSummaryA = '0';
+    String scoreSummaryB = '0';
+
+    if (tennis.parsedEngineState != null) {
+      final state = tennis.parsedEngineState!;
+      final setsA = state.sideASetsWon;
+      final setsB = state.sideBSetsWon;
+      scoreSummaryA = '$setsA Sets';
+      scoreSummaryB = '$setsB Sets';
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (tennis.matchResult.isNotEmpty)
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: const Color(0xFF14241B),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.emoji_events_outlined, color: AppColors.accent, size: 22),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    tennis.matchResult,
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        _sectionHeader('Tennis Match Scorecard'),
+        const SizedBox(height: 12),
+
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF141414),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: DataTable(
+              headingRowHeight: 40,
+              dataRowMinHeight: 44,
+              dataRowMaxHeight: 52,
+              horizontalMargin: 16,
+              columnSpacing: 16,
+              headingRowColor: WidgetStateProperty.all(const Color(0xFF1E1E1E)),
+              columns: const [
+                DataColumn(label: Text('Player / Team', style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 12))),
+                DataColumn(label: Text('Score', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+                DataColumn(label: Text('Format', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+              ],
+              rows: [
+                DataRow(
+                  cells: [
+                    DataCell(Text(teamA, style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                    DataCell(Text(scoreSummaryA, style: GoogleFonts.inter(color: AppColors.accent, fontSize: 12))),
+                    DataCell(Text(formatStr, style: GoogleFonts.inter(color: Colors.white70, fontSize: 11))),
+                  ],
+                ),
+                DataRow(
+                  cells: [
+                    DataCell(Text(teamB, style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                    DataCell(Text(scoreSummaryB, style: GoogleFonts.inter(color: AppColors.accent, fontSize: 12))),
+                    DataCell(Text(tennis.status, style: GoogleFonts.inter(color: Colors.white70, fontSize: 11))),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ════════════════════ TABLE TENNIS TABLES ════════════════════
+  Widget _buildTableTennisTable(TableTennisMatchModel tt) {
+    final teamA = tt.homeTeamName.isNotEmpty ? _truncate8(tt.homeTeamName) : 'Player A';
+    final teamB = tt.awayTeamName.isNotEmpty ? _truncate8(tt.awayTeamName) : 'Player B';
+    final gamesFormatStr = tt.config['gamesFormat']?.toString() ?? 'Best of 5';
+
+    String gamesWonA = '0';
+    String gamesWonB = '0';
+
+    if (tt.parsedEngineState != null) {
+      final state = tt.parsedEngineState!;
+      gamesWonA = '${state.sideAGamesWon} Games';
+      gamesWonB = '${state.sideBGamesWon} Games';
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (tt.matchResult.isNotEmpty)
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: const Color(0xFF14241B),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.emoji_events_outlined, color: AppColors.accent, size: 22),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    tt.matchResult,
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        _sectionHeader('Table Tennis Match Scorecard'),
+        const SizedBox(height: 12),
+
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF141414),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: DataTable(
+              headingRowHeight: 40,
+              dataRowMinHeight: 44,
+              dataRowMaxHeight: 52,
+              horizontalMargin: 16,
+              columnSpacing: 16,
+              headingRowColor: WidgetStateProperty.all(const Color(0xFF1E1E1E)),
+              columns: const [
+                DataColumn(label: Text('Player / Team', style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold, fontSize: 12))),
+                DataColumn(label: Text('Games Won', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+                DataColumn(label: Text('Format', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12))),
+              ],
+              rows: [
+                DataRow(
+                  cells: [
+                    DataCell(Text(teamA, style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                    DataCell(Text(gamesWonA, style: GoogleFonts.inter(color: AppColors.accent, fontSize: 12))),
+                    DataCell(Text(gamesFormatStr, style: GoogleFonts.inter(color: Colors.white70, fontSize: 11))),
+                  ],
+                ),
+                DataRow(
+                  cells: [
+                    DataCell(Text(teamB, style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13))),
+                    DataCell(Text(gamesWonB, style: GoogleFonts.inter(color: AppColors.accent, fontSize: 12))),
+                    DataCell(Text(tt.status, style: GoogleFonts.inter(color: Colors.white70, fontSize: 11))),
                   ],
                 ),
               ],

@@ -3,16 +3,26 @@ import 'package:get/get.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/cricketSqflite.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/badmintonSqflite.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/footballSqflite.dart';
+import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/tennisSqflite.dart';
+import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/tableTennisSqflite.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/badminton_controller.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_controller.dart';
+import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/tennis_controller.dart';
+import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Table_Tennis/table_tennis_controller.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_scoreboard/cricket_scoreboard_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/badminton_scoreboard_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Football/football_scoreboard/football_scoreboard_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Tennis/tennis_scoreboard_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Table_Tennis/table_tennis_scoreboard_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/badminton_model.dart';
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Tennis/tennis_model.dart';
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Table_Tennis/table_tennis_model.dart';
+
+
 
 class RecoverableMatchItem {
   final String matchId;
@@ -160,6 +170,55 @@ class ScoreboardRecoveryManager {
       }
     } catch (_) {}
 
+    // 4. Check Tennis Matches from SQFlite
+    try {
+      final tennisMatches = await TennisSqflite.instance.getAllMatches();
+      for (final t in tennisMatches) {
+        if (t.status.toLowerCase() != 'completed') {
+          final isSlot = t.matchId.startsWith('SLOT_');
+          final teamA = t.homeTeamName.isNotEmpty ? t.homeTeamName : 'Player A';
+          final teamB = t.awayTeamName.isNotEmpty ? t.awayTeamName : 'Player B';
+
+          list.add(
+            RecoverableMatchItem(
+              matchId: t.matchId,
+              sport: 'Tennis',
+              matchType: isSlot ? 'SLOT_DEDICATED' : 'NORMAL',
+              title: '$teamA vs $teamB',
+              subtitle: 'Tennis • ${t.config['setsFormat'] ?? 'Best of 3'} • ${t.status}',
+              lastUpdatedAt: t.lastUpdatedAt,
+              rawModel: t,
+            ),
+          );
+        }
+      }
+    } catch (_) {}
+
+    // 5. Check Table Tennis Matches from SQFlite
+    try {
+      final ttMatches = await TableTennisSqflite.instance.getAllMatches();
+      for (final tt in ttMatches) {
+        if (tt.status.toLowerCase() != 'completed') {
+          final isSlot = tt.matchId.startsWith('SLOT_');
+          final teamA = tt.homeTeamName.isNotEmpty ? tt.homeTeamName : 'Player A';
+          final teamB = tt.awayTeamName.isNotEmpty ? tt.awayTeamName : 'Player B';
+
+          list.add(
+            RecoverableMatchItem(
+              matchId: tt.matchId,
+              sport: 'Table Tennis',
+              matchType: isSlot ? 'SLOT_DEDICATED' : 'NORMAL',
+              title: '$teamA vs $teamB',
+              subtitle: 'Table Tennis • ${tt.config['gamesFormat'] ?? 'Best of 5'} • ${tt.status}',
+              lastUpdatedAt: tt.lastUpdatedAt,
+              rawModel: tt,
+            ),
+          );
+        }
+      }
+    } catch (_) {}
+
+
     list.sort((a, b) => b.lastUpdatedAt.compareTo(a.lastUpdatedAt));
     return list;
   }
@@ -274,7 +333,75 @@ class ScoreboardRecoveryManager {
       }
     } catch (_) {}
 
-    // 4. Fetch from Firestore for participating teammates (completed matches)
+    // 4. Tennis Matches from SQFlite
+    try {
+      final tennisMatches = await TennisSqflite.instance.getAllMatches();
+      for (final t in tennisMatches) {
+        final isSlot = t.matchId.startsWith('SLOT_');
+        final isCompleted = t.status.toLowerCase() == 'completed' || t.matchResult.isNotEmpty;
+        final matchType = isSlot ? 'SLOT_DEDICATED' : 'NORMAL';
+
+        if (isCompleted || (!isCompleted && !isSlot)) {
+          final teamA = t.homeTeamName.isNotEmpty ? t.homeTeamName : 'Player A';
+          final teamB = t.awayTeamName.isNotEmpty ? t.awayTeamName : 'Player B';
+
+          String sub = 'Tennis • ${t.config['setsFormat'] ?? 'Best of 3'}';
+          if (isCompleted && t.matchResult.isNotEmpty) {
+            sub = t.matchResult;
+          }
+
+          list.add(
+            ScoreboardHubItem(
+              matchId: t.matchId,
+              sport: 'Tennis',
+              matchType: matchType,
+              status: isCompleted ? 'completed' : 'incomplete',
+              title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
+              subtitle: sub,
+              lastUpdatedAt: t.lastUpdatedAt,
+              createdAt: t.createdAt,
+              rawModel: t,
+            ),
+          );
+        }
+      }
+    } catch (_) {}
+
+    // 5. Table Tennis Matches from SQFlite
+    try {
+      final ttMatches = await TableTennisSqflite.instance.getAllMatches();
+      for (final tt in ttMatches) {
+        final isSlot = tt.matchId.startsWith('SLOT_');
+        final isCompleted = tt.status.toLowerCase() == 'completed' || tt.matchResult.isNotEmpty;
+        final matchType = isSlot ? 'SLOT_DEDICATED' : 'NORMAL';
+
+        if (isCompleted || (!isCompleted && !isSlot)) {
+          final teamA = tt.homeTeamName.isNotEmpty ? tt.homeTeamName : 'Player A';
+          final teamB = tt.awayTeamName.isNotEmpty ? tt.awayTeamName : 'Player B';
+
+          String sub = 'Table Tennis • ${tt.config['gamesFormat'] ?? 'Best of 5'}';
+          if (isCompleted && tt.matchResult.isNotEmpty) {
+            sub = tt.matchResult;
+          }
+
+          list.add(
+            ScoreboardHubItem(
+              matchId: tt.matchId,
+              sport: 'Table Tennis',
+              matchType: matchType,
+              status: isCompleted ? 'completed' : 'incomplete',
+              title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
+              subtitle: sub,
+              lastUpdatedAt: tt.lastUpdatedAt,
+              createdAt: tt.createdAt,
+              rawModel: tt,
+            ),
+          );
+        }
+      }
+    } catch (_) {}
+
+    // 6. Fetch from Firestore for participating teammates (completed matches)
     try {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid != null) {
@@ -295,7 +422,50 @@ class ScoreboardRecoveryManager {
           final isSlot = matchId.startsWith('SLOT_');
           final matchType = isSlot ? 'SLOT_DEDICATED' : 'NORMAL';
 
-          if (data.containsKey('homeTeamName')) {
+          if (data['sport'] == 'table_tennis') {
+            final tt = TableTennisMatchModel.fromFirebaseJson(data);
+            final teamA = tt.homeTeamName.isNotEmpty ? tt.homeTeamName : 'Player A';
+            final teamB = tt.awayTeamName.isNotEmpty ? tt.awayTeamName : 'Player B';
+
+            String sub = tt.matchResult.isNotEmpty ? tt.matchResult : 'Table Tennis';
+
+            list.add(
+              ScoreboardHubItem(
+                matchId: tt.matchId,
+                sport: 'Table Tennis',
+                matchType: matchType,
+                status: 'completed',
+                title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
+                subtitle: sub,
+                lastUpdatedAt: tt.lastUpdatedAt,
+                createdAt: tt.createdAt,
+                rawModel: tt,
+              ),
+            );
+          } else if (data['sport'] == 'tennis' ||
+              (data.containsKey('engineState') &&
+                  data['engineState'] != null &&
+                  (data['engineState'] as Map).containsKey('sideAPointScore'))) {
+            final t = TennisMatchModel.fromFirebaseJson(data);
+            final teamA = t.homeTeamName.isNotEmpty ? t.homeTeamName : 'Player A';
+            final teamB = t.awayTeamName.isNotEmpty ? t.awayTeamName : 'Player B';
+
+            String sub = t.matchResult.isNotEmpty ? t.matchResult : 'Tennis';
+
+            list.add(
+              ScoreboardHubItem(
+                matchId: t.matchId,
+                sport: 'Tennis',
+                matchType: matchType,
+                status: 'completed',
+                title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
+                subtitle: sub,
+                lastUpdatedAt: t.lastUpdatedAt,
+                createdAt: t.createdAt,
+                rawModel: t,
+              ),
+            );
+          } else if (data.containsKey('homeTeamName')) {
             final m = CricketMatchModel.fromJson(data);
             final teamA = m.homeTeamName.isNotEmpty ? m.homeTeamName : 'Team Red';
             final teamB = m.awayTeamName.isNotEmpty ? m.awayTeamName : 'Team Blue';
@@ -332,6 +502,7 @@ class ScoreboardRecoveryManager {
                 title: '${_truncate8(teamA)} vs ${_truncate8(teamB)}',
                 subtitle: sub,
                 lastUpdatedAt: updatedDate,
+                createdAt: b.createdAt,
                 rawModel: b,
               ),
             );
@@ -432,6 +603,36 @@ class ScoreboardRecoveryManager {
           );
         }
       }
+    } else if (item.sport == 'Tennis') {
+      final controller = Get.isRegistered<TennisController>()
+          ? Get.find<TennisController>()
+          : Get.put(TennisController());
+
+      final matchData = await TennisSqflite.instance.getMatch(item.matchId);
+      if (matchData != null) {
+        controller.restoreTennisMatchFromSqflite(matchData);
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const TennisScoreboardScreen()),
+          );
+        }
+      }
+    } else if (item.sport == 'Table Tennis') {
+      final controller = Get.isRegistered<TableTennisController>()
+          ? Get.find<TableTennisController>()
+          : Get.put(TableTennisController());
+
+      final matchData = await TableTennisSqflite.instance.getMatch(item.matchId);
+      if (matchData != null) {
+        controller.restoreTableTennisMatchFromSqflite(matchData);
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const TableTennisScoreboardScreen()),
+          );
+        }
+      }
     }
   }
 
@@ -442,6 +643,10 @@ class ScoreboardRecoveryManager {
       await BadmintonSqflite.instance.deleteMatch(item.matchId);
     } else if (item.sport == 'Football') {
       await FootballSqflite.instance.deleteMatch(item.matchId);
+    } else if (item.sport == 'Tennis') {
+      await TennisSqflite.instance.deleteMatch(item.matchId);
+    } else if (item.sport == 'Table Tennis') {
+      await TableTennisSqflite.instance.deleteMatch(item.matchId);
     }
   }
 }
