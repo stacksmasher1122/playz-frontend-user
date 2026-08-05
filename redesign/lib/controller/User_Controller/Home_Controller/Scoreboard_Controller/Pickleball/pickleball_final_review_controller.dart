@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/pickleball_review_model.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/live_match/live_pickleball_match_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/live_match/pickleball_scoreboard_screen.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/pickleball_initialize_match_controller.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/pickleball_team_management_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/pickleball_rule_engine.dart';
@@ -107,13 +107,15 @@ class PickleballFinalReviewController extends GetxController {
 
   void startMatch(BuildContext context) async {
     isStarting.value = true;
-    await Future.delayed(Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(milliseconds: 1500));
     isStarting.value = false;
     showSuccess("Match started successfully!");
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => LivePickleballMatchScreen()),
-    );
+    if (context.mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const PickleballScoreboardScreen()),
+      );
+    }
   }
 
   void showSuccess(String msg) {

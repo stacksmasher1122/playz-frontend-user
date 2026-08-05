@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_state_models.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
+/// An elevated, app-themed card widget presented after setup & coin toss
+/// for picking the Opening Striker, Non-Striker, and Opening Bowler.
 class SetupWizardCard extends StatefulWidget {
   final CricketController controller;
   final List<Player> battingTeam;
@@ -74,44 +76,73 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
         (_selectedStrikerName != _selectedNonStrikerName || batNames.length == 1);
 
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
-      margin: EdgeInsets.all(ResponsiveHelper.w(16)),
+      margin: EdgeInsets.all(ResponsiveHelper.w(16.0)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(20.0)),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
-        border: Border.all(color: AppColors.accent.withValues(alpha: 0.3), width: 1.5),
+        color: AppColors.cardSurface,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24.0)),
+        border: Border.all(color: AppColors.accent.withValues(alpha: 0.25), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.4),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Row with Icon Badge & Title
           Row(
             children: [
-              const Icon(Icons.sports_cricket, color: AppColors.accent, size: 24),
-              const SizedBox(width: 10),
-              Text(
-                'Select Opening Players',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(20),
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: EdgeInsets.all(ResponsiveHelper.w(10.0)),
+                decoration: BoxDecoration(
+                  color: AppColors.accent.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+                ),
+                child: Icon(
+                  Icons.sports_cricket_rounded,
+                  color: AppColors.accent,
+                  size: ResponsiveHelper.w(24.0),
+                ),
+              ),
+              SizedBox(width: ResponsiveHelper.w(12.0)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Select Opening Players',
+                      style: AppTypography.headlineSm.copyWith(
+                        color: AppColors.textPrimary,
+                        fontSize: ResponsiveHelper.sp(20.0),
+                        fontWeight: FontWeight.bold,
+                      ).responsive(context),
+                    ),
+                    SizedBox(height: ResponsiveHelper.h(2.0)),
+                    Text(
+                      'Draft opening batters and bowler to begin scoring.',
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.mutedText,
+                        fontSize: ResponsiveHelper.sp(12.0),
+                      ).responsive(context),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          Text(
-            'Choose the striker, non-striker, and opening bowler to start the match.',
-            style: GoogleFonts.inter(
-              color: AppColors.muted,
-              fontSize: ResponsiveHelper.sp(12),
-            ),
-          ),
-          const SizedBox(height: 24),
+          SizedBox(height: ResponsiveHelper.h(24.0)),
 
-          // Striker Selector
-          _buildNameSelector(
-            label: 'Striker (On Strike)',
+          // 1. Striker Selector Card
+          _buildRoleSelectorCard(
+            context,
+            roleTitle: 'STRIKER (ON STRIKE)',
+            icon: Icons.sports_cricket_rounded,
+            accentColor: AppColors.accent,
             names: batNames,
             selectedName: _selectedStrikerName,
             onChanged: (name) {
@@ -124,11 +155,14 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: ResponsiveHelper.h(16.0)),
 
-          // Non-Striker Selector
-          _buildNameSelector(
-            label: 'Non-Striker',
+          // 2. Non-Striker Selector Card
+          _buildRoleSelectorCard(
+            context,
+            roleTitle: 'NON-STRIKER',
+            icon: Icons.sports_cricket_rounded,
+            accentColor: const Color(0xFF4D96FF),
             names: batNames,
             selectedName: _selectedNonStrikerName,
             onChanged: (name) {
@@ -141,11 +175,14 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
             },
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: ResponsiveHelper.h(16.0)),
 
-          // Opening Bowler Selector
-          _buildNameSelector(
-            label: 'Opening Bowler',
+          // 3. Opening Bowler Selector Card
+          _buildRoleSelectorCard(
+            context,
+            roleTitle: 'OPENING BOWLER',
+            icon: Icons.sports_baseball_rounded,
+            accentColor: const Color(0xFFFF6B6B),
             names: bowlNames,
             selectedName: _selectedBowlerName,
             onChanged: (name) {
@@ -155,11 +192,12 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
             },
           ),
 
-          const SizedBox(height: 28),
+          SizedBox(height: ResponsiveHelper.h(28.0)),
 
+          // Start Match Scoring Action Button
           SizedBox(
             width: double.infinity,
-            height: 50,
+            height: ResponsiveHelper.h(54.0),
             child: ElevatedButton(
               onPressed: canStart
                   ? () {
@@ -172,15 +210,22 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
                   : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accent,
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                foregroundColor: AppColors.background,
+                disabledBackgroundColor: AppColors.accent.withValues(alpha: 0.3),
+                disabledForegroundColor: Colors.white38,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(16.0)),
+                ),
               ),
               child: Text(
-                'Start Match Scoring',
-                style: GoogleFonts.inter(
-                  fontSize: ResponsiveHelper.sp(16),
-                  fontWeight: FontWeight.bold,
-                ),
+                'START MATCH SCORING',
+                style: AppTypography.headlineSm.copyWith(
+                  color: canStart ? AppColors.background : Colors.white38,
+                  fontSize: ResponsiveHelper.sp(16.0),
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.2,
+                ).responsive(context),
               ),
             ),
           ),
@@ -189,55 +234,230 @@ class _SetupWizardCardState extends State<SetupWizardCard> {
     );
   }
 
-  Widget _buildNameSelector({
-    required String label,
+  Widget _buildRoleSelectorCard(
+    BuildContext context, {
+    required String roleTitle,
+    required IconData icon,
+    required Color accentColor,
     required List<String> names,
     required String? selectedName,
-    required ValueChanged<String?> onChanged,
+    required ValueChanged<String> onChanged,
   }) {
-    final String? validValue = (selectedName != null && names.contains(selectedName)) ? selectedName : null;
+    final String displayValue = selectedName ?? 'Select player';
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.inter(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 6),
-        Container(
-          height: 48,
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          decoration: BoxDecoration(
-            color: const Color(0xFF141414),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-            borderRadius: BorderRadius.circular(12),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          _openPlayerSelectorSheet(
+            context,
+            roleTitle: roleTitle,
+            accentColor: accentColor,
+            names: names,
+            selectedName: selectedName,
+            onSelected: onChanged,
+          );
+        },
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16.0)),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveHelper.w(16.0),
+            vertical: ResponsiveHelper.h(14.0),
           ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              isExpanded: true,
-              dropdownColor: const Color(0xFF1A1A1A),
-              value: validValue,
-              hint: Text(
-                'Select player',
-                style: GoogleFonts.inter(color: Colors.white38, fontSize: 13),
-              ),
-              items: names
-                  .map(
-                    (name) => DropdownMenuItem<String>(
-                      value: name,
-                      child: Text(
-                        name,
-                        style: GoogleFonts.inter(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  )
-                  .toList(),
-              onChanged: onChanged,
+          decoration: BoxDecoration(
+            color: const Color(0xFF131313),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16.0)),
+            border: Border(
+              left: BorderSide(color: accentColor, width: 4.0),
             ),
           ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    icon,
+                    color: accentColor,
+                    size: ResponsiveHelper.w(18.0),
+                  ),
+                  SizedBox(width: ResponsiveHelper.w(8.0)),
+                  Text(
+                    roleTitle,
+                    style: AppTypography.labelCaps.copyWith(
+                      color: accentColor,
+                      fontSize: ResponsiveHelper.sp(11.0),
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                    ).responsive(context),
+                  ),
+                ],
+              ),
+              SizedBox(height: ResponsiveHelper.h(10.0)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    displayValue,
+                    style: AppTypography.bodyMd.copyWith(
+                      color: selectedName != null ? AppColors.textPrimary : AppColors.mutedText,
+                      fontSize: ResponsiveHelper.sp(15.0),
+                      fontWeight: selectedName != null ? FontWeight.bold : FontWeight.normal,
+                    ).responsive(context),
+                  ),
+                  Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: AppColors.mutedText,
+                    size: ResponsiveHelper.w(22.0),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ],
+      ),
+    );
+  }
+
+  void _openPlayerSelectorSheet(
+    BuildContext context, {
+    required String roleTitle,
+    required Color accentColor,
+    required List<String> names,
+    required String? selectedName,
+    required ValueChanged<String> onSelected,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.cardSurface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ResponsiveHelper.w(24.0)),
+        ),
+      ),
+      builder: (ctx) {
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveHelper.w(20.0),
+            vertical: ResponsiveHelper.h(16.0),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Top Drag Handle Pill
+              Center(
+                child: Container(
+                  width: ResponsiveHelper.w(44.0),
+                  height: ResponsiveHelper.h(4.5),
+                  margin: EdgeInsets.only(bottom: ResponsiveHelper.h(16.0)),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(10.0)),
+                  ),
+                ),
+              ),
+
+              // Title
+              Text(
+                'SELECT $roleTitle',
+                style: AppTypography.labelCaps.copyWith(
+                  color: accentColor,
+                  fontSize: ResponsiveHelper.sp(12.0),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.5,
+                ).responsive(context),
+              ),
+              SizedBox(height: ResponsiveHelper.h(4.0)),
+              Text(
+                'Choose player for this role',
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.mutedText,
+                  fontSize: ResponsiveHelper.sp(13.0),
+                ).responsive(context),
+              ),
+              SizedBox(height: ResponsiveHelper.h(16.0)),
+
+              // Player List
+              Flexible(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: names.length,
+                  separatorBuilder: (c, i) => SizedBox(height: ResponsiveHelper.h(8.0)),
+                  itemBuilder: (context, index) {
+                    final name = names[index];
+                    final isSelected = name == selectedName;
+
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          onSelected(name);
+                          Navigator.of(ctx).pop();
+                        },
+                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ResponsiveHelper.w(16.0),
+                            vertical: ResponsiveHelper.h(14.0),
+                          ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? accentColor.withValues(alpha: 0.15)
+                                : const Color(0xFF131313),
+                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+                            border: Border.all(
+                              color: isSelected
+                                  ? accentColor
+                                  : Colors.white.withValues(alpha: 0.08),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: ResponsiveHelper.w(16.0),
+                                backgroundColor: isSelected
+                                    ? accentColor
+                                    : const Color(0xFF2A2A2A),
+                                child: Text(
+                                  name.isNotEmpty ? name[0].toUpperCase() : '?',
+                                  style: TextStyle(
+                                    color: isSelected ? AppColors.background : AppColors.textPrimary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: ResponsiveHelper.sp(13.0),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: ResponsiveHelper.w(12.0)),
+                              Expanded(
+                                child: Text(
+                                  name,
+                                  style: AppTypography.bodyMd.copyWith(
+                                    color: isSelected ? accentColor : AppColors.textPrimary,
+                                    fontSize: ResponsiveHelper.sp(15.0),
+                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                  ).responsive(context),
+                                ),
+                              ),
+                              if (isSelected)
+                                Icon(
+                                  Icons.check_circle_rounded,
+                                  color: accentColor,
+                                  size: ResponsiveHelper.w(20.0),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: ResponsiveHelper.h(16.0)),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -61,7 +61,7 @@ class BookingController extends GetxController {
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
         final favs = List<String>.from(data['favoriteTurfs'] ?? []);
-        favoriteTurfIds.value = favs.toSet();
+        favoriteTurfIds.assignAll(favs);
       }
     } catch (e) {
       debugPrint('🔴 [BookingController] fetchFavoriteTurfs error: $e');
@@ -75,7 +75,7 @@ class BookingController extends GetxController {
     } else {
       updated.add(turfId);
     }
-    favoriteTurfIds.value = updated;
+    favoriteTurfIds.assignAll(updated);
     applyFilters();
 
     try {

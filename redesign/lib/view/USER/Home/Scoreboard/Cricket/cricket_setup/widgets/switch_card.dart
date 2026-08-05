@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../cricket_setup_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class SwitchCard extends StatelessWidget {
@@ -24,7 +24,7 @@ class SwitchCard extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: kSurface,
+        color: AppColors.cardSurface,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
       ),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
@@ -38,7 +38,7 @@ class SwitchCard extends StatelessWidget {
             ),
             child: Icon(
               icon,
-              color: kGreen,
+              color: AppColors.accent,
               size: 24,
             ),
           ),
@@ -59,7 +59,7 @@ class SwitchCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: TextStyle(
-                    color: kMutedText,
+                    color: AppColors.mutedText,
                     fontSize: ResponsiveHelper.sp(13),
                     height: ResponsiveHelper.h(1.2),
                   ),
@@ -72,8 +72,8 @@ class SwitchCard extends StatelessWidget {
               value: valueStream.value,
               onChanged: onChanged,
               activeThumbColor: Colors.white,
-              activeTrackColor: kGreen,
-              inactiveThumbColor: kMutedText,
+              activeTrackColor: AppColors.accent,
+              inactiveThumbColor: AppColors.mutedText,
               inactiveTrackColor: Color(0xFF2C2C2C),
               thumbColor: WidgetStateProperty.resolveWith<Color>((
                 Set<WidgetState> states,
@@ -81,7 +81,7 @@ class SwitchCard extends StatelessWidget {
                 if (states.contains(WidgetState.selected)) {
                   return Colors.black;
                 }
-                return kMutedText;
+                return AppColors.mutedText;
               }),
             ),
           ),

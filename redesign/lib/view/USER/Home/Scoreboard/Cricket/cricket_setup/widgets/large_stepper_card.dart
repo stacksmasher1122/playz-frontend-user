@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
-import '../cricket_setup_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'circle_button.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -19,7 +19,7 @@ class LargeStepperCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: kSurface,
+        color: AppColors.cardSurface,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
       ),
       padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(24), horizontal: ResponsiveHelper.w(20)),
@@ -28,7 +28,7 @@ class LargeStepperCard extends StatelessWidget {
           Text(
             'MATCH LENGTH',
             style: TextStyle(
-              color: kMutedText,
+              color: AppColors.mutedText,
               fontSize: ResponsiveHelper.sp(11),
               fontWeight: FontWeight.w800,
               letterSpacing: 1.5,
@@ -52,7 +52,7 @@ class LargeStepperCard extends StatelessWidget {
                 CircleButton(
                   icon: Icons.remove,
                   color: Color(0xFF131313),
-                  iconColor: kGreen.withValues(alpha: 0.7),
+                  iconColor: AppColors.accent.withValues(alpha: 0.7),
                   onTap: controller.decrementOvers,
                   size: 56,
                   iconSize: 28,
@@ -64,7 +64,7 @@ class LargeStepperCard extends StatelessWidget {
                       () => Text(
                         controller.overs.value.toString(),
                         style: TextStyle(
-                          color: kGreen,
+                          color: AppColors.accent,
                           fontSize: ResponsiveHelper.sp(64),
                           fontWeight: FontWeight.w800,
                           height: ResponsiveHelper.h(1),
@@ -80,7 +80,7 @@ class LargeStepperCard extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                        BoxShadow(
-                        color: kGreen.withValues(alpha: 0.3),
+                        color: AppColors.accent.withValues(alpha: 0.3),
                         blurRadius: 20,
                         spreadRadius: 2,
                       ),
@@ -88,7 +88,7 @@ class LargeStepperCard extends StatelessWidget {
                   ),
                   child: CircleButton(
                     icon: Icons.add,
-                    color: kGreen,
+                    color: AppColors.accent,
                     iconColor: Colors.black,
                     onTap: controller.incrementOvers,
                     size: 56,

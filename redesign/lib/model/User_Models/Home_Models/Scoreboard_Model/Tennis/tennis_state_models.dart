@@ -1,4 +1,4 @@
-import 'package:uuid/uuid.dart';
+import 'dart:convert';
 
 /* ═══════════════════ DATA MODELS & ENUMS ═══════════════════ */
 
@@ -75,17 +75,17 @@ class TennisPlayer {
       };
 
   factory TennisPlayer.fromJson(Map<String, dynamic> json) => TennisPlayer(
-        id: json['id'] ?? const Uuid().v4(),
-        name: json['name'] ?? 'Player',
-        email: json['email'] ?? '',
-        profilePic: json['profilePic'] ?? '',
-        pointsWon: json['pointsWon'] ?? 0,
-        aces: json['aces'] ?? 0,
-        doubleFaults: json['doubleFaults'] ?? 0,
-        winners: json['winners'] ?? 0,
-        unforcedErrors: json['unforcedErrors'] ?? 0,
-        firstServesIn: json['firstServesIn'] ?? 0,
-        firstServesTotal: json['firstServesTotal'] ?? 0,
+        id: json['id']?.toString() ?? 'player_${DateTime.now().millisecondsSinceEpoch}',
+        name: json['name']?.toString() ?? 'Player',
+        email: json['email']?.toString() ?? '',
+        profilePic: json['profilePic']?.toString() ?? '',
+        pointsWon: json['pointsWon'] is int ? json['pointsWon'] : int.tryParse(json['pointsWon']?.toString() ?? '') ?? 0,
+        aces: json['aces'] is int ? json['aces'] : int.tryParse(json['aces']?.toString() ?? '') ?? 0,
+        doubleFaults: json['doubleFaults'] is int ? json['doubleFaults'] : int.tryParse(json['doubleFaults']?.toString() ?? '') ?? 0,
+        winners: json['winners'] is int ? json['winners'] : int.tryParse(json['winners']?.toString() ?? '') ?? 0,
+        unforcedErrors: json['unforcedErrors'] is int ? json['unforcedErrors'] : int.tryParse(json['unforcedErrors']?.toString() ?? '') ?? 0,
+        firstServesIn: json['firstServesIn'] is int ? json['firstServesIn'] : int.tryParse(json['firstServesIn']?.toString() ?? '') ?? 0,
+        firstServesTotal: json['firstServesTotal'] is int ? json['firstServesTotal'] : int.tryParse(json['firstServesTotal']?.toString() ?? '') ?? 0,
       );
 }
 
@@ -144,14 +144,14 @@ class SetScore {
       };
 
   factory SetScore.fromJson(Map<String, dynamic> json) => SetScore(
-        setNumber: json['setNumber'] ?? 1,
-        sideAGames: json['sideAGames'] ?? 0,
-        sideBGames: json['sideBGames'] ?? 0,
-        tiebreakSideAPoints: json['tiebreakSideAPoints'] ?? 0,
-        tiebreakSideBPoints: json['tiebreakSideBPoints'] ?? 0,
-        isTiebreak: json['isTiebreak'] ?? false,
-        isCompleted: json['isCompleted'] ?? false,
-        winnerSide: json['winnerSide'],
+        setNumber: json['setNumber'] is int ? json['setNumber'] : int.tryParse(json['setNumber']?.toString() ?? '') ?? 1,
+        sideAGames: json['sideAGames'] is int ? json['sideAGames'] : int.tryParse(json['sideAGames']?.toString() ?? '') ?? 0,
+        sideBGames: json['sideBGames'] is int ? json['sideBGames'] : int.tryParse(json['sideBGames']?.toString() ?? '') ?? 0,
+        tiebreakSideAPoints: json['tiebreakSideAPoints'] is int ? json['tiebreakSideAPoints'] : int.tryParse(json['tiebreakSideAPoints']?.toString() ?? '') ?? 0,
+        tiebreakSideBPoints: json['tiebreakSideBPoints'] is int ? json['tiebreakSideBPoints'] : int.tryParse(json['tiebreakSideBPoints']?.toString() ?? '') ?? 0,
+        isTiebreak: json['isTiebreak'] == true || json['isTiebreak'] == 1,
+        isCompleted: json['isCompleted'] == true || json['isCompleted'] == 1,
+        winnerSide: json['winnerSide']?.toString(),
       );
 }
 
@@ -228,15 +228,15 @@ class TennisMatchConfig {
 
   factory TennisMatchConfig.fromJson(Map<String, dynamic> json) =>
       TennisMatchConfig(
-        format: json['format'] ?? 'SINGLES',
-        setsFormat: json['setsFormat'] ?? 'BEST_OF_3',
-        isFriendlyMode: json['isFriendlyMode'] ?? false,
-        gamesPerSet: json['gamesPerSet'] ?? 6,
-        tiebreakTarget: json['tiebreakTarget'] ?? 7,
-        noAdScoring: json['noAdScoring'] ?? false,
-        finalSetFormat: json['finalSetFormat'] ?? 'STANDARD_TIEBREAK',
-        homeTeamName: json['homeTeamName'] ?? 'Team A',
-        awayTeamName: json['awayTeamName'] ?? 'Team B',
+        format: json['format']?.toString() ?? 'SINGLES',
+        setsFormat: json['setsFormat']?.toString() ?? 'BEST_OF_3',
+        isFriendlyMode: json['isFriendlyMode'] == true || json['isFriendlyMode'] == 1,
+        gamesPerSet: json['gamesPerSet'] is int ? json['gamesPerSet'] : int.tryParse(json['gamesPerSet']?.toString() ?? '') ?? 6,
+        tiebreakTarget: json['tiebreakTarget'] is int ? json['tiebreakTarget'] : int.tryParse(json['tiebreakTarget']?.toString() ?? '') ?? 7,
+        noAdScoring: json['noAdScoring'] == true || json['noAdScoring'] == 1,
+        finalSetFormat: json['finalSetFormat']?.toString() ?? 'STANDARD_TIEBREAK',
+        homeTeamName: json['homeTeamName']?.toString() ?? 'Team A',
+        awayTeamName: json['awayTeamName']?.toString() ?? 'Team B',
       );
 }
 
@@ -286,19 +286,19 @@ class TennisPointEvent {
 
   factory TennisPointEvent.fromJson(Map<String, dynamic> json) =>
       TennisPointEvent(
-        id: json['id'] ?? const Uuid().v4(),
-        winnerSide: json['winnerSide'] ?? 'A',
-        outcomeType: json['outcomeType'] ?? 'normalPoint',
-        serverSide: json['serverSide'] ?? 'A',
-        serverPlayerIndex: json['serverPlayerIndex'] ?? 0,
-        servingCourt: json['servingCourt'] ?? 'DEUCE',
-        isSecondServe: json['isSecondServe'] ?? false,
-        setNumber: json['setNumber'] ?? 1,
-        gameNumberInSet: json['gameNumberInSet'] ?? 1,
-        scoreBefore: json['scoreBefore'] ?? '0-0',
-        scoreAfter: json['scoreAfter'] ?? '0-0',
+        id: json['id']?.toString() ?? 'player_${DateTime.now().millisecondsSinceEpoch}',
+        winnerSide: json['winnerSide']?.toString() ?? 'A',
+        outcomeType: json['outcomeType']?.toString() ?? 'normalPoint',
+        serverSide: json['serverSide']?.toString() ?? 'A',
+        serverPlayerIndex: json['serverPlayerIndex'] is int ? json['serverPlayerIndex'] : int.tryParse(json['serverPlayerIndex']?.toString() ?? '') ?? 0,
+        servingCourt: json['servingCourt']?.toString() ?? 'DEUCE',
+        isSecondServe: json['isSecondServe'] == true || json['isSecondServe'] == 1,
+        setNumber: json['setNumber'] is int ? json['setNumber'] : int.tryParse(json['setNumber']?.toString() ?? '') ?? 1,
+        gameNumberInSet: json['gameNumberInSet'] is int ? json['gameNumberInSet'] : int.tryParse(json['gameNumberInSet']?.toString() ?? '') ?? 1,
+        scoreBefore: json['scoreBefore']?.toString() ?? '0-0',
+        scoreAfter: json['scoreAfter']?.toString() ?? '0-0',
         timestamp: json['timestamp'] != null
-            ? DateTime.parse(json['timestamp'])
+            ? DateTime.tryParse(json['timestamp'].toString()) ?? DateTime.now()
             : DateTime.now(),
       );
 }
@@ -444,39 +444,40 @@ class TennisMatchState {
 
   factory TennisMatchState.fromJson(Map<String, dynamic> json) =>
       TennisMatchState(
-        sideAPointScore: json['sideAPointScore'] ?? '0',
-        sideBPointScore: json['sideBPointScore'] ?? '0',
-        sideAPointCount: json['sideAPointCount'] ?? 0,
-        sideBPointCount: json['sideBPointCount'] ?? 0,
-        sideATiebreakPoints: json['sideATiebreakPoints'] ?? 0,
-        sideBTiebreakPoints: json['sideBTiebreakPoints'] ?? 0,
-        isTiebreak: json['isTiebreak'] ?? false,
-        isMatchTiebreak: json['isMatchTiebreak'] ?? false,
-        currentSetIndex: json['currentSetIndex'] ?? 0,
+        sideAPointScore: json['sideAPointScore']?.toString() ?? '0',
+        sideBPointScore: json['sideBPointScore']?.toString() ?? '0',
+        sideAPointCount: json['sideAPointCount'] is int ? json['sideAPointCount'] : int.tryParse(json['sideAPointCount']?.toString() ?? '') ?? 0,
+        sideBPointCount: json['sideBPointCount'] is int ? json['sideBPointCount'] : int.tryParse(json['sideBPointCount']?.toString() ?? '') ?? 0,
+        sideATiebreakPoints: json['sideATiebreakPoints'] is int ? json['sideATiebreakPoints'] : int.tryParse(json['sideATiebreakPoints']?.toString() ?? '') ?? 0,
+        sideBTiebreakPoints: json['sideBTiebreakPoints'] is int ? json['sideBTiebreakPoints'] : int.tryParse(json['sideBTiebreakPoints']?.toString() ?? '') ?? 0,
+        isTiebreak: json['isTiebreak'] == true || json['isTiebreak'] == 1,
+        isMatchTiebreak: json['isMatchTiebreak'] == true || json['isMatchTiebreak'] == 1,
+        currentSetIndex: json['currentSetIndex'] is int ? json['currentSetIndex'] : int.tryParse(json['currentSetIndex']?.toString() ?? '') ?? 0,
         setScores: (json['setScores'] as List? ?? [])
-            .map((s) => SetScore.fromJson(Map<String, dynamic>.from(s)))
+            .map((s) => SetScore.fromJson(Map<String, dynamic>.from(s is String ? jsonDecode(s) : s)))
             .toList(),
-        sideASetsWon: json['sideASetsWon'] ?? 0,
-        sideBSetsWon: json['sideBSetsWon'] ?? 0,
-        servingSide: json['servingSide'] ?? 'A',
-        servingPlayerIndex: json['servingPlayerIndex'] ?? 0,
-        servingCourt: json['servingCourt'] ?? 'DEUCE',
-        isSecondServe: json['isSecondServe'] ?? false,
-        isEndsSwitched: json['isEndsSwitched'] ?? false,
-        matchStatus: json['matchStatus'] ?? 'INITIALIZING',
-        matchResult: json['matchResult'] ?? '',
-        matchConfig: TennisMatchConfig.fromJson(
-            Map<String, dynamic>.from(json['matchConfig'] ?? {})),
+        sideASetsWon: json['sideASetsWon'] is int ? json['sideASetsWon'] : int.tryParse(json['sideASetsWon']?.toString() ?? '') ?? 0,
+        sideBSetsWon: json['sideBSetsWon'] is int ? json['sideBSetsWon'] : int.tryParse(json['sideBSetsWon']?.toString() ?? '') ?? 0,
+        servingSide: json['servingSide']?.toString() ?? 'A',
+        servingPlayerIndex: json['servingPlayerIndex'] is int ? json['servingPlayerIndex'] : int.tryParse(json['servingPlayerIndex']?.toString() ?? '') ?? 0,
+        servingCourt: json['servingCourt']?.toString() ?? 'DEUCE',
+        isSecondServe: json['isSecondServe'] == true || json['isSecondServe'] == 1,
+        isEndsSwitched: json['isEndsSwitched'] == true || json['isEndsSwitched'] == 1,
+        matchStatus: json['matchStatus']?.toString() ?? 'INITIALIZING',
+        matchResult: json['matchResult']?.toString() ?? '',
+        matchConfig: json['matchConfig'] != null
+            ? TennisMatchConfig.fromJson(Map<String, dynamic>.from(json['matchConfig'] is String ? jsonDecode(json['matchConfig']) : json['matchConfig']))
+            : const TennisMatchConfig(),
         sideAPlayers: (json['sideAPlayers'] as List? ?? [])
-            .map((p) => TennisPlayer.fromJson(Map<String, dynamic>.from(p)))
+            .map((p) => TennisPlayer.fromJson(Map<String, dynamic>.from(p is String ? jsonDecode(p) : p)))
             .toList(),
         sideBPlayers: (json['sideBPlayers'] as List? ?? [])
-            .map((p) => TennisPlayer.fromJson(Map<String, dynamic>.from(p)))
+            .map((p) => TennisPlayer.fromJson(Map<String, dynamic>.from(p is String ? jsonDecode(p) : p)))
             .toList(),
         history: (json['history'] as List? ?? [])
-            .map((e) => TennisPointEvent.fromJson(Map<String, dynamic>.from(e)))
+            .map((e) => TennisPointEvent.fromJson(Map<String, dynamic>.from(e is String ? jsonDecode(e) : e)))
             .toList(),
-        tossWinner: json['tossWinner'] ?? '',
-        tossDecision: json['tossDecision'] ?? '',
+        tossWinner: json['tossWinner']?.toString() ?? '',
+        tossDecision: json['tossDecision']?.toString() ?? '',
       );
 }

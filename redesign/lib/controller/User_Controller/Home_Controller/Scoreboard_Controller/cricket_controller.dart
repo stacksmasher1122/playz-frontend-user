@@ -186,6 +186,8 @@ class CricketController extends GetxController {
     Get.to(() => CoinFlipScreen());
   }
 
+  void startMatchFromSetup() => goToToss();
+
   // ════════════════════ MATCH LIFECYCLE ════════════════════
 
   Future<void> finalizeMatchAndStart(

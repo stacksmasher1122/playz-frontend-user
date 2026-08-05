@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_state_models.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_scoreboard/widgets/advanced_actions_grid.dart';
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 import 'package:redesign/view/USER/Home/scoreboard_screen/scoreboards_screen.dart';
+import 'package:redesign/common/common_match_end_sheet.dart';
 
 // Internal Imports
 import 'widgets/scoreboard_header.dart';
@@ -193,337 +195,152 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
 
   // Workflows & Dialogs
   void _showInningsBreakDialog() {
-    int target = totalRuns + 1;
-    int timeLeft = 60;
-    Timer? countdownTimer;
+    final bool canUndoInningsBreak =
+        !controller.hasInningsBreakUndoBeenUsed.value &&
+        controller.engine.canUndo;
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            countdownTimer ??= Timer.periodic(const Duration(seconds: 1), (
-              timer,
-            ) {
-              if (timeLeft > 0) {
-                if (mounted) {
-                  setState(() {
-                    timeLeft--;
-                  });
-                }
-              } else {
-                timer.cancel();
-                if (Navigator.canPop(dialogContext)) {
-                  Navigator.pop(dialogContext);
-                }
-                controller.startSecondInnings();
-              }
-            });
+    final target = totalRuns + 1;
+    final highlights = <MatchHighlightItem>[];
+    if (topBatter != null) {
+      highlights.add(MatchHighlightItem(
+        icon: Icons.sports_cricket,
+        iconColor: AppColors.accent,
+        label: '1st Innings Top Batter',
+        value: '${topBatter!.name} (${topBatter!.runs}r, ${topBatter!.ballsFaced}b)',
+      ));
+    }
+    if (topBowler != null) {
+      highlights.add(MatchHighlightItem(
+        icon: Icons.sports_baseball,
+        iconColor: const Color(0xFFFF6B6B),
+        label: '1st Innings Top Bowler',
+        value: '${topBowler!.name} (${topBowler!.wicketsTaken}w / ${topBowler!.runsConceded}r)',
+      ));
+    }
 
-            final bool canUndoInningsBreak =
-                !controller.hasInningsBreakUndoBeenUsed.value &&
-                controller.engine.canUndo;
-
-            final String formattedTime =
-                '00:${timeLeft.toString().padLeft(2, '0')}';
-
-            return AlertDialog(
-              backgroundColor: AppColors.surface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              title: Row(
-                children: [
-                  const Icon(Icons.pause_circle_outline_rounded, color: AppColors.accent),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Innings Break',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '1st Innings Ended: ${s.matchConfig.battingTeamName} scored $totalRuns/$wickets',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: ResponsiveHelper.sp(14),
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Target for ${s.matchConfig.bowlingTeamName} is $target runs',
-                    style: TextStyle(
-                      color: AppColors.accent,
-                      fontSize: ResponsiveHelper.sp(16),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.timer_outlined, color: AppColors.muted, size: 18),
-                        const SizedBox(width: 6),
-                        Text(
-                          '2nd Innings starts in $formattedTime',
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (!canUndoInningsBreak && controller.hasInningsBreakUndoBeenUsed.value) ...[
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Innings-break undo already used (1/1)',
-                      style: TextStyle(color: AppColors.muted, fontSize: 11, fontStyle: FontStyle.italic),
-                    ),
-                  ],
-                ],
-              ),
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              actions: [
-                if (canUndoInningsBreak)
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.error.withValues(alpha: 0.2),
-                      foregroundColor: AppColors.error,
-                      elevation: 0,
-                      side: const BorderSide(color: AppColors.error, width: 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    onPressed: () {
-                      controller.hasInningsBreakUndoBeenUsed.value = true;
-                      countdownTimer?.cancel();
-                      Navigator.pop(dialogContext);
-                      _undo();
-                      Get.snackbar(
-                        'Undone',
-                        'Last ball undone. You can now correct the 1st innings final delivery.',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: AppColors.surface,
-                        colorText: Colors.white,
-                      );
-                    },
-                    icon: const Icon(Icons.undo_rounded, size: 18),
-                    label: const Text(
-                      'UNDO LAST BALL',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                else
-                  const SizedBox.shrink(),
-                TextButton(
-                  onPressed: () {
-                    countdownTimer?.cancel();
-                    Navigator.pop(dialogContext);
-                    controller.startSecondInnings();
-                  },
-                  child: const Text(
-                    'START 2ND INNINGS',
-                    style: TextStyle(
-                      color: AppColors.accent,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
+    CommonMatchEndSheet.showInningsBreak(
+      context,
+      title: '1ST INNINGS COMPLETED',
+      targetText: 'Target for ${s.matchConfig.bowlingTeamName}: $target runs',
+      team1Name: s.matchConfig.battingTeamName,
+      team1Score: '$totalRuns/$wickets ($oversDisplay ov)',
+      team2Name: s.matchConfig.bowlingTeamName,
+      team2Score: 'Target: $target runs',
+      highlights: highlights,
+      canUndo: canUndoInningsBreak,
+      undoButtonText: 'UNDO LAST BALL',
+      finishButtonText: 'START 2ND INNINGS',
+      timerPrefix: '2nd Innings starts in',
+      onUndo: () {
+        controller.hasInningsBreakUndoBeenUsed.value = true;
+        _undo();
+        Get.snackbar(
+          'Undone',
+          'Last ball undone. You can now correct the 1st innings final delivery.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.cardSurface,
+          colorText: Colors.white,
         );
       },
-    ).then((_) {
-      countdownTimer?.cancel();
-    });
+      onFinish: () {
+        controller.startSecondInnings();
+      },
+    );
   }
 
   void _endMatch() {
-    int timeLeft = 60;
-    Timer? countdownTimer;
+    final bool canUndoMatchEnd =
+        !controller.hasMatchEndUndoBeenUsed.value && controller.engine.canUndo;
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            countdownTimer ??= Timer.periodic(const Duration(seconds: 1), (
-              timer,
-            ) {
-              if (timeLeft > 0) {
-                if (mounted) {
-                  setState(() {
-                    timeLeft--;
-                  });
-                }
-              } else {
-                timer.cancel();
-                if (Navigator.canPop(dialogContext)) {
-                  Navigator.pop(dialogContext);
-                }
-                Get.offAll(() => const ScoreboardHubScreen());
-              }
-            });
+    final highlights = <MatchHighlightItem>[];
+    if (topBatter != null) {
+      highlights.add(MatchHighlightItem(
+        icon: Icons.sports_cricket,
+        iconColor: AppColors.accent,
+        label: 'Top Batter',
+        value: '${topBatter!.name} (${topBatter!.runs}r, ${topBatter!.ballsFaced}b)',
+      ));
+    }
+    if (topBowler != null) {
+      highlights.add(MatchHighlightItem(
+        icon: Icons.sports_baseball,
+        iconColor: const Color(0xFFFF6B6B),
+        label: 'Top Bowler',
+        value: '${topBowler!.name} (${topBowler!.wicketsTaken}w / ${topBowler!.runsConceded}r)',
+      ));
+    }
 
-            final bool canUndoMatchEnd =
-                !controller.hasMatchEndUndoBeenUsed.value &&
-                controller.engine.canUndo;
-
-            final String formattedTime =
-                '00:${timeLeft.toString().padLeft(2, '0')}';
-
-            return AlertDialog(
-              backgroundColor: AppColors.surface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              title: Row(
-                children: [
-                  const Icon(Icons.emoji_events_rounded, color: AppColors.coinsGold),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Match Completed',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    matchResult,
-                    style: TextStyle(
-                      color: AppColors.accent,
-                      fontSize: ResponsiveHelper.sp(18),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.timer_outlined, color: AppColors.muted, size: 18),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Finalizing in $formattedTime',
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (!canUndoMatchEnd && controller.hasMatchEndUndoBeenUsed.value) ...[
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Match-end undo already used (1/1)',
-                      style: TextStyle(color: AppColors.muted, fontSize: 11, fontStyle: FontStyle.italic),
-                    ),
-                  ],
-                ],
-              ),
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              actions: [
-                if (canUndoMatchEnd)
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.error.withValues(alpha: 0.2),
-                      foregroundColor: AppColors.error,
-                      elevation: 0,
-                      side: const BorderSide(color: AppColors.error, width: 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    onPressed: () {
-                      controller.hasMatchEndUndoBeenUsed.value = true;
-                      countdownTimer?.cancel();
-                      Navigator.pop(dialogContext);
-                      _undo();
-                      Get.snackbar(
-                        'Undone',
-                        'Last ball undone. You can now re-enter or correct the delivery.',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: AppColors.surface,
-                        colorText: Colors.white,
-                      );
-                    },
-                    icon: const Icon(Icons.undo_rounded, size: 18),
-                    label: const Text(
-                      'UNDO LAST BALL',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                else
-                  const SizedBox.shrink(),
-                TextButton(
-                  onPressed: () {
-                    countdownTimer?.cancel();
-                    Navigator.pop(dialogContext);
-                    Get.offAll(() => const ScoreboardHubScreen());
-                  },
-                  child: const Text(
-                    'FINISH NOW',
-                    style: TextStyle(
-                      color: AppColors.accent,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
+    CommonMatchEndSheet.show(
+      context,
+      title: 'MATCH COMPLETED',
+      resultBannerText: matchResult,
+      team1Name: s.matchConfig.bowlingTeamName,
+      team1Score: '${targetScore != null ? targetScore! - 1 : totalRuns} runs',
+      team2Name: s.matchConfig.battingTeamName,
+      team2Score: '$totalRuns/$wickets ($oversDisplay ov)',
+      highlights: highlights,
+      canUndo: canUndoMatchEnd,
+      undoButtonText: 'UNDO LAST BALL',
+      finishButtonText: 'FINISH MATCH',
+      onUndo: () {
+        controller.hasMatchEndUndoBeenUsed.value = true;
+        _undo();
+        Get.snackbar(
+          'Undone',
+          'Last ball undone. You can now re-enter or correct the delivery.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.cardSurface,
+          colorText: Colors.white,
         );
       },
-    ).then((_) {
-      countdownTimer?.cancel();
-    });
+      onFinish: () {
+        Get.offAll(() => const ScoreboardHubScreen());
+      },
+    );
   }
 
   String get currentPhase => s.currentPhase;
 
+  Player? get topBatter {
+    final allBatters = [...s.battingTeam, ...s.bowlingTeam];
+    if (allBatters.isEmpty) return null;
+    allBatters.sort((a, b) => b.runs.compareTo(a.runs));
+    return allBatters.first.runs > 0 ? allBatters.first : null;
+  }
+
+  Player? get topBowler {
+    final allBowlers = [...s.battingTeam, ...s.bowlingTeam];
+    if (allBowlers.isEmpty) return null;
+    allBowlers.sort((a, b) {
+      final wComp = b.wicketsTaken.compareTo(a.wicketsTaken);
+      if (wComp != 0) return wComp;
+      return a.runsConceded.compareTo(b.runsConceded);
+    });
+    return allBowlers.first.wicketsTaken > 0 ? allBowlers.first : null;
+  }
+
   String get matchResult {
-    if (s.matchResult != null) return s.matchResult!;
-    if (matchStatus != 'MATCH_COMPLETED' || targetScore == null) return '';
-    final totalBatters = s.battingTeam.length;
-    final wicketsRemaining = (totalBatters - 1) - wickets;
-    if (totalRuns >= targetScore!) {
-      return controller.currentMatch.value != null
-          ? '${controller.currentMatch.value!.bowlingFirstTeam} won by $wicketsRemaining wickets'
-          : 'Batting team won by $wicketsRemaining wickets';
-    } else {
-      final runsTarget = targetScore! - totalRuns;
-      return controller.currentMatch.value != null
-          ? '${controller.currentMatch.value!.battingFirstTeam} won by ${runsTarget - 1} runs'
-          : 'Bowling team won by ${runsTarget - 1} runs';
+    if (s.matchResult != null && s.matchResult!.isNotEmpty) return s.matchResult!;
+    if (matchStatus != 'MATCH_COMPLETED') return '';
+
+    final batTeam = s.matchConfig.battingTeamName;
+    final bowlTeam = s.matchConfig.bowlingTeamName;
+
+    if (targetScore != null) {
+      final maxW = controller.engine.maxWickets;
+      final wicketsRemaining = maxW - wickets;
+
+      if (totalRuns >= targetScore!) {
+        final wRem = wicketsRemaining > 0 ? wicketsRemaining : 1;
+        return '$batTeam won by $wRem wicket${wRem != 1 ? 's' : ''}';
+      } else if (totalRuns == targetScore! - 1) {
+        return 'Match Tied';
+      } else {
+        final runsMargin = (targetScore! - 1) - totalRuns;
+        return '$bowlTeam won by $runsMargin run${runsMargin != 1 ? 's' : ''}';
+      }
     }
+    return 'Match Completed';
   }
 
   void _showBowlerChangeDialog() {
@@ -1300,12 +1117,14 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
           if (matchStatus == 'INITIALIZING' ||
               (matchStatus == 'LIVE_INNINGS_2' && striker == null)) {
             return SafeArea(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: SetupWizardCard(
-                  controller: controller,
-                  battingTeam: battingTeam,
-                  bowlingTeam: bowlingTeam,
+              child: Center(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: SetupWizardCard(
+                    controller: controller,
+                    battingTeam: battingTeam,
+                    bowlingTeam: bowlingTeam,
+                  ),
                 ),
               ),
             );

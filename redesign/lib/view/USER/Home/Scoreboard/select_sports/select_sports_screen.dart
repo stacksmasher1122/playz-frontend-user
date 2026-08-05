@@ -5,8 +5,19 @@ import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_setup/cricket
 import 'package:redesign/view/USER/Home/Scoreboard/Football/create_match/football_create_match_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Tennis/tennis_setup_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Table_Tennis/table_tennis_setup_screen.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/scored/pickleball_initialize_match_screen.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/volleyball_initialize_match_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Squash/squash_setup/squash_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Kabaddi/kabaddi_setup/kabaddi_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Basketball/basketball_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/volleyball_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Hockey/hockey_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Kho_Kho/khokho_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/pickleball_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Boxing/boxing_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Wrestling/wrestling_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Karate/karate_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Judo/judo_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Taekwondo/taekwondo_setup_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/MuayThai/muay_thai_setup_screen.dart';
 // Widgets
 import 'widgets/select_sport_app_bar.dart';
 import 'widgets/select_sport_search_bar.dart';
@@ -31,7 +42,6 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
   final Map<String, bool> expanded = {
     'Team Sports': true,
     'Racquet & Net': false,
-    'Indoor & Board': false,
     'Fitness & Combat': false,
   };
 
@@ -59,36 +69,39 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           ).push(MaterialPageRoute(builder: (_) => FootballCreateMatchScreen())),
         ),
         SportItem(
-          'Box Cricket',
-          Icons.sports_baseball,
-          onTap: () => _openSetup('Box Cricket'),
-        ),
-        SportItem(
           'Kabaddi',
-          Icons.sports_martial_arts,
-          onTap: () => _openSetup('Kabaddi'),
+          Icons.sports_kabaddi,
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => KabaddiSetupScreen())),
         ),
         SportItem(
           'Basketball',
           Icons.sports_basketball,
-          onTap: () => _openSetup('Basketball'),
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const BasketballSetupScreen())),
         ),
         SportItem(
           'Volleyball',
           Icons.sports_volleyball,
           onTap: () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (_) => VolleyballInitializeMatchScreen())),
+          ).push(MaterialPageRoute(builder: (_) => const VolleyballSetupScreen())),
         ),
         SportItem(
           'Hockey',
           Icons.sports_hockey,
-          onTap: () => _openSetup('Hockey'),
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const HockeySetupScreen())),
         ),
         SportItem(
           'Kho Kho',
           Icons.directions_run,
-          onTap: () => _openSetup('Kho Kho'),
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const KhoKhoSetupScreen())),
         ),
       ],
       'Racquet & Net': [
@@ -120,62 +133,76 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
         SportItem(
           'Squash',
           Icons.sports_handball,
-          onTap: () => _openSetup('Squash'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SquashSetupScreen(),
+            ),
+          ),
         ),
         SportItem(
           'Pickleball',
           Icons.sports_tennis,
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => PickleballInitializeMatchScreen(),
+              builder: (_) => const PickleballSetupScreen(),
             ),
           ),
         ),
       ],
-      'Indoor & Board': [
-        SportItem(
-          'Carrom',
-          Icons.circle_outlined,
-          onTap: () => _openSetup('Carrom'),
-        ),
-        SportItem('Chess', Icons.grid_on, onTap: () => _openSetup('Chess')),
-        SportItem(
-          'Snooker',
-          Icons.sports_esports,
-          onTap: () => _openSetup('Snooker'),
-        ),
-      ],
       'Fitness & Combat': [
-        SportItem(
-          'Workout',
-          Icons.fitness_center,
-          onTap: () => _openSetup('Workout'),
-        ),
-        SportItem(
-          'Running',
-          Icons.directions_run,
-          onTap: () => _openSetup('Running'),
-        ),
-        SportItem(
-          'Yoga',
-          Icons.self_improvement,
-          onTap: () => _openSetup('Yoga'),
-        ),
-        SportItem('Swimming', Icons.pool, onTap: () => _openSetup('Swimming')),
-        SportItem(
-          'Cycling',
-          Icons.directions_bike,
-          onTap: () => _openSetup('Cycling'),
-        ),
-        SportItem(
-          'Wrestling',
-          Icons.sports_martial_arts,
-          onTap: () => _openSetup('Wrestling'),
-        ),
         SportItem(
           'Boxing',
           Icons.sports_mma,
-          onTap: () => _openSetup('Boxing'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const BoxingSetupScreen(),
+            ),
+          ),
+        ),
+        SportItem(
+          'Wrestling',
+          Icons.sports_kabaddi,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const WrestlingSetupScreen(),
+            ),
+          ),
+        ),
+        SportItem(
+          'Karate',
+          Icons.sports_martial_arts,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const KarateSetupScreen(),
+            ),
+          ),
+        ),
+        SportItem(
+          'Judo',
+          Icons.sports_martial_arts,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const JudoSetupScreen(),
+            ),
+          ),
+        ),
+        SportItem(
+          'Taekwondo',
+          Icons.sports_martial_arts,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const TaekwondoSetupScreen(),
+            ),
+          ),
+        ),
+        SportItem(
+          'Muay Thai',
+          Icons.sports_mma,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const MuayThaiSetupScreen(),
+            ),
+          ),
         ),
       ],
     };
@@ -194,6 +221,13 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
     if (sport == 'Table Tennis') {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => TableTennisSetupScreen()),
+      );
+      return;
+    }
+
+    if (sport == 'Squash') {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => SquashSetupScreen()),
       );
       return;
     }

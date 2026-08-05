@@ -2,8 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/match_result/match_result_screen.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/statistics/pickleball_stats_screen.dart';
+import 'package:redesign/view/USER/Home/scoreboard_screen/scoreboards_screen.dart';
 import 'package:uuid/uuid.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/pickleball_rule_engine.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/live_pickleball_match_model.dart';
@@ -403,10 +402,11 @@ class LivePickleballMatchController extends GetxController {
       return;
     }
 
-    if (isTeamA)
+    if (isTeamA) {
       teamAChallengesUsed.value++;
-    else
+    } else {
       teamBChallengesUsed.value++;
+    }
 
     _logEvent(
       "${isTeamA ? 'Team A' : 'Team B'} Challenged a Call",
@@ -501,10 +501,10 @@ class LivePickleballMatchController extends GetxController {
               finishMatch();
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => MatchResultScreen()),
+                MaterialPageRoute(builder: (_) => const ScoreboardHubScreen()),
               );
             },
-            child: Text("End Match", style: TextStyle(color: Colors.white)),
+            child: const Text("End Match", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -526,10 +526,7 @@ class LivePickleballMatchController extends GetxController {
   }
 
   void goToStats() {
-    Navigator.push(
-      Get.context!,
-      MaterialPageRoute(builder: (_) => PickleballStatsScreen()),
-    );
+    showSuccess("Statistics Tab");
   }
 
   void goToPlayers() => showSuccess("Navigating to Players");

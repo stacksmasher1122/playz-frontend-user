@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/live_pickleball_match_model.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/pickleball_sync_service.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/live_pickleball_match_controller.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/live_match/live_pickleball_match_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/live_match/pickleball_scoreboard_screen.dart';
 import 'package:flutter/material.dart';
 
 class PickleballMatchHistoryController extends GetxController {
@@ -22,8 +22,7 @@ class PickleballMatchHistoryController extends GetxController {
     try {
       var offlineMatches = await _syncService.getOfflineMatches();
       matches.assignAll(offlineMatches);
-    } catch (e) {
-      print("Error fetching match history: $e");
+    } catch (_) {
     } finally {
       isLoading.value = false;
     }
@@ -45,6 +44,6 @@ class PickleballMatchHistoryController extends GetxController {
     liveController.loadMatch(match);
     
     // Navigate to Live Screen
-    Get.to(() => LivePickleballMatchScreen());
+    Get.to(() => const PickleballScoreboardScreen());
   }
 }

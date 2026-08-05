@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../cricket_setup_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class RulesSwitchCard extends StatelessWidget {
@@ -18,7 +18,7 @@ class RulesSwitchCard extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: kSurface,
+        color: AppColors.cardSurface,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
       ),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
@@ -32,7 +32,7 @@ class RulesSwitchCard extends StatelessWidget {
             ),
             child: Icon(
               Icons.gavel_rounded,
-              color: kRed,
+              color: const Color(0xFFFF6B6B),
               size: 24,
             ),
           ),
@@ -53,7 +53,7 @@ class RulesSwitchCard extends StatelessWidget {
                 Text(
                   'Disable to allow single\nbatter (Last Man Standing)',
                   style: TextStyle(
-                    color: kMutedText,
+                    color: AppColors.mutedText,
                     fontSize: ResponsiveHelper.sp(13),
                     height: ResponsiveHelper.h(1.2),
                   ),
@@ -66,8 +66,8 @@ class RulesSwitchCard extends StatelessWidget {
               value: valueStream.value,
               onChanged: onChanged,
               activeThumbColor: Colors.white,
-              activeTrackColor: kRed,
-              inactiveThumbColor: kMutedText,
+              activeTrackColor: const Color(0xFFFF6B6B),
+              inactiveThumbColor: AppColors.mutedText,
               inactiveTrackColor: Color(0xFF2C2C2C),
               thumbColor: WidgetStateProperty.resolveWith<Color>((
                 Set<WidgetState> states,
@@ -75,7 +75,7 @@ class RulesSwitchCard extends StatelessWidget {
                 if (states.contains(WidgetState.selected)) {
                   return Colors.black;
                 }
-                return kMutedText;
+                return AppColors.mutedText;
               }),
             ),
           ),

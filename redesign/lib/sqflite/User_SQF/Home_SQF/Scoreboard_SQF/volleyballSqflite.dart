@@ -1,150 +1,175 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_match_model.dart';
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_model.dart';
 
-class VolleyballSqflite {
-  static final VolleyballSqflite instance = VolleyballSqflite._init();
+class VolleyballSqfliteService {
   static Database? _database;
 
-  VolleyballSqflite._init();
-
-  Future<Database> get database async {
+  static Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('volleyball_matches.db');
+    _database = await _initDatabase();
     return _database!;
   }
 
-  Future<Database> _initDB(String filePath) async {
+  static Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, filePath);
+    final path = join(dbPath, 'volleyball_matches.db');
 
     return await openDatabase(
-      path, 
-      version: 3, 
-      onCreate: _createDB,
-      onUpgrade: _upgradeDB,
+      path,
+      version: 3,
+      onCreate: (db, version) async {
+        await _createTable(db);
+      },
+      onOpen: (db) async {
+        await _ensureColumnsExist(db);
+      },
     );
   }
 
-  Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      try {
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN lineupA TEXT');
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN lineupB TEXT');
-      } catch (e) {
-        // Columns might already exist if they manually dropped DB
-      }
-    }
-    if (oldVersion < 3) {
-      try {
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN scoreTeamA INTEGER DEFAULT 0');
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN scoreTeamB INTEGER DEFAULT 0');
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN setsTeamA INTEGER DEFAULT 0');
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN setsTeamB INTEGER DEFAULT 0');
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN currentSet INTEGER DEFAULT 1');
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN isTeamAServing INTEGER DEFAULT 1');
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN matchSeconds INTEGER DEFAULT 0');
-        await db.execute('ALTER TABLE volleyball_matches ADD COLUMN isPaused INTEGER DEFAULT 1');
-      } catch (e) {
-        // Columns might already exist
-      }
-    }
-  }
-
-  Future<void> _createDB(Database db, int version) async {
+  static Future<void> _createTable(Database db) async {
     await db.execute('''
-      CREATE TABLE volleyball_matches (
+      CREATE TABLE IF NOT EXISTS volleyball_matches (
         matchId TEXT PRIMARY KEY,
-        createdBy TEXT,
-        matchName TEXT,
-        tournament TEXT,
-        date TEXT,
-        time TEXT,
-        venue TEXT,
-        court TEXT,
-        referee TEXT,
-        assistantReferee TEXT,
-        category TEXT,
-        format TEXT,
-        pointsPerSet INTEGER,
-        finalSetPoints INTEGER,
-        timeouts INTEGER,
-        substitutions INTEGER,
-        technicalTimeout INTEGER,
-        liberoEnabled INTEGER,
-        challengeEnabled INTEGER,
-        videoReview INTEGER,
-        winByTwo INTEGER,
-        status TEXT,
+        userId TEXT,
+        homeTeam TEXT,
+        awayTeam TEXT,
+        homeSetsWon INTEGER,
+        awaySetsWon INTEGER,
+        currentSetDisplay TEXT,
+        isCompleted INTEGER,
+        matchResult TEXT,
+        engineState TEXT,
         createdAt TEXT,
-        homeTeamName TEXT,
-        awayTeamName TEXT,
-        homeCoachName TEXT,
-        awayCoachName TEXT,
-        homeTeamPlayers TEXT,
-        awayTeamPlayers TEXT,
-        metadata TEXT,
-        lineupA TEXT,
-        lineupB TEXT,
-        scoreTeamA INTEGER,
-        scoreTeamB INTEGER,
-        setsTeamA INTEGER,
-        setsTeamB INTEGER,
-        currentSet INTEGER,
-        isTeamAServing INTEGER,
-        matchSeconds INTEGER,
-        isPaused INTEGER
+        updatedAt TEXT
       )
     ''');
   }
 
-  Future<void> insertMatch(VolleyballMatchModel match) async {
-    final db = await instance.database;
-    await db.insert(
-      'volleyball_matches',
-      match.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+  static Future<void> _ensureColumnsExist(Database db) async {
+    await _createTable(db);
+    try {
+      final pragmaInfo = await db.rawQuery('PRAGMA table_info(volleyball_matches);');
+      final existingColumns = pragmaInfo.map((c) => c['name'] as String).toSet();
+
+      final requiredColumns = {
+        'userId': 'TEXT',
+        'homeTeam': 'TEXT',
+        'awayTeam': 'TEXT',
+        'homeSetsWon': 'INTEGER',
+        'awaySetsWon': 'INTEGER',
+        'currentSetDisplay': 'TEXT',
+        'isCompleted': 'INTEGER',
+        'matchResult': 'TEXT',
+        'engineState': 'TEXT',
+        'createdAt': 'TEXT',
+        'updatedAt': 'TEXT',
+      };
+
+      for (final entry in requiredColumns.entries) {
+        if (!existingColumns.contains(entry.key)) {
+          try {
+            await db.execute('ALTER TABLE volleyball_matches ADD COLUMN ${entry.key} ${entry.value};');
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
   }
 
-  Future<VolleyballMatchModel?> getMatch(String id) async {
-    final db = await instance.database;
-    final maps = await db.query(
-      'volleyball_matches',
-      where: 'matchId = ?',
-      whereArgs: [id],
-    );
-    if (maps.isNotEmpty) {
-      return VolleyballMatchModel.fromMap(maps.first);
+  static Future<int> insertMatch(VolleyballMatchModel match) async {
+    final db = await database;
+    try {
+      return await db.insert(
+        'volleyball_matches',
+        match.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } catch (_) {
+      await _ensureColumnsExist(db);
+      return await db.insert(
+        'volleyball_matches',
+        match.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     }
+  }
+
+  static Future<int> updateMatch(VolleyballMatchModel match) async {
+    final db = await database;
+    try {
+      return await db.update(
+        'volleyball_matches',
+        match.toMap(),
+        where: 'matchId = ?',
+        whereArgs: [match.matchId],
+      );
+    } catch (_) {
+      await _ensureColumnsExist(db);
+      return await db.update(
+        'volleyball_matches',
+        match.toMap(),
+        where: 'matchId = ?',
+        whereArgs: [match.matchId],
+      );
+    }
+  }
+
+  static Future<VolleyballMatchModel?> getMatchById(String matchId) async {
+    final db = await database;
+    try {
+      final List<Map<String, dynamic>> maps = await db.query(
+        'volleyball_matches',
+        where: 'matchId = ?',
+        whereArgs: [matchId],
+      );
+
+      if (maps.isNotEmpty) {
+        return VolleyballMatchModel.fromMap(maps.first);
+      }
+    } catch (_) {}
     return null;
   }
 
-  Future<List<VolleyballMatchModel>> getAllMatches() async {
-    final db = await instance.database;
-    final result = await db.query(
-      'volleyball_matches',
-      orderBy: 'createdAt DESC',
-    );
-    return result.map((json) => VolleyballMatchModel.fromMap(json)).toList();
+  static Future<List<VolleyballMatchModel>> getUnfinishedMatches() async {
+    final db = await database;
+    try {
+      final List<Map<String, dynamic>> maps = await db.query(
+        'volleyball_matches',
+        where: 'isCompleted = ?',
+        whereArgs: [0],
+        orderBy: 'updatedAt DESC',
+      );
+
+      return List.generate(maps.length, (i) => VolleyballMatchModel.fromMap(maps[i]));
+    } catch (_) {
+      return [];
+    }
   }
 
-  Future<int> updateMatch(VolleyballMatchModel match) async {
-    final db = await instance.database;
-    return db.update(
-      'volleyball_matches',
-      match.toMap(),
-      where: 'matchId = ?',
-      whereArgs: [match.matchId],
-    );
+  static Future<List<VolleyballMatchModel>> getAllMatches() async {
+    final db = await database;
+    try {
+      final List<Map<String, dynamic>> maps = await db.query(
+        'volleyball_matches',
+        orderBy: 'updatedAt DESC',
+      );
+
+      return List.generate(maps.length, (i) => VolleyballMatchModel.fromMap(maps[i]));
+    } catch (_) {
+      return [];
+    }
   }
 
-  Future<int> deleteMatch(String id) async {
-    final db = await instance.database;
-    return db.delete(
-      'volleyball_matches',
-      where: 'matchId = ?',
-      whereArgs: [id],
-    );
+  static Future<int> deleteMatch(String matchId) async {
+    final db = await database;
+    try {
+      return await db.delete(
+        'volleyball_matches',
+        where: 'matchId = ?',
+        whereArgs: [matchId],
+      );
+    } catch (_) {
+      return 0;
+    }
   }
 }

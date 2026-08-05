@@ -6,6 +6,8 @@ import 'package:vibration/vibration.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
+import 'package:redesign/common/common_toss_call_sheet.dart';
+import 'package:redesign/common/common_toss_decision_sheet.dart';
 
 // Widgets
 import 'widgets/coin_3d.dart';
@@ -368,98 +370,11 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
   }
 
   void _showCallTossBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isDismissible: false,
-      enableDrag: false,
-      backgroundColor: Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
-      ),
-      builder: (ctx) {
-        return PopScope(
-          canPop: false,
-          child: Padding(
-            padding: EdgeInsets.all(ResponsiveHelper.w(24.0)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'TOSS TIME',
-                  style: GoogleFonts.outfit(
-                    color: Colors.white54,
-                    fontSize: ResponsiveHelper.sp(14),
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  "$callerTeamName's Call",
-                  style: GoogleFonts.outfit(
-                    color: Colors.white,
-                    fontSize: ResponsiveHelper.sp(24),
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          callerPrediction = "HEADS";
-                          Navigator.pop(ctx);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFF7E7A1),
-                          foregroundColor: Colors.black,
-                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                          ),
-                        ),
-                        child: Text(
-                          'HEADS',
-                          style: TextStyle(
-                            fontSize: ResponsiveHelper.sp(18),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          callerPrediction = "TAILS";
-                          Navigator.pop(ctx);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFF7E7A1),
-                          foregroundColor: Colors.black,
-                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                          ),
-                        ),
-                        child: Text(
-                          'TAILS',
-                          style: TextStyle(
-                            fontSize: ResponsiveHelper.sp(18),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-              ],
-            ),
-          ),
-        );
+    CommonTossCallSheet.show(
+      context,
+      callerTeamName: callerTeamName,
+      onCallSelected: (prediction) {
+        callerPrediction = prediction;
       },
     );
   }
@@ -470,173 +385,37 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
     bool callerWon = (tossResult == callerPrediction);
     String winner = callerWon ? callerTeamName : otherTeamName;
 
-    showModalBottomSheet(
-      context: context,
-      isDismissible: false,
-      enableDrag: false,
-      backgroundColor: Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
-      ),
-      builder: (ctx) {
-        return PopScope(
-          canPop: false,
-          child: Padding(
-            padding: EdgeInsets.all(ResponsiveHelper.w(24.0)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'TOSS WON BY',
-                  style: GoogleFonts.outfit(
-                    color: Colors.white54,
-                    fontSize: ResponsiveHelper.sp(14),
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
+    CommonTossDecisionSheet.show(
+      context,
+      winingTeamName: winner,
+      sport: widget.sport,
+      onDecisionSelected: (decision) async {
+        try {
+          if (widget.onTossComplete != null) {
+            await widget.onTossComplete!(winner, decision);
+          } else {
+            final cCtrl = Get.find<CricketController>();
+            await cCtrl.finalizeMatchAndStart(winner, decision);
+            if (mounted) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CricketScoreboardScreen(),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  winner,
-                  style: GoogleFonts.outfit(
-                    color: Color(0xFF56F174),
-                    fontSize: ResponsiveHelper.sp(28),
-                    fontWeight: FontWeight.w800,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 12),
-                Text(
-                  'What will they do first?',
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
-                ),
-                SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          Navigator.pop(ctx);
-                          try {
-                            if (widget.onTossComplete != null) {
-                              await widget.onTossComplete!(
-                                  winner,
-                                  (widget.sport == 'badminton' ||
-                                          widget.sport == 'tennis' ||
-                                          widget.sport == 'table_tennis')
-                                      ? 'serve'
-                                      : 'bat');
-                            } else {
-                              final cCtrl = Get.find<CricketController>();
-                              await cCtrl.finalizeMatchAndStart(winner, 'bat');
-                              if (mounted) {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CricketScoreboardScreen(),
-                                  ),
-                                  (route) => false,
-                                );
-                              }
-                            }
-                          } catch (e) {
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Error: $e'),
-                                  backgroundColor: Colors.redAccent,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                          ),
-                        ),
-                        child: Text(
-                          (widget.sport == 'badminton' ||
-                                  widget.sport == 'tennis' ||
-                                  widget.sport == 'table_tennis')
-                              ? 'SERVE'
-                              : 'BAT',
-                          style: TextStyle(
-                            fontSize: ResponsiveHelper.sp(18),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          Navigator.pop(ctx);
-                          try {
-                            if (widget.onTossComplete != null) {
-                              await widget.onTossComplete!(
-                                  winner,
-                                  (widget.sport == 'badminton' ||
-                                          widget.sport == 'tennis' ||
-                                          widget.sport == 'table_tennis')
-                                      ? 'receive'
-                                      : 'bowl');
-                            } else {
-                              final cCtrl = Get.find<CricketController>();
-                              await cCtrl.finalizeMatchAndStart(winner, 'bowl');
-                              if (mounted) {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CricketScoreboardScreen(),
-                                  ),
-                                  (route) => false,
-                                );
-                              }
-                            }
-                          } catch (e) {
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Error: $e'),
-                                  backgroundColor: Colors.redAccent,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                          ),
-                        ),
-                        child: Text(
-                          (widget.sport == 'badminton' ||
-                                  widget.sport == 'tennis' ||
-                                  widget.sport == 'table_tennis')
-                              ? 'RECEIVE'
-                              : 'BOWL',
-                          style: TextStyle(
-                            fontSize: ResponsiveHelper.sp(18),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-              ],
-            ),
-          ),
-        );
+                (route) => false,
+              );
+            }
+          }
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error: $e'),
+                backgroundColor: Colors.redAccent,
+              ),
+            );
+          }
+        }
       },
     );
   }

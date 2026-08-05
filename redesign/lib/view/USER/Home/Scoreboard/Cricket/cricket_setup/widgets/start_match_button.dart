@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
-import '../cricket_setup_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class StartMatchButton extends StatelessWidget {
@@ -18,7 +18,7 @@ class StartMatchButton extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       padding: EdgeInsets.only(left: ResponsiveHelper.w(20), right: ResponsiveHelper.w(20), bottom: ResponsiveHelper.h(30), top: 10),
-      color: kBg,
+      color: AppColors.background,
       child: Obx(
         () => ElevatedButton(
           onPressed: controller.isLoading.value
@@ -42,9 +42,9 @@ class StartMatchButton extends StatelessWidget {
                   );
                 },
           style: ElevatedButton.styleFrom(
-            backgroundColor: kGreen,
+            backgroundColor: AppColors.accent,
             foregroundColor: Colors.black,
-            disabledBackgroundColor: kGreen.withValues(alpha: 0.5),
+            disabledBackgroundColor: AppColors.accent.withValues(alpha: 0.5),
             padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(20)),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ResponsiveHelper.w(30)),

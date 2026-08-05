@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 class ScoreboardHeader extends StatelessWidget {
@@ -150,22 +151,39 @@ class ScoreboardHeader extends StatelessWidget {
             ),
           ],
           if (matchStatus == 'MATCH_COMPLETED') ...[
-            SizedBox(height: ResponsiveHelper.h(8)),
+            SizedBox(height: ResponsiveHelper.h(10)),
             Container(
+              width: double.infinity,
               padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.w(16),
-                vertical: ResponsiveHelper.h(8),
+                horizontal: ResponsiveHelper.w(16.0),
+                vertical: ResponsiveHelper.h(10.0),
               ),
               decoration: BoxDecoration(
-                color: AppColors.accent.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                color: AppColors.accent.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+                border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
               ),
-              child: Text(
-                matchResult,
-                style: TextStyle(
-                  color: AppColors.accent,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.emoji_events_rounded,
+                    color: AppColors.accent,
+                    size: ResponsiveHelper.w(20.0),
+                  ),
+                  SizedBox(width: ResponsiveHelper.w(8.0)),
+                  Expanded(
+                    child: Text(
+                      matchResult,
+                      style: AppTypography.bodyMd.copyWith(
+                        color: AppColors.accent,
+                        fontSize: ResponsiveHelper.sp(14.0),
+                        fontWeight: FontWeight.bold,
+                      ).responsive(context),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

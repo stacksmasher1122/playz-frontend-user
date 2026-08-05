@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Pickleball/pickleball_player_model.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/final_review/pickleball_final_review_screen.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Pickleball/live_match/pickleball_scoreboard_screen.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Pickleball/pickleball_initialize_match_controller.dart';
 
 class PickleballTeamManagementController extends GetxController {
@@ -211,7 +211,7 @@ class PickleballTeamManagementController extends GetxController {
     if (isMatchReady) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => PickleballFinalReviewScreen()),
+        MaterialPageRoute(builder: (_) => const PickleballScoreboardScreen()),
       );
     } else {
       Get.snackbar(

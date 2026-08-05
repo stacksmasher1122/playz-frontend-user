@@ -52,7 +52,9 @@ class _UserAppNavShellState extends State<UserAppNavShell> {
         ? Get.find<UserNavController>()
         : Get.put(UserNavController());
     if (widget.initialIndex != 0) {
-      _navCtrl.changeTab(widget.initialIndex);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _navCtrl.changeTab(widget.initialIndex);
+      });
     }
 
     final mapsCtrl = Get.isRegistered<MapsController>()

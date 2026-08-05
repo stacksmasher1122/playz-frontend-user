@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
-import '../cricket_setup_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'friends_selection_sheet.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -30,7 +30,7 @@ class TeamCard extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: kSurface,
+        color: AppColors.cardSurface,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border(left: BorderSide(color: accentColor, width: 4)),
       ),
@@ -98,14 +98,14 @@ class TeamCard extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.person_add,
-                    color: kMutedText.withValues(alpha: 0.5),
+                    color: AppColors.mutedText.withValues(alpha: 0.5),
                   ),
                   SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Tap to add players from Friendlist',
                       style: TextStyle(
-                        color: kMutedText.withValues(alpha: 0.5),
+                        color: AppColors.mutedText.withValues(alpha: 0.5),
                         fontSize: ResponsiveHelper.sp(14),
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -141,7 +141,7 @@ class TeamCard extends StatelessWidget {
                     ),
                     deleteIcon: Icon(
                       Icons.close,
-                      color: kMutedText,
+                      color: AppColors.mutedText,
                       size: 16,
                     ),
                     onDeleted: () =>
@@ -163,7 +163,7 @@ class TeamCard extends StatelessWidget {
   void _showFriendsBottomSheet(BuildContext context, bool isHome) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: kSurface,
+      backgroundColor: AppColors.cardSurface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../cricket_setup_screen.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'circle_button.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
@@ -27,7 +27,7 @@ class StepperCard extends StatelessWidget {
     ResponsiveHelper.init(context);
     return Container(
       decoration: BoxDecoration(
-        color: kSurface,
+        color: AppColors.cardSurface,
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
       ),
       padding: EdgeInsets.all(ResponsiveHelper.w(20)),
@@ -41,7 +41,7 @@ class StepperCard extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    color: titleColor ?? kMutedText,
+                    color: titleColor ?? AppColors.mutedText,
                     fontSize: ResponsiveHelper.sp(11),
                     fontWeight: FontWeight.w800,
                     letterSpacing: 1.2,
@@ -72,7 +72,7 @@ class StepperCard extends StatelessWidget {
                 CircleButton(
                   icon: Icons.remove,
                   color: Color(0xFF2C2C2C),
-                  iconColor: kGreen,
+                  iconColor: AppColors.accent,
                   onTap: onDecrement,
                 ),
                 SizedBox(width: 16),
@@ -89,7 +89,7 @@ class StepperCard extends StatelessWidget {
                 SizedBox(width: 16),
                 CircleButton(
                   icon: Icons.add,
-                  color: kGreen,
+                  color: AppColors.accent,
                   iconColor: Colors.black,
                   onTap: onIncrement,
                 ),
