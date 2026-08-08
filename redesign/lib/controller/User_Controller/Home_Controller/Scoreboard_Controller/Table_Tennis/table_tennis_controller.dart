@@ -13,11 +13,15 @@ import '../../../../../shared_preferences/userPreferences.dart';
 import '../../../../../view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
 import '../../../../../view/USER/Home/Scoreboard/Table_Tennis/table_tennis_scoreboard_screen.dart';
 
+import '../../../../../common/common_select_players_sheet.dart';
+
 class TableTennisController extends GetxController {
   // ════════════════════ SETUP PARAMETERS ════════════════════
   var format = 'SINGLES'.obs; // 'SINGLES' or 'DOUBLES'
   var gamesFormat = 'BEST_OF_5'.obs; // 'BEST_OF_1', 'BEST_OF_3', 'BEST_OF_5', 'BEST_OF_7'
+  var setsFormat = 'BEST_OF_5'.obs;
   var isFriendlyMode = false.obs;
+  var isProRules = true.obs;
   var pointsPerGame = 11.obs; // 11 (Pro default) or 7 / 21 (Friendly)
 
   var homeTeamName = 'Player A'.obs;
@@ -104,20 +108,29 @@ class TableTennisController extends GetxController {
   }
 
   int get maxAllowedPlayers => format.value == 'DOUBLES' ? 2 : 1;
+  var homeTeamPlayerEmails = <String>[].obs;
+  var awayTeamPlayerEmails = <String>[].obs;
+
   List<String> get homeTeamPlayers => homeTeamRoster.map((f) => f.email).toList();
   List<String> get awayTeamPlayers => awayTeamRoster.map((f) => f.email).toList();
 
   void addTeamPlayer(bool isSideA, FriendModel friend) {
     final roster = isSideA ? homeTeamRoster : awayTeamRoster;
+    final emails = isSideA ? homeTeamPlayerEmails : awayTeamPlayerEmails;
+
     if (roster.any((p) => p.email == friend.email)) return;
     if (roster.length >= maxAllowedPlayers) {
       if (maxAllowedPlayers == 1) {
         roster.clear();
+        emails.clear();
       } else {
         roster.removeAt(0);
+        if (emails.isNotEmpty) emails.removeAt(0);
       }
     }
     roster.add(friend);
+    emails.add(friend.email);
+
     if (isSideA && (homeTeamName.value == 'Player A' || homeTeamName.value.isEmpty)) {
       homeTeamController.text = friend.fullName;
     } else if (!isSideA && (awayTeamName.value == 'Player B' || awayTeamName.value.isEmpty)) {
@@ -127,28 +140,71 @@ class TableTennisController extends GetxController {
 
   void removeTeamPlayer(bool isSideA, FriendModel friend) {
     final roster = isSideA ? homeTeamRoster : awayTeamRoster;
+    final emails = isSideA ? homeTeamPlayerEmails : awayTeamPlayerEmails;
+
     roster.removeWhere((p) => p.email == friend.email);
+    emails.remove(friend.email);
   }
 
   // ════════════════════ SETUP ACTIONS ════════════════════
   void setFormat(String newFormat) {
-    format.value = newFormat;
+    format.value = newFormat.toUpperCase();
+    if (format.value == 'SINGLES') {
+      if (homeTeamRoster.length > 1) {
+        homeTeamRoster.removeRange(1, homeTeamRoster.length);
+        homeTeamPlayerEmails.assignAll(homeTeamRoster.map((p) => p.email));
+      }
+      if (awayTeamRoster.length > 1) {
+        awayTeamRoster.removeRange(1, awayTeamRoster.length);
+        awayTeamPlayerEmails.assignAll(awayTeamRoster.map((p) => p.email));
+      }
+    }
   }
 
   void setGamesFormat(String newGamesFormat) {
     gamesFormat.value = newGamesFormat;
+    setsFormat.value = newGamesFormat;
+  }
+
+  void setSetsFormat(String setCode) {
+    setGamesFormat(setCode);
   }
 
   void toggleFriendlyRules(bool val) {
     isFriendlyMode.value = val;
+    isProRules.value = !val;
     if (!val) {
       // Pro defaults
       pointsPerGame.value = 11;
     }
   }
 
+  void toggleProRules(bool val) {
+    isProRules.value = val;
+    toggleFriendlyRules(!val);
+  }
+
   void setPointsPerGame(int val) {
     pointsPerGame.value = val;
+  }
+
+  void openPlayerSelection(BuildContext context, bool isSideA) {
+    final selectedEmails = isSideA ? homeTeamPlayerEmails : awayTeamPlayerEmails;
+    final opponentEmails = isSideA ? awayTeamPlayerEmails : homeTeamPlayerEmails;
+    final sideLabel = isSideA
+        ? (homeTeamController.text.isNotEmpty ? homeTeamController.text : 'Side A')
+        : (awayTeamController.text.isNotEmpty ? awayTeamController.text : 'Side B');
+
+    CommonSelectPlayersBottomSheet.show(
+      context,
+      title: 'Select $sideLabel Player',
+      maxCount: maxAllowedPlayers,
+      selectedPlayerEmails: selectedEmails,
+      opponentPlayerEmails: opponentEmails,
+      onPlayerSelected: (friend) {
+        addTeamPlayer(isSideA, friend);
+      },
+    );
   }
 
   void goToToss(BuildContext context) {

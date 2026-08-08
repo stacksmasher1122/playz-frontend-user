@@ -11,6 +11,7 @@ import '../../../../../sqflite/User_SQF/Home_SQF/Scoreboard_SQF/tennisSqflite.da
 import '../../../../../score_engine/tennisMatchEngine/tennis_match_engine.dart';
 import '../../../../../shared_preferences/userPreferences.dart';
 import '../../../../../view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
+import '../../../../../common/common_select_players_sheet.dart';
 import '../../../../../view/USER/Home/Scoreboard/Tennis/tennis_scoreboard_screen.dart';
 
 class TennisController extends GetxController {
@@ -86,20 +87,30 @@ class TennisController extends GetxController {
   }
 
   int get maxAllowedPlayers => format.value == 'DOUBLES' ? 2 : 1;
-  List<String> get homeTeamPlayers => homeTeamRoster.map((f) => f.email).toList();
-  List<String> get awayTeamPlayers => awayTeamRoster.map((f) => f.email).toList();
+
+  final homeTeamPlayerEmails = <String>[].obs;
+  final awayTeamPlayerEmails = <String>[].obs;
+
+  List<String> get homeTeamPlayers => homeTeamPlayerEmails;
+  List<String> get awayTeamPlayers => awayTeamPlayerEmails;
 
   void addTeamPlayer(bool isSideA, FriendModel friend) {
     final roster = isSideA ? homeTeamRoster : awayTeamRoster;
+    final emails = isSideA ? homeTeamPlayerEmails : awayTeamPlayerEmails;
+
     if (roster.any((p) => p.email == friend.email)) return;
     if (roster.length >= maxAllowedPlayers) {
       if (maxAllowedPlayers == 1) {
         roster.clear();
+        emails.clear();
       } else {
         roster.removeAt(0);
+        if (emails.isNotEmpty) emails.removeAt(0);
       }
     }
     roster.add(friend);
+    emails.add(friend.email);
+
     if (isSideA && (homeTeamName.value == 'Player A' || homeTeamName.value.isEmpty)) {
       homeTeamController.text = friend.fullName;
     } else if (!isSideA && (awayTeamName.value == 'Player B' || awayTeamName.value.isEmpty)) {
@@ -109,7 +120,10 @@ class TennisController extends GetxController {
 
   void removeTeamPlayer(bool isSideA, FriendModel friend) {
     final roster = isSideA ? homeTeamRoster : awayTeamRoster;
+    final emails = isSideA ? homeTeamPlayerEmails : awayTeamPlayerEmails;
+
     roster.removeWhere((p) => p.email == friend.email);
+    emails.remove(friend.email);
   }
 
   // ════════════════════ SETUP ACTIONS ════════════════════
@@ -148,7 +162,48 @@ class TennisController extends GetxController {
     noAdScoring.value = val;
   }
 
+  var isProRules = true.obs;
+
+  void toggleProRules(bool val) {
+    isProRules.value = val;
+    toggleFriendlyRules(!val);
+  }
+
+  void openPlayerSelection(BuildContext context, bool isSideA) {
+    final selectedEmails = isSideA ? homeTeamPlayerEmails : awayTeamPlayerEmails;
+    final opponentEmails = isSideA ? awayTeamPlayerEmails : homeTeamPlayerEmails;
+    final teamName = isSideA ? homeTeamName.value : awayTeamName.value;
+
+    CommonSelectPlayersBottomSheet.show(
+      context,
+      title: 'Select $teamName Player',
+      maxCount: maxAllowedPlayers,
+      selectedPlayerEmails: selectedEmails,
+      opponentPlayerEmails: opponentEmails,
+      onPlayerSelected: (friend) {
+        addTeamPlayer(isSideA, friend);
+      },
+    );
+  }
+
   void goToToss(BuildContext context) {
+    if (homeTeamRoster.isEmpty) {
+      for (int i = 1; i <= maxAllowedPlayers; i++) {
+        homeTeamRoster.add(FriendModel(
+          email: 'playerA_$i@local',
+          fullName: maxAllowedPlayers == 1 ? homeTeamName.value : '${homeTeamName.value} Player $i',
+        ));
+      }
+    }
+    if (awayTeamRoster.isEmpty) {
+      for (int i = 1; i <= maxAllowedPlayers; i++) {
+        awayTeamRoster.add(FriendModel(
+          email: 'playerB_$i@local',
+          fullName: maxAllowedPlayers == 1 ? awayTeamName.value : '${awayTeamName.value} Player $i',
+        ));
+      }
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(

@@ -4,8 +4,10 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Hockey/hockey_controller.dart';
-import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Hockey/hockey_state_models.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Hockey/live_match/widgets/hockey_goal_type_sheet.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Hockey/live_match/widgets/hockey_penalty_corner_sheet.dart';
 
+/// Pixel-perfect Hockey Action & Scoring Controls matching the attached reference screenshot.
 class HockeyActionButtons extends StatelessWidget {
   const HockeyActionButtons({super.key});
 
@@ -15,89 +17,99 @@ class HockeyActionButtons extends StatelessWidget {
     final controller = Get.find<HockeyController>();
 
     return Obx(() {
-      final homeName = controller.currentMatch.value?.homeTeam ?? 'Side A';
-      final awayName = controller.currentMatch.value?.awayTeam ?? 'Side B';
+      final homeName = controller.currentMatch.value?.homeTeam.isNotEmpty == true
+          ? controller.currentMatch.value!.homeTeam
+          : 'Side A';
+      final awayName = controller.currentMatch.value?.awayTeam.isNotEmpty == true
+          ? controller.currentMatch.value!.awayTeam
+          : 'Side B';
       final isReadOnly = controller.isReadOnly.value;
+
+      const Color greenColor = Color(0xFF00E676);
+      const Color blueColor = Color(0xFF448AFF);
+      const Color goldColor = Color(0xFFFFC107);
+      const Color cardBgColor = Color(0xFF10141E);
 
       return Container(
         padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveHelper.w(16),
-          vertical: ResponsiveHelper.h(12),
+          horizontal: ResponsiveHelper.w(16.0),
+          vertical: ResponsiveHelper.h(16.0),
         ),
         decoration: BoxDecoration(
-          color: AppColors.cardSurface,
-          border: Border(
-            top: BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 1),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.4),
-              blurRadius: 10,
-              offset: const Offset(0, -4),
-            ),
-          ],
+          color: cardBgColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24.0))),
+          border: Border.all(color: const Color(0xFF1F2B3E), width: 1.2),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 1. PRIMARY SCORING BUTTONS (+1 GOAL)
+            // ─── 1. PRIMARY SCORING BUTTONS (+1 GOAL SIDE A & SIDE B) ───
             Row(
               children: [
-                // Side A +1 Goal
+                // SIDE A +1 GOAL BUTTON (GREEN FILLED)
                 Expanded(
-                  child: _buildGoalButton(
+                  child: _buildFilledGoalButton(
                     context,
-                    label: '+1 GOAL ($homeName)',
-                    accentColor: AppColors.accent,
+                    teamName: homeName,
+                    accentColor: greenColor,
                     isEnabled: !isReadOnly,
-                    onTap: () => _openGoalTypeDialog(context, controller, 'sideA', homeName),
+                    onTap: () => HockeyGoalTypeSheet.show(context, controller, 'sideA', homeName),
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(12)),
-                // Side B +1 Goal
+                SizedBox(width: ResponsiveHelper.w(12.0)),
+                // SIDE B +1 GOAL BUTTON (BLUE FILLED)
                 Expanded(
-                  child: _buildGoalButton(
+                  child: _buildFilledGoalButton(
                     context,
-                    label: '+1 GOAL ($awayName)',
-                    accentColor: const Color(0xFF4D96FF),
+                    teamName: awayName,
+                    accentColor: blueColor,
                     isEnabled: !isReadOnly,
-                    onTap: () => _openGoalTypeDialog(context, controller, 'sideB', awayName),
+                    onTap: () => HockeyGoalTypeSheet.show(context, controller, 'sideB', awayName),
                   ),
                 ),
               ],
             ),
 
-            SizedBox(height: ResponsiveHelper.h(12)),
+            SizedBox(height: ResponsiveHelper.h(14.0)),
 
-            // 2. SECONDARY CONTROLS (PENALTY CORNER, NEXT PERIOD, UNDO)
+            // ─── 2. BOTTOM UTILITY CONTROLS (PENALTY CORNER, NEXT PERIOD, UNDO) ───
             Row(
               children: [
+                // PENALTY CORNER
                 Expanded(
-                  child: _buildActionChip(
-                    context: context,
-                    icon: Icons.sports_hockey,
+                  child: _buildUtilityCard(
+                    context,
+                    icon: Icons.flag_outlined,
                     label: 'PENALTY CORNER',
-                    color: Colors.amber,
-                    onTap: () => _openPCDialog(context, controller, homeName, awayName),
+                    accentColor: goldColor,
+                    borderColor: goldColor,
+                    isEnabled: !isReadOnly,
+                    onTap: () => HockeyPenaltyCornerSheet.show(context, controller, homeName, awayName),
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(6)),
+                SizedBox(width: ResponsiveHelper.w(8.0)),
+                // NEXT PERIOD
                 Expanded(
-                  child: _buildActionChip(
-                    context: context,
+                  child: _buildUtilityCard(
+                    context,
                     icon: Icons.timer_outlined,
                     label: 'NEXT PERIOD',
-                    color: AppColors.accent,
+                    accentColor: greenColor,
+                    borderColor: greenColor,
+                    isEnabled: !isReadOnly,
                     onTap: () => controller.advancePeriod(),
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(6)),
+                SizedBox(width: ResponsiveHelper.w(8.0)),
+                // UNDO
                 Expanded(
-                  child: _buildActionChip(
-                    context: context,
-                    icon: Icons.undo,
+                  child: _buildUtilityCard(
+                    context,
+                    icon: Icons.undo_rounded,
                     label: 'UNDO',
-                    color: AppColors.textSecondary,
+                    accentColor: const Color(0xFF9EABBE),
+                    borderColor: const Color(0xFF232E42),
+                    isEnabled: !isReadOnly,
                     onTap: () => controller.undoLastAction(),
                   ),
                 ),
@@ -109,145 +121,128 @@ class HockeyActionButtons extends StatelessWidget {
     });
   }
 
-  Widget _buildGoalButton(
+  // ─── HELPER: FILLED GOAL BUTTON (+1 GOAL) ───
+  Widget _buildFilledGoalButton(
     BuildContext context, {
-    required String label,
+    required String teamName,
     required Color accentColor,
     required bool isEnabled,
     required VoidCallback onTap,
   }) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isEnabled ? accentColor : Colors.white10,
-        foregroundColor: isEnabled ? Colors.black : AppColors.mutedText,
-        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(14)),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: isEnabled ? onTap : null,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16.0)),
+        child: Container(
+          height: ResponsiveHelper.h(68.0),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12.0)),
+          decoration: BoxDecoration(
+            color: isEnabled ? accentColor : Colors.white.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16.0)),
+          ),
+          child: Row(
+            children: [
+              // Goal Net Icon Box
+              Container(
+                padding: EdgeInsets.all(ResponsiveHelper.w(8.0)),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(10.0)),
+                ),
+                child: Icon(
+                  Icons.sports_soccer_outlined,
+                  color: Colors.black,
+                  size: ResponsiveHelper.w(24.0),
+                ),
+              ),
+
+              SizedBox(width: ResponsiveHelper.w(10.0)),
+
+              // Text Column (+1 GOAL & Team Name)
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '+1 GOAL',
+                      style: AppTypography.headlineSm.copyWith(
+                        color: Colors.black,
+                        fontSize: ResponsiveHelper.sp(16.0),
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.5,
+                      ).responsive(context),
+                    ),
+                    SizedBox(height: ResponsiveHelper.h(2.0)),
+                    Text(
+                      teamName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySm.copyWith(
+                        color: Colors.black.withValues(alpha: 0.8),
+                        fontSize: ResponsiveHelper.sp(12.0),
+                        fontWeight: FontWeight.w700,
+                      ).responsive(context),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      onPressed: isEnabled ? onTap : null,
-      child: Text(
-        label,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: AppTypography.headlineSm.copyWith(
-          fontSize: ResponsiveHelper.sp(13),
-          fontWeight: FontWeight.w900,
-        ).responsive(context),
       ),
     );
   }
 
-  Widget _buildActionChip({
-    required BuildContext context,
+  // ─── HELPER: UTILITY ACTION CARD ───
+  Widget _buildUtilityCard(
+    BuildContext context, {
     required IconData icon,
     required String label,
-    required Color color,
+    required Color accentColor,
+    required Color borderColor,
+    required bool isEnabled,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveHelper.w(6),
-          vertical: ResponsiveHelper.h(8),
-        ),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.4)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 16),
-            SizedBox(width: ResponsiveHelper.w(4)),
-            Flexible(
-              child: Text(
-                label,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.labelCaps.copyWith(
-                  color: color,
-                  fontSize: ResponsiveHelper.sp(10),
-                  fontWeight: FontWeight.bold,
-                ).responsive(context),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: isEnabled ? onTap : null,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+        child: Container(
+          height: ResponsiveHelper.h(48.0),
+          decoration: BoxDecoration(
+            color: const Color(0xFF121724),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+            border: Border.all(
+              color: isEnabled ? borderColor : Colors.white.withValues(alpha: 0.08),
+              width: 1.2,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: isEnabled ? accentColor : AppColors.mutedText,
+                size: ResponsiveHelper.w(16.0),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _openGoalTypeDialog(BuildContext context, HockeyController controller, String team, String teamName) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.cardSurface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          'Select Goal Type ($teamName)',
-          style: AppTypography.headlineMd.copyWith(color: AppColors.textPrimary, fontSize: 16),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text('Field Goal (FG)', style: AppTypography.bodyMd.copyWith(color: AppColors.textPrimary)),
-              onTap: () {
-                Navigator.pop(ctx);
-                controller.scoreGoal(team, goalType: GoalType.fieldGoal);
-              },
-            ),
-            ListTile(
-              title: Text('Penalty Corner (PC)', style: AppTypography.bodyMd.copyWith(color: AppColors.textPrimary)),
-              onTap: () {
-                Navigator.pop(ctx);
-                controller.scoreGoal(team, goalType: GoalType.penaltyCorner);
-              },
-            ),
-            ListTile(
-              title: Text('Penalty Stroke (PS)', style: AppTypography.bodyMd.copyWith(color: AppColors.textPrimary)),
-              onTap: () {
-                Navigator.pop(ctx);
-                controller.scoreGoal(team, goalType: GoalType.penaltyStroke);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _openPCDialog(BuildContext context, HockeyController controller, String homeName, String awayName) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.cardSurface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          'Award Penalty Corner',
-          style: AppTypography.headlineMd.copyWith(color: AppColors.textPrimary, fontSize: 16),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text('Penalty Corner for $homeName', style: AppTypography.bodyMd.copyWith(color: AppColors.textPrimary)),
-              onTap: () {
-                Navigator.pop(ctx);
-                controller.addPenaltyCorner('sideA');
-              },
-            ),
-            ListTile(
-              title: Text('Penalty Corner for $awayName', style: AppTypography.bodyMd.copyWith(color: AppColors.textPrimary)),
-              onTap: () {
-                Navigator.pop(ctx);
-                controller.addPenaltyCorner('sideB');
-              },
-            ),
-          ],
+              SizedBox(width: ResponsiveHelper.w(6.0)),
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelCaps.copyWith(
+                    color: isEnabled ? accentColor : AppColors.mutedText,
+                    fontSize: ResponsiveHelper.sp(11.0),
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
+                  ).responsive(context),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

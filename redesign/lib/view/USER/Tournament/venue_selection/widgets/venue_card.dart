@@ -36,18 +36,9 @@ class _VenueCardState extends State<VenueCard> {
           color: AppColors.card,
           borderRadius: BorderRadius.circular(context.minDimensionPct(4)),
           border: Border.all(
-            color: widget.venue.isSelected ? AppColors.accent : AppColors.card,
-            width: widget.venue.isSelected ? 1.5 : 1,
+            color: widget.venue.isSelected ? AppColors.primary : AppColors.borderDark,
+            width: widget.venue.isSelected ? 2.0 : 1.0,
           ),
-          boxShadow: widget.venue.isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.accent.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    spreadRadius: 1,
-                  )
-                ]
-              : [],
         ),
         child: Row(
           children: [

@@ -26,6 +26,7 @@ class BracketController extends GetxController {
   final RxString tournamentStatus = 'upcoming'.obs;
 
   late String matchType; // knockout, roundRobinSingle, roundRobinDouble, groupToKnockout
+  int advancingTeamsPerGroup = 2;
 
   bool get isTournamentStarted => tournamentStatus.value == 'in_progress' || tournamentStatus.value == 'completed';
 
@@ -52,6 +53,7 @@ class BracketController extends GetxController {
       if (doc.exists) {
         final data = doc.data()!;
         matchType = data['format']?['matchType'] ?? 'knockout';
+        advancingTeamsPerGroup = (data['format']?['advancingTeamsPerGroup'] as num?)?.toInt() ?? 2;
         tournamentStatus.value = data['status'] ?? 'upcoming';
 
         // Listen to teams
@@ -85,10 +87,14 @@ class BracketController extends GetxController {
             .listen((snapshot) {
           matches.value = snapshot.docs.map((d) => BracketMatchModel.fromMap(d.id, d.data())).toList();
           _checkCanShuffle();
+          if (matchType == 'groupToKnockout') {
+            _checkAndGenerateKnockoutFromGroups();
+          }
           isLoading.value = false;
         });
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Error loading config: $e");
       isLoading.value = false;
     }
@@ -181,12 +187,21 @@ class BracketController extends GetxController {
     if (teams.length < 2) return;
 
     int expectedMatches = 0;
+    final int n = teams.length;
     if (matchType == 'knockout') {
-      int nextPowerOf2 = pow(2, (log(teams.length) / log(2)).ceil()).toInt();
+      int nextPowerOf2 = pow(2, (log(n) / log(2)).ceil()).toInt();
       expectedMatches = nextPowerOf2 - 1;
+    } else if (matchType == 'roundRobinSingle') {
+      expectedMatches = n * (n - 1) ~/ 2;
+    } else if (matchType == 'roundRobinDouble') {
+      expectedMatches = n * (n - 1);
+    } else if (matchType == 'groupToKnockout') {
+      // Group stage match count varies; don't force mismatch for groups
+      // (knockout phase is generated later by _checkAndGenerateKnockoutFromGroups)
+      expectedMatches = -1; // Skip mismatch check
     }
 
-    final bool matchCountMismatch = matchType == 'knockout' && oldMatches.docs.length != expectedMatches;
+    final bool matchCountMismatch = expectedMatches >= 0 && oldMatches.docs.length != expectedMatches;
     final bool hasStartedMatches = oldMatches.docs.any((d) => d.data()['status'] == 'in_progress' || d.data()['status'] == 'completed');
 
     // Auto-regenerate if bracket does not exist, or if team count changed
@@ -429,11 +444,100 @@ class BracketController extends GetxController {
           teamBId: m.teamBId,
           status: 'unscheduled',
           groupName: "Group $groupName",
+          groupIndex: g,
+          isGroupStage: true,
         ));
       }
     }
 
     return matches;
+  }
+
+  Future<void> _checkAndGenerateKnockoutFromGroups() async {
+    if (matches.isEmpty) return;
+
+    final groupMatches = matches.where((m) => m.isGroupStage || (m.groupName != null && m.groupName!.startsWith('Group'))).toList();
+    if (groupMatches.isEmpty) return;
+
+    // Check if ALL group matches are completed
+    bool allGroupMatchesDone = groupMatches.every((m) => m.status == 'completed');
+    if (!allGroupMatchesDone) return;
+
+    // Check if knockout matches already generated
+    bool knockoutMatchesExist = matches.any((m) => !m.isGroupStage && (m.groupName == null || !m.groupName!.startsWith('Group')));
+    if (knockoutMatchesExist) return;
+
+    // All group matches done and no knockout matches generated yet -> generate knockout stage!
+    try {
+      final leaderboardSnap = await FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId)
+          .collection('leaderboard')
+          .get();
+
+      Map<String, Map<String, dynamic>> leaderboardData = {};
+      for (var doc in leaderboardSnap.docs) {
+        leaderboardData[doc.id] = doc.data();
+      }
+
+      // Group teams by groupName
+      Map<String, List<String>> groupTeamIds = {};
+      for (var m in groupMatches) {
+        if (m.groupName != null) {
+          if (m.teamAId != null) groupTeamIds.putIfAbsent(m.groupName!, () => []).add(m.teamAId!);
+          if (m.teamBId != null) groupTeamIds.putIfAbsent(m.groupName!, () => []).add(m.teamBId!);
+        }
+      }
+
+      List<TournamentTeamModel> advancingTeamsList = [];
+      for (var entry in groupTeamIds.entries) {
+        final uniqueTeamIds = entry.value.toSet().toList();
+        // Sort by points, then NRR/gameDiff
+        uniqueTeamIds.sort((idA, idB) {
+          final dataA = leaderboardData[idA] ?? {};
+          final dataB = leaderboardData[idB] ?? {};
+          int ptsA = dataA['points'] ?? 0;
+          int ptsB = dataB['points'] ?? 0;
+          if (ptsA != ptsB) return ptsB.compareTo(ptsA);
+
+          double nrrA = (dataA['nrr'] as num?)?.toDouble() ?? 0.0;
+          double nrrB = (dataB['nrr'] as num?)?.toDouble() ?? 0.0;
+          return nrrB.compareTo(nrrA);
+        });
+
+        int takeCount = advancingTeamsPerGroup.clamp(1, uniqueTeamIds.length);
+        for (int i = 0; i < takeCount; i++) {
+          final tId = uniqueTeamIds[i];
+          final teamObj = teams.firstWhereOrNull((t) => t.id == tId);
+          if (teamObj != null && !advancingTeamsList.contains(teamObj)) {
+            advancingTeamsList.add(teamObj);
+          }
+        }
+      }
+
+      if (advancingTeamsList.length >= 2) {
+        final knockoutMatches = _generateKnockout(advancingTeamsList);
+        final batch = FirebaseFirestore.instance.batch();
+        for (var km in knockoutMatches) {
+          final ref = FirebaseFirestore.instance
+              .collection('tournaments')
+              .doc(tournamentId)
+              .collection('bracket')
+              .doc(km.id);
+          batch.set(ref, km.toMap());
+        }
+        await batch.commit();
+        Get.snackbar(
+          "Knockout Stage Unlocked!",
+          "Group stage completed! ${advancingTeamsList.length} teams advanced to playoff brackets.",
+          backgroundColor: AppColors.primary,
+          colorText: Colors.black,
+          snackPosition: SnackPosition.TOP,
+        );
+      }
+    } catch (e) {
+      debugPrint("Error generating knockout from groups: $e");
+    }
   }
 
   void shuffleBracket() {
@@ -487,6 +591,7 @@ class BracketController extends GetxController {
     );
 
     if (date != null) {
+      if (!context.mounted) return;
       final time = await showTimePicker(
         context: context,
         initialTime: match.scheduledDate != null

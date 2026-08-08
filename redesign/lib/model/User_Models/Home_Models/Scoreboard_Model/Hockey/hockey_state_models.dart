@@ -1,4 +1,4 @@
-import 'dart:convert';
+// Hockey State Models
 
 class HockeyPlayer {
   final String id;
@@ -281,9 +281,29 @@ class HockeyMatchEngine {
       newGoalsB++;
     }
 
+    final name = scorerName ?? (team == 'sideA' ? 'Side A Player' : 'Side B Player');
+    final isTeamA = team == 'sideA';
+    final targetRoster = isTeamA ? _state.teamA : _state.teamB;
+
+    final updatedRoster = targetRoster.map((p) {
+      if (p.name == name || p.id == name) {
+        return HockeyPlayer(
+          id: p.id,
+          name: p.name,
+          number: p.number,
+          isOnField: p.isOnField,
+          greenCards: p.greenCards,
+          yellowCards: p.yellowCards,
+          redCards: p.redCards,
+          goals: p.goals + 1,
+        );
+      }
+      return p;
+    }).toList();
+
     final newGoalEvent = HockeyGoalEvent(
       team: team,
-      scorerName: scorerName ?? (team == 'sideA' ? 'Side A Player' : 'Side B Player'),
+      scorerName: name,
       goalType: goalType,
       period: _state.currentPeriod,
       minute: 1,
@@ -294,6 +314,8 @@ class HockeyMatchEngine {
     _state = _state.copyWith(
       goalsA: newGoalsA,
       goalsB: newGoalsB,
+      teamA: isTeamA ? updatedRoster : _state.teamA,
+      teamB: isTeamA ? _state.teamB : updatedRoster,
       goalEvents: newGoalEvents,
     );
   }

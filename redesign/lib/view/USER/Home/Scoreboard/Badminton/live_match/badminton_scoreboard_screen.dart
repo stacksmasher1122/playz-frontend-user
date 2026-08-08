@@ -9,6 +9,7 @@ import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/badminto
 import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/widgets/scoring_console.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/widgets/badminton_scoreboard_header.dart';
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
+import 'package:redesign/common/common_match_end_sheet.dart';
 
 class BadmintonScoreboardScreen extends StatefulWidget {
   const BadmintonScoreboardScreen({super.key});
@@ -21,12 +22,21 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
   final BadmintonController controller = Get.find<BadmintonController>();
   Worker? _stateWorker;
   bool _isMatchEndFlowActive = false;
+  int _lastCompletedGameCount = 0;
 
   @override
   void initState() {
     super.initState();
     _stateWorker = ever(controller.liveState, (state) {
-      if (state?.status == MatchStatus.completed &&
+      if (state == null) return;
+      final completedGames = state.games.where((g) => g.isCompleted).length;
+      if (completedGames > _lastCompletedGameCount &&
+          state.status != MatchStatus.completed &&
+          mounted &&
+          !controller.isReadOnly.value) {
+        _lastCompletedGameCount = completedGames;
+        _showSetCompletedSheet(state);
+      } else if (state.status == MatchStatus.completed &&
           !_isMatchEndFlowActive &&
           mounted &&
           !controller.isReadOnly.value) {
@@ -35,7 +45,11 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (controller.liveState.value?.status == MatchStatus.completed &&
+      final state = controller.liveState.value;
+      if (state != null) {
+        _lastCompletedGameCount = state.games.where((g) => g.isCompleted).length;
+      }
+      if (state?.status == MatchStatus.completed &&
           !_isMatchEndFlowActive &&
           mounted &&
           !controller.isReadOnly.value) {
@@ -50,256 +64,128 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
     super.dispose();
   }
 
+  void _showSetCompletedSheet(BadmintonMatchState state) {
+    final int gameNumber = state.currentGameIndex > 0 ? state.currentGameIndex : 1;
+    final completedGames = state.games.where((g) => g.isCompleted).toList();
+    String setSummaryText = 'Game $gameNumber Completed!';
+    if (completedGames.isNotEmpty) {
+      final g = completedGames.last;
+      final winnerName = g.winner == PlayerSide.sideA
+          ? controller.homeTeamName.value
+          : controller.awayTeamName.value;
+      setSummaryText = '$winnerName won Game $gameNumber (${g.scoreA}-${g.scoreB})';
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (bottomSheetContext) => CommonMatchEndSheet(
+        title: 'SET COMPLETED',
+        titleIcon: Icons.emoji_events_rounded,
+        titleIconColor: AppColors.primaryGreen,
+        resultBannerText: setSummaryText,
+        team1Name: controller.homeTeamName.value,
+        team1Score: '${state.games.where((g) => g.isCompleted && g.winner == PlayerSide.sideA).length}',
+        team2Name: controller.awayTeamName.value,
+        team2Score: '${state.games.where((g) => g.isCompleted && g.winner == PlayerSide.sideB).length}',
+        autoFinalizeSeconds: 15,
+        timerPrefix: 'Next game in',
+        canUndo: true,
+        undoButtonText: 'UNDO LAST POINT',
+        finishButtonText: 'NEXT GAME',
+        onUndo: () {
+          Navigator.pop(bottomSheetContext);
+          controller.undoLastEvent();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Last point undone. Game resumed.'),
+                backgroundColor: AppColors.surface,
+              ),
+            );
+          }
+        },
+        onFinish: () {
+          Navigator.pop(bottomSheetContext);
+        },
+      ),
+    );
+  }
+
   void _triggerMatchCompletionFlow() {
     _isMatchEndFlowActive = true;
-    _showOneMinuteUndoDialog();
+    _showMatchCompletedSheet();
   }
 
-  void _showOneMinuteUndoDialog() {
-    int timeLeft = 60;
-    Timer? countdownTimer;
+  void _showMatchCompletedSheet() {
+    final state = controller.liveState.value;
+    final String rawResult = controller.currentMatch.value?.matchResult ?? '';
+    String matchResultText = '';
+    if (rawResult.isNotEmpty) {
+      matchResultText = rawResult
+          .split(' ')
+          .map((token) => token.contains('@') ? _cleanPlayerName(token) : token)
+          .join(' ');
+    } else if (state != null) {
+      matchResultText = _getWinnerTextText(state);
+    } else {
+      matchResultText = 'MATCH COMPLETED';
+    }
 
-    showDialog(
+    final int gamesWonA = state != null
+        ? state.games.where((g) => g.isCompleted && g.winner == PlayerSide.sideA).length
+        : 0;
+    final int gamesWonB = state != null
+        ? state.games.where((g) => g.isCompleted && g.winner == PlayerSide.sideB).length
+        : 0;
+
+    final bool canUndoMatchEnd =
+        !controller.hasMatchEndUndoBeenUsed.value && controller.engine.canUndo;
+
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (ctx, setState) {
-            countdownTimer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
-              if (timeLeft > 0) {
-                if (mounted) {
-                  setState(() {
-                    timeLeft--;
-                  });
-                }
-              } else {
-                timer.cancel();
-                if (Navigator.canPop(dialogContext)) {
-                  Navigator.pop(dialogContext);
-                }
-                _showTwentySecondCompletionCountdown();
-              }
-            });
-
-            final bool canUndoMatchEnd =
-                !controller.hasMatchEndUndoBeenUsed.value &&
-                controller.engine.canUndo;
-
-            final String formattedTime =
-                '00:${timeLeft.toString().padLeft(2, '0')}';
-            final String rawResult = controller.currentMatch.value?.matchResult ?? '';
-            String matchResultText = '';
-            if (rawResult.isNotEmpty) {
-              matchResultText = rawResult
-                  .split(' ')
-                  .map((token) => token.contains('@') ? _cleanPlayerName(token) : token)
-                  .join(' ');
-            } else if (controller.liveState.value != null) {
-              matchResultText = _getWinnerTextText(controller.liveState.value!);
-            } else {
-              matchResultText = 'MATCH COMPLETED';
-            }
-
-            return AlertDialog(
-              backgroundColor: AppColors.surface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (bottomSheetContext) => CommonMatchEndSheet(
+        title: 'MATCH COMPLETED',
+        titleIcon: Icons.emoji_events_rounded,
+        titleIconColor: AppColors.coinsGold,
+        resultBannerText: matchResultText,
+        team1Name: controller.homeTeamName.value,
+        team1Score: '$gamesWonA',
+        team2Name: controller.awayTeamName.value,
+        team2Score: '$gamesWonB',
+        autoFinalizeSeconds: 60,
+        timerPrefix: 'Finalizing in',
+        canUndo: canUndoMatchEnd,
+        undoButtonText: 'UNDO LAST POINT',
+        finishButtonText: 'FINISH MATCH',
+        onUndo: () {
+          Navigator.pop(bottomSheetContext);
+          _isMatchEndFlowActive = false;
+          controller.hasMatchEndUndoBeenUsed.value = true;
+          controller.undoLastEvent();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Last point undone. Match resumed.'),
+                backgroundColor: AppColors.surface,
               ),
-              title: Row(
-                children: const [
-                  Icon(Icons.emoji_events_rounded, color: AppColors.coinsGold),
-                  SizedBox(width: 8),
-                  Text(
-                    'Match Completed',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    matchResultText,
-                    style: TextStyle(
-                      color: AppColors.accent,
-                      fontSize: ResponsiveHelper.sp(18),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.timer_outlined, color: AppColors.muted, size: 18),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Finalizing in $formattedTime',
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: ResponsiveHelper.sp(14),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (!canUndoMatchEnd && controller.hasMatchEndUndoBeenUsed.value) ...[
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Match-end undo already used (1/1)',
-                      style: TextStyle(color: Colors.grey, fontSize: 11, fontStyle: FontStyle.italic),
-                    ),
-                  ],
-                ],
-              ),
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              actions: [
-                if (canUndoMatchEnd)
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.error.withValues(alpha: 0.2),
-                      foregroundColor: AppColors.error,
-                      elevation: 0,
-                      side: const BorderSide(color: AppColors.error, width: 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    onPressed: () {
-                      controller.hasMatchEndUndoBeenUsed.value = true;
-                      countdownTimer?.cancel();
-                      Navigator.pop(dialogContext);
-                      _isMatchEndFlowActive = false;
-                      controller.undoLastEvent();
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Last point undone. Match resumed.'),
-                            backgroundColor: AppColors.surface,
-                          ),
-                        );
-                      }
-                    },
-                    icon: const Icon(Icons.undo_rounded, size: 18),
-                    label: const Text(
-                      'UNDO LAST POINT',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                else
-                  const SizedBox.shrink(),
-                TextButton(
-                  onPressed: () {
-                    countdownTimer?.cancel();
-                    Navigator.pop(dialogContext);
-                    _showTwentySecondCompletionCountdown();
-                  },
-                  child: const Text(
-                    'FINISH NOW',
-                    style: TextStyle(
-                      color: AppColors.accent,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
             );
-          },
-        );
-      },
+          }
+        },
+        onFinish: () {
+          Navigator.pop(bottomSheetContext);
+          _finalizeMatchAndNavigateHome();
+        },
+      ),
     ).then((_) {
-      countdownTimer?.cancel();
-    });
-  }
-
-  void _showTwentySecondCompletionCountdown() {
-    int timeLeft = 20;
-    Timer? countdownTimer;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (ctx, setState) {
-            countdownTimer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
-              if (timeLeft > 0) {
-                if (mounted) {
-                  setState(() {
-                    timeLeft--;
-                  });
-                }
-              } else {
-                timer.cancel();
-                if (Navigator.canPop(dialogContext)) {
-                  Navigator.pop(dialogContext);
-                }
-                _finalizeMatchAndNavigateHome();
-              }
-            });
-
-            final String formattedTime = '00:${timeLeft.toString().padLeft(2, '0')}';
-
-            return AlertDialog(
-              backgroundColor: AppColors.surface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              title: const Row(
-                children: [
-                  Icon(Icons.check_circle_outline, color: AppColors.accent),
-                  SizedBox(width: 8),
-                  Text(
-                    'Declaring Match Complete',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ],
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Match will be declared complete in $formattedTime',
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  LinearProgressIndicator(
-                    value: timeLeft / 20.0,
-                    backgroundColor: AppColors.background,
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    countdownTimer?.cancel();
-                    Navigator.pop(dialogContext);
-                    _finalizeMatchAndNavigateHome();
-                  },
-                  child: const Text(
-                    'FINISH IMMEDIATELY',
-                    style: TextStyle(
-                      color: AppColors.accent,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    ).then((_) {
-      countdownTimer?.cancel();
+      _isMatchEndFlowActive = false;
     });
   }
 
@@ -393,33 +279,6 @@ class _BadmintonScoreboardScreenState extends State<BadmintonScoreboardScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: AppColors.background,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: AppColors.accent),
-            onPressed: () async {
-              final shouldPop = await _showExitConfirmationDialog();
-              if (shouldPop && context.mounted) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => UserAppNavShell()),
-                  (route) => false,
-                );
-              }
-            },
-          ),
-          title: Text(
-            'LIVE MATCH',
-            style: TextStyle(
-              color: AppColors.accent,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.2,
-            ),
-          ),
-          centerTitle: true,
-        ),
         body: Obx(() {
           final state = controller.liveState.value;
           if (!controller.isEngineReady.value || state == null) {

@@ -1,48 +1,30 @@
-import 'package:redesign/theme/app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/score_engine/footballMatchEngine/football_match_engine.dart';
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
+/// Top Football Scoreboard Header Card featuring team circle initials, score below team,
+/// timer, and phase pill strictly adhering to AppColors design tokens.
 class ScoreboardHeader extends StatelessWidget {
   final MatchEngine engine;
 
   const ScoreboardHeader({super.key, required this.engine});
 
-  @override
-  Widget build(BuildContext context) {
-    ResponsiveHelper.init(context);
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.w(16),
-        vertical: ResponsiveHelper.h(20),
-      ),
-      color: AppColors.surface,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildTeamBlock(
-                engine.state.homeTeam,
-                engine.state.homeScore,
-                engine.state.homeTeam.penaltiesScored,
-                CrossAxisAlignment.start,
-              ),
-              _buildClock(),
-              _buildTeamBlock(
-                engine.state.awayTeam,
-                engine.state.awayScore,
-                engine.state.awayTeam.penaltiesScored,
-                CrossAxisAlignment.end,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+  String _getTeamInitials(String name) {
+    final cleanName = name.trim().replaceAll(RegExp(r'[^a-zA-Z0-9\s]'), '');
+    final words = cleanName.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+    if (words.length >= 3) {
+      return (words[0][0] + words[1][0] + words[2][0]).toUpperCase();
+    } else if (cleanName.length >= 3) {
+      return cleanName.substring(0, 3).toUpperCase();
+    } else {
+      return cleanName.toUpperCase();
+    }
   }
 
-  Widget _buildClock() {
+  String _getFormattedTime() {
     int totalSec = engine.state.seconds;
     int min = totalSec ~/ 60;
     int sec = totalSec % 60;
@@ -53,155 +35,197 @@ class ScoreboardHeader extends StatelessWidget {
     if (added > 0) {
       timeStr += "+${(added ~/ 60) + 1}";
     }
-
-    return Column(
-      children: [
-        Text(
-          timeStr,
-          style: TextStyle(
-            color: AppColors.accent,
-            fontSize: ResponsiveHelper.sp(26),
-            fontWeight: FontWeight.bold,
-            fontFamily: 'JetBrains Mono',
-          ),
-        ),
-        SizedBox(height: 4),
-        _buildPhaseBadge(engine.state.phase),
-      ],
-    );
+    return timeStr;
   }
 
-  Widget _buildPhaseBadge(MatchPhase p) {
-    String label = "PRE-MATCH";
-    Color col = AppColors.muted;
+  String _getPhaseText(MatchPhase p) {
     switch (p) {
       case MatchPhase.firstHalf:
-        label = "1ST HALF";
-        col = AppColors.success;
-        break;
+        return "1ST HALF";
       case MatchPhase.halfTime:
-        label = "HALF TIME";
-        col = AppColors.warning;
-        break;
+        return "HALF TIME";
       case MatchPhase.secondHalf:
-        label = "2ND HALF";
-        col = AppColors.success;
-        break;
+        return "2ND HALF";
       case MatchPhase.extraTimeFirst:
-        label = "ET 1ST HALF";
-        col = Colors.purpleAccent;
-        break;
+        return "ET 1ST HALF";
       case MatchPhase.extraTimeHalf:
-        label = "ET HALF TIME";
-        col = AppColors.warning;
-        break;
+        return "ET HALF TIME";
       case MatchPhase.extraTimeSecond:
-        label = "ET 2ND HALF";
-        col = Colors.purpleAccent;
-        break;
+        return "ET 2ND HALF";
       case MatchPhase.penalties:
-        label = "PENALTIES";
-        col = Colors.cyanAccent;
-        break;
+        return "PENALTIES";
       case MatchPhase.fullTime:
-        label = "FULL TIME";
-        col = AppColors.error;
-        break;
+        return "FULL TIME";
       default:
-        break;
+        return "PRE-MATCH";
     }
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.w(8),
-        vertical: ResponsiveHelper.h(2),
-      ),
-      decoration: BoxDecoration(
-        color: col.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(4)),
-        border: Border.all(color: col.withValues(alpha: 0.5)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: col,
-          fontSize: ResponsiveHelper.sp(10),
-          fontWeight: FontWeight.bold,
-          letterSpacing: 0.5,
-        ),
-      ),
-    );
   }
 
-  Widget _buildTeamBlock(
-    MatchTeam team,
-    int score,
-    int penScore,
-    CrossAxisAlignment align,
-  ) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: align,
+  @override
+  Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
+    final homeTeam = engine.state.homeTeam;
+    final awayTeam = engine.state.awayTeam;
+
+    return Container(
+      margin: EdgeInsets.all(ResponsiveHelper.w(16.0)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(16.0),
+        vertical: ResponsiveHelper.h(18.0),
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.cardSurface,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20.0)),
+        border: Border.all(color: AppColors.borderDark),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            team.name,
-            style: TextStyle(
-              color: AppColors.muted,
-              fontWeight: FontWeight.bold,
-              fontSize: ResponsiveHelper.sp(14),
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(height: 4),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: align == CrossAxisAlignment.start ? Alignment.centerLeft : Alignment.centerRight,
-            child: Row(
+          // Left Team Column (Circle Initials -> Team Name -> Score Number)
+          Expanded(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (align == CrossAxisAlignment.end &&
-                    engine.state.phase == MatchPhase.penalties)
-                  Padding(
-                    padding: EdgeInsets.only(right: 6.0, bottom: 6.0),
-                    child: Text(
-                      "($penScore)",
-                      style: TextStyle(
-                        color: Colors.cyanAccent,
-                        fontSize: ResponsiveHelper.sp(18),
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'JetBrains Mono',
-                      ),
-                    ),
-                  ),
-                Text(
-                  "$score",
-                  style: TextStyle(
-                    color: AppColors.onPrimary,
-                    fontSize: ResponsiveHelper.sp(44),
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'JetBrains Mono',
-                  ),
+                _buildTeamCircleAvatar(
+                  context,
+                  initials: _getTeamInitials(homeTeam.name),
+                  imageUrl: homeTeam.logo,
                 ),
-                if (align == CrossAxisAlignment.start &&
-                    engine.state.phase == MatchPhase.penalties)
-                  Padding(
-                    padding: EdgeInsets.only(left: 6.0, bottom: 6.0),
-                    child: Text(
-                      "($penScore)",
-                      style: TextStyle(
-                        color: Colors.cyanAccent,
-                        fontSize: ResponsiveHelper.sp(18),
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'JetBrains Mono',
-                      ),
-                    ),
-                  ),
+                SizedBox(height: ResponsiveHelper.h(6.0)),
+                Text(
+                  homeTeam.name,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.mutedText,
+                    fontWeight: FontWeight.w600,
+                    fontSize: ResponsiveHelper.sp(12.0),
+                  ).responsive(context),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: ResponsiveHelper.h(4.0)),
+                Text(
+                  '${engine.state.homeScore}',
+                  style: AppTypography.displayLg.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: ResponsiveHelper.sp(34.0),
+                    fontWeight: FontWeight.w900,
+                  ).responsive(context),
+                ),
+              ],
+            ),
+          ),
+
+          // Center Column (Digital Timer & Phase Badge)
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _getFormattedTime(),
+                style: AppTypography.displayLg.copyWith(
+                  color: AppColors.accent,
+                  fontSize: ResponsiveHelper.sp(28.0),
+                  fontWeight: FontWeight.w900,
+                  fontFamily: 'JetBrains Mono',
+                ).responsive(context),
+              ),
+              SizedBox(height: ResponsiveHelper.h(8.0)),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveHelper.w(10.0),
+                  vertical: ResponsiveHelper.h(4.0),
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.accent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12.0)),
+                  border: Border.all(color: AppColors.accent, width: 1.0),
+                ),
+                child: Text(
+                  _getPhaseText(engine.state.phase),
+                  style: AppTypography.labelCaps.copyWith(
+                    color: AppColors.accent,
+                    fontSize: ResponsiveHelper.sp(10.0),
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.8,
+                  ).responsive(context),
+                ),
+              ),
+            ],
+          ),
+
+          // Right Team Column (Circle Initials -> Team Name -> Score Number)
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildTeamCircleAvatar(
+                  context,
+                  initials: _getTeamInitials(awayTeam.name),
+                  imageUrl: awayTeam.logo,
+                ),
+                SizedBox(height: ResponsiveHelper.h(6.0)),
+                Text(
+                  awayTeam.name,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.mutedText,
+                    fontWeight: FontWeight.w600,
+                    fontSize: ResponsiveHelper.sp(12.0),
+                  ).responsive(context),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: ResponsiveHelper.h(4.0)),
+                Text(
+                  '${engine.state.awayScore}',
+                  style: AppTypography.displayLg.copyWith(
+                    color: AppColors.textPrimary,
+                    fontSize: ResponsiveHelper.sp(34.0),
+                    fontWeight: FontWeight.w900,
+                  ).responsive(context),
+                ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTeamCircleAvatar(
+    BuildContext context, {
+    required String initials,
+    String? imageUrl,
+  }) {
+    final bool hasImage = imageUrl != null && imageUrl.trim().isNotEmpty;
+
+    return Container(
+      width: ResponsiveHelper.w(52.0),
+      height: ResponsiveHelper.w(52.0),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        shape: BoxShape.circle,
+        image: hasImage
+            ? DecorationImage(
+                image: CachedNetworkImageProvider(imageUrl),
+                fit: BoxFit.cover,
+              )
+            : null,
+      ),
+      child: !hasImage
+          ? Center(
+              child: Text(
+                initials,
+                style: AppTypography.headlineSm.copyWith(
+                  color: AppColors.accent,
+                  fontSize: ResponsiveHelper.sp(15.0),
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.5,
+                ).responsive(context),
+              ),
+            )
+          : null,
     );
   }
 }

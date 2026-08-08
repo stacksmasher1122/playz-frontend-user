@@ -58,6 +58,17 @@ class MatchController extends GetxController {
         .listen(
           (snapshot) {
             final docs = snapshot.docs
+                .where((doc) {
+                  final data = doc.data() as Map<String, dynamic>? ?? {};
+                  final hostId = (data['hostId'] ?? '').toString().trim();
+                  final isScoreboardOrTournament = data.containsKey('scorecard') ||
+                      data.containsKey('currentInnings') ||
+                      data.containsKey('engineState') ||
+                      data.containsKey('inningsArray') ||
+                      data.containsKey('homeTeamName') ||
+                      data.containsKey('awayTeamName');
+                  return hostId.isNotEmpty && !isScoreboardOrTournament;
+                })
                 .map((doc) => GameData.fromFirestore(doc))
                 .toList();
             docs.sort((a, b) {
@@ -68,7 +79,7 @@ class MatchController extends GetxController {
             allMatches.value = docs;
             isLoading.value = false;
             debugPrint(
-              '📥 [MatchController] Fetched ${docs.length} matches from Firestore.',
+              '📥 [MatchController] Fetched ${docs.length} hosted match polls from Firestore.',
             );
           },
           onError: (err) {

@@ -56,6 +56,8 @@ class BadmintonMatchModel {
   // Tournament context
   final String? tournamentId;
   final String? bracketMatchId;
+  final String? teamALogo;
+  final String? teamBLogo;
 
   BadmintonMatchModel({
     required this.matchId,
@@ -80,6 +82,8 @@ class BadmintonMatchModel {
     this.pointLog = const [],
     this.tournamentId,
     this.bracketMatchId,
+    this.teamALogo,
+    this.teamBLogo,
   });
 
   Map<String, dynamic> toJson() {
@@ -106,6 +110,8 @@ class BadmintonMatchModel {
       'pointLog': pointLog,
       'tournamentId': tournamentId,
       'bracketMatchId': bracketMatchId,
+      'teamALogo': teamALogo,
+      'teamBLogo': teamBLogo,
     };
   }
 
@@ -133,6 +139,8 @@ class BadmintonMatchModel {
       pointLog: _toList<Map<String, dynamic>>(json['pointLog']),
       tournamentId: json['tournamentId'],
       bracketMatchId: json['bracketMatchId'],
+      teamALogo: json['teamALogo'],
+      teamBLogo: json['teamBLogo'],
     );
   }
 }

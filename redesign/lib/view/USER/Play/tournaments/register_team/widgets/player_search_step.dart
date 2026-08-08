@@ -34,12 +34,57 @@ class PlayerSearchStep extends StatelessWidget {
             Obx(() => Text(
               "${controller.selectedPlayers.length}/${controller.teamSize}",
               style: AppTypography.bodyMd.copyWith(
-                color: AppColors.accent,
+                color: controller.isRosterFull ? AppColors.accent : AppColors.warning,
                 fontWeight: FontWeight.bold,
                 fontSize: context.responsiveFont(14),
               ),
             )),
           ],
+        ),
+        SizedBox(height: context.heightPct(1)),
+        // Progress bar
+        Obx(() => ClipRRect(
+          borderRadius: BorderRadius.circular(context.minDimensionPct(1)),
+          child: LinearProgressIndicator(
+            value: controller.teamSize > 0
+                ? (controller.selectedPlayers.length / controller.teamSize).clamp(0.0, 1.0)
+                : 0.0,
+            backgroundColor: AppColors.surface,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              controller.isRosterFull ? AppColors.accent : AppColors.warning,
+            ),
+            minHeight: context.heightPct(0.6).clamp(4.0, 6.0),
+          ),
+        )),
+        Obx(() => !controller.isRosterFull
+            ? Padding(
+                padding: EdgeInsets.only(top: context.heightPct(0.8)),
+                child: Text(
+                  "Add ${controller.remainingSlots} more player${controller.remainingSlots == 1 ? '' : 's'} to continue",
+                  style: AppTypography.bodySm.copyWith(
+                    color: AppColors.warning,
+                    fontSize: context.responsiveFont(12),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              )
+            : Padding(
+                padding: EdgeInsets.only(top: context.heightPct(0.8)),
+                child: Row(
+                  children: [
+                    Icon(Icons.check_circle_rounded, color: AppColors.accent, size: context.responsiveFont(14)),
+                    SizedBox(width: context.widthPct(1)),
+                    Text(
+                      "Roster complete!",
+                      style: AppTypography.bodySm.copyWith(
+                        color: AppColors.accent,
+                        fontSize: context.responsiveFont(12),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
         ),
         SizedBox(height: context.heightPct(1.5)),
 
@@ -167,15 +212,26 @@ class PlayerSearchStep extends StatelessWidget {
         ),
         SizedBox(height: context.heightPct(1.2)),
 
-        CommonTextField(
-          controller: controller.searchController,
-          hintText: "Search name or username...",
-          prefixIcon: const Icon(Icons.search_rounded, color: AppColors.accent),
-          onChanged: (val) {
-            controller.searchPlayers(val);
-          },
-        ),
-        SizedBox(height: context.heightPct(1.5)),
+        // Only show search when team is not full
+        Obx(() {
+          if (controller.isRosterFull) {
+            return const SizedBox.shrink();
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CommonTextField(
+                controller: controller.searchController,
+                hintText: "Search name or username...",
+                prefixIcon: const Icon(Icons.search_rounded, color: AppColors.accent),
+                onChanged: (val) {
+                  controller.searchPlayers(val);
+                },
+              ),
+              SizedBox(height: context.heightPct(1.5)),
+            ],
+          );
+        }),
 
         // Search Results
         Obx(() {

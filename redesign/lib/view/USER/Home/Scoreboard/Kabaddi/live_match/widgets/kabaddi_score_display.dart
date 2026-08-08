@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Kabaddi/kabaddi_controller.dart';
+import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Kabaddi/kabaddi_state_models.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
-import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Kabaddi/kabaddi_controller.dart';
-import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Kabaddi/kabaddi_state_models.dart';
 
+/// Top Scoreboard Display Card for Kabaddi with top-left timer pill and centered half header.
 class KabaddiScoreDisplay extends StatelessWidget {
   final KabaddiMatchState state;
   final Function(PlayerSide) onScoreRaid;
@@ -20,229 +21,173 @@ class KabaddiScoreDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ResponsiveHelper.init(context);
     final controller = Get.find<KabaddiController>();
-    String sideAName = state.teamA.isNotEmpty ? state.teamA.first.name : 'Side A';
-    String sideBName = state.teamB.isNotEmpty ? state.teamB.first.name : 'Side B';
 
-    final isRaidingA = state.raidingSide == PlayerSide.sideA;
-    final isRaidingB = state.raidingSide == PlayerSide.sideB;
-    final maxActive = state.config.activePlayersPerTeam;
+    final String sideAName = controller.homeTeamName.value.isNotEmpty
+        ? controller.homeTeamName.value
+        : (state.teamA.isNotEmpty ? state.teamA.first.name : 'Side A');
+
+    final String sideBName = controller.awayTeamName.value.isNotEmpty
+        ? controller.awayTeamName.value
+        : (state.teamB.isNotEmpty ? state.teamB.first.name : 'Side B');
+
+    final bool isRaidingA = (state.raidingSide == PlayerSide.sideA);
+    final bool isRaidingB = (state.raidingSide == PlayerSide.sideB);
+    final int maxActive = state.config.activePlayersPerTeam;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Live Scoreboard Container Card
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(
-            horizontal: ResponsiveHelper.w(12),
-            vertical: ResponsiveHelper.h(14),
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.card,
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-            border: Border.all(color: AppColors.borderDark, width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.5),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              // Header: Half Timer & Pro Raid Clock
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Half Timer Pill
-                  Obx(() {
-                    final sec = controller.secondsRemaining.value;
-                    final minsStr = (sec ~/ 60).toString().padLeft(2, '0');
-                    final secsStr = (sec % 60).toString().padLeft(2, '0');
-                    return GestureDetector(
-                      onTap: controller.toggleHalfTimer,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ResponsiveHelper.w(8),
-                          vertical: ResponsiveHelper.h(4),
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.surfaceElevated,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.primaryGreen, width: 1),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              controller.isTimerRunning.value ? Icons.pause : Icons.play_arrow,
-                              color: AppColors.primaryGreen,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '$minsStr:$secsStr',
-                              style: AppTypography.labelCaps.copyWith(
-                                color: AppColors.primaryGreen,
-                                fontWeight: FontWeight.bold,
-                                fontSize: context.responsiveFont(11),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
+        // Top Left Timer Pill (Outside the Card)
+        Obx(() {
+          final sec = controller.secondsRemaining.value;
+          final minsStr = (sec ~/ 60).toString().padLeft(2, '0');
+          final secsStr = (sec % 60).toString().padLeft(2, '0');
+          final bool isRunning = controller.isTimerRunning.value;
 
-                  // 30s Raid Clock (in Pro Mode)
-                  if (state.config.isProRules)
-                    Obx(() {
-                      final raidSec = controller.raidClockSeconds.value;
-                      final isLow = raidSec <= 5;
-                      return GestureDetector(
-                        onTap: controller.toggleRaidClock,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: ResponsiveHelper.w(8),
-                            vertical: ResponsiveHelper.h(4),
-                          ),
-                          decoration: BoxDecoration(
-                            color: isLow ? AppColors.error.withValues(alpha: 0.2) : AppColors.surfaceElevated,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isLow ? AppColors.error : AppColors.coinsGold,
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.timer,
-                                color: isLow ? AppColors.error : AppColors.coinsGold,
-                                size: 14,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Raid: 00:${raidSec.toString().padLeft(2, '0')}',
-                                style: AppTypography.labelCaps.copyWith(
-                                  color: isLow ? AppColors.error : AppColors.coinsGold,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: context.responsiveFont(11),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
+          return GestureDetector(
+            onTap: controller.toggleHalfTimer,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(12.0),
+                vertical: ResponsiveHelper.h(6.0),
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.cardSurface,
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16.0)),
+                border: Border.all(color: AppColors.accent, width: 1.2),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                    color: AppColors.accent,
+                    size: ResponsiveHelper.w(18.0),
+                  ),
+                  SizedBox(width: ResponsiveHelper.w(6.0)),
+                  Text(
+                    '$minsStr:$secsStr',
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.accent,
+                      fontWeight: FontWeight.bold,
+                      fontSize: ResponsiveHelper.sp(15.0),
+                      fontFamily: 'JetBrains Mono',
+                    ).responsive(context),
+                  ),
                 ],
               ),
-              SizedBox(height: ResponsiveHelper.h(10)),
+            ),
+          );
+        }),
+        SizedBox(height: ResponsiveHelper.h(10.0)),
 
-              // Official Break Banner
-              Obx(() {
-                final isMatchStarted = controller.isMatchStarted.value;
-                final isRunning = controller.isTimerRunning.value;
-                if (isMatchStarted && !isRunning) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: ResponsiveHelper.h(8)),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ResponsiveHelper.w(10),
-                      vertical: ResponsiveHelper.h(4),
+        // Main Live Scoreboard Container Card
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(ResponsiveHelper.w(16.0)),
+          decoration: BoxDecoration(
+            color: AppColors.cardSurface,
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(20.0)),
+            border: Border.all(color: AppColors.borderDark),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Centered Half Header: — 1st Half —
+              Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: ResponsiveHelper.w(20.0),
+                      height: 1.5,
+                      color: AppColors.accent.withValues(alpha: 0.6),
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.amber),
+                    SizedBox(width: ResponsiveHelper.w(8.0)),
+                    Text(
+                      '${state.currentHalf}${state.currentHalf == 1 ? 'st' : 'nd'} Half',
+                      style: AppTypography.labelCaps.copyWith(
+                        color: AppColors.accent,
+                        fontSize: ResponsiveHelper.sp(13.0),
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.8,
+                      ).responsive(context),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.pause_circle_filled, color: Colors.amber, size: 14),
-                        const SizedBox(width: 6),
-                        Text(
-                          'MATCH ON BREAK - TAP RESUME TO CONTINUE',
-                          style: AppTypography.labelCaps.copyWith(
-                            color: Colors.amber,
-                            fontWeight: FontWeight.bold,
-                            fontSize: context.responsiveFont(10),
-                          ),
-                        ),
-                      ],
+                    SizedBox(width: ResponsiveHelper.w(8.0)),
+                    Container(
+                      width: ResponsiveHelper.w(20.0),
+                      height: 1.5,
+                      color: AppColors.accent.withValues(alpha: 0.6),
                     ),
-                  );
-                }
-                return const SizedBox.shrink();
-              }),
+                  ],
+                ),
+              ),
+              SizedBox(height: ResponsiveHelper.h(16.0)),
 
+              // 2 Team Cards Side-by-Side (Side A vs Side B)
               Row(
                 children: [
-                  // Side A Box
+                  // Side A Team Box
                   Expanded(
-                    child: _buildSideScoreBox(
-                      context: context,
-                      sideName: sideAName,
+                    child: _buildTeamCardBox(
+                      context,
+                      teamName: sideAName,
                       score: state.sideAScore,
                       activeCount: state.sideAActiveCount,
                       maxActive: maxActive,
                       isRaiding: isRaidingA,
                       isDoOrDie: isRaidingA && state.isDoOrDieA,
-                      accentColor: AppColors.error,
-                      onTapScore: () => onScoreRaid(PlayerSide.sideA),
                     ),
                   ),
 
-                  // VS & Half Header
+                  // VS Divider
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(6)),
+                    padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10.0)),
                     child: Column(
                       children: [
+                        Container(
+                          width: 3.0,
+                          height: 3.0,
+                          decoration: const BoxDecoration(
+                            color: AppColors.mutedText,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        SizedBox(height: ResponsiveHelper.h(8.0)),
                         Text(
                           'VS',
                           style: AppTypography.headlineSm.copyWith(
                             color: AppColors.mutedText,
-                            fontSize: context.responsiveFont(12),
+                            fontSize: ResponsiveHelper.sp(14.0),
                             fontWeight: FontWeight.w900,
-                          ),
+                          ).responsive(context),
                         ),
-                        SizedBox(height: ResponsiveHelper.h(6)),
+                        SizedBox(height: ResponsiveHelper.h(8.0)),
                         Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: ResponsiveHelper.w(8),
-                            vertical: ResponsiveHelper.h(3),
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.surfaceElevated,
-                            borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                            border: Border.all(color: AppColors.borderDark),
-                          ),
-                          child: Text(
-                            '${state.currentHalf}st Half',
-                            style: AppTypography.labelCaps.copyWith(
-                              color: AppColors.primaryGreen,
-                              fontSize: context.responsiveFont(10),
-                            ),
+                          width: 3.0,
+                          height: 3.0,
+                          decoration: const BoxDecoration(
+                            color: AppColors.mutedText,
+                            shape: BoxShape.circle,
                           ),
                         ),
                       ],
                     ),
                   ),
 
-                  // Side B Box
+                  // Side B Team Box
                   Expanded(
-                    child: _buildSideScoreBox(
-                      context: context,
-                      sideName: sideBName,
+                    child: _buildTeamCardBox(
+                      context,
+                      teamName: sideBName,
                       score: state.sideBScore,
                       activeCount: state.sideBActiveCount,
                       maxActive: maxActive,
                       isRaiding: isRaidingB,
                       isDoOrDie: isRaidingB && state.isDoOrDieB,
-                      accentColor: AppColors.primary,
-                      onTapScore: () => onScoreRaid(PlayerSide.sideB),
                     ),
                   ),
                 ],
@@ -254,111 +199,135 @@ class KabaddiScoreDisplay extends StatelessWidget {
     );
   }
 
-  Widget _buildSideScoreBox({
-    required BuildContext context,
-    required String sideName,
+  Widget _buildTeamCardBox(
+    BuildContext context, {
+    required String teamName,
     required int score,
     required int activeCount,
     required int maxActive,
     required bool isRaiding,
     required bool isDoOrDie,
-    required Color accentColor,
-    required VoidCallback onTapScore,
   }) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveHelper.w(8),
-        vertical: ResponsiveHelper.h(10),
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceElevated,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(
-          color: isRaiding ? (isDoOrDie ? AppColors.error : accentColor) : AppColors.borderDark,
-          width: isRaiding ? 2 : 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          // Raiding Badge Status
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.topCenter,
+      children: [
+        // Card Body Container
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveHelper.w(12.0),
+            vertical: ResponsiveHelper.h(14.0),
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.background,
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(18.0)),
+            border: Border.all(
+              color: isRaiding ? AppColors.accent : AppColors.borderDark,
+              width: isRaiding ? 2.0 : 1.0,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              if (isRaiding)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ResponsiveHelper.w(6),
-                    vertical: ResponsiveHelper.h(2),
-                  ),
-                  decoration: BoxDecoration(
-                    color: isDoOrDie ? AppColors.error : accentColor,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    isDoOrDie ? 'DO-OR-DIE' : 'RAIDING',
-                    style: AppTypography.labelCaps.copyWith(
-                      color: Colors.black,
-                      fontSize: context.responsiveFont(9),
-                      fontWeight: FontWeight.w900,
+              SizedBox(height: isRaiding ? ResponsiveHelper.h(8.0) : ResponsiveHelper.h(2.0)),
+
+              // Shield Icon (Filled green if raiding, else muted outline)
+              Icon(
+                isRaiding ? Icons.shield_rounded : Icons.shield_outlined,
+                color: isRaiding ? AppColors.accent : AppColors.mutedText,
+                size: ResponsiveHelper.w(26.0),
+              ),
+              SizedBox(height: ResponsiveHelper.h(6.0)),
+
+              // Large Score Digit
+              Text(
+                '$score',
+                style: AppTypography.displayLg.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: ResponsiveHelper.sp(44.0),
+                  fontWeight: FontWeight.w900,
+                  height: 1.0,
+                ).responsive(context),
+              ),
+              SizedBox(height: ResponsiveHelper.h(8.0)),
+
+              // Team Name
+              Text(
+                teamName,
+                style: AppTypography.bodySm.copyWith(
+                  color: AppColors.textPrimary,
+                  fontSize: ResponsiveHelper.sp(13.0),
+                  fontWeight: FontWeight.bold,
+                ).responsive(context),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: ResponsiveHelper.h(8.0)),
+
+              // Active Players Pill
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveHelper.w(10.0),
+                  vertical: ResponsiveHelper.h(3.0),
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.cardSurface,
+                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12.0)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: AppColors.accent,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                )
-              else
-                const SizedBox(height: 18),
+                    SizedBox(width: ResponsiveHelper.w(4.0)),
+                    Text(
+                      'Active: $activeCount/$maxActive',
+                      style: AppTypography.labelCaps.copyWith(
+                        color: AppColors.accent,
+                        fontSize: ResponsiveHelper.sp(10.0),
+                        fontWeight: FontWeight.bold,
+                      ).responsive(context),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-          SizedBox(height: ResponsiveHelper.h(4)),
+        ),
 
-          // Score Digits
-          GestureDetector(
-            onTap: onTapScore,
-            child: Text(
-              '$score',
-              style: AppTypography.displayScoreSora.copyWith(
-                color: isRaiding ? AppColors.textPrimary : AppColors.textSecondary,
-                fontSize: context.responsiveFont(54),
-                fontWeight: FontWeight.bold,
-                height: 1.0,
+        // RAIDING / DO-OR-DIE Top Floating Pill Badge
+        if (isRaiding)
+          Positioned(
+            top: -11,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(10.0),
+                vertical: ResponsiveHelper.h(3.0),
+              ),
+              decoration: BoxDecoration(
+                color: isDoOrDie ? AppColors.error : AppColors.accent,
+                borderRadius: BorderRadius.circular(ResponsiveHelper.w(10.0)),
+              ),
+              child: Text(
+                isDoOrDie ? 'DO-OR-DIE' : 'RAIDING',
+                style: AppTypography.labelCaps.copyWith(
+                  color: AppColors.background,
+                  fontSize: ResponsiveHelper.sp(9.0),
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.8,
+                ).responsive(context),
               ),
             ),
           ),
-          SizedBox(height: ResponsiveHelper.h(6)),
-
-          // Team Title
-          Text(
-            sideName,
-            style: AppTypography.headlineSm.copyWith(
-              color: AppColors.textPrimary,
-              fontSize: context.responsiveFont(12),
-              fontWeight: FontWeight.bold,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: ResponsiveHelper.h(4)),
-
-          // Active Players Pill
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: ResponsiveHelper.w(8),
-              vertical: ResponsiveHelper.h(2),
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              'Active: $activeCount/$maxActive',
-              style: AppTypography.bodyXs.copyWith(
-                color: AppColors.primaryGreen,
-                fontSize: context.responsiveFont(11),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
+      ],
     );
   }
 }

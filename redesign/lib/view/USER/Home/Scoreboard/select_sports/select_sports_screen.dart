@@ -23,7 +23,6 @@ import 'widgets/select_sport_app_bar.dart';
 import 'widgets/select_sport_search_bar.dart';
 import 'widgets/select_sport_tile.dart';
 import 'widgets/select_sport_category_section.dart';
-import 'widgets/sport_match_setup_screen.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
 Color kBg = AppColors.background;
@@ -80,14 +79,14 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
           Icons.sports_basketball,
           onTap: () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (_) => const BasketballSetupScreen())),
+          ).push(MaterialPageRoute(builder: (_) => BasketballSetupScreen())),
         ),
         SportItem(
           'Volleyball',
           Icons.sports_volleyball,
           onTap: () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (_) => const VolleyballSetupScreen())),
+          ).push(MaterialPageRoute(builder: (_) => VolleyballSetupScreen())),
         ),
         SportItem(
           'Hockey',
@@ -206,35 +205,6 @@ class _SelectSportScreenState extends State<SelectSportScreen> {
         ),
       ],
     };
-  }
-
-  void _openSetup(String sport) {
-    setState(() => selectedSport = sport);
-
-    if (sport == 'Football') {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => FootballCreateMatchScreen()),
-      );
-      return;
-    }
-
-    if (sport == 'Table Tennis') {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => TableTennisSetupScreen()),
-      );
-      return;
-    }
-
-    if (sport == 'Squash') {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => SquashSetupScreen()),
-      );
-      return;
-    }
-
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => SportMatchSetupScreen(sport: sport)),
-    );
   }
 
   @override

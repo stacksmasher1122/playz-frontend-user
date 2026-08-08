@@ -21,7 +21,6 @@ import 'widgets/member_count_slider.dart';
 import 'widgets/create_group_submit_button.dart';
 import 'widgets/create_group_overlay.dart';
 import 'widgets/group_location_picker_card.dart';
-import 'package:redesign/theme/responsive_helper.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});

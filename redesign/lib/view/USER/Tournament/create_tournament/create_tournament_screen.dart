@@ -5,14 +5,12 @@ import 'package:redesign/theme/responsive_helper.dart';
 
 import '../../../../controller/User_Controller/Tournament_Controller/create_tournament_controller.dart';
 import 'create_tournament_skeleton.dart';
-import 'widgets/access_toggle_widget.dart';
 import 'widgets/bottom_action_bar_widget.dart';
 import 'widgets/cover_image_widget.dart';
-import 'widgets/date_range_widget.dart';
 import 'widgets/description_field_widget.dart';
+import 'widgets/schedule_date_time_widget.dart';
 import 'widgets/sport_selector_widget.dart';
 import 'widgets/step_progress_widget.dart';
-import 'widgets/timing_dropdown_widget.dart';
 import 'widgets/tournament_appbar_widget.dart';
 import 'widgets/tournament_text_field.dart';
 
@@ -50,7 +48,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Obx(() => AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
+          duration: const Duration(milliseconds: 300),
           child: controller.isLoading.value
               ? const CreateTournamentSkeleton(key: ValueKey('skeleton'))
               : _CreateTournamentContent(
@@ -91,73 +89,87 @@ class _CreateTournamentContentState extends State<_CreateTournamentContent> {
 
     return Column(
       children: [
+        // 1. Common AppBar with AppBackButton and Green Cross Button ✕
         TournamentAppbarWidget(
           onBack: () => widget.controller.goBack(context),
           onClose: () => widget.controller.goBack(context),
         ),
+
+        // 2. Step Progress Bar
         Obx(() => StepProgressWidget(currentStep: widget.controller.currentStep.value)),
+
+        // 3. Scrollable Form Body
         Expanded(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: context.widthPct(4),
-                vertical: context.heightPct(2.5),
+                horizontal: ResponsiveHelper.w(16.0),
+                vertical: ResponsiveHelper.h(16.0),
               ),
               child: Form(
                 key: widget.formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // A. Sports Search Bar + Scoreable Sports Selector
                     Obx(() => SportSelectorWidget(
-                      sports: widget.controller.sports,
-                      selectedSport: widget.controller.selectedSport.value,
-                      onSportSelected: widget.controller.selectSport,
-                    )),
-                    SizedBox(height: context.heightPct(2.5)),
+                          sports: widget.controller.filteredSports,
+                          selectedSport: widget.controller.selectedSport.value,
+                          onSportSelected: widget.controller.selectSport,
+                          searchQuery: widget.controller.searchQuery.value,
+                          onSearchChanged: (query) =>
+                              widget.controller.searchQuery.value = query,
+                        )),
+                    SizedBox(height: ResponsiveHelper.h(20.0)),
+
+                    // B. Cover Image Selection Card
                     Obx(() => CoverImageWidget(
-                      onTap: widget.controller.pickCoverImage,
-                      imagePath: widget.controller.coverImagePath.value,
-                    )),
-                    SizedBox(height: context.heightPct(2)),
+                          onTap: widget.controller.pickCoverImage,
+                          imagePath: widget.controller.coverImagePath.value,
+                        )),
+                    SizedBox(height: ResponsiveHelper.h(16.0)),
+
+                    // C. Tournament Name Text Field
                     TournamentTextField(
                       label: "Tournament Name",
                       controller: widget.nameController,
-                      hint: "e.g. Summer Cup 2024",
+                      hint: "e.g. PlayZ Championship 2026",
                       validator: (val) {
                         if (val == null || val.isEmpty) return 'Enter tournament name';
                         return null;
                       },
                     ),
-                    SizedBox(height: context.heightPct(2)),
-                    Obx(() => DateRangeWidget(
-                      startDate: widget.controller.startDate.value,
-                      endDate: widget.controller.endDate.value,
-                      onStartTap: () => widget.controller.selectStartDate(context),
-                      onEndTap: () => widget.controller.selectEndDate(context),
-                    )),
-                    SizedBox(height: context.heightPct(2)),
-                    Obx(() => TimingDropdownWidget(
-                      options: widget.controller.timingOptions,
-                      selectedValue: widget.controller.selectedTiming.value,
-                      onChanged: (val) {
-                        if (val != null) widget.controller.selectTiming(val);
-                      },
-                    )),
-                    SizedBox(height: context.heightPct(2)),
-                    Obx(() => AccessToggleWidget(
-                      isEnabled: widget.controller.isPublicAccess.value,
-                      onToggle: widget.controller.toggleAccess,
-                    )),
-                    SizedBox(height: context.heightPct(2)),
+                    SizedBox(height: ResponsiveHelper.h(20.0)),
+
+                    // D. Schedule Timings: Start Date, Start Time, End Date, End Time
+                    Obx(() => ScheduleDateTimeWidget(
+                          startDate: widget.controller.startDate.value,
+                          startTime: widget.controller.startTime.value,
+                          endDate: widget.controller.endDate.value,
+                          endTime: widget.controller.endTime.value,
+                          onSelectStartDate: () =>
+                              widget.controller.selectStartDate(context),
+                          onSelectStartTime: () =>
+                              widget.controller.selectStartTime(context),
+                          onSelectEndDate: () =>
+                              widget.controller.selectEndDate(context),
+                          onSelectEndTime: () =>
+                              widget.controller.selectEndTime(context),
+                        )),
+                    SizedBox(height: ResponsiveHelper.h(20.0)),
+
+                    // E. Description Field
                     DescriptionFieldWidget(controller: widget.descriptionController),
-                    SizedBox(height: context.heightPct(3)),
+                    SizedBox(height: ResponsiveHelper.h(24.0)),
                   ],
                 ),
               ),
             ),
           ),
         ),
+
+        // 4. Bottom Action Bar
         BottomActionBarWidget(
           onBack: () => widget.controller.goBack(context),
           onSaveDraft: widget.controller.saveDraft,

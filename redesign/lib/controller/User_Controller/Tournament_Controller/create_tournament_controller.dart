@@ -1,43 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:redesign/theme/app_colors.dart';
 import '../../../view/USER/Tournament/venue_selection/venue_selection_page.dart';
 
 class CreateTournamentController extends GetxController {
   final RxBool isLoading = true.obs;
-  final RxString selectedSport = "Football".obs;
-  final RxString selectedTiming = "Morning (6 AM - 12 PM)".obs;
-  final RxBool isPublicAccess = true.obs;
-  final Rx<DateTime?> startDate = Rx<DateTime?>(null);
-  final Rx<DateTime?> endDate = Rx<DateTime?>(null);
+  final RxString selectedSport = "Cricket".obs;
+  final RxString searchQuery = "".obs;
+
+  final Rx<DateTime?> startDate = Rx<DateTime?>(DateTime.now());
+  final Rx<TimeOfDay?> startTime = Rx<TimeOfDay?>(const TimeOfDay(hour: 9, minute: 0));
+  final Rx<DateTime?> endDate = Rx<DateTime?>(DateTime.now().add(const Duration(days: 3)));
+  final Rx<TimeOfDay?> endTime = Rx<TimeOfDay?>(const TimeOfDay(hour: 18, minute: 0));
+
   final RxInt currentStep = 1.obs;
   final RxString coverImagePath = "".obs;
-  
+
   // Storing form fields to construct model later
   final RxString tournamentName = "".obs;
   final RxString description = "".obs;
 
   final RxList<String> sports = <String>[].obs;
-  final RxList<String> timingOptions = <String>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     loadDefaults();
-    // Simulate loading for UI testing
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       isLoading.value = false;
     });
   }
 
   void loadDefaults() {
-    sports.assignAll(["Cricket", "Football", "Tennis", "Badminton", "Basketball"]);
-    timingOptions.assignAll([
-      "Morning (6 AM - 12 PM)",
-      "Afternoon (12 PM - 6 PM)",
-      "Evening (6 PM - 10 PM)",
-      "Any Time"
+    sports.assignAll([
+      "Cricket",
+      "Football",
+      "Basketball",
+      "Tennis",
+      "Badminton",
+      "Table Tennis",
+      "Volleyball",
+      "Hockey",
+      "Kabaddi",
+      "Kho Kho",
+      "Boxing",
+      "MMA",
+      "Wrestling",
+      "Judo",
+      "Karate",
+      "Taekwondo",
+      "Squash",
+      "Pickleball",
     ]);
+  }
+
+  List<String> get filteredSports {
+    if (searchQuery.value.trim().isEmpty) {
+      return sports;
+    }
+    final query = searchQuery.value.trim().toLowerCase();
+    return sports.where((s) => s.toLowerCase().contains(query)).toList();
   }
 
   void selectSport(String sport) {
@@ -58,9 +81,48 @@ class CreateTournamentController extends GetxController {
       initialDate: startDate.value ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.primary,
+              onPrimary: Colors.black,
+              surface: AppColors.surface,
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null) {
       startDate.value = picked;
+      if (endDate.value != null && endDate.value!.isBefore(picked)) {
+        endDate.value = picked;
+      }
+    }
+  }
+
+  Future<void> selectStartTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: startTime.value ?? const TimeOfDay(hour: 9, minute: 0),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.primary,
+              onPrimary: Colors.black,
+              surface: AppColors.surface,
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      startTime.value = picked;
     }
   }
 
@@ -70,18 +132,46 @@ class CreateTournamentController extends GetxController {
       initialDate: endDate.value ?? (startDate.value ?? DateTime.now()),
       firstDate: startDate.value ?? DateTime.now(),
       lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.primary,
+              onPrimary: Colors.black,
+              surface: AppColors.surface,
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null) {
       endDate.value = picked;
     }
   }
 
-  void selectTiming(String value) {
-    selectedTiming.value = value;
-  }
-
-  void toggleAccess() {
-    isPublicAccess.toggle();
+  Future<void> selectEndTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: endTime.value ?? const TimeOfDay(hour: 18, minute: 0),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.primary,
+              onPrimary: Colors.black,
+              surface: AppColors.surface,
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      endTime.value = picked;
+    }
   }
 
   void saveDraft() {

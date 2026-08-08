@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/theme/app_colors.dart';
@@ -42,14 +43,22 @@ class ScoreboardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
     String teamCode = 'BAT';
+    String? teamLogoUrl;
 
     if (controller.currentMatch.value != null) {
+      final match = controller.currentMatch.value!;
       final String teamName = inningsNumber == 1
-          ? controller.currentMatch.value!.battingFirstTeam
-          : controller.currentMatch.value!.bowlingFirstTeam;
+          ? match.battingFirstTeam
+          : match.bowlingFirstTeam;
       teamCode = teamName.length >= 3
           ? teamName.substring(0, 3).toUpperCase()
           : teamName.toUpperCase();
+
+      if (teamName == match.homeTeamName) {
+        teamLogoUrl = match.homeTeamLogo;
+      } else if (teamName == match.awayTeamName) {
+        teamLogoUrl = match.awayTeamLogo;
+      }
     }
 
     return Container(
@@ -63,7 +72,7 @@ class ScoreboardHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              _teamLogo(teamCode, AppColors.infoBlue),
+              _teamLogo(teamCode, AppColors.infoBlue, imageUrl: teamLogoUrl),
               Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -225,7 +234,9 @@ class ScoreboardHeader extends StatelessWidget {
     );
   }
 
-  Widget _teamLogo(String code, Color color) {
+  Widget _teamLogo(String code, Color color, {String? imageUrl}) {
+    final bool hasImage = imageUrl != null && imageUrl.trim().isNotEmpty;
+
     return Container(
       width: ResponsiveHelper.w(52),
       height: ResponsiveHelper.h(52),
@@ -233,16 +244,24 @@ class ScoreboardHeader extends StatelessWidget {
         color: color.withValues(alpha: 0.2),
         shape: BoxShape.circle,
         border: Border.all(color: color.withValues(alpha: 0.5), width: 1.5),
+        image: hasImage
+            ? DecorationImage(
+                image: CachedNetworkImageProvider(imageUrl),
+                fit: BoxFit.cover,
+              )
+            : null,
       ),
       alignment: Alignment.center,
-      child: Text(
-        code,
-        style: TextStyle(
-          color: color,
-          fontWeight: FontWeight.w800,
-          fontSize: ResponsiveHelper.sp(16),
-        ),
-      ),
+      child: !hasImage
+          ? Text(
+              code,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w800,
+                fontSize: ResponsiveHelper.sp(16),
+              ),
+            )
+          : null,
     );
   }
 }

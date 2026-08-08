@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Taekwondo/taekwondo_model.dart';

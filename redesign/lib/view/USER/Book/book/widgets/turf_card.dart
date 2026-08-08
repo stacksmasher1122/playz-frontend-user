@@ -132,7 +132,7 @@ class _TurfCardState extends State<TurfCard>
       onTap: () async {
         setState(() => _isPressed = false);
         await Future.delayed(const Duration(milliseconds: 60));
-        if (mounted) {
+        if (context.mounted) {
           _navigateToTurfDetail(context, turf);
         }
       },

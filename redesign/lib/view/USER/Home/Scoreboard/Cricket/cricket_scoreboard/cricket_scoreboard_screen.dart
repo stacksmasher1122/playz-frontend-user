@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:redesign/theme/app_colors.dart';
-import 'package:redesign/theme/app_typography.dart';
 import 'package:get/get.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_state_models.dart';
@@ -294,7 +293,11 @@ class _CricketScoreboardScreenState extends State<CricketScoreboardScreen> {
         );
       },
       onFinish: () {
-        Get.offAll(() => const ScoreboardHubScreen());
+        if (controller.tournamentId.value.isNotEmpty) {
+          controller.endTournamentMatch(context);
+        } else {
+          Get.offAll(() => const ScoreboardHubScreen());
+        }
       },
     );
   }

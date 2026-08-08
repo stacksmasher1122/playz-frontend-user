@@ -58,8 +58,8 @@ class XpRewardService {
       final updates = <String, dynamic>{};
       final Map<String, int> syncedSportXp = {};
 
-      bookingCounts.forEach((sportKey, count) {
-        final calculatedXp = count * 50;
+      bookingCounts.forEach((sportKey, bookingCount) {
+        final calculatedXp = bookingCount * 50;
         final currentXp = (existingSportsXp[sportKey] as num?)?.toInt() ?? 0;
         if (calculatedXp > currentXp) {
           updates['sportsXp.$sportKey'] = calculatedXp;

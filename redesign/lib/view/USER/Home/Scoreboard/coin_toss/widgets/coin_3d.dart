@@ -56,6 +56,7 @@ class Coin3D extends StatelessWidget {
         alignment: Alignment.center,
         transform: Matrix4.identity()
           ..setEntry(3, 2, 0.001)
+          // ignore: deprecated_member_use
           ..translate(
             xOffset * randomDriftScale,
             verticalShift * verticalVelocityRatio,
@@ -64,6 +65,7 @@ class Coin3D extends StatelessWidget {
             angle + (isIdle ? idleWobble : 0) + wobbleAngle,
           )
           ..rotateZ(isIdle ? 0 : randomTilt)
+          // ignore: deprecated_member_use
           ..scale(1.0, scaleValue),
         child: Stack(
           alignment: Alignment.center,
@@ -72,6 +74,7 @@ class Coin3D extends StatelessWidget {
               Transform(
                 alignment: Alignment.center,
                 transform: Matrix4.identity()
+                  // ignore: deprecated_member_use
                   ..translate(
                     0.0,
                     0.0,
@@ -130,6 +133,7 @@ class Coin3D extends StatelessWidget {
               Transform(
                 alignment: Alignment.center,
                 transform: Matrix4.identity()
+                  // ignore: deprecated_member_use
                   ..translate(0.0, 0.0, thickness / 2),
                 child: Container(
                   decoration: BoxDecoration(
@@ -159,6 +163,7 @@ class Coin3D extends StatelessWidget {
               Transform(
                 alignment: Alignment.center,
                 transform: Matrix4.identity()
+                  // ignore: deprecated_member_use
                   ..translate(0.0, 0.0, -thickness / 2)
                   ..rotateX(pi),
                 child: Container(

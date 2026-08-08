@@ -1,5 +1,3 @@
-import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Squash/squash_state_models.dart';
-
 class SquashMatchModel {
   final String matchId;
   final String createdBy;

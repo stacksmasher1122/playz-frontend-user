@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/common/app_back_button.dart';
 
 import '../../../../controller/User_Controller/Tournament_Controller/format_setup_controller.dart';
 import '../venue_selection/widgets/bottom_navigation.dart';
@@ -41,179 +42,174 @@ class _FormatSetupPageState extends State<FormatSetupPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: AppColors.textPrimary,
-            size: context.responsiveFont(20),
-          ),
-          onPressed: () => Navigator.pop(context),
+        leading: Padding(
+          padding: EdgeInsets.only(left: ResponsiveHelper.w(8.0)),
+          child: const AppBackButton(),
         ),
-        title: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            "Create Tournament",
-            style: AppTypography.headlineSm.copyWith(
-              color: AppColors.accent,
-              fontSize: context.responsiveFont(18),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+        title: Text(
+          "Create Tournament",
+          style: AppTypography.headlineMd.copyWith(
+            color: AppColors.primary,
+            fontSize: ResponsiveHelper.sp(18.0),
+            fontWeight: FontWeight.w900,
+          ).responsive(context),
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.close_rounded,
-              color: AppColors.textPrimary,
-              size: context.responsiveFont(22),
+          Padding(
+            padding: EdgeInsets.only(right: ResponsiveHelper.w(12.0)),
+            child: InkWell(
+              onTap: () => Navigator.pop(context),
+              borderRadius: BorderRadius.circular(ResponsiveHelper.w(20.0)),
+              child: Container(
+                width: ResponsiveHelper.w(36.0),
+                height: ResponsiveHelper.w(36.0),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.card,
+                ),
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.close_rounded,
+                  color: AppColors.primaryGreen,
+                  size: ResponsiveHelper.w(20.0),
+                ),
+              ),
             ),
-            onPressed: () => Navigator.pop(context),
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: AppColors.card,
-            height: 1.0,
-          ),
-        ),
       ),
       body: SafeArea(
         child: Column(
           children: [
-            // Scrollable Content
+            // Scrollable Form Body
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: context.widthPct(4)),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ResponsiveHelper.w(16.0),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: context.heightPct(2)),
+                      SizedBox(height: ResponsiveHelper.h(8.0)),
+
+                      // Progress Header (Step 3 of 5)
                       const ProgressHeader(
                         currentStep: 3,
                         totalSteps: 5,
                         title: "Step 3 of 5: Format Setup",
                       ),
-                      SizedBox(height: context.heightPct(3)),
+                      SizedBox(height: ResponsiveHelper.h(20.0)),
 
-                      // Section 1: Team Composition
+                      // Section 1: Team Composition & Squad Rules
                       Text(
                         "Team Composition",
                         style: AppTypography.headlineSm.copyWith(
                           color: AppColors.textPrimary,
-                          fontSize: context.responsiveFont(16),
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontSize: ResponsiveHelper.sp(16.0),
+                          fontWeight: FontWeight.w900,
+                        ).responsive(context),
                       ),
-                      SizedBox(height: context.heightPct(1.5)),
+                      SizedBox(height: ResponsiveHelper.h(12.0)),
                       TeamCompositionWidget(controller: controller),
-                      SizedBox(height: context.heightPct(3)),
+                      SizedBox(height: ResponsiveHelper.h(24.0)),
 
-                      // Section 2: Match Type
+                      // Section 2: Match Format Type
                       Text(
-                        "Match Type",
+                        "Match Format",
                         style: AppTypography.headlineSm.copyWith(
                           color: AppColors.textPrimary,
-                          fontSize: context.responsiveFont(16),
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontSize: ResponsiveHelper.sp(16.0),
+                          fontWeight: FontWeight.w900,
+                        ).responsive(context),
                       ),
-                      SizedBox(height: context.heightPct(1.5)),
+                      SizedBox(height: ResponsiveHelper.h(12.0)),
                       Obx(() => Column(
-                        children: [
-                          Row(
                             children: [
-                              Expanded(
-                                child: FormatCardWidget(
-                                  title: "Knockout",
-                                  description: "Single elimination.",
-                                  icon: Icons.account_tree_rounded,
-                                  isSelected: controller.matchType.value == "knockout",
-                                  onTap: () => controller.selectMatchType("knockout"),
-                                ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: FormatCardWidget(
+                                      title: "Knockout",
+                                      description: "Single elimination bracket",
+                                      icon: Icons.account_tree_rounded,
+                                      isSelected:
+                                          controller.matchType.value == "knockout",
+                                      onTap: () =>
+                                          controller.selectMatchType("knockout"),
+                                    ),
+                                  ),
+                                  SizedBox(width: ResponsiveHelper.w(12.0)),
+                                  Expanded(
+                                    child: FormatCardWidget(
+                                      title: "Round Robin (Single)",
+                                      description: "Every team plays each other once",
+                                      icon: Icons.table_chart_rounded,
+                                      isSelected: controller.matchType.value ==
+                                          "roundRobinSingle",
+                                      onTap: () => controller
+                                          .selectMatchType("roundRobinSingle"),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: context.widthPct(3)),
-                              Expanded(
-                                child: FormatCardWidget(
-                                  title: "Round Robin (Single)",
-                                  description: "Play everyone once.",
-                                  icon: Icons.table_chart_rounded,
-                                  isSelected: controller.matchType.value == "roundRobinSingle",
-                                  onTap: () => controller.selectMatchType("roundRobinSingle"),
-                                ),
+                              SizedBox(height: ResponsiveHelper.h(12.0)),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: FormatCardWidget(
+                                      title: "Round Robin (Double)",
+                                      description: "Home & away fixture rounds",
+                                      icon: Icons.cached_rounded,
+                                      isSelected: controller.matchType.value ==
+                                          "roundRobinDouble",
+                                      onTap: () => controller
+                                          .selectMatchType("roundRobinDouble"),
+                                    ),
+                                  ),
+                                  SizedBox(width: ResponsiveHelper.w(12.0)),
+                                  Expanded(
+                                    child: FormatCardWidget(
+                                      title: "Groups to Knockout",
+                                      description: "Group matches then playoffs",
+                                      icon: Icons.grid_view_rounded,
+                                      isSelected: controller.matchType.value ==
+                                          "groupToKnockout",
+                                      onTap: () => controller
+                                          .selectMatchType("groupToKnockout"),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
-                          ),
-                          SizedBox(height: context.heightPct(1.5)),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: FormatCardWidget(
-                                  title: "Round Robin (Double)",
-                                  description: "Play everyone twice.",
-                                  icon: Icons.cached_rounded,
-                                  isSelected: controller.matchType.value == "roundRobinDouble",
-                                  onTap: () => controller.selectMatchType("roundRobinDouble"),
-                                ),
-                              ),
-                              SizedBox(width: context.widthPct(3)),
-                              Expanded(
-                                child: FormatCardWidget(
-                                  title: "Groups to Knockout",
-                                  description: "Group stage then playoffs.",
-                                  icon: Icons.grid_view_rounded,
-                                  isSelected: controller.matchType.value == "groupToKnockout",
-                                  onTap: () => controller.selectMatchType("groupToKnockout"),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )),
-                      SizedBox(height: context.heightPct(3)),
+                          )),
+                      SizedBox(height: ResponsiveHelper.h(24.0)),
 
-                      // Section 3: Number of Participants/Teams
+                      // Section 3: Max No. of Teams Card (Unified single card)
                       Text(
-                        "Expected Number of Participants/Teams",
+                        "Registration Cap",
                         style: AppTypography.headlineSm.copyWith(
                           color: AppColors.textPrimary,
-                          fontSize: context.responsiveFont(16),
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontSize: ResponsiveHelper.sp(16.0),
+                          fontWeight: FontWeight.w900,
+                        ).responsive(context),
                       ),
-                      SizedBox(height: context.heightPct(1.5)),
+                      SizedBox(height: ResponsiveHelper.h(12.0)),
                       Obx(() => ParticipantCounterWidget(
-                        title: "Expected Participants",
-                        subtitle: "Will be used to estimate schedule",
-                        count: controller.participantCount.value,
-                        onIncrement: controller.incrementParticipants,
-                        onDecrement: controller.decrementParticipants,
-                      )),
-                      SizedBox(height: context.heightPct(2)),
-                      Text(
-                        "Registration Cap (Max Teams)",
-                        style: AppTypography.headlineSm.copyWith(
-                          color: AppColors.textPrimary,
-                          fontSize: context.responsiveFont(16),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: context.heightPct(1.5)),
-                      Obx(() => ParticipantCounterWidget(
-                        title: "Max Teams Allowed",
-                        subtitle: controller.matchType.value == 'knockout'
-                            ? "Hint: Powers of 2 (4, 8, 16) make clean knockout brackets."
-                            : "Registration will lock automatically when this is reached.",
-                        count: controller.maxTeams.value,
-                        onIncrement: controller.incrementMaxTeams,
-                        onDecrement: controller.decrementMaxTeams,
-                      )),
-                      SizedBox(height: context.heightPct(3)),
+                            title: "MAX NO. OF TEAMS",
+                            subtitle: controller.matchType.value == 'knockout'
+                                ? "Powers of 2 (4, 8, 16, 32) make clean knockout brackets."
+                                : "Registration will lock automatically when limit is reached.",
+                            count: controller.maxTeams.value,
+                            onIncrement: controller.incrementMaxTeams,
+                            onDecrement: controller.decrementMaxTeams,
+                            onPresetSelected: controller.setMaxTeams,
+                          )),
+                      SizedBox(height: ResponsiveHelper.h(24.0)),
 
                       // Section 4: Match Rules
                       RichText(
@@ -221,31 +217,31 @@ class _FormatSetupPageState extends State<FormatSetupPage> {
                           text: "Match Rules ",
                           style: AppTypography.headlineSm.copyWith(
                             color: AppColors.textPrimary,
-                            fontSize: context.responsiveFont(16),
-                            fontWeight: FontWeight.bold,
-                          ),
+                            fontSize: ResponsiveHelper.sp(16.0),
+                            fontWeight: FontWeight.w900,
+                          ).responsive(context),
                           children: [
                             TextSpan(
                               text: "(${controller.selectedSport})",
                               style: AppTypography.bodySm.copyWith(
-                                color: AppColors.muted,
-                                fontSize: context.responsiveFont(13),
-                                fontWeight: FontWeight.normal,
-                              ),
+                                color: AppColors.primary,
+                                fontSize: ResponsiveHelper.sp(13.0),
+                                fontWeight: FontWeight.bold,
+                              ).responsive(context),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: context.heightPct(1.5)),
+                      SizedBox(height: ResponsiveHelper.h(12.0)),
                       DynamicMatchRulesWidget(controller: controller),
-                      SizedBox(height: context.heightPct(3)),
+                      SizedBox(height: ResponsiveHelper.h(28.0)),
                     ],
                   ),
                 ),
               ),
             ),
-            
-            // Bottom Navigation
+
+            // Bottom Navigation (Back & Next Buttons)
             BottomNavigation(
               onBack: () => controller.goBack(context),
               onNext: () => controller.goNext(context),

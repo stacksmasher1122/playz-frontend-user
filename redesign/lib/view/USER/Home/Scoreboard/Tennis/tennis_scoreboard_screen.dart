@@ -6,9 +6,9 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Tennis/tennis_controller.dart';
 import 'package:redesign/view/USER/Home/scoreboard_screen/scoreboards_screen.dart';
+import 'package:redesign/common/common_match_end_sheet.dart';
 import 'widgets/tennis_scoreboard_header.dart';
 import 'widgets/tennis_scoring_dock.dart';
-import 'widgets/tennis_more_actions_sheet.dart';
 
 class TennisScoreboardScreen extends StatefulWidget {
   const TennisScoreboardScreen({super.key});
@@ -76,153 +76,59 @@ class _TennisScoreboardScreenState extends State<TennisScoreboardScreen> {
   }
 
   void _showSetCompletedDialog() {
-    int timeLeft = 15;
-    Timer? countdownTimer;
+    final state = controller.liveState.value;
+    String setSummaryText = 'Set Completed!';
+    if (state != null && state.setScores.isNotEmpty) {
+      final lastCompletedSetIdx = state.currentSetIndex > 0 ? state.currentSetIndex - 1 : 0;
+      if (lastCompletedSetIdx < state.setScores.length) {
+        final setObj = state.setScores[lastCompletedSetIdx];
+        final winnerName = setObj.winnerSide == 'A'
+            ? state.matchConfig.homeTeamName
+            : state.matchConfig.awayTeamName;
+        setSummaryText = '$winnerName won Set ${setObj.setNumber} (${setObj.sideAGames}-${setObj.sideBGames})';
+      }
+    }
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (ctx, setState) {
-            countdownTimer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
-              if (timeLeft > 0) {
-                if (mounted) {
-                  setState(() {
-                    timeLeft--;
-                  });
-                }
-              } else {
-                timer.cancel();
-                if (Navigator.canPop(dialogContext)) {
-                  Navigator.pop(dialogContext);
-                }
-                _isSetBreakFlowActive = false;
-                controller.gamePointUndoSeconds.value = 0;
-              }
-            });
-
-            final String formattedTime = '00:${timeLeft.toString().padLeft(2, '0')}';
-            final state = controller.liveState.value;
-            String setSummaryText = 'Set Completed!';
-            if (state != null && state.setScores.isNotEmpty) {
-              final lastCompletedSetIdx = state.currentSetIndex > 0 ? state.currentSetIndex - 1 : 0;
-              if (lastCompletedSetIdx < state.setScores.length) {
-                final setObj = state.setScores[lastCompletedSetIdx];
-                final winnerName = setObj.winnerSide == 'A'
-                    ? state.matchConfig.homeTeamName
-                    : state.matchConfig.awayTeamName;
-                setSummaryText = '$winnerName won Set ${setObj.setNumber} (${setObj.sideAGames}-${setObj.sideBGames})';
-              }
-            }
-
-            return AlertDialog(
-              backgroundColor: AppColors.surface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-                side: const BorderSide(color: AppColors.coinsGold, width: 1.5),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (bottomSheetContext) => CommonMatchEndSheet(
+        title: 'SET COMPLETED',
+        titleIcon: Icons.emoji_events_rounded,
+        titleIconColor: AppColors.primaryGreen,
+        resultBannerText: setSummaryText,
+        team1Name: state?.matchConfig.homeTeamName ?? 'Side A',
+        team1Score: '${state?.sideASetsWon ?? 0}',
+        team2Name: state?.matchConfig.awayTeamName ?? 'Side B',
+        team2Score: '${state?.sideBSetsWon ?? 0}',
+        autoFinalizeSeconds: 15,
+        timerPrefix: 'Next set in',
+        canUndo: true,
+        undoButtonText: 'UNDO LAST POINT',
+        finishButtonText: 'NEXT SET',
+        onUndo: () {
+          Navigator.pop(bottomSheetContext);
+          _isSetBreakFlowActive = false;
+          controller.undoSetPoint();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Last point undone. Set resumed.'),
+                backgroundColor: AppColors.surface,
               ),
-              title: Row(
-                children: const [
-                  Icon(Icons.emoji_events_rounded, color: AppColors.coinsGold, size: 24),
-                  SizedBox(width: 8),
-                  Text(
-                    'Set Completed',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    setSummaryText,
-                    style: TextStyle(
-                      color: AppColors.coinsGold,
-                      fontSize: ResponsiveHelper.sp(16),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.timer_outlined, color: AppColors.mutedText, size: 18),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Next Set in $formattedTime',
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: ResponsiveHelper.sp(14),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              actions: [
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.error.withValues(alpha: 0.2),
-                    foregroundColor: AppColors.error,
-                    elevation: 0,
-                    side: const BorderSide(color: AppColors.error, width: 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {
-                    countdownTimer?.cancel();
-                    Navigator.pop(dialogContext);
-                    _isSetBreakFlowActive = false;
-                    controller.undoSetPoint();
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Last point undone. Set resumed.'),
-                          backgroundColor: AppColors.surface,
-                        ),
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.undo_rounded, size: 18),
-                  label: const Text(
-                    'UNDO LAST POINT',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    countdownTimer?.cancel();
-                    Navigator.pop(dialogContext);
-                    _isSetBreakFlowActive = false;
-                    controller.gamePointUndoSeconds.value = 0;
-                  },
-                  child: const Text(
-                    'NEXT SET',
-                    style: TextStyle(
-                      color: AppColors.coinsGold,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
             );
-          },
-        );
-      },
+          }
+        },
+        onFinish: () {
+          Navigator.pop(bottomSheetContext);
+          _isSetBreakFlowActive = false;
+          controller.gamePointUndoSeconds.value = 0;
+        },
+      ),
     ).then((_) {
-      countdownTimer?.cancel();
       _isSetBreakFlowActive = false;
     });
   }
@@ -545,54 +451,11 @@ class _TennisScoreboardScreenState extends State<TennisScoreboardScreen> {
         if (didPop) return;
         final shouldExit = await _showExitConfirmationDialog(context);
         if (shouldExit && context.mounted) {
-          Navigator.of(context).pop();
+          _finalizeMatchAndNavigateHome();
         }
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: AppColors.background,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.primaryGreen),
-            onPressed: () async {
-              final shouldExit = await _showExitConfirmationDialog(context);
-              if (shouldExit && context.mounted) {
-                Navigator.of(context).pop();
-              }
-            },
-          ),
-          title: Text(
-            'LIVE SCOREBOARD',
-            style: AppTypography.headlineMd.copyWith(
-              color: AppColors.primaryGreen,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.2,
-              fontStyle: FontStyle.italic,
-              fontSize: context.responsiveFont(16),
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert_rounded, color: AppColors.textPrimary),
-              onPressed: () {
-                final state = controller.liveState.value;
-                if (state == null) return;
-                showModalBottomSheet(
-                  context: context,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  builder: (_) => TennisMoreActionsSheet(
-                    homeTeamName: state.matchConfig.homeTeamName,
-                    awayTeamName: state.matchConfig.awayTeamName,
-                    onRetirePlayer: controller.retirePlayer,
-                    onChangeServer: controller.changeServer,
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
         body: SafeArea(
           child: Obx(() {
             final state = controller.liveState.value;

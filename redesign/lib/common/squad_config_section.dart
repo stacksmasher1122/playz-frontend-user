@@ -246,7 +246,7 @@ class SquadConfigSection extends StatelessWidget {
             () => Switch(
               value: valueStream.value,
               onChanged: onChanged,
-              activeColor: AppColors.background,
+              activeThumbColor: AppColors.background,
               activeTrackColor: AppColors.accent,
               inactiveThumbColor: AppColors.mutedText,
               inactiveTrackColor: const Color(0xFF131313),

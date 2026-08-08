@@ -8,6 +8,7 @@ import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_mod
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/kabaddiSqflite.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Kabaddi/live_match/kabaddi_scoreboard_screen.dart';
+import 'package:redesign/common/common_select_players_sheet.dart';
 
 class KabaddiController extends GetxController {
   final TextEditingController homeTeamController = TextEditingController(text: 'Side A');
@@ -58,18 +59,6 @@ class KabaddiController extends GetxController {
     awayTeamController.addListener(() {
       awayTeamName.value = awayTeamController.text;
     });
-    _initDefaultUserRoster();
-  }
-
-  void _initDefaultUserRoster() {
-    final user = FirebaseAuth.instance.currentUser;
-    final userName = user?.displayName ?? 'You';
-    final userEmail = user?.email ?? 'you@local';
-
-    if (teamARoster.isEmpty) {
-      teamARoster.add(FriendModel(email: userEmail, fullName: '$userName (You)'));
-      teamAPlayers.add(userEmail);
-    }
   }
 
   void resetSetupScreen() {
@@ -84,7 +73,6 @@ class KabaddiController extends GetxController {
     squadLimit.value = 7;
     subsEnabled.value = true;
     maxSubstitutes.value = 5;
-    _initDefaultUserRoster();
   }
 
   void incrementSquadLimit() {
@@ -150,6 +138,23 @@ class KabaddiController extends GetxController {
     playersList.remove(player.email);
   }
 
+  void openPlayerSelection(BuildContext context, bool isTeamA) {
+    final teamName = isTeamA ? homeTeamName.value : awayTeamName.value;
+    final selectedEmails = isTeamA ? teamAPlayers : teamBPlayers;
+    final opponentEmails = isTeamA ? teamBPlayers : teamAPlayers;
+
+    CommonSelectPlayersBottomSheet.show(
+      context,
+      title: 'Select $teamName Players',
+      maxCount: maxAllowedPlayers,
+      selectedPlayerEmails: selectedEmails,
+      opponentPlayerEmails: opponentEmails,
+      onPlayerSelected: (friend) {
+        addTeamPlayer(isTeamA, friend);
+      },
+    );
+  }
+
   void goToToss([BuildContext? context]) {
     final teamAName = homeTeamController.text.trim().isNotEmpty
         ? homeTeamController.text.trim()
@@ -178,8 +183,8 @@ class KabaddiController extends GetxController {
             sport: 'kabaddi',
             onTossComplete: (tossWinner, tossDecision) async {
               final isWinnerA = tossWinner == teamAName;
-              final raidingSide = (isWinnerA && tossDecision == 'raid') ||
-                      (!isWinnerA && tossDecision == 'defend')
+              final bool isRaidChosen = tossDecision.toLowerCase().contains('raid');
+              final raidingSide = (isWinnerA && isRaidChosen) || (!isWinnerA && !isRaidChosen)
                   ? PlayerSide.sideA
                   : PlayerSide.sideB;
 
@@ -245,6 +250,7 @@ class KabaddiController extends GetxController {
       hasMatchEndUndoBeenUsed.value = false;
 
       _initEngineFromState(initialState);
+      startMatch();
       await KabaddiSqfliteService.insertMatch(matchModel);
 
       try {
@@ -328,7 +334,12 @@ class KabaddiController extends GetxController {
 
     if (match.engineState != null) {
       final restoredState = KabaddiMatchState.fromJson(match.engineState!);
+      secondsRemaining.value = restoredState.config.halfDurationMinutes * 60;
+      isProRules.value = restoredState.config.isProRules;
       _initEngineFromState(restoredState);
+      if (!restoredState.isMatchFinished) {
+        startMatch();
+      }
     }
   }
 
@@ -359,9 +370,9 @@ class KabaddiController extends GetxController {
 
   // ════════════════════ LIVE SCORING ACTIONS ════════════════════
 
-  void scoreRaidPoint(PlayerSide team, {int points = 1}) {
+  void scoreRaidPoint(PlayerSide team, {int points = 1, String? revivedPlayerId}) {
     if (!isEngineReady.value || !isMatchStarted.value) return;
-    engine.scoreRaidPoint(team, points: points);
+    engine.scoreRaidPoint(team, points: points, revivedPlayerId: revivedPlayerId);
     resetRaidClock();
     _syncState();
   }
@@ -373,9 +384,9 @@ class KabaddiController extends GetxController {
     _syncState();
   }
 
-  void scoreTacklePoint(PlayerSide team) {
+  void scoreTacklePoint(PlayerSide team, {String? revivedPlayerId}) {
     if (!isEngineReady.value || !isMatchStarted.value) return;
-    engine.scoreTacklePoint(team);
+    engine.scoreTacklePoint(team, revivedPlayerId: revivedPlayerId);
     resetRaidClock();
     _syncState();
   }
@@ -481,7 +492,7 @@ class KabaddiController extends GetxController {
       awayTeam: currentMatch.value!.awayTeam,
       homeScore: updatedState.sideAScore,
       awayScore: updatedState.sideBScore,
-      currentHalf: '${updatedState.currentHalf}st Half',
+      currentHalf: updatedState.currentHalf == 1 ? '1st Half' : '2nd Half',
       isCompleted: isCompleted,
       matchResult: resultText,
       engineState: updatedState.toJson(),

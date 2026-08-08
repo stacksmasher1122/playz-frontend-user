@@ -125,7 +125,9 @@ class _LocationInfraSectionState extends State<LocationInfraSection> {
               if (index == 0) {
                 return AddPhotoTile(
                   onTap: () {
-                    // TODO: Image picker
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Facility photo picker opened')),
+                    );
                   },
                 );
               }

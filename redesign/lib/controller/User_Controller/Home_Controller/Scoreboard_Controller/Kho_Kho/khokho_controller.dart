@@ -8,6 +8,7 @@ import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Kho_Kho/
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Kho_Kho/khokho_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/khokhoSqflite.dart';
+import 'package:redesign/common/common_select_players_sheet.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Kho_Kho/live_match/khokho_scoreboard_screen.dart';
 
@@ -23,9 +24,84 @@ class KhoKhoController extends GetxController {
   final RxList<String> teamAPlayers = <String>[].obs;
   final RxList<String> teamBPlayers = <String>[].obs;
 
-  final RxInt squadLimit = 12.obs; // KKFI 12v12 default
+  final RxInt squadLimit = 9.obs; // KKFI 9v9 active default
+  final RxBool subsEnabled = true.obs;
+  final RxInt maxSubstitutes = 3.obs; // 3 substitutes default (total 12)
   final RxInt turnDurationMinutes = 9.obs; // 9m or 7m
   final RxBool isProRules = true.obs;
+
+  int get maxAllowedPlayers => squadLimit.value + (subsEnabled.value ? maxSubstitutes.value : 0);
+
+  void toggleSubs(bool value) {
+    subsEnabled.value = value;
+  }
+
+  void incrementSubs() {
+    if (maxSubstitutes.value < 5) maxSubstitutes.value++;
+  }
+
+  void decrementSubs() {
+    if (maxSubstitutes.value > 0) maxSubstitutes.value--;
+  }
+
+  void openPlayerSelection(BuildContext context, bool isTeamA) {
+    final selectedEmails = isTeamA ? teamAPlayers : teamBPlayers;
+    final opponentEmails = isTeamA ? teamBPlayers : teamAPlayers;
+    final teamName = isTeamA
+        ? (homeTeamName.value.isNotEmpty ? homeTeamName.value : 'Side A')
+        : (awayTeamName.value.isNotEmpty ? awayTeamName.value : 'Side B');
+
+    CommonSelectPlayersBottomSheet.show(
+      context,
+      title: 'Select $teamName Players',
+      maxCount: maxAllowedPlayers,
+      selectedPlayerEmails: selectedEmails,
+      opponentPlayerEmails: opponentEmails,
+      onPlayerSelected: (friend) {
+        addTeamPlayer(isTeamA, friend);
+      },
+    );
+  }
+
+  void proceedToCoinToss(BuildContext context) {
+    if (teamARoster.isEmpty) {
+      for (int i = 1; i <= squadLimit.value; i++) {
+        teamARoster.add(FriendModel(email: 'sideA_player_$i@local', fullName: 'Side A Player $i'));
+      }
+    }
+    if (teamBRoster.isEmpty) {
+      for (int i = 1; i <= squadLimit.value; i++) {
+        teamBRoster.add(FriendModel(email: 'sideB_player_$i@local', fullName: 'Side B Player $i'));
+      }
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CoinFlipScreen(
+          teamAName: homeTeamName.value.isNotEmpty ? homeTeamName.value : 'Side A',
+          teamBName: awayTeamName.value.isNotEmpty ? awayTeamName.value : 'Side B',
+          sport: 'kho_kho',
+          onTossComplete: (winnerTeam, choice) async {
+            final isWinnerA = winnerTeam ==
+                (homeTeamName.value.isNotEmpty ? homeTeamName.value : 'Side A');
+            final choiceLower = choice.toLowerCase().trim();
+
+            String activeChasing = 'sideA';
+            if (choiceLower.contains('chase') || choiceLower.contains('chasing')) {
+              // Winner chose to CHASE
+              activeChasing = isWinnerA ? 'sideA' : 'sideB';
+            } else {
+              // Winner chose to DEFEND -> Opposing team gets to CHASE first
+              activeChasing = isWinnerA ? 'sideB' : 'sideA';
+            }
+
+            startMatchFromSetup(activeChasingTeam: activeChasing);
+          },
+        ),
+      ),
+    );
+  }
 
   // Live Scoreboard State Guards
   final RxBool isMatchStarted = false.obs;
@@ -84,6 +160,14 @@ class KhoKhoController extends GetxController {
     turnDurationMinutes.value = mins;
   }
 
+  void incrementTurnDuration() {
+    if (turnDurationMinutes.value < 15) turnDurationMinutes.value++;
+  }
+
+  void decrementTurnDuration() {
+    if (turnDurationMinutes.value > 3) turnDurationMinutes.value--;
+  }
+
   void toggleProRules(bool value) {
     isProRules.value = value;
     if (value) {
@@ -130,36 +214,6 @@ class KhoKhoController extends GetxController {
 
     roster.remove(player);
     playersList.remove(player.email);
-  }
-
-  void proceedToCoinToss(BuildContext context) {
-    if (teamARoster.isEmpty || teamBRoster.isEmpty) {
-      Get.snackbar(
-        'Teams Required',
-        'Please add players to both teams.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.cardSurface,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => CoinFlipScreen(
-          teamAName: homeTeamName.value.isNotEmpty ? homeTeamName.value : 'Side A',
-          teamBName: awayTeamName.value.isNotEmpty ? awayTeamName.value : 'Side B',
-          sport: 'kho_kho',
-          onTossComplete: (winnerTeam, choice) async {
-            // Choice: 'Chasing' or 'Running'
-            final isSideAChasing = (winnerTeam == homeTeamName.value && choice.toLowerCase().contains('chasing')) ||
-                (winnerTeam != homeTeamName.value && choice.toLowerCase().contains('running'));
-            startMatchFromSetup(activeChasingTeam: isSideAChasing ? 'sideA' : 'sideB');
-          },
-        ),
-      ),
-    );
   }
 
   Future<void> startMatchFromSetup({String activeChasingTeam = 'sideA'}) async {
@@ -257,10 +311,9 @@ class KhoKhoController extends GetxController {
     });
   }
 
-  void scoreOut({bool isPoleDive = false}) {
+  void scoreOut(String chasingTeam, {bool isPoleDive = false, String? chaserName}) {
     if (isReadOnly.value || liveState.value == null) return;
-    final chasing = liveState.value!.activeChasingTeam;
-    engine.scoreOut(chasing, isPoleDive: isPoleDive);
+    engine.scoreOut(chasingTeam, isPoleDive: isPoleDive, chaserName: chaserName);
     liveState.value = engine.state;
     _syncMatchState();
 

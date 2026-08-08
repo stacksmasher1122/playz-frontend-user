@@ -92,28 +92,57 @@ class LeaderboardSection extends StatelessWidget {
 
               final docs = snapshot.data!.docs;
 
-              return FutureBuilder<QuerySnapshot>(
-                future: FirebaseFirestore.instance
-                    .collection('tournaments')
-                    .doc(tournamentId)
-                    .collection('teams')
-                    .get(),
-                builder: (context, teamSnapshot) {
-                  if (teamSnapshot.connectionState == ConnectionState.waiting) {
+              return FutureBuilder<List<dynamic>>(
+                future: Future.wait([
+                  FirebaseFirestore.instance
+                      .collection('tournaments')
+                      .doc(tournamentId)
+                      .collection('teams')
+                      .get(),
+                  FirebaseFirestore.instance
+                      .collection('tournaments')
+                      .doc(tournamentId)
+                      .get(),
+                ]),
+                builder: (context, asyncSnap) {
+                  if (asyncSnap.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator(color: AppColors.accent));
                   }
 
                   Map<String, Map<String, dynamic>> teamMap = {};
-                  if (teamSnapshot.hasData) {
-                    for (var doc in teamSnapshot.data!.docs) {
+                  String sportName = 'Cricket';
+
+                  if (asyncSnap.hasData && asyncSnap.data != null) {
+                    final teamSnap = asyncSnap.data![0] as QuerySnapshot;
+                    for (var doc in teamSnap.docs) {
                       teamMap[doc.id] = doc.data() as Map<String, dynamic>;
                     }
+                    final tourneyDoc = asyncSnap.data![1] as DocumentSnapshot;
+                    if (tourneyDoc.exists) {
+                      sportName = (tourneyDoc.data() as Map<String, dynamic>?)?['sport'] ?? 'Cricket';
+                    }
                   }
+
+                  final String sportLower = sportName.toLowerCase();
 
                   List<Map<String, dynamic>> entries = docs.map((doc) {
                     var data = doc.data() as Map<String, dynamic>;
                     data['id'] = doc.id;
                     data['teamData'] = teamMap[doc.id] ?? {};
+
+                    double runsScored = (data['runsScored'] as num?)?.toDouble() ?? 0.0;
+                    double runsConceded = (data['runsConceded'] as num?)?.toDouble() ?? 0.0;
+                    double oversFaced = (data['oversFaced'] as num?)?.toDouble() ?? 0.0;
+                    double oversBowled = (data['oversBowled'] as num?)?.toDouble() ?? 0.0;
+
+                    double computedNrr = 0.0;
+                    if (oversFaced > 0 && oversBowled > 0) {
+                      computedNrr = (runsScored / oversFaced) - (runsConceded / oversBowled);
+                    } else if (data['nrr'] != null) {
+                      computedNrr = (data['nrr'] as num).toDouble();
+                    }
+                    data['computedNrr'] = computedNrr;
+
                     return data;
                   }).toList();
 
@@ -122,9 +151,21 @@ class LeaderboardSection extends StatelessWidget {
                     int pointsB = b['points'] ?? 0;
                     if (pointsA != pointsB) return pointsB.compareTo(pointsA);
 
-                    int gDiffA = (a['gamesWon'] ?? 0) - (a['gamesLost'] ?? 0);
-                    int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
-                    if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
+                    if (sportLower == 'cricket') {
+                      double nrrA = (a['computedNrr'] as num?)?.toDouble() ?? 0.0;
+                      double nrrB = (b['computedNrr'] as num?)?.toDouble() ?? 0.0;
+                      if (nrrA != nrrB) return nrrB.compareTo(nrrA);
+                    } else if (sportLower == 'football') {
+                      int gdA = (a['goalDifference'] as num?)?.toInt() ??
+                          (((a['goalsScored'] as num?)?.toInt() ?? 0) - ((a['goalsConceded'] as num?)?.toInt() ?? 0));
+                      int gdB = (b['goalDifference'] as num?)?.toInt() ??
+                          (((b['goalsScored'] as num?)?.toInt() ?? 0) - ((b['goalsConceded'] as num?)?.toInt() ?? 0));
+                      if (gdA != gdB) return gdB.compareTo(gdA);
+                    } else {
+                      int gDiffA = (a['gamesWon'] ?? 0) - (a['gamesLost'] ?? 0);
+                      int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
+                      if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
+                    }
 
                     int matchesPlayedA = a['matchesPlayed'] ?? 0;
                     int matchesPlayedB = b['matchesPlayed'] ?? 0;

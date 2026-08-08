@@ -87,7 +87,9 @@ class _IdentityVerificationSectionState
                 icon: Icons.badge_outlined,
                 image: frontImage,
                 onTap: () {
-                  // TODO: pick front image
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('ID Front image picker opened')),
+                  );
                 },
               ),
             ),
@@ -98,7 +100,9 @@ class _IdentityVerificationSectionState
                 icon: Icons.badge_outlined,
                 image: backImage,
                 onTap: () {
-                  // TODO: pick back image
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('ID Back image picker opened')),
+                  );
                 },
               ),
             ),
@@ -117,7 +121,9 @@ class _IdentityVerificationSectionState
         SelfieCard(
           image: selfieImage,
           onTap: () {
-            // TODO: open camera
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Selfie camera opened')),
+            );
           },
         ),
 

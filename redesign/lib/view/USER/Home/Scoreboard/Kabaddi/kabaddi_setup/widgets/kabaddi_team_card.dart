@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Kabaddi/kabaddi_controller.dart';
-import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_setup/widgets/friends_selection_sheet.dart';
 
 Color kSurface = const Color(0xFF1E1E1E);

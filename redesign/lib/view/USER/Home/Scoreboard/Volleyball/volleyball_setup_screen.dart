@@ -1,508 +1,243 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/common/app_back_button.dart';
+import 'package:redesign/common/arena_title_text.dart';
+import 'package:redesign/common/setup_match_header.dart';
+import 'package:redesign/common/squad_config_section.dart';
+import 'package:redesign/common/team_builder_section.dart';
+import 'package:redesign/common/pro_rules_switch_card.dart';
+import 'package:redesign/common/common_start_match_button.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Volleyball/volleyball_controller.dart';
-import 'package:redesign/controller/User_Controller/Home_Controller/Friends_Controller/friends_controller.dart';
-import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/widgets/volleyball_team_card.dart';
 
 class VolleyballSetupScreen extends StatelessWidget {
-  const VolleyballSetupScreen({super.key});
+  VolleyballSetupScreen({super.key});
+
+  final VolleyballController controller = Get.isRegistered<VolleyballController>()
+      ? Get.find<VolleyballController>()
+      : Get.put(VolleyballController());
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final controller = Get.put(VolleyballController());
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary),
-          onPressed: () => Navigator.pop(context),
+        leading: Center(
+          child: AppBackButton(size: ResponsiveHelper.w(38.0)),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => controller.resetSetupScreen(),
-            child: Text(
-              'RESET ALL',
-              style: AppTypography.labelCaps.copyWith(
-                color: AppColors.accent,
-                fontWeight: FontWeight.bold,
-              ).responsive(context),
-            ),
-          ),
-        ],
+        title: const ArenaTitleText(sportName: 'Volleyball'),
+        centerTitle: false,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(20)),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveHelper.w(20.0),
+            vertical: ResponsiveHelper.h(10.0),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'MATCH ARENA',
-                style: AppTypography.labelCaps.copyWith(
-                  color: AppColors.accent,
-                  fontSize: ResponsiveHelper.sp(12),
-                  fontWeight: FontWeight.w900,
-                  fontStyle: FontStyle.italic,
-                  letterSpacing: 1.5,
-                ).responsive(context),
+              // Setup Match Header Card with 3D Volleyball Court Asset
+              const SetupMatchHeader(
+                title: 'Setup Match',
+                subtitle: 'Configure court squad, set targets,\nbattle rosters and FIVB rules.',
+                imageAsset: 'assets/volleyball_court_3d.png',
+                imageHeight: 115.0,
               ),
-              const SizedBox(height: 4),
-              Text(
-                'Setup Volleyball Match',
-                style: AppTypography.headlineMd.copyWith(
-                  color: AppColors.textPrimary,
-                  fontSize: ResponsiveHelper.sp(30),
-                  fontWeight: FontWeight.bold,
-                ).responsive(context),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Configure court squad, set targets, battle rosters and FIVB rules.',
-                style: AppTypography.bodySm.copyWith(
-                  color: AppColors.mutedText,
-                  fontSize: ResponsiveHelper.sp(15),
-                  height: 1.4,
-                ).responsive(context),
-              ),
-              const SizedBox(height: 32),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
 
-              // 1. Squad Limit Card
-              _buildStepperCard(
-                context,
-                title: 'SQUAD LIMIT',
-                mainText: 'Players per\nTeam',
-                valueStream: controller.squadLimit,
-                onDecrement: controller.decrementSquadLimit,
-                onIncrement: controller.incrementSquadLimit,
+              // Squad Limit, Subs Toggle & Max Substitutes Section
+              SquadConfigSection(
+                squadLimit: controller.squadLimit,
+                onSquadLimitIncrement: controller.incrementSquadLimit,
+                onSquadLimitDecrement: controller.decrementSquadLimit,
+                subsEnabled: controller.subsEnabled,
+                onSubsToggle: controller.toggleSubs,
+                maxSubstitutes: controller.maxSubstitutes,
+                onMaxSubsIncrement: controller.incrementSubs,
+                onMaxSubsDecrement: controller.decrementSubs,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
 
-              // 2. Substitute Players Switch Card
-              _buildSwitchCard(
-                context,
-                valueStream: controller.subsEnabled,
-                onChanged: controller.toggleSubs,
-                title: 'Substitute Players',
-                subtitle: 'Enable set-by-set\nrotations',
-                icon: Icons.swap_horiz_rounded,
+              // Team Builder Section (Side A & Side B Roster Cards)
+              TeamBuilderSection(
+                sectionTitle: 'BATTLE ROSTERS',
+                homeTeamController: controller.homeTeamController,
+                awayTeamController: controller.awayTeamController,
+                homeTeamName: controller.homeTeamName,
+                awayTeamName: controller.awayTeamName,
+                homeTeamRoster: controller.teamARoster,
+                awayTeamRoster: controller.teamBRoster,
+                onSelectHomePlayers: () => controller.openPlayerSelection(context, true),
+                onSelectAwayPlayers: () => controller.openPlayerSelection(context, false),
+                onRemovePlayer: (isHome, friend) =>
+                    controller.removeTeamPlayer(isHome, friend),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
 
-              // 3. Reserves Stepper Card
-              Obx(
-                () => controller.subsEnabled.value
-                    ? Column(
-                        children: [
-                          _buildStepperCard(
-                            context,
-                            title: 'RESERVES',
-                            titleColor: AppColors.accent,
-                            mainText: 'Max\nSubstitutes',
-                            valueStream: controller.maxSubstitutes,
-                            onDecrement: controller.decrementSubs,
-                            onIncrement: controller.incrementSubs,
-                          ),
-                          const SizedBox(height: 32),
-                        ],
-                      )
-                    : const SizedBox(height: 16),
-              ),
+              // Match Max Sets Stepper Card
+              _buildMaxSetsCard(context, controller),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
 
-              // 4. BATTLE ROSTERS Section Header
-              Text(
-                'BATTLE ROSTERS',
-                style: AppTypography.labelCaps.copyWith(
-                  color: AppColors.mutedText,
-                  fontSize: ResponsiveHelper.sp(12),
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                ).responsive(context),
-              ),
-              const SizedBox(height: 16),
-
-              // Home Team Card (Side A - Red Accent)
-              VolleyballTeamCard(
-                teamTitle: 'Side A (Home)',
-                nameController: controller.homeTeamController,
-                accentColor: const Color(0xFFFF6B6B).withValues(alpha: 0.8),
-                dotColor: const Color(0xFFFF6B6B),
-                roster: controller.teamARoster,
-                maxPlayers: controller.maxAllowedPlayers,
-                onAddPlayer: () => _openFriendsBottomSheet(context, controller, isTeamA: true),
-                onRemovePlayer: (player) => controller.removeTeamPlayer(true, player),
-              ),
-              const SizedBox(height: 16),
-
-              // Away Team Card (Side B - Blue Accent)
-              VolleyballTeamCard(
-                teamTitle: 'Side B (Away)',
-                nameController: controller.awayTeamController,
-                accentColor: const Color(0xFF4D96FF).withValues(alpha: 0.8),
-                dotColor: const Color(0xFF4D96FF),
-                roster: controller.teamBRoster,
-                maxPlayers: controller.maxAllowedPlayers,
-                onAddPlayer: () => _openFriendsBottomSheet(context, controller, isTeamA: false),
-                onRemovePlayer: (player) => controller.removeTeamPlayer(false, player),
-              ),
-              const SizedBox(height: 32),
-
-              // 5. Match Max Sets Large Stepper Card
-              _buildLargeStepperCard(
-                context,
-                title: 'MAX SETS',
-                mainText: 'Best of Sets (1, 3, or 5)',
-                valueStream: controller.maxSets,
-                onDecrement: () {
-                  if (controller.maxSets.value > 1) {
-                    controller.setMaxSets(controller.maxSets.value - 2);
-                  }
-                },
-                onIncrement: () {
-                  if (controller.maxSets.value < 5) {
-                    controller.setMaxSets(controller.maxSets.value + 2);
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // 6. Pro Rules Switch Card
-              _buildRulesSwitchCard(
-                context,
+              // FIVB Pro Rules Switch Card
+              ProRulesSwitchCard(
                 valueStream: controller.isProRules,
                 onChanged: controller.toggleProRules,
+                title: 'FIVB Pro Rules',
+                subtitle: 'Enforces 5-Set Match, 25-Point Sets\n& Standard 6v6 Court Squad',
               ),
-              const SizedBox(height: 48),
+              SizedBox(height: ResponsiveHelper.h(32.0)),
+
+              // Scrollable Start Match Button (Not sticky at bottom)
+              CommonStartMatchButton(
+                label: 'PROCEED TO COIN TOSS',
+                onPressed: () => controller.proceedToCoinToss(context),
+              ),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: _buildStartMatchButton(context, controller),
     );
   }
 
-  Widget _buildStepperCard(
-    BuildContext context, {
-    required String title,
-    required String mainText,
-    required RxInt valueStream,
-    required VoidCallback onDecrement,
-    required VoidCallback onIncrement,
-    Color? titleColor,
-  }) {
+  Widget _buildMaxSetsCard(BuildContext context, VolleyballController controller) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.cardSurface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20.0)),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.05),
+          width: 1.0,
+        ),
       ),
-      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTypography.labelCaps.copyWith(
-                    color: titleColor ?? AppColors.mutedText,
-                    fontSize: ResponsiveHelper.sp(11),
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.2,
-                  ).responsive(context),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  mainText,
-                  style: AppTypography.headlineSm.copyWith(
-                    color: AppColors.textPrimary,
-                    fontSize: ResponsiveHelper.sp(18),
-                    fontWeight: FontWeight.bold,
-                  ).responsive(context),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              _buildCircleBtn(
-                context,
-                icon: Icons.remove,
-                color: const Color(0xFF131313),
-                iconColor: AppColors.accent,
-                onTap: onDecrement,
-              ),
-              SizedBox(width: ResponsiveHelper.w(16)),
-              Obx(
-                () => SizedBox(
-                  width: ResponsiveHelper.w(28),
-                  child: Text(
-                    valueStream.value.toString(),
-                    textAlign: TextAlign.center,
-                    style: AppTypography.headlineMd.copyWith(
-                      color: AppColors.textPrimary,
-                      fontSize: ResponsiveHelper.sp(22),
-                      fontWeight: FontWeight.bold,
-                    ).responsive(context),
-                  ),
-                ),
-              ),
-              SizedBox(width: ResponsiveHelper.w(16)),
-              _buildCircleBtn(
-                context,
-                icon: Icons.add,
-                color: AppColors.accent,
-                iconColor: Colors.black,
-                onTap: onIncrement,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSwitchCard(
-    BuildContext context, {
-    required RxBool valueStream,
-    required Function(bool) onChanged,
-    required String title,
-    required String subtitle,
-    required IconData icon,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.cardSurface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-      ),
-      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      padding: EdgeInsets.all(ResponsiveHelper.w(20.0)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: ResponsiveHelper.w(44),
-                height: ResponsiveHelper.w(44),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF131313),
-                  borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-                ),
-                child: Icon(icon, color: AppColors.accent, size: 22),
-              ),
-              SizedBox(width: ResponsiveHelper.w(16)),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    'MATCH FORMAT',
+                    style: AppTypography.labelCaps.copyWith(
+                      color: AppColors.mutedText,
+                      fontSize: ResponsiveHelper.sp(11.0),
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                    ).responsive(context),
+                  ),
+                  SizedBox(height: ResponsiveHelper.h(4.0)),
+                  Text(
+                    'Best of Sets',
                     style: AppTypography.headlineSm.copyWith(
                       color: AppColors.textPrimary,
-                      fontSize: ResponsiveHelper.sp(16),
+                      fontSize: ResponsiveHelper.sp(18.0),
                       fontWeight: FontWeight.bold,
                     ).responsive(context),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: AppTypography.bodySm.copyWith(
-                      color: AppColors.mutedText,
-                      fontSize: ResponsiveHelper.sp(12),
-                    ).responsive(context),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildCircleBtn(
+                    context,
+                    icon: Icons.remove,
+                    color: const Color(0xFF131313),
+                    iconColor: AppColors.accent,
+                    onTap: () {
+                      if (controller.maxSets.value > 1) {
+                        controller.setMaxSets(controller.maxSets.value - 2);
+                      }
+                    },
+                  ),
+                  SizedBox(width: ResponsiveHelper.w(16.0)),
+                  Obx(
+                    () => SizedBox(
+                      width: ResponsiveHelper.w(28.0),
+                      child: Text(
+                        controller.maxSets.value.toString(),
+                        textAlign: TextAlign.center,
+                        style: AppTypography.headlineMd.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: ResponsiveHelper.sp(22.0),
+                          fontWeight: FontWeight.bold,
+                        ).responsive(context),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: ResponsiveHelper.w(16.0)),
+                  _buildCircleBtn(
+                    context,
+                    icon: Icons.add,
+                    color: AppColors.accent,
+                    iconColor: Colors.black,
+                    onTap: () {
+                      if (controller.maxSets.value < 5) {
+                        controller.setMaxSets(controller.maxSets.value + 2);
+                      }
+                    },
                   ),
                 ],
               ),
             ],
           ),
-          Obx(
-            () => Switch.adaptive(
-              value: valueStream.value,
-              onChanged: onChanged,
-              activeThumbColor: Colors.black,
-              activeTrackColor: AppColors.accent,
-              inactiveThumbColor: AppColors.mutedText,
-              inactiveTrackColor: const Color(0xFF2C2C2C),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          SizedBox(height: ResponsiveHelper.h(16.0)),
 
-  Widget _buildLargeStepperCard(
-    BuildContext context, {
-    required String title,
-    required String mainText,
-    required RxInt valueStream,
-    required VoidCallback onDecrement,
-    required VoidCallback onIncrement,
-  }) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.cardSurface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
-      ),
-      padding: EdgeInsets.symmetric(
-        vertical: ResponsiveHelper.h(24),
-        horizontal: ResponsiveHelper.w(20),
-      ),
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: AppTypography.labelCaps.copyWith(
-              color: AppColors.mutedText,
-              fontSize: ResponsiveHelper.sp(11),
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.5,
-            ).responsive(context),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            mainText,
-            style: AppTypography.headlineSm.copyWith(
-              color: AppColors.textPrimary,
-              fontSize: ResponsiveHelper.sp(20),
-              fontWeight: FontWeight.bold,
-            ).responsive(context),
-          ),
-          const SizedBox(height: 24),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildCircleBtn(
-                  context,
-                  icon: Icons.remove,
-                  color: const Color(0xFF131313),
-                  iconColor: AppColors.accent.withValues(alpha: 0.7),
-                  onTap: onDecrement,
-                  size: 56,
-                  iconSize: 28,
-                ),
-                SizedBox(width: ResponsiveHelper.w(32)),
-                Obx(
-                  () => Text(
-                    valueStream.value.toString(),
-                    style: AppTypography.displayScoreSora.copyWith(
-                      color: AppColors.accent,
-                      fontSize: ResponsiveHelper.sp(64),
-                      fontWeight: FontWeight.w800,
-                      height: 1.0,
-                    ).responsive(context),
-                  ),
-                ),
-                SizedBox(width: ResponsiveHelper.w(32)),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.accent.withValues(alpha: 0.3),
-                        blurRadius: 16,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: _buildCircleBtn(
-                    context,
-                    icon: Icons.add,
-                    color: AppColors.accent,
-                    iconColor: Colors.black,
-                    onTap: onIncrement,
-                    size: 56,
-                    iconSize: 28,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRulesSwitchCard(
-    BuildContext context, {
-    required RxBool valueStream,
-    required Function(bool) onChanged,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.cardSurface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
-      ),
-      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
-      child: Row(
-        children: [
-          Container(
-            width: ResponsiveHelper.w(48),
-            height: ResponsiveHelper.w(48),
-            decoration: BoxDecoration(
-              color: AppColors.accent.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
-            ),
-            child: const Icon(Icons.gavel_rounded, color: AppColors.accent, size: 24),
-          ),
-          SizedBox(width: ResponsiveHelper.w(16)),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'FIBA / FIVB PRO RULES',
-                      style: AppTypography.labelCaps.copyWith(
-                        color: AppColors.accent,
-                        fontSize: ResponsiveHelper.sp(10),
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.0,
-                      ).responsive(context),
+          // Preset Chips Row for Max Sets (1, 3, 5 Sets)
+          Obx(() {
+            const presets = [1, 3, 5];
+            return Row(
+              children: presets.map((sets) {
+                final isSelected = controller.maxSets.value == sets;
+                return Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      right: sets != 5 ? ResponsiveHelper.w(8.0) : 0,
                     ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Formal Volleyball Rules',
-                  style: AppTypography.headlineSm.copyWith(
-                    color: AppColors.textPrimary,
-                    fontSize: ResponsiveHelper.sp(16),
-                    fontWeight: FontWeight.bold,
-                  ).responsive(context),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Enforces 25-pt sets, win-by-2, 6v6 squad & rally scoring.',
-                  style: AppTypography.bodySm.copyWith(
-                    color: AppColors.mutedText,
-                    fontSize: ResponsiveHelper.sp(12),
-                  ).responsive(context),
-                ),
-              ],
-            ),
-          ),
-          Obx(
-            () => Switch.adaptive(
-              value: valueStream.value,
-              onChanged: onChanged,
-              activeThumbColor: Colors.black,
-              activeTrackColor: AppColors.accent,
-              inactiveThumbColor: AppColors.mutedText,
-              inactiveTrackColor: const Color(0xFF2C2C2C),
-            ),
-          ),
+                    child: InkWell(
+                      onTap: () => controller.setMaxSets(sets),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(12.0)),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(10.0)),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.accent.withValues(alpha: 0.15)
+                              : const Color(0xFF141822),
+                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(12.0)),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.accent
+                                : Colors.white.withValues(alpha: 0.08),
+                            width: isSelected ? 1.5 : 1.0,
+                          ),
+                        ),
+                        child: Text(
+                          '$sets ${sets == 1 ? "Set" : "Sets"}',
+                          textAlign: TextAlign.center,
+                          style: AppTypography.labelCaps.copyWith(
+                            color: isSelected ? AppColors.accent : AppColors.textSecondary,
+                            fontSize: ResponsiveHelper.sp(12.0),
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                          ).responsive(context),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            );
+          }),
         ],
       ),
     );
@@ -514,155 +249,19 @@ class VolleyballSetupScreen extends StatelessWidget {
     required Color color,
     required Color iconColor,
     required VoidCallback onTap,
-    double size = 40,
-    double iconSize = 20,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: Ink(
-          width: ResponsiveHelper.w(size),
-          height: ResponsiveHelper.w(size),
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: iconColor, size: ResponsiveHelper.w(iconSize)),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(ResponsiveHelper.w(20.0)),
+      child: Container(
+        width: ResponsiveHelper.w(40.0),
+        height: ResponsiveHelper.w(40.0),
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
         ),
+        child: Icon(icon, color: iconColor, size: ResponsiveHelper.w(20.0)),
       ),
-    );
-  }
-
-  Widget _buildStartMatchButton(BuildContext context, VolleyballController controller) {
-    return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(20)),
-      color: AppColors.background,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.accent,
-          foregroundColor: Colors.black,
-          minimumSize: Size(double.infinity, ResponsiveHelper.h(56)),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-          ),
-          elevation: 8,
-          shadowColor: AppColors.accent.withValues(alpha: 0.4),
-        ),
-        onPressed: () => controller.proceedToCoinToss(context),
-        child: Text(
-          'PROCEED TO COIN TOSS',
-          style: AppTypography.headlineSm.copyWith(
-            color: Colors.black,
-            fontSize: ResponsiveHelper.sp(16),
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.0,
-          ).responsive(context),
-        ),
-      ),
-    );
-  }
-
-  void _openFriendsBottomSheet(BuildContext context, VolleyballController controller, {required bool isTeamA}) {
-    final FriendsController friendsCtrl = Get.put(FriendsController());
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.cardSurface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ResponsiveHelper.w(24))),
-      ),
-      builder: (ctx) {
-        return Container(
-          padding: EdgeInsets.all(ResponsiveHelper.w(20)),
-          height: MediaQuery.of(context).size.height * 0.6,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Select Players (${isTeamA ? "Side A" : "Side B"})',
-                    style: AppTypography.headlineSm.copyWith(
-                      color: AppColors.textPrimary,
-                      fontSize: ResponsiveHelper.sp(20),
-                      fontWeight: FontWeight.bold,
-                    ).responsive(context),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white54),
-                    onPressed: () => Navigator.pop(ctx),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: Obx(() {
-                  final user = FirebaseAuth.instance.currentUser;
-                  final userName = user?.displayName ?? 'You';
-                  final userEmail = user?.email ?? 'you@local';
-
-                  final currentUserFriend = FriendModel(
-                    email: userEmail,
-                    fullName: '$userName (You)',
-                  );
-
-                  List<FriendModel> allSelectable = [currentUserFriend];
-                  allSelectable.addAll(friendsCtrl.friends.where((f) => f.email != userEmail));
-
-                  if (friendsCtrl.isLoading.value && friendsCtrl.friends.isEmpty) {
-                    return const Center(child: CircularProgressIndicator(color: AppColors.accent));
-                  }
-
-                  return ListView.builder(
-                    itemCount: allSelectable.length,
-                    itemBuilder: (c, idx) {
-                      final friend = allSelectable[idx];
-                      final isSelected = controller.teamAPlayers.contains(friend.email) ||
-                          controller.teamBPlayers.contains(friend.email);
-
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.grey[800],
-                          backgroundImage: friend.profileImageUrl.isNotEmpty
-                              ? NetworkImage(friend.profileImageUrl)
-                              : null,
-                          child: friend.profileImageUrl.isEmpty
-                              ? const Icon(Icons.person, color: Colors.white)
-                              : null,
-                        ),
-                        title: Text(
-                          friend.fullName.isNotEmpty ? friend.fullName : friend.email,
-                          style: AppTypography.bodyMd.copyWith(
-                            color: AppColors.textPrimary,
-                            fontWeight: FontWeight.bold,
-                          ).responsive(context),
-                        ),
-                        subtitle: Text(
-                          friend.email,
-                          style: AppTypography.bodySm.copyWith(color: AppColors.mutedText, fontSize: 11).responsive(context),
-                        ),
-                        trailing: isSelected
-                            ? const Icon(Icons.check_circle, color: AppColors.accent)
-                            : const Icon(Icons.add_circle_outline, color: Colors.white38),
-                        onTap: isSelected
-                            ? null
-                            : () {
-                                controller.addTeamPlayer(isTeamA, friend);
-                                Navigator.pop(ctx);
-                              },
-                      );
-                    },
-                  );
-                }),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

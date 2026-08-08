@@ -158,30 +158,35 @@ class _RegisterTeamScreenState extends State<RegisterTeamScreen> {
                       ],
                       Expanded(
                         flex: 2,
-                        child: SizedBox(
-                          height: context.heightPct(6).clamp(48.0, 54.0),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.accent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                        child: Obx(() {
+                          final bool canProceed = controller.currentStep.value != 1 || controller.isRosterFull;
+                          return SizedBox(
+                            height: context.heightPct(6).clamp(48.0, 54.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: canProceed ? AppColors.accent : AppColors.muted.withValues(alpha: 0.3),
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(context.minDimensionPct(3)),
+                                ),
                               ),
-                            ),
-                            onPressed: controller.nextStep,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                "NEXT",
-                                style: AppTypography.labelCaps10.copyWith(
-                                  color: AppColors.background,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: context.responsiveFont(14),
+                              onPressed: canProceed ? controller.nextStep : null,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  controller.currentStep.value == 1 && !controller.isRosterFull
+                                      ? "${controller.remainingSlots} MORE NEEDED"
+                                      : "NEXT",
+                                  style: AppTypography.labelCaps10.copyWith(
+                                    color: canProceed ? AppColors.background : AppColors.muted,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: context.responsiveFont(14),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        }),
                       ),
                     ],
                   ),

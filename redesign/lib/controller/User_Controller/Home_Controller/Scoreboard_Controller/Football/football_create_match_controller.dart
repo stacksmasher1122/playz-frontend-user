@@ -68,8 +68,10 @@ class FootballCreateMatchController extends GetxController {
   final RxBool penaltyShootout = false.obs;
 
   // Teams & Friends
-  final RxString homeTeamName = ''.obs;
-  final RxString awayTeamName = ''.obs;
+  final TextEditingController homeTeamController = TextEditingController(text: 'Home FC');
+  final TextEditingController awayTeamController = TextEditingController(text: 'Away United');
+  final RxString homeTeamName = 'Home FC'.obs;
+  final RxString awayTeamName = 'Away United'.obs;
 
   final RxList<String> homeTeamPlayers = <String>[].obs;
   final RxList<String> awayTeamPlayers = <String>[].obs;
@@ -78,6 +80,18 @@ class FootballCreateMatchController extends GetxController {
   final RxList<FriendModel> awayTeamRoster = <FriendModel>[].obs;
 
   final Rx<FriendModel?> currentUserFriendModel = Rx<FriendModel?>(null);
+
+  void incrementDuration() {
+    if (duration.value < 180) duration.value += 5;
+  }
+
+  void decrementDuration() {
+    if (duration.value > 5) duration.value -= 5;
+  }
+
+  void setDuration(int mins) {
+    duration.value = mins.toDouble();
+  }
 
   void selectMatchFormat(String format) {
     if (format == '11v11') {
@@ -136,7 +150,20 @@ class FootballCreateMatchController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    homeTeamController.addListener(() {
+      homeTeamName.value = homeTeamController.text.trim();
+    });
+    awayTeamController.addListener(() {
+      awayTeamName.value = awayTeamController.text.trim();
+    });
     _loadCurrentUserProfile();
+  }
+
+  @override
+  void onClose() {
+    homeTeamController.dispose();
+    awayTeamController.dispose();
+    super.onClose();
   }
 
   void loadInitialData() {
@@ -213,7 +240,7 @@ class FootballCreateMatchController extends GetxController {
     Get.snackbar('Success', 'Template saved successfully.');
   }
 
-  Future<void> createMatchAndStart([BuildContext? context]) async {
+  Future<void> createMatchAndStart(BuildContext context, {String? tossWinner, String? tossDecision}) async {
     if (!validateForm()) return;
 
     isLoading.value = true;
@@ -245,6 +272,8 @@ class FootballCreateMatchController extends GetxController {
           'extraTimeEnabled': allowProRules.value ? extraTime.value : false,
           'penaltiesEnabled': allowProRules.value ? penaltyShootout.value : false,
           'maxSubs': subsEnabled.value ? maxSubs.value : 0,
+          'tossWinner': tossWinner ?? homeTeamName.value,
+          'tossDecision': tossDecision ?? 'kickoff',
         },
         status: 'pending',
         engineState: engineState,
@@ -266,7 +295,7 @@ class FootballCreateMatchController extends GetxController {
       mainController.restoreFootballMatchFromSqflite(newMatch);
 
       // Navigate to Live Scoreboard directly via Navigator
-      if (context != null && context.mounted) {
+      if (context.mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => FootballScoreboardScreen()),

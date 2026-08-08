@@ -614,7 +614,15 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
               });
 
               return ListView.builder(
-                padding: EdgeInsets.all(context.widthPct(4)),
+                padding: EdgeInsets.only(
+                  left: context.widthPct(4),
+                  right: context.widthPct(4),
+                  top: context.heightPct(1.5),
+                  bottom: context.heightPct(14).clamp(100.0, 140.0),
+                ),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
                 itemCount: docs.isEmpty
                     ? 2
                     : docs.length + 1, // +1 for CreateTournamentCard at top
@@ -650,10 +658,13 @@ class _TournamentsListScreenState extends State<TournamentsListScreen> {
                   final docIndex = index - 1;
                   final data = docs[docIndex].data() as Map<String, dynamic>;
                   final id = docs[docIndex].id;
-                  return TournamentCard(
-                    tournamentId: id,
-                    data: data,
-                    currentUserId: currentUserId!,
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: context.heightPct(2)),
+                    child: TournamentCard(
+                      tournamentId: id,
+                      data: data,
+                      currentUserId: currentUserId!,
+                    ),
                   );
                 },
               );

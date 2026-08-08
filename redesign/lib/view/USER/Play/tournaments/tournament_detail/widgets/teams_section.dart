@@ -214,12 +214,18 @@ class TeamsSection extends StatelessWidget {
                               fontSize: context.responsiveFont(12),
                             ),
                           ),
-                          if (isOrganizer && isOpen)
+                          // Only allow host to delete teams they registered themselves
+                          if (isOrganizer && isOpen && data['registeredBy'] == currentUserId)
                             IconButton(
                               icon: const Icon(Icons.remove_circle_outline_rounded, color: AppColors.error, size: 20),
                               onPressed: () {
                                 _showRemoveTeamDialog(context, doc.id, name, data['paymentStatus'] == 'paid');
                               },
+                            )
+                          else if (isOrganizer && isOpen && data['registeredBy'] != currentUserId)
+                            Tooltip(
+                              message: 'Registered by user — cannot remove',
+                              child: Icon(Icons.lock_outline_rounded, color: AppColors.muted.withValues(alpha: 0.5), size: 18),
                             ),
                         ],
                       ),

@@ -55,7 +55,6 @@ class ReviewPublishController extends GetxController {
 
   void togglePublicSetting(bool value) {
     isPublic.value = value;
-    _createCtrl.isPublicAccess.value = value; // keep in sync
   }
 
   void copyInviteLink() {
@@ -117,9 +116,9 @@ class ReviewPublishController extends GetxController {
         'description': _createCtrl.description.value,
         'coverImageUrl': coverImageUrl,
         'startDate': _createCtrl.startDate.value != null ? Timestamp.fromDate(_createCtrl.startDate.value!) : null,
-        'endDate': _createCtrl.endDate.value != null ? Timestamp.fromDate(_createCtrl.endDate.value!) : null,
-        'timing': _createCtrl.selectedTiming.value,
-        'access': _createCtrl.isPublicAccess.value ? 'public' : 'private',
+        'startTime': _createCtrl.startTime.value != null ? "${_createCtrl.startTime.value!.hour}:${_createCtrl.startTime.value!.minute}" : null,
+        'endTime': _createCtrl.endTime.value != null ? "${_createCtrl.endTime.value!.hour}:${_createCtrl.endTime.value!.minute}" : null,
+        'access': isPublic.value ? 'public' : 'private',
         'venue': {
           'source': _venueCtrl.selectedTab.value == "PlayZ Venues" ? 'playz' : 'other',
           'name': _venueCtrl.selectedVenueName.value,

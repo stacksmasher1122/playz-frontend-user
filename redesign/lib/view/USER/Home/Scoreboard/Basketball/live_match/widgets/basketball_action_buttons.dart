@@ -4,8 +4,10 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Basketball/basketball_controller.dart';
-import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Basketball/basketball_state_models.dart';
+import 'basketball_record_foul_sheet.dart';
+import 'basketball_call_timeout_sheet.dart';
 
+/// High-fidelity Basketball Live Action Buttons & Controls matching the design screenshot.
 class BasketballActionButtons extends StatelessWidget {
   const BasketballActionButtons({super.key});
 
@@ -17,80 +19,55 @@ class BasketballActionButtons extends StatelessWidget {
     return Obx(() {
       final isStarted = controller.isMatchStarted.value;
       final isRunning = controller.isTimerRunning.value;
-      final homeName = controller.currentMatch.value?.homeTeam ?? 'Side A';
-      final awayName = controller.currentMatch.value?.awayTeam ?? 'Side B';
+      final homeName = controller.currentMatch.value?.homeTeam.isNotEmpty == true
+          ? controller.currentMatch.value!.homeTeam
+          : 'SIDE A';
+      final awayName = controller.currentMatch.value?.awayTeam.isNotEmpty == true
+          ? controller.currentMatch.value!.awayTeam
+          : 'SIDE B';
 
-      return Column(
-        children: [
-          // 1. START MATCH NOW / RESUME CLOCK BANNER BUTTON
-          if (!isStarted)
-            Container(
-              width: double.infinity,
-              margin: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.w(16),
-                vertical: ResponsiveHelper.h(8),
-              ),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
-                  foregroundColor: Colors.black,
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(14)),
+      return Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveHelper.w(16.0),
+          vertical: ResponsiveHelper.h(12.0),
+        ),
+        child: Column(
+          children: [
+            // ─── START MATCH NOW BANNER (IF NOT STARTED) ───
+            if (!isStarted) ...[
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: Colors.black,
+                    padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16.0)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+                    ),
+                    elevation: 4,
                   ),
-                  elevation: 6,
-                ),
-                onPressed: () => controller.startMatch(),
-                icon: const Icon(Icons.play_arrow_rounded, size: 24, color: Colors.black),
-                label: Text(
-                  'START MATCH NOW',
-                  style: AppTypography.headlineSm.copyWith(
-                    fontSize: ResponsiveHelper.sp(15),
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 0.5,
-                  ).responsive(context),
-                ),
-              ),
-            ),
-
-          if (isStarted && !isRunning)
-            Container(
-              width: double.infinity,
-              margin: EdgeInsets.symmetric(
-                horizontal: ResponsiveHelper.w(16),
-                vertical: ResponsiveHelper.h(6),
-              ),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.warning,
-                  foregroundColor: Colors.black,
-                  padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(12)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
+                  onPressed: () => controller.startMatch(),
+                  icon: const Icon(Icons.play_arrow_rounded, size: 24, color: Colors.black),
+                  label: Text(
+                    'START MATCH NOW',
+                    style: AppTypography.headlineSm.copyWith(
+                      fontSize: ResponsiveHelper.sp(15.0),
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5,
+                    ).responsive(context),
                   ),
                 ),
-                onPressed: () => controller.resumeFromBreak(),
-                icon: const Icon(Icons.play_arrow_rounded, color: Colors.black),
-                label: Text(
-                  'RESUME MATCH CLOCK',
-                  style: AppTypography.headlineSm.copyWith(
-                    fontSize: ResponsiveHelper.sp(13),
-                    fontWeight: FontWeight.bold,
-                  ).responsive(context),
-                ),
               ),
-            ),
+              SizedBox(height: ResponsiveHelper.h(14.0)),
+            ],
 
-          SizedBox(height: ResponsiveHelper.h(10)),
-
-          // 2. PRIMARY SCORING CARDS (SIDE A vs SIDE B)
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-            child: Row(
+            // ─── 1. TEAM SCORING PANELS (SIDE A GREEN | SIDE B BLUE) ───
+            Row(
               children: [
-                // Side A Scoring Card
+                // SIDE A Scoring Panel
                 Expanded(
-                  child: _buildTeamScoringCard(
+                  child: _buildTeamScoringPanel(
                     context,
                     controller: controller,
                     team: 'sideA',
@@ -98,10 +75,11 @@ class BasketballActionButtons extends StatelessWidget {
                     accentColor: AppColors.accent,
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(12)),
-                // Side B Scoring Card
+                SizedBox(width: ResponsiveHelper.w(12.0)),
+
+                // SIDE B Scoring Panel
                 Expanded(
-                  child: _buildTeamScoringCard(
+                  child: _buildTeamScoringPanel(
                     context,
                     controller: controller,
                     team: 'sideB',
@@ -111,151 +89,104 @@ class BasketballActionButtons extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+            SizedBox(height: ResponsiveHelper.h(14.0)),
 
-          SizedBox(height: ResponsiveHelper.h(16)),
-
-          // 3. SHOT CLOCK MANUAL RESETS
-          if (controller.enableShotClock.value)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.textPrimary,
-                        side: const BorderSide(color: Colors.white24),
-                        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(10)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
-                        ),
-                      ),
-                      onPressed: () => controller.resetShotClock24(),
-                      icon: const Icon(Icons.refresh, size: 16, color: AppColors.accent),
-                      label: Text(
-                        'Reset 24s Shot Clock',
-                        style: AppTypography.bodySm.copyWith(
-                          fontSize: ResponsiveHelper.sp(11),
-                        ).responsive(context),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: ResponsiveHelper.w(10)),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.textPrimary,
-                        side: const BorderSide(color: Colors.white24),
-                        padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(10)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
-                        ),
-                      ),
-                      onPressed: () => controller.resetShotClock14(),
-                      icon: const Icon(Icons.replay_10, size: 16, color: AppColors.warning),
-                      label: Text(
-                        'Off. Rebound (14s)',
-                        style: AppTypography.bodySm.copyWith(
-                          fontSize: ResponsiveHelper.sp(11),
-                        ).responsive(context),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-          SizedBox(height: ResponsiveHelper.h(16)),
-
-          // 4. JUMP BALL & POSSESSION ARROW CONTROLS
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-            child: Row(
+            // ─── 2. SHOT CLOCK UTILITY CONTROLS (ROW 1: RESET 24s | OFF. REBOUND 14s) ───
+            Row(
               children: [
+                // RESET 24s SHOT CLOCK Button
                 Expanded(
-                  child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.textPrimary,
-                      side: BorderSide(color: AppColors.accent.withValues(alpha: 0.5)),
-                      padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(10)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
-                      ),
-                    ),
-                    onPressed: () => controller.recordHeldBall(),
-                    icon: const Icon(Icons.sports_basketball, size: 16, color: AppColors.accent),
-                    label: Text(
-                      'HELD BALL / JUMP BALL',
-                      style: AppTypography.labelCaps.copyWith(
-                        color: AppColors.accent,
-                        fontSize: ResponsiveHelper.sp(11),
-                        fontWeight: FontWeight.bold,
-                      ).responsive(context),
-                    ),
+                  child: _buildShotClockControlTile(
+                    context,
+                    badgeText: '24',
+                    title: 'RESET 24s',
+                    subtitle: 'SHOT CLOCK',
+                    accentColor: AppColors.accent,
+                    onTap: () => controller.resetShotClock24(),
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(10)),
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.textPrimary,
-                    side: const BorderSide(color: Colors.white24),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ResponsiveHelper.w(12),
-                      vertical: ResponsiveHelper.h(10),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
-                    ),
-                  ),
-                  onPressed: () => controller.togglePossessionArrow(),
-                  icon: const Icon(Icons.swap_horiz, size: 18, color: Colors.amber),
-                  label: Text(
-                    'ARROW ⇄',
-                    style: AppTypography.labelCaps.copyWith(
-                      color: Colors.amber,
-                      fontSize: ResponsiveHelper.sp(11),
-                      fontWeight: FontWeight.bold,
-                    ).responsive(context),
+                SizedBox(width: ResponsiveHelper.w(12.0)),
+
+                // OFF. REBOUND 14s Button
+                Expanded(
+                  child: _buildShotClockControlTile(
+                    context,
+                    badgeText: '14',
+                    title: 'OFF. REBOUND',
+                    subtitle: '14s',
+                    accentColor: const Color(0xFF4D96FF),
+                    onTap: () => controller.resetShotClock14(),
                   ),
                 ),
               ],
             ),
-          ),
+            SizedBox(height: ResponsiveHelper.h(12.0)),
 
-          SizedBox(height: ResponsiveHelper.h(16)),
-
-          // 5. SECONDARY REFEREE ACTION CONTROLS
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16)),
-            child: Row(
+            // ─── 3. POSSESSION CONTROLS (ROW 2: HELD BALL / JUMP BALL | ARROW ⇄) ───
+            Row(
               children: [
+                // HELD BALL / JUMP BALL Button
                 Expanded(
-                  child: _buildActionChip(
-                    context: context,
-                    icon: Icons.warning_amber_rounded,
+                  flex: 3,
+                  child: _buildOutlineUtilityTile(
+                    context,
+                    icon: Icons.sports_basketball_rounded,
+                    label: 'HELD BALL / JUMP BALL',
+                    accentColor: AppColors.accent,
+                    onTap: () => controller.recordHeldBall(),
+                  ),
+                ),
+                SizedBox(width: ResponsiveHelper.w(10.0)),
+
+                // ARROW ⇄ Button
+                Expanded(
+                  flex: 2,
+                  child: _buildOutlineUtilityTile(
+                    context,
+                    icon: Icons.swap_horizontal_circle_outlined,
+                    label: 'ARROW  ⇄',
+                    accentColor: const Color(0xFFFFB300),
+                    onTap: () => controller.togglePossessionArrow(),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: ResponsiveHelper.h(14.0)),
+
+            // ─── 4. BOTTOM ACTION CONTROL TILES (FOUL | TIMEOUT | BREAK | UNDO) ───
+            Row(
+              children: [
+                // 1. FOUL Tile
+                Expanded(
+                  child: _buildBottomActionTile(
+                    context,
+                    icon: Icons.sports_rounded,
                     label: 'FOUL',
-                    color: Colors.orangeAccent,
+                    accentColor: const Color(0xFFFFB300),
                     onTap: () => _showFoulDialog(context, controller, homeName, awayName),
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(6)),
+                SizedBox(width: ResponsiveHelper.w(8.0)),
+
+                // 2. TIMEOUT Tile
                 Expanded(
-                  child: _buildActionChip(
-                    context: context,
+                  child: _buildBottomActionTile(
+                    context,
                     icon: Icons.timer_outlined,
                     label: 'TIMEOUT',
-                    color: AppColors.warning,
+                    accentColor: const Color(0xFFFFC107),
                     onTap: () => _showTimeoutDialog(context, controller, homeName, awayName),
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(6)),
+                SizedBox(width: ResponsiveHelper.w(8.0)),
+
+                // 3. BREAK / RESUME Tile
                 Expanded(
-                  child: _buildActionChip(
-                    context: context,
-                    icon: isRunning ? Icons.pause : Icons.play_arrow,
+                  child: _buildBottomActionTile(
+                    context,
+                    icon: isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
                     label: isRunning ? 'BREAK' : 'RESUME',
-                    color: isRunning ? AppColors.liveRed : AppColors.accent,
+                    accentColor: isRunning ? const Color(0xFFFF5252) : AppColors.accent,
                     onTap: () {
                       if (isRunning) {
                         controller.pauseForBreak();
@@ -265,86 +196,101 @@ class BasketballActionButtons extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.w(6)),
+                SizedBox(width: ResponsiveHelper.w(8.0)),
+
+                // 4. UNDO Tile
                 Expanded(
-                  child: _buildActionChip(
-                    context: context,
-                    icon: Icons.undo,
+                  child: _buildBottomActionTile(
+                    context,
+                    icon: Icons.undo_rounded,
                     label: 'UNDO',
-                    color: AppColors.textSecondary,
+                    accentColor: AppColors.mutedText,
                     onTap: () => controller.undoLastAction(),
                   ),
                 ),
               ],
             ),
-          ),
-
-          SizedBox(height: ResponsiveHelper.h(16)),
-        ],
+            SizedBox(height: ResponsiveHelper.h(16.0)),
+          ],
+        ),
       );
     });
   }
 
-  Widget _buildTeamScoringCard(
+  // ─── HELPER: TEAM SCORING PANEL (SIDE A / SIDE B) ───
+  Widget _buildTeamScoringPanel(
     BuildContext context, {
     required BasketballController controller,
     required String team,
     required String teamName,
     required Color accentColor,
   }) {
-    final isEnabled = controller.isMatchStarted.value && !controller.isReadOnly.value;
-
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+      padding: EdgeInsets.all(ResponsiveHelper.w(14.0)),
       decoration: BoxDecoration(
-        color: AppColors.cardSurface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-        border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+        color: const Color(0xFF141822),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(18.0)),
+        border: Border.all(
+          color: accentColor.withValues(alpha: 0.6),
+          width: 1.5,
+        ),
       ),
       child: Column(
         children: [
+          // Header Label with Underline Indicator
           Text(
-            teamName,
+            teamName.toUpperCase(),
+            style: AppTypography.labelCaps.copyWith(
+              color: accentColor,
+              fontSize: ResponsiveHelper.sp(13.0),
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.0,
+            ).responsive(context),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: AppTypography.headlineSm.copyWith(
-              color: accentColor,
-              fontSize: ResponsiveHelper.sp(13),
-              fontWeight: FontWeight.bold,
-            ).responsive(context),
           ),
-          SizedBox(height: ResponsiveHelper.h(10)),
+          SizedBox(height: ResponsiveHelper.h(4.0)),
+          Container(
+            width: ResponsiveHelper.w(20.0),
+            height: 2.0,
+            decoration: BoxDecoration(
+              color: accentColor,
+              borderRadius: BorderRadius.circular(2.0),
+            ),
+          ),
+          SizedBox(height: ResponsiveHelper.h(14.0)),
+
+          // Top Row: +1 FT & +2 FG Buttons
           Row(
             children: [
               Expanded(
-                child: _buildPointButton(
+                child: _buildScoringButton(
                   context,
-                  '+1 FT',
-                  points: 1,
-                  isEnabled: isEnabled,
+                  icon: Icons.filter_center_focus_rounded,
+                  label: '+1 FT',
                   accentColor: accentColor,
                   onTap: () => controller.scorePoints(team, 1),
                 ),
               ),
-              SizedBox(width: ResponsiveHelper.w(6)),
+              SizedBox(width: ResponsiveHelper.w(8.0)),
               Expanded(
-                child: _buildPointButton(
+                child: _buildScoringButton(
                   context,
-                  '+2 FG',
-                  points: 2,
-                  isEnabled: isEnabled,
+                  icon: Icons.sports_basketball_outlined,
+                  label: '+2 FG',
                   accentColor: accentColor,
                   onTap: () => controller.scorePoints(team, 2),
                 ),
               ),
             ],
           ),
-          SizedBox(height: ResponsiveHelper.h(6)),
-          _buildPointButton(
+          SizedBox(height: ResponsiveHelper.h(8.0)),
+
+          // Bottom Full-Width Row: +3 3-PT Button
+          _buildScoringButton(
             context,
-            '+3 3-PT',
-            points: 3,
-            isEnabled: isEnabled,
+            icon: Icons.sports_basketball_rounded,
+            label: '+3 3-PT',
             accentColor: accentColor,
             isFullWidth: true,
             onTap: () => controller.scorePoints(team, 3),
@@ -354,228 +300,265 @@ class BasketballActionButtons extends StatelessWidget {
     );
   }
 
-  Widget _buildPointButton(
-    BuildContext context,
-    String text, {
-    required int points,
-    required bool isEnabled,
+  // ─── HELPER: SCORING BUTTON TILE ───
+  Widget _buildScoringButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
     required Color accentColor,
     bool isFullWidth = false,
     required VoidCallback onTap,
   }) {
-    return SizedBox(
-      width: isFullWidth ? double.infinity : null,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isEnabled ? accentColor : Colors.white10,
-          foregroundColor: isEnabled ? Colors.black : AppColors.mutedText,
-          padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(10)),
-          minimumSize: Size.zero,
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ResponsiveHelper.w(10)),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(12.0)),
+        child: Container(
+          height: ResponsiveHelper.h(48.0),
+          width: isFullWidth ? double.infinity : null,
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4.0)),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0D111A),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(12.0)),
+            border: Border.all(
+              color: accentColor.withValues(alpha: 0.35),
+              width: 1.0,
+            ),
           ),
-        ),
-        onPressed: isEnabled ? onTap : null,
-        child: Text(
-          text,
-          style: AppTypography.headlineSm.copyWith(
-            fontSize: ResponsiveHelper.sp(12),
-            fontWeight: FontWeight.w900,
-          ).responsive(context),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionChip({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveHelper.w(6),
-          vertical: ResponsiveHelper.h(8),
-        ),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.4)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 16),
-            SizedBox(width: ResponsiveHelper.w(4)),
-            Flexible(
-              child: Text(
-                label,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.labelCaps.copyWith(
-                  color: color,
-                  fontSize: ResponsiveHelper.sp(10),
-                  fontWeight: FontWeight.bold,
-                ).responsive(context),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.center,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4.0)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    color: accentColor,
+                    size: ResponsiveHelper.w(16.0),
+                  ),
+                  SizedBox(width: ResponsiveHelper.w(4.0)),
+                  Text(
+                    label,
+                    style: AppTypography.headlineSm.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: ResponsiveHelper.sp(13.0),
+                      fontWeight: FontWeight.w900,
+                    ).responsive(context),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  void _showFoulDialog(BuildContext context, BasketballController controller, String homeName, String awayName) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.cardSurface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) {
-        final state = controller.liveState.value;
-        if (state == null) return const SizedBox.shrink();
-
-        return Container(
-          padding: EdgeInsets.all(ResponsiveHelper.w(20)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+  // ─── HELPER: SHOT CLOCK CONTROL TILE ───
+  Widget _buildShotClockControlTile(
+    BuildContext context, {
+    required String badgeText,
+    required String title,
+    required String subtitle,
+    required Color accentColor,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+        child: Container(
+          height: ResponsiveHelper.h(54.0),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(10.0)),
+          decoration: BoxDecoration(
+            color: const Color(0xFF141822),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.08),
+              width: 1.0,
+            ),
+          ),
+          child: Row(
             children: [
-              Text(
-                'Record Personal / Technical Foul',
-                style: AppTypography.headlineMd.copyWith(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
+              // Round Badge
+              Container(
+                width: ResponsiveHelper.w(30.0),
+                height: ResponsiveHelper.w(30.0),
+                decoration: BoxDecoration(
+                  color: accentColor.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: accentColor, width: 1.2),
+                ),
+                child: Center(
+                  child: Text(
+                    badgeText,
+                    style: AppTypography.labelCaps.copyWith(
+                      color: accentColor,
+                      fontSize: ResponsiveHelper.sp(10.5),
+                      fontWeight: FontWeight.w900,
+                    ).responsive(context),
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
-
-              // Side A Foul Section
-              _buildFoulTeamList(
-                context,
-                controller: controller,
-                team: 'sideA',
-                teamName: homeName,
-                players: state.teamA,
-                accentColor: AppColors.accent,
-              ),
-
-              const SizedBox(height: 16),
-
-              // Side B Foul Section
-              _buildFoulTeamList(
-                context,
-                controller: controller,
-                team: 'sideB',
-                teamName: awayName,
-                players: state.teamB,
-                accentColor: const Color(0xFF4D96FF),
+              SizedBox(width: ResponsiveHelper.w(8.0)),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTypography.labelCaps.copyWith(
+                        color: AppColors.textPrimary,
+                        fontSize: ResponsiveHelper.sp(10.5),
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.5,
+                      ).responsive(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      subtitle,
+                      style: AppTypography.labelCaps.copyWith(
+                        color: AppColors.mutedText,
+                        fontSize: ResponsiveHelper.sp(8.5),
+                        fontWeight: FontWeight.bold,
+                      ).responsive(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildFoulTeamList(
-    BuildContext context, {
-    required BasketballController controller,
-    required String team,
-    required String teamName,
-    required List<BasketballPlayer> players,
-    required Color accentColor,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              teamName,
-              style: AppTypography.headlineSm.copyWith(
-                color: accentColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: accentColor.withValues(alpha: 0.2),
-                foregroundColor: accentColor,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                minimumSize: Size.zero,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                controller.recordFoul(team);
-              },
-              child: const Text('Team Foul +1', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-            ),
-          ],
         ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: players.map((player) {
-            final isFouledOut = player.isFouledOut;
-            return ChoiceChip(
-              backgroundColor: const Color(0xFF262626),
-              selectedColor: Colors.orangeAccent,
-              selected: false,
-              label: Text(
-                '${player.name} (${player.personalFouls}/5 PF)',
-                style: AppTypography.bodySm.copyWith(
-                  color: isFouledOut ? AppColors.liveRed : AppColors.textPrimary,
-                  decoration: isFouledOut ? TextDecoration.lineThrough : null,
-                ),
-              ),
-              avatar: isFouledOut
-                  ? const Icon(Icons.block, size: 14, color: AppColors.liveRed)
-                  : const Icon(Icons.warning_amber_rounded, size: 14, color: Colors.orangeAccent),
-              onSelected: isFouledOut
-                  ? null
-                  : (_) {
-                      Navigator.pop(context);
-                      controller.recordFoul(team, playerFouledId: player.id);
-                    },
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  void _showTimeoutDialog(BuildContext context, BasketballController controller, String homeName, String awayName) {
-    Get.defaultDialog(
-      title: 'Call 60s Timeout',
-      backgroundColor: AppColors.cardSurface,
-      titleStyle: AppTypography.headlineMd.copyWith(color: AppColors.textPrimary),
-      content: Column(
-        children: [
-          ListTile(
-            title: Text('Timeout for $homeName', style: AppTypography.bodyMd.copyWith(color: AppColors.textPrimary)),
-            onTap: () {
-              Get.back();
-              controller.useTimeout('sideA');
-            },
-          ),
-          ListTile(
-            title: Text('Timeout for $awayName', style: AppTypography.bodyMd.copyWith(color: AppColors.textPrimary)),
-            onTap: () {
-              Get.back();
-              controller.useTimeout('sideB');
-            },
-          ),
-        ],
       ),
     );
+  }
+
+  // ─── HELPER: OUTLINE UTILITY TILE ───
+  Widget _buildOutlineUtilityTile(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color accentColor,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+        child: Container(
+          height: ResponsiveHelper.h(48.0),
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4.0)),
+          decoration: BoxDecoration(
+            color: const Color(0xFF141822),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+            border: Border.all(
+              color: accentColor.withValues(alpha: 0.5),
+              width: 1.2,
+            ),
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: accentColor, size: ResponsiveHelper.w(18.0)),
+                SizedBox(width: ResponsiveHelper.w(6.0)),
+                Text(
+                  label,
+                  style: AppTypography.labelCaps.copyWith(
+                    color: accentColor,
+                    fontSize: ResponsiveHelper.sp(11.0),
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.6,
+                  ).responsive(context),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─── HELPER: BOTTOM ACTION TILE (FOUL | TIMEOUT | BREAK | UNDO) ───
+  Widget _buildBottomActionTile(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color accentColor,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+        child: Container(
+          height: ResponsiveHelper.h(62.0),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(2.0)),
+          decoration: BoxDecoration(
+            color: const Color(0xFF141822),
+            borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
+            border: Border.all(
+              color: accentColor.withValues(alpha: 0.4),
+              width: 1.2,
+            ),
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: accentColor, size: ResponsiveHelper.w(20.0)),
+                SizedBox(height: ResponsiveHelper.h(4.0)),
+                Text(
+                  label,
+                  style: AppTypography.labelCaps.copyWith(
+                    color: accentColor,
+                    fontSize: ResponsiveHelper.sp(10.0),
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
+                  ).responsive(context),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─── BOTTOM SHEETS FOR RECORD FOUL & CALL TIMEOUT ───
+  void _showFoulDialog(
+    BuildContext context,
+    BasketballController controller,
+    String homeName,
+    String awayName,
+  ) {
+    BasketballRecordFoulSheet.show(context, controller);
+  }
+
+  void _showTimeoutDialog(
+    BuildContext context,
+    BasketballController controller,
+    String homeName,
+    String awayName,
+  ) {
+    BasketballCallTimeoutSheet.show(context, controller);
   }
 }

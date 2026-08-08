@@ -109,13 +109,14 @@ class CommonTossDecisionSheet extends StatelessWidget {
           SizedBox(height: ResponsiveHelper.h(8.0)),
 
           Text(
-            'What will they do first?',
-            style: AppTypography.bodySm.copyWith(
-              color: Colors.white70,
-              fontSize: ResponsiveHelper.sp(15.0),
+            'Decision:',
+            style: AppTypography.headlineSm.copyWith(
+              color: Colors.white,
+              fontSize: ResponsiveHelper.sp(16.0),
+              fontWeight: FontWeight.w700,
             ).responsive(context),
           ),
-          SizedBox(height: ResponsiveHelper.h(24.0)),
+          SizedBox(height: ResponsiveHelper.h(20.0)),
 
           // Decision Action Buttons
           Row(
@@ -149,12 +150,16 @@ class CommonTossDecisionSheet extends StatelessWidget {
 
   List<String> _getSportOptions() {
     final s = sport.toLowerCase().trim();
-    if (s == 'badminton' || s == 'tennis' || s == 'table_tennis' || s == 'squash') {
+    if (s == 'tennis' || s == 'volleyball' || s == 'badminton') {
+      return ['SERVE', 'CHOOSE SIDE'];
+    } else if (s == 'table_tennis' || s == 'squash') {
       return ['SERVE', 'RECEIVE'];
-    } else if (s == 'kabaddi') {
-      return ['RAID', 'DEFEND'];
-    } else if (s == 'football' || s == 'basketball' || s == 'hockey' || s == 'volleyball') {
-      return ['POSSESSION', 'SIDE'];
+    } else if (s == 'hockey') {
+      return ['FIRST CENTER', 'CHOOSE SIDE'];
+    } else if (s == 'kho_kho' || s == 'khokho') {
+      return ['CHASE', 'DEFEND'];
+    } else if (s == 'football' || s == 'soccer' || s == 'basketball') {
+      return ['KICKOFF', 'CHOOSE SIDE'];
     }
     // Default to Cricket
     return ['BAT', 'BOWL'];

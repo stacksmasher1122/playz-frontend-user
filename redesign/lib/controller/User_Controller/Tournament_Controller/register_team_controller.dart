@@ -41,8 +41,10 @@ class RegisterTeamController extends GetxController {
 
   // State
   final RxBool isRegistering = false.obs;
-  final RxInt currentStep =
-      1.obs; // 1: Basics, 2: Players & Roles, 3: Payment/Confirm
+  final RxInt currentStep = 1.obs; // 1: Players, 2: Basics, 3: Payment/Confirm
+
+  // Cross-team duplicate prevention: player IDs already enrolled in other teams
+  final RxSet<String> enrolledPlayerIds = <String>{}.obs;
 
   // Derived tournament format data
   late final String sport;
@@ -51,11 +53,17 @@ class RegisterTeamController extends GetxController {
   late final num entryFeeAmount;
   late final Map<String, String> availableRoles;
 
+  // Reactive getter: true when roster has exactly the required team size
+  bool get isRosterFull => selectedPlayers.length >= teamSize;
+  int get remainingSlots =>
+      (teamSize - selectedPlayers.length).clamp(0, teamSize);
+
   @override
   void onInit() {
     super.onInit();
     _initTournamentData();
     _initRazorpay();
+    _fetchAlreadyEnrolledPlayerIds();
   }
 
   Future<void> addCurrentUserAction() async {
@@ -84,6 +92,35 @@ class RegisterTeamController extends GetxController {
     } catch (e) {
       debugPrint(
         "🔴 [TeamRegistration] Error fetching fresh tournament data: $e",
+      );
+    }
+  }
+
+  /// Fetches all player IDs already enrolled in other teams for this tournament.
+  Future<void> _fetchAlreadyEnrolledPlayerIds() async {
+    try {
+      final teamsSnapshot = await FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId)
+          .collection('teams')
+          .get();
+
+      final Set<String> ids = {};
+      for (final doc in teamsSnapshot.docs) {
+        final players = doc.data()['players'] as List<dynamic>? ?? [];
+        for (final p in players) {
+          if (p is Map<String, dynamic> && p['userId'] != null) {
+            ids.add(p['userId'] as String);
+          }
+        }
+      }
+      enrolledPlayerIds.assignAll(ids);
+      debugPrint(
+        '📋 [TeamRegistration] Already enrolled player IDs: ${ids.length} found.',
+      );
+    } catch (e) {
+      debugPrint(
+        '🔴 [TeamRegistration] Error fetching enrolled player IDs: $e',
       );
     }
   }
@@ -150,6 +187,17 @@ class RegisterTeamController extends GetxController {
           "Team Full",
           "You have reached the maximum team size of $teamSize.",
           snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+      // Cross-team duplicate check
+      if (enrolledPlayerIds.contains(currentUserId)) {
+        Get.snackbar(
+          "Already Enrolled",
+          "You are already registered in another team for this tournament.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
         );
         return;
       }
@@ -238,6 +286,19 @@ class RegisterTeamController extends GetxController {
       return;
     }
 
+    // Cross-team duplicate check
+    final playerId = playerData['userId'] as String?;
+    if (playerId != null && enrolledPlayerIds.contains(playerId)) {
+      Get.snackbar(
+        "Already Enrolled",
+        "This player is already registered in another team.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     if (selectedPlayers.length >= teamSize) {
       Get.snackbar(
         "Team Full",
@@ -281,11 +342,13 @@ class RegisterTeamController extends GetxController {
 
   void nextStep() {
     if (currentStep.value == 1) {
-      if (selectedPlayers.isEmpty) {
+      if (selectedPlayers.length < teamSize) {
         Get.snackbar(
-          "Validation Error",
-          "Please add at least one player.",
+          "Incomplete Roster",
+          "Your team needs $teamSize players. Currently ${selectedPlayers.length}/$teamSize.",
           snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
         );
         return;
       }
@@ -533,8 +596,15 @@ class RegisterTeamController extends GetxController {
         snackPosition: SnackPosition.TOP,
       );
 
-      // Navigate back to Tournament Detail screen
-      Get.back();
+      // Navigate back to Tournament Detail screen (pop the entire registration flow)
+      if (Get.currentRoute.contains('RegisterTeam') ||
+          Get.previousRoute.contains('RegisterTeam')) {
+        Get.until(
+          (route) => !route.settings.name.toString().contains('RegisterTeam'),
+        );
+      } else {
+        Get.back();
+      }
     } catch (e, stack) {
       debugPrint('🔴 [TeamRegistration] Error writing team to Firestore: $e');
       debugPrint('🔴 [TeamRegistration] StackTrace: $stack');

@@ -245,7 +245,7 @@ class SquashController extends GetxController {
       _initEngineFromState(initialState);
 
       final navContext = context ?? Get.context;
-      if (navContext != null) {
+      if (navContext != null && navContext.mounted) {
         Navigator.push(
           navContext,
           MaterialPageRoute(builder: (context) => const SquashScoreboardScreen()),

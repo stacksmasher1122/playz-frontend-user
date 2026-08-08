@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Tennis/tennis_state_models.dart';
 
+/// Tennis Live Scoreboard Header Card designed strictly matching reference UI pixel-for-pixel.
 class TennisScoreboardHeader extends StatelessWidget {
   final TennisMatchState state;
 
@@ -17,364 +17,272 @@ class TennisScoreboardHeader extends StatelessWidget {
     ResponsiveHelper.init(context);
     final homeName = state.matchConfig.homeTeamName;
     final awayName = state.matchConfig.awayTeamName;
+    final currentSetNum = state.currentSetIndex + 1;
+    final maxSetsLabel = state.matchConfig.setsFormat.replaceAll('BEST_OF_', 'Best of ');
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(ResponsiveHelper.w(24)),
+        color: const Color(0xFF0D1117),
+        borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
         border: Border.all(
-          color: state.isTiebreak || state.isMatchTiebreak
-              ? AppColors.coinsGold.withValues(alpha: 0.5)
-              : AppColors.cardSurface,
-          width: 1.5,
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1.0,
         ),
       ),
       padding: EdgeInsets.all(ResponsiveHelper.w(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Top Badges Bar: Match Status, Rule Mode, Tiebreak Banner
+          // ─── 1. TOP HEADER ROW (NO LIVE BADGE PER USER INSTRUCTION) ───
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // Match Status Badge
-              Flexible(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ResponsiveHelper.w(10),
-                    vertical: ResponsiveHelper.h(4),
-                  ),
-                  decoration: BoxDecoration(
-                    color: state.matchStatus == 'COMPLETED'
-                        ? AppColors.infoBlue.withValues(alpha: 0.2)
-                        : (state.matchStatus == 'RETIRED'
-                            ? AppColors.error.withValues(alpha: 0.2)
-                            : AppColors.primaryGreen.withValues(alpha: 0.2)),
-                    borderRadius: BorderRadius.circular(ResponsiveHelper.w(8)),
-                  ),
-                  child: Text(
-                    state.matchStatus,
-                    style: AppTypography.labelCaps.copyWith(
-                      color: state.matchStatus == 'COMPLETED'
-                          ? Colors.lightBlue
-                          : (state.matchStatus == 'RETIRED'
-                              ? AppColors.liveRed
-                              : AppColors.primaryGreen),
-                      fontSize: context.responsiveFont(11),
-                      fontWeight: FontWeight.w800,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-              SizedBox(width: ResponsiveHelper.w(8)),
-
-              // Tiebreak or Current Set badge indicator
-              Flexible(
-                child: state.isTiebreak || state.isMatchTiebreak
-                    ? Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ResponsiveHelper.w(10),
-                          vertical: ResponsiveHelper.h(4),
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.coinsGold.withValues(alpha: 0.2),
-                          borderRadius:
-                              BorderRadius.circular(ResponsiveHelper.w(8)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.flash_on_rounded,
-                                size: 14, color: AppColors.coinsGold),
-                            SizedBox(width: ResponsiveHelper.w(4)),
-                            Flexible(
-                              child: Text(
-                                state.isMatchTiebreak
-                                    ? 'MATCH TIEBREAK (to 10)'
-                                    : 'TIEBREAK (to ${state.matchConfig.tiebreakTarget})',
-                                style: AppTypography.labelCaps.copyWith(
-                                  color: AppColors.coinsGold,
-                                  fontSize: context.responsiveFont(10),
-                                  fontWeight: FontWeight.w800,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Text(
-                        'Set ${state.currentSetIndex + 1} of ${state.matchConfig.setsFormat.replaceAll('BEST_OF_', 'Best of ')}',
-                        style: AppTypography.bodySm.copyWith(
-                          color: AppColors.mutedText,
-                          fontSize: context.responsiveFont(12),
-                          fontWeight: FontWeight.w600,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+              Text(
+                'Set $currentSetNum of $maxSetsLabel',
+                style: AppTypography.bodySm.copyWith(
+                  color: const Color(0xFF8E8E93),
+                  fontSize: ResponsiveHelper.sp(12),
+                  fontWeight: FontWeight.w600,
+                ).responsive(context),
               ),
             ],
           ),
+
           SizedBox(height: ResponsiveHelper.h(16)),
 
-          // Team Scores & Server Display Row
+          // ─── 2. MAIN TEAMS & SCORE BOXES ───
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Team A Card
+              // ─── SIDE A (HOME TEAM) BOX ───
               Expanded(
-                child: _buildTeamScoreCard(
-                  context: context,
+                child: _buildTeamScoreBox(
+                  context,
                   name: homeName,
                   pointScore: state.sideAPointScore,
                   setsWon: state.sideASetsWon,
                   isServing: state.servingSide == 'A',
-                  accentColor: AppColors.primaryGreen,
-                  court: state.servingCourt,
-                  isSecondServe: state.isSecondServe,
+                  isGreenAccent: true,
                 ),
               ),
 
-              SizedBox(width: ResponsiveHelper.w(10)),
+              SizedBox(width: ResponsiveHelper.w(12)),
 
-              // VS & Current Set Score Divider
+              // ─── CENTER VS & SET GAMES COLUMN ───
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     'VS',
                     style: AppTypography.labelCaps.copyWith(
-                      color: AppColors.mutedText,
-                      fontSize: context.responsiveFont(13),
+                      color: const Color(0xFF8E8E93),
+                      fontSize: ResponsiveHelper.sp(13),
                       fontWeight: FontWeight.w900,
-                      fontStyle: FontStyle.italic,
-                    ),
+                    ).responsive(context),
                   ),
-                  SizedBox(height: ResponsiveHelper.h(4)),
-                  if (state.setScores.isNotEmpty)
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        '${state.setScores[state.currentSetIndex].sideAGames} - ${state.setScores[state.currentSetIndex].sideBGames}',
-                        style: AppTypography.monoLg.copyWith(
-                          color: AppColors.textPrimary,
-                          fontSize: context.responsiveFont(20),
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
+                  SizedBox(height: ResponsiveHelper.h(6)),
+                  Text(
+                    state.setScores.isNotEmpty
+                        ? '${state.setScores[state.currentSetIndex].sideAGames} - ${state.setScores[state.currentSetIndex].sideBGames}'
+                        : '0 - 0',
+                    style: AppTypography.headlineSm.copyWith(
+                      color: Colors.white,
+                      fontSize: ResponsiveHelper.sp(20),
+                      fontWeight: FontWeight.w900,
+                    ).responsive(context),
+                  ),
                 ],
               ),
 
-              SizedBox(width: ResponsiveHelper.w(10)),
+              SizedBox(width: ResponsiveHelper.w(12)),
 
-              // Team B Card
+              // ─── SIDE B (AWAY TEAM) BOX ───
               Expanded(
-                child: _buildTeamScoreCard(
-                  context: context,
+                child: _buildTeamScoreBox(
+                  context,
                   name: awayName,
                   pointScore: state.sideBPointScore,
                   setsWon: state.sideBSetsWon,
                   isServing: state.servingSide == 'B',
-                  accentColor: AppColors.infoBlue,
-                  court: state.servingCourt,
-                  isSecondServe: state.isSecondServe,
+                  isGreenAccent: false,
                 ),
               ),
             ],
           ),
-          SizedBox(height: ResponsiveHelper.h(14)),
 
-          // Set Scores History & Server / Court Indicator Bar
-          Container(
-            padding: EdgeInsets.all(ResponsiveHelper.w(12)),
-            decoration: BoxDecoration(
-              color: AppColors.cardSurface,
-              borderRadius: BorderRadius.circular(ResponsiveHelper.w(12)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Set score history row
-                Row(
-                  children: [
-                    Text(
-                      'Sets Score:',
-                      style: AppTypography.bodySm.copyWith(
-                        color: AppColors.mutedText,
-                        fontSize: context.responsiveFont(12),
-                        fontWeight: FontWeight.w600,
+          SizedBox(height: ResponsiveHelper.h(20)),
+
+          // ─── 3. SET SCORE DIVIDER ROW ───
+          Column(
+            children: [
+              Text(
+                'SET SCORE',
+                style: AppTypography.labelCaps.copyWith(
+                  color: const Color(0xFF8E8E93),
+                  fontSize: ResponsiveHelper.sp(10),
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.0,
+                ).responsive(context),
+              ),
+              SizedBox(height: ResponsiveHelper.h(8)),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: Colors.white.withValues(alpha: 0.1),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(12)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ResponsiveHelper.w(14),
+                      vertical: ResponsiveHelper.h(6),
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0A2417),
+                      borderRadius: BorderRadius.circular(ResponsiveHelper.w(20)),
+                      border: Border.all(color: const Color(0xFF00E676), width: 1.0),
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: state.setScores.map((s) {
+                          final String tiebreakStr = (s.tiebreakSideAPoints > 0 || s.tiebreakSideBPoints > 0)
+                              ? ' (${s.winnerSide == 'A' ? s.tiebreakSideBPoints : s.tiebreakSideAPoints})'
+                              : '';
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(4)),
+                            child: Text(
+                              'S${s.setNumber}: ${s.sideAGames} - ${s.sideBGames}$tiebreakStr',
+                              style: AppTypography.monoMd.copyWith(
+                                color: const Color(0xFF00E676),
+                                fontSize: ResponsiveHelper.sp(12),
+                                fontWeight: FontWeight.w800,
+                              ).responsive(context),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
-                    SizedBox(width: ResponsiveHelper.w(8)),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        physics: const BouncingScrollPhysics(),
-                        child: Row(
-                          children: state.setScores.map((s) {
-                            final isCurrent =
-                                s.setNumber == (state.currentSetIndex + 1);
-                            final tiebreakInfo = (s.tiebreakSideAPoints > 0 ||
-                                    s.tiebreakSideBPoints > 0)
-                                ? '(${s.winnerSide == 'A' ? s.tiebreakSideBPoints : s.tiebreakSideAPoints})'
-                                : '';
-                            return Container(
-                              margin: EdgeInsets.only(
-                                  right: ResponsiveHelper.w(6)),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: ResponsiveHelper.w(8),
-                                vertical: ResponsiveHelper.h(3),
-                              ),
-                              decoration: BoxDecoration(
-                                color: isCurrent
-                                    ? AppColors.primaryGreen
-                                        .withValues(alpha: 0.2)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                'S${s.setNumber}: ${s.sideAGames}-${s.sideBGames}$tiebreakInfo',
-                                style: AppTypography.monoMd.copyWith(
-                                  color: isCurrent
-                                      ? AppColors.primaryGreen
-                                      : AppColors.textPrimary,
-                                  fontSize: context.responsiveFont(12),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: Colors.white.withValues(alpha: 0.1),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          SizedBox(height: ResponsiveHelper.h(16)),
+
+          // ─── 4. BOTTOM SERVER & SET FORMAT INFO ROW ───
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Server info
+              Expanded(
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.sports_tennis_rounded,
+                      size: 16,
+                      color: Color(0xFF00E676),
+                    ),
+                    SizedBox(width: ResponsiveHelper.w(6)),
+                    Flexible(
+                      child: Text(
+                        'Server: ${state.servingSide == 'A' ? homeName : awayName} (${state.servingCourt} Court)',
+                        style: AppTypography.bodySm.copyWith(
+                          color: Colors.white,
+                          fontSize: ResponsiveHelper.sp(11),
+                          fontWeight: FontWeight.w600,
+                        ).responsive(context),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: ResponsiveHelper.h(8)),
-                Divider(
-                    color: Colors.white.withValues(alpha: 0.08), height: 1),
-                SizedBox(height: ResponsiveHelper.h(8)),
+              ),
 
-                // Server court & ends switch indicator row
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.sports_tennis_rounded,
-                            size: 16,
-                            color: AppColors.primaryGreen,
-                          ),
-                          SizedBox(width: ResponsiveHelper.w(6)),
-                          Text(
-                            'Server: ${state.servingSide == 'A' ? homeName : awayName} (${state.servingCourt} Court)',
-                            style: AppTypography.bodySm.copyWith(
-                              color: AppColors.textPrimary,
-                              fontSize: context.responsiveFont(12),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          if (state.isSecondServe) ...[
-                            SizedBox(width: ResponsiveHelper.w(6)),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: ResponsiveHelper.w(6),
-                                vertical: ResponsiveHelper.h(2),
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.orange.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                '2nd Serve',
-                                style: AppTypography.labelCaps10.copyWith(
-                                  color: Colors.orangeAccent,
-                                  fontSize: context.responsiveFont(10),
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      SizedBox(width: ResponsiveHelper.w(16)),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.sync_alt_rounded,
-                            size: 14,
-                            color: state.isEndsSwitched
-                                ? AppColors.coinsGold
-                                : AppColors.mutedText,
-                          ),
-                          SizedBox(width: ResponsiveHelper.w(4)),
-                          Text(
-                            state.isEndsSwitched
-                                ? 'Sides Switched'
-                                : 'Normal Side',
-                            style: AppTypography.bodySm.copyWith(
-                              color: state.isEndsSwitched
-                                  ? AppColors.coinsGold
-                                  : AppColors.mutedText,
-                              fontSize: context.responsiveFont(11),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+              // Vertical Divider
+              Container(
+                height: 14,
+                width: 1,
+                color: Colors.white24,
+                margin: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(8)),
+              ),
+
+              // Match / Set Mode indicator
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.sync_alt_rounded,
+                    size: 16,
+                    color: Color(0xFF00E676),
                   ),
-                ),
-              ],
-            ),
+                  SizedBox(width: ResponsiveHelper.w(6)),
+                  Text(
+                    state.isTiebreak || state.isMatchTiebreak ? 'Tiebreak' : 'Normal Set',
+                    style: AppTypography.bodySm.copyWith(
+                      color: Colors.white,
+                      fontSize: ResponsiveHelper.sp(11),
+                      fontWeight: FontWeight.w600,
+                    ).responsive(context),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTeamScoreCard({
-    required BuildContext context,
+  Widget _buildTeamScoreBox(
+    BuildContext context, {
     required String name,
     required String pointScore,
     required int setsWon,
     required bool isServing,
-    required Color accentColor,
-    required String court,
-    required bool isSecondServe,
+    required bool isGreenAccent,
   }) {
+    final Color borderColor = isServing ? const Color(0xFF00E676) : Colors.white.withValues(alpha: 0.08);
+    final Color scoreColor = isServing || isGreenAccent ? const Color(0xFF00E676) : Colors.white;
+
     return Container(
-      padding: EdgeInsets.all(ResponsiveHelper.w(12)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.w(12),
+        vertical: ResponsiveHelper.h(14),
+      ),
       decoration: BoxDecoration(
-        color: isServing
-            ? accentColor.withValues(alpha: 0.12)
-            : AppColors.cardSurface,
+        color: const Color(0xFF14181F),
         borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
         border: Border.all(
-          color: isServing ? accentColor : Colors.transparent,
-          width: 1.5,
+          color: borderColor,
+          width: isServing ? 1.5 : 1.0,
         ),
       ),
       child: Column(
         children: [
+          // Player Name & Serving Racquet Icon Row
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Flexible(
                 child: Text(
                   name,
-                  style: AppTypography.headlineSm.copyWith(
-                    color: AppColors.textPrimary,
-                    fontSize: context.responsiveFont(14),
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: AppTypography.bodyMd.copyWith(
+                    color: Colors.white,
+                    fontSize: ResponsiveHelper.sp(13),
+                    fontWeight: FontWeight.bold,
+                  ).responsive(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -384,34 +292,50 @@ class TennisScoreboardHeader extends StatelessWidget {
                 const Icon(
                   Icons.sports_tennis_rounded,
                   size: 14,
-                  color: AppColors.primaryGreen,
+                  color: Color(0xFF00E676),
                 ),
               ],
             ],
           ),
-          SizedBox(height: ResponsiveHelper.h(6)),
 
-          // Point Score Display (Sora font, scaleDown fitted)
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              pointScore,
-              style: AppTypography.displayScoreSora.copyWith(
-                color: isServing ? accentColor : AppColors.textPrimary,
-                fontSize: context.responsiveFont(36),
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ),
-          SizedBox(height: ResponsiveHelper.h(4)),
+          SizedBox(height: ResponsiveHelper.h(10)),
 
+          // Big Center Point Score Number
           Text(
-            'Sets: $setsWon',
-            style: AppTypography.bodySm.copyWith(
-              color: AppColors.mutedText,
-              fontSize: context.responsiveFont(12),
-              fontWeight: FontWeight.w600,
-            ),
+            pointScore,
+            style: AppTypography.headlineLg.copyWith(
+              color: scoreColor,
+              fontSize: ResponsiveHelper.sp(42),
+              fontWeight: FontWeight.w900,
+              height: 1.0,
+            ).responsive(context),
+          ),
+
+          SizedBox(height: ResponsiveHelper.h(12)),
+
+          // Sets Count Subtitle Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: isServing ? const Color(0xFF00E676) : const Color(0xFF8E8E93),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              SizedBox(width: ResponsiveHelper.w(6)),
+              Text(
+                'SETS: $setsWon',
+                style: AppTypography.labelCaps10.copyWith(
+                  color: const Color(0xFF8E8E93),
+                  fontSize: ResponsiveHelper.sp(11),
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                ).responsive(context),
+              ),
+            ],
           ),
         ],
       ),

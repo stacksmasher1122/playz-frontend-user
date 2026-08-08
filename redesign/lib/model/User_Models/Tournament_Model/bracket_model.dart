@@ -8,11 +8,13 @@ class BracketMatchModel {
   final DateTime? scheduledDate;
   final String status; // 'unscheduled', 'scheduled', 'in_progress', 'completed'
   final String? winnerId;
-  final String? groupName; // Used for group stage matches
+  final String? groupName; // Used for group stage matches (e.g. "Group A")
+  final int? groupIndex; // 0-based group index for sorting/grouping
+  final bool isGroupStage; // true for group stage matches, false for knockout
   final String? nextMatchId;
   final String? nextMatchSlot; // 'A' or 'B'
   final String? liveMatchId;
-  final Map<String, dynamic>? referee; // D1 Fix: Referee tracking
+  final Map<String, dynamic>? referee;
 
   BracketMatchModel({
     required this.id,
@@ -23,6 +25,8 @@ class BracketMatchModel {
     required this.status,
     this.winnerId,
     this.groupName,
+    this.groupIndex,
+    this.isGroupStage = false,
     this.nextMatchId,
     this.nextMatchSlot,
     this.liveMatchId,
@@ -38,6 +42,8 @@ class BracketMatchModel {
       'status': status,
       'winnerId': winnerId,
       'groupName': groupName,
+      'groupIndex': groupIndex,
+      'isGroupStage': isGroupStage,
       'nextMatchId': nextMatchId,
       'nextMatchSlot': nextMatchSlot,
       'liveMatchId': liveMatchId,
@@ -55,6 +61,8 @@ class BracketMatchModel {
       status: map['status'] ?? 'unscheduled',
       winnerId: map['winnerId'],
       groupName: map['groupName'],
+      groupIndex: map['groupIndex'] != null ? int.tryParse(map['groupIndex'].toString()) : null,
+      isGroupStage: map['isGroupStage'] == true,
       nextMatchId: map['nextMatchId'],
       nextMatchSlot: map['nextMatchSlot'],
       liveMatchId: map['liveMatchId'],

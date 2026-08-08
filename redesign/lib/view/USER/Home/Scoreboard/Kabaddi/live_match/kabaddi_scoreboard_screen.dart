@@ -336,47 +336,6 @@ class _KabaddiScoreboardScreenState extends State<KabaddiScoreboardScreen> {
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: AppColors.background,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.primaryGreen),
-            onPressed: () async {
-              final shouldPop = await _showExitConfirmationDialog();
-              if (shouldPop && context.mounted) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => UserAppNavShell()),
-                  (route) => false,
-                );
-              }
-            },
-          ),
-          title: Text(
-            'KABADDI MATCH',
-            style: AppTypography.headlineMd.copyWith(
-              color: AppColors.primaryGreen,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.2,
-              fontStyle: FontStyle.italic,
-              fontSize: context.responsiveFont(16),
-            ),
-          ),
-          centerTitle: false,
-          actions: [
-            Obx(() {
-              final state = controller.liveState.value;
-              final canUndo = state != null && controller.engine.canUndo;
-              return IconButton(
-                icon: Icon(
-                  Icons.undo_rounded,
-                  color: canUndo ? AppColors.primaryGreen : AppColors.mutedText,
-                ),
-                onPressed: canUndo ? controller.undoLastAction : null,
-              );
-            }),
-          ],
-        ),
         body: SafeArea(
           child: Obx(() {
             final state = controller.liveState.value;

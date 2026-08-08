@@ -193,13 +193,3 @@ class TierHelper {
     return 'ROOKIE';
   }
 }
-
-// TODO: The following UI files currently contain hardcoded Color(0x...) and LinearGradient(...) instances which can be refactored to use AppColors gradient tokens:
-// - lib/view/USER/Trainer/trainer/trainer_screen.dart (greenBlackBg)
-// - lib/view/USER/More/z_coins/z_coins_screen.dart (emeraldDarkCard)
-// - lib/view/USER/More/menu/widgets/z_coins_card.dart (blackGreyCard)
-// - lib/view/USER/More/reward_center/reward_center_screen.dart (greenBlackBg, blackGreyCard)
-// - lib/view/USER/More/profile/profile_screen.dart (blackGreyCard, tierGradients)
-// - lib/view/USER/SignIn-SignUp/login/widgets/login_background.dart (greenBlackBg)
-// - lib/view/USER/Play/play/widgets/game_diary_section.dart (blackGreyCard)
-// - lib/view/USER/Home/home/widgets/home_hero_cta.dart (neonGreenGlow)

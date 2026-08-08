@@ -12,8 +12,9 @@ class PickleballFirebaseService {
           .doc(match.matchId)
           .set(match.toMap(), SetOptions(merge: true));
     } catch (e) {
+      // ignore: avoid_print
       print("Error saving match to Firebase: $e");
-      throw e; // Rethrow to let the SyncService know it failed
+      rethrow; // Rethrow to let the SyncService know it failed
     }
   }
 
@@ -29,6 +30,7 @@ class PickleballFirebaseService {
         return LivePickleballMatchModel.fromMap(data);
       }).toList();
     } catch (e) {
+      // ignore: avoid_print
       print("Error fetching matches from Firebase: $e");
       return [];
     }

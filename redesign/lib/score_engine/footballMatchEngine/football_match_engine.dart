@@ -68,6 +68,7 @@ class MatchTeam {
   int substitutionsUsed;
   int penaltiesScored;
   int penaltiesMissed;
+  String logo;
 
   MatchTeam({
     required this.id,
@@ -77,6 +78,7 @@ class MatchTeam {
     this.substitutionsUsed = 0,
     this.penaltiesScored = 0,
     this.penaltiesMissed = 0,
+    this.logo = '',
   });
 
   Map<String, dynamic> toJson() => {
@@ -86,6 +88,7 @@ class MatchTeam {
         'substitutionsUsed': substitutionsUsed,
         'penaltiesScored': penaltiesScored,
         'penaltiesMissed': penaltiesMissed,
+        'logo': logo,
         'squad': squad.map((p) => p.toJson()).toList(),
       };
 
@@ -96,6 +99,7 @@ class MatchTeam {
         substitutionsUsed: json['substitutionsUsed'] ?? 0,
         penaltiesScored: json['penaltiesScored'] ?? 0,
         penaltiesMissed: json['penaltiesMissed'] ?? 0,
+        logo: json['logo'] ?? '',
         squad: (json['squad'] as List?)?.map((p) => MatchPlayer.fromJson(p)).toList() ?? [],
       );
 }
@@ -489,7 +493,7 @@ class MatchEngine extends ChangeNotifier {
         processGoal(side, taker, null);
       } else {
         _saveSnapshot();
-        _log(EventType.penaltyMiss, side, "Penalty Missed", "${taker?.name ?? 'Unknown'}", icon: Icons.close, color: Colors.red, playerId: taker?.id);
+        _log(EventType.penaltyMiss, side, "Penalty Missed", taker?.name ?? 'Unknown', icon: Icons.close, color: Colors.red, playerId: taker?.id);
         notifyListeners();
       }
       return;
@@ -503,14 +507,14 @@ class MatchEngine extends ChangeNotifier {
       } else {
         state.awayTeam.penaltiesScored++;
       }
-      _log(EventType.penaltyGoal, side, "Penalty Scored", "${taker?.name ?? 'Unknown'}", icon: Icons.sports_soccer, color: Colors.green, playerId: taker?.id);
+      _log(EventType.penaltyGoal, side, "Penalty Scored", taker?.name ?? 'Unknown', icon: Icons.sports_soccer, color: Colors.green, playerId: taker?.id);
     } else {
       if (side == TeamSide.home) {
         state.homeTeam.penaltiesMissed++;
       } else {
         state.awayTeam.penaltiesMissed++;
       }
-      _log(EventType.penaltyMiss, side, "Penalty Missed", "${taker?.name ?? 'Unknown'}", icon: Icons.close, color: Colors.red, playerId: taker?.id);
+      _log(EventType.penaltyMiss, side, "Penalty Missed", taker?.name ?? 'Unknown', icon: Icons.close, color: Colors.red, playerId: taker?.id);
     }
 
     // Auto-determine shootout winner based on Standard 5 kicks logic
@@ -554,14 +558,14 @@ class MatchEngine extends ChangeNotifier {
   void processOffside(TeamSide side, MatchPlayer? player) {
     if (!_isPlayActive()) return;
     _saveSnapshot();
-    _log(EventType.offside, side, "Offside", "${player?.name ?? 'Unknown'}", icon: Icons.flag, color: Colors.orange, playerId: player?.id);
+    _log(EventType.offside, side, "Offside", player?.name ?? 'Unknown', icon: Icons.flag, color: Colors.orange, playerId: player?.id);
     notifyListeners();
   }
 
   void processFreeKick(TeamSide side, MatchPlayer? player) {
     if (!_isPlayActive()) return;
     _saveSnapshot();
-    _log(EventType.freeKick, side, "Free Kick", "${player?.name ?? 'Unknown'}", icon: Icons.sports_kabaddi, color: Colors.blue, playerId: player?.id);
+    _log(EventType.freeKick, side, "Free Kick", player?.name ?? 'Unknown', icon: Icons.sports_kabaddi, color: Colors.blue, playerId: player?.id);
     notifyListeners();
   }
 

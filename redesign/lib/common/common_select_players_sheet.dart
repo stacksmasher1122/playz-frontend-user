@@ -226,6 +226,14 @@ class _CommonSelectPlayersBottomSheetState extends State<CommonSelectPlayersBott
                         horizontal: ResponsiveHelper.w(8.0),
                         vertical: ResponsiveHelper.h(4.0),
                       ),
+                      onTap: (isOpponentSelected || isSelected)
+                          ? null
+                          : () {
+                              widget.onPlayerSelected(friend);
+                              if (widget.selectedPlayerEmails.length >= widget.maxCount) {
+                                Navigator.of(context).pop();
+                              }
+                            },
                       leading: CircleAvatar(
                         backgroundColor: isMe ? AppColors.accent.withValues(alpha: 0.3) : Colors.grey[800],
                         backgroundImage: friend.profileImageUrl.isNotEmpty
@@ -260,7 +268,6 @@ class _CommonSelectPlayersBottomSheetState extends State<CommonSelectPlayersBott
                                   icon: const Icon(Icons.add, color: AppColors.accent, size: 24),
                                   onPressed: () {
                                     widget.onPlayerSelected(friend);
-                                    // Auto close bottom sheet if team becomes full after adding this player
                                     if (widget.selectedPlayerEmails.length >= widget.maxCount) {
                                       Navigator.of(context).pop();
                                     }

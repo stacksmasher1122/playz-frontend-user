@@ -52,4 +52,30 @@ class FootballMatchModel {
         'tournamentId': tournamentId,
         'bracketMatchId': bracketMatchId,
       };
+
+  factory FootballMatchModel.fromJson(Map<String, dynamic> json) {
+    return FootballMatchModel(
+      id: json['id']?.toString() ?? '',
+      createdBy: json['createdBy']?.toString() ?? 'unknown',
+      sport: json['sport']?.toString() ?? 'football',
+      allPlayers: List<String>.from(json['allPlayers'] ?? []),
+      homeTeamPlayers: List<String>.from(json['homeTeamPlayers'] ?? []),
+      awayTeamPlayers: List<String>.from(json['awayTeamPlayers'] ?? []),
+      config: Map<String, dynamic>.from(json['config'] ?? {}),
+      isFriendlyRules: json['isFriendlyRules'] == true,
+      status: json['status']?.toString() ?? 'pending',
+      engineState: json['engineState'] != null
+          ? FootballMatchState.fromJson(Map<String, dynamic>.from(json['engineState']))
+          : FootballMatchState(),
+      matchResult: json['matchResult']?.toString() ?? '',
+      lastUpdatedAt: json['lastUpdatedAt'] != null
+          ? DateTime.tryParse(json['lastUpdatedAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      tournamentId: json['tournamentId']?.toString(),
+      bracketMatchId: json['bracketMatchId']?.toString(),
+    );
+  }
 }

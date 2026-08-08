@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-
 enum PlayerSide { sideA, sideB }
 enum RaidOutcome { touchPoint, tacklePoint, superTackle, bonusPoint, emptyRaid, allOut }
 
@@ -101,8 +98,6 @@ class KabaddiMatchState {
   final List<KabaddiPlayer> teamB;
   final int sideAScore;
   final int sideBScore;
-  final int sideAActiveCount;
-  final int sideBActiveCount;
   final int currentHalf; // 1 or 2
   final PlayerSide raidingSide;
   final int consecutiveEmptyRaidsA;
@@ -111,6 +106,9 @@ class KabaddiMatchState {
   final bool isHalfCompleted;
   final bool isMatchFinished;
   final PlayerSide? matchWinner;
+
+  int get sideAActiveCount => teamA.isEmpty ? config.activePlayersPerTeam : teamA.where((p) => p.isOnCourt).length;
+  int get sideBActiveCount => teamB.isEmpty ? config.activePlayersPerTeam : teamB.where((p) => p.isOnCourt).length;
 
   bool get isDoOrDieA => config.isProRules && config.enableDoOrDie && consecutiveEmptyRaidsA >= 2;
   bool get isDoOrDieB => config.isProRules && config.enableDoOrDie && consecutiveEmptyRaidsB >= 2;
@@ -121,8 +119,6 @@ class KabaddiMatchState {
     required this.teamB,
     required this.sideAScore,
     required this.sideBScore,
-    required this.sideAActiveCount,
-    required this.sideBActiveCount,
     required this.currentHalf,
     required this.raidingSide,
     required this.consecutiveEmptyRaidsA,
@@ -139,14 +135,11 @@ class KabaddiMatchState {
     required KabaddiMatchConfig config,
     required PlayerSide initialRaidingSide,
   }) {
-    final maxActive = config.activePlayersPerTeam;
     return KabaddiMatchState(
       teamA: teamA,
       teamB: teamB,
       sideAScore: 0,
       sideBScore: 0,
-      sideAActiveCount: teamA.length.clamp(1, maxActive),
-      sideBActiveCount: teamB.length.clamp(1, maxActive),
       currentHalf: 1,
       raidingSide: initialRaidingSide,
       consecutiveEmptyRaidsA: 0,
@@ -163,8 +156,6 @@ class KabaddiMatchState {
     List<KabaddiPlayer>? teamB,
     int? sideAScore,
     int? sideBScore,
-    int? sideAActiveCount,
-    int? sideBActiveCount,
     int? currentHalf,
     PlayerSide? raidingSide,
     int? consecutiveEmptyRaidsA,
@@ -173,14 +164,13 @@ class KabaddiMatchState {
     bool? isHalfCompleted,
     bool? isMatchFinished,
     PlayerSide? matchWinner,
+    bool clearMatchWinner = false,
   }) {
     return KabaddiMatchState(
       teamA: teamA ?? this.teamA,
       teamB: teamB ?? this.teamB,
       sideAScore: sideAScore ?? this.sideAScore,
       sideBScore: sideBScore ?? this.sideBScore,
-      sideAActiveCount: sideAActiveCount ?? this.sideAActiveCount,
-      sideBActiveCount: sideBActiveCount ?? this.sideBActiveCount,
       currentHalf: currentHalf ?? this.currentHalf,
       raidingSide: raidingSide ?? this.raidingSide,
       consecutiveEmptyRaidsA: consecutiveEmptyRaidsA ?? this.consecutiveEmptyRaidsA,
@@ -188,7 +178,7 @@ class KabaddiMatchState {
       config: config ?? this.config,
       isHalfCompleted: isHalfCompleted ?? this.isHalfCompleted,
       isMatchFinished: isMatchFinished ?? this.isMatchFinished,
-      matchWinner: matchWinner ?? this.matchWinner,
+      matchWinner: clearMatchWinner ? null : (matchWinner ?? this.matchWinner),
     );
   }
 
@@ -218,8 +208,6 @@ class KabaddiMatchState {
             .toList(),
         sideAScore: json['sideAScore'] as int? ?? 0,
         sideBScore: json['sideBScore'] as int? ?? 0,
-        sideAActiveCount: json['sideAActiveCount'] as int? ?? 7,
-        sideBActiveCount: json['sideBActiveCount'] as int? ?? 7,
         currentHalf: json['currentHalf'] as int? ?? 1,
         raidingSide: json['raidingSide'] == 'sideB' ? PlayerSide.sideB : PlayerSide.sideA,
         consecutiveEmptyRaidsA: json['consecutiveEmptyRaidsA'] as int? ?? 0,
@@ -249,44 +237,74 @@ class KabaddiMatchEngine {
   void _pushState(KabaddiMatchState newState) {
     _state = newState;
     _history.add(_state);
+    if (_history.length > 50) {
+      _history.removeAt(0);
+    }
   }
 
-  void scoreRaidPoint(PlayerSide raidingTeam, {int points = 1}) {
+  void scoreRaidPoint(PlayerSide raidingTeam, {int points = 1, String? raiderId, String? revivedPlayerId}) {
     if (_state.isMatchFinished) return;
 
     final maxActive = _state.config.activePlayersPerTeam;
     final isTeamA = raidingTeam == PlayerSide.sideA;
+
     int newAScore = _state.sideAScore + (isTeamA ? points : 0);
     int newBScore = _state.sideBScore + (!isTeamA ? points : 0);
 
-    int newAActive = _state.sideAActiveCount;
-    int newBActive = _state.sideBActiveCount;
+    List<KabaddiPlayer> updatedTeamA = List.from(_state.teamA);
+    List<KabaddiPlayer> updatedTeamB = List.from(_state.teamB);
 
-    // Multi-touch raider points eliminate N defenders and revive up to N raider teammates
-    if (isTeamA) {
-      newBActive = (newBActive - points).clamp(0, maxActive);
-      newAActive = (newAActive + points).clamp(1, maxActive);
-    } else {
-      newAActive = (newAActive - points).clamp(0, maxActive);
-      newBActive = (newBActive + points).clamp(1, maxActive);
+    var raidingSquad = isTeamA ? updatedTeamA : updatedTeamB;
+    var defendingSquad = isTeamA ? updatedTeamB : updatedTeamA;
+
+    // Eliminate 'points' defender(s) from defending squad
+    int eliminatedCount = 0;
+    for (int i = 0; i < defendingSquad.length; i++) {
+      if (defendingSquad[i].isOnCourt && eliminatedCount < points) {
+        defendingSquad[i] = defendingSquad[i].copyWith(isOnCourt: false);
+        eliminatedCount++;
+      }
     }
 
-    // Check All-Out (+2 Lona)
-    if (newBActive == 0) {
+    // Revive 'points' player(s) for raiding squad
+    int revivedCount = 0;
+    if (revivedPlayerId != null) {
+      for (int i = 0; i < raidingSquad.length; i++) {
+        if (raidingSquad[i].id == revivedPlayerId) {
+          raidingSquad[i] = raidingSquad[i].copyWith(isOnCourt: true);
+          revivedCount++;
+          break;
+        }
+      }
+    }
+    // Auto-revive any remaining out players up to 'points'
+    for (int i = 0; i < raidingSquad.length; i++) {
+      if (!raidingSquad[i].isOnCourt && revivedCount < points) {
+        raidingSquad[i] = raidingSquad[i].copyWith(isOnCourt: true);
+        revivedCount++;
+      }
+    }
+
+    int newAActive = updatedTeamA.isEmpty ? maxActive : updatedTeamA.where((p) => p.isOnCourt).length;
+    int newBActive = updatedTeamB.isEmpty ? maxActive : updatedTeamB.where((p) => p.isOnCourt).length;
+
+    // Check All-Out for defending team
+    if (newBActive == 0 && updatedTeamB.isNotEmpty) {
       newAScore += 2;
-      newBActive = maxActive;
-    } else if (newAActive == 0) {
+      updatedTeamB = updatedTeamB.map((p) => p.copyWith(isOnCourt: true)).toList();
+    }
+    if (newAActive == 0 && updatedTeamA.isNotEmpty) {
       newBScore += 2;
-      newAActive = maxActive;
+      updatedTeamA = updatedTeamA.map((p) => p.copyWith(isOnCourt: true)).toList();
     }
 
     final nextRaidSide = isTeamA ? PlayerSide.sideB : PlayerSide.sideA;
 
     _pushState(_state.copyWith(
+      teamA: updatedTeamA,
+      teamB: updatedTeamB,
       sideAScore: newAScore,
       sideBScore: newBScore,
-      sideAActiveCount: newAActive,
-      sideBActiveCount: newBActive,
       raidingSide: nextRaidSide,
       consecutiveEmptyRaidsA: isTeamA ? 0 : _state.consecutiveEmptyRaidsA,
       consecutiveEmptyRaidsB: !isTeamA ? 0 : _state.consecutiveEmptyRaidsB,
@@ -314,13 +332,11 @@ class KabaddiMatchEngine {
     ));
   }
 
-  void scoreTacklePoint(PlayerSide defendingTeam) {
+  void scoreTacklePoint(PlayerSide defendingTeam, {String? revivedPlayerId}) {
     if (_state.isMatchFinished) return;
 
-    final maxActive = _state.config.activePlayersPerTeam;
     final isDefendingA = defendingTeam == PlayerSide.sideA;
 
-    // Check Super Tackle (+2) if 3 or fewer defenders active
     final defendersActive = isDefendingA ? _state.sideAActiveCount : _state.sideBActiveCount;
     final isSuperTackle = _state.config.enableSuperTackle && defendersActive <= 3;
     final pointsEarned = isSuperTackle ? 2 : 1;
@@ -328,34 +344,59 @@ class KabaddiMatchEngine {
     int newAScore = _state.sideAScore + (isDefendingA ? pointsEarned : 0);
     int newBScore = _state.sideBScore + (!isDefendingA ? pointsEarned : 0);
 
-    int newAActive = _state.sideAActiveCount;
-    int newBActive = _state.sideBActiveCount;
+    List<KabaddiPlayer> updatedTeamA = List.from(_state.teamA);
+    List<KabaddiPlayer> updatedTeamB = List.from(_state.teamB);
 
-    // Tackle eliminates the raider and revives 1 defender
-    if (isDefendingA) {
-      newBActive = (newBActive - 1).clamp(0, maxActive);
-      newAActive = (newAActive + 1).clamp(1, maxActive);
-    } else {
-      newAActive = (newAActive - 1).clamp(0, maxActive);
-      newBActive = (newBActive + 1).clamp(1, maxActive);
+    var defendingSquad = isDefendingA ? updatedTeamA : updatedTeamB;
+    var raidingSquad = isDefendingA ? updatedTeamB : updatedTeamA;
+
+    // Eliminate 1 raider from raiding squad
+    for (int i = 0; i < raidingSquad.length; i++) {
+      if (raidingSquad[i].isOnCourt) {
+        raidingSquad[i] = raidingSquad[i].copyWith(isOnCourt: false);
+        break;
+      }
     }
 
+    // Revive 1 defender in defending squad (only if someone is out)
+    if (defendingSquad.any((p) => !p.isOnCourt)) {
+      if (revivedPlayerId != null) {
+        for (int i = 0; i < defendingSquad.length; i++) {
+          if (defendingSquad[i].id == revivedPlayerId) {
+            defendingSquad[i] = defendingSquad[i].copyWith(isOnCourt: true);
+            break;
+          }
+        }
+      } else {
+        for (int i = 0; i < defendingSquad.length; i++) {
+          if (!defendingSquad[i].isOnCourt) {
+            defendingSquad[i] = defendingSquad[i].copyWith(isOnCourt: true);
+            break;
+          }
+        }
+      }
+    }
+
+    int newAActive = updatedTeamA.isEmpty ? _state.config.activePlayersPerTeam : updatedTeamA.where((p) => p.isOnCourt).length;
+    int newBActive = updatedTeamB.isEmpty ? _state.config.activePlayersPerTeam : updatedTeamB.where((p) => p.isOnCourt).length;
+
     // Check All-Out
-    if (newBActive == 0) {
+    if (newBActive == 0 && updatedTeamB.isNotEmpty) {
       newAScore += 2;
-      newBActive = maxActive;
-    } else if (newAActive == 0) {
+      updatedTeamB = updatedTeamB.map((p) => p.copyWith(isOnCourt: true)).toList();
+    }
+    if (newAActive == 0 && updatedTeamA.isNotEmpty) {
       newBScore += 2;
-      newAActive = maxActive;
+      updatedTeamA = updatedTeamA.map((p) => p.copyWith(isOnCourt: true)).toList();
     }
 
     final nextRaidSide = isDefendingA ? PlayerSide.sideA : PlayerSide.sideB;
 
     _pushState(_state.copyWith(
+      teamA: updatedTeamA,
+      teamB: updatedTeamB,
       sideAScore: newAScore,
       sideBScore: newBScore,
-      sideAActiveCount: newAActive,
-      sideBActiveCount: newBActive,
       raidingSide: nextRaidSide,
       consecutiveEmptyRaidsA: isDefendingA ? _state.consecutiveEmptyRaidsA : 0,
       consecutiveEmptyRaidsB: !isDefendingA ? _state.consecutiveEmptyRaidsB : 0,
@@ -365,16 +406,18 @@ class KabaddiMatchEngine {
   void scoreAllOut(PlayerSide teamAwarded) {
     if (_state.isMatchFinished) return;
 
-    final maxActive = _state.config.activePlayersPerTeam;
     final isTeamA = teamAwarded == PlayerSide.sideA;
     int newAScore = _state.sideAScore + (isTeamA ? 2 : 0);
     int newBScore = _state.sideBScore + (!isTeamA ? 2 : 0);
 
+    final updatedTeamA = _state.teamA.map((p) => p.copyWith(isOnCourt: true)).toList();
+    final updatedTeamB = _state.teamB.map((p) => p.copyWith(isOnCourt: true)).toList();
+
     _pushState(_state.copyWith(
+      teamA: updatedTeamA,
+      teamB: updatedTeamB,
       sideAScore: newAScore,
       sideBScore: newBScore,
-      sideAActiveCount: maxActive,
-      sideBActiveCount: maxActive,
     ));
   }
 
@@ -400,9 +443,17 @@ class KabaddiMatchEngine {
       endMatch();
       return;
     }
+
+    final updatedTeamA = _state.teamA.map((p) => p.copyWith(isOnCourt: true)).toList();
+    final updatedTeamB = _state.teamB.map((p) => p.copyWith(isOnCourt: true)).toList();
+
     _pushState(_state.copyWith(
+      teamA: updatedTeamA,
+      teamB: updatedTeamB,
       currentHalf: 2,
       isHalfCompleted: true,
+      consecutiveEmptyRaidsA: 0,
+      consecutiveEmptyRaidsB: 0,
       raidingSide: _state.raidingSide == PlayerSide.sideA ? PlayerSide.sideB : PlayerSide.sideA,
     ));
   }

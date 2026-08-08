@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 class RegisterModel {
   String name;
   String email;

@@ -40,7 +40,7 @@ class LeaderboardScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Leaderboard",
+          "Leaderboard & Standings",
           style: AppTypography.headlineSm.copyWith(
             color: AppColors.textPrimary,
             fontSize: context.responsiveFont(18),
@@ -84,30 +84,59 @@ class LeaderboardScreen extends StatelessWidget {
 
           final docs = snapshot.data!.docs;
 
-          // Fetch teams mapping for names/logos
-          return FutureBuilder<QuerySnapshot>(
-            future: FirebaseFirestore.instance
-                .collection('tournaments')
-                .doc(tournamentId)
-                .collection('teams')
-                .get(),
-            builder: (context, teamSnapshot) {
-              if (teamSnapshot.connectionState == ConnectionState.waiting) {
+          return FutureBuilder<List<dynamic>>(
+            future: Future.wait([
+              FirebaseFirestore.instance
+                  .collection('tournaments')
+                  .doc(tournamentId)
+                  .collection('teams')
+                  .get(),
+              FirebaseFirestore.instance
+                  .collection('tournaments')
+                  .doc(tournamentId)
+                  .get(),
+            ]),
+            builder: (context, asyncSnap) {
+              if (asyncSnap.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator(color: AppColors.accent));
               }
 
               Map<String, Map<String, dynamic>> teamMap = {};
-              if (teamSnapshot.hasData) {
-                for (var doc in teamSnapshot.data!.docs) {
+              String sportName = 'Cricket';
+
+              if (asyncSnap.hasData && asyncSnap.data != null) {
+                final teamSnap = asyncSnap.data![0] as QuerySnapshot;
+                for (var doc in teamSnap.docs) {
                   teamMap[doc.id] = doc.data() as Map<String, dynamic>;
+                }
+                final tourneyDoc = asyncSnap.data![1] as DocumentSnapshot;
+                if (tourneyDoc.exists) {
+                  sportName = (tourneyDoc.data() as Map<String, dynamic>?)?['sport'] ?? 'Cricket';
                 }
               }
 
-              // Combine and sort
+              final String sportLower = sportName.toLowerCase();
+
+              // Combine and sort entries
               List<Map<String, dynamic>> entries = docs.map((doc) {
                 var data = doc.data() as Map<String, dynamic>;
                 data['id'] = doc.id;
                 data['teamData'] = teamMap[doc.id] ?? {};
+
+                // Calculate Net Run Rate if cricket statistics are present
+                double runsScored = (data['runsScored'] as num?)?.toDouble() ?? 0.0;
+                double runsConceded = (data['runsConceded'] as num?)?.toDouble() ?? 0.0;
+                double oversFaced = (data['oversFaced'] as num?)?.toDouble() ?? 0.0;
+                double oversBowled = (data['oversBowled'] as num?)?.toDouble() ?? 0.0;
+
+                double computedNrr = 0.0;
+                if (oversFaced > 0 && oversBowled > 0) {
+                  computedNrr = (runsScored / oversFaced) - (runsConceded / oversBowled);
+                } else if (data['nrr'] != null) {
+                  computedNrr = (data['nrr'] as num).toDouble();
+                }
+                data['computedNrr'] = computedNrr;
+
                 return data;
               }).toList();
 
@@ -116,12 +145,26 @@ class LeaderboardScreen extends StatelessWidget {
                 int pointsB = b['points'] ?? 0;
                 if (pointsA != pointsB) return pointsB.compareTo(pointsA);
 
-                // Tiebreaker: Game Differential
-                int gDiffA = (a['gamesWon'] ?? 0) - (a['gamesLost'] ?? 0);
-                int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
-                if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
+                if (sportLower == 'cricket') {
+                  double nrrA = (a['computedNrr'] as num?)?.toDouble() ?? 0.0;
+                  double nrrB = (b['computedNrr'] as num?)?.toDouble() ?? 0.0;
+                  if (nrrA != nrrB) return nrrB.compareTo(nrrA);
+                } else if (sportLower == 'football') {
+                  int gdA = (a['goalDifference'] as num?)?.toInt() ??
+                      (((a['goalsScored'] as num?)?.toInt() ?? 0) - ((a['goalsConceded'] as num?)?.toInt() ?? 0));
+                  int gdB = (b['goalDifference'] as num?)?.toInt() ??
+                      (((b['goalsScored'] as num?)?.toInt() ?? 0) - ((b['goalsConceded'] as num?)?.toInt() ?? 0));
+                  if (gdA != gdB) return gdB.compareTo(gdA);
 
-                // Tiebreaker account for matches played
+                  int gsA = (a['goalsScored'] as num?)?.toInt() ?? 0;
+                  int gsB = (b['goalsScored'] as num?)?.toInt() ?? 0;
+                  if (gsA != gsB) return gsB.compareTo(gsA);
+                } else {
+                  int gDiffA = (a['gamesWon'] ?? 0) - (a['gamesLost'] ?? 0);
+                  int gDiffB = (b['gamesWon'] ?? 0) - (b['gamesLost'] ?? 0);
+                  if (gDiffA != gDiffB) return gDiffB.compareTo(gDiffA);
+                }
+
                 int matchesPlayedA = a['matchesPlayed'] ?? 0;
                 int matchesPlayedB = b['matchesPlayed'] ?? 0;
                 return matchesPlayedB.compareTo(matchesPlayedA);
@@ -130,9 +173,9 @@ class LeaderboardScreen extends StatelessWidget {
               return ListView(
                 padding: EdgeInsets.all(context.widthPct(4)),
                 children: [
-                  _buildHeader(context),
+                  _buildHeader(context, sportLower),
                   SizedBox(height: context.heightPct(1.5)),
-                  ...entries.asMap().entries.map((e) => _buildRow(context, e.key + 1, e.value)),
+                  ...entries.asMap().entries.map((e) => _buildRow(context, e.key + 1, e.value, sportLower)),
                 ],
               );
             },
@@ -142,14 +185,35 @@ class LeaderboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, String sportLower) {
+    String col4 = "L";
+    String col5 = "NRR";
+    if (sportLower == 'football') {
+      col4 = "D";
+      col5 = "GD";
+    } else if (sportLower == 'badminton') {
+      col4 = "GW";
+      col5 = "GL";
+    }
+
     return Row(
       children: [
-        SizedBox(width: context.widthPct(8)), // For rank
+        SizedBox(width: context.widthPct(7)), // For rank
         Expanded(
           flex: 4,
           child: Text(
             "Team",
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(11),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(
+            "P",
+            textAlign: TextAlign.center,
             style: AppTypography.labelCaps10.copyWith(
               color: AppColors.muted,
               fontSize: context.responsiveFont(11),
@@ -170,7 +234,18 @@ class LeaderboardScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: Text(
-            "L",
+            col4,
+            textAlign: TextAlign.center,
+            style: AppTypography.labelCaps10.copyWith(
+              color: AppColors.muted,
+              fontSize: context.responsiveFont(11),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(
+            col5,
             textAlign: TextAlign.center,
             style: AppTypography.labelCaps10.copyWith(
               color: AppColors.muted,
@@ -194,15 +269,80 @@ class LeaderboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRow(BuildContext context, int rank, Map<String, dynamic> entry) {
+  Widget _buildRow(BuildContext context, int rank, Map<String, dynamic> entry, String sportLower) {
     final teamData = entry['teamData'] as Map<String, dynamic>;
     final name = teamData['name'] ?? 'Unknown Team';
     final logoUrl = teamData['logoUrl'] ?? '';
+    final played = entry['matchesPlayed'] ?? 0;
     final wins = entry['wins'] ?? 0;
     final losses = entry['losses'] ?? 0;
+    final draws = entry['draws'] ?? 0;
     final points = entry['points'] ?? 0;
+    final double nrr = (entry['computedNrr'] as num?)?.toDouble() ?? 0.0;
+    final int gd = (entry['goalDifference'] as num?)?.toInt() ??
+        (((entry['goalsScored'] as num?)?.toInt() ?? 0) - ((entry['goalsConceded'] as num?)?.toInt() ?? 0));
+    final int gw = entry['gamesWon'] ?? 0;
+    final int gl = entry['gamesLost'] ?? 0;
 
     final rankColor = _getRankColor(rank);
+
+    Widget col4Widget;
+    Widget col5Widget;
+
+    if (sportLower == 'football') {
+      col4Widget = Text(
+        draws.toString(),
+        textAlign: TextAlign.center,
+        style: AppTypography.bodyMd.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(12.5),
+        ),
+      );
+      col5Widget = Text(
+        gd >= 0 ? "+$gd" : "$gd",
+        textAlign: TextAlign.center,
+        style: AppTypography.bodySm.copyWith(
+          color: gd >= 0 ? Colors.greenAccent : Colors.redAccent,
+          fontSize: context.responsiveFont(11.0),
+          fontWeight: FontWeight.w600,
+        ),
+      );
+    } else if (sportLower == 'badminton') {
+      col4Widget = Text(
+        gw.toString(),
+        textAlign: TextAlign.center,
+        style: AppTypography.bodyMd.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(12.5),
+        ),
+      );
+      col5Widget = Text(
+        gl.toString(),
+        textAlign: TextAlign.center,
+        style: AppTypography.bodyMd.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(12.5),
+        ),
+      );
+    } else {
+      col4Widget = Text(
+        losses.toString(),
+        textAlign: TextAlign.center,
+        style: AppTypography.bodyMd.copyWith(
+          color: AppColors.textPrimary,
+          fontSize: context.responsiveFont(12.5),
+        ),
+      );
+      col5Widget = Text(
+        nrr >= 0 ? "+${nrr.toStringAsFixed(2)}" : nrr.toStringAsFixed(2),
+        textAlign: TextAlign.center,
+        style: AppTypography.bodySm.copyWith(
+          color: nrr >= 0 ? Colors.greenAccent : Colors.redAccent,
+          fontSize: context.responsiveFont(11.0),
+          fontWeight: FontWeight.w600,
+        ),
+      );
+    }
 
     return Padding(
       padding: EdgeInsets.only(bottom: context.heightPct(1.5)),
@@ -219,7 +359,7 @@ class LeaderboardScreen extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(
-              width: context.widthPct(8),
+              width: context.widthPct(7),
               child: Text(
                 "$rank",
                 style: AppTypography.bodyLg.copyWith(
@@ -247,7 +387,7 @@ class LeaderboardScreen extends StatelessWidget {
                       name,
                       style: AppTypography.bodyMd.copyWith(
                         color: AppColors.textPrimary,
-                        fontSize: context.responsiveFont(13.5),
+                        fontSize: context.responsiveFont(13.0),
                         fontWeight: rank <= 3 ? FontWeight.bold : FontWeight.w500,
                       ),
                       maxLines: 1,
@@ -260,24 +400,32 @@ class LeaderboardScreen extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                wins.toString(),
+                played.toString(),
                 textAlign: TextAlign.center,
                 style: AppTypography.bodyMd.copyWith(
                   color: AppColors.textPrimary,
-                  fontSize: context.responsiveFont(13.5),
+                  fontSize: context.responsiveFont(12.5),
                 ),
               ),
             ),
             Expanded(
               flex: 1,
               child: Text(
-                losses.toString(),
+                wins.toString(),
                 textAlign: TextAlign.center,
                 style: AppTypography.bodyMd.copyWith(
                   color: AppColors.textPrimary,
-                  fontSize: context.responsiveFont(13.5),
+                  fontSize: context.responsiveFont(12.5),
                 ),
               ),
+            ),
+            Expanded(
+              flex: 1,
+              child: col4Widget,
+            ),
+            Expanded(
+              flex: 1,
+              child: col5Widget,
             ),
             Expanded(
               flex: 1,
@@ -287,7 +435,7 @@ class LeaderboardScreen extends StatelessWidget {
                 style: AppTypography.bodyMd.copyWith(
                   color: AppColors.accent,
                   fontWeight: FontWeight.bold,
-                  fontSize: context.responsiveFont(14),
+                  fontSize: context.responsiveFont(13.5),
                 ),
               ),
             ),

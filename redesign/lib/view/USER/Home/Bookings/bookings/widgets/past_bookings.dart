@@ -14,8 +14,9 @@ class PastBookingsWidget extends StatelessWidget {
   bool _isPast(Map<String, dynamic> data) {
     final status = (data['status'] ?? '').toString().toLowerCase();
     if (status == 'completed' || status == 'expired') return true;
-    if (status == 'cancelled' || status == 'rejected' || status == 'refunded')
+    if (status == 'cancelled' || status == 'rejected' || status == 'refunded') {
       return false;
+    }
 
     final dateStr =
         (data['dateFormatted'] ?? data['date'] ?? data['bookingDate'] ?? '')

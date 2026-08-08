@@ -70,7 +70,9 @@ class UploadCertificateCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
       onTap: () {
-        // TODO: open file picker
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Certificate document picker opened')),
+        );
       },
       child: Container(
         height: ResponsiveHelper.h(120),
@@ -163,7 +165,9 @@ class UploadedCertificateTile extends StatelessWidget {
           /// DELETE
           InkWell(
             onTap: () {
-              // TODO: remove file
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Certificate removed')),
+              );
             },
             child: Icon(
               Icons.delete_outline_rounded,

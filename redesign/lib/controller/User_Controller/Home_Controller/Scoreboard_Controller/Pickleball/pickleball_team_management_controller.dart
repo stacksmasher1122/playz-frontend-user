@@ -92,10 +92,12 @@ class PickleballTeamManagementController extends GetxController {
   void changeMode(bool singles) {
     isSingles.value = singles;
     if (singles) {
-      if (teamAPlayers.length > 1)
+      if (teamAPlayers.length > 1) {
         teamAPlayers.removeRange(1, teamAPlayers.length);
-      if (teamBPlayers.length > 1)
+      }
+      if (teamBPlayers.length > 1) {
         teamBPlayers.removeRange(1, teamBPlayers.length);
+      }
     }
   }
 

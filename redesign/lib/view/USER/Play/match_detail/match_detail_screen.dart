@@ -846,7 +846,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
 
                   if (confirm == true && matchId.isNotEmpty) {
                     final success = await _matchController.deleteMatchPoll(matchId);
-                    if (success && mounted) {
+                    if (success && context.mounted) {
                       if (Navigator.canPop(context)) {
                         Navigator.pop(context);
                       } else {

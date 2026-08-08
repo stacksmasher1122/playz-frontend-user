@@ -1,4 +1,4 @@
-import 'dart:convert';
+// Kho Kho State Models
 
 class KhoKhoPlayer {
   final String id;
@@ -253,7 +253,7 @@ class KhoKhoMatchEngine {
 
   KhoKhoMatchState get state => _state;
 
-  void scoreOut(String chasingTeam, {bool isPoleDive = false}) {
+  void scoreOut(String chasingTeam, {bool isPoleDive = false, String? chaserName}) {
     if (_state.isMatchFinished) return;
 
     _history.add(_state);
@@ -267,12 +267,30 @@ class KhoKhoMatchEngine {
       newPointsB += pts;
     }
 
+    final isTeamA = chasingTeam == 'sideA';
+    final targetRoster = isTeamA ? _state.teamA : _state.teamB;
+
+    List<KhoKhoPlayer> updatedRoster = targetRoster;
+    if (chaserName != null && chaserName.isNotEmpty) {
+      updatedRoster = targetRoster.map((p) {
+        if (p.name == chaserName || p.id == chaserName) {
+          return p.copyWith(
+            outsTaken: p.outsTaken + 1,
+            pointsScored: p.pointsScored + pts,
+          );
+        }
+        return p;
+      }).toList();
+    }
+
     final newEvent = KhoKhoTurnEvent(
       team: chasingTeam,
       eventType: isPoleDive ? KhoKhoEventType.poleDive : KhoKhoEventType.out,
       points: pts,
       turnNumber: _state.currentTurn,
-      description: isPoleDive ? 'Pole Dive (+2 pts)' : 'Defender Out (+1 pt)',
+      description: chaserName != null && chaserName.isNotEmpty
+          ? '$chaserName (${isPoleDive ? "Pole Dive +2" : "Out +1"})'
+          : (isPoleDive ? 'Pole Dive (+2 pts)' : 'Defender Out (+1 pt)'),
     );
 
     final newEvents = List<KhoKhoTurnEvent>.from(_state.turnEvents)..add(newEvent);
@@ -280,6 +298,8 @@ class KhoKhoMatchEngine {
     _state = _state.copyWith(
       pointsA: newPointsA,
       pointsB: newPointsB,
+      teamA: isTeamA ? updatedRoster : _state.teamA,
+      teamB: isTeamA ? _state.teamB : updatedRoster,
       turnEvents: newEvents,
     );
   }

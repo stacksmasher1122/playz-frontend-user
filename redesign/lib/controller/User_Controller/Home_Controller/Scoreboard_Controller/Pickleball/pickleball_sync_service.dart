@@ -26,6 +26,7 @@ class PickleballSyncService extends GetxService {
       // 2. Save to Sqflite
       if (cloudMatches.isNotEmpty) {
         await _localDb.saveMatchesFromCloud(cloudMatches);
+        // ignore: avoid_print
         print("Synced ${cloudMatches.length} matches from Firebase to Sqflite.");
       }
       
@@ -33,6 +34,7 @@ class PickleballSyncService extends GetxService {
       await _pushPendingSyncs();
       
     } catch (e) {
+      // ignore: avoid_print
       print("Initial sync failed: $e");
     } finally {
       isSyncing.value = false;
@@ -45,9 +47,11 @@ class PickleballSyncService extends GetxService {
       for (var match in unsynced) {
         await _firebaseDb.saveMatchToCloud(match);
         await _localDb.markMatchAsSynced(match.matchId);
+        // ignore: avoid_print
         print("Successfully synced local match ${match.matchId} to Firebase.");
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Error pushing pending syncs to Firebase: $e");
     }
   }
@@ -66,6 +70,7 @@ class PickleballSyncService extends GetxService {
       await _firebaseDb.saveMatchToCloud(match);
       await _localDb.markMatchAsSynced(match.matchId);
     } catch (e) {
+      // ignore: avoid_print
       print("Background sync failed for ${match.matchId}, will retry on next sync pass. Error: $e");
     }
   }

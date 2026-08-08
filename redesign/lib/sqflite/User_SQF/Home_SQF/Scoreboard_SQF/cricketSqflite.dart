@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_model.dart';
@@ -20,7 +21,7 @@ class CricketSqflite {
 
     return await openDatabase(
       path,
-      version: 6,
+      version: 7,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -59,6 +60,10 @@ class CricketSqflite {
       await db.execute('ALTER TABLE matches ADD COLUMN bookingId TEXT');
       await db.execute('ALTER TABLE matches ADD COLUMN matchType TEXT DEFAULT "NORMAL"');
       await db.execute('ALTER TABLE matches ADD COLUMN isRecoverable INTEGER DEFAULT 1');
+    }
+    if (oldVersion < 7) {
+      await db.execute('ALTER TABLE matches ADD COLUMN tournamentId TEXT');
+      await db.execute('ALTER TABLE matches ADD COLUMN bracketMatchId TEXT');
     }
   }
 
@@ -104,7 +109,9 @@ CREATE TABLE matches (
   ballEvents $textType,
   bookingId $textType,
   matchType $textType DEFAULT "NORMAL",
-  isRecoverable $integerType DEFAULT 1
+  isRecoverable $integerType DEFAULT 1,
+  tournamentId $textType,
+  bracketMatchId $textType
 )
 ''');
   }

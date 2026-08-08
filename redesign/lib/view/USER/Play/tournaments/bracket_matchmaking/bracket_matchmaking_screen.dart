@@ -9,6 +9,8 @@ import '../../../../../controller/User_Controller/Tournament_Controller/bracket_
 import '../../../../../model/User_Models/Tournament_Model/bracket_model.dart';
 import '../match_team_confirmation/match_team_confirmation_screen.dart';
 import '../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/badminton_controller.dart';
+import '../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
+import '../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_controller.dart';
 import '../../../../../shared_preferences/userPreferences.dart';
 import 'widgets/match_slot_card.dart';
 
@@ -73,6 +75,13 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
   }
 
   String _getRoundDisplayLabel(String key, int index, int totalRounds, int matchCount) {
+    if (key.startsWith('Group')) {
+      return key;
+    }
+    if (controller.matchType == 'roundRobinSingle' || controller.matchType == 'roundRobinDouble') {
+      return "Matchday ${index + 1}";
+    }
+
     if (!key.startsWith('Round')) {
       return key;
     }
@@ -112,6 +121,9 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
     if (!doc.exists) return;
     final freshMatch = BracketMatchModel.fromMap(doc.id, doc.data()!);
 
+    final tourneyDoc = await FirebaseFirestore.instance.collection('tournaments').doc(widget.tournamentId).get();
+    final String sportStr = (tourneyDoc.data()?['sport'] ?? 'Badminton').toString().toLowerCase();
+
     final authUid = FirebaseAuth.instance.currentUser?.uid;
     final authEmail = FirebaseAuth.instance.currentUser?.email;
     final docId = await UserPreferences.getDocId();
@@ -131,23 +143,54 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
     final canScore = widget.isOrganizer || isMatchReferee;
 
     if (freshMatch.status == 'in_progress' && freshMatch.liveMatchId != null) {
-      final badmintonController = Get.put(BadmintonController());
-
-      if (canScore) {
-        // Organizer or accepted referee gets full scoring console access
-        badmintonController.resumeTournamentMatch(
-          tId: widget.tournamentId,
-          bMatchId: freshMatch.id,
-          matchId: freshMatch.liveMatchId!,
-          readOnly: false,
-        );
+      if (sportStr == 'cricket') {
+        final cricketController = Get.put(CricketController());
+        if (canScore) {
+          cricketController.resumeTournamentMatch(
+            tId: widget.tournamentId,
+            bMatchId: freshMatch.id,
+            matchId: freshMatch.liveMatchId!,
+            readOnly: false,
+          );
+        } else {
+          cricketController.viewTournamentMatch(
+            tId: widget.tournamentId,
+            bMatchId: freshMatch.id,
+            matchId: freshMatch.liveMatchId!,
+          );
+        }
+      } else if (sportStr == 'football') {
+        final footballController = Get.put(FootballController());
+        if (canScore) {
+          footballController.resumeTournamentMatch(
+            tId: widget.tournamentId,
+            bMatchId: freshMatch.id,
+            matchId: freshMatch.liveMatchId!,
+            readOnly: false,
+          );
+        } else {
+          footballController.viewTournamentMatch(
+            tId: widget.tournamentId,
+            bMatchId: freshMatch.id,
+            matchId: freshMatch.liveMatchId!,
+          );
+        }
       } else {
-        // Normal players / spectators get read-only live scoreboard
-        badmintonController.viewTournamentMatch(
-          tId: widget.tournamentId,
-          bMatchId: freshMatch.id,
-          matchId: freshMatch.liveMatchId!,
-        );
+        final badmintonController = Get.put(BadmintonController());
+        if (canScore) {
+          badmintonController.resumeTournamentMatch(
+            tId: widget.tournamentId,
+            bMatchId: freshMatch.id,
+            matchId: freshMatch.liveMatchId!,
+            readOnly: false,
+          );
+        } else {
+          badmintonController.viewTournamentMatch(
+            tId: widget.tournamentId,
+            bMatchId: freshMatch.id,
+            matchId: freshMatch.liveMatchId!,
+          );
+        }
       }
     } else if (freshMatch.status == 'unscheduled' || freshMatch.status == 'scheduled') {
       if (!controller.isTournamentStarted) {
@@ -218,13 +261,28 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
         );
       }
     } else if (freshMatch.status == 'completed' && freshMatch.liveMatchId != null) {
-      // Completed match: view-only scoreboard for everyone
-      final badmintonController = Get.put(BadmintonController());
-      badmintonController.viewTournamentMatch(
-        tId: widget.tournamentId,
-        bMatchId: freshMatch.id,
-        matchId: freshMatch.liveMatchId!,
-      );
+      if (sportStr == 'cricket') {
+        final cricketController = Get.put(CricketController());
+        cricketController.viewTournamentMatch(
+          tId: widget.tournamentId,
+          bMatchId: freshMatch.id,
+          matchId: freshMatch.liveMatchId!,
+        );
+      } else if (sportStr == 'football') {
+        final footballController = Get.put(FootballController());
+        footballController.viewTournamentMatch(
+          tId: widget.tournamentId,
+          bMatchId: freshMatch.id,
+          matchId: freshMatch.liveMatchId!,
+        );
+      } else {
+        final badmintonController = Get.put(BadmintonController());
+        badmintonController.viewTournamentMatch(
+          tId: widget.tournamentId,
+          bMatchId: freshMatch.id,
+          matchId: freshMatch.liveMatchId!,
+        );
+      }
     }
   }
 
@@ -298,7 +356,21 @@ class _BracketMatchmakingScreenState extends State<BracketMatchmakingScreen> {
         }
 
         final sortedKeys = grouped.keys.toList()..sort((a, b) {
+          final aIsGroup = a.startsWith('Group');
+          final bIsGroup = b.startsWith('Group');
+          // Groups come first
+          if (aIsGroup && !bIsGroup) return -1;
+          if (!aIsGroup && bIsGroup) return 1;
+          // Both are groups: alphabetical (Group A, Group B, ...)
+          if (aIsGroup && bIsGroup) return a.compareTo(b);
+          // Both are rounds: numeric sort
           if (a.startsWith('Round') && b.startsWith('Round')) {
+            int rA = int.tryParse(a.split(' ').last) ?? 0;
+            int rB = int.tryParse(b.split(' ').last) ?? 0;
+            return rA.compareTo(rB);
+          }
+          // Matchday sorting (Round Robin)
+          if (a.startsWith('Matchday') && b.startsWith('Matchday')) {
             int rA = int.tryParse(a.split(' ').last) ?? 0;
             int rB = int.tryParse(b.split(' ').last) ?? 0;
             return rA.compareTo(rB);

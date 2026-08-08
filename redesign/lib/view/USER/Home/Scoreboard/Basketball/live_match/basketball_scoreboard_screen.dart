@@ -7,9 +7,59 @@ import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_C
 import 'package:redesign/view/USER/Navigation/user_navigation.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Basketball/live_match/widgets/basketball_score_display.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Basketball/live_match/widgets/basketball_action_buttons.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/Basketball/live_match/widgets/basketball_quarter_ended_sheet.dart';
 
-class BasketballScoreboardScreen extends StatelessWidget {
+class BasketballScoreboardScreen extends StatefulWidget {
   const BasketballScoreboardScreen({super.key});
+
+  @override
+  State<BasketballScoreboardScreen> createState() => _BasketballScoreboardScreenState();
+}
+
+class _BasketballScoreboardScreenState extends State<BasketballScoreboardScreen> {
+  final BasketballController controller = Get.find<BasketballController>();
+  Worker? _quarterWorker;
+  Worker? _otWorker;
+  bool _isQuarterSheetActive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _quarterWorker = ever(controller.pendingQuarterEnded, (endedQ) {
+      if (endedQ > 0 && !_isQuarterSheetActive && mounted && !controller.isReadOnly.value) {
+        _showQuarterEndedModal(endedQ, isOvertime: false);
+      }
+    });
+
+    _otWorker = ever(controller.pendingOvertimeEnded, (endedQ) {
+      if (endedQ > 0 && !_isQuarterSheetActive && mounted && !controller.isReadOnly.value) {
+        _showQuarterEndedModal(endedQ, isOvertime: true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _quarterWorker?.dispose();
+    _otWorker?.dispose();
+    super.dispose();
+  }
+
+  void _showQuarterEndedModal(int endedQ, {required bool isOvertime}) {
+    _isQuarterSheetActive = true;
+    BasketballQuarterEndedSheet.show(
+      context,
+      controller: controller,
+      endedQuarter: endedQ,
+      isOvertime: isOvertime,
+      onStartNextQuarter: () {
+        _isQuarterSheetActive = false;
+        controller.pendingQuarterEnded.value = 0;
+        controller.pendingOvertimeEnded.value = 0;
+        controller.startMatch();
+      },
+    );
+  }
 
   void _navigateToScoreboardHub(BuildContext context) {
     Navigator.pushAndRemoveUntil(
@@ -27,7 +77,6 @@ class BasketballScoreboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
-    final controller = Get.find<BasketballController>();
 
     return PopScope(
       canPop: false,
@@ -40,76 +89,29 @@ class BasketballScoreboardScreen extends StatelessWidget {
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: AppColors.background,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary),
-            onPressed: () async {
-              final shouldExit = await _showExitDialog(context);
-              if (shouldExit == true && context.mounted) {
-                _navigateToScoreboardHub(context);
-              }
-            },
-          ),
-          title: Text(
-            'Basketball Live Scoreboard',
-            style: AppTypography.headlineMd.copyWith(
-              color: AppColors.textPrimary,
-              fontSize: ResponsiveHelper.sp(16),
-              fontWeight: FontWeight.bold,
-            ).responsive(context),
-          ),
-          actions: [
-            Obx(() {
-              if (controller.isReadOnly.value) {
-                return Container(
-                  margin: EdgeInsets.only(right: ResponsiveHelper.w(16)),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ResponsiveHelper.w(10),
-                    vertical: ResponsiveHelper.h(4),
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.warning.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'SPECTATOR',
-                      style: AppTypography.labelCaps.copyWith(
-                        color: AppColors.warning,
-                        fontSize: ResponsiveHelper.sp(11),
-                        fontWeight: FontWeight.bold,
-                      ).responsive(context),
-                    ),
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            }),
-          ],
+        body: SafeArea(
+          child: Obx(() {
+            if (!controller.isEngineReady.value || controller.liveState.value == null) {
+              return const Center(child: CircularProgressIndicator(color: AppColors.accent));
+            }
+
+            final state = controller.liveState.value!;
+            if (state.isMatchFinished) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _showMatchFinishedDialog(context, controller);
+              });
+            }
+
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const BasketballScoreDisplay(),
+                  const BasketballActionButtons(),
+                ],
+              ),
+            );
+          }),
         ),
-        body: Obx(() {
-          if (!controller.isEngineReady.value || controller.liveState.value == null) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.accent));
-          }
-
-          final state = controller.liveState.value!;
-          if (state.isMatchFinished) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _showMatchFinishedDialog(context, controller);
-            });
-          }
-
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                const BasketballScoreDisplay(),
-                const BasketballActionButtons(),
-              ],
-            ),
-          );
-        }),
       ),
     );
   }
@@ -199,14 +201,10 @@ class BasketballScoreboardScreen extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
               foregroundColor: Colors.black,
-              minimumSize: const Size(double.infinity, 44),
             ),
-            onPressed: () {
-              Get.back();
-              _navigateToScoreboardHub(context);
-            },
+            onPressed: () => _navigateToScoreboardHub(context),
             child: Text(
-              'Return to Scoreboard Hub',
+              'GO TO MATCH HUB',
               style: AppTypography.bodySm.copyWith(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -215,7 +213,6 @@ class BasketballScoreboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      barrierDismissible: false,
     );
   }
 }

@@ -647,6 +647,7 @@ class _HostMatchScreenState extends State<HostMatchScreen> {
     }
 
     final matchMap = {
+      'isMatchPoll': true,
       'hostId': docId,
       'hostName': hostName,
       'avatarUrl': avatarUrl,

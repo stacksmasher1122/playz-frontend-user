@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-@deprecated
+@Deprecated('Use VolleyballController instead')
 class VolleyballFinalReviewController extends GetxController {
   // Legacy stub retained for backward compatibility. Use VolleyballController instead.
 }

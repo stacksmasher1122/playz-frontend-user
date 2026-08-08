@@ -63,6 +63,10 @@ class CricketMatchModel {
   final String matchResult;
   final List<Map<String, dynamic>> ballEvents;
   final List<Map<String, dynamic>> inningsArray;
+  final String? tournamentId;
+  final String? bracketMatchId;
+  final String? homeTeamLogo;
+  final String? awayTeamLogo;
 
   CricketMatchModel({
     required this.matchId,
@@ -99,6 +103,10 @@ class CricketMatchModel {
     this.matchResult = '',
     this.ballEvents = const [],
     this.inningsArray = const [],
+    this.tournamentId,
+    this.bracketMatchId,
+    this.homeTeamLogo,
+    this.awayTeamLogo,
   }) : lastUpdatedAt = lastUpdatedAt ?? DateTime.now();
 
   CricketMatchModel copyWith({
@@ -211,6 +219,10 @@ class CricketMatchModel {
       'matchResult': matchResult,
       'ballEvents': jsonEncode(ballEvents),
       'inningsArray': jsonEncode(inningsArray),
+      'tournamentId': tournamentId,
+      'bracketMatchId': bracketMatchId,
+      'homeTeamLogo': homeTeamLogo,
+      'awayTeamLogo': awayTeamLogo,
     };
   }
 
@@ -248,12 +260,12 @@ class CricketMatchModel {
       currentBattingTeam: map['currentBattingTeam'] ?? '',
       currentBowlingTeam: map['currentBowlingTeam'] ?? '',
       matchResult: map['matchResult'] ?? '',
-      ballEvents: _toList<dynamic>(map['ballEvents'])
-          .map((e) => Map<String, dynamic>.from(e))
-          .toList(),
-      inningsArray: _toList<dynamic>(map['inningsArray'])
-          .map((e) => Map<String, dynamic>.from(e))
-          .toList(),
+      ballEvents: (map['ballEvents'] as List?)?.map((e) => _toMap(e)).toList() ?? [],
+      inningsArray: (map['inningsArray'] as List?)?.map((e) => _toMap(e)).toList() ?? [],
+      tournamentId: map['tournamentId'],
+      bracketMatchId: map['bracketMatchId'],
+      homeTeamLogo: map['homeTeamLogo'],
+      awayTeamLogo: map['awayTeamLogo'],
     );
   }
 
@@ -293,6 +305,8 @@ class CricketMatchModel {
       'matchResult': matchResult,
       'ballEvents': ballEvents,
       'inningsArray': inningsArray,
+      'tournamentId': tournamentId,
+      'bracketMatchId': bracketMatchId,
     };
   }
 
@@ -348,6 +362,8 @@ class CricketMatchModel {
       inningsArray: List<Map<String, dynamic>>.from(
         (json['inningsArray'] ?? []).map((e) => Map<String, dynamic>.from(e)),
       ),
+      tournamentId: json['tournamentId'],
+      bracketMatchId: json['bracketMatchId'],
     );
   }
 }

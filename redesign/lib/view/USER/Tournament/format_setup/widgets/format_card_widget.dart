@@ -3,7 +3,7 @@ import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
-class FormatCardWidget extends StatefulWidget {
+class FormatCardWidget extends StatelessWidget {
   final String title;
   final String description;
   final IconData icon;
@@ -22,25 +22,22 @@ class FormatCardWidget extends StatefulWidget {
   });
 
   @override
-  State<FormatCardWidget> createState() => _FormatCardWidgetState();
-}
-
-class _FormatCardWidgetState extends State<FormatCardWidget> {
-  @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
 
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.all(context.widthPct(3.5)),
+        padding: EdgeInsets.all(ResponsiveHelper.w(14.0)),
         decoration: BoxDecoration(
-          color: widget.isSelected ? AppColors.accent.withValues(alpha: 0.08) : AppColors.card,
-          borderRadius: BorderRadius.circular(context.minDimensionPct(3.5)),
+          color: isSelected
+              ? AppColors.primary.withValues(alpha: 0.12)
+              : AppColors.card,
+          borderRadius: BorderRadius.circular(ResponsiveHelper.w(14.0)),
           border: Border.all(
-            color: widget.isSelected ? AppColors.accent : AppColors.card,
-            width: 2,
+            color: isSelected ? AppColors.primary : AppColors.borderDark,
+            width: isSelected ? 2.0 : 1.0,
           ),
         ),
         child: Stack(
@@ -50,51 +47,60 @@ class _FormatCardWidgetState extends State<FormatCardWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: context.widthPct(10).clamp(38.0, 44.0),
-                  height: context.widthPct(10).clamp(38.0, 44.0),
+                  width: ResponsiveHelper.w(38.0),
+                  height: ResponsiveHelper.w(38.0),
                   decoration: BoxDecoration(
-                    color: widget.isSelected
-                        ? AppColors.accent.withValues(alpha: 0.2)
-                        : AppColors.surface,
+                    color: isSelected
+                        ? AppColors.primary.withValues(alpha: 0.2)
+                        : AppColors.surfaceElevated,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    widget.icon,
-                    color: widget.isSelected ? AppColors.accent : AppColors.muted,
-                    size: context.responsiveFont(20),
+                    icon,
+                    color: isSelected ? AppColors.primary : AppColors.mutedText,
+                    size: ResponsiveHelper.w(20.0),
                   ),
                 ),
-                SizedBox(height: context.heightPct(1.2)),
+                SizedBox(height: ResponsiveHelper.h(12.0)),
                 Text(
-                  widget.title,
+                  title,
                   style: AppTypography.headlineSm.copyWith(
-                    color: widget.isSelected ? AppColors.accent : AppColors.textPrimary,
-                    fontSize: context.responsiveFont(14),
+                    color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                    fontSize: ResponsiveHelper.sp(14.0),
                     fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 2,
+                  ).responsive(context),
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: context.heightPct(0.5)),
+                SizedBox(height: ResponsiveHelper.h(4.0)),
                 Text(
-                  widget.description,
+                  description,
                   style: AppTypography.bodySm.copyWith(
-                    color: AppColors.muted,
-                    fontSize: context.responsiveFont(12),
-                  ),
+                    color: AppColors.mutedText,
+                    fontSize: ResponsiveHelper.sp(12.0),
+                    height: 1.3,
+                  ).responsive(context),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
-            if (widget.isSelected)
+            if (isSelected)
               Positioned(
                 top: 0,
                 right: 0,
-                child: Icon(
-                  Icons.check_circle_rounded,
-                  color: AppColors.accent,
-                  size: context.responsiveFont(20),
+                child: Container(
+                  width: ResponsiveHelper.w(20.0),
+                  height: ResponsiveHelper.w(20.0),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.primary,
+                  ),
+                  child: Icon(
+                    Icons.check_rounded,
+                    color: Colors.black,
+                    size: ResponsiveHelper.w(14.0),
+                  ),
                 ),
               ),
           ],

@@ -8,6 +8,7 @@ import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyba
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/Volleyball/volleyball_model.dart';
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/volleyballSqflite.dart';
+import 'package:redesign/common/common_select_players_sheet.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Volleyball/live_match/volleyball_scoreboard_screen.dart';
 
@@ -161,16 +162,35 @@ class VolleyballController extends GetxController {
     playersList.remove(player.email);
   }
 
+  void openPlayerSelection(BuildContext context, bool isTeamA) {
+    final selectedEmails = isTeamA ? teamAPlayers : teamBPlayers;
+    final opponentEmails = isTeamA ? teamBPlayers : teamAPlayers;
+    final teamName = isTeamA
+        ? (homeTeamName.value.isNotEmpty ? homeTeamName.value : 'Side A')
+        : (awayTeamName.value.isNotEmpty ? awayTeamName.value : 'Side B');
+
+    CommonSelectPlayersBottomSheet.show(
+      context,
+      title: 'Select $teamName Players',
+      maxCount: maxAllowedPlayers,
+      selectedPlayerEmails: selectedEmails,
+      opponentPlayerEmails: opponentEmails,
+      onPlayerSelected: (friend) {
+        addTeamPlayer(isTeamA, friend);
+      },
+    );
+  }
+
   void proceedToCoinToss(BuildContext context) {
-    if (teamARoster.isEmpty || teamBRoster.isEmpty) {
-      Get.snackbar(
-        'Teams Required',
-        'Please add players to both teams.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.cardSurface,
-        colorText: Colors.white,
-      );
-      return;
+    if (teamARoster.isEmpty) {
+      for (int i = 1; i <= squadLimit.value; i++) {
+        teamARoster.add(FriendModel(email: 'sideA_player_$i@local', fullName: 'Side A Player $i'));
+      }
+    }
+    if (teamBRoster.isEmpty) {
+      for (int i = 1; i <= squadLimit.value; i++) {
+        teamBRoster.add(FriendModel(email: 'sideB_player_$i@local', fullName: 'Side B Player $i'));
+      }
     }
 
     Navigator.push(
@@ -181,10 +201,19 @@ class VolleyballController extends GetxController {
           teamBName: awayTeamName.value.isNotEmpty ? awayTeamName.value : 'Side B',
           sport: 'volleyball',
           onTossComplete: (winnerTeam, choice) async {
+            final isWinnerA = winnerTeam ==
+                (homeTeamName.value.isNotEmpty ? homeTeamName.value : 'Side A');
+            final choiceLower = choice.toLowerCase().trim();
+
             String initialServing = 'sideA';
-            if (winnerTeam == (awayTeamName.value.isNotEmpty ? awayTeamName.value : 'Side B')) {
-              initialServing = 'sideB';
+            if (choiceLower.contains('serve')) {
+              // Winner chose to serve first
+              initialServing = isWinnerA ? 'sideA' : 'sideB';
+            } else {
+              // Winner chose court side -> Opposing team serves first!
+              initialServing = isWinnerA ? 'sideB' : 'sideA';
             }
+
             startMatchFromSetup(initialServingTeam: initialServing);
           },
         ),
@@ -233,7 +262,7 @@ class VolleyballController extends GetxController {
     engine = VolleyballMatchEngine(initState);
     liveState.value = engine.state;
     isEngineReady.value = true;
-    isMatchStarted.value = false;
+    isMatchStarted.value = true;
 
     final user = FirebaseAuth.instance.currentUser;
     final userId = user?.uid ?? 'local_user';

@@ -376,6 +376,7 @@ class MapsController extends GetxController {
         'recent_locations': recentsMaps,
       }, SetOptions(merge: true));
     } catch (e) {
+      // ignore: avoid_print
       print('Error saving location arrays to Firebase: $e');
     }
   }
@@ -424,6 +425,7 @@ class MapsController extends GetxController {
         }
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching location arrays from Firebase: $e');
     }
   }

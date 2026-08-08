@@ -1,14 +1,24 @@
-import 'package:redesign/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_create_match_controller.dart';
-import 'widgets/football_create_match_appbar.dart';
-import 'widgets/team_selection_card.dart';
-import 'widgets/match_format_card.dart';
-import 'widgets/rules_configuration_card.dart';
-import 'widgets/bottom_action_widget.dart';
+import 'package:redesign/theme/app_colors.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 
+// Common Setup Widgets
+import 'package:redesign/common/app_back_button.dart';
+import 'package:redesign/common/arena_title_text.dart';
+import 'package:redesign/common/setup_match_header.dart';
+import 'package:redesign/common/squad_config_section.dart';
+import 'package:redesign/common/team_builder_section.dart';
+import 'package:redesign/common/common_match_duration_card.dart';
+import 'package:redesign/common/pro_rules_switch_card.dart';
+import 'package:redesign/common/common_select_players_sheet.dart';
+import 'package:redesign/common/common_start_match_button.dart';
+
+// Controller & Toss
+import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_create_match_controller.dart';
+import 'package:redesign/view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
+
+/// Football Match Creation Screen utilizing PlayZ common setup components.
 class FootballCreateMatchScreen extends StatefulWidget {
   const FootballCreateMatchScreen({super.key});
 
@@ -16,97 +26,171 @@ class FootballCreateMatchScreen extends StatefulWidget {
   State<FootballCreateMatchScreen> createState() => _FootballCreateMatchScreenState();
 }
 
-class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> with SingleTickerProviderStateMixin {
+class _FootballCreateMatchScreenState extends State<FootballCreateMatchScreen> {
   late final FootballCreateMatchController controller;
-  late final AnimationController _animController;
-  late final Animation<double> _opacity;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(FootballCreateMatchController());
+    controller = Get.isRegistered<FootballCreateMatchController>()
+        ? Get.find<FootballCreateMatchController>()
+        : Get.put(FootballCreateMatchController());
     controller.loadInitialData();
-
-    _animController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    );
-    _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeIn),
-    );
-    _animController.forward();
   }
 
-  @override
-  void dispose() {
-    _animController.dispose();
-    Get.delete<FootballCreateMatchController>();
-    super.dispose();
+  void _goToCoinToss(BuildContext context) {
+    if (!controller.validateForm()) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CoinFlipScreen(
+          teamAName: controller.homeTeamName.value,
+          teamBName: controller.awayTeamName.value,
+          sport: 'football',
+          onTossComplete: (winner, decision) async {
+            await controller.createMatchAndStart(
+              context,
+              tossWinner: winner,
+              tossDecision: decision,
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void _openSelectPlayersSheet(BuildContext context, {required bool isHome}) {
+    CommonSelectPlayersBottomSheet.show(
+      context,
+      title: isHome
+          ? 'Select ${controller.homeTeamName.value} Players'
+          : 'Select ${controller.awayTeamName.value} Players',
+      maxCount: controller.maxAllowedPlayers.value,
+      selectedPlayerEmails:
+          isHome ? controller.homeTeamPlayers : controller.awayTeamPlayers,
+      opponentPlayerEmails:
+          isHome ? controller.awayTeamPlayers : controller.homeTeamPlayers,
+      currentUserModel: controller.currentUserFriendModel.value,
+      onPlayerSelected: (friend) {
+        controller.addTeamPlayer(isHome, friend);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
-      backgroundColor: AppColors.background, // Dark background
-      appBar: FootballCreateMatchAppbar(),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.accent, // Lime Green
-            ),
-          );
-        }
-
-        return FadeTransition(
-          opacity: _opacity,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeaderSection(),
-                MatchFormatCard(),
-                MatchDurationCard(),
-                TeamSelectionCard(),
-                RulesConfigurationCard(),
-                BottomActionWidget(
-                  onCreate: () => controller.createMatchAndStart(context),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Center(
+          child: AppBackButton(
+            size: ResponsiveHelper.w(38.0),
+          ),
+        ),
+        leadingWidth: ResponsiveHelper.w(56.0),
+        title: const ArenaTitleText(sportName: 'Football'),
+        centerTitle: false,
+      ),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
+        child: SafeArea(
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.accent,
                 ),
-                SizedBox(height: ResponsiveHelper.h(24)),
-              ],
-            ),
-          ),
-        );
-      }),
-    );
-  }
+              );
+            }
 
-  Widget _buildHeaderSection() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveHelper.w(16.0), vertical: ResponsiveHelper.h(12.0)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Create Match',
-            style: TextStyle(
-              color: AppColors.accent, // Lime Green
-              fontSize: ResponsiveHelper.sp(28),
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          SizedBox(height: ResponsiveHelper.h(8)),
-          Text(
-            'Configure a new professional match session for real-time scouting and analytics.',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: ResponsiveHelper.sp(14),
-              height: 1.4,
-            ),
-          ),
-          SizedBox(height: ResponsiveHelper.h(12)),
-        ],
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.w(20.0),
+                vertical: ResponsiveHelper.h(10.0),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1. Setup Match Upper Header Banner (3D Football Pitch Asset)
+                  const SetupMatchHeader(
+                    title: 'Match Setup',
+                    subtitle: 'Configure your match rules\nand draft your squads.',
+                    imageAsset: 'assets/football_pitch_3d.png',
+                    imageHeight: 115.0,
+                  ),
+
+                  // 2. Squad Limit, Subs Toggle & Max Subs Cards
+                  SquadConfigSection(
+                    squadLimit: controller.maxAllowedPlayers,
+                    onSquadLimitDecrement: controller.decrementSquadLimit,
+                    onSquadLimitIncrement: controller.incrementSquadLimit,
+                    subsEnabled: controller.subsEnabled,
+                    onSubsToggle: controller.toggleSubs,
+                    maxSubstitutes: controller.maxSubs,
+                    onMaxSubsDecrement: controller.decrementSubs,
+                    onMaxSubsIncrement: controller.incrementSubs,
+                  ),
+                  SizedBox(height: ResponsiveHelper.h(16.0)),
+
+                  // 3. Team Formation / Team Builder Cards
+                  TeamBuilderSection(
+                    sectionTitle: 'TEAM FORMATION',
+                    homeTeamController: controller.homeTeamController,
+                    awayTeamController: controller.awayTeamController,
+                    homeTeamName: controller.homeTeamName,
+                    awayTeamName: controller.awayTeamName,
+                    homeTeamRoster: controller.homeTeamRoster,
+                    awayTeamRoster: controller.awayTeamRoster,
+                    onSelectHomePlayers: () => _openSelectPlayersSheet(context, isHome: true),
+                    onSelectAwayPlayers: () => _openSelectPlayersSheet(context, isHome: false),
+                    onRemovePlayer: (isHome, friend) => controller.removeTeamPlayer(isHome, friend),
+                    homeAccentColor: const Color(0xFF1DB954),
+                    awayAccentColor: const Color(0xFFE53935),
+                  ),
+                  SizedBox(height: ResponsiveHelper.h(24.0)),
+
+                  // 4. Match Duration Stepper Card
+                  Obx(
+                    () => CommonMatchDurationCard(
+                      title: 'HALF DURATION',
+                      subtitle: 'Half Duration in\nMinutes',
+                      durationMinutes: controller.duration.value.toInt().obs,
+                      onDecrement: controller.decrementDuration,
+                      onIncrement: controller.incrementDuration,
+                      presetMinutes: const [10, 15, 20, 30, 45, 90],
+                      onPresetSelected: (mins) => controller.setDuration(mins),
+                    ),
+                  ),
+                  SizedBox(height: ResponsiveHelper.h(16.0)),
+
+                  // 5. Pro Rules Switch Card
+                  ProRulesSwitchCard(
+                    valueStream: controller.allowProRules,
+                    onChanged: controller.toggleProRules,
+                    title: 'PRO RULES',
+                    subtitle: 'Formal Match Guidelines, Offsides & VAR Simulation',
+                  ),
+                  SizedBox(height: ResponsiveHelper.h(24.0)),
+
+                  // 6. Non-sticky Start Match Button (Placed inside scrollable Column)
+                  Obx(
+                    () => CommonStartMatchButton(
+                      label: 'START MATCH',
+                      isLoading: controller.isLoading.value,
+                      onPressed: () => _goToCoinToss(context),
+                    ),
+                  ),
+                  SizedBox(height: ResponsiveHelper.h(24.0)),
+                ],
+              ),
+            );
+          }),
+        ),
       ),
     );
   }

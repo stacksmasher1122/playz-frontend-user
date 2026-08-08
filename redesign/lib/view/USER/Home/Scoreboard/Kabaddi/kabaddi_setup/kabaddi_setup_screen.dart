@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:redesign/theme/app_colors.dart';
-import 'package:redesign/theme/app_typography.dart';
-import 'package:redesign/theme/responsive_helper.dart';
+import 'package:redesign/common/app_back_button.dart';
+import 'package:redesign/common/arena_title_text.dart';
+import 'package:redesign/common/common_match_duration_card.dart';
+import 'package:redesign/common/common_start_match_button.dart';
+import 'package:redesign/common/pro_rules_switch_card.dart';
+import 'package:redesign/common/setup_match_header.dart';
+import 'package:redesign/common/squad_config_section.dart';
+import 'package:redesign/common/team_builder_section.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Kabaddi/kabaddi_controller.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_setup/widgets/stepper_card.dart';
-import 'package:redesign/view/USER/Home/Scoreboard/Cricket/cricket_setup/widgets/switch_card.dart';
-import 'widgets/kabaddi_team_card.dart';
-
-Color kBg = const Color(0xFF161616);
-Color kGreen = const Color(0xFF56F174);
-Color kMutedText = const Color(0xFFA0A0A0);
-Color kRed = const Color(0xFFFF6B6B);
-Color kBlue = const Color(0xFF4D96FF);
+import 'package:redesign/theme/app_colors.dart';
+import 'package:redesign/theme/responsive_helper.dart';
 
 class KabaddiSetupScreen extends StatelessWidget {
   KabaddiSetupScreen({super.key});
@@ -24,24 +22,16 @@ class KabaddiSetupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
-      backgroundColor: kBg,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: kBg,
+        backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: kGreen),
-          onPressed: () => Navigator.pop(context),
+        leading: Center(
+          child: AppBackButton(size: ResponsiveHelper.w(38.0)),
         ),
-        title: Text(
-          'KABADDI ARENA',
-          style: TextStyle(
-            color: kGreen,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.2,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
+        title: const ArenaTitleText(sportName: 'Kabaddi'),
         centerTitle: false,
       ),
       body: SafeArea(
@@ -53,155 +43,78 @@ class KabaddiSetupScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Setup Match',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: ResponsiveHelper.sp(32),
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
-                ),
+              // Setup Match Header Card with 3D Kabaddi Court Asset
+              const SetupMatchHeader(
+                title: 'Match Setup',
+                subtitle: 'Configure your Kabaddi arena rules\nand draft your squads.',
+                imageAsset: 'assets/kabaddi_court_3d.png',
+                imageHeight: 115.0,
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Configure your Kabaddi arena rules and draft your\nsquads.',
-                style: TextStyle(color: kMutedText, fontSize: ResponsiveHelper.sp(15), height: 1.4),
-              ),
-              const SizedBox(height: 32),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
 
-              // 1. Squad Limit Card
-              StepperCard(
-                title: 'SQUAD LIMIT',
-                mainText: 'Players per\nTeam',
-                valueStream: controller.squadLimit,
-                onDecrement: controller.decrementSquadLimit,
-                onIncrement: controller.incrementSquadLimit,
+              // Squad Limit, Subs Toggle & Max Substitutes Cards
+              SquadConfigSection(
+                squadLimit: controller.squadLimit,
+                onSquadLimitIncrement: controller.incrementSquadLimit,
+                onSquadLimitDecrement: controller.decrementSquadLimit,
+                subsEnabled: controller.subsEnabled,
+                onSubsToggle: controller.toggleSubs,
+                maxSubstitutes: controller.maxSubstitutes,
+                onMaxSubsIncrement: controller.incrementSubs,
+                onMaxSubsDecrement: controller.decrementSubs,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
 
-              // 2. Substitute Players Card
-              SwitchCard(
-                valueStream: controller.subsEnabled,
-                onChanged: controller.toggleSubs,
-                title: 'Substitute Players',
-                subtitle: 'Enable mid-match\nrotations',
-                icon: Icons.swap_horiz_rounded,
+              // Team Builder Section (Side A & Side B Roster Cards)
+              TeamBuilderSection(
+                sectionTitle: 'BATTLE ROSTERS',
+                homeTeamController: controller.homeTeamController,
+                awayTeamController: controller.awayTeamController,
+                homeTeamName: controller.homeTeamName,
+                awayTeamName: controller.awayTeamName,
+                homeTeamRoster: controller.teamARoster,
+                awayTeamRoster: controller.teamBRoster,
+                onSelectHomePlayers: () => controller.openPlayerSelection(context, true),
+                onSelectAwayPlayers: () => controller.openPlayerSelection(context, false),
+                onRemovePlayer: (isHome, friend) =>
+                    controller.removeTeamPlayer(isHome, friend),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
 
-              // 3. Reserves Card
-              Obx(
-                () => controller.subsEnabled.value
-                    ? Column(
-                        children: [
-                          StepperCard(
-                            title: 'RESERVES',
-                            titleColor: kGreen,
-                            mainText: 'Max\nSubstitutes',
-                            valueStream: controller.maxSubstitutes,
-                            onDecrement: controller.decrementSubs,
-                            onIncrement: controller.incrementSubs,
-                          ),
-                          const SizedBox(height: 32),
-                        ],
-                      )
-                    : const SizedBox(height: 16),
-              ),
-
-              Text(
-                'BATTLE ROSTERS',
-                style: TextStyle(
-                  color: kMutedText,
-                  fontSize: ResponsiveHelper.sp(12),
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // 4. Home Team Card (Side A)
-              KabaddiTeamCard(
-                context: context,
-                controller: controller,
-                titleStream: controller.homeTeamName,
-                dotColor: kRed,
-                accentColor: kRed.withValues(alpha: 0.8),
-                textController: controller.homeTeamController,
-                isHome: true,
-              ),
-              const SizedBox(height: 16),
-
-              // 5. Away Team Card (Side B)
-              KabaddiTeamCard(
-                context: context,
-                controller: controller,
-                titleStream: controller.awayTeamName,
-                dotColor: kBlue,
-                accentColor: kBlue.withValues(alpha: 0.8),
-                textController: controller.awayTeamController,
-                isHome: false,
-              ),
-              const SizedBox(height: 32),
-
-              // 6. Half Duration Stepper Card
-              StepperCard(
+              // Match Duration Stepper & Quick-Select Card
+              CommonMatchDurationCard(
                 title: 'HALF DURATION',
-                mainText: 'Minutes per\nHalf',
-                valueStream: controller.halfDurationMinutes,
-                onIncrement: () => controller.setHalfDuration(controller.halfDurationMinutes.value + 5),
+                subtitle: 'Minutes per\nHalf',
+                durationMinutes: controller.halfDurationMinutes,
+                presetMinutes: const [10, 15, 20, 30],
+                onIncrement: () => controller
+                    .setHalfDuration(controller.halfDurationMinutes.value + 5),
                 onDecrement: () {
                   if (controller.halfDurationMinutes.value > 5) {
-                    controller.setHalfDuration(controller.halfDurationMinutes.value - 5);
+                    controller.setHalfDuration(
+                        controller.halfDurationMinutes.value - 5);
                   }
                 },
+                onPresetSelected: (val) => controller.setHalfDuration(val),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
 
-              // 7. Pro Rules Switch Card
-              SwitchCard(
+              // Pro Rules Switch Card
+              ProRulesSwitchCard(
                 valueStream: controller.isProRules,
                 onChanged: controller.toggleProRules,
                 title: 'Pro Rules Mode',
                 subtitle: 'Enables 30s Raid Clock,\nDo-or-Die & Super Tackle',
-                icon: Icons.gavel,
               ),
-              const SizedBox(height: 48),
+              SizedBox(height: ResponsiveHelper.h(32.0)),
+
+              // Scrollable Proceed to Toss Button (Not sticky at bottom)
+              CommonStartMatchButton(
+                label: 'PROCEED TO COIN TOSS',
+                onPressed: () => controller.goToToss(context),
+              ),
+              SizedBox(height: ResponsiveHelper.h(24.0)),
             ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.all(ResponsiveHelper.w(16)),
-        decoration: BoxDecoration(
-          color: kBg,
-          border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
-        ),
-        child: SafeArea(
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: kGreen,
-              foregroundColor: Colors.black,
-              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.h(16)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ResponsiveHelper.w(16)),
-              ),
-            ),
-            onPressed: () => controller.goToToss(context),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.sports_kabaddi, color: Colors.black, size: 22),
-                const SizedBox(width: 8),
-                Text(
-                  'PROCEED TO COIN TOSS',
-                  style: TextStyle(
-                    fontSize: ResponsiveHelper.sp(16),
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),

@@ -51,7 +51,9 @@ class _FootballScoreboardScreenState extends State<FootballScoreboardScreen> {
 
   void _onEngineStateChanged() {
     if (controller.engine.state.phase == MatchPhase.fullTime) {
-      if (mounted && Navigator.canPop(context)) {
+      if (controller.tournamentId.value.isNotEmpty && !controller.isReadOnly.value) {
+        controller.endTournamentMatch(context);
+      } else if (mounted && Navigator.canPop(context)) {
         Navigator.pop(context);
       }
     }
@@ -69,10 +71,6 @@ class _FootballScoreboardScreenState extends State<FootballScoreboardScreen> {
             return Column(
               children: [
                 ScoreboardHeader(engine: controller.engine),
-                Container(
-                  height: ResponsiveHelper.h(1),
-                  color: AppColors.outlineVariant,
-                ),
                 Expanded(
                   child: CustomScrollView(
                     controller: _scrollController,

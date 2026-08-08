@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_model.dart';

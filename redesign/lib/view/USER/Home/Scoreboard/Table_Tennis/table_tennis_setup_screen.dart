@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redesign/theme/app_colors.dart';
-import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import 'package:redesign/controller/User_Controller/Home_Controller/Scoreboard_Controller/Table_Tennis/table_tennis_controller.dart';
-import 'widgets/tt_format_card.dart';
-import 'widgets/tt_games_card.dart';
-import 'widgets/tt_rules_switch_card.dart';
-import 'widgets/tt_team_card.dart';
+import 'package:redesign/common/app_back_button.dart';
+import 'package:redesign/common/arena_title_text.dart';
+import 'package:redesign/common/setup_match_header.dart';
+import 'package:redesign/common/common_match_mode_sets_card.dart';
+import 'package:redesign/common/common_team_formation_card.dart';
+import 'package:redesign/common/pro_rules_switch_card.dart';
+import 'package:redesign/common/common_start_match_button.dart';
 
 class TableTennisSetupScreen extends StatelessWidget {
   TableTennisSetupScreen({super.key});
@@ -17,170 +19,75 @@ class TableTennisSetupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ResponsiveHelper.init(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primaryGreen),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'TABLE TENNIS ARENA',
-          style: AppTypography.headlineMd.copyWith(
-            color: AppColors.primaryGreen,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.2,
-            fontStyle: FontStyle.italic,
-            fontSize: context.responsiveFont(16),
-          ),
-        ),
+        leading: const AppBackButton(),
+        title: const ArenaTitleText(sportName: 'Table Tennis'),
         centerTitle: false,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           padding: EdgeInsets.symmetric(
             horizontal: ResponsiveHelper.w(20.0),
             vertical: ResponsiveHelper.h(10.0),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Setup Match',
-                style: AppTypography.headlineXl.copyWith(
-                  color: AppColors.textPrimary,
-                  fontSize: context.responsiveFont(32),
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
+          child: Obx(() {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 1. 3D Blue Table Tennis Table Header Banner
+                const SetupMatchHeader(
+                  imageAsset: 'assets/table_tennis_table_3d.png',
+                  title: 'Setup Match',
+                  subtitle: 'Configure your match rules and draft your squads.',
                 ),
-              ),
-              SizedBox(height: ResponsiveHelper.h(8)),
-              Text(
-                'Configure match rules, formats, and draft\nyour players.',
-                style: AppTypography.bodyMd.copyWith(
-                  color: AppColors.mutedText,
-                  fontSize: context.responsiveFont(15),
-                  height: 1.4,
+                SizedBox(height: ResponsiveHelper.h(24.0)),
+
+                // 2. Common Match Mode & Sets Card (Singles/Doubles & Best of Sets)
+                CommonMatchModeSetsCard(
+                  format: controller.format.value,
+                  setsFormat: controller.setsFormat.value,
+                  onFormatChanged: controller.setFormat,
+                  onSetsFormatChanged: controller.setSetsFormat,
                 ),
-              ),
-              SizedBox(height: ResponsiveHelper.h(28)),
+                SizedBox(height: ResponsiveHelper.h(16.0)),
 
-              // 1. Singles / Doubles Format Selection
-              TtFormatCard(
-                selectedFormat: controller.format,
-                onFormatChanged: controller.setFormat,
-              ),
-              SizedBox(height: ResponsiveHelper.h(16)),
-
-              // 2. Best of 1 / 3 / 5 / 7 Games Selection
-              TtGamesCard(
-                selectedGamesFormat: controller.gamesFormat,
-                onGamesFormatChanged: controller.setGamesFormat,
-              ),
-              SizedBox(height: ResponsiveHelper.h(16)),
-
-              // 3. Pro vs Friendly Rules Toggle + Stepper
-              TtRulesSwitchCard(
-                isFriendlyMode: controller.isFriendlyMode,
-                onFriendlyModeChanged: controller.toggleFriendlyRules,
-                pointsPerGame: controller.pointsPerGame,
-                onPointsPerGameChanged: controller.setPointsPerGame,
-              ),
-              SizedBox(height: ResponsiveHelper.h(24)),
-
-              Text(
-                'PLAYER ROSTERS',
-                style: AppTypography.labelCaps.copyWith(
-                  color: AppColors.mutedText,
-                  fontSize: context.responsiveFont(12),
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
+                // 3. Common Team Formation Card (Singles/Doubles Rosters & Team Names)
+                CommonTeamFormationCard(
+                  format: controller.format.value,
+                  homeTeamController: controller.homeTeamController,
+                  awayTeamController: controller.awayTeamController,
+                  homeTeamRoster: controller.homeTeamRoster,
+                  awayTeamRoster: controller.awayTeamRoster,
+                  onSelectHomePlayer: () => controller.openPlayerSelection(context, true),
+                  onSelectAwayPlayer: () => controller.openPlayerSelection(context, false),
+                  onRemovePlayer: (isHome, friend) => controller.removeTeamPlayer(isHome, friend),
                 ),
-              ),
-              SizedBox(height: ResponsiveHelper.h(16)),
+                SizedBox(height: ResponsiveHelper.h(16.0)),
 
-              // Side A Card
-              TtTeamCard(
-                context: context,
-                controller: controller,
-                title: 'Side A',
-                dotColor: AppColors.error,
-                accentColor: AppColors.error.withValues(alpha: 0.8),
-                isSideA: true,
-                textController: controller.homeTeamController,
-              ),
-              SizedBox(height: ResponsiveHelper.h(16)),
-
-              // Side B Card
-              TtTeamCard(
-                context: context,
-                controller: controller,
-                title: 'Side B',
-                dotColor: AppColors.primary,
-                accentColor: AppColors.primary.withValues(alpha: 0.8),
-                isSideA: false,
-                textController: controller.awayTeamController,
-              ),
-              SizedBox(height: ResponsiveHelper.h(32)),
-
-              // 5. Coin Flip & Start Match Button
-              SizedBox(
-                width: double.infinity,
-                child: Obx(
-                  () => ElevatedButton(
-                    onPressed: controller.isLoading.value
-                        ? null
-                        : () => controller.goToToss(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryGreen,
-                      foregroundColor: Colors.black,
-                      padding: EdgeInsets.symmetric(
-                        vertical: ResponsiveHelper.h(16),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          ResponsiveHelper.w(16),
-                        ),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: controller.isLoading.value
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: Colors.black,
-                              strokeWidth: 2.5,
-                            ),
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.casino_rounded, size: 22),
-                              SizedBox(width: ResponsiveHelper.w(8)),
-                              Flexible(
-                                child: Text(
-                                  'COIN TOSS & START MATCH',
-                                  style: AppTypography.headlineSm.copyWith(
-                                    fontSize: context.responsiveFont(16),
-                                    fontWeight: FontWeight.w800,
-                                    letterSpacing: 0.8,
-                                    color: Colors.black,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                  ),
+                // 4. Common Pro Rules Switch Card
+                ProRulesSwitchCard(
+                  valueStream: controller.isProRules,
+                  onChanged: controller.toggleProRules,
+                  title: 'ITTF PRO RULES',
+                  subtitle: 'Formal ITTF match rules & 11-point set cap',
                 ),
-              ),
-              SizedBox(height: ResponsiveHelper.h(24)),
-            ],
-          ),
+                SizedBox(height: ResponsiveHelper.h(28.0)),
+
+                // 5. Common Start Match Button (Unpinned inside scrollable Column)
+                CommonStartMatchButton(
+                  label: 'PROCEED TO COIN TOSS',
+                  isLoading: controller.isLoading.value,
+                  onPressed: () => controller.goToToss(context),
+                ),
+                SizedBox(height: ResponsiveHelper.h(24.0)),
+              ],
+            );
+          }),
         ),
       ),
     );

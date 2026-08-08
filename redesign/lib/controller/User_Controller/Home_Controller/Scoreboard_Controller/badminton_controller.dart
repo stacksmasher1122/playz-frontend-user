@@ -15,18 +15,27 @@ import 'package:redesign/view/USER/Home/Scoreboard/Badminton/live_match/badminto
 import 'package:redesign/view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
 import 'package:redesign/services/xp_reward_service.dart';
 
+import 'package:redesign/common/common_select_players_sheet.dart';
+
 class BadmintonController extends GetxController {
   // Setup Parameters
   var isFriendlyRules = false.obs;
+  var isProRules = true.obs;
   var pointsToWin = 21.obs;
   var gamesToWin = 2.obs;
+  var setsFormat = 'BEST_OF_3'.obs;
   var winByTwo = true.obs;
   var maxPointCap = 30.obs;
   var intervalsEnabled = true.obs;
   var endsChangeEnabled = true.obs;
-  var format = 'Singles'.obs;
+  var format = 'SINGLES'.obs;
 
   var maxAllowedPlayers = 1.obs; // 1 for singles, 2 for doubles
+
+  final homeTeamController = TextEditingController(text: 'Side A');
+  final awayTeamController = TextEditingController(text: 'Side B');
+  var homeTeamName = 'Side A'.obs;
+  var awayTeamName = 'Side B'.obs;
 
   var teamAPlayers = <String>[].obs;
   var teamBPlayers = <String>[].obs;
@@ -55,6 +64,12 @@ class BadmintonController extends GetxController {
   void onInit() {
     super.onInit();
     _loadCurrentUserProfile();
+    homeTeamController.addListener(() {
+      homeTeamName.value = homeTeamController.text;
+    });
+    awayTeamController.addListener(() {
+      awayTeamName.value = awayTeamController.text;
+    });
   }
 
   Future<void> _loadCurrentUserProfile() async {
@@ -78,6 +93,7 @@ class BadmintonController extends GetxController {
 
   void toggleFriendlyRules(bool val) {
     isFriendlyRules.value = val;
+    isProRules.value = !val;
     if (val) {
       // Relaxed defaults
       winByTwo.value = false;
@@ -93,17 +109,37 @@ class BadmintonController extends GetxController {
     }
   }
 
+  void toggleProRules(bool val) {
+    isProRules.value = val;
+    toggleFriendlyRules(!val);
+  }
+
   void setFormat(String newFormat) {
-    format.value = newFormat;
-    if (newFormat == 'Singles') {
+    format.value = newFormat.toUpperCase();
+    if (format.value == 'SINGLES') {
       maxAllowedPlayers.value = 1;
+      if (teamARoster.length > 1) {
+        teamARoster.removeRange(1, teamARoster.length);
+        teamAPlayers.assignAll(teamARoster.map((p) => p.email));
+      }
+      if (teamBRoster.length > 1) {
+        teamBRoster.removeRange(1, teamBRoster.length);
+        teamBPlayers.assignAll(teamBRoster.map((p) => p.email));
+      }
     } else {
       maxAllowedPlayers.value = 2;
     }
-    teamARoster.clear();
-    teamBRoster.clear();
-    teamAPlayers.clear();
-    teamBPlayers.clear();
+  }
+
+  void setSetsFormat(String setCode) {
+    setsFormat.value = setCode;
+    if (setCode == 'BEST_OF_1') {
+      gamesToWin.value = 1;
+    } else if (setCode == 'BEST_OF_5') {
+      gamesToWin.value = 3;
+    } else {
+      gamesToWin.value = 2;
+    }
   }
 
   void incrementPoints() {
@@ -122,27 +158,90 @@ class BadmintonController extends GetxController {
     final roster = isTeamA ? teamARoster : teamBRoster;
     final playersList = isTeamA ? teamAPlayers : teamBPlayers;
 
-    if (roster.length >= maxAllowedPlayers.value) {
-      Get.snackbar('Limit Reached', 'Cannot add more players to this side.');
-      return;
-    }
+    if (roster.any((p) => p.email == player.email)) return;
 
-    // Prevent adding to both sides
-    if (teamAPlayers.contains(player.email) || teamBPlayers.contains(player.email)) {
-      Get.snackbar('Error', 'Player already added.');
-      return;
+    final maxCount = maxAllowedPlayers.value;
+    if (roster.length >= maxCount) {
+      if (maxCount == 1) {
+        roster.clear();
+        playersList.clear();
+      } else {
+        roster.removeAt(0);
+        if (playersList.isNotEmpty) playersList.removeAt(0);
+      }
     }
-
     roster.add(player);
     playersList.add(player.email);
+
+    if (isTeamA && (homeTeamController.text == 'Side A' || homeTeamController.text.isEmpty)) {
+      homeTeamController.text = player.fullName.isNotEmpty ? player.fullName : player.email;
+      homeTeamName.value = homeTeamController.text;
+    } else if (!isTeamA && (awayTeamController.text == 'Side B' || awayTeamController.text.isEmpty)) {
+      awayTeamController.text = player.fullName.isNotEmpty ? player.fullName : player.email;
+      awayTeamName.value = awayTeamController.text;
+    }
   }
 
   void removeTeamPlayer(bool isTeamA, FriendModel player) {
     final roster = isTeamA ? teamARoster : teamBRoster;
     final playersList = isTeamA ? teamAPlayers : teamBPlayers;
 
-    roster.remove(player);
+    roster.removeWhere((p) => p.email == player.email);
     playersList.remove(player.email);
+  }
+
+  void openPlayerSelection(BuildContext context, bool isSideA) {
+    final selectedEmails = isSideA ? teamAPlayers : teamBPlayers;
+    final opponentEmails = isSideA ? teamBPlayers : teamAPlayers;
+    final sideLabel = isSideA
+        ? (homeTeamController.text.isNotEmpty ? homeTeamController.text : 'Side A')
+        : (awayTeamController.text.isNotEmpty ? awayTeamController.text : 'Side B');
+    final maxCount = maxAllowedPlayers.value;
+
+    CommonSelectPlayersBottomSheet.show(
+      context,
+      title: 'Select $sideLabel Player',
+      maxCount: maxCount,
+      selectedPlayerEmails: selectedEmails,
+      opponentPlayerEmails: opponentEmails,
+      onPlayerSelected: (friend) {
+        addTeamPlayer(isSideA, friend);
+      },
+    );
+  }
+
+  void openTossDecision(BuildContext context) {
+    if (teamARoster.isEmpty || teamBRoster.isEmpty) {
+      Get.snackbar('Error', 'Both sides need at least 1 player');
+      return;
+    }
+
+    final sideAName = homeTeamController.text.trim().isNotEmpty
+        ? homeTeamController.text.trim()
+        : 'Side A';
+    final sideBName = awayTeamController.text.trim().isNotEmpty
+        ? awayTeamController.text.trim()
+        : 'Side B';
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => CoinFlipScreen(
+          teamAName: sideAName,
+          teamBName: sideBName,
+          sport: 'badminton',
+          onTossComplete: (tossWinner, tossDecision) async {
+            final isWinnerA = tossWinner == sideAName;
+            final servingSide = (isWinnerA && tossDecision.toLowerCase() == 'serve') ||
+                    (!isWinnerA && tossDecision.toLowerCase() == 'choose side')
+                ? PlayerSide.sideA
+                : PlayerSide.sideB;
+
+            await createAndStartMatch(context, initialServingSide: servingSide);
+          },
+        ),
+      ),
+    );
   }
 
   void goToToss([BuildContext? context]) {
@@ -253,7 +352,7 @@ class BadmintonController extends GetxController {
       _initEngineFromState(initialState);
 
       final navContext = context ?? Get.context;
-      if (navContext != null) {
+      if (navContext != null && navContext.mounted) {
         Navigator.push(
           navContext,
           MaterialPageRoute(builder: (context) => const BadmintonScoreboardScreen()),
@@ -273,6 +372,8 @@ class BadmintonController extends GetxController {
     required List<FriendModel> teamA,
     required List<FriendModel> teamB,
     required Map<String, dynamic> sportRules,
+    String? teamALogo,
+    String? teamBLogo,
     BuildContext? context,
   }) async {
     try {
@@ -332,6 +433,8 @@ class BadmintonController extends GetxController {
         lastUpdatedAt: DateTime.now(),
         tournamentId: tId,
         bracketMatchId: bMatchId,
+        teamALogo: teamALogo,
+        teamBLogo: teamBLogo,
       );
 
       // Save Local
@@ -361,7 +464,7 @@ class BadmintonController extends GetxController {
       _initEngineFromState(initialState);
 
       final navContext = context ?? Get.context;
-      if (navContext != null) {
+      if (navContext != null && navContext.mounted) {
         Navigator.push(
           navContext,
           MaterialPageRoute(builder: (context) => const BadmintonScoreboardScreen()),
@@ -439,7 +542,7 @@ class BadmintonController extends GetxController {
       _initEngineFromState(incomingState);
 
       final navContext = context ?? Get.context;
-      if (navContext != null) {
+      if (navContext != null && navContext.mounted) {
         Navigator.push(
           navContext,
           MaterialPageRoute(builder: (context) => const BadmintonScoreboardScreen()),
@@ -893,7 +996,7 @@ class BadmintonController extends GetxController {
 
       // Navigate back to Bracket & Matchmaking screen
       final navContext = context ?? Get.context;
-      if (navContext != null) {
+      if (navContext != null && navContext.mounted) {
         Navigator.popUntil(navContext, (route) {
           final routeName = route.settings.name ?? '';
           return routeName.contains('BracketMatchmaking') ||

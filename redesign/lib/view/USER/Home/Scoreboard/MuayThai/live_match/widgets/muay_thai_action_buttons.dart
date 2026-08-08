@@ -15,6 +15,7 @@ class MuayThaiActionButtons extends StatelessWidget {
 
     return Obx(() {
       final isReadOnly = controller.isReadOnly.value;
+      if (isReadOnly) return const SizedBox.shrink();
 
       final redName = controller.currentMatch.value?.fighterA ?? 'RED Corner';
       final blueName = controller.currentMatch.value?.fighterB ?? 'BLUE Corner';

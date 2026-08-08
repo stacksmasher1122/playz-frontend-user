@@ -6,7 +6,10 @@ import 'package:redesign/theme/app_typography.dart';
 import 'package:redesign/theme/responsive_helper.dart';
 import '../../../../../model/User_Models/Tournament_Model/tournament_team_model.dart';
 import '../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/badminton_controller.dart';
+import '../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/cricket_controller.dart';
+import '../../../../../controller/User_Controller/Home_Controller/Scoreboard_Controller/Football/football_controller.dart';
 import '../../../../../model/User_Models/Home_Models/Friends_Model/friends_model.dart';
+import '../../../Home/Scoreboard/coin_toss/coin_toss_screen.dart';
 import 'widgets/rules_summary_card.dart';
 
 class MatchRulesConfirmationScreen extends StatefulWidget {
@@ -60,11 +63,10 @@ class _MatchRulesConfirmationScreenState extends State<MatchRulesConfirmationScr
   void _startMatch() {
     if (tournamentData == null) return;
 
-    // We reuse the existing BadmintonController
-    final badmintonController = Get.put(BadmintonController());
+    final String sport = (tournamentData!['sport'] ?? 'Badminton').toString();
 
     List<FriendModel> teamARoster = widget.teamA.players.map((p) => FriendModel(
-      email: p.userId, // use userId as unique identifier
+      email: p.userId,
       fullName: p.name,
       profileImageUrl: p.profileImageUrl,
     )).toList();
@@ -76,14 +78,77 @@ class _MatchRulesConfirmationScreenState extends State<MatchRulesConfirmationScr
     )).toList();
 
     Map<String, dynamic> sportRules = tournamentData!['format']?['sportRules'] ?? {};
+    final String sportLower = sport.toLowerCase();
 
-    badmintonController.createAndStartTournamentMatch(
-      tId: widget.tournamentId,
-      bMatchId: widget.bracketMatchId,
-      teamA: teamARoster,
-      teamB: teamBRoster,
-      sportRules: sportRules,
-    );
+    final String? logoA = widget.teamA.logoUrl;
+    final String? logoB = widget.teamB.logoUrl;
+
+    if (sportLower == 'cricket') {
+      final cricketController = Get.put(CricketController());
+      Get.to(() => CoinFlipScreen(
+        teamAName: widget.teamA.name,
+        teamBName: widget.teamB.name,
+        sport: 'cricket',
+        onTossComplete: (tossWinner, tossDecision) async {
+          await cricketController.createAndStartTournamentMatch(
+            tId: widget.tournamentId,
+            bMatchId: widget.bracketMatchId,
+            teamA: teamARoster,
+            teamB: teamBRoster,
+            teamAName: widget.teamA.name,
+            teamBName: widget.teamB.name,
+            teamALogo: logoA,
+            teamBLogo: logoB,
+            sportRules: sportRules,
+            tossWinner: tossWinner,
+            tossDecision: tossDecision,
+            context: context,
+          );
+        },
+      ));
+    } else if (sportLower == 'football') {
+      final footballController = Get.put(FootballController());
+      Get.to(() => CoinFlipScreen(
+        teamAName: widget.teamA.name,
+        teamBName: widget.teamB.name,
+        sport: 'football',
+        onTossComplete: (tossWinner, tossDecision) async {
+          await footballController.createAndStartTournamentMatch(
+            tId: widget.tournamentId,
+            bMatchId: widget.bracketMatchId,
+            teamA: teamARoster,
+            teamB: teamBRoster,
+            teamAName: widget.teamA.name,
+            teamBName: widget.teamB.name,
+            teamALogo: logoA,
+            teamBLogo: logoB,
+            sportRules: sportRules,
+            tossWinner: tossWinner,
+            tossDecision: tossDecision,
+            context: context,
+          );
+        },
+      ));
+    } else {
+      final badmintonController = Get.put(BadmintonController());
+      Get.to(() => CoinFlipScreen(
+        teamAName: widget.teamA.name,
+        teamBName: widget.teamB.name,
+        sport: 'badminton',
+        onTossComplete: (tossWinner, tossDecision) async {
+          await badmintonController.createAndStartTournamentMatch(
+            tId: widget.tournamentId,
+            bMatchId: widget.bracketMatchId,
+            teamA: teamARoster,
+            teamB: teamBRoster,
+            teamALogo: logoA,
+            teamBLogo: logoB,
+            sportRules: sportRules,
+            context: context,
+          );
+        },
+      ));
+    }
   }
 
   @override

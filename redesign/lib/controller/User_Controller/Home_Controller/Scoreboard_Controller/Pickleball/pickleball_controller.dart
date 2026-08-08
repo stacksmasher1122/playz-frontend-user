@@ -81,13 +81,19 @@ class PickleballController extends GetxController {
   }
 
   void incrementTargetPoints() {
-    if (targetPoints.value == 11) targetPoints.value = 15;
-    else if (targetPoints.value == 15) targetPoints.value = 21;
+    if (targetPoints.value == 11) {
+      targetPoints.value = 15;
+    } else if (targetPoints.value == 15) {
+      targetPoints.value = 21;
+    }
   }
 
   void decrementTargetPoints() {
-    if (targetPoints.value == 21) targetPoints.value = 15;
-    else if (targetPoints.value == 15) targetPoints.value = 11;
+    if (targetPoints.value == 21) {
+      targetPoints.value = 15;
+    } else if (targetPoints.value == 15) {
+      targetPoints.value = 11;
+    }
   }
 
   void setGamesToWin(int count) {

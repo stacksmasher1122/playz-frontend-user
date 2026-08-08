@@ -15,6 +15,7 @@ class TaekwondoActionButtons extends StatelessWidget {
 
     return Obx(() {
       final isReadOnly = controller.isReadOnly.value;
+      if (isReadOnly) return const SizedBox.shrink();
 
       final hongName = controller.currentMatch.value?.hongFighter ?? 'HONG (Red)';
       final chongName = controller.currentMatch.value?.chongFighter ?? 'CHONG (Blue)';

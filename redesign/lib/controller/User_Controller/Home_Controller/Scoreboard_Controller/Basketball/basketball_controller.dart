@@ -9,6 +9,7 @@ import 'package:redesign/model/User_Models/Home_Models/Friends_Model/friends_mod
 import 'package:redesign/sqflite/User_SQF/Home_SQF/Scoreboard_SQF/basketballSqflite.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.dart';
 import 'package:redesign/view/USER/Home/Scoreboard/Basketball/live_match/basketball_scoreboard_screen.dart';
+import 'package:redesign/common/common_select_players_sheet.dart';
 
 class BasketballController extends GetxController {
   final TextEditingController homeTeamController = TextEditingController(
@@ -58,6 +59,8 @@ class BasketballController extends GetxController {
   final RxBool isEngineReady = false.obs;
   final RxBool isReadOnly = false.obs;
   final RxBool hasMatchEndUndoBeenUsed = false.obs;
+  final RxInt pendingQuarterEnded = 0.obs;
+  final RxInt pendingOvertimeEnded = 0.obs;
 
   StreamSubscription<DocumentSnapshot>? _firestoreSubscription;
 
@@ -70,7 +73,6 @@ class BasketballController extends GetxController {
     awayTeamController.addListener(() {
       awayTeamName.value = awayTeamController.text;
     });
-    _initDefaultUserRoster();
   }
 
   @override
@@ -79,19 +81,6 @@ class BasketballController extends GetxController {
     _shotClockTimer?.cancel();
     _firestoreSubscription?.cancel();
     super.onClose();
-  }
-
-  void _initDefaultUserRoster() {
-    final user = FirebaseAuth.instance.currentUser;
-    final userName = user?.displayName ?? 'You';
-    final userEmail = user?.email ?? 'you@local';
-
-    if (teamARoster.isEmpty) {
-      teamARoster.add(
-        FriendModel(email: userEmail, fullName: '$userName (You)'),
-      );
-      teamAPlayers.add(userEmail);
-    }
   }
 
   void resetSetupScreen() {
@@ -109,7 +98,6 @@ class BasketballController extends GetxController {
     quarterDurationMinutes.value = 10;
     isProRules.value = true;
     enableShotClock.value = true;
-    _initDefaultUserRoster();
   }
 
   void incrementSquadLimit() {
@@ -185,10 +173,38 @@ class BasketballController extends GetxController {
     playersList.remove(player.email);
   }
 
+  void openPlayerSelection(BuildContext context, bool isTeamA) {
+    final teamName = isTeamA ? homeTeamName.value : awayTeamName.value;
+    final selectedEmails = isTeamA ? teamAPlayers : teamBPlayers;
+    final opponentEmails = isTeamA ? teamBPlayers : teamAPlayers;
+
+    CommonSelectPlayersBottomSheet.show(
+      context,
+      title: 'Select $teamName Players',
+      maxCount: maxAllowedPlayers,
+      selectedPlayerEmails: selectedEmails,
+      opponentPlayerEmails: opponentEmails,
+      onPlayerSelected: (friend) {
+        addTeamPlayer(isTeamA, friend);
+      },
+    );
+  }
+
   void proceedToJumpBall(BuildContext context) {
-    if (teamARoster.isEmpty || teamBRoster.isEmpty) {
-      Get.snackbar('Teams Required', 'Please add players to both teams.');
-      return;
+    final teamAName = homeTeamController.text.trim().isNotEmpty
+        ? homeTeamController.text.trim()
+        : (teamARoster.isNotEmpty ? teamARoster.first.fullName : 'Side A');
+    final teamBName = awayTeamController.text.trim().isNotEmpty
+        ? awayTeamController.text.trim()
+        : (teamBRoster.isNotEmpty ? teamBRoster.first.fullName : 'Side B');
+
+    if (teamARoster.isEmpty) {
+      teamARoster.add(FriendModel(email: 'sideA@local', fullName: teamAName));
+      teamAPlayers.add('sideA@local');
+    }
+    if (teamBRoster.isEmpty) {
+      teamBRoster.add(FriendModel(email: 'sideB@local', fullName: teamBName));
+      teamBPlayers.add('sideB@local');
     }
 
     Navigator.push(
@@ -376,22 +392,14 @@ class BasketballController extends GetxController {
 
   void _onQuarterEnded() {
     if (liveState.value == null) return;
-    if (engine.state.currentQuarter < 4) {
+    final currentQ = engine.state.currentQuarter;
+    if (currentQ < 4) {
       engine.advanceQuarter();
       liveState.value = engine.state;
       secondsRemaining.value = engine.state.config.quarterDurationMinutes * 60;
       resetShotClock24();
       _syncMatchState();
-      Get.defaultDialog(
-        title: 'Quarter Ended',
-        middleText: '${engine.state.quarterDisplay} is starting now.',
-        confirmTextColor: Colors.black,
-        textConfirm: 'Start Next Quarter',
-        onConfirm: () {
-          Get.back();
-          startMatch();
-        },
-      );
+      pendingQuarterEnded.value = currentQ;
     } else {
       // Q4 or OT ended
       if (engine.state.sideAScore == engine.state.sideBScore) {
@@ -401,16 +409,7 @@ class BasketballController extends GetxController {
         secondsRemaining.value = 300; // 5-minute OT
         resetShotClock24();
         _syncMatchState();
-        Get.defaultDialog(
-          title: 'MATCH TIED!',
-          middleText:
-              '5-Minute Overtime (${engine.state.quarterDisplay}) will begin.',
-          textConfirm: 'Start Overtime',
-          onConfirm: () {
-            Get.back();
-            startMatch();
-          },
-        );
+        pendingOvertimeEnded.value = currentQ;
       } else {
         finishMatch();
       }
@@ -471,6 +470,8 @@ class BasketballController extends GetxController {
     _syncMatchState();
     Get.snackbar('TIMEOUT', 'Official 60s Timeout called by $team');
   }
+
+  void callTimeout(String team) => useTimeout(team);
 
   void resetShotClock24() {
     shotClockSeconds.value = 24;

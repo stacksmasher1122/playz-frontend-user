@@ -349,9 +349,13 @@ class BoxingMatchEngine {
     bool matchEnded = _state.currentRoundIndex + 1 >= _state.config.totalRounds;
     String? winner;
     if (matchEnded) {
-      if (_state.sideAPoints > _state.sideBPoints) winner = 'fighterA';
-      else if (_state.sideBPoints > _state.sideAPoints) winner = 'fighterB';
-      else winner = 'draw';
+      if (_state.sideAPoints > _state.sideBPoints) {
+        winner = 'fighterA';
+      } else if (_state.sideBPoints > _state.sideAPoints) {
+        winner = 'fighterB';
+      } else {
+        winner = 'draw';
+      }
     }
 
     _state = _state.copyWith(

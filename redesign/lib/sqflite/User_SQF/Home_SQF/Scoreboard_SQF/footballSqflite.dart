@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:redesign/score_engine/footballMatchEngine/football_match_engine.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';

@@ -11,6 +11,7 @@ import 'package:redesign/view/USER/Home/Scoreboard/coin_toss/coin_toss_screen.da
 import 'package:redesign/model/User_Models/Home_Models/Scoreboard_Model/cricket_state_models.dart';
 import 'package:redesign/shared_preferences/userPreferences.dart';
 import 'package:redesign/score_engine/cricketMatchEngine/cricket_match_engine.dart';
+import 'package:redesign/services/xp_reward_service.dart';
 
 class CricketController extends GetxController {
   // Setup Parameters
@@ -39,6 +40,9 @@ class CricketController extends GetxController {
   // ════════════════════ LIVE MATCH STATE ════════════════════
   var currentMatchId = ''.obs;
   var currentMatch = Rxn<CricketMatchModel>();
+  var tournamentId = ''.obs;
+  var bracketMatchId = ''.obs;
+  var isReadOnly = false.obs;
 
   // Real-time engine
   late MatchEngine engine;
@@ -700,6 +704,342 @@ class CricketController extends GetxController {
       } catch (e) {
         debugPrint("Error updating player lifetime stats for ${p.name}: $e");
       }
+    }
+  }
+
+  // ════════════════════ TOURNAMENT MATCH LIFECYCLE ════════════════════
+
+  Future<void> createAndStartTournamentMatch({
+    required String tId,
+    required String bMatchId,
+    required List<FriendModel> teamA,
+    required List<FriendModel> teamB,
+    required Map<String, dynamic> sportRules,
+    String? teamAName,
+    String? teamBName,
+    String? teamALogo,
+    String? teamBLogo,
+    String tossWinner = '',
+    String tossDecision = '',
+    BuildContext? context,
+  }) async {
+    try {
+      isLoading.value = true;
+      isReadOnly.value = false;
+      final user = FirebaseAuth.instance.currentUser;
+      final matchId = const Uuid().v4();
+
+      tournamentId.value = tId;
+      bracketMatchId.value = bMatchId;
+
+      homeTeamRoster.assignAll(teamA);
+      awayTeamRoster.assignAll(teamB);
+      homeTeamPlayers.assignAll(teamA.map((p) => p.fullName.isNotEmpty ? p.fullName : p.email).toList());
+      awayTeamPlayers.assignAll(teamB.map((p) => p.fullName.isNotEmpty ? p.fullName : p.email).toList());
+
+      homeTeamName.value = (teamAName != null && teamAName.trim().isNotEmpty)
+          ? teamAName.trim()
+          : (teamA.isNotEmpty ? 'Team A' : 'Side A');
+      awayTeamName.value = (teamBName != null && teamBName.trim().isNotEmpty)
+          ? teamBName.trim()
+          : (teamB.isNotEmpty ? 'Team B' : 'Side B');
+
+      final int matchOvers = sportRules['overs'] ?? 20;
+      overs.value = matchOvers;
+
+      String battingFirst = homeTeamName.value;
+      String bowlingFirst = awayTeamName.value;
+
+      if (tossWinner.isNotEmpty && tossDecision.isNotEmpty) {
+        final otherTeam = (tossWinner == homeTeamName.value)
+            ? awayTeamName.value
+            : homeTeamName.value;
+        if (tossDecision.toLowerCase() == 'bat') {
+          battingFirst = tossWinner;
+          bowlingFirst = otherTeam;
+        } else {
+          bowlingFirst = tossWinner;
+          battingFirst = otherTeam;
+        }
+      }
+
+      final newMatch = CricketMatchModel(
+        matchId: matchId,
+        createdBy: user?.uid ?? 'unknown',
+        allPlayers: [...homeTeamPlayers, ...awayTeamPlayers],
+        homeTeamName: homeTeamName.value,
+        awayTeamName: awayTeamName.value,
+        homeTeamPlayers: homeTeamPlayers.toList(),
+        awayTeamPlayers: awayTeamPlayers.toList(),
+        squadLimit: teamA.isNotEmpty ? teamA.length : 11,
+        subsEnabled: true,
+        maxSubstitutes: 5,
+        overs: matchOvers,
+        status: 'In Progress',
+        scorecard: {},
+        createdAt: DateTime.now(),
+        tossWinner: tossWinner,
+        tossDecision: tossDecision,
+        battingFirstTeam: battingFirst,
+        bowlingFirstTeam: bowlingFirst,
+        currentInnings: 1,
+        currentBattingTeam: battingFirst,
+        currentBowlingTeam: bowlingFirst,
+        tournamentId: tId,
+        bracketMatchId: bMatchId,
+        homeTeamLogo: teamALogo,
+        awayTeamLogo: teamBLogo,
+      );
+
+      _initEngine(newMatch);
+      currentMatchId.value = matchId;
+      currentMatch.value = newMatch;
+      isEngineReady.value = true;
+
+      // Save local Sqflite
+      await CricketSqflite.instance.insertMatch(newMatch);
+
+      // Save Remote (atomic WriteBatch)
+      final batch = FirebaseFirestore.instance.batch();
+
+      final matchDocRef = FirebaseFirestore.instance.collection('matches').doc(matchId);
+      batch.set(matchDocRef, newMatch.toFirebaseJson());
+
+      final bracketDocRef = FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tId)
+          .collection('bracket')
+          .doc(bMatchId);
+      batch.update(bracketDocRef, {
+        'status': 'in_progress',
+        'liveMatchId': matchId,
+      });
+
+      await batch.commit();
+      _listenToFirestore(matchId);
+
+      final navContext = context ?? Get.context;
+      if (navContext != null) {
+        Get.off(() => CricketScoreboardScreen());
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to start tournament cricket match: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> resumeTournamentMatch({
+    required String tId,
+    required String bMatchId,
+    required String matchId,
+    bool readOnly = false,
+    BuildContext? context,
+  }) async {
+    try {
+      isLoading.value = true;
+      isReadOnly.value = readOnly;
+      final doc = await FirebaseFirestore.instance.collection('matches').doc(matchId).get();
+      if (!doc.exists || doc.data() == null) {
+        Get.snackbar("Error", "Match data not found.");
+        return;
+      }
+
+      final matchData = doc.data()!;
+      final matchModel = CricketMatchModel.fromJson(matchData);
+
+      tournamentId.value = tId;
+      bracketMatchId.value = bMatchId;
+      currentMatchId.value = matchId;
+      currentMatch.value = matchModel;
+
+      _initEngine(matchModel);
+      if (matchData['engineState'] != null) {
+        try {
+          engine.restoreState(matchData['engineState']);
+          liveState.value = engine.state;
+        } catch (e) {
+          debugPrint("Error restoring engine state: $e");
+        }
+      }
+      isEngineReady.value = true;
+      _listenToFirestore(matchId);
+
+      Get.to(() => CricketScoreboardScreen());
+    } catch (e) {
+      Get.snackbar("Error", "Failed to resume match: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> viewTournamentMatch({
+    required String tId,
+    required String bMatchId,
+    required String matchId,
+    BuildContext? context,
+  }) async {
+    await resumeTournamentMatch(
+      tId: tId,
+      bMatchId: bMatchId,
+      matchId: matchId,
+      readOnly: true,
+      context: context,
+    );
+  }
+
+  Future<void> endTournamentMatch([BuildContext? context]) async {
+    if (tournamentId.isEmpty || bracketMatchId.isEmpty || !isEngineReady.value) return;
+
+    final state = engine.state;
+    final bool isOver = state.matchStatus == 'MATCH_COMPLETED' || state.matchStatus == 'TIE' || (state.matchResult != null && state.matchResult!.isNotEmpty);
+    if (!isOver) return;
+
+    isLoading.value = true;
+    try {
+      final batch = FirebaseFirestore.instance.batch();
+
+      final bracketRef = FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId.value)
+          .collection('bracket')
+          .doc(bracketMatchId.value);
+
+      final bracketDoc = await bracketRef.get();
+      if (!bracketDoc.exists) return;
+
+      final bracketData = bracketDoc.data()!;
+      final teamAId = bracketData['teamAId'];
+      final teamBId = bracketData['teamBId'];
+
+      final String resultStr = state.matchResult ?? currentMatch.value?.matchResult ?? '';
+      final bool isTie = state.matchStatus == 'TIE' || resultStr.toLowerCase().contains('tie');
+
+      String winningTeamId = teamAId;
+      if (!isTie) {
+        final awayName = currentMatch.value?.awayTeamName ?? 'Team B';
+        if (resultStr.contains(awayName) || resultStr.contains('Side B') || resultStr.contains('Team B')) {
+          winningTeamId = teamBId ?? teamAId;
+        } else {
+          winningTeamId = teamAId;
+        }
+      }
+
+      final nextMatchId = bracketData['nextMatchId'];
+      final nextMatchSlot = bracketData['nextMatchSlot'];
+
+      // 1. Update Current Bracket Match
+      batch.update(bracketRef, {
+        'status': 'completed',
+        'winnerId': winningTeamId,
+      });
+
+      // 2. Propagate winner to next match if applicable (knockout format)
+      if (nextMatchId != null && nextMatchSlot != null) {
+        final nextMatchRef = FirebaseFirestore.instance
+            .collection('tournaments')
+            .doc(tournamentId.value)
+            .collection('bracket')
+            .doc(nextMatchId);
+
+        if (nextMatchSlot == 'A') {
+          batch.update(nextMatchRef, {'teamAId': winningTeamId});
+        } else if (nextMatchSlot == 'B') {
+          batch.update(nextMatchRef, {'teamBId': winningTeamId});
+        }
+      }
+
+      // 3. Update Leaderboard (Points, W/L, NRR Data)
+      final leaderboardRefA = FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId.value)
+          .collection('leaderboard')
+          .doc(teamAId);
+
+      final leaderboardRefB = FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId.value)
+          .collection('leaderboard')
+          .doc(teamBId);
+
+      bool isTeamAWinner = winningTeamId == teamAId;
+
+      int runsA = currentMatch.value?.innings1Score ?? 0;
+      int runsB = currentMatch.value?.innings2Score ?? 0;
+
+      double oversA = (currentMatch.value?.innings1Overs ?? 0) + ((currentMatch.value?.innings1Balls ?? 0) / 6.0);
+      double oversB = (currentMatch.value?.innings2Overs ?? 0) + ((currentMatch.value?.innings2Balls ?? 0) / 6.0);
+
+      batch.set(leaderboardRefA, {
+        'matchesPlayed': FieldValue.increment(1),
+        'wins': FieldValue.increment(isTie ? 0 : (isTeamAWinner ? 1 : 0)),
+        'losses': FieldValue.increment(isTie ? 0 : (isTeamAWinner ? 0 : 1)),
+        'ties': FieldValue.increment(isTie ? 1 : 0),
+        'points': FieldValue.increment(isTie ? 1 : (isTeamAWinner ? 2 : 0)),
+        'runsScored': FieldValue.increment(runsA),
+        'runsConceded': FieldValue.increment(runsB),
+        'oversFaced': FieldValue.increment(oversA),
+        'oversBowled': FieldValue.increment(oversB),
+      }, SetOptions(merge: true));
+
+      batch.set(leaderboardRefB, {
+        'matchesPlayed': FieldValue.increment(1),
+        'wins': FieldValue.increment(isTie ? 0 : (!isTeamAWinner ? 1 : 0)),
+        'losses': FieldValue.increment(isTie ? 0 : (!isTeamAWinner ? 0 : 1)),
+        'ties': FieldValue.increment(isTie ? 1 : 0),
+        'points': FieldValue.increment(isTie ? 1 : (!isTeamAWinner ? 2 : 0)),
+        'runsScored': FieldValue.increment(runsB),
+        'runsConceded': FieldValue.increment(runsA),
+        'oversFaced': FieldValue.increment(oversB),
+        'oversBowled': FieldValue.increment(oversA),
+      }, SetOptions(merge: true));
+
+      // 4. Check if entire bracket phase is completed
+      final allBracketDocs = await FirebaseFirestore.instance
+          .collection('tournaments')
+          .doc(tournamentId.value)
+          .collection('bracket')
+          .get();
+
+      bool allCompleted = true;
+      for (var doc in allBracketDocs.docs) {
+        if (doc.id == bracketMatchId.value) continue;
+        final s = doc.data()['status'];
+        if (s != 'completed' && doc.data()['teamAId'] != null && doc.data()['teamBId'] != null) {
+          allCompleted = false;
+          break;
+        }
+      }
+
+      if (allCompleted) {
+        final tRef = FirebaseFirestore.instance.collection('tournaments').doc(tournamentId.value);
+        batch.update(tRef, {'status': 'completed'});
+        await batch.commit();
+
+        final runnerUpTeamId = isTeamAWinner ? teamBId : teamAId;
+        await XpRewardService.awardTournamentRankingsXp(
+          tournamentId: tournamentId.value,
+          winnerTeamId: winningTeamId,
+          runnerUpTeamId: runnerUpTeamId,
+          sport: 'Cricket',
+        );
+      } else {
+        await batch.commit();
+      }
+
+      final navContext = context ?? Get.context;
+      if (navContext != null && navContext.mounted) {
+        Navigator.popUntil(navContext, (route) {
+          final routeName = route.settings.name ?? '';
+          return routeName.contains('BracketMatchmaking') ||
+              routeName.contains('TournamentDetail') ||
+              route.isFirst;
+        });
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to save cricket tournament result: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 }

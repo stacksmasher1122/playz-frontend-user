@@ -88,7 +88,7 @@ class AppBackButton extends StatelessWidget {
     final Color effectiveBgColor = backgroundColor ?? AppColors.card;
     final Color effectiveBorderColor = borderColor ?? AppColors.borderDark;
     final Color effectiveIconColor = iconColor ?? AppColors.textPrimary;
-    final BorderRadius effectiveRadius = borderRadius ?? BorderRadius.circular(12);
+    final BorderRadius effectiveRadius = borderRadius ?? BorderRadius.circular(10.0);
 
     Widget buttonTile = Container(
       width: effectiveSize,
@@ -120,18 +120,20 @@ class AppBackButton extends StatelessWidget {
 
     return Container(
       margin: margin,
-      child: Tooltip(
-        message: tooltip,
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: effectiveRadius,
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
+      child: Center(
+        child: Tooltip(
+          message: tooltip,
+          child: Material(
+            color: Colors.transparent,
             borderRadius: effectiveRadius,
-            splashColor: AppColors.accent.withValues(alpha: 0.15),
-            highlightColor: AppColors.accent.withValues(alpha: 0.08),
-            onTap: () => _handleBack(context),
-            child: buttonTile,
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              borderRadius: effectiveRadius,
+              splashColor: AppColors.accent.withValues(alpha: 0.15),
+              highlightColor: AppColors.accent.withValues(alpha: 0.08),
+              onTap: () => _handleBack(context),
+              child: buttonTile,
+            ),
           ),
         ),
       ),
